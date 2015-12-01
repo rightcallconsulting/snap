@@ -1286,7 +1286,7 @@ mouseClicked = function() {
       playName = "";
       feedbackMessage = "Saved!"
       // Logic to save the play to the database
-    } else{
+    } else {
       feedbackMessage = "Invalid Play"
     }
   }
