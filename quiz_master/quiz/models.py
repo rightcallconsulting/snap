@@ -20,7 +20,7 @@ class Player(models.Model):
     number = models.IntegerField()
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     is_being_tested = models.BooleanField() # true if player has been assigned a test
-    image_url = models.ImageField()
+    image_url = models.ImageField(blank=True, null=True)
     starter = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
