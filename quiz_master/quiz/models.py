@@ -18,17 +18,7 @@ class Player(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     is_being_tested = models.BooleanField() # true if player has been assigned a test
     image_url = models.ImageField()
-    starter = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True) # set when it's created
-    updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
-
-class Play(models.Model):
-    name = models.CharField(max_length=100)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
-    players = models.ManyToManyField(Player)
-    tests = models.ManyToManyField(Test)
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    starter = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
@@ -46,5 +36,15 @@ class Test(models.Model):
     deadline = models.DateTimeField()
     completed = models.BooleanField()
     in_progress = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+class Play(models.Model):
+    name = models.CharField(max_length=100)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    players = models.ManyToManyField(Player)
+    tests = models.ManyToManyField(Test)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
