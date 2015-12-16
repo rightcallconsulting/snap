@@ -9,6 +9,9 @@ class Team(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+    def __str__(self):
+        return self.name
+
 class Player(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -21,6 +24,12 @@ class Player(models.Model):
     starter = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+    def __str__(self):
+        return self.full_name()
+
+    def full_name(self):
+        return "{0} {1}".format(self.first_name, self.last_name)
 
 class Formation(models.Model):
     name = models.CharField(max_length=100)
