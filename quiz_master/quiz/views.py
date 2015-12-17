@@ -15,6 +15,29 @@ def index(request):
 def qb_progression(request):
     return render(request, 'quiz/qb_progression.html')
 
+def cb_assignment(request):
+    return render(request, 'quiz/cb_assignment.html')
+
+def create_formation(request):
+    return render(request, 'quiz/create_formation.html')
+
+def create_play(request):
+    return render(request, 'quiz/create_play.html')
+
+def formation_quiz(request):
+    return render(request, 'quiz/formation_quiz.html')
+
+def ol_view(request):
+    return render(request, 'quiz/ol_view.html')
+
+def results_chart(request):
+    return render(request, 'quiz/results_chart.html')
+
+def results(request):
+    return render(request, 'quiz/results.html')
+
+def wr_route(request):
+    return render(request, 'quiz/wr_route.html')
 
 def players(request):
     player_list = Player.objects.all()
