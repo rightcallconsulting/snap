@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'formation',
-    'quiz.apps.QuizConfig'
+    'quiz.apps.QuizConfig',
+    'dashboard.apps.DashboardConfig',
 )
 
 MIDDLEWARE_CLASSES = (
