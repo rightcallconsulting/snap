@@ -1,0 +1,436 @@
+[
+{
+  "model": "quiz.team",
+  "pk": 1,
+  "fields": {
+    "name": "Broncos",
+    "created_at": "2015-12-16T16:12:30.260Z",
+    "updated_at": "2015-12-16T16:12:30.260Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 7,
+  "fields": {
+    "first_name": "Adam",
+    "last_name": "Moelis",
+    "position": "WR",
+    "unit": "offense",
+    "number": 2,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "blah",
+    "starter": false,
+    "created_at": "2015-12-16T16:12:51.925Z",
+    "updated_at": "2015-12-16T16:12:51.925Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 8,
+  "fields": {
+    "first_name": "Peyton",
+    "last_name": "Manning",
+    "position": "QB",
+    "unit": "offense",
+    "number": 18,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "./otter.jpg",
+    "starter": true,
+    "created_at": "2015-12-16T19:00:09.113Z",
+    "updated_at": "2015-12-16T19:00:09.113Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 9,
+  "fields": {
+    "first_name": "Brock",
+    "last_name": "Osweiler",
+    "position": "QB",
+    "unit": "offense",
+    "number": 17,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "./ziggy.jpeg",
+    "starter": false,
+    "created_at": "2015-12-16T19:00:46.451Z",
+    "updated_at": "2015-12-16T19:00:46.451Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 10,
+  "fields": {
+    "first_name": "CJ",
+    "last_name": "Anderson",
+    "position": "RB",
+    "unit": "offense",
+    "number": 22,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:02:41.897Z",
+    "updated_at": "2015-12-16T19:02:41.897Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 11,
+  "fields": {
+    "first_name": "Ronnie",
+    "last_name": "Hillman",
+    "position": "RB",
+    "unit": "offense",
+    "number": 23,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": false,
+    "created_at": "2015-12-16T19:02:55.338Z",
+    "updated_at": "2015-12-16T19:02:55.338Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 12,
+  "fields": {
+    "first_name": "Demaryius",
+    "last_name": "Thomas",
+    "position": "WR",
+    "unit": "offense",
+    "number": 88,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:03:06.668Z",
+    "updated_at": "2015-12-16T19:03:06.668Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 13,
+  "fields": {
+    "first_name": "Emmanuel",
+    "last_name": "Sanders",
+    "position": "WR",
+    "unit": "offense",
+    "number": 10,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:03:25.473Z",
+    "updated_at": "2015-12-16T19:03:25.473Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 14,
+  "fields": {
+    "first_name": "Jordan",
+    "last_name": "Norwood",
+    "position": "WR",
+    "unit": "offense",
+    "number": 11,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": false,
+    "created_at": "2015-12-16T19:03:39.041Z",
+    "updated_at": "2015-12-16T19:03:39.041Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 15,
+  "fields": {
+    "first_name": "Ryan",
+    "last_name": "Harris",
+    "position": "LT",
+    "unit": "offense",
+    "number": 76,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:04:06.719Z",
+    "updated_at": "2015-12-16T19:04:06.719Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 16,
+  "fields": {
+    "first_name": "Louis",
+    "last_name": "Vazquez",
+    "position": "LG",
+    "unit": "offense",
+    "number": 75,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:04:19.775Z",
+    "updated_at": "2015-12-16T19:04:19.775Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 17,
+  "fields": {
+    "first_name": "Matt",
+    "last_name": "Paradis",
+    "position": "C",
+    "unit": "offense",
+    "number": 74,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:04:38.464Z",
+    "updated_at": "2015-12-16T19:04:38.464Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 18,
+  "fields": {
+    "first_name": "Evan",
+    "last_name": "Mathis",
+    "position": "RG",
+    "unit": "offense",
+    "number": 73,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:04:49.067Z",
+    "updated_at": "2015-12-16T19:04:49.067Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 19,
+  "fields": {
+    "first_name": "Michael",
+    "last_name": "Schofield",
+    "position": "RT",
+    "unit": "offense",
+    "number": 72,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:05:04.897Z",
+    "updated_at": "2015-12-16T19:05:04.897Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 20,
+  "fields": {
+    "first_name": "Chris",
+    "last_name": "Harris Jr.",
+    "position": "CB",
+    "unit": "defense",
+    "number": 25,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:58:11.642Z",
+    "updated_at": "2015-12-16T19:58:11.642Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 21,
+  "fields": {
+    "first_name": "Aqib",
+    "last_name": "Talib",
+    "position": "CB",
+    "unit": "defense",
+    "number": 21,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:58:23.783Z",
+    "updated_at": "2015-12-16T19:58:23.784Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 22,
+  "fields": {
+    "first_name": "Bradley",
+    "last_name": "Roby",
+    "position": "CB",
+    "unit": "defense",
+    "number": 29,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": false,
+    "created_at": "2015-12-16T19:58:35.066Z",
+    "updated_at": "2015-12-16T19:58:35.066Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 23,
+  "fields": {
+    "first_name": "Darian",
+    "last_name": "Stewart",
+    "position": "SS",
+    "unit": "defense",
+    "number": 26,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:58:49.386Z",
+    "updated_at": "2015-12-16T19:58:49.386Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 24,
+  "fields": {
+    "first_name": "T.J",
+    "last_name": "Ward",
+    "position": "FS",
+    "unit": "defense",
+    "number": 43,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:59:03.779Z",
+    "updated_at": "2015-12-16T19:59:03.779Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 25,
+  "fields": {
+    "first_name": "Brandon",
+    "last_name": "Marshall",
+    "position": "MLB",
+    "unit": "defense",
+    "number": 54,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T19:59:17.488Z",
+    "updated_at": "2015-12-16T19:59:17.488Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 26,
+  "fields": {
+    "first_name": "Danny",
+    "last_name": "Trevathan",
+    "position": "OLB",
+    "unit": "defense",
+    "number": 59,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:01:09.235Z",
+    "updated_at": "2015-12-16T20:01:09.235Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 27,
+  "fields": {
+    "first_name": "Von",
+    "last_name": "Miller",
+    "position": "OLB",
+    "unit": "defense",
+    "number": 58,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:01:19.513Z",
+    "updated_at": "2015-12-16T20:01:19.513Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 28,
+  "fields": {
+    "first_name": "DeMarcus",
+    "last_name": "Ware",
+    "position": "OLB",
+    "unit": "defense",
+    "number": 94,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:01:38.767Z",
+    "updated_at": "2015-12-16T20:01:38.767Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 29,
+  "fields": {
+    "first_name": "Sylvester",
+    "last_name": "Williams",
+    "position": "DT",
+    "unit": "defense",
+    "number": 92,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:01:51.134Z",
+    "updated_at": "2015-12-16T20:01:51.134Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 30,
+  "fields": {
+    "first_name": "Derek",
+    "last_name": "Wolfe",
+    "position": "DE",
+    "unit": "defense",
+    "number": 95,
+    "team": 1,
+    "is_being_tested": true,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:02:07.505Z",
+    "updated_at": "2015-12-16T20:02:07.505Z"
+  }
+},
+{
+  "model": "quiz.player",
+  "pk": 31,
+  "fields": {
+    "first_name": "Malik",
+    "last_name": "Jackson",
+    "position": "DE",
+    "unit": "defense",
+    "number": 91,
+    "team": 1,
+    "is_being_tested": false,
+    "image_url": "",
+    "starter": true,
+    "created_at": "2015-12-16T20:02:20.027Z",
+    "updated_at": "2015-12-16T20:02:20.027Z"
+  }
+}
+]
