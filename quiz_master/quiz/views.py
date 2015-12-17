@@ -12,6 +12,10 @@ def index(request):
     context = {'player_list': player_list}
     return render(request, 'quiz/index.html', context)
 
+def qb_progression(request):
+    return render(request, 'quiz/qb_progression.html')
+
+
 def players(request):
     player_list = Player.objects.all()
     context = {'player_list': player_list}
