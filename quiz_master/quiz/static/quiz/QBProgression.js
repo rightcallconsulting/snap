@@ -5,6 +5,11 @@ function setup() {
 
 function draw() {
   //Create Scoreboard
+  $.getJSON('/quiz/players/11', function(data, jqXHR){
+    // do something with response
+    console.log('here')
+    debugger;
+  });
   var scoreboard = new Scoreboard({
 
   });

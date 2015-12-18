@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404
 from django.template import RequestContext, loader
 
 from quiz.models import Player, Team, Play, Formation
+from IPython import embed
 
 # Create your views here.
 
