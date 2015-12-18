@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	
+	<!-- Google Code Prettify -->
+	<link href="assets/css/prettify.css" rel="stylesheet">
+	
+	<!-- Font Awesome -->
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+	
+	<!-- Default Stylesheet-->
+	<link href="assets/css/endless.min.css" rel="stylesheet">
+	<link href="assets/css/doc.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+	<div class="top-nav"></div>
+	<div class="wrapper">
+		<div class="header">
+			<span class="brand">Endless Admin</span>
+			<span class="version">Documentation 1.5.1</span>
+		</div>
+	
+		<div class="bg-grey">
+			<h2 class="m-top-none">Thank You For Purchasing One of Our Items!</h2>
+			Below is all the information you will need to setup and use your theme. We have taken extra time and effort to make these docs as detailed as possible.If you have any questions that are beyond the scope of this help file, please feel free to contact us at <span class="text-important">endless.themes@gmail.com</span>.We will do our best to help you where we can.
+		</div>
+		
+		<h2 class="headline">
+			Table of Contents
+			<span class="line"></span>
+		</h2>
+		<ul>
+			<li><a href="#section1">A. Getting Started</a></li>
+			<li><a href="#section2">B. HTML Structure</a></li>
+			<li><a href="#section3">C. CSS</a></li>
+			<li><a href="#section4">D. Component</a></li>
+			<li><a href="#section5">E. Change Log</a></li>
+			<li><a href="#section6">F. Credits</a></li>
+		</ul>
+		<h2 class="headline" id="section1">
+			A. Getting started
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		<p>
+			Before we start, let's take a look on the folder structure of the theme. All theme files are placed in the HTML folder. The main HTML folder consists of 6 more folders for different types of theme assets:
+		</p>
+		<h3 class="headline">
+			1. Main Structure
+			<span class="line"></span>
+		</h3>
+<pre class="prettyprint linenums">	HTML/                      		// Root directory
+	    bootstrap/                     	// Twitter Bootstrap
+	    fonts/                    		// Fonts
+	    css/                           	// CSS Files
+	    img/                           	// Default Images
+	    js/                            	// Scripts
+	    less/                          	// LESS Files
+</pre>
+		
+		<h3 class="headline">
+			2. CSS Files
+			<span class="line"></span>
+		</h3>
+		<p>Endless Admin uses several of stylesheets to control visual apperance.The stylesheets consist of Twitter Bootstrap, default theme stylesheets and plugin stylesheets. </p>
+<pre class="prettyprint linenums">	HTML/bootstrap/css/bootstrap.css		// Twitter Bootstrap Stylesheets
+	HTML/css/endless.css				// Default Stylesheets
+	HTML/css/endless-skin.css			// Skin Color
+</pre>
+
+		<div class="alert">
+			<strong>Note</strong> : There are more plugin-specific CSS files in the "css" folder. These CSS files are important for the correct work of the third party plugins.
+		</div>
+		
+		<h3 class="headline">
+			3. LESS Files
+			<span class="line"></span>
+		</h3>
+		
+		<p>
+			LESS extends CSS with dynamic behavior such as variables, mixins, operations and functions.LESS runs on both the server-side (with Node.js and Rhino) and client-side (modern browsers only).
+		</p>
+		
+		<p>LESS files are located under the <code>HTML/less</code> directory.</p>
+		
+		<p>ALL LESS variables are defined in <code>variables.less</code>.</p>
+		
+		<a href="http://lesscss.org/#synopsis" class="text-important">Learn more about less css</a>
+		<h3 class="headline">
+			4. Scripts
+			<span class="line"></span>
+		</h3>
+		<p>
+			Endless Admin uses many third party plugins & scripts. There are scripts from Twitter Bootstrap, jQuery & plugins and custom scripts. They are all located in <code>HTML/js/</code>. The uncompressed js files are put in the <code>HTML/js/uncompressed/</code> folder. For more information about external scripts refer to <a class="text-important" href="#section5">Credits</a>.
+		</p>
+		
+		<h2 class="headline" id="section2">
+			B. HTML Structure
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		
+		<p>
+			The main HTML structure of the template consists of 4 main containers containing all page elements:
+		</p>
+		<ul>
+			<li>Top navigation</li>
+			<li>Sidebar menu</li>
+			<li>Main container</li>
+			<li>Footer</li>
+		</ul>
+		
+		<p>
+			Endless Admin is based on the Twitter Bootstrap framework which makes it flexible for all kinds of resolutions. It uses a 12 column grid.  The main page build up is as follows:
+		</p>
+		
+<pre class="prettyprint linenums">&lt;!-- Main Wrapper --&gt;
+&lt;div id="wrapper"&gt;
+
+    &lt;!-- Top Navigation --&gt;
+    &lt;div id="top-nav"&gt;
+	
+    &lt;/div&gt;
+    &lt;!-- End of Top Navigation --&gt;
+
+    &lt;!-- Sidebar Menu --&gt;
+    &lt;aside class="fixed"&gt;
+	
+    &lt;/aside&gt;
+    &lt;!-- End of Sidebar Menu --&gt;
+	
+    &lt;!-- Main Container --&gt;
+    &lt;div id="main-container"&gt;
+	
+    &lt;/div&gt;
+    &lt;!-- End of Main Container --&gt;
+	
+    &lt;!-- Footer --&gt;
+    &lt;footer"&gt;
+	
+    &lt;/footer&gt;
+    &lt;!-- End of Footer --&gt;
+&lt;/div&gt;
+&lt;!-- End of Main Wrapper --&gt;
+</pre>
+		<h3 class="headline" id="topNavigation">
+			1. Top Navigation
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		
+		<p>
+			The top navigation is the bar at the top of the page.
+		</p>
+		
+		<img src="assets/img/top_navigation.png" alt="Top Navigation" class="m-bottom-20">
+		
+<pre class="prettyprint linenums">
+    &lt;!-- Top Navigation --&gt;
+    &lt;div id="top-nav"&gt;
+        &lt;div class="brand"&gt;
+            &lt;span&gt;Endless&lt;/span&gt;
+            &lt;span class="text-toggle"&gt; Admin&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button type="button" class="navbar-toggle pull-left" id="sidebarToggle"&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button type="button" class="navbar-toggle pull-left hide-menu" id="menuToggle"&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+           &lt;span class="icon-bar"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;ul class="nav-notification clearfix"&gt;
+            ...
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;!-- End of Top Navigation --&gt;
+</pre>
+		<p>
+			You can turn every item in <code>.nav-notification</code>  into a dropdown toggle by adding the following code:
+		</p>
+
+<pre class="prettyprint linenums">
+     &lt;ul class="nav-notification clearfix"&gt;
+         &lt;li class="dropdown"&gt;
+             &lt;a class="dropdown-toggle" data-toggle="dropdown"&gt;
+                 ...
+             &lt;/a&gt;
+             &lt;ul class="dropdown-menu"&gt;	  
+                 ...
+             &lt;/ul&gt;
+         &lt;/li&gt;
+     &lt;/ul&gt;
+</pre>
+		<p>For example</p>
+		
+<pre class="prettyprint linenums">
+    &lt;ul class="nav-notification clearfix"&gt;
+        &lt;li class="dropdown"&gt;
+            &lt;a class="dropdown-toggle" data-toggle="dropdown"&gt;
+                &lt;i class="fa fa-envelope fa-lg"&gt;&lt;/i&gt;
+                &lt;span class="notification-label">7&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;ul class="dropdown-menu"&gt;	  
+                &lt;li&gt;
+                    &lt;a class="clearfix" href="#"&gt;
+                        &lt;img src="img/user.jpg" alt=""&gt;
+                        &lt;div class="detail"&gt;
+                            &lt;strong>John Doe&lt;/strong&gt;
+                            &lt;p class="no-margin"&gt;
+                                Lorem ipsum dolor sit amet...
+                            &lt;/p&gt;
+                            &lt;small class="text-muted"&gt;&lt;i class="fa fa-check text-success"&gt;&lt;/i&gt; 27m ago&lt;/small&gt;
+                        &lt;/div&gt;
+                    &lt;/a&gt;	
+                &lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+</pre>
+		<p>Produces</p>
+		
+		<img src="assets/img/top_navigation2.jpg" alt="Top Navigation" class="img-thumbnail">
+		
+		<h3 class="headline">
+			2. Sidebar Menu
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		
+		<div class="clearfix">
+			<div class="pull-left" style="width:200px;">
+				<img src="assets/img/sidebar.png" alt="Sidebar Menu" class="img-thumbnail">
+			</div>
+			<div class="pull-left"  style="width:750px;">
+<pre class="prettyprint linenums">
+    &lt;aside class="fixed"&gt;	
+        &lt;div class="sidebar-inner scrollable-sidebar"&gt;	
+            &lt;div class="size-toggle"&gt;
+                ...
+            &lt;/div&gt;
+            &lt;div class="user-block clearfix"&gt;
+                ...
+            &lt;/div&gt;
+            &lt;div class="search-block"&gt;
+                ...
+            &lt;/div&gt;
+            &lt;div class="main-menu"&gt;
+                ...
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/aside&gt;
+</pre>
+			</div>
+		</div>
+		
+		<h4 class="headline">
+			2.1 Main Menu
+			<span class="line"></span>
+		</h4>
+		
+<pre class="prettyprint linenums">
+&lt;div class="main-menu"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;
+            &lt;a href="index.html"&gt;
+                &lt;span class="menu-icon"&gt;
+                    &lt;i class="fa fa-desktop fa-lg">&lt;/i&gt;
+                &lt;/span&gt;
+                &lt;span class="text"&gt;
+                    Dashboard
+                &lt;/span&gt;
+                &lt;span class="menu-hover"&gt;&lt;/span&gt; &lt;!-- Small element on the left hand side --&gt;
+            &lt;/a&gt;
+        &lt;/li&gt;
+        ...
+    &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+		
+		<p>You can use the <code>.sidebar-mini</code> class to change size of the sidebar menu. Sidebar toggle effect is controlled by custom jQuery script (<span class="text-important">endless.js</span>).</p>
+		
+		<div class="clearfix">
+			<div class="pull-left" style="width:110px;">
+				<img src="assets/img/sidebar2.png" alt="Sidebar Menu" class="img-thumbnail">
+			</div>
+			<div class="pull-left"  style="width:840px;">
+			
+<pre class="prettyprint linenums">&lt;!-- Main Wrapper --&gt;
+&lt;div id="wrapper" class="sidebar-mini"&gt;
+    &lt;!-- Sidebar Menu --&gt;
+    &lt;aside class="fixed"&gt;
+	
+    &lt;/aside&gt;
+    &lt;!-- End of Sidebar Menu --&gt;
+&lt;/div&gt;
+&lt;!-- End of Main Wrapper --&gt;
+</pre>
+            
+			</div>
+		</div>
+		
+		<h4 class="headline">
+			2.2 Sub Menus
+			<span class="line"></span>
+		</h4>
+		
+		<div class="clearfix">
+			<div class="pull-left" style="width:380px;">
+				<img src="assets/img/sidebar3.png" alt="Sidebar Menu" class="img-thumbnail">
+			</div>
+			<div class="pull-left"  style="width:570px;">
+			
+<pre class="prettyprint linenums">
+&lt;div class="main-menu"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;
+            &lt;a href="#" class="dropdown-toggle" 
+data-toggle="dropdown"&gt;
+            &lt;/a&gt;
+            &lt;ul class="dropdown-menu"&gt;
+                &lt;li&gt;&lt;a&gt;Sub_menu1&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;Sub_menu2&lt;/a&gt;&lt;/li&gt;
+             &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;div&gt;	
+</pre>
+			</div>
+		</div>
+		
+		<h4 class="headline">
+			2.3 Collapsible Menus
+			<span class="line"></span>
+		</h4>
+		
+		<div class="clearfix">
+			<div class="pull-left" style="width:220px;">
+				<img src="assets/img/sidebar4.jpg" alt="Sidebar Menu" class="img-thumbnail">
+			</div>
+			<div class="pull-left"  style="width:670px;">
+			<p>Add <code>.openable</code> to activate collapsible menu.</p>
+<pre class="prettyprint linenums">
+&lt;div class="main-menu"&gt;
+    &lt;ul&gt;
+        &lt;li class="openable"&gt
+            &lt;a href="#"&gt;...&lt;/a&gt;
+            &lt;ul class="submenu"&gt;
+                &lt;li&gt;&lt;a&gt;&lt;span class="submenu-label"&gt;Sub_menu1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;&lt;span class="submenu-label"&gt;Sub_menu2&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+			</div>
+		</div>
+		
+		<h3 class="headline">
+			3. Main Container
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		<p>
+			The main content is the most important part and can be filled in various ways. Take a look at the example pages and mix and match to get what you want. 
+		</p>
+<pre class="prettyprint linenums">
+&lt;div id="main-container"&gt;
+    ...    
+&lt;/div&gt;
+</pre>
+		
+		<h2 class="headline" id="section3">
+			C. CSS
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		
+		<p>This theme is built on Twitter's Bootstrap Framework.This documentation included some of the information about Bootstrap Framework, but If you are not familiar with Bootstrap, it's highly recommended that you learn directly from <a href="http://getbootstrap.com/" class="text-important">Twitter's Bootstrap documentation.</a></p>
+		
+		<h3 class="headline">
+			1. Grid System
+			<span class="line"></span>
+		</h3>
+		<p>
+			Using a single set of <code>.col-md-*</code> grid classes, you can create a basic grid system that starts out stacked on mobile devices and tablet devices (the extra small to small range) before becoming horizontal on desktop (medium) devices.
+		</p>
+		<div class="row show-grid">
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+			<div class="col-md-1">.col-md-1</div>
+		</div>
+		<div class="row show-grid">
+			<div class="col-md-8">.col-md-8</div>
+			<div class="col-md-4">.col-md-4</div>
+		</div>
+		<div class="row show-grid">
+			<div class="col-md-4">.col-md-4</div>
+			<div class="col-md-4">.col-md-4</div>
+			<div class="col-md-4">.col-md-4</div>
+		</div>
+		<div class="row show-grid m-bottom-20">
+			<div class="col-md-6">.col-md-6</div>
+			<div class="col-md-6">.col-md-6</div>
+		</div>
+<pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+    &lt;div class="col-md-1"&gt;.col-md-1&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="row&gt;
+    &lt;div class="col-md-8"&gt;.col-md-8&lt;/div&gt;
+    &lt;div class="col-md-4"&gt;.col-md-4&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;.col-md-4&lt;/div&gt;
+    &lt;div class="col-md-4"&gt;.col-md-4&lt;/div&gt;
+    &lt;div class="col-md-4"&gt;.col-md-4&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-md-6"&gt;.col-md-6&lt;/div&gt;
+    &lt;div class="col-md-6"&gt;.col-md-6&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+		<h4 class="headline">
+			1.1 Mobile, tablet, desktops
+			<span class="line"></span>
+		</h4>
+		<p>
+			Use the extra small and medium device grid classes by adding <code>.col-xs-*</code> <code>.col-sm-*</code> <code>.col-md-*</code> to your columns. See the example below for a better idea of how it all works.
+		</p>
+		
+		<div class="row show-grid">
+		  <div class="col-xs-12 col-md-8">.col-xs-12 col-md-8</div>
+		  <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+		</div>
+
+		<div class="row show-grid">
+		  <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+		  <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+		  <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+		</div>
+
+		<div class="row show-grid m-bottom-20">
+		  <div class="col-xs-6">.col-xs-6</div>
+		  <div class="col-xs-6">.col-xs-6</div>
+		</div>
+<pre class="prettyprint linenums">
+&lt;!-- Stack the columns on mobile by making one full-width and the other half-width --&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-xs-12 col-md-8"&gt;.col-xs-12 col-md-8&lt;/div&gt;
+    &lt;div class="col-xs-6 col-md-4"&gt;.col-xs-6 .col-md-4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop --&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-xs-6 col-md-4"&gt;.col-xs-6 .col-md-4&lt;/div&gt;
+    &lt;div class="col-xs-6 col-md-4"&gt;.col-xs-6 .col-md-4&lt;/div&gt;
+    &lt;div class="col-xs-6 col-md-4"&gt;.col-xs-6 .col-md-4&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Columns are always 50% wide, on mobile and desktop --&gt;
+&lt;div class="row"&gt;
+    &lt;div class="col-xs-6"&gt;.col-xs-6&lt;/div&gt;
+    &lt;div class="col-xs-6"&gt;.col-xs-6&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+		
+		<h4 class="headline">
+			1.2 Nesting columns
+			<span class="line"></span>
+		</h4>
+		<p>
+			To nest your content with the default grid, add a new <code>.row</code> and set of <code>.col-md-*</code> columns within an existing <code>.col-md-*</code> column. Nested rows should include a set of columns that add up to 12.
+		</p>
+		<div class="row show-grid m-bottom-20">
+			<div class="col-md-9">
+				Level 1: .col-md-9
+				<div class="row">
+					<div class="col-md-6">
+						Level 2: .col-md-6
+					</div>
+					<div class="col-md-6">
+						Level 2: .col-md-6
+					</div>
+				</div>
+			</div>
+		</div>
+<pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+    &lt;div class="col-md-9"&gt;
+        Level 1: .col-md-9
+        &lt;div class="row"&gt;
+            &lt;div class="col-md-6"&gt;
+                Level 2: .col-md-6
+            &lt;/div&gt;
+            &lt;div class="col-md-6"&gt;
+                Level 2: .col-md-6
+            &lt;/div&gt; 
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>	
+		<h3 class="headline">
+			2. Button
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		<p>
+			Button styles can be applied to anything with the <code>.btn</code> class applied. However, typically you'll want to apply these to only <code>&lt;a&gt;</code> and <code>&lt;button&gt;</code> elements for the best rendering.
+		</p>
+		<div class="m-bottom-20">
+			<button class="btn btn-default">Default</button>
+			<button class="btn btn-primary">Primary</button>
+			<button class="btn btn-info">info</button>
+			<button class="btn btn-success">Success</button>
+			<button class="btn btn-warning">Warning</button>
+			<button class="btn btn-danger">Danger</button>
+		</div>
+		<div class="alert">
+			<strong>Note : </strong> All buttons MUST have the .btn class
+		</div>
+<pre class="prettyprint linenums">
+    &lt;!-- Default Button --&gt;	
+    &lt;button class="btn btn-default"&gt;Default&lt;/button&gt;
+	
+    &lt;!-- Primary Button --&gt;	
+    &lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
+	
+    &lt;!-- Info Button --&gt;	
+    &lt;button class="btn btn-info"&gt;Info&lt;/button&gt;
+	
+    &lt;!-- Success Button --&gt;	
+    &lt;button class="btn btn-success"&gt;Success&lt;/button&gt;
+	
+    &lt;!-- Warning Button --&gt;	
+    &lt;button class="btn btn-warning"&gt;Warning&lt;/button&gt;
+	
+    &lt;!-- Danger Button --&gt;	
+    &lt;button class="btn btn-danger"&gt;Danger&lt;/button&gt;
+</pre>
+		<h4 class="headline">
+			2.1 Single Button Dropdowns
+			<span class="line"></span>
+		</h4>
+		
+		<div class="m-bottom-20">
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					Default <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					Primary <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+					Info <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+					Success <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+					Warning <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+					Danger <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+		</div>
+<pre class="prettyprint linenums">
+&lt;!-- Single button --&gt;
+&lt;div class="btn-group"&gt;
+    &lt;button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"&gt;
+        Default &lt;span class="caret">&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;ul class="dropdown-menu"&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Action&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Another action&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Something else here&lt;/a&gt;&lt;/li&gt;
+        &lt;li class="divider"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Separated link&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+		
+		<h4 class="headline">
+			2.2 Split Button Dropdowns
+			<span class="line"></span>
+		</h4>
+		
+		<div class="m-bottom-20">
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-default">Action</button>
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-primary">Action</button>
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-info">Action</button>
+				<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-success">Action</button>
+				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group m-right-5">
+				<button type="button" class="btn btn-warning">Action</button>
+				<button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-danger">Action</button>
+				<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+		</div>
+		
+<pre class="prettyprint linenums">
+&lt;!-- Split button --&gt;
+&lt;div class="btn-group"&gt;
+    &lt;button type="button" class="btn btn-danger"&gt;Action&lt;/button&gt;
+    &lt;button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"&gt;
+        &lt;span class="caret"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;ul class="dropdown-menu" role="menu"&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Action&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Another action&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Something else here&lt;/a&gt;&lt;/li&gt;
+        &lt;li class="divider"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Separated link&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+
+		<h4 class="headline">
+			2.3 Application Button
+			<span class="line"></span>
+		</h4>	
+				
+		<p>Use <code>.quick-btn</code> class to create an application button.</p>
+		
+		<div class="m-bottom-20">
+			<a class="btn btn-danger quick-btn"><i class="fa fa-envelope"></i><span>Email</span></a>
+			<a class="btn btn-info quick-btn"><i class="fa fa-picture-o"></i><span>Gallery</span></a>
+		</div>
+		
+<pre class="prettyprint linenums">
+&lt;!-- Application button --&gt;	
+&lt;a class="btn btn-danger quick-btn"&gt;&lt;i class="fa fa-envelope"&gt;&lt;/i&gt;&lt;span&gt;Email&lt;/span&gt;&lt;/a&gt;
+</pre>
+
+		<h3 class="headline">
+			3. Widget
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Heading
+			</div>
+			<div class="panel-body" id = "simpleWidget">
+				Some default widget content here.
+			</div>
+		</div>
+		
+<pre class="prettyprint linenums">
+    &lt;div class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;
+            Heading
+        &lt;/div&gt;
+
+        &lt;div class="panel-body"&gt;
+            ...
+        &lt;/div&gt;
+    &lt;/div&gt;
+</pre>
+		<p>You can use the <code>.collapse-toggle</code> class to turn on collapsible effect. Collapsible effect is controlled by Twitter Bootstrap script and custom jQuery script <span class="text-important">(endless.js).</span>
+
+<pre class="prettyprint linenums">
+    &lt;div class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;
+            Heading
+            &lt;ul class="panel-toolbar"&gt;
+                &lt;li&gt;
+                    &lt;a class="collapse-toggle"&gt;..&lt;/a&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+
+        &lt;div class="panel-body"&gt;
+            ...
+        &lt;/div&gt;
+    &lt;/div&gt;
+</pre>		
+		<h3 class="headline">
+			4. Table
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		
+		<div class="panel">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Username</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>Mark</td>
+						<td>Otto</td>
+						<td>@mdo</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>Jacob</td>
+						<td>Thornton</td>
+						<td>@fat</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>Larry</td>
+						<td>the Bird</td>
+						<td>@twitter</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+<pre class="prettyprint linenums">
+&lt;table class="table"&gt;
+    ...
+&lt;/table&gt;
+</pre>
+		<h4 class="headline">
+			4.1 Striped rows
+			<span class="line"></span>
+		</h4>
+		<div class="panel">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Username</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>Mark</td>
+						<td>Otto</td>
+						<td>@mdo</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>Jacob</td>
+						<td>Thornton</td>
+						<td>@fat</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>Larry</td>
+						<td>the Bird</td>
+						<td>@twitter</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+<pre class="prettyprint linenums">
+&lt;table class="table table-striped"&gt;
+    ...
+&lt;/table&gt;
+</pre>
+		
+		<h4 class="headline">
+			4.2 Bordered table
+			<span class="line"></span>
+		</h4>
+		
+		<div class="panel">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Username</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>Mark</td>
+						<td>Otto</td>
+						<td>@mdo</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>Jacob</td>
+						<td>Thornton</td>
+						<td>@fat</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>Larry</td>
+						<td>the Bird</td>
+						<td>@twitter</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+<pre class="prettyprint linenums">
+&lt;table class="table table-bordered"&gt;
+    ...
+&lt;/table&gt;
+</pre>
+		<h3 class="headline">
+			5. Form Element
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		
+		<p>
+			Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
+		</p>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Basic Example
+			</div>
+			<form>
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Email address</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+					</div>
+					<div class="form-group">
+						<label>File input</label>
+						<div class="upload-file" style="width:300px;">
+							<input type="file" id="upload-demo" class="upload-demo">
+							<label data-title="Select file" for="upload-demo">
+								<span data-title="No file selected..."></span>
+							</label>
+						</div>
+					</div>
+					<p class="help-block">Example block-level help text here.</p>
+					<label class="label-checkbox">
+						<input type="checkbox">
+						<span class="custom-checkbox"></span>
+						Check me out
+					</label>
+				</div>
+				<div class="panel-footer">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</form>
+		</div>
+<pre class="prettyprint linenums">
+&lt;div class="panel panel-default"&gt;
+    &lt;div class="panel-heading"&gt;
+        Basic Example
+    &lt;/div&gt;
+    &lt;form&gt;
+        &lt;div class="panel-body"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="exampleInputEmail1"&gt;Email address&lt;/label&gt;
+                &lt;input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="exampleInputPassword1"&gt;Password&lt;/label&gt;
+                &lt;input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="exampleInputFile"&gt;File input&lt;/label&gt;
+                &lt;div class="upload-file" style="width:300px;"&gt;
+                    &lt;input type="file" id="upload-demo" class="upload-demo"&gt;
+                    &lt;label data-title="Select file" for="upload-demo"&gt;
+                        &lt;span data-title="No file selected..."&gt;&lt;/span&gt;
+                    &lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+		
+            &lt;p class="help-block">Example block-level help text here.&lt;/p&gt; &lt;!-- Help text --&gt;
+		
+            &lt;label class="label-checkbox"&gt;
+                &lt;input type="checkbox"&gt;
+                &lt;span class="custom-checkbox">&lt;/span&gt;
+                Check me out
+            &lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div class="panel-footer"&gt;
+            &lt;button type="submit" class="btn btn-default"&gt;Submit&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/form&gt;
+&lt;/div&gt;
+</pre>
+		<h4 class="headline">
+			5.1 Inline Form
+			<span class="line"></span>
+		</h4>
+		<p>Add <code>.form-inline</code> for left-aligned and inline-block controls for a compact layout.</p>
+		
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form class="form-inline">
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputEmail2">Email address</label>
+						<input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="exampleInputPassword2">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+					</div>
+					<label class="label-checkbox inline">
+						<input type="checkbox">
+						<span class="custom-checkbox"></span>
+						Remember me
+					</label>
+					<button type="submit" class="btn btn-default">Sign in</button>
+				</form>
+			</div>
+		</div>
+
+<pre class="prettyprint linenums">
+&lt;div class="panel panel-default"&gt;
+    &lt;div class="panel-body"&gt;
+        &lt;form class="form-inline"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label class="sr-only" for="exampleInputEmail2"&gt;Email address&lt;/label&gt;
+                &lt;input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"&gt;
+            &lt;/div&gt;
+            &lt;iv class="form-group"&gt;
+                &lt;label class="sr-only" for="exampleInputPassword2"&gt;Password&lt;/label&gt;
+                &lt;input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"&gt;
+            &lt;/div&gt;
+            &lt;label class="label-checkbox inline"&gt;
+                &lt;input type="checkbox"&gt;
+                &lt;span class="custom-checkbox"&gt;&lt;/span&gt;
+                Remember me
+            &lt;/label&gt;
+            &lt;button type="submit" class="btn btn-default">Sign in&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+		<h4 class="headline">
+			5.2 Horizontal form
+			<span class="line"></span>
+		</h4>
+		<p>
+			Use Bootstrap's predefined grid classes to align labels and groups of form controls in a horizontal layout by adding <code>.form-horizontal</code> to the <code>form</code>. Doing so changes <code>.form-groups</code> to behave as grid rows, so no need for <code>.row</code>.
+		</p>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Horizontal form
+			</div>
+			
+			<form class="form-horizontal">
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="inputUsername1" class="col-lg-2 control-label">Username</label>
+						<div class="col-lg-10">
+							<input type="text" class="form-control" id="inputUsername1" placeholder="Username">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPassword3" class="col-lg-2 control-label">Password</label>
+						<div class="col-lg-10">
+							<input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">Gender</label>
+						<div class="col-lg-10">
+							<label class="label-radio inline">
+								<input type="radio" name="inline-radio">
+								<span class="custom-radio"></span>
+								Male
+							</label>
+							<label class="label-radio inline">
+								<input type="radio" name="inline-radio">
+								<span class="custom-radio"></span>
+								Female
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer text-right">
+					<button type="submit" class="btn btn-success">Submit</button>
+					<button type="reset" class="btn btn-success">Clear</button>
+				</div>
+			</form>
+		</div>
+		
+<pre class="prettyprint linenums">
+&lt;div class="panel panel-default"&gt;
+    &lt;div class="panel-heading"&gt;
+        Horizontal form
+    &lt;/div&gt;
+			
+    &lt;form class="form-horizontal"&gt;
+        &lt;div class="panel-body"&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="inputUsername1" class="col-lg-2 control-label">Username&lt;/label&gt;
+                &lt;div class="col-lg-10"&gt;
+                    &lt;input type="text" class="form-control" id="inputUsername1" placeholder="Username"&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label for="inputPassword3" class="col-lg-2 control-label">Password&lt;/label&gt;
+                &lt;div class="col-lg-10"&gt;
+                    &lt;input type="password" class="form-control" id="inputPassword3" placeholder="Password"&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="form-group"&gt;
+                &lt;label class="col-lg-2 control-label">Gender&lt;/label&gt;
+                &lt;div class="col-lg-10"&gt;
+                    &lt;label class="label-radio inline"&gt;
+                        &lt;input type="radio" name="inline-radio"&gt;
+                        &lt;span class="custom-radio"&gt;&lt;/span&gt;
+                        Male
+                    &lt;/label&gt;
+                    &lt;label class="label-radio inline"&gt;	
+                        &lt;input type="radio" name="inline-radio"&gt;
+                        &lt;span class="custom-radio"&gt;&lt;/span&gt;
+                        Female
+                    &lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="panel-footer text-right"&gt;
+            &lt;button type="submit" class="btn btn-success">Submit&lt;/button&gt;
+            &lt;button type="reset" class="btn btn-success">Clear&lt;/button>
+        &lt;/div&gt;
+    &lt;/form&gt;
+&lt;/div&gt;
+</pre>
+	
+		<h3 class="headline">
+			6. Helper Class
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h3>
+		
+		<p>All helper classes are defined in <code>utility.less</code>.</p>
+		
+		<h4 class="headline">
+			6.1 Padding
+			<span class="line"></span>
+		</h4>
+		
+		<p>Set padding property to an element.</p>
+		
+<pre class="prettyprint linenums">
+&lt;div class="padding-xs"&gt;&lt;/div&gt; &lt;!-- Padding 5px --&gt;
+&lt;div class="padding-sm"&gt;&lt;/div&gt; &lt;!-- Padding 10px --&gt;
+&lt;div class="padding-md"&gt;&lt;/div&gt; &lt;!-- Padding 20px --&gt;
+&lt;div class="padding-lg"&gt;&lt;/div&gt; &lt;!-- Padding 40px --&gt;
+</pre>
+
+		<h4 class="headline">
+			6.2 Margin
+			<span class="line"></span>
+		</h4>
+		
+		<p>Set margin property to an element.</p>
+		
+<pre class="prettyprint linenums">
+&lt;div class="margin-xs"&gt;&lt;/div&gt; &lt;!-- Margin 5px --&gt;
+&lt;div class="margin-sm"&gt;&lt;/div&gt; &lt;!-- Margin 10px --&gt;
+&lt;div class="margin-md"&gt;&lt;/div&gt; &lt;!-- Margin 20px --&gt;
+&lt;div class="margin-lg"&gt;&lt;/div&gt; &lt;!-- Margin 40px --&gt;
+</pre>
+		
+		<h4 class="headline">
+			6.3 Emphasis classes
+			<span class="line"></span>
+		</h4>
+		<p>Convey meaning through color with a handful of emphasis utility classes.</p>
+		
+		<div class="well">
+			<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			<p class="text-info">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			<p class="text-success">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			<p class="text-primary">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			<p class="text-warning">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			<p class="text-danger">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+		</div>
+<pre class="prettyprint linenums">
+&lt;p class="text-muted"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+&lt;p class="text-info"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+&lt;p class="text-success"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+&lt;p class="text-primary"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+&lt;p class="text-warning"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+&lt;p class="text-danger"&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;	
+</pre>
+
+		<h4 class="headline">
+			6.4 Background Color
+			<span class="line"></span>
+		</h4>	
+
+		<p>Use any of the available background classes to change background color.</p>
+		
+		<div class="panel bg-white padding-xs"></div>
+		<div class="panel bg-dark padding-xs"></div>
+		<div class="panel bg-light padding-xs"></div>
+		<div class="panel bg-info padding-xs"></div>
+		<div class="panel bg-primary padding-xs"></div>
+		<div class="panel bg-success padding-xs"></div>
+		<div class="panel bg-warning padding-xs"></div>
+		<div class="panel bg-danger padding-xs"></div>
+		
+<pre class="prettyprint linenums">
+&lt;div class="bg-white"&gt;&lt;/div&gt;
+&lt;div class="bg-dark"&gt;&lt;/div&gt;
+&lt;div class="bg-light"&gt;&lt;/div&gt;
+&lt;div class="bg-info"&gt;&lt;/div&gt;
+&lt;div class="bg-primary"&gt;&lt;/div&gt;
+&lt;div class="bg-success"&gt;&lt;/div&gt;
+&lt;div class="bg-warning"&gt;&lt;/div&gt;
+&lt;div class="bg-danger"&gt;&lt;/div&gt;
+</pre>		
+
+		<h4 class="headline">
+			6.5 Animation
+			<span class="line"></span>
+		</h4>	
+		
+		<p>Use any of the available animation classes to quickly create a css3 animation.</p>
+		
+		<a class="btn btn-danger m-bottom-20" id="fadeInUpDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInUp"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInUpLargeDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInUpLarge"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInDownDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInDown"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInDownLargeDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInDownLarge"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInLeftDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInLeft"&gt;&lt;/div&gt;
+</pre>
+		
+		<a class="btn btn-danger m-bottom-20" id="fadeInLeftLargeDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInLeftLarge"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInRightDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInRightLarge"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="fadeInRightLargeDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="fadeInRightLarge"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="bounceInDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="bounceIn"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="bounceInDownDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="bounceInDown"&gt;&lt;/div&gt;
+</pre>
+
+		<a class="btn btn-danger m-bottom-20" id="flipInHDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="flipInH"&gt;&lt;/div&gt;
+</pre>
+		
+		<a class="btn btn-danger m-bottom-20" id="flipInVDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="flipInV"&gt;&lt;/div&gt;
+</pre>
+		
+		<h4 class="headline">
+			6.6 Animation Delay
+			<span class="line"></span>
+		</h4>	
+		
+		<p>Uses the following classes to specify a animation delay of the element <code>.animation-delay*</code></p>
+		
+		<a class="btn btn-danger m-bottom-20 animation-delay5" id="delayDemo">Start Animation</a>
+		
+<pre class="prettyprint linenums">
+&lt;div class="bounceIn animation-delay5"&gt;&lt;/div&gt;
+</pre>
+	
+		<h2 class="headline" id="section4">
+			D. Component
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		
+		<p>Endless admin uses the same elements and classes of Bootstrap with addition of a few elements and classes to add some customization:</p>
+		
+		<h3 class="headline">
+			1. Statistic Widget
+			<span class="line"></span>
+		</h3>
+		
+		<div class="row">
+			<div class="col-md-3 col-sm-4">
+				<div class="panel panel-default panel-stat1 bg-success">
+					<div class="panel-body">
+						<div class="value">99</div>
+						<div class="title">
+							<i class="fa fa-usd"></i>
+							<span class="m-left-xs">Sales</span>
+						</div>
+					</div>
+				</div><!-- /panel -->
+			</div><!-- /.col -->
+			<div class="col-md-3 col-sm-4">
+				<div class="panel panel-default panel-stat2 bg-warning">
+					<div class="panel-body">
+						<span class="stat-icon">
+							<i class="fa fa-bar-chart-o"></i>
+						</span>
+						<div class="pull-right text-right">
+							<div class="value">58</div>
+							<div class="title">Visits</div>
+						</div>
+					</div>
+				</div><!-- /panel -->
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+		
+<pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+    &lt;div class="col-md-3 col-sm-4"&gt;
+        &lt;div class="panel panel-default panel-stat1 bg-success"&gt;
+            &lt;div class="panel-body"&gt;
+                &lt;div class="value">99&lt;/div&gt;
+                &lt;div class="title"&gt;
+                    &lt;i class="fa fa-usd"&gt;&lt;/i&gt;
+                    &lt;span class="m-left-xs"&gt;Sales&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;&lt;!-- /panel --&gt;
+    &lt;/div&gt;&lt;!-- /.col --&gt;
+    &lt;div class="col-md-3 col-sm-4"&gt;
+        &lt;div class="panel panel-default panel-stat2 bg-warning"&gt;
+            &lt;div class="panel-body"&gt;
+                &lt;span class="stat-icon"&gt;
+                    &lt;i class="fa fa-bar-chart-o"&gt;&lt;/i&gt;
+                &lt;/span&gt;
+                &lt;div class="pull-right text-right"&gt;
+                    &lt;div class="value">58&lt;/div&gt;
+                    &lt;div class="title">Visits&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;&lt;!-- /panel --&gt;
+    &lt;/div&gt;&lt;!-- /.col --&gt;
+&lt;/div&gt;&lt;!-- /.row --&gt;
+</pre>
+		
+		<h3 class="headline">
+			2. To Do List
+			<span class="line"></span>
+		</h3>
+
+		<div class="row">
+			<div class="col-md-4 col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">To Do List <span class="text-success m-left-xs"><i class="fa fa-check"></i></span></div>
+					<ul class="list-group task-list">
+						<li class="list-group-item selected">
+							<label class="label-checkbox inline">
+								<input type="checkbox" class="task-finish" checked="">
+								<span class="custom-checkbox"></span>
+							</label>
+							SEO Optimisation
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<label class="label-checkbox inline">
+								 <input type="checkbox" class="task-finish">
+								 <span class="custom-checkbox"></span>
+							</label>
+							Unit Testing
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<label class="label-checkbox inline">
+								 <input type="checkbox" class="task-finish">
+								 <span class="custom-checkbox"></span>
+							</label>
+							Mobile Development 
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+							<span class="badge badge-success m-right-xs">3</span>
+						</li>
+						<li class="list-group-item">
+							<label class="label-checkbox inline">
+								 <input type="checkbox" class="task-finish">
+								 <span class="custom-checkbox"></span>
+							</label>
+							Database Migration
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<label class="label-checkbox inline">
+								 <input type="checkbox" class="task-finish">
+								 <span class="custom-checkbox"></span>
+							</label>
+							New Frontend Layout <span class="label label-warning m-left-xs">PENDING</span>
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+						</li>
+						<li class="list-group-item">
+							<label class="label-checkbox inline">
+								 <input type="checkbox" class="task-finish">
+								 <span class="custom-checkbox"></span>
+							</label>
+							Bug Fixes <span class="label label-danger m-left-xs">IMPORTANT</span>
+							<span class="pull-right">
+								<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
+							</span>
+						</li>
+					</ul><!-- /list-group -->
+				</div>
+			</div>
+		</div>
+		
+<pre class="prettyprint linenums">
+&lt;div class="panel panel-default"&gt;
+    &lt;div class="panel-heading"&gt;To Do List &lt;span class="text-success m-left-xs"&gt;&lt;i class="fa fa-check"&gt;&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;ul class="list-group task-list"&gt;
+            &lt;li class="list-group-item selected"&gt;
+                &lt;label class="label-checkbox inline"&gt;
+                    &lt;input type="checkbox" class="task-finish" checked=""&gt;
+                    &lt;span class="custom-checkbox"&gt;&lt;/span&gt;
+                &lt;/label&gt;
+                SEO Optimisation
+                &lt;span class="pull-right"&gt;
+                    &lt;a href="#" class="task-del"&gt;&lt;i class="fa fa-trash-o fa-lg text-danger"&gt;&lt;/i&gt;&lt;/a&gt;
+                &lt;/span&gt;
+            &lt;/li&gt;
+            .
+            .
+            .
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+		<h2 class="headline" id="section5">
+			E. Change Log
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		
+		<div class="alert alert-info">Some elements have been enhanced and some bugs fixed. Please take a look at the change log for a quick overview.</div>
+		
+		<h5>
+			Version 1.5.1
+		</h5>
+		
+<pre class="prettyprint linenums">
+    Upgraded to Bootstrap 3.2
+    Upgraded to Font Awesome 4.1
+    Add active state to inbox menu
+    Fix custom radio button issue
+    Fix loading icon
+    A few bug fixes and enhancements
+</pre>		
+
+		<h5>
+			Version 1.5
+		</h5>
+		
+<pre class="prettyprint linenums">
+    Upgraded to Bootstrap 3.1.1
+    Add Multi-level menu
+    Add show/hide menu toggle
+    Add active menu in second level menu
+    Add lock screen page
+    Fix google map icon not showing up
+    A few bug fixes and enhancements
+</pre>		
+		
+		<h5>
+			Version 1.4
+		</h5>
+		
+<pre class="prettyprint linenums">
+    Upgraded to Bootstrap 3.1.0
+    Add email template
+    Add new popup dialog
+    A few bug fixes and enhancements
+</pre>		
+		
+		<h5>
+			Version 1.3
+		</h5>
+		
+		<p>
+			<code>.panel-toolbar</code> is changed to <code>.tool-bar</code>
+		</p>
+		
+<pre class="prettyprint linenums">
+    Add flot chart
+    Add new components
+    Add new preloading animation
+    Add new scrollable sidebar menu
+    Add 2 new skin color
+    Update dashboard page
+    A few bug fixes and enhancements
+</pre>
+		
+		<h5>
+			Version 1.2
+		</h5>
+		
+		<p>
+			Previously, <code>.brand</code> are located inside <code>aside</code> tag ,but in Endless Admin version 1.2 <code>.brand</code> are moved from <code>aside</code> to <code>#top-nav</code>.<br/>
+			You have to remove <code>.brand</code> in <code>aside</code> and add it into <code>#top-nav</code> for the correct visual appearance of the theme. <a class="text-important m-left-xs" href="#topNavigation">See here</a>
+		</p>
+		
+<pre class="prettyprint linenums">
+    Add collapsible menu
+    Add chat room page
+    Add movie gallery page
+    Add jquery jcarousel
+    Add jquery resize
+    Add jquery modernizr
+    A few bug fixes and enhancements
+</pre>
+		
+		<h5>
+			Version 1.1
+		</h5>
+<pre class="prettyprint linenums">
+    Add FAQ page
+    Add search result page
+    Add error 500 page
+    Add pricing table on landing page
+    A few bug fixes and enhancements
+</pre>
+		
+		<h5>
+			Version 1.0
+		</h5>
+<pre class="prettyprint linenums">
+    Initial Version.
+</pre>
+		
+		<h2 class="headline" id="section6">
+			F. Credits
+			<span class="line"></span>
+			<a class="to-top" href="#">Back to top <i class="fa fa-angle-double-up"></i></a>
+		</h2>
+		
+		<p>
+			Endless Admin could not be what it is without using the following:
+		</p>
+		
+		<h4>Libraries & Plugins</h4>
+		<ul class="m-bottom-20">
+			<li><a href="http://getbootstrap.com/">Twiiter Bootstrap</a></li>
+			<li><a href="http://jquery.com/">jQuery</a></li>
+			<li><a href="http://jqueryui.com/">jQuery UI</a></li>
+			<li><a href="http://harvesthq.github.io/chosen/">Chosen</a></li>
+			<li><a href="http://labs.abeautifulsite.net/jquery-minicolors/">jQuery minicolors</a></li>
+			<li><a href="http://www.datatables.net/">Datatables</a></li>
+			<li><a href="http://www.eyecon.ro/bootstrap-datepicker">Datepicker</a></li>
+			<li><a href="http://arshaw.com/fullcalendar/">Full calendar</a></li>
+			<li><a href="http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/">Gritter</a></li>
+			<li><a href="http://digitalbush.com/projects/masked-input-plugin/">Masked input</a></li>
+			<li><a href="http://rocha.la/jQuery-slimScroll">jQuery slimScroll</a></li>
+			<li><a href="http://omnipotent.net/jquery.sparkline/#s-about">jQuery Sparkline</a></li>
+			<li><a href="http://jdewit.github.io/bootstrap-timepicker/">Timepicker</a></li>
+			<li><a href="https://github.com/xing/wysihtml5">Wysihtml5</a></li>
+			<li><a href="https://github.com/jhollingworth/bootstrap-wysihtml5/">Bootstrap Wysihtml5</a></li>
+			<li><a href="http://www.jacklmoore.com/colorbox/">Colorbox</a></li>
+			<li><a href="http://www.dropzonejs.com/">Dropzone</a></li>
+			<li><a href="https://github.com/xoxco/jQuery-Tags-Input">jQeury Tags input</a></li>
+			<li><a href="https://github.com/carhartl/jquery-cookie">jQuery cookie</a></li>
+			<li><a href="http://www.eyecon.ro/bootstrap-slider/">Slider for Bootstrap</a></li>
+			<li><a href="http://raphaeljs.com/">Raphael</a></li>
+			<li><a href="http://www.oesmith.co.uk/morris.js/">Morris</a></li>
+			<li><a href="https://github.com/dbushell/Nestable">Nestable List</a></li>
+			<li><a href="http://parsleyjs.org/">Parsley</a></li>
+			<li><a href="http://imakewebthings.com/jquery-waypoints/">jQuery Waypoint</a></li>
+			<li><a href="http://flesler.blogspot.com/2007/10/jquerylocalscroll-10.html">jQuery LocalScroll</a></li>
+			<li><a href="http://flesler.blogspot.com/2007/10/jqueryscrollto.html">jQuery ScrollTo</a></li>
+			<li><a href="http://sorgalla.com/jcarousel/">jQuery jcarousel</a></li>
+			<li><a href="http://benalman.com/projects/jquery-resize-plugin/">jQuery resize</a></li>
+			<li><a href="http://modernizr.com/">Modernizr</a></li>
+			<li><a href="http://www.flotcharts.org/">Flot</a></li>
+			<li><a href="http://github.hubspot.com/pace/">Pace</a></li>
+			<li><a href="http://vast-engineering.github.io/jquery-popup-overlay/">jQuery Popup Overlay</a></li>
+			<li><a href="https://github.com/imsky/holder">holder</a></li>
+			<li><a href="https://code.google.com/p/jquery-ui-map/">jQuery ui map</a></li>	
+			<li><a href="https://code.google.com/p/google-code-prettify/">Google Code Prettify</a></li>	
+			<li><a href="http://fortawesome.github.io/Font-Awesome/">Font awesome</a>
+			<li><a href="http://www.google.com/fonts">Google Web Fonts</a></li>
+			<li><a href="http://lesscss.org/">LESS</a></li>
+		</ul>
+		
+		<h4>Flickr Photos</h4>
+		<p class="block" style="margin-bottom: 50px;">
+			All images viewed in the live preview are for demo purposes only and are not included with your purchase. All images are licensed under <a href="http://creativecommons.org/licenses/by/2.0/deed.en" class="text-important">Creative Commons - Attribution 2.0 Generic</a>. These images are courtesy of <a href="http://www.flickr.com/photos/astragony/" class="text-important">Daniel Zedda </a>, 
+			<a href="http://www.flickr.com/photos/58782395@N03/" class="text-important">Sweetie187</a>, <a href="http://www.flickr.com/photos/meedan/" class="text-important">meedanphotos </a>, <a href="http://www.flickr.com/photos/johnkarakatsanis/" class="text-important">John Karakatsanis </a> ,
+			<a href="http://www.flickr.com/photos/ivyfield/" class="text-important">Yutaka Tsutano</a> and <a href="http://www.flickr.com/photos/szene/" class="text-important">Andreas Dantz</a>.
+		</p>
+	</div>
+	
+	<!-- Jquery -->
+	<script src="assets/js/jquery-1.10.2.min.js"></script>
+	
+	<!-- Bootstrap -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+  
+	<!-- Google Code Prettify -->
+	<script src='assets/js/run_prettify.js'></script>
+	
+	<!-- Demo -->
+	<script src='assets/js/demo.js'></script>
+	
+	<script>
+		$(function()	{
+			$('#fadeInUpDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInUp');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInUp');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInUpLargeDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInUpLarge');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInUpLarge');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInDownDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInDown');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInDown');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInDownLargeDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInDownLarge');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInDownLarge');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInLeftDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInLeft');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInLeft');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInRightDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInRight');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInRight');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInLeftLargeDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInLeftLarge');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInLeftLarge');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#fadeInRightLargeDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('fadeInRightLarge');
+				
+				setTimeout(function() {
+					_activeElm.addClass('fadeInRightLarge');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#bounceInDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('bounceIn');
+				
+				setTimeout(function() {
+					_activeElm.addClass('bounceIn');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#bounceInDownDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('bounceInDown');
+				
+				setTimeout(function() {
+					_activeElm.addClass('bounceInDown');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#flipInHDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('flipInH');
+				
+				setTimeout(function() {
+					_activeElm.addClass('flipInH');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#flipInVDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('flipInV');
+				
+				setTimeout(function() {
+					_activeElm.addClass('flipInV');
+				}, 200);
+				
+				return false;
+			});
+			
+			$('#delayDemo').click(function()	{
+				var _activeElm = $(this);
+			
+				_activeElm.removeClass('bounceIn');
+				
+				setTimeout(function() {
+					_activeElm.addClass('bounceIn');
+				}, 200);
+				
+				return false;
+			});
+		});
+	</script>
+	
+  </body>
+</html>

@@ -1,0 +1,120 @@
+Twiiter Bootstrap 
+- http://getbootstrap.com/
+
+jQuery
+- http://jquery.com/
+
+jQuery UI
+- http://jqueryui.com/
+
+Chosen
+- http://harvesthq.github.io/chosen/
+
+jQuery minicolors
+- http://labs.abeautifulsite.net/jquery-minicolors/
+
+Datatables
+- http://www.datatables.net/
+
+Datepicker
+- http://www.eyecon.ro/bootstrap-datepicker
+
+Full calendar
+- http://arshaw.com/fullcalendar/
+
+Gritter
+- http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/
+
+Masked input
+- http://digitalbush.com/projects/masked-input-plugin/
+
+jQuery slimScroll
+- http://rocha.la/jQuery-slimScroll
+
+jQuery Sparkline
+- http://omnipotent.net/jquery.sparkline/#s-about
+
+Timepicker
+- http://jdewit.github.io/bootstrap-timepicker/
+
+Wysihtml5
+- https://github.com/xing/wysihtml5
+- https://github.com/jhollingworth/bootstrap-wysihtml5/
+
+Colorbox
+- http://www.jacklmoore.com/colorbox/
+
+Dropzone
+- http://www.dropzonejs.com/
+
+jQeury Tags input
+- https://github.com/xoxco/jQuery-Tags-Input
+
+jQuery cookie
+- https://github.com/carhartl/jquery-cookie
+
+Slider for Bootstrap
+- http://www.eyecon.ro/bootstrap-slider/
+
+Raphael
+- http://raphaeljs.com/
+
+Morris
+- http://www.oesmith.co.uk/morris.js/
+
+Nestable List
+- https://github.com/dbushell/Nestable
+
+Parsley
+- http://parsleyjs.org/
+
+jQuery Waypoint
+- http://imakewebthings.com/jquery-waypoints/
+
+jQuery LocalScroll
+- http://flesler.blogspot.com/2007/10/jquerylocalscroll-10.html
+
+jQuery ScrollTo
+- http://flesler.blogspot.com/2007/10/jqueryscrollto.html
+
+jQuery jcarousel
+- http://sorgalla.com/jcarousel/
+
+jQuery resize
+- http://benalman.com/projects/jquery-resize-plugin/
+
+Modernizr
+http://modernizr.com/
+
+Flot
+http://www.flotcharts.org/
+
+Pace
+http://github.hubspot.com/pace/
+
+jQuery Popup Overlay
+- http://vast-engineering.github.io/jquery-popup-overlay/
+
+holder
+- https://github.com/imsky/holder
+
+jQuery ui map
+- https://code.google.com/p/jquery-ui-map/
+
+Google Code Prettify
+- https://code.google.com/p/google-code-prettify/
+
+Font awesome
+- http://fortawesome.github.io/Font-Awesome/
+
+Google Web Fonts
+- http://www.google.com/fonts
+
+LESS
+- http://lesscss.org/
+
+Flickr Photos
+All images viewed in the live preview are for demo purposes only and are not included with your purchase.
+These images are courtesy of Daniel Zedda - http://www.flickr.com/photos/astragony/ ,Sweetie187 - http://www.flickr.com/photos/58782395@N03/ ,
+meedanphotos - http://www.flickr.com/photos/meedan/ ,John Karakatsanis - http://www.flickr.com/photos/johnkarakatsanis/ ,
+Yutaka Tsutano - http://www.flickr.com/photos/ivyfield/ and Andreas Dantz - http://www.flickr.com/photos/szene/  
