@@ -14,50 +14,7 @@
 		<div id="main-container">
 			{% include "dashboard/breadcrumb.html" %}
 			{% include "dashboard/main_header.html" %}
-
-			<div class="grey-container shortcut-wrapper">
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-bar-chart-o"></i>
-					</span>
-					<span class="text">Statistic</span>
-				</a>
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-envelope-o"></i>
-						<span class="shortcut-alert">
-							5
-						</span>
-					</span>
-					<span class="text">Messages</span>
-				</a>
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-user"></i>
-					</span>
-					<span class="text">New Users</span>
-				</a>
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-globe"></i>
-						<span class="shortcut-alert">
-							7
-						</span>
-					</span>
-					<span class="text">Notification</span>
-				</a>
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-list"></i>
-					</span>
-					<span class="text">Activity</span>
-				</a>
-				<a href="#" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-cog"></i></span>
-					<span class="text">Setting</span>
-				</a>
-			</div><!-- /grey-container -->
+			{% include "dashboard/grey_container.html" %}
 
 			<div class="padding-md">
 				<div class="row">
@@ -548,17 +505,8 @@
 
 	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
-	<!-- Logout confirmation -->
-	<div class="custom-popup width-100" id="logoutConfirm">
-		<div class="padding-md">
-			<h4 class="m-top-none"> Do you want to logout?</h4>
-		</div>
+	{% include "dashboard/logout_popup.html" %}
 
-		<div class="text-center">
-			<a class="btn btn-success m-right-sm" href="login">Logout</a>
-			<a class="btn btn-danger logoutConfirm_close">Cancel</a>
-		</div>
-	</div>
 
 
 
