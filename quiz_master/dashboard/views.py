@@ -14,3 +14,6 @@ def login(request):
 
 def register(request):
     return render(request, 'dashboard/register.html')
+
+def timeline(request):
+    return render(request, 'dashboard/timeline.html')
