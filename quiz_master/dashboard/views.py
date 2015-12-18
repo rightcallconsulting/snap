@@ -11,3 +11,6 @@ def homepage(request):
 
 def login(request):
     return render(request, 'dashboard/login.html')
+
+def register(request):
+    return render(request, 'dashboard/register.html')
