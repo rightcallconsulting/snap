@@ -7,6 +7,7 @@ from quiz.models import Player, Team, Play, Formation
 # Create your views here.
 
 def homepage(request):
-    player_list = Player.objects.all()
-    context = {'player_list': player_list}
-    return render(request, 'dashboard/homepage.html', context)
+    return render(request, 'dashboard/homepage.html')
+
+def login(request):
+    return render(request, 'dashboard/login.html')
