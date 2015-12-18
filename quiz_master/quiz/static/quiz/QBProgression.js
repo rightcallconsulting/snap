@@ -4,7 +4,13 @@ function setup() {
 }
 
 function draw() {
-  //Create Scoreboard
+
+  // Fetch player object from Django DB
+  $.getJSON('/quiz/players/11', function(data, jqXHR){
+    var playerObject = data[0].fields
+  });
+
+  // Create Scoreboard
   var scoreboard = new Scoreboard({
 
   });
@@ -269,7 +275,6 @@ function draw() {
       text(scoreboard.feedbackMessage, 160, 360);
       scoreboard.draw(test, user);
   };
-
   // game scene
   var drawScene = function(play) {
       drawBackground(play, field);

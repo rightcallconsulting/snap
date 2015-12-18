@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.template import RequestContext, loader
+from django.http import JsonResponse
+from django.core import serializers
+import json
 
 # Create your views here.
 
 from .models import Player, Team, Play, Formation
+from IPython import embed
+
 
 
 def index(request):
@@ -46,7 +51,7 @@ def players(request):
 
 def player_detail(request, player_id):
     try:
-        player = Player.objects.get(pk=player_id)
+        player = Player.objects.filter(pk=player_id)
     except Player.DoesNotExist:
         raise Http404("Player does not exist")
-    return render(request, 'quiz/player_detail.html', {'player': player})
+    return HttpResponse(serializers.serialize("json", player))
