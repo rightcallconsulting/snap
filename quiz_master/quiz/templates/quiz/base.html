@@ -5,10 +5,50 @@
   <head>
     <meta charset="UTF-8">
     <style> body {padding: 0; margin: 0;} </style>
+    <meta charset="utf-8">
+    <title>Right Call Consulting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'dashboard/css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css">
+    <!-- Font Awesome -->
+
+    <!-- Pace -->
+    <link href="{% static 'dashboard/css/pace.css' %}" rel="stylesheet">
+
+    <!-- Color box -->
+    <link href="{% static 'dashboard/css/colorbox/colorbox.css' %}" rel="stylesheet">
+
+    <!-- Morris -->
+    <link href="{% static 'dashboard/css/morris.css' %}" rel="stylesheet"/>
+
+    <!-- Endless -->
+    <link href="{% static 'dashboard/css/endless.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/css/endless-skin.css' %}" rel="stylesheet">
   </head>
 
-  <body>
-    <canvas id="defaultCanvas0" class="" style="width: 400px; height: 400px;" width="800" height="800"></canvas>
+  <body class="overflow-hidden">
+    {% include "dashboard/theme_setting.html" %}
+    <div id="wrapper" class="preload">
+  		{% include "dashboard/top_nav_bar.html" %}
+  		{% include "dashboard/sidebar.html" %}
+
+
+  		<div id="main-container">
+  			{% include "dashboard/breadcrumb.html" %}
+  			{% include "dashboard/main_header.html" %}
+  			{% include "dashboard/grey_container.html" %}
+        <div class="padding-md">
+          <div id="quiz-box">
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </body>
 
   <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
