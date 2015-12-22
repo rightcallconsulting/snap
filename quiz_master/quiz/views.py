@@ -55,3 +55,11 @@ def player_detail(request, player_id):
     except Player.DoesNotExist:
         raise Http404("Player does not exist")
     return HttpResponse(serializers.serialize("json", player))
+
+def update_player(request, player_id):
+    embed()
+    try:
+        player = Player.objects.filter(pk=player_id)
+    except Player.DoesNotExist:
+        raise Http404("Player does not exist")
+    return HttpResponse(serializers.serialize("json", player))
