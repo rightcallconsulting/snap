@@ -33,6 +33,17 @@ function sameOrigin(url) {
         !(/^(\/\/|http:|https:).*/.test(url));
 }
 
-var sendDataToServer = function(){
-  $.post( "players/"+playerID+"/update", { name: "John", time: "2pm" } );
+var sendTestDataToServer = function(playerID, testObject){
+  $.post( "players/"+playerID+"/update", { test: testObject} );
 }
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    }
+});

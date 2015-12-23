@@ -7,31 +7,17 @@ function setup() {
 function draw() {
 
 
-  var csrftoken = getCookie('csrftoken');
-  var currentPlayerTested = null
-  var playerID = null
+  // var csrftoken = getCookie('csrftoken');
+  var currentPlayerTested = null;
+  var playerID = null;
   // Fetch player object from Django DB
 
   $.getJSON('/quiz/players/11', function(data, jqXHR){
-    currentPlayerTested = data[0].fields
-    playerID = data[0].pk
-    sendDataToServer()
+    currentPlayerTested = data[0].fields;
+    playerID = data[0].pk;
+    sendTestDataToServer(11, test);
   });
 
-  $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-              // Send the token to same-origin, relative URLs only.
-              // Send the token only if the method warrants CSRF protection
-              // Using the CSRFToken value acquired earlier
-              xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
-      }
-  });
-
-  var sendDataToServer = function(){
-    $.post( "players/"+playerID+"/update", { name: "John", time: "2pm" } );
-  }
 
   // Create Scoreboard
   var scoreboard = new Scoreboard({
