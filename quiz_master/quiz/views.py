@@ -51,15 +51,13 @@ def players(request):
 
 def player_detail(request, player_id):
     try:
-        player = Player.objects.filter(pk=player_id)
+        player_array = Player.objects.filter(pk=player_id)
     except Player.DoesNotExist:
         raise Http404("Player does not exist")
-    return HttpResponse(serializers.serialize("json", player))
+    return HttpResponse(serializers.serialize("json", player_array))
 
 def update_player(request, player_id):
+    player = Player.objects.filter(pk=player_id)[0]
+    params = request.POST
     embed()
-    try:
-        player = Player.objects.filter(pk=player_id)
-    except Player.DoesNotExist:
-        raise Http404("Player does not exist")
-    return HttpResponse(serializers.serialize("json", player))
+    return HttpResponse('')
