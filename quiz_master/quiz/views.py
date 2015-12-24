@@ -72,7 +72,6 @@ def player_tests(request, player_id):
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
-    # [x for x in tests if x.pk == test_id][0]
     if len(tests) == 1:
         selected_test = tests[0]
     else:

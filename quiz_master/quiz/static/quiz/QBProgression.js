@@ -10,11 +10,16 @@ function draw() {
   // var csrftoken = getCookie('csrftoken');
   var currentPlayerTested = null;
   var playerID = null;
+  var currentTest = null;
   // Fetch player object from Django DB
 
-  $.getJSON('/quiz/players/8', function(data, jqXHR){
-    currentPlayerTested = data[0].fields;
-    playerID = data[0].pk;
+  $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
+    currentTest = data[0].fields;
+    currentTestID = data[0].fields.pk;
+    playerID = data[0].fields.player;
+    $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
+      currentPlayerTested = data2[0].fields;
+    })
     sendTestDataToServer(8, "test");
   });
 
