@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^results_chart$', views.results_chart, name='results_chart'),
     url(r'^wr_route$', views.wr_route, name='wr_route'),
     url(r'^players/(?P<player_id>[0-9]+)$', views.player_detail, name='player_detail'),
+    url(r'^players/(?P<player_id>[0-9]+)/tests$', views.player_tests, name='player_tests'),
+    url(r'^players/(?P<player_id>[0-9]+)/tests/(?P<test_id>[0-9]+)$', views.player_test, name='player_test'),
     url(r'^players/(?P<player_id>[0-9]+)/update$', views.update_player, name='update_player'),
 
 ]

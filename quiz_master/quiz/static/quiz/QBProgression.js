@@ -12,10 +12,10 @@ function draw() {
   var playerID = null;
   // Fetch player object from Django DB
 
-  $.getJSON('/quiz/players/11', function(data, jqXHR){
+  $.getJSON('/quiz/players/8', function(data, jqXHR){
     currentPlayerTested = data[0].fields;
     playerID = data[0].pk;
-    sendTestDataToServer(11, test);
+    sendTestDataToServer(8, "test");
   });
 
 
