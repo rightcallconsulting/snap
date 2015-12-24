@@ -1,14 +1,23 @@
 function setup() {
-  createCanvas(400, 400);
+  var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
+  myCanvas.parent('quiz-box');
 }
 
 function draw() {
 
+
+  // var csrftoken = getCookie('csrftoken');
+  var currentPlayerTested = null;
+  var playerID = null;
   // Fetch player object from Django DB
-  $.getJSON('/quiz/players/11', function(data, jqXHR){
-    var playerObject = data[0].fields
+
+  $.getJSON('/quiz/players/8', function(data, jqXHR){
+    currentPlayerTested = data[0].fields;
+    playerID = data[0].pk;
+    sendTestDataToServer(8, "test");
   });
+
 
   // Create Scoreboard
   var scoreboard = new Scoreboard({
