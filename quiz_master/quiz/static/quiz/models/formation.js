@@ -258,8 +258,7 @@ Formation.prototype.mouseInOL = function(){
 };
 
 Formation.prototype.saveToDB = function(){
-  debugger;
-  // $.post( "teams/broncos/formations/new", { formation: this.offensivePlayers} );
+  $.post( "teams/broncos/formations/new", { formation: JSON.stringify(this)});
 };
 
 var createFormationButtons = function(formationArray){

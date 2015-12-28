@@ -68,7 +68,6 @@ def player_tests(request, player_id):
     tests = player.test_set.all()
     return HttpResponse(serializers.serialize("json", tests))
 
-
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
@@ -78,3 +77,9 @@ def player_test(request, player_id, test_id):
         for test_object in tests:
             selected_test = test if test_object.pk == test_id else None
     return HttpResponse(serializers.serialize("json", [selected_test]))
+
+def new_play(request):
+    params = request.POST
+    formation = params['formation']
+    embed()
+    return HttpResponse('')
