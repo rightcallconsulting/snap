@@ -1,4 +1,5 @@
 var Test = function(config){
+    this.pythonTest = config.pythonTest || null;
     this.typeTest = config.typeTest || null;
     this.plays = config.plays || [];
     this.defensivePlays = config.defensivePlays || [];
@@ -85,7 +86,7 @@ Test.prototype.restartQuiz = function(defensivePlay){
   this.clearSelection();
 };
 
-Test.prototype.advanceToNextPlay = function(message){
+Test.prototype.advanceToNextPlay = function(message, testID){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
   if(this.questionNum >= this.plays.length){
@@ -95,6 +96,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
+  // sendTestDataToServer(8, this);
 };
 
 Test.prototype.drawQuizSummary = function() {

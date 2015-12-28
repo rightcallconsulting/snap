@@ -54,7 +54,7 @@ Play.prototype.checkProgression = function(){
     }
   })
   if (isCorrect){
-    this.test.advanceToNextPlay("You got it, dude");
+    this.test.advanceToNextPlay("You got it, dude", this.test.pk);
     this.test.score++;
   }else{
       this.test.scoreboard.feedbackMessage = "Wrong Answer";

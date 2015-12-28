@@ -12,7 +12,7 @@ function draw() {
   if(!currentPlayerTested && !currentTest){
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
       currentTest = data[0].fields;
-      var currentTestID = data[0].fields.pk;
+      currentTest.pk = data[0].pk;
       var playerID = data[0].fields.player;
       sendTestDataToServer(8, "test");
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
@@ -120,11 +120,13 @@ function draw() {
 
     // Create Test
     var test = new Test({
+        pythonTest: currentTest,
         plays: [spider2Y, hawaii511, bootSlide],
         badGuessPenalty: 0.1,
         scoreboard: scoreboard,
         typeTest: "QBProgression"
     });
+    debugger;
 
     spider2Y.test = test;
     hawaii511.test = test;
@@ -372,7 +374,7 @@ function draw() {
             clear.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
-          test.advanceToNextPlay("Boo! Weak!");
+          test.advanceToNextPlay("Boo! Weak!", currentTest.pk);
         }
         else if (currentPlay){
             var playerSelected = false;

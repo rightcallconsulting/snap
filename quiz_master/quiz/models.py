@@ -47,7 +47,7 @@ class Test(models.Model):
     in_progress = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
-    
+
 
     def __str__(self):
         return self.type_of_test
@@ -61,3 +61,6 @@ class Play(models.Model):
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+    def __str__(self):
+        return self.name
