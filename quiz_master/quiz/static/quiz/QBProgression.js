@@ -14,7 +14,6 @@ function draw() {
       currentTest = data[0].fields;
       currentTest.pk = data[0].pk;
       var playerID = data[0].fields.player;
-      sendTestDataToServer(8, "test");
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = data2[0].fields;
         runTest("QBProgression", currentPlayerTested, currentTest);

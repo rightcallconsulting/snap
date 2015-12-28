@@ -82,3 +82,6 @@ def new_play(request):
     params = request.POST
     formation = json.loads(params['formation'])
     return HttpResponse('')
+
+def update_player(request):
+    return HttpResponse('')

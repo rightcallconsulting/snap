@@ -1,5 +1,7 @@
 var Test = function(config){
     this.pythonTest = config.pythonTest || null;
+    this.playerID = config.playerID || null;
+    this.id = config.id || null;
     this.typeTest = config.typeTest || null;
     this.plays = config.plays || [];
     this.defensivePlays = config.defensivePlays || [];
@@ -96,7 +98,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  $.post( "players/"+this.playerID+"/tests"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
+  $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
 };
 
 Test.prototype.drawQuizSummary = function() {
