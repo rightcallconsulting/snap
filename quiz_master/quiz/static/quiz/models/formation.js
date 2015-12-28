@@ -93,7 +93,7 @@ Formation.prototype.createSkillPlayers = function(){
   this.offensivePlayers.push(te2);
   this.offensivePlayers.push(wr1);
   this.offensivePlayers.push(wr2);
-  
+
   this.eligibleReceivers.push(rb1);
   this.eligibleReceivers.push(te1);
   this.eligibleReceivers.push(te2);
@@ -249,6 +249,11 @@ Formation.prototype.mouseInOL = function(){
   })[0];
   if (selectedOL) selectedOL.select();
   return selectedOL;
+};
+
+Formation.prototype.saveToDB = function(){
+  debugger;
+  $.post( "teams/broncos/formations/new", { formation: this} );
 };
 
 var createFormationButtons = function(formationArray){

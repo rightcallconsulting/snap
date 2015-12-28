@@ -36,6 +36,9 @@ class Formation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+    def __str__(self):
+        return self.name
+
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)

@@ -126,7 +126,6 @@ function draw() {
         scoreboard: scoreboard,
         typeTest: "QBProgression"
     });
-    debugger;
 
     spider2Y.test = test;
     hawaii511.test = test;
