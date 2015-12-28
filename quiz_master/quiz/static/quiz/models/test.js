@@ -94,7 +94,6 @@ Test.prototype.advanceToNextPlay = function(message){
   } else{
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
-    debugger;
   }
 };
 
