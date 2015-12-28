@@ -28,7 +28,7 @@ function draw() {
           if(this.rank > 0){
               fill(255, 255, 0);
           }else{
-              fill(this.fill);
+              fill(this.red, this.green, this.blue);
           }
           if (this.change){
             this.x = mouseX;
@@ -56,7 +56,7 @@ function draw() {
           }
       }
       else {
-          fill(this.fill);
+          fill(this.red, this.green, this.blue);
           textSize(17);
           textAlign(CENTER, CENTER);
           text(this.pos, this.x, this.y);
@@ -66,7 +66,7 @@ function draw() {
   };
 
   Player.prototype.select = function() {
-      //this.fill = color(255, 234, 0);
+      //this.red, this.green, this.blue = color(255, 234, 0);
       this.rank = 1;
       this.clicked = true;
       // Unselect all other players to isolate one route
@@ -118,21 +118,30 @@ function draw() {
       x: 130,
       y: 375,
       num: 'RB',
-      fill: color(255, 0, 0)
+      // fill: color(255, 0, 0)
+      red: 255,
+      green: 0,
+      blue: 0
   });
 
   var te = new Player ({
       x: 170,
       y: 375,
       num: 'TE',
-      fill: color(255, 0, 0)
+      // fill: color(255, 0, 0)
+      red: 255,
+      green: 0,
+      blue: 0
   });
 
   var wr = new Player({
      x: 210,
      y: 375,
      num: 'WR',
-     fill: color(255, 0, 0)
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0
   });
 
   formationExample.optionsToCreate.push(rb);
@@ -214,7 +223,10 @@ function draw() {
         x: positionOptionSelected.x,
         y: positionOptionSelected.y,
         num: positionOptionSelected.num,
-        fill: color(255, 0, 0),
+        // fill: color(255, 0, 0),
+        red: 255,
+        green: 0,
+        blue: 0,
         change: true
       })
       formationExample.createPlayer(newPlayer);

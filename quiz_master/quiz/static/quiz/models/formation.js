@@ -28,7 +28,10 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           x: xPos,
           y: yPos,
           num: 70+i,
-          fill: color(143, 29, 29)
+          // fill: color(143, 29, 29)
+          red: 143,
+          blue: 29,
+          green: 29
       });
       if(siz){tmp.siz = siz}
       this.oline.push(tmp);
@@ -39,7 +42,10 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       x: this.oline[2].x,
       y: this.oline[2].y + xdist,
       num: 12,
-      fill: color(212, 130, 130)
+      fill: color(212, 130, 130),
+      red: 212,
+      blue: 130,
+      green: 130
   });
   if(siz){tmp.siz = siz}
   this.qb.push(tmp);
@@ -253,7 +259,7 @@ Formation.prototype.mouseInOL = function(){
 
 Formation.prototype.saveToDB = function(){
   debugger;
-  $.post( "teams/broncos/formations/new", { formation: this} );
+  // $.post( "teams/broncos/formations/new", { formation: this.offensivePlayers} );
 };
 
 var createFormationButtons = function(formationArray){

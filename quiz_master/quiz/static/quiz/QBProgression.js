@@ -38,7 +38,9 @@ function draw() {
         x: formationExample.qb[0].x,
         y: formationExample.qb[0].y + 60,
         num: 22,
-        fill: color(255, 0, 0),
+        red: 255,
+        green: 0,
+        blue: 0,
         progressionRank: 3,
         routeNum: 2
     });
@@ -47,7 +49,9 @@ function draw() {
         x: formationExample.oline[0].x - 30,
         y: formationExample.oline[0].y,
         num: 80,
-        fill: color(255, 0, 0),
+        red: 255,
+        green: 0,
+        blue: 0,
         progressionRank: 2,
         routeNum: 3
     });
@@ -55,7 +59,9 @@ function draw() {
        x: formationExample.oline[4].x + 40,
        y: formationExample.oline[4].y + 30,
        num: 17,
-       fill: color(255, 0, 0),
+       red: 255,
+       green: 0,
+       blue: 0,
        progressionRank: 4,
        routeNum: 4
     });
@@ -63,7 +69,9 @@ function draw() {
        x: formationExample.oline[0].x - 80,
        y: formationExample.oline[4].y + 30,
        num: 88,
-       fill: color(255, 0, 0),
+       red: 255,
+       green: 0,
+       blue: 0,
        progressionRank: 1,
        routeNum: 0
     });
@@ -71,7 +79,9 @@ function draw() {
        x: formationExample.oline[4].x + 80,
        y: formationExample.oline[4].y,
        num: 84,
-       fill: color(255, 0, 0),
+       red: 255,
+       green: 0,
+       blue: 0,
        progressionRank: 5,
        routeNum: 1
     });
@@ -139,7 +149,7 @@ function draw() {
             if(this.rank > 0){
                 fill(255, 255, 0);
             }else{
-                fill(this.fill);
+                fill(this.red,this.green,this.blue);
             }
             ellipse(this.x, this.y, this.siz, this.siz);
             fill(0,0,0);
@@ -155,7 +165,7 @@ function draw() {
             }
         }
         else {
-            fill(this.fill);
+            fill(this.red,this.green,this.blue);
             textSize(17);
             textAlign(CENTER, CENTER);
             text(this.pos, this.x, this.y);
@@ -163,7 +173,6 @@ function draw() {
     };
 
     Player.prototype.select = function() {
-        //this.fill = color(255, 234, 0);
         this.rank = Player.rank;
         Player.rank++;
         this.clicked = true;
