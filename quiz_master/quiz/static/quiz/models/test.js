@@ -86,7 +86,7 @@ Test.prototype.restartQuiz = function(defensivePlay){
   this.clearSelection();
 };
 
-Test.prototype.advanceToNextPlay = function(message, testID){
+Test.prototype.advanceToNextPlay = function(message){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
   if(this.questionNum >= this.plays.length){
@@ -96,7 +96,7 @@ Test.prototype.advanceToNextPlay = function(message, testID){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  // sendTestDataToServer(8, this);
+  $.post( "players/"+this.playerID+"/tests"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
 };
 
 Test.prototype.drawQuizSummary = function() {

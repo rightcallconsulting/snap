@@ -80,6 +80,5 @@ def player_test(request, player_id, test_id):
 
 def new_play(request):
     params = request.POST
-    formation = params['formation']
-    embed()
+    formation = json.loads(params['formation'])
     return HttpResponse('')

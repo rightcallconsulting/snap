@@ -131,6 +131,8 @@ function draw() {
     // Create Test
     var test = new Test({
         pythonTest: currentTest,
+        id: currentTest.pk,
+        playerID: currentTest.player,
         plays: [spider2Y, hawaii511, bootSlide],
         badGuessPenalty: 0.1,
         scoreboard: scoreboard,
@@ -382,7 +384,7 @@ function draw() {
             clear.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
-          test.advanceToNextPlay("Boo! Weak!", currentTest.pk);
+          test.advanceToNextPlay("Boo! Weak!");
         }
         else if (currentPlay){
             var playerSelected = false;
