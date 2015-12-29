@@ -7,7 +7,7 @@ import json
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation
+from .models import Player, Team, Play, Formation, Test
 from IPython import embed
 
 
@@ -78,13 +78,15 @@ def player_test(request, player_id, test_id):
             selected_test = test if test_object.pk == test_id else None
     return HttpResponse(serializers.serialize("json", [selected_test]))
 
-def new_play(request):
+def new_formation(request):
     params = request.POST
     formation = json.loads(params['formation'])
+    embed()
     return HttpResponse('')
 
 def update_test(request, player_id, test_id):
     params = request.POST
-    test = json.loads(params['test'])    
+    jsTest = json.loads(params['test'])
+    pythonTest = Test.objects.get(pk=jsTest['id'])
     embed()
     return HttpResponse('')

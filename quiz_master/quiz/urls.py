@@ -19,6 +19,6 @@ urlpatterns = [
     url(r'^players/(?P<player_id>[0-9]+)/tests/(?P<test_id>[0-9]+)$', views.player_test, name='player_test'),
     url(r'^players/(?P<player_id>[0-9]+)/update$', views.update_player, name='update_player'),
     url(r'^players/(?P<player_id>[0-9]+)/tests/(?P<test_id>[0-9]+)/update$', views.update_test, name='update_test'),
-    url(r'^teams/broncos/formations/new$', views.new_play, name='new_play'),
+    url(r'^teams/broncos/formations/new$', views.new_formation, name='new_formation'),
 
 ]
