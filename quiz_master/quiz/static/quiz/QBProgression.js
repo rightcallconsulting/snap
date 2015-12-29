@@ -383,6 +383,7 @@ function draw() {
             clear.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
+          test.skips++;
           test.advanceToNextPlay("Boo! Weak!");
         }
         else if (currentPlay){

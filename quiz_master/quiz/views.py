@@ -83,5 +83,8 @@ def new_play(request):
     formation = json.loads(params['formation'])
     return HttpResponse('')
 
-def update_player(request):
+def update_test(request, player_id, test_id):
+    params = request.POST
+    test = json.loads(params['test'])    
+    embed()
     return HttpResponse('')
