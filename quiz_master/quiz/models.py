@@ -33,6 +33,8 @@ class Player(models.Model):
 
 class Formation(models.Model):
     name = models.CharField(max_length=100)
+    offensivePlayers = models.ManyToManyField(Player)
+    playName = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
