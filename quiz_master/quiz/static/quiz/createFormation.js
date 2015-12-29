@@ -121,7 +121,8 @@ function draw() {
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
-      blue: 0
+      blue: 0,
+      pos: 'RB'
   });
 
   var te = new Player ({
@@ -131,7 +132,8 @@ function draw() {
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
-      blue: 0
+      blue: 0,
+      pos: 'TE'
   });
 
   var wr = new Player({
@@ -141,7 +143,8 @@ function draw() {
     //  fill: color(255, 0, 0)
     red: 255,
     green: 0,
-    blue: 0
+    blue: 0,
+    pos: 'WR'
   });
 
   formationExample.optionsToCreate.push(rb);
@@ -227,7 +230,8 @@ function draw() {
         red: 255,
         green: 0,
         blue: 0,
-        change: true
+        change: true,
+        pos: positionOptionSelected.pos
       })
       formationExample.createPlayer(newPlayer);
     }

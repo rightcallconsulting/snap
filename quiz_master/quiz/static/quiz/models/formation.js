@@ -31,7 +31,8 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           // fill: color(143, 29, 29)
           red: 143,
           blue: 29,
-          green: 29
+          green: 29,
+          pos: "OL"
       });
       if(siz){tmp.siz = siz}
       this.oline.push(tmp);
@@ -45,7 +46,8 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       fill: color(212, 130, 130),
       red: 212,
       blue: 130,
-      green: 130
+      green: 130,
+      pos: "QB"
   });
   if(siz){tmp.siz = siz}
   this.qb.push(tmp);

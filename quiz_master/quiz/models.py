@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from IPython import embed
+import code
+
 
 # Create your models here.
 
@@ -40,6 +43,15 @@ class Formation(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def from_json(cls, json):
+        new_formation = Formation()
+        new_formation.name = json['playName']
+        for player in json['offensivePlayers']:
+            player = Player(position=player['pos'], number=player['num'])
+            code.interact(local=locals())
+        return cls
 
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
