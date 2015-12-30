@@ -49,9 +49,18 @@ class Formation(models.Model):
         new_formation = Formation()
         new_formation.name = json['playName']
         for player in json['offensivePlayers']:
-            player = Player(position=player['pos'], number=player['num'])
+            new_player = Player(position=player['pos'], number=player['num'])
             code.interact(local=locals())
         return cls
+
+class Position(models.Model):
+    startX = models.FloatField()
+    startY = models.FloatField()
+    name = models.CharField(max_length=100)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
