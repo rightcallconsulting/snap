@@ -8,6 +8,10 @@ var Formation = function(config){
   this.changeablePlayers = config.changeablePlayers || [];
   this.optionsToCreate = config.optionsToCreate || [];
   this.feedbackMessage = "";
+  this.id = config.id || null;
+  this.updated_at = config.updated_at || null;
+  this.created_at = config.updated_at || null;
+  this.positions = config.positions || null;
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
