@@ -28,7 +28,7 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           x: xPos,
           y: yPos,
           num: 70+i,
-          // fill: color(143, 29, 29)
+          fill: color(143, 29, 29),
           red: 143,
           blue: 29,
           green: 29,

@@ -15,6 +15,13 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    def formations(self):
+        positions = []
+        for formation in self.formation_set.all():
+            for position in formation.position_set.all():
+                positions.append(position)
+        return positions
+
 class Player(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
