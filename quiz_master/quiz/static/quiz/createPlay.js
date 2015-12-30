@@ -22,11 +22,19 @@ function draw() {
           data.forEach(function(position){
             position.fields.id = position.pk;
             position.fields.x = position.fields.startX;
-            position.fields.x = position.fields.startX;
+            position.fields.y = position.fields.startY;
             position.fields.pos = position.fields.name;
             position.fields.num = position.fields.pos;
             var newPlayer = new Player(position.fields)
-            newPlayer.fill = color(255, 0, 0);
+            if(newPlayer.pos==="QB"){
+              newPlayer.fill = color(212, 130, 130);
+            }
+            else if(newPlayer.pos==="OL"){
+              newPlayer.fill = color(143, 29, 29);
+            }
+            else{
+              newPlayer.fill = color(255, 0, 0);
+            }
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             formation.positions.push(newPlayer);
           })

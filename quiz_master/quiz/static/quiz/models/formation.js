@@ -272,6 +272,7 @@ Formation.prototype.populatePositions = function(){
     return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
   });
   this.eligibleReceivers = eligibleReceivers;
+  this.offensivePlayers = this.positions;
 
 };
 
