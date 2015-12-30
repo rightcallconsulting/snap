@@ -48,10 +48,11 @@ class Formation(models.Model):
     def from_json(cls, json):
         new_formation = Formation()
         new_formation.name = json['playName']
+        new_formation.save()
         for player in json['offensivePlayers']:
-            new_player = Player(position=player['pos'], number=player['num'])
-            code.interact(local=locals())
-        return cls
+            new_position = Position(name=player['pos'], startX=player['startX'],
+            startY=player['startY'], formation=new_formation)
+            new_position.save()
 
 class Position(models.Model):
     startX = models.FloatField()
