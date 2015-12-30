@@ -1,4 +1,25 @@
 var formations = [];
+if(formations.length == 0){
+  $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
+    debugger;
+    data.forEach(function(formationObject){
+      formationObject.fields.id = formationObject.pk
+      formationObject.fields.positions = [];
+      formations.push(formationObject.fields);
+    })
+      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+        data.forEach(function(position){
+          position.fields.id = position.pk;
+          formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+          formation.positions.push(position.fields);
+        })
+        debugger;
+        runTest();
+
+      })
+
+  });
+}
 
 function setup() {
   var myCanvas = createCanvas(400, 600);
@@ -8,24 +29,6 @@ function setup() {
 
 function draw() {
 
-  $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-    data.forEach(function(formationObject){
-      formationObject.fields.id = formationObject.pk
-      formationObject.fields.positions = [];
-      formations.push(formationObject.fields);
-    })
-    formations.forEach(function(formation){
-      $.getJSON('/quiz/teams/1/formations/'+formation.id+'/positions', function(data, jqXHR){
-        data.forEach(function(position){
-          position.fields.id = position.pk;
-          formation.positions.push(position.fields);
-        })
-      })
-    })
-    debugger;
-    runTest();
-
-  });
 
   var runTest = function(){
     // Trips right formation players
