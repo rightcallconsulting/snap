@@ -281,15 +281,31 @@ Formation.prototype.saveToDB = function(){
 };
 
 var createFormationButtons = function(formationArray){
+  var prevYCoord
   for(var i = 0; i < formationArray.length; i++){
+    var xDist;
+    var yDist;
+    if(i < 4){
+      xDist = i;
+      yDist = 0;
+    }
+    else if (i % 4 == 0){
+      xDist = 0;
+      yDist++;
+    }
+    else {
+      xDist = i % 4;
+    }
+
     var tmpButton = new Button({
-        x: 10 + (100 * i),
-        y: 420,
+        x: 10 + (100 * xDist),
+        y: 420 + (50 * yDist),
         width: 80,
         label: formationArray[i].playName,
         displayButton: true,
         clicked: false
     });
+    prevYCoord = tmpButton.y;
     formationButtons.push(tmpButton);
   }
 };
