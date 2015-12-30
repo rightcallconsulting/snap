@@ -84,6 +84,13 @@ def new_formation(request):
     Formation.from_json(formation)
     return HttpResponse('')
 
+def team_formations(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    formations = team.formation_set.all()
+    return HttpResponse(serializers.serialize("json", formations))
+
+    return HttpResponse('')
+
 def update_test(request, player_id, test_id):
     params = request.POST
     jsTest = json.loads(params['test'])
