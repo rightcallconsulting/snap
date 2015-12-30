@@ -12,18 +12,27 @@ function draw() {
   if(formations.length == 0){
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk
+        formationObject.fields.id = formationObject.pk;
         formationObject.fields.positions = [];
-        newFormation = new Formation(formationObject.fields)
+        var newFormation = new Formation(formationObject.fields);
+        newFormation.playName = formationObject.fields.name;
         formations.push(newFormation);
       })
         $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
           data.forEach(function(position){
             position.fields.id = position.pk;
+            position.fields.x = position.fields.startX;
+            position.fields.x = position.fields.startX;
+            position.fields.pos = position.fields.name;
+            position.fields.num = position.fields.pos;
+            var newPlayer = new Player(position.fields)
+            newPlayer.fill = color(255, 0, 0);
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            formation.positions.push(position.fields);
+            formation.positions.push(newPlayer);
           })
-          debugger;
+          formations.forEach(function(formation){
+            formation.populatePositions();
+          })
           runTest();
 
         })
@@ -331,6 +340,7 @@ function draw() {
         currentFormation.drawBlockingAssignments();
     };
 
+    debugger;
     // game scene
     var drawScene = function() {
         createPlayField.drawBackground(playBeingCreated, height, width)

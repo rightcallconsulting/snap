@@ -263,6 +263,18 @@ Formation.prototype.mouseInOL = function(){
   return selectedOL;
 };
 
+Formation.prototype.populatePositions = function(){
+  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  oline.forEach(function(player){this.oline.push(player)}.bind(this));
+  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+  this.qb = qb
+  var eligibleReceivers = this.positions.filter(function(player) {
+    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+  });
+  this.eligibleReceivers = eligibleReceivers;
+
+};
+
 Formation.prototype.saveToDB = function(){
   $.post( "teams/broncos/formations/new", { formation: JSON.stringify(this)});
 };
