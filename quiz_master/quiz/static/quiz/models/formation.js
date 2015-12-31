@@ -8,6 +8,10 @@ var Formation = function(config){
   this.changeablePlayers = config.changeablePlayers || [];
   this.optionsToCreate = config.optionsToCreate || [];
   this.feedbackMessage = "";
+  this.id = config.id || null;
+  this.updated_at = config.updated_at || null;
+  this.created_at = config.updated_at || null;
+  this.positions = config.positions || null;
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
@@ -28,7 +32,11 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           x: xPos,
           y: yPos,
           num: 70+i,
-          fill: color(143, 29, 29)
+          fill: color(143, 29, 29),
+          red: 143,
+          blue: 29,
+          green: 29,
+          pos: "OL"
       });
       if(siz){tmp.siz = siz}
       this.oline.push(tmp);
@@ -39,7 +47,11 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       x: this.oline[2].x,
       y: this.oline[2].y + xdist,
       num: 12,
-      fill: color(212, 130, 130)
+      fill: color(212, 130, 130),
+      red: 212,
+      blue: 130,
+      green: 130,
+      pos: "QB"
   });
   if(siz){tmp.siz = siz}
   this.qb.push(tmp);
@@ -93,7 +105,7 @@ Formation.prototype.createSkillPlayers = function(){
   this.offensivePlayers.push(te2);
   this.offensivePlayers.push(wr1);
   this.offensivePlayers.push(wr2);
-  
+
   this.eligibleReceivers.push(rb1);
   this.eligibleReceivers.push(te1);
   this.eligibleReceivers.push(te2);
@@ -251,16 +263,49 @@ Formation.prototype.mouseInOL = function(){
   return selectedOL;
 };
 
+Formation.prototype.populatePositions = function(){
+  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  oline.forEach(function(player){this.oline.push(player)}.bind(this));
+  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+  this.qb = qb
+  var eligibleReceivers = this.positions.filter(function(player) {
+    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+  });
+  this.eligibleReceivers = eligibleReceivers;
+  this.offensivePlayers = this.positions;
+
+};
+
+Formation.prototype.saveToDB = function(){
+  $.post( "teams/broncos/formations/new", { formation: JSON.stringify(this)});
+};
+
 var createFormationButtons = function(formationArray){
+  var prevYCoord
   for(var i = 0; i < formationArray.length; i++){
+    var xDist;
+    var yDist;
+    if(i < 4){
+      xDist = i;
+      yDist = 0;
+    }
+    else if (i % 4 == 0){
+      xDist = 0;
+      yDist++;
+    }
+    else {
+      xDist = i % 4;
+    }
+
     var tmpButton = new Button({
-        x: 10 + (100 * i),
-        y: 420,
+        x: 10 + (100 * xDist),
+        y: 420 + (50 * yDist),
         width: 80,
         label: formationArray[i].playName,
         displayButton: true,
         clicked: false
     });
+    prevYCoord = tmpButton.y;
     formationButtons.push(tmpButton);
   }
 };

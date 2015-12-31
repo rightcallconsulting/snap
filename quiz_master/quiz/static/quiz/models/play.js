@@ -54,11 +54,11 @@ Play.prototype.checkProgression = function(){
     }
   })
   if (isCorrect){
-    this.test.advanceToNextPlay("You got it, dude");
     this.test.score++;
+    this.test.advanceToNextPlay("You got it, dude", this.test.pk);
   }else{
-      this.test.scoreboard.feedbackMessage = "Wrong Answer";
-      this.test.incorrectGuesses++;
+    this.test.scoreboard.feedbackMessage = "Wrong Answer";
+    this.test.incorrectGuesses++;
   }
 };
 

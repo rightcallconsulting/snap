@@ -18,5 +18,11 @@ urlpatterns = [
     url(r'^players/(?P<player_id>[0-9]+)/tests$', views.player_tests, name='player_tests'),
     url(r'^players/(?P<player_id>[0-9]+)/tests/(?P<test_id>[0-9]+)$', views.player_test, name='player_test'),
     url(r'^players/(?P<player_id>[0-9]+)/update$', views.update_player, name='update_player'),
+    url(r'^players/(?P<player_id>[0-9]+)/tests/(?P<test_id>[0-9]+)/update$', views.update_test, name='update_test'),
+    url(r'^teams/broncos/formations/new$', views.new_formation, name='new_formation'),
+    url(r'^teams/(?P<team_id>[0-9]+)/formations$', views.team_formations, name='team_formations'),
+    url(r'^teams/(?P<team_id>[0-9]+)/formations/positions$', views.team_formation_positions, name='team_formation_positions'),
+    url(r'^teams/(?P<team_id>[0-9]+)/formations/(?P<formation_id>[0-9]+)/positions$', views.formation_positions, name='formation_positions'),
+
 
 ]

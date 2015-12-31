@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from IPython import embed
+import code
+
 
 # Create your models here.
 
@@ -11,6 +14,13 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+    def formations(self):
+        positions = []
+        for formation in self.formation_set.all():
+            for position in formation.position_set.all():
+                positions.append(position)
+        return positions
 
 class Player(models.Model):
     first_name = models.CharField(max_length=30)
@@ -33,8 +43,32 @@ class Player(models.Model):
 
 class Formation(models.Model):
     name = models.CharField(max_length=100)
+    offensivePlayers = models.ManyToManyField(Player)
+    playName = models.CharField(max_length=100)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def from_json(cls, json):
+        new_formation = Formation(name=json['playName'], team=Team.objects.get(pk=1))
+        new_formation.save()
+        for player in json['offensivePlayers']:
+            new_position = Position(name=player['pos'], startX=player['startX'],
+            startY=player['startY'], formation=new_formation)
+            new_position.save()
+
+class Position(models.Model):
+    startX = models.FloatField()
+    startY = models.FloatField()
+    name = models.CharField(max_length=100)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
@@ -48,6 +82,7 @@ class Test(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+
     def __str__(self):
         return self.type_of_test
 
@@ -60,3 +95,6 @@ class Play(models.Model):
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+    def __str__(self):
+        return self.name

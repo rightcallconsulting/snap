@@ -7,7 +7,7 @@ import json
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation
+from .models import Player, Team, Play, Formation, Test
 from IPython import embed
 
 
@@ -68,14 +68,41 @@ def player_tests(request, player_id):
     tests = player.test_set.all()
     return HttpResponse(serializers.serialize("json", tests))
 
-
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
-    # [x for x in tests if x.pk == test_id][0]
     if len(tests) == 1:
         selected_test = tests[0]
     else:
         for test_object in tests:
             selected_test = test if test_object.pk == test_id else None
     return HttpResponse(serializers.serialize("json", [selected_test]))
+
+def new_formation(request):
+    params = request.POST
+    formation = json.loads(params['formation'])
+    Formation.from_json(formation)
+    return HttpResponse('')
+
+def team_formations(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    formations = team.formation_set.all()
+    return HttpResponse(serializers.serialize("json", formations))
+
+def formation_positions(request, team_id, formation_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    formation = Formation.objects.filter(pk=formation_id)[0]
+    positions = formation.position_set.all()
+    return HttpResponse(serializers.serialize("json", positions))
+
+def team_formation_positions(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    positions = team.formations()
+    return HttpResponse(serializers.serialize("json", positions))
+
+def update_test(request, player_id, test_id):
+    params = request.POST
+    jsTest = json.loads(params['test'])
+    pythonTest = Test.objects.get(pk=jsTest['id'])
+    embed()
+    return HttpResponse('')
