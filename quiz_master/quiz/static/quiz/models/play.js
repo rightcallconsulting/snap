@@ -2,6 +2,7 @@ var Play = function(config) {
     this.eligibleReceivers = config.eligibleReceivers || [];
     this.offensivePlayers = config.offensivePlayers || [];
     this.playName = config.playName || "";
+    this.name = config.name || "";
     this.qb = config.qb || null;
     this.oline = config.oline || null;
     this.formation = config.formation || null;
@@ -131,4 +132,8 @@ Play.prototype.clearSelection = function(test, play) {
       }
     }
   }
+};
+
+Play.prototype.saveToDB = function(){
+  $.post( "teams/broncos/plays/new", { play: JSON.stringify(this)});
 };

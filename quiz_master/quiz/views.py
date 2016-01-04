@@ -106,3 +106,19 @@ def update_test(request, player_id, test_id):
     pythonTest = Test.objects.get(pk=jsTest['id'])
     embed()
     return HttpResponse('')
+
+def new_play(request):
+    params = request.POST
+    play = json.loads(params['play'])
+    Play.from_json(play)
+    return HttpResponse('')
+
+def team_plays(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    plays = team.play_set.all()
+    return HttpResponse(serializers.serialize("json", plays))
+
+def team_play_players(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    # positions = team.plays()
+    return HttpResponse(serializers.serialize("json", positions))
