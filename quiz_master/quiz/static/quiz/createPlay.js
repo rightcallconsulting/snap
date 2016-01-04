@@ -439,13 +439,14 @@ function draw() {
               oline: getCurrentFormation().oline,
               formation: getCurrentFormation()
           });
+          // Logic to save the play to the database
+          newPlay.saveToDB();
           getCurrentFormation().clearRouteDrawings();
           getCurrentFormation().clearProgression();
           getCurrentFormation().clearBlockingAssignments();
           defensePlay.clearSelections();
           playBeingCreated.playName = "";
           getCurrentFormation().feedbackMessage = "Saved!";
-          // Logic to save the play to the database
       }
       else if (formationClicked){
         currentFormation = formations.filter(function(formation) {

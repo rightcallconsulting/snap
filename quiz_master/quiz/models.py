@@ -92,9 +92,18 @@ class Play(models.Model):
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     players = models.ManyToManyField(Player)
     tests = models.ManyToManyField(Test)
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def from_json(cls, json):
+        new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
+        formation=Formation.objects.get(pk=json['formation']['id']))
+        new_play.save()
+        for player in json['offensivePlayers']:
+            new_position = Position(name=player['pos'], startX=player['startX'],
+            startY=player['startY'], formation=new_play)
+            new_position.save()
