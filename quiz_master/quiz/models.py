@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from IPython import embed
 import code
+import copy
+import json
 
 
 # Create your models here.
@@ -65,10 +67,17 @@ class Position(models.Model):
     startX = models.FloatField()
     startY = models.FloatField()
     name = models.CharField(max_length=100)
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
+    routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def set_route_coordinates(self, coords):
+        self.routeCoordinates = json.dumps(coords)
+
+    def get_route_coordinates(self):
+        return json.loads(self.routeCoordinates)
 
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
@@ -91,6 +100,7 @@ class Play(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
     players = models.ManyToManyField(Player)
+    positions = models.ManyToManyField(Position)
     tests = models.ManyToManyField(Test)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
@@ -103,7 +113,11 @@ class Play(models.Model):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
         formation=Formation.objects.get(pk=json['formation']['id']))
         new_play.save()
+        code.interact(local=locals())
+
         for player in json['offensivePlayers']:
-            new_position = Position(name=player['pos'], startX=player['startX'],
-            startY=player['startY'], formation=new_play)
+            new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
+            startY=player['startY'])
+            new_position.set_route_coordinates(player['routeCoordinates'])
+            code.interact(local=locals())
             new_position.save()
