@@ -161,3 +161,14 @@ Play.prototype.addPositionsFromID = function(positionArray){
     }
   }.bind(this))
 }
+
+var createPlayFromJSON = function(jsonPlay){
+  var play = new Play({});
+  play.id = jsonPlay.pk;
+  play.playName = jsonPlay.fields.name;
+  play.name = jsonPlay.fields.name;
+  play.teamID = jsonPlay.fields.team;
+  play.formation = jsonPlay.fields.formation;
+  play.positionIDs = jsonPlay.fields.positions;
+  return play;
+};

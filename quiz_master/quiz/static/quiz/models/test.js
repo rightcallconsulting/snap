@@ -99,6 +99,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().setAllRoutes();
   }
   $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
+  Player.rank = 1;
 };
 
 Test.prototype.drawQuizSummary = function() {
@@ -186,3 +187,15 @@ Test.prototype.checkBigSelection = function() {
       //TODO: Explain what was wrong (or print right answer?)
     }
   }
+
+  var createTestFromJSON = function(jsonTest){
+    var test = new Test({
+      typeTest: jsonTest.fields.type_of_test,
+      playerID: jsonTest.fields.player,
+      score: jsonTest.fields.score,
+      incorrectGuesses: jsonTest.fields.incorrect_guesses,
+      skips: jsonTest.fields.skips,
+      id: jsonTest.pk
+    });
+    return test
+  };

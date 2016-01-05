@@ -14,53 +14,23 @@ function draw() {
   if(makeJSONCall){
     makeJSONCall = false
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
-      test = new Test({
-        typeTest: data[0].fields.type_of_test,
-        playerID: data[0].fields.player,
-        score: data[0].fields.score,
-        incorrectGuesses: data[0].fields.incorrect_guesses,
-        skips: data[0].fields.skips,
-        id: data[0].pk
-      })
-      var playerID = data[0].fields.player;
+      test = createTestFromJSON(data[0]);
+      var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = new User({
-          id: data2[0].pk,
-          firstName: data2[0].fields.first_name,
-          lastName: data2[0].fields.last_name,
-          position: data2[0].fields.position
-        })
+        currentPlayerTested = createUserFromJSON(data2[0]);
         $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
           data3.forEach(function(play){
             var testIDArray = play.fields.tests;
             if(testIDArray.includes(test.id)){
-              var play = new Play({
-                id: play.pk,
-                playName: play.fields.name,
-                name: play.fields.name,
-                teamID: play.fields.team,
-                formation: play.fields.formation,
-                positionIDs: play.fields.positions,
-                test: test
-              })
+              var play = createPlayFromJSON(play);
+              play.test = test
               test.plays.push(play);
             }
           })
           $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
             data4.forEach(function(position){
-              position.fields.id = position.pk;
-              position.fields.x = position.fields.startX;
-              position.fields.y = position.fields.startY;
-              position.fields.routeCoordinates = JSON.parse(position.fields.routeCoordinates)
-              var player = new Player(position.fields)
-              player.id = position.pk
-              player.pos = position.fields.name
-              player.num = position.fields.name
-              player.establishFill();
-              if(player.routeCoordinates){
-                player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
-              }
-              positions.push(player)
+              var player = createPlayerFromJSON(position);
+              positions.push(player);
             })
             test.plays.forEach(function(play){
               play.addPositionsFromID(positions);
@@ -81,95 +51,6 @@ function draw() {
     });
     test.scoreboard = scoreboard
 
-    // var formationExample = new Formation({
-    //
-    // })
-    // formationExample.createOLineAndQB();
-
-    // Create Players
-    // var rb1 = new Player ({
-    //     x: formationExample.qb[0].x,
-    //     y: formationExample.qb[0].y + 60,
-    //     num: 22,
-    //     red: 255,
-    //     green: 0,
-    //     blue: 0,
-    //     progressionRank: 3,
-    //     routeNum: 2
-    // });
-    //
-    // var te1 = new Player ({
-    //     x: formationExample.oline[0].x - 30,
-    //     y: formationExample.oline[0].y,
-    //     num: 80,
-    //     red: 255,
-    //     green: 0,
-    //     blue: 0,
-    //     progressionRank: 2,
-    //     routeNum: 3
-    // });
-    // var te2 = new Player({
-    //    x: formationExample.oline[4].x + 40,
-    //    y: formationExample.oline[4].y + 30,
-    //    num: 17,
-    //    red: 255,
-    //    green: 0,
-    //    blue: 0,
-    //    progressionRank: 4,
-    //    routeNum: 4
-    // });
-    // var wr1 = new Player({
-    //    x: formationExample.oline[0].x - 80,
-    //    y: formationExample.oline[4].y + 30,
-    //    num: 88,
-    //    red: 255,
-    //    green: 0,
-    //    blue: 0,
-    //    progressionRank: 1,
-    //    routeNum: 0
-    // });
-    // var wr2 = new Player({
-    //    x: formationExample.oline[4].x + 80,
-    //    y: formationExample.oline[4].y,
-    //    num: 84,
-    //    red: 255,
-    //    green: 0,
-    //    blue: 0,
-    //    progressionRank: 5,
-    //    routeNum: 1
-    // });
-    //
-    // // Create Plays
-    // var spider2Y = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "Spider-2 Y Banana",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-    //
-    // var hawaii511 = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "511 Hawaii",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-    //
-    // var bootSlide = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "Boot-Slide",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
@@ -180,21 +61,6 @@ function draw() {
       dbPositions: ["CB", "SS", "F/S", "CB"],
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
-
-    // Create Test
-    // var test = new Test({
-    //     pythonTest: test,
-    //     id: test.pk,
-    //     playerID: test.player,
-    //     plays: [spider2Y, hawaii511, bootSlide],
-    //     badGuessPenalty: 0.1,
-    //     scoreboard: scoreboard,
-    //     typeTest: "QBProgression"
-    // });
-    //
-    // spider2Y.test = test;
-    // hawaii511.test = test;
-    // bootSlide.test = test;
 
     var user = new User({});
 

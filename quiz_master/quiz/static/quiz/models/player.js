@@ -547,3 +547,18 @@ var getDestination = function(distance, theta, x, y){
     var yDist = -1*distance*Math.sin(theta);
     return [x + xDist, y + yDist];
 };
+
+var createPlayerFromJSON = function(jsonPosition){
+  jsonPosition.fields.x = jsonPosition.fields.startX;
+  jsonPosition.fields.y = jsonPosition.fields.startY;
+  jsonPosition.fields.routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
+  var player = new Player(jsonPosition.fields)
+  player.id = jsonPosition.pk;
+  player.pos = jsonPosition.fields.name;
+  player.num = jsonPosition.fields.name;
+  player.establishFill();
+  if(player.routeCoordinates){
+    player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
+  }
+  return player
+};
