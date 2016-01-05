@@ -1,5 +1,7 @@
-var currentTest
+var test
 var currentPlayerTested
+var positions = []
+var makeJSONCall = true
 function setup() {
   var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
@@ -9,112 +11,44 @@ function setup() {
 function draw() {
 
   // Fetch player object from Django DB
-  if(!currentPlayerTested && !currentTest){
+  if(makeJSONCall){
+    makeJSONCall = false
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
-      currentTest = data[0].fields;
-      currentTest.pk = data[0].pk;
-      var playerID = data[0].fields.player;
+      test = createTestFromJSON(data[0]);
+      var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = data2[0].fields;
-        runTest("QBProgression", currentPlayerTested, currentTest);
+        currentPlayerTested = createUserFromJSON(data2[0]);
+        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+          data3.forEach(function(play){
+            var testIDArray = play.fields.tests;
+            if(testIDArray.includes(test.id)){
+              var play = createPlayFromJSON(play);
+              play.test = test
+              test.plays.push(play);
+            }
+          })
+          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+            data4.forEach(function(position){
+              var player = createPlayerFromJSON(position);
+              positions.push(player);
+            })
+            test.plays.forEach(function(play){
+              play.addPositionsFromID(positions);
+              play.populatePositions();
+            })
+            runTest("QBProgression", currentPlayerTested, test);
+          })
+        })
       })
     });
   }
 
-  var runTest = function(type, playerTested, testObject){
+  var runTest = function(type, playerTested, test){
     // Create Scoreboard
     var scoreboard = new Scoreboard({
 
     });
-
-    var formationExample = new Formation({
-
-    })
-    formationExample.createOLineAndQB();
-
-    // Create Players
-    var rb1 = new Player ({
-        x: formationExample.qb[0].x,
-        y: formationExample.qb[0].y + 60,
-        num: 22,
-        red: 255,
-        green: 0,
-        blue: 0,
-        progressionRank: 3,
-        routeNum: 2
-    });
-
-    var te1 = new Player ({
-        x: formationExample.oline[0].x - 30,
-        y: formationExample.oline[0].y,
-        num: 80,
-        red: 255,
-        green: 0,
-        blue: 0,
-        progressionRank: 2,
-        routeNum: 3
-    });
-    var te2 = new Player({
-       x: formationExample.oline[4].x + 40,
-       y: formationExample.oline[4].y + 30,
-       num: 17,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 4,
-       routeNum: 4
-    });
-    var wr1 = new Player({
-       x: formationExample.oline[0].x - 80,
-       y: formationExample.oline[4].y + 30,
-       num: 88,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 1,
-       routeNum: 0
-    });
-    var wr2 = new Player({
-       x: formationExample.oline[4].x + 80,
-       y: formationExample.oline[4].y,
-       num: 84,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 5,
-       routeNum: 1
-    });
-
-    // Create Plays
-    var spider2Y = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Spider-2 Y Banana",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    var hawaii511 = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "511 Hawaii",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    var bootSlide = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Boot-Slide",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
+    test.scoreboard = scoreboard
 
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
@@ -127,21 +61,6 @@ function draw() {
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-    // Create Test
-    var test = new Test({
-        pythonTest: currentTest,
-        id: currentTest.pk,
-        playerID: currentTest.player,
-        plays: [spider2Y, hawaii511, bootSlide],
-        badGuessPenalty: 0.1,
-        scoreboard: scoreboard,
-        typeTest: "QBProgression"
-    });
-
-    spider2Y.test = test;
-    hawaii511.test = test;
-    bootSlide.test = test;
-
     var user = new User({});
 
     Player.prototype.draw = function() {
@@ -150,7 +69,7 @@ function draw() {
             if(this.rank > 0){
                 fill(255, 255, 0);
             }else{
-                fill(this.red,this.green,this.blue);
+                fill(this.fill);
             }
             ellipse(this.x, this.y, this.siz, this.siz);
             fill(0,0,0);
@@ -258,7 +177,7 @@ function draw() {
     });
 
     // Draw Defense
-    defensePlay.draw(formationExample.oline[2].x, formationExample.oline[2].y, test);
+    defensePlay.draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
 
     var drawBackground = function(play, field) {
         background(93, 148, 81);
@@ -315,9 +234,9 @@ function draw() {
             play.eligibleReceivers[i].runRoute();
         }
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.formation.oline[2],play);
+            defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
         }
-        play.qb.runBootleg(play.formation.oline[2], 1.0);
+        play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 120, 60);

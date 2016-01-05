@@ -4,10 +4,11 @@ from django.template import RequestContext, loader
 from django.http import JsonResponse
 from django.core import serializers
 import json
+import simplejson
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation, Test
+from .models import Player, Team, Play, Formation, Test, Position
 from IPython import embed
 
 
@@ -73,6 +74,8 @@ def player_tests(request, player_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
     return HttpResponse(serializers.serialize("json", tests))
+    # all = list(Play.objects.all()) + list(Test.objects.all())
+    # return HttpResponse(simplejson.dumps(all), mimetype='application/json')
 
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]
@@ -110,7 +113,6 @@ def update_test(request, player_id, test_id):
     params = request.POST
     jsTest = json.loads(params['test'])
     pythonTest = Test.objects.get(pk=jsTest['id'])
-    embed()
     return HttpResponse('')
 
 def new_play(request):
@@ -126,5 +128,5 @@ def team_plays(request, team_id):
 
 def team_play_players(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
-    # positions = team.plays()
+    positions = team.play_positions()
     return HttpResponse(serializers.serialize("json", positions))

@@ -4,12 +4,16 @@ var Play = function(config) {
     this.playName = config.playName || "";
     this.name = config.name || "";
     this.qb = config.qb || null;
-    this.oline = config.oline || null;
+    this.oline = config.oline || [];
     this.formation = config.formation || null;
     this.test = config.test || null;
     this.inProgress = false;
     this.newPlay = config.newPlay || false;
     this.bigPlayer = config.bigPlayer || null;
+    this.id = config.id || null;
+    this.teamID = config.teamID || null;
+    this.positions = config.positions || [];
+    this.positionIDs = config.positionIDs || [];
 };
 
 
@@ -27,7 +31,7 @@ Play.prototype.resetPlayers = function(defensivePlay){
 
 Play.prototype.setAllRoutes = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
-    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.formation.oline[2]);
+    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.oline[2]);
   }
 };
 
@@ -136,4 +140,35 @@ Play.prototype.clearSelection = function(test, play) {
 
 Play.prototype.saveToDB = function(){
   $.post( "teams/broncos/plays/new", { play: JSON.stringify(this)});
+};
+
+Play.prototype.populatePositions = function(){
+  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  oline.forEach(function(player){this.oline.push(player)}.bind(this));
+  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+  this.qb = qb
+  var eligibleReceivers = this.positions.filter(function(player) {
+    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+  });
+  this.eligibleReceivers = eligibleReceivers;
+  this.offensivePlayers = this.positions;
+};
+
+Play.prototype.addPositionsFromID = function(positionArray){
+  positionArray.forEach(function(position){
+    if(this.positionIDs.includes(position.id)){
+      this.positions.push(position);
+    }
+  }.bind(this))
+}
+
+var createPlayFromJSON = function(jsonPlay){
+  var play = new Play({});
+  play.id = jsonPlay.pk;
+  play.playName = jsonPlay.fields.name;
+  play.name = jsonPlay.fields.name;
+  play.teamID = jsonPlay.fields.team;
+  play.formation = jsonPlay.fields.formation;
+  play.positionIDs = jsonPlay.fields.positions;
+  return play;
 };

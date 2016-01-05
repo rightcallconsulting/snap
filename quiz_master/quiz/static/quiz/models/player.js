@@ -20,11 +20,11 @@ var Player = function(config) {
     this.breakPoints = config.breakPoints || [];
     this.currentBreak = config.currentBreak || 0;
     this.showRoute = false;
-    this.routeCoordinates = [[this.startX, this.startY]];
+    this.routeCoordinates = config.routeCoordinates || [[this.startX, this.startY]];
     this.routeNodes = [];
     this.change = config.change || false;
     this.progressionRank = config.progressionRank || 0;
-    this.routeNum = config.routeNum || 0;
+    this.routeNum = config.routeNum || null;
     this.blockingAssignment = config.blockingAssignment || null;
     this.blocker = config.blocker || false;
     this.runner = config.runner || false;
@@ -32,6 +32,7 @@ var Player = function(config) {
     this.initialRank = 1;
     this.CBAssignment = config.CBAssignment || null;
     this.isBeingTested = config.isBeingTested || false;
+    this.id = config.id || null;
 };
 
 Player.rank = 1;
@@ -473,6 +474,18 @@ Player.prototype.saveToDB = function(){
 
 };
 
+Player.prototype.establishFill = function(){
+  if(this.pos==="QB"){
+    this.fill = color(212, 130, 130);
+  }
+  else if(this.pos==="OL"){
+    this.fill = color(143, 29, 29);
+  }
+  else{
+    this.fill = color(255, 0, 0);
+  }
+};
+
 Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;
@@ -533,4 +546,19 @@ var getDestination = function(distance, theta, x, y){
     var xDist = distance*Math.cos(theta);
     var yDist = -1*distance*Math.sin(theta);
     return [x + xDist, y + yDist];
+};
+
+var createPlayerFromJSON = function(jsonPosition){
+  jsonPosition.fields.x = jsonPosition.fields.startX;
+  jsonPosition.fields.y = jsonPosition.fields.startY;
+  jsonPosition.fields.routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
+  var player = new Player(jsonPosition.fields)
+  player.id = jsonPosition.pk;
+  player.pos = jsonPosition.fields.name;
+  player.num = jsonPosition.fields.name;
+  player.establishFill();
+  if(player.routeCoordinates){
+    player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
+  }
+  return player
 };

@@ -1,4 +1,6 @@
 var User = function(config){
+    this.firstName = config.firstName || null;
+    this.lastName = config.lastName || null;
     this.name = config.name || null;
     this.position = config.position || null;
     this.score = 0;
@@ -159,5 +161,14 @@ User.prototype.drawQuizResults = function() {
   if(this.position === "QB"){
 
   }
+};
 
+var createUserFromJSON = function(jsonUser){
+  var user = new User({
+    id: jsonUser.pk,
+    firstName: jsonUser.fields.first_name,
+    lastName: jsonUser.fields.last_name,
+    position: jsonUser.fields.position
+  });
+  return user
 };

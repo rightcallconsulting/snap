@@ -273,7 +273,6 @@ Formation.prototype.populatePositions = function(){
   });
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
-
 };
 
 Formation.prototype.saveToDB = function(){

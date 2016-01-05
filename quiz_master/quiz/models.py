@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from IPython import embed
 import code
+import copy
+import json
 
 
 # Create your models here.
@@ -19,6 +21,13 @@ class Team(models.Model):
         positions = []
         for formation in self.formation_set.all():
             for position in formation.position_set.all():
+                positions.append(position)
+        return positions
+
+    def play_positions(self):
+        positions = []
+        for play in self.play_set.all():
+            for position in play.positions.all():
                 positions.append(position)
         return positions
 
@@ -65,10 +74,21 @@ class Position(models.Model):
     startX = models.FloatField()
     startY = models.FloatField()
     name = models.CharField(max_length=100)
-    formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
+    routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
+    progressionRank = models.IntegerField(null=True, blank=True)
+    routeNum = models.IntegerField(null=True, blank=True)
+    blocker = models.NullBooleanField()
+    runner = models.NullBooleanField()
 
     def __str__(self):
         return self.name
+
+    def set_route_coordinates(self, coords):
+        self.routeCoordinates = json.dumps(coords)
+
+    def get_route_coordinates(self):
+        return json.loads(self.routeCoordinates)
 
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
@@ -90,7 +110,8 @@ class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
-    players = models.ManyToManyField(Player)
+    players = models.ManyToManyField(Player, null=True, blank=True)
+    positions = models.ManyToManyField(Position)
     tests = models.ManyToManyField(Test)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
@@ -104,6 +125,9 @@ class Play(models.Model):
         formation=Formation.objects.get(pk=json['formation']['id']))
         new_play.save()
         for player in json['offensivePlayers']:
-            new_position = Position(name=player['pos'], startX=player['startX'],
-            startY=player['startY'], formation=new_play)
+            new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
+            startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
+            progressionRank=player['progressionRank'])
+            new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
+        new_play.save()
