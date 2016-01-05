@@ -20,6 +20,9 @@ def index(request):
 def qb_progression(request):
     return render(request, 'quiz/qb_progression.html')
 
+def cadence_quiz(request):
+    return render(request, 'quiz/cadence_quiz.html')
+
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
