@@ -12,7 +12,6 @@ var Play = function(config) {
     this.bigPlayer = config.bigPlayer || null;
     this.id = config.id || null;
     this.teamID = config.teamID || null;
-    this.formation = config.formation || null;
     this.positions = config.positions || [];
     this.positionIDs = config.positionIDs || [];
 };
@@ -32,7 +31,7 @@ Play.prototype.resetPlayers = function(defensivePlay){
 
 Play.prototype.setAllRoutes = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
-    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.formation.oline[2]);
+    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.oline[2]);
   }
 };
 

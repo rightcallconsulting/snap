@@ -1,6 +1,7 @@
-var currentTest
+var test
 var currentPlayerTested
 var positions = []
+var makeJSONCall = true
 function setup() {
   var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
@@ -10,9 +11,10 @@ function setup() {
 function draw() {
 
   // Fetch player object from Django DB
-  if(!currentPlayerTested && !currentTest){
+  if(makeJSONCall){
+    makeJSONCall = false
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
-      currentTest = new Test({
+      test = new Test({
         typeTest: data[0].fields.type_of_test,
         playerID: data[0].fields.player,
         score: data[0].fields.score,
@@ -31,16 +33,17 @@ function draw() {
         $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
           data3.forEach(function(play){
             var testIDArray = play.fields.tests;
-            if(testIDArray.includes(currentTest.id)){
+            if(testIDArray.includes(test.id)){
               var play = new Play({
                 id: play.pk,
                 playName: play.fields.name,
                 name: play.fields.name,
                 teamID: play.fields.team,
                 formation: play.fields.formation,
-                positionIDs: play.fields.positions
+                positionIDs: play.fields.positions,
+                test: test
               })
-              currentTest.plays.push(play);
+              test.plays.push(play);
             }
           })
           $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
@@ -48,18 +51,19 @@ function draw() {
               position.fields.id = position.pk;
               position.fields.x = position.fields.startX;
               position.fields.y = position.fields.startY;
-              position.fields.num = position.fields.pos;
+              position.fields.routeCoordinates = JSON.parse(position.fields.routeCoordinates)
               var player = new Player(position.fields)
               player.id = position.pk
               player.pos = position.fields.name
+              player.num = position.fields.name
               player.establishFill();
               positions.push(player)
             })
-            currentTest.plays.forEach(function(play){
+            test.plays.forEach(function(play){
               play.addPositionsFromID(positions);
               play.populatePositions();
             })
-            runTest("QBProgression", currentPlayerTested, currentTest);
+            runTest("QBProgression", currentPlayerTested, test);
 
           })
         })
@@ -67,100 +71,101 @@ function draw() {
     });
   }
 
-  var runTest = function(type, playerTested, testObject){
+  var runTest = function(type, playerTested, test){
     // Create Scoreboard
     var scoreboard = new Scoreboard({
 
     });
+    test.scoreboard = scoreboard
 
-    var formationExample = new Formation({
-
-    })
-    formationExample.createOLineAndQB();
+    // var formationExample = new Formation({
+    //
+    // })
+    // formationExample.createOLineAndQB();
 
     // Create Players
-    var rb1 = new Player ({
-        x: formationExample.qb[0].x,
-        y: formationExample.qb[0].y + 60,
-        num: 22,
-        red: 255,
-        green: 0,
-        blue: 0,
-        progressionRank: 3,
-        routeNum: 2
-    });
-
-    var te1 = new Player ({
-        x: formationExample.oline[0].x - 30,
-        y: formationExample.oline[0].y,
-        num: 80,
-        red: 255,
-        green: 0,
-        blue: 0,
-        progressionRank: 2,
-        routeNum: 3
-    });
-    var te2 = new Player({
-       x: formationExample.oline[4].x + 40,
-       y: formationExample.oline[4].y + 30,
-       num: 17,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 4,
-       routeNum: 4
-    });
-    var wr1 = new Player({
-       x: formationExample.oline[0].x - 80,
-       y: formationExample.oline[4].y + 30,
-       num: 88,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 1,
-       routeNum: 0
-    });
-    var wr2 = new Player({
-       x: formationExample.oline[4].x + 80,
-       y: formationExample.oline[4].y,
-       num: 84,
-       red: 255,
-       green: 0,
-       blue: 0,
-       progressionRank: 5,
-       routeNum: 1
-    });
-
-    // Create Plays
-    var spider2Y = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Spider-2 Y Banana",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    var hawaii511 = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "511 Hawaii",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    var bootSlide = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Boot-Slide",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
+    // var rb1 = new Player ({
+    //     x: formationExample.qb[0].x,
+    //     y: formationExample.qb[0].y + 60,
+    //     num: 22,
+    //     red: 255,
+    //     green: 0,
+    //     blue: 0,
+    //     progressionRank: 3,
+    //     routeNum: 2
+    // });
+    //
+    // var te1 = new Player ({
+    //     x: formationExample.oline[0].x - 30,
+    //     y: formationExample.oline[0].y,
+    //     num: 80,
+    //     red: 255,
+    //     green: 0,
+    //     blue: 0,
+    //     progressionRank: 2,
+    //     routeNum: 3
+    // });
+    // var te2 = new Player({
+    //    x: formationExample.oline[4].x + 40,
+    //    y: formationExample.oline[4].y + 30,
+    //    num: 17,
+    //    red: 255,
+    //    green: 0,
+    //    blue: 0,
+    //    progressionRank: 4,
+    //    routeNum: 4
+    // });
+    // var wr1 = new Player({
+    //    x: formationExample.oline[0].x - 80,
+    //    y: formationExample.oline[4].y + 30,
+    //    num: 88,
+    //    red: 255,
+    //    green: 0,
+    //    blue: 0,
+    //    progressionRank: 1,
+    //    routeNum: 0
+    // });
+    // var wr2 = new Player({
+    //    x: formationExample.oline[4].x + 80,
+    //    y: formationExample.oline[4].y,
+    //    num: 84,
+    //    red: 255,
+    //    green: 0,
+    //    blue: 0,
+    //    progressionRank: 5,
+    //    routeNum: 1
+    // });
+    //
+    // // Create Plays
+    // var spider2Y = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "Spider-2 Y Banana",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
+    //
+    // var hawaii511 = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "511 Hawaii",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
+    //
+    // var bootSlide = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "Boot-Slide",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
 
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
@@ -174,19 +179,19 @@ function draw() {
     });
 
     // Create Test
-    var test = new Test({
-        pythonTest: currentTest,
-        id: currentTest.pk,
-        playerID: currentTest.player,
-        plays: [spider2Y, hawaii511, bootSlide],
-        badGuessPenalty: 0.1,
-        scoreboard: scoreboard,
-        typeTest: "QBProgression"
-    });
-
-    spider2Y.test = test;
-    hawaii511.test = test;
-    bootSlide.test = test;
+    // var test = new Test({
+    //     pythonTest: test,
+    //     id: test.pk,
+    //     playerID: test.player,
+    //     plays: [spider2Y, hawaii511, bootSlide],
+    //     badGuessPenalty: 0.1,
+    //     scoreboard: scoreboard,
+    //     typeTest: "QBProgression"
+    // });
+    //
+    // spider2Y.test = test;
+    // hawaii511.test = test;
+    // bootSlide.test = test;
 
     var user = new User({});
 
@@ -196,7 +201,7 @@ function draw() {
             if(this.rank > 0){
                 fill(255, 255, 0);
             }else{
-                fill(this.red,this.green,this.blue);
+                fill(this.fill);
             }
             ellipse(this.x, this.y, this.siz, this.siz);
             fill(0,0,0);
@@ -304,7 +309,7 @@ function draw() {
     });
 
     // Draw Defense
-    defensePlay.draw(formationExample.oline[2].x, formationExample.oline[2].y, test);
+    defensePlay.draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
 
     var drawBackground = function(play, field) {
         background(93, 148, 81);
@@ -361,9 +366,9 @@ function draw() {
             play.eligibleReceivers[i].runRoute();
         }
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.formation.oline[2],play);
+            defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
         }
-        play.qb.runBootleg(play.formation.oline[2], 1.0);
+        play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 120, 60);
