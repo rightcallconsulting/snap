@@ -315,13 +315,15 @@ Player.prototype.drawRoute = function(){
       noStroke();
       fill(255, 0, 0)
       node = this.routeNodes[i]
-      if (node.change){
+      if (node && node.change){
         node.x = mouseX;
         node.y = mouseY;
         this.routeCoordinates[i + 1][0] = mouseX;
         this.routeCoordinates[i + 1][1] = mouseY;
       }
-      node.draw();
+      if(node){
+        node.draw();
+      }
     }
   }
 };
@@ -551,14 +553,18 @@ var getDestination = function(distance, theta, x, y){
 var createPlayerFromJSON = function(jsonPosition){
   jsonPosition.fields.x = jsonPosition.fields.startX;
   jsonPosition.fields.y = jsonPosition.fields.startY;
-  jsonPosition.fields.routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
+  var routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
-  player.establishFill();
-  if(player.routeCoordinates){
-    player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
+  player.routeCoordinates = [[player.startX, player.startY]]
+  if(routeCoordinates){
+    player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
+  player.establishFill();
+  // if(player.routeCoordinates){
+  //   player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
+  // }
   return player
 };
