@@ -4,6 +4,7 @@ from django.template import RequestContext, loader
 from django.http import JsonResponse
 from django.core import serializers
 import json
+import simplejson
 
 # Create your views here.
 
@@ -67,6 +68,8 @@ def player_tests(request, player_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
     return HttpResponse(serializers.serialize("json", tests))
+    # all = list(Play.objects.all()) + list(Test.objects.all())
+    # return HttpResponse(simplejson.dumps(all), mimetype='application/json')
 
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]

@@ -11,8 +11,17 @@ function draw() {
   // Fetch player object from Django DB
   if(!currentPlayerTested && !currentTest){
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
-      currentTest = data[0].fields;
-      currentTest.pk = data[0].pk;
+      debugger;
+      currentTest = new Test({
+        typeTest: data[0].fields.type_of_test,
+        playerID: data[0].fields.player,
+        score: data[0].fields.score,
+        incorrectGuesses: data[0].fields.incorrect_guesses,
+        skips: data[0].fields.skips,
+        id: data[0].pk
+      })
+      // currentTest = data[0].fields;
+      // currentTest.pk = data[0].pk;
       var playerID = data[0].fields.player;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = data2[0].fields;
@@ -23,6 +32,7 @@ function draw() {
 
   var runTest = function(type, playerTested, testObject){
     // Create Scoreboard
+    debugger;
     var scoreboard = new Scoreboard({
 
     });
