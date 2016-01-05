@@ -23,6 +23,9 @@ def qb_progression(request):
 def cadence_quiz(request):
     return render(request, 'quiz/cadence_quiz.html')
 
+def option_quiz(request):
+    return render(request, 'quiz/option_quiz.html')
+
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
