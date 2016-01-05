@@ -11,7 +11,6 @@ function draw() {
   // Fetch player object from Django DB
   if(!currentPlayerTested && !currentTest){
     $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
-      debugger;
       currentTest = new Test({
         typeTest: data[0].fields.type_of_test,
         playerID: data[0].fields.player,
@@ -20,12 +19,31 @@ function draw() {
         skips: data[0].fields.skips,
         id: data[0].pk
       })
-      // currentTest = data[0].fields;
-      // currentTest.pk = data[0].pk;
       var playerID = data[0].fields.player;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = data2[0].fields;
-        runTest("QBProgression", currentPlayerTested, currentTest);
+        currentPlayerTested = new User({
+          id: data2[0].pk,
+          firstName: data2[0].fields.first_name,
+          lastName: data2[0].fields.last_name,
+          position: data2[0].fields.position,
+        })
+        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+          data3.forEach(function(play){
+            var testIDArray = play.fields.tests;
+            if(testIDArray.includes(currentTest.id)){
+              var play = new Play({
+                id: play.pk,
+                playName: play.fields.name,
+                name: play.fields.name,
+                teamID: play.fields.team,
+                formation: play.fields.formation,
+              })
+              currentTest.plays.push(play);
+            }
+          })
+          debugger;
+          runTest("QBProgression", currentPlayerTested, currentTest);
+        })
       })
     });
   }

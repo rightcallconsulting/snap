@@ -32,6 +32,7 @@ var Player = function(config) {
     this.initialRank = 1;
     this.CBAssignment = config.CBAssignment || null;
     this.isBeingTested = config.isBeingTested || false;
+    this.id = config.id || null;
 };
 
 Player.rank = 1;

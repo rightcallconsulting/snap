@@ -10,6 +10,10 @@ var Play = function(config) {
     this.inProgress = false;
     this.newPlay = config.newPlay || false;
     this.bigPlayer = config.bigPlayer || null;
+    this.id = config.id || null;
+    this.teamID = config.teamID || null;
+    this.formation = config.formation || null;
+    this.positions = config.positions || null;
 };
 
 
@@ -136,4 +140,16 @@ Play.prototype.clearSelection = function(test, play) {
 
 Play.prototype.saveToDB = function(){
   $.post( "teams/broncos/plays/new", { play: JSON.stringify(this)});
+};
+
+Play.prototype.populatePositions = function(){
+  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  oline.forEach(function(player){this.oline.push(player)}.bind(this));
+  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+  this.qb = qb
+  var eligibleReceivers = this.positions.filter(function(player) {
+    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+  });
+  this.eligibleReceivers = eligibleReceivers;
+  this.offensivePlayers = this.positions;
 };

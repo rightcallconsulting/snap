@@ -8,7 +8,7 @@ import simplejson
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation, Test
+from .models import Player, Team, Play, Formation, Test, Position
 from IPython import embed
 
 
@@ -107,7 +107,6 @@ def update_test(request, player_id, test_id):
     params = request.POST
     jsTest = json.loads(params['test'])
     pythonTest = Test.objects.get(pk=jsTest['id'])
-    embed()
     return HttpResponse('')
 
 def new_play(request):
@@ -123,5 +122,7 @@ def team_plays(request, team_id):
 
 def team_play_players(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
-    # positions = team.plays()
+    embed()
+    # positions = team.play_set.all()[0].positions.all()
+    positions = team.play_positions()
     return HttpResponse(serializers.serialize("json", positions))

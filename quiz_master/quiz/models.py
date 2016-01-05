@@ -24,6 +24,13 @@ class Team(models.Model):
                 positions.append(position)
         return positions
 
+    def play_positions(self):
+        positions = []
+        for play in self.play_set.all():
+            for position in play.positions.all():
+                positions.append(position)
+        return positions
+
 class Player(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
