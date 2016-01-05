@@ -563,8 +563,6 @@ var createPlayerFromJSON = function(jsonPosition){
     player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
   player.establishFill();
-  // if(player.routeCoordinates){
-  //   player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
-  // }
+
   return player
 };

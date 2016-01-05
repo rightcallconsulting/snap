@@ -331,9 +331,9 @@ function draw() {
             play.eligibleReceivers[i].runRoute();
         }
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.formation.oline[2],play);
+            defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
         }
-        play.qb.runBootleg(play.formation.oline[2], 1.0);
+        play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 120, 60);
