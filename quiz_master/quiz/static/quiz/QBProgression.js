@@ -26,12 +26,11 @@ function draw() {
           id: data2[0].pk,
           firstName: data2[0].fields.first_name,
           lastName: data2[0].fields.last_name,
-          position: data2[0].fields.position,
+          position: data2[0].fields.position
         })
         $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
           data3.forEach(function(play){
             var testIDArray = play.fields.tests;
-            var positionIDArray = play.fields.positions;
             if(testIDArray.includes(currentTest.id)){
               var play = new Play({
                 id: play.pk,
@@ -39,17 +38,27 @@ function draw() {
                 name: play.fields.name,
                 teamID: play.fields.team,
                 formation: play.fields.formation,
+                positionIDs: play.fields.positions
               })
               currentTest.plays.push(play);
             }
           })
           $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
             data4.forEach(function(position){
+              position.fields.id = position.pk;
+              position.fields.x = position.fields.startX;
+              position.fields.y = position.fields.startY;
+              position.fields.num = position.fields.pos;
               var player = new Player(position.fields)
               player.id = position.pk
+              player.pos = position.fields.name
+              player.establishFill();
               positions.push(player)
             })
-
+            currentTest.plays.forEach(function(play){
+              play.addPositionsFromID(positions);
+              play.populatePositions();
+            })
             runTest("QBProgression", currentPlayerTested, currentTest);
 
           })
@@ -60,7 +69,6 @@ function draw() {
 
   var runTest = function(type, playerTested, testObject){
     // Create Scoreboard
-    debugger;
     var scoreboard = new Scoreboard({
 
     });

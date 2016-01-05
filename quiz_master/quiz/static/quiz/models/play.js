@@ -4,7 +4,7 @@ var Play = function(config) {
     this.playName = config.playName || "";
     this.name = config.name || "";
     this.qb = config.qb || null;
-    this.oline = config.oline || null;
+    this.oline = config.oline || [];
     this.formation = config.formation || null;
     this.test = config.test || null;
     this.inProgress = false;
@@ -13,7 +13,8 @@ var Play = function(config) {
     this.id = config.id || null;
     this.teamID = config.teamID || null;
     this.formation = config.formation || null;
-    this.positions = config.positions || null;
+    this.positions = config.positions || [];
+    this.positionIDs = config.positionIDs || [];
 };
 
 
@@ -153,3 +154,11 @@ Play.prototype.populatePositions = function(){
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
 };
+
+Play.prototype.addPositionsFromID = function(positionArray){
+  positionArray.forEach(function(position){
+    if(this.positionIDs.includes(position.id)){
+      this.positions.push(position);
+    }
+  }.bind(this))
+}

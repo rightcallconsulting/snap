@@ -126,7 +126,8 @@ class Play(models.Model):
         new_play.save()
         for player in json['offensivePlayers']:
             new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
-            startY=player['startY'], blocker=player['blocker'], runner=player['runner'])
+            startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
+            progressionRank=player['progressionRank'])
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()

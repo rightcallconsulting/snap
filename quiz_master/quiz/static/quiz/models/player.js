@@ -474,6 +474,18 @@ Player.prototype.saveToDB = function(){
 
 };
 
+Player.prototype.establishFill = function(){
+  if(this.pos==="QB"){
+    this.fill = color(212, 130, 130);
+  }
+  else if(this.pos==="OL"){
+    this.fill = color(143, 29, 29);
+  }
+  else{
+    this.fill = color(255, 0, 0);
+  }
+};
+
 Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;
