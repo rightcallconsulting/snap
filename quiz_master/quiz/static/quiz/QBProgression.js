@@ -1,5 +1,6 @@
 var currentTest
 var currentPlayerTested
+var positions = []
 function setup() {
   var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
@@ -30,6 +31,7 @@ function draw() {
         $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
           data3.forEach(function(play){
             var testIDArray = play.fields.tests;
+            var positionIDArray = play.fields.positions;
             if(testIDArray.includes(currentTest.id)){
               var play = new Play({
                 id: play.pk,
@@ -41,8 +43,16 @@ function draw() {
               currentTest.plays.push(play);
             }
           })
-          debugger;
-          runTest("QBProgression", currentPlayerTested, currentTest);
+          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+            data4.forEach(function(position){
+              var player = new Player(position.fields)
+              player.id = position.pk
+              positions.push(player)
+            })
+
+            runTest("QBProgression", currentPlayerTested, currentTest);
+
+          })
         })
       })
     });

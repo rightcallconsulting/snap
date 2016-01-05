@@ -122,7 +122,5 @@ def team_plays(request, team_id):
 
 def team_play_players(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
-    embed()
-    # positions = team.play_set.all()[0].positions.all()
     positions = team.play_positions()
     return HttpResponse(serializers.serialize("json", positions))
