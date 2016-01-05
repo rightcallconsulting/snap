@@ -69,6 +69,10 @@ class Position(models.Model):
     name = models.CharField(max_length=100)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
     routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
+    progressionRank = models.IntegerField(null=True, blank=True)
+    routeNum = models.IntegerField(null=True, blank=True)
+    blocker = models.NullBooleanField()
+    runner = models.NullBooleanField()
 
     def __str__(self):
         return self.name
@@ -99,7 +103,7 @@ class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
-    players = models.ManyToManyField(Player)
+    players = models.ManyToManyField(Player, null=True, blank=True)
     positions = models.ManyToManyField(Position)
     tests = models.ManyToManyField(Test)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
@@ -113,11 +117,9 @@ class Play(models.Model):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
         formation=Formation.objects.get(pk=json['formation']['id']))
         new_play.save()
-        code.interact(local=locals())
-
         for player in json['offensivePlayers']:
             new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
-            startY=player['startY'])
+            startY=player['startY'], blocker=player['blocker'], runner=player['runner'])
             new_position.set_route_coordinates(player['routeCoordinates'])
-            code.interact(local=locals())
             new_position.save()
+        new_play.save()
