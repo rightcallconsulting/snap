@@ -65,6 +65,9 @@ Test.prototype.getScoreString = function(){
       return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
     }
   }
+  else if(this.typeTest === "Option"){
+    return "N/A";
+  }
 };
 
 Test.prototype.getPercentage = function(){
