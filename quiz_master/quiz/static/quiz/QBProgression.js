@@ -57,6 +57,9 @@ function draw() {
               player.pos = position.fields.name
               player.num = position.fields.name
               player.establishFill();
+              if(player.routeCoordinates){
+                player.breakPoints = player.routeCoordinates.slice(1, player.routeCoordinates.length);
+              }
               positions.push(player)
             })
             test.plays.forEach(function(play){
