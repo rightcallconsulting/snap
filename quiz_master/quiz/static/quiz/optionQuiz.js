@@ -6,11 +6,13 @@ function setup() {
 
 function draw() {
 
+  var RANK = 1;
+
   var test = new Test({
       plays: [],
       badGuessPenalty: 0.1,
       scoreboard: scoreboard,
-      typeTest: "CBAssignment"
+      typeTest: "Option"
   });
 
   var formationExample = new Formation({
@@ -147,7 +149,7 @@ function draw() {
   Player.prototype.draw = function() {
     if (this.unit === "offense") {
       noStroke();
-      if (this.clicked) {
+      if (this.rank > 0) {
         fill(255, 255, 0);
       } else if (this === test.getCurrentPlay().bigPlayer) {
         fill(255, 0, 0);
@@ -158,7 +160,12 @@ function draw() {
       fill(0, 0, 0);
       textSize(14);
       textAlign(CENTER, CENTER);
-      text(this.num, this.x, this.y);
+      if(this.rank > 0){
+        text(this.rank, this.x, this.y);
+      }else{
+        text(this.num, this.x, this.y);
+      }
+
     } else {
       if (this.isBeingTested) {
         fill(0, 0, 250);
@@ -182,12 +189,24 @@ function draw() {
   };
 
   Player.prototype.select = function() {
-    test.clearSelection()
-    this.clicked = true;
-    currentReceiver = this;
+    //test.clearSelection()
+    this.rank = RANK;
+    RANK++;
   };
 
   Player.prototype.unselect = function() {
+    currentPlay = test.getCurrentPlay();
+    if(currentPlay && this.rank > 0 && this.rank < RANK - 1){
+        //decrement the later guys' ranks
+        for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
+            var p = currentPlay.eligibleReceivers[i];
+            if(p.rank > this.rank){
+                p.rank--;
+            }
+        }
+    }
+    this.rank = 0;
+    RANK--;
     this.clicked = false;
   };
 
@@ -273,6 +292,22 @@ function draw() {
 
   test.getCurrentDefensivePlay().draw(formationExample.oline[2].x, formationExample.oline[2].y, test);
   test.getCurrentDefensivePlay().defensivePlayers[10].CBAssignment = test.getCurrentPlay().eligibleReceivers[4];
+
+  //correctProgression is an array of player(s) in order you are responsible for them
+  var checkProgression = function(correctProgression){
+    var isCorrect = (RANK === (correctProgression.length + 1));
+    for(var i = 0; i < correctProgression.length; i++){
+      if(correctProgression[i].rank !== (i+1)){
+        isCorrect = false;
+      }
+    }
+    debugger;
+    if(isCorrect){
+
+    }else{
+      test.feedbackMessage = "BOOOO"
+    }
+  };
 
   keyPressed = function() {
     if (keyCode === 32){
@@ -376,7 +411,7 @@ function draw() {
       test.restartQuiz(cover2);
 
     } else if (clear.isMouseInside()) {
-      test.clearSelection();
+      test.getCurrentPlay().clearProgression();
       scoreboard.feedbackMessage = "";
     } else if (pause.isMouseInside() && pause.displayButton) {
       pause.changeClickStatus();
@@ -420,11 +455,17 @@ function draw() {
 
         var playerSelected = false;
 
-        for (var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++) {
-          var p = test.getCurrentPlay().eligibleReceivers[i];
+        var oPlayers = test.getCurrentPlay().eligibleReceivers;
+        oPlayers.push(test.getCurrentPlay().qb);
+
+        for (var i = 0; i < oPlayers.length; i++) {
+          var p = oPlayers[i];
           if (p.isMouseInside()) {
-            if (p.clicked) {
-              p.checkSelection(test);
+            if (p.rank > 0 && p.rank === (RANK - 1)) {
+              //debugger;
+              checkProgression([test.getCurrentPlay().qb, test.getCurrentPlay().eligibleReceivers[2]]);
+            } else if (p.rank > 0){
+              p.unselect();
             } else {
               p.select();
             }
