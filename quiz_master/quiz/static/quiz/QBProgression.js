@@ -37,7 +37,6 @@ function draw() {
               play.populatePositions();
             })
             runTest("QBProgression", currentPlayerTested, test);
-
           })
         })
       })
