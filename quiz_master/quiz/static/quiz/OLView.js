@@ -13,7 +13,7 @@ function draw() {
 
   if(makeJSONCall){
     makeJSONCall = false
-    $.getJSON('/quiz/players/8/tests/1', function(data, jqXHR){
+    $.getJSON('/quiz/players/18/tests/1', function(data, jqXHR){
       test = createTestFromJSON(data[0]);
       var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
@@ -203,11 +203,6 @@ function draw() {
       clicked: false
     });
 
-    // Goes right to left
-    user.position = "LG"
-
-
-
     // intro scene
     var drawOpening = function() {
       currentPlayer = test.establishOLPlayerTested(user);
@@ -279,7 +274,7 @@ function draw() {
       pause.draw();
       stop.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
-      formationExample.drawAllPlayers();
+      test.getCurrentPlay().drawAllPlayers();
       for (var i = 0; i < test.getCurrentPlay().oline.length; i++) {
         var olineman = test.getCurrentPlay().oline[i];
         olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);

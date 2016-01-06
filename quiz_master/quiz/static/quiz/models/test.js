@@ -192,6 +192,7 @@ Test.prototype.checkBigSelection = function() {
   }
 
   Test.prototype.establishOLPlayerTested = function(user, hardCodePosition) {
+    // Positions on o-line in the database go from right to left for indexing
     if(hardCodePosition){
       var position = hardCodePosition;
     }
