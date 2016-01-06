@@ -56,7 +56,7 @@ CadenceTest.prototype.registerAnswer = function(ellapsedMillis){
     this.cadences[this.questionNum].pauseCadence();
     this.cadences[this.questionNum].restartCadence();
   }
-  
+
   //this.scoreboard.feedbackMessage = message;
 };
 
