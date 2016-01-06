@@ -80,6 +80,8 @@ class Position(models.Model):
     routeNum = models.IntegerField(null=True, blank=True)
     blocker = models.NullBooleanField()
     runner = models.NullBooleanField()
+    blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+    blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -127,7 +129,9 @@ class Play(models.Model):
         for player in json['offensivePlayers']:
             new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
             startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
-            progressionRank=player['progressionRank'])
+            progressionRank=player['progressionRank'],
+            blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
+            blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'])
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()
