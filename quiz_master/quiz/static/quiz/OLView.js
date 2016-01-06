@@ -36,7 +36,7 @@ function draw() {
               play.addPositionsFromID(positions);
               play.populatePositions();
             })
-            runTest("WRRoute", currentPlayerTested, test);
+            runTest("OLView", currentPlayerTested, test);
           })
         })
       })
@@ -45,105 +45,105 @@ function draw() {
 
   var runTest = function(type, playerTested, test){
 
-    var test = new Test({
-        plays: [],
-        badGuessPenalty: 0.1,
-        scoreboard: scoreboard,
-        typeTest: "OLAssignment"
-    });
-
-    var formationExample = new Formation({
-
-    })
-    formationExample.createOLineAndQB(35, 38);
-
-
-    var user = new User({
-
-    })
+    // var test = new Test({
+    //     plays: [],
+    //     badGuessPenalty: 0.1,
+    //     scoreboard: scoreboard,
+    //     typeTest: "OLAssignment"
+    // });
+    //
+    // var formationExample = new Formation({
+    //
+    // })
+    // formationExample.createOLineAndQB();
+    //
+    //
+    // var user = new User({
+    //
+    // })
 
     // Create Players
-    var rb1 = new Player ({
-        x: formationExample.qb[0].x,
-        y: formationExample.qb[0].y + 60,
-        num: 22,
-        fill: color(255, 0, 0),
-        progressionRank: 3,
-        routeNum: 2,
-        siz: 35
-    });
-
-    var te1 = new Player ({
-        x: formationExample.oline[0].x - 40,
-        y: formationExample.oline[0].y,
-        num: 80,
-        fill: color(255, 0, 0),
-        progressionRank: 2,
-        routeNum: 3,
-        siz: 35
-    });
-    var te2 = new Player({
-       x: formationExample.oline[4].x + 40,
-       y: formationExample.oline[4].y + 30,
-       num: 17,
-       fill: color(255, 0, 0),
-       progressionRank: 4,
-       routeNum: 4,
-       siz: 35
-    });
-    var wr1 = new Player({
-       x: formationExample.oline[0].x - 80,
-       y: formationExample.oline[4].y + 30,
-       num: 88,
-       fill: color(255, 0, 0),
-       progressionRank: 1,
-       routeNum: 0
-    });
-    var wr2 = new Player({
-       x: formationExample.oline[4].x + 80,
-       y: formationExample.oline[4].y,
-       num: 84,
-       fill: color(255, 0, 0),
-       progressionRank: 5,
-       routeNum: 1
-    });
-
-    // Create Plays
-    var spider2Y = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Spider-2 Y Banana",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    test.plays.push(spider2Y);
-
-    var hawaii511 = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "511 Hawaii",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    test.plays.push(hawaii511);
-
-    var bootSlide = new Play({
-      eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-      offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-      playName: "Boot-Slide",
-      qb: formationExample.qb[0],
-      oline: formationExample.oline,
-      formation: formationExample,
-      test: test
-    });
-
-    test.plays.push(bootSlide);
+    // var rb1 = new Player ({
+    //     x: formationExample.qb[0].x,
+    //     y: formationExample.qb[0].y + 60,
+    //     num: 22,
+    //     fill: color(255, 0, 0),
+    //     progressionRank: 3,
+    //     routeNum: 2,
+    //     // siz: 35
+    // });
+    //
+    // var te1 = new Player ({
+    //     x: formationExample.oline[0].x - 40,
+    //     y: formationExample.oline[0].y,
+    //     num: 80,
+    //     fill: color(255, 0, 0),
+    //     progressionRank: 2,
+    //     routeNum: 3,
+    //     // siz: 35
+    // });
+    // var te2 = new Player({
+    //    x: formationExample.oline[4].x + 40,
+    //    y: formationExample.oline[4].y + 30,
+    //    num: 17,
+    //    fill: color(255, 0, 0),
+    //    progressionRank: 4,
+    //    routeNum: 4,
+    //   //  siz: 35
+    // });
+    // var wr1 = new Player({
+    //    x: formationExample.oline[0].x - 80,
+    //    y: formationExample.oline[4].y + 30,
+    //    num: 88,
+    //    fill: color(255, 0, 0),
+    //    progressionRank: 1,
+    //    routeNum: 0
+    // });
+    // var wr2 = new Player({
+    //    x: formationExample.oline[4].x + 80,
+    //    y: formationExample.oline[4].y,
+    //    num: 84,
+    //    fill: color(255, 0, 0),
+    //    progressionRank: 5,
+    //    routeNum: 1
+    // });
+    //
+    // // Create Plays
+    // var spider2Y = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "Spider-2 Y Banana",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
+    //
+    // test.plays.push(spider2Y);
+    //
+    // var hawaii511 = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "511 Hawaii",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
+    //
+    // test.plays.push(hawaii511);
+    //
+    // var bootSlide = new Play({
+    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
+    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
+    //   playName: "Boot-Slide",
+    //   qb: formationExample.qb[0],
+    //   oline: formationExample.oline,
+    //   formation: formationExample,
+    //   test: test
+    // });
+    //
+    // test.plays.push(bootSlide);
 
     var cover2 = new DefensivePlay({
       playName: "Cover 2",
@@ -212,7 +212,7 @@ function draw() {
         textAlign(CENTER, CENTER);
         text(this.num, this.x, this.y);
       } else {
-        if (this === currentPlayer) {
+        if (this.isBeingTested) {
           fill(0, 0, 250);
         } else if (this.clicked) {
           fill(255, 255, 0);
@@ -307,21 +307,22 @@ function draw() {
       clicked: false
     });
 
-    formationExample.offensivePlayers.push(rb1);
-    formationExample.offensivePlayers.push(te1);
-    formationExample.offensivePlayers.push(te2);
-    formationExample.oline[3].isBeingTested = true;
-
-    formationExample.eligibleReceivers.push(te1);
-    formationExample.eligibleReceivers.push(rb1);
-    formationExample.eligibleReceivers.push(te2);
+    // formationExample.offensivePlayers.push(rb1);
+    // formationExample.offensivePlayers.push(te1);
+    // formationExample.offensivePlayers.push(te2);
+    // formationExample.oline[3].isBeingTested = true;
+    test.getCurrentPlay().oline[3].isBeingTested = true;
+    currentPlayer = test.getCurrentPlay().oline[3];
+    // formationExample.eligibleReceivers.push(te1);
+    // formationExample.eligibleReceivers.push(rb1);
+    // formationExample.eligibleReceivers.push(te2);
 
     // intro scene
     var drawOpening = function() {
       if(test.getCurrentDefensivePlay().defensivePlayers.length === 0){
-        test.getCurrentDefensivePlay().draw(formationExample.oline[2].x, formationExample.oline[2].y);
+        test.getCurrentDefensivePlay().draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y);
       }
-      formationExample.oline[3].blockingAssignment = test.getCurrentDefensivePlay().defensivePlayers[2];
+      test.getCurrentPlay().oline[3].blockingAssignment = test.getCurrentDefensivePlay().defensivePlayers[2];
       if (test.startTime === 0) {
         test.startTime = millis();
       }
@@ -330,7 +331,7 @@ function draw() {
       restart.draw();
       clear.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
-      formationExample.drawAllPlayers();
+      test.getCurrentPlay().drawAllPlayers();
       fill(0, 0, 0);
       textSize(20);
       noStroke();

@@ -497,6 +497,8 @@ Player.prototype.checkSelection = function(test) {
   }
   else if (test.getCurrentPlay().playerBeingTested().blockingAssignment){
     var correctPlayer = test.getCurrentPlay().playerBeingTested().blockingAssignment;
+    var correctPlayerIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex;
+    var correctUnitIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentUnitIndex;
   }
   if (this === correctPlayer){
     var isCorrect = true
@@ -559,6 +561,8 @@ var createPlayerFromJSON = function(jsonPosition){
   var routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
+  player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
+  player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]
