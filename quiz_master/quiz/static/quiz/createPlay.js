@@ -332,10 +332,14 @@ function draw() {
         }
         else if(selectedWR.blocker && dlClicked){
           selectedWR.blockingAssignment = selectedDL;
+          selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
+          selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
         }
       }
       else if(dlClicked && selectedOL){
         selectedOL.blockingAssignment = selectedDL;
+        selectedOL.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
+        selectedOL.blockingAssignmentUnitIndex = selectedDL.unitIndex;
       }
     };
 

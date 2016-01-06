@@ -16,6 +16,7 @@ var Player = function(config) {
     this.unit = config.unit || "offense";
     this.name = config.name || "";
     this.playerIndex = config.index || 0;
+    this.unitIndex = config.unitIndex || 0;
     this.gap = config.gap || 0;
     this.breakPoints = config.breakPoints || [];
     this.currentBreak = config.currentBreak || 0;
@@ -26,6 +27,8 @@ var Player = function(config) {
     this.progressionRank = config.progressionRank || 0;
     this.routeNum = config.routeNum || null;
     this.blockingAssignment = config.blockingAssignment || null;
+    this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
+    this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
     this.blocker = config.blocker || false;
     this.runner = config.runner || false;
     this.speed = 1;
@@ -492,10 +495,11 @@ Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;
   }
-  else if (test.getCurrentPlay().playerBeingTested().blockingAssignment){
-    var correctPlayer = test.getCurrentPlay().playerBeingTested().blockingAssignment;
+  else if (test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex){
+    var correctPlayerIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex;
+    var correctUnitIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentUnitIndex;
   }
-  if (this === correctPlayer){
+  if (this === correctPlayer || (correctPlayerIndex === this.playerIndex && correctUnitIndex === this.unitIndex)){
     var isCorrect = true
   }
   if (isCorrect) {
@@ -556,6 +560,8 @@ var createPlayerFromJSON = function(jsonPosition){
   var routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
+  player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
+  player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]

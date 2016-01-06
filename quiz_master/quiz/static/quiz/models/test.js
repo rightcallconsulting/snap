@@ -191,6 +191,32 @@ Test.prototype.checkBigSelection = function() {
     }
   }
 
+  Test.prototype.establishOLPlayerTested = function(user, hardCodePosition) {
+    // Positions on o-line in the database go from right to left for indexing
+    if(hardCodePosition){
+      var position = hardCodePosition;
+    }
+    else{
+      var position = user.position;
+    }
+
+    if(position === "LT"){
+      return this.getCurrentPlay().oline[4];
+    }
+    else if(position === "LG"){
+      return this.getCurrentPlay().oline[3];
+    }
+    else if(position === "C"){
+      return this.getCurrentPlay().oline[2];
+    }
+    else if(position === "RG"){
+      return this.getCurrentPlay().oline[1];
+    }
+    else if(position === "RT"){
+      return this.getCurrentPlay().oline[0];
+    }
+  }
+
   var createTestFromJSON = function(jsonTest){
     var test = new Test({
       typeTest: jsonTest.fields.type_of_test,

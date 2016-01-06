@@ -13,6 +13,8 @@ var DefensivePlay = function(config) {
 
 };
 
+// Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
+
 DefensivePlay.prototype.draw = function(ballX, ballY, test){
   for(var i = 0; i < 4; i++){
       var dl = new Player ({
@@ -22,7 +24,8 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
           pos: this.dlPositions[i],
           name: this.dlNames[i],
           unit: "defense",
-          index: i
+          index: i,
+          unitIndex: 0
       });
       if(test) dl.gap = this.dlAssignments[test.questionNum][i]
       this.defensivePlayers.push(dl);
@@ -35,7 +38,8 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
           fill: color(0, 0, 0),
           pos: this.lbPositions[i],
           unit: "defense",
-          index: 4+i,
+          index: i,
+          unitIndex: 1
 
       });
       if(test) lb.gap = this.lbAssignments[test.questionNum][i]
@@ -49,7 +53,8 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
           fill: color(0, 0, 0),
           pos: this.dbPositions[i+1],
           unit: "defense",
-          index: 4+i
+          index: i,
+          unitIndex: 2
       });
       if(test) safety.gap = this.dbAssignments[test.questionNum][i+1]
       this.defensivePlayers.push(safety);
@@ -62,7 +67,8 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
           fill: color(0, 0, 0),
           pos: this.dbPositions[i*3],
           unit: "defense",
-          index: 4+i,
+          index: i,
+          unitIndex: 3
 
       });
       if(test) corner.gap = this.dbAssignments[test.questionNum][i*3]
