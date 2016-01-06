@@ -180,25 +180,7 @@ function draw() {
     defensePlay.draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
 
     var drawBackground = function(play, field) {
-        background(93, 148, 81);
-        for(var i = 0; i < field.heightInYards; i++){
-            var yc = height * (i/field.heightInYards);
-            stroke(255, 255, 255);
-            if(i % 10 === 0){
-                line(0, yc, width, yc);
-            }else if(i % 5 === 0){
-                line(0, yc, width, yc);
-            }else{
-                line(width*0.24, yc, width*0.25, yc);
-                line(width*0.74, yc, width*0.75, yc);
-            }
-        }
-        textSize(18);
-        textAlign(LEFT);
-        if(play){
-          fill(255,255,255)
-          text(play.playName,10,23);
-        }
+        field.drawBackground(play, height, width);
     };
 
     // intro scene
