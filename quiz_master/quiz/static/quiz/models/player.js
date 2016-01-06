@@ -495,12 +495,11 @@ Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;
   }
-  else if (test.getCurrentPlay().playerBeingTested().blockingAssignment){
-    var correctPlayer = test.getCurrentPlay().playerBeingTested().blockingAssignment;
+  else if (test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex){
     var correctPlayerIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex;
     var correctUnitIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentUnitIndex;
   }
-  if (this === correctPlayer){
+  if (this === correctPlayer || (correctPlayerIndex === this.playerIndex && correctUnitIndex === this.unitIndex)){
     var isCorrect = true
   }
   if (isCorrect) {

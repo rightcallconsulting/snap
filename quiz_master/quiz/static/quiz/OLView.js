@@ -43,7 +43,7 @@ function draw() {
     });
   }
 
-  var runTest = function(type, playerTested, test){
+  var runTest = function(type, user, test){
 
     // var test = new Test({
     //     plays: [],
@@ -58,9 +58,7 @@ function draw() {
     // formationExample.createOLineAndQB();
     //
     //
-    // var user = new User({
-    //
-    // })
+
 
     // Create Players
     // var rb1 = new Player ({
@@ -253,11 +251,6 @@ function draw() {
       this.clicked = false;
     };
 
-
-    var user = new User({
-
-    });
-
     // Create Buttons
     var playButton = new Button({
       x: 10,
@@ -311,8 +304,10 @@ function draw() {
     // formationExample.offensivePlayers.push(te1);
     // formationExample.offensivePlayers.push(te2);
     // formationExample.oline[3].isBeingTested = true;
-    test.getCurrentPlay().oline[3].isBeingTested = true;
-    currentPlayer = test.getCurrentPlay().oline[3];
+
+    currentPlayer = test.getCurrentPlay().oline[0];
+    currentPlayer.isBeingTested = true;
+
     // formationExample.eligibleReceivers.push(te1);
     // formationExample.eligibleReceivers.push(rb1);
     // formationExample.eligibleReceivers.push(te2);
