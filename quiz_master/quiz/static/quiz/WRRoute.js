@@ -49,86 +49,6 @@ function draw() {
 
     test.scoreboard = scoreboard;
 
-    // Create Position groups
-    // var formationExample = new Formation({
-    //
-    // })
-    // formationExample.createOLineAndQB();
-
-    // Create Players
-    // var rb1 = new Player ({
-    //     x: formationExample.qb[0].x,
-    //     y: formationExample.qb[0].y + 60,
-    //     num: 22,
-    //     fill: color(255, 0, 0),
-    //     progressionRank: 3,
-    //     routeNum: 2
-    // });
-    //
-    // var te1 = new Player ({
-    //     x: formationExample.oline[0].x - 30,
-    //     y: formationExample.oline[0].y,
-    //     num: 80,
-    //     fill: color(255, 0, 0),
-    //     progressionRank: 2,
-    //     routeNum: 3
-    // });
-    // var te2 = new Player({
-    //    x: formationExample.oline[4].x + 40,
-    //    y: formationExample.oline[4].y + 30,
-    //    num: 17,
-    //    fill: color(255, 0, 0),
-    //    progressionRank: 4,
-    //    routeNum: 4
-    // });
-    // var wr1 = new Player({
-    //    x: formationExample.oline[0].x - 80,
-    //    y: formationExample.oline[4].y + 30,
-    //    num: 88,
-    //    fill: color(255, 0, 0),
-    //    progressionRank: 1,
-    //    routeNum: 0
-    // });
-    // var wr2 = new Player({
-    //    x: formationExample.oline[4].x + 80,
-    //    y: formationExample.oline[4].y,
-    //    num: 84,
-    //    fill: color(255, 0, 0),
-    //    progressionRank: 5,
-    //    routeNum: 1
-    // });
-    //
-    // // Create Plays
-    // var spider2Y = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "Spider-2 Y Banana",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-    //
-    // var hawaii511 = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "511 Hawaii",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-    //
-    // var bootSlide = new Play({
-    //   eligibleReceivers: [wr1, te1, rb1, te2, wr2],
-    //   offensivePlayers: [].concat.apply([],[rb1, te1, te2, wr1, wr2, formationExample.oline, formationExample.qb[0]]),
-    //   playName: "Boot-Slide",
-    //   qb: formationExample.qb[0],
-    //   oline: formationExample.oline,
-    //   formation: formationExample,
-    //   test: test
-    // });
-
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
@@ -139,19 +59,6 @@ function draw() {
       dbPositions: ["CB", "SS", "F/S", "CB"],
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
-
-    // Create Test
-    // var test = new Test({
-    //     plays: [spider2Y, hawaii511, bootSlide],
-    //     badGuessPenalty: 0.1,
-    //     scoreboard: scoreboard,
-    //     typeTest: "WRRoute",
-    //     cutOff: 50
-    // });
-    //
-    // spider2Y.test = test;
-    // hawaii511.test = test;
-    // bootSlide.test = test;
 
     var user = new User({});
 
