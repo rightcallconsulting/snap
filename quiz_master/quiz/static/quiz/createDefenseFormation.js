@@ -66,8 +66,7 @@ function draw() {
     // Create Position groups
     var formationExample = new Formation({
     })
-    formationExample.createOLineAndQB();
-    formationExample.changeablePlayers.push(formationExample.qb[0]);
+
 
     // Global Variables
     var capitalLetter = false;
@@ -106,7 +105,7 @@ function draw() {
             }
         }
         else {
-            fill(this.red, this.green, this.blue);
+            fill(this.fill);
             textSize(17);
             textAlign(CENTER, CENTER);
             text(this.pos, this.x, this.y);
@@ -116,7 +115,6 @@ function draw() {
     };
 
     Player.prototype.select = function() {
-        //this.red, this.green, this.blue = color(255, 234, 0);
         this.rank = 1;
         this.clicked = true;
         // Unselect all other players to isolate one route
@@ -164,42 +162,88 @@ function draw() {
 
     // Create Position groups
 
-    var rb = new Player ({
-        x: 130,
+    var dl = new Player ({
+        x: 120,
         y: 375,
-        num: 'RB',
-        // fill: color(255, 0, 0)
-        red: 255,
-        green: 0,
-        blue: 0,
-        pos: 'RB'
+        num: 'DL',
+        fill: color(0, 0, 0),
+        pos: 'DL',
+        unit: "defense"
     });
 
-    var te = new Player ({
-        x: 170,
+    var de = new Player ({
+        x: 150,
         y: 375,
-        num: 'TE',
-        // fill: color(255, 0, 0)
-        red: 255,
-        green: 0,
-        blue: 0,
-        pos: 'TE'
+        num: 'DE',
+        fill: color(0, 0, 0),
+        pos: 'DE',
+        unit: "defense"
     });
 
-    var wr = new Player({
-       x: 210,
-       y: 375,
-       num: 'WR',
-      //  fill: color(255, 0, 0)
-      red: 255,
-      green: 0,
-      blue: 0,
-      pos: 'WR'
+    var mike = new Player ({
+      x: 180,
+      y: 375,
+      num: 'M',
+      fill: color(0, 0, 0),
+      pos: 'M',
+      unit: "defense"
     });
 
-    formationExample.optionsToCreate.push(rb);
-    formationExample.optionsToCreate.push(wr);
-    formationExample.optionsToCreate.push(te);
+    var will = new Player ({
+      x: 205,
+      y: 375,
+      num: 'W',
+      fill: color(0, 0, 0),
+      pos: 'W',
+      unit: "defense"
+    });
+
+    var sam = new Player ({
+      x: 230,
+      y: 375,
+      num: 'S',
+      fill: color(0, 0, 0),
+      pos: 'S',
+      unit: "defense"
+    });
+
+    var cb = new Player({
+      x: 260,
+      y: 375,
+      num: 'CB',
+      fill: color(0, 0, 0),
+      pos: 'CB',
+      unit: "defense"
+    });
+
+    var ss = new Player({
+      x: 290,
+      y: 375,
+      num: 'SS',
+      fill: color(0, 0, 0),
+      pos: 'SS',
+      unit: "defense"
+    });
+
+    var fs = new Player({
+      x: 320,
+      y: 375,
+      num: 'FS',
+      fill: color(0, 0, 0),
+      pos: 'FS',
+      unit: "defense"
+    });
+
+    formationExample.optionsToCreate.push(dl);
+    formationExample.optionsToCreate.push(mike);
+    formationExample.optionsToCreate.push(will);
+    formationExample.optionsToCreate.push(sam);
+    formationExample.optionsToCreate.push(cb);
+    formationExample.optionsToCreate.push(de);
+    formationExample.optionsToCreate.push(ss);
+    formationExample.optionsToCreate.push(fs);
+
+
 
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
@@ -212,17 +256,15 @@ function draw() {
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-    defensePlay.draw(formationExample.oline[2].x, formationExample.oline[2].y);
+    defensePlay.draw(currentFormation.oline[2].x, currentFormation.oline[2].y);
 
     // intro scene
     var drawOpening = function() {
-        field.drawBackground(formationExample, height, width);
+        field.drawBackground(getCurrentFormation(), height, width);
         save.draw();
         clear.draw();
         trash.draw();
         formationExample.drawOptionsToCreate();
-        formationExample.drawOLQB();
-        formationExample.drawAllPlayers();
         formationButtons.forEach(function(button){
           button.draw();
         })
@@ -231,7 +273,7 @@ function draw() {
         text("Offensive Formation: "+getCurrentFormation().playName, 100, 20);
         fill(0, 0, 0);
         textSize(20);
-        text(formationExample.feedbackMessage, 330, 20);
+        text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
     };
 
@@ -272,10 +314,7 @@ function draw() {
       if (formationExample.establishingNewPlayer){
         formationExample.establishingNewPlayer.movePlayer();
       }
-      else if (receiverClicked){
-        receiverClicked.change = receiverClicked.change ?  false : true;
-        formationExample.establishingNewPlayer = receiverClicked;
-      }
+
       else if (positionOptionSelected){
         var newPlayer = new Player({
           x: positionOptionSelected.x,
