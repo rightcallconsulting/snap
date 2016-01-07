@@ -106,7 +106,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  //$.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
+  $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
   Player.rank = 1;
 };
 
