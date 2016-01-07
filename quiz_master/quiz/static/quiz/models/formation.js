@@ -493,11 +493,132 @@ Formation.prototype.establishPersonnel = function(personnel){
       change: true,
       pos: "FS"
     })
+
     this.createPlayer(fs);
-    this.establishingNewPlayer = null;
 
   }
   else if(personnel === "Nickel"){
+    var de1 = new Player({
+      x: 128,
+      y: 197.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de1);
+
+    var de2 = new Player({
+      x: 264,
+      y: 191.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de2);
+
+    var dl1 = new Player({
+      x: 176,
+      y: 195.33,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl1);
+
+    var dl2 = new Player({
+      x: 219,
+      y: 191,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl2);
+
+    var mike1 = new Player({
+      x: 176,
+      y: 137,
+      num: "M",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "M"
+    })
+    this.createPlayer(mike1);
+
+    var mike2 = new Player({
+      x: 264,
+      y: 131,
+      num: "M",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "M"
+    })
+    this.createPlayer(mike2);
+
+    var cb1 = new Player({
+      x: 342,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb1);
+
+    var cb2 = new Player({
+      x: 52,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb2);
+
+    var cb3 = new Player({
+      x: 292,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb3);
+
+    var ss = new Player({
+      x: 308,
+      y: 63,
+      num: "SS",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "SS"
+    })
+    this.createPlayer(ss);
+
+    var fs = new Player({
+      x: 147,
+      y: 60,
+      num: "FS",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "FS"
+    })
+    this.createPlayer(fs);
+
 
   }
   else if(personnel === "Jumbo"){
@@ -506,7 +627,7 @@ Formation.prototype.establishPersonnel = function(personnel){
   else if(personnel === "Goal Line"){
 
   }
-
+  this.establishingNewPlayer = null;
 };
 
 var isFormationClicked = function(formationButtonArray){
