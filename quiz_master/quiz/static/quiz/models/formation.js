@@ -166,6 +166,18 @@ Formation.prototype.createPlayer = function(player){
       this.defensivePlayers.push(player);
       this.changeablePlayers.push(player);
       this.establishingNewPlayer = player;
+      if(player.position === "DL" || player.position === "DE"){
+        this.dline.push(player);
+      }
+      else if(player.position === "W" || player.position === "M" || player.position === "S"){
+        this.linebackers.push(player);
+      }
+      else if(player.position === "CB"){
+        this.cornerbacks.push(player);
+      }
+      else if(player.position === "SS" || player.position === "FS"){
+        this.safeties.push(player);
+      }
     }
   }
   else{
@@ -220,12 +232,37 @@ Formation.prototype.validPlay = function(){
 }
 
 Formation.prototype.deletePlayer = function(player){
-  index = this.eligibleReceivers.indexOf(player);
-  this.eligibleReceivers.splice(index, 1);
-  index = this.changeablePlayers.indexOf(player);
-  this.changeablePlayers.splice(index, 1);
-  index = this.offensivePlayers.indexOf(player);
-  this.offensivePlayers.splice(index, 1);
+  if(player.unit === "defense"){
+    index = this.defensivePlayers.indexOf(player);
+    this.defensivePlayers.splice(index, 1);
+    index = this.changeablePlayers.indexOf(player);
+    this.changeablePlayers.splice(index, 1);
+
+    if(player.position === "DL" || player.position === "DE"){
+      index = this.dline.indexOf(player);
+      this.dline.splice(index, 1);
+    }
+    else if(player.position === "W" || player.position === "M" || player.position === "S"){
+      index = this.linebackers.indexOf(player);
+      this.linebackers.splice(index, 1);
+    }
+    else if(player.position === "CB"){
+      index = this.cornerbacks.indexOf(player);
+      this.cornerbacks.splice(index, 1);
+    }
+    else if(player.position === "SS" || player.position === "FS"){
+      index = this.safeties.indexOf(player);
+      this.safeties.splice(index, 1);
+    }
+  }
+  else{
+    index = this.eligibleReceivers.indexOf(player);
+    this.eligibleReceivers.splice(index, 1);
+    index = this.changeablePlayers.indexOf(player);
+    this.changeablePlayers.splice(index, 1);
+    index = this.offensivePlayers.indexOf(player);
+    this.offensivePlayers.splice(index, 1);
+  }
 };
 
 Formation.prototype.clearPreviousRouteDisplays = function(){
