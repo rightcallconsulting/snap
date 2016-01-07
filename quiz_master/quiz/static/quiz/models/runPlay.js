@@ -4,4 +4,5 @@ var RunPlay = function(config){
   this.exchangePoints = config.exchangePoints || []; //[(ball carrier x,y), (recipient x,y)], relative to LOS?
   this.carrierDestination = config.carrierDestination || []; //x,y coordinates?
   this.recipientDestination = config.recipientDestination || 0; //Gap number
+  this.hasExchanged = config.hasExchanged || false;
 };

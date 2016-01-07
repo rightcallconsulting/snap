@@ -28,6 +28,9 @@ Play.prototype.resetPlayers = function(defensivePlay){
   for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
       defensivePlay.defensivePlayers[i].resetToStart();
   }
+  if(this.runPlay !== null){
+    this.runPlay.hasExchanged = false;
+  }
 };
 
 Play.prototype.setAllRoutes = function(){

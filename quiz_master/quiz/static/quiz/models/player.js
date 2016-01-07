@@ -379,9 +379,9 @@ Player.prototype.getGapX = function(gap, center){
         offset *= -1;
     }
     if(offset === 0){
-        return center.x - 15 + 30 * gap;
+        return center.startX - 15 + 30 * gap;
     }
-    return center.x + offset*bucketSize;
+    return center.startX + offset*bucketSize;
 };
 
 Player.prototype.setCorrectCoordinates = function(){

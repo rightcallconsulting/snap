@@ -25,6 +25,7 @@ function draw() {
               var play = createPlayFromJSON(play);
               play.test = test
               play.runPlay = new RunPlay({
+                //exchangePoints: [[play.qb.startX + 10, play.qb.startY + 10], [play.qb.startX + 10 + play.qb.siz, play.qb.startY + 10 + play.qb+siz]],
                 recipientDestination: 4
               });
               test.plays.push(play);
@@ -38,6 +39,10 @@ function draw() {
             test.plays.forEach(function(play){
               play.addPositionsFromID(positions);
               play.populatePositions();
+              play.runPlay.ballCarrier = play.qb[0];
+              play.runPlay.ballRecipient = play.eligibleReceivers[4];
+              play.runPlay.exchangePoints = [[play.qb[0].startX + 20, play.qb[0].startY + 20], [play.qb[0].startX + 10 + play.qb[0].siz, play.qb[0].startY + 10 + play.qb[0].siz]];
+              play.runPlay.carrierDestination = [play.qb[0].startX - 70, play.qb[0].startY + 30];
             })
             test.typeTest = "RBQuiz"
             runTest("RBQuiz", currentPlayerTested, test);
@@ -262,12 +267,29 @@ function draw() {
       stop.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
-      for (var i = 0; i < test.getCurrentPlay().oline.length; i++) {
-        var olineman = test.getCurrentPlay().oline[i];
-        olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);
+
+      var oline = test.getCurrentPlay().oline;
+
+      for (var i = 0; i < oline.length; i++) {
+        var olineman = oline[i];
+        //olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);
       }
       for (var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++) {
-        test.getCurrentDefensivePlay().defensivePlayers[i].blitzGap(test.getCurrentPlay().oline[2], test.getCurrentPlay());
+        //test.getCurrentDefensivePlay().defensivePlayers[i].blitzGap(oline[2], test.getCurrentPlay());
+      }
+      if(currentPlayer !== null && test.getCurrentPlay().runPlay !== null){
+        var runPlay = test.getCurrentPlay().runPlay;
+        if(runPlay.hasExchanged){
+          currentPlayer.moveTo(currentPlayer.getGapX(runPlay.recipientDestination, oline[2]),oline[2].startY);
+          if(runPlay.carrierDestination.length === 2){
+            runPlay.ballCarrier.moveTo(runPlay.carrierDestination[0], runPlay.carrierDestination[1]);
+          }
+        }else{
+          runPlay.ballCarrier.moveTo(runPlay.exchangePoints[0][0],runPlay.exchangePoints[0][1]);
+          if(currentPlayer.moveTo(runPlay.exchangePoints[1][0],runPlay.exchangePoints[1][1])){
+            runPlay.hasExchanged = true;
+          }
+        }
       }
       fill(0, 0, 0);
       textSize(20);
