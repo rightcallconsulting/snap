@@ -633,9 +633,250 @@ Formation.prototype.establishPersonnel = function(personnel){
 
   }
   else if(personnel === "Jumbo"){
+    var de1 = new Player({
+      x: 128,
+      y: 197.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de1);
 
+    var de2 = new Player({
+      x: 264,
+      y: 191.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de2);
+
+    var dl1 = new Player({
+      x: 176,
+      y: 195.33,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl1);
+
+    var dl2 = new Player({
+      x: 219,
+      y: 191,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl2);
+
+    var will = new Player({
+      x: 136,
+      y: 137,
+      num: "W",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "W"
+    })
+    this.createPlayer(will);
+
+    var mike1 = new Player({
+      x: 204,
+      y: 131,
+      num: "M",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "M"
+    })
+    this.createPlayer(mike1);
+
+    var mike2 = new Player({
+      x: 244,
+      y: 131,
+      num: "M",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "M"
+    })
+    this.createPlayer(mike2);
+
+    var sam = new Player({
+      x: 271,
+      y: 133,
+      num: "S",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "S"
+    })
+    this.createPlayer(sam);
+
+    var cb1 = new Player({
+      x: 342,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb1);
+
+    var cb2 = new Player({
+      x: 52,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb2);
+
+    var fs = new Player({
+      x: 147,
+      y: 60,
+      num: "FS",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "FS"
+    })
+
+    this.createPlayer(fs);
   }
   else if(personnel === "Goal Line"){
+    var de1 = new Player({
+      x: 128,
+      y: 197.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de1);
+
+    var de2 = new Player({
+      x: 264,
+      y: 191.33,
+      num: "DE",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DE"
+    })
+    this.createPlayer(de2);
+
+    var dl1 = new Player({
+      x: 176,
+      y: 195.33,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl1);
+
+    var dl2 = new Player({
+      x: 219,
+      y: 191,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl2);
+
+    var dl3 = new Player({
+      x: 239,
+      y: 191,
+      num: "DL",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "DL"
+    })
+    this.createPlayer(dl3);
+
+    var will = new Player({
+      x: 136,
+      y: 137,
+      num: "W",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "W"
+    })
+    this.createPlayer(will);
+
+    var mike1 = new Player({
+      x: 204,
+      y: 131,
+      num: "M",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "M"
+    })
+    this.createPlayer(mike1);
+
+    var sam = new Player({
+      x: 271,
+      y: 133,
+      num: "S",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "S"
+    })
+    this.createPlayer(sam);
+
+    var cb1 = new Player({
+      x: 342,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb1);
+
+    var cb2 = new Player({
+      x: 52,
+      y: 175,
+      num: "CB",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "CB"
+    })
+    this.createPlayer(cb2);
+
+    var fs = new Player({
+      x: 147,
+      y: 60,
+      num: "FS",
+      fill: color(0, 0, 0),
+      unit: "defense",
+      change: true,
+      pos: "FS"
+    })
+
+    this.createPlayer(fs);
 
   }
   this.establishingNewPlayer = null;

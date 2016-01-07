@@ -108,7 +108,12 @@ function draw() {
             }
         }
         else {
-            fill(this.fill);
+            if(this.clicked){
+              fill(0, 0, 255);
+            }
+            else{
+              fill(this.fill);
+            }
             textSize(17);
             textAlign(CENTER, CENTER);
             text(this.pos, this.x, this.y);
@@ -314,7 +319,6 @@ function draw() {
         })
         defensePlay.drawAllPlayers();
         currentFormation.drawAllPlayers();
-        text("Offensive Formation: "+getCurrentFormation().playName, 100, 20);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
@@ -485,7 +489,6 @@ function draw() {
           formationExample.removeAllPlayers();
           formationExample.playName = "";
           formationExample.feedbackMessage = "Saved!"
-          // Logic to save the play to the database
 
         } else{
           formationExample.feedbackMessage = "Invalid Play"
