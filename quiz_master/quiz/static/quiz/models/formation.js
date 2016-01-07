@@ -396,17 +396,6 @@ Formation.prototype.establishPersonnel = function(personnel){
     })
     this.createPlayer(de2);
 
-    var de2 = new Player({
-      x: 264,
-      y: 191.33,
-      num: "DE",
-      fill: color(0, 0, 0),
-      unit: "defense",
-      change: true,
-      pos: "DE"
-    })
-    this.createPlayer(de2);
-
     var dl1 = new Player({
       x: 176,
       y: 195.33,
@@ -505,6 +494,7 @@ Formation.prototype.establishPersonnel = function(personnel){
       pos: "FS"
     })
     this.createPlayer(fs);
+    this.establishingNewPlayer = null;
 
   }
   else if(personnel === "Nickel"){
