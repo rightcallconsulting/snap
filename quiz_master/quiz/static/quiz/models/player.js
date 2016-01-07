@@ -504,19 +504,11 @@ Player.prototype.checkSelection = function(test) {
   }
   if (isCorrect) {
     // clearSelection();
-    test.scoreboard.feedbackMessage = "You got it, dude";
-    test.score++;
     test.showBigPlayers = true;
-    if (test.questionNum >= test.plays.length) {
-      endTime = millis();
-    } else {
-
-    }
   } else {
-    test.scoreboard.feedbackMessage = "Wrong Answer";
-    test.incorrectGuesses++;
     //TODO: Explain what was wrong (or print right answer?)
   }
+  test.registerAnswer(isCorrect);
 };
 
 Player.prototype.createBigPlayer = function(height, width){

@@ -10,6 +10,7 @@ function draw() {
       plays: [],
       badGuessPenalty: 0.1,
       scoreboard: scoreboard,
+      questionsPerPlay: 2,
       typeTest: "CBAssignment"
   });
 
