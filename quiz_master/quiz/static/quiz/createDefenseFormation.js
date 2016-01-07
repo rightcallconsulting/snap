@@ -119,8 +119,8 @@ function draw() {
         this.rank = 1;
         this.clicked = true;
         // Unselect all other players to isolate one route
-        for(var i = 0; i < formationExample.eligibleReceivers.length; i++){
-          var p = formationExample.eligibleReceivers[i];
+        for(var i = 0; i < formationExample.defensivePlayers.length; i++){
+          var p = formationExample.defensivePlayers[i];
           if(p !== this){
             p.clicked = false;
             p.rank = 0;
@@ -306,13 +306,17 @@ function draw() {
     };
 
     mouseDragged = function(){
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
       var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
       var selectedNode = formationExample.mouseInReceiverOrNode()[1];
       var positionOptionSelected = formationExample.mouseInOptionsToCreate();
       if (formationExample.establishingNewPlayer){
         formationExample.establishingNewPlayer.movePlayer();
       }
-
+      else if (defensivePlayerClicked){
+        defensivePlayerClicked.change = defensivePlayerClicked.change ?  false : true;
+        formationExample.establishingNewPlayer = defensivePlayerClicked;
+      }
       else if (positionOptionSelected){
         var newPlayer = new Player({
           x: positionOptionSelected.x,
@@ -337,6 +341,7 @@ function draw() {
     };
 
     mouseClicked = function() {
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
       var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
       var selectedNode = formationExample.mouseInReceiverOrNode()[1];
       var formationClicked = isFormationClicked(formationButtons);
@@ -368,6 +373,21 @@ function draw() {
           var playerSelected = false;
           for(var i = 0; i < formationExample.eligibleReceivers.length; i++){
               var p = formationExample.eligibleReceivers[i];
+              if (p.isMouseInside()){
+                  if(p.clicked){
+                      p.unselect();
+                      p.showRoute = false;
+                  }else{
+                      p.select();
+                  }
+                  break;
+              }
+          }
+      }
+      else if (defensivePlayerClicked){
+          var playerSelected = false;
+          for(var i = 0; i < formationExample.defensivePlayers.length; i++){
+              var p = formationExample.defensivePlayers[i];
               if (p.isMouseInside()){
                   if(p.clicked){
                       p.unselect();

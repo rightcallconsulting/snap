@@ -466,7 +466,6 @@ Player.prototype.movePlayer = function(){
   this.startY = mouseY;
   this.routeCoordinates[0][0] = mouseX;
   this.routeCoordinates[0][1] = mouseY;
-  console.log(this.x)
 };
 
 Player.prototype.convertRouteDrawingToBreakPoints = function(){

@@ -17,6 +17,7 @@ var Formation = function(config){
   this.linebackers = config.linebackers || [];
   this.cornerbacks = config.cornerbacks || [];
   this.safeties = config.safeties || [];
+  this.defensivePlayers = config.defensivePlayers || [];
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
@@ -160,11 +161,20 @@ Formation.prototype.removeAllPlayers = function(){
 };
 
 Formation.prototype.createPlayer = function(player){
-  if (this.offensivePlayers.length < 11){
-    this.offensivePlayers.push(player);
-    this.eligibleReceivers.push(player);
-    this.changeablePlayers.push(player);
-    this.establishingNewPlayer = player;
+  if(player.unit === "defense"){
+    if (this.defensivePlayers.length < 11){
+      this.defensivePlayers.push(player);
+      this.changeablePlayers.push(player);
+      this.establishingNewPlayer = player;
+    }
+  }
+  else{
+    if (this.offensivePlayers.length < 11){
+      this.offensivePlayers.push(player);
+      this.eligibleReceivers.push(player);
+      this.changeablePlayers.push(player);
+      this.establishingNewPlayer = player;
+    }
   }
 };
 
@@ -182,6 +192,17 @@ Formation.prototype.mouseInReceiverOrNode = function(){
     }
   }
   return [receiverClicked, selectedNode];
+};
+
+Formation.prototype.mouseInDefensivePlayer = function(){
+  for(var i = 0; i < this.defensivePlayers.length; i++){
+    var p = this.defensivePlayers[i];
+    if (p.isMouseInside()){
+      var defensivePlayer = p;
+    }
+
+  }
+  return defensivePlayer
 };
 
 Formation.prototype.mouseInOptionsToCreate = function() {
