@@ -65,6 +65,7 @@ function draw() {
 
     // Create Position groups
     var formationExample = new Formation({
+      unit: "defense"
     })
 
 
@@ -243,8 +244,6 @@ function draw() {
     formationExample.optionsToCreate.push(ss);
     formationExample.optionsToCreate.push(fs);
 
-
-
     var defensePlay = new DefensivePlay({
       defensivePlayers: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
@@ -256,8 +255,6 @@ function draw() {
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-    defensePlay.draw(currentFormation.oline[2].x, currentFormation.oline[2].y);
-
     // intro scene
     var drawOpening = function() {
         field.drawBackground(getCurrentFormation(), height, width);
@@ -265,6 +262,7 @@ function draw() {
         clear.draw();
         trash.draw();
         formationExample.drawOptionsToCreate();
+        formationExample.drawAllPlayers();
         formationButtons.forEach(function(button){
           button.draw();
         })
@@ -320,10 +318,8 @@ function draw() {
           x: positionOptionSelected.x,
           y: positionOptionSelected.y,
           num: positionOptionSelected.num,
-          // fill: color(255, 0, 0),
-          red: 255,
-          green: 0,
-          blue: 0,
+          fill: color(0, 0, 0),
+          unit: "defense",
           change: true,
           pos: positionOptionSelected.pos
         })

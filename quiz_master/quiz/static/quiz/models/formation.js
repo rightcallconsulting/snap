@@ -12,6 +12,11 @@ var Formation = function(config){
   this.updated_at = config.updated_at || null;
   this.created_at = config.updated_at || null;
   this.positions = config.positions || null;
+  this.unit = config.unit || "offense";
+  this.dline = config.dline || [];
+  this.linebackers = config.linebackers || [];
+  this.cornerbacks = config.cornerbacks || [];
+  this.safeties = config.safeties || [];
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
