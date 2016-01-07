@@ -15,6 +15,7 @@ function draw() {
     makeJSONCall = false
     $.getJSON('/quiz/players/18/tests/1', function(data, jqXHR){
       test = createTestFromJSON(data[0]);
+      test.questionsPerPlay = 2;
       var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = createUserFromJSON(data2[0]);
@@ -49,9 +50,9 @@ function draw() {
     var cover2 = new DefensivePlay({
       playName: "Cover 2",
       defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8],[-3,0,8]],
+      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5],[-1,-2,-4,-5]],
       dlPositions: ["DE", "NT", "DT", "RE"],
       lbPositions: ["W", "M", "S"],
       dbPositions: ["CB", "SS", "F/S", "CB"],
@@ -63,9 +64,9 @@ function draw() {
     var cover3 = new DefensivePlay({
       playName: "Cover 3",
       defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8],[-3,0,8]],
+      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5],[-1,-2,-4,-5]],
       dlPositions: ["DE", "NT", "DT", "RE"],
       lbPositions: ["W", "M", "S"],
       dbPositions: ["CB", "SS", "F/S", "CB"],
@@ -77,16 +78,19 @@ function draw() {
     var cover4 = new DefensivePlay({
       playName: "Cover 4",
       defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8],[-3,0,8]],
+      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5],[-1,-2,-4,-5]],
       dlPositions: ["DE", "NT", "DT", "RE"],
       lbPositions: ["W", "M", "S"],
       dbPositions: ["CB", "SS", "F/S", "CB"],
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-    test.defensivePlays.push(cover4);
+    while(test.plays.length > test.defensivePlays.length){
+      test.defensivePlays.push(cover4);
+    }
+
 
     //Create Scoreboard
     var scoreboard = new Scoreboard({
