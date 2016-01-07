@@ -152,12 +152,22 @@ Formation.prototype.findSelectedWR = function(){
 };
 
 Formation.prototype.removeAllPlayers = function(){
-  this.eligibleReceivers.forEach(function(player){
-      index = this.offensivePlayers.indexOf(player);
-      this.offensivePlayers.splice(index, 1);
-  }.bind(this))
-  this.eligibleReceivers = [];
-  this.changeablePlayers = [this.qb[0]];
+  if(this.unit === "defense"){
+    this.defensivePlayers = [];
+    this.dline = [];
+    this.linebackers = [];
+    this.safeties = [];
+    this.cornerbacks = [];
+    this.changeablePlayers = [];
+  }
+  else{
+    this.eligibleReceivers.forEach(function(player){
+        index = this.offensivePlayers.indexOf(player);
+        this.offensivePlayers.splice(index, 1);
+    }.bind(this))
+    this.eligibleReceivers = [];
+    this.changeablePlayers = [this.qb[0]];
+  }
 };
 
 Formation.prototype.createPlayer = function(player){
@@ -373,6 +383,7 @@ var createFormationButtons = function(formationArray){
 };
 
 Formation.prototype.establishPersonnel = function(personnel){
+  this.removeAllPlayers();
   if(personnel === "Base"){
     var de1 = new Player({
       x: 128,
