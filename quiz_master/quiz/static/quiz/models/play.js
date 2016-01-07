@@ -14,6 +14,7 @@ var Play = function(config) {
     this.teamID = config.teamID || null;
     this.positions = config.positions || [];
     this.positionIDs = config.positionIDs || [];
+    this.runPlay = config.runPlay || null;
 };
 
 

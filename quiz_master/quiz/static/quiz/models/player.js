@@ -502,7 +502,7 @@ Player.prototype.checkSelection = function(test) {
   if (this === correctPlayer || (correctPlayerIndex === this.playerIndex && correctUnitIndex === this.unitIndex)){
     var isCorrect = true
   }
-  if (isCorrect) {
+  if (isCorrect && test.questionsPerPlay > 1) {
     // clearSelection();
     test.showBigPlayers = true;
   } else {

@@ -42,6 +42,9 @@ def formation_quiz(request):
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
+def rb_quiz(request):
+    return render(request, 'quiz/rb_quiz.html')
+
 def results_chart(request):
     return render(request, 'quiz/results_chart.html')
 

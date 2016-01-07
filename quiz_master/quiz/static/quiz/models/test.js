@@ -57,6 +57,8 @@ Test.prototype.getScoreString = function(){
   }
   else if(this.typeTest === "Option"){
     return "N/A";
+  }else if(this.typeTest === "RBQuiz"){
+    return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length * this.questionsPerPlay + ", " + scorePercentage;
   }
 };
 
@@ -144,15 +146,15 @@ Test.prototype.clearSelection = function() {
         this.getCurrentPlay().bigPlayer.unselect();
       }
     } else {
-        if (dPlay){
-          for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
-            var p = dPlay.defensivePlayers[i];
-            if (p.clicked) {
-              p.unselect();
-            }
+      if (dPlay){
+        for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
+          var p = dPlay.defensivePlayers[i];
+          if (p.clicked) {
+            p.unselect();
           }
         }
-        if (oPlay){
+      }
+      if (oPlay){
         for (var i = 0; i < oPlay.offensivePlayers.length; i++) {
           var p = oPlay.offensivePlayers[i];
           if (p.clicked) {
