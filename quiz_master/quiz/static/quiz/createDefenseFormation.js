@@ -428,6 +428,7 @@ function draw() {
       }
       else if (personnelClicked){
         currentPersonnel = personnelClicked.label;
+        formationExample.establishPersonnel(currentPersonnel);
       }
       else if (receiverClicked){
           var playerSelected = false;
