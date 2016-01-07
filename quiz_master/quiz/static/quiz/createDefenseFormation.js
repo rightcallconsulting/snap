@@ -1,8 +1,10 @@
 var formations = [];
 var makeJSONCall = true;
+var personnelButtons = [];
+var currentPersonnel = "Base";
 
 function setup() {
-  var myCanvas = createCanvas(400, 600);
+  var myCanvas = createCanvas(600, 600);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -161,6 +163,47 @@ function draw() {
         displayButton: true
     });
 
+    var base = new Button({
+        x: 450,
+        y: 10,
+        width: 70,
+        label: "Base",
+        clicked: false,
+        displayButton: true
+    });
+
+    var nickel = new Button({
+        x: 450,
+        y: 50,
+        width: 70,
+        label: "Nickel",
+        clicked: false,
+        displayButton: true
+    });
+
+    var jumbo = new Button({
+        x: 450,
+        y: 90,
+        width: 70,
+        label: "Jumbo",
+        clicked: false,
+        displayButton: true
+    });
+
+    var goalLine = new Button({
+        x: 450,
+        y: 130,
+        width: 70,
+        label: "Goal Line",
+        clicked: false,
+        displayButton: true
+    });
+
+    personnelButtons.push(base)
+    personnelButtons.push(nickel)
+    personnelButtons.push(jumbo)
+    personnelButtons.push(goalLine)
+
     // Create Position groups
 
     var dl = new Player ({
@@ -266,6 +309,9 @@ function draw() {
         formationButtons.forEach(function(button){
           button.draw();
         })
+        personnelButtons.forEach(function(button){
+          button.draw();
+        })
         defensePlay.drawAllPlayers();
         currentFormation.drawAllPlayers();
         text("Offensive Formation: "+getCurrentFormation().playName, 100, 20);
@@ -340,11 +386,22 @@ function draw() {
       }
     };
 
+    var isPersonnelClicked = function(personnelButtonArray){
+      var personnelClicked;
+      personnelButtonArray.forEach(function(button){
+        if (button.isMouseInside()){
+          personnelClicked = button;
+        }
+      })
+      return personnelClicked;
+    };
+
     mouseClicked = function() {
       var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
       var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
       var selectedNode = formationExample.mouseInReceiverOrNode()[1];
       var formationClicked = isFormationClicked(formationButtons);
+      var personnelClicked = isPersonnelClicked(personnelButtons);
       selectedWR = formationExample.findSelectedWR();
       if (formationExample.establishingNewPlayer){
         if(isInsideTrash(formationExample.establishingNewPlayer)){
@@ -368,6 +425,9 @@ function draw() {
         currentFormation = formations.filter(function(formation) {
           return formation.playName == formationClicked.label;
         })[0];
+      }
+      else if (personnelClicked){
+        currentPersonnel = personnelClicked.label;
       }
       else if (receiverClicked){
           var playerSelected = false;

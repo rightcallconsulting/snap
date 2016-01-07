@@ -372,6 +372,11 @@ var createFormationButtons = function(formationArray){
   }
 };
 
+Formation.prototype.drawDefensePersonnel = function(personnel){
+  
+
+};
+
 var isFormationClicked = function(formationButtonArray){
   var formationClicked;
   formationButtonArray.forEach(function(button){
