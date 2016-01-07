@@ -509,6 +509,7 @@ Player.prototype.checkSelection = function(test) {
     //TODO: Explain what was wrong (or print right answer?)
   }
   test.registerAnswer(isCorrect);
+  return isCorrect;
 };
 
 Player.prototype.createBigPlayer = function(height, width){

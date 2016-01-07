@@ -105,7 +105,8 @@ function draw() {
       if (this.unit === "offense") {
         noStroke();
         if (this.clicked) {
-          fill(255, 255, 0);
+          //fill(255, 255, 0);
+          fill(this.fill);
         } else if (this === test.getCurrentPlay().bigPlayer) {
           fill(255, 0, 0);
         } else if (this.isBeingTested) {
@@ -214,6 +215,16 @@ function draw() {
       clicked: false
     });
 
+    var getSelectedPlayer = function(){
+      var players = test.getCurrentPlay().oline.slice();
+      for(var i = 0; i < players.length; i++){
+        if(players[i].clicked){
+          return players[i];
+        }
+      }
+      return null;
+    }
+
     // intro scene
     var drawOpening = function() {
       currentPlayer = test.getCurrentPlay().eligibleReceivers[4];//test.establishOLPlayerTested(user);
@@ -230,6 +241,14 @@ function draw() {
       clear.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
+
+      //draw line from RB to currently selected gap?
+      var selectedPlayer = getSelectedPlayer();
+      if(selectedPlayer !== null){
+        stroke(250,250,0);
+        line(currentPlayer.x, currentPlayer.y, selectedPlayer.x, selectedPlayer.y);
+      }
+
       fill(0, 0, 0);
       textSize(20);
       noStroke();
@@ -339,7 +358,9 @@ function draw() {
           var p = test.getCurrentDefensivePlay().defensivePlayers[i];
           if (p.isMouseInside()) {
             if (p.clicked) {
-              p.checkSelection(test);
+              if(p.checkSelection(test)){
+                test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
+              }
             } else {
               p.select();
             }
