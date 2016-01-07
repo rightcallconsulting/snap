@@ -33,6 +33,9 @@ def cb_assignment(request):
 def create_formation(request):
     return render(request, 'quiz/create_formation.html')
 
+def create_defense_formation(request):
+    return render(request, 'quiz/create_defense_formation.html')
+
 def create_play(request):
     return render(request, 'quiz/create_play.html')
 

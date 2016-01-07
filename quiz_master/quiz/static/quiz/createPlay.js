@@ -160,7 +160,6 @@ function draw() {
         displayButton: true
     });
 
-    // Will need to interact with database to fetch a formation
     var getCurrentFormation = function(){
       return currentFormation;
     };

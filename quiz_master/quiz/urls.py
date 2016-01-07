@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^cadence_quiz$', views.cadence_quiz, name='cadence_quiz'),
     url(r'^option_quiz$', views.option_quiz, name='option_quiz'),
     url(r'^create_formation$', views.create_formation, name='create_formation'),
+    url(r'^create_defense_formation$', views.create_defense_formation, name='create_defense_formation'),
     url(r'^create_play$', views.create_play, name='create_play'),
     url(r'^formation_quiz$', views.formation_quiz, name='formation_quiz'),
     url(r'^ol_view$', views.ol_view, name='ol_view'),
