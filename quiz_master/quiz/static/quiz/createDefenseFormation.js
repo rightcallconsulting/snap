@@ -39,7 +39,9 @@ function draw() {
               newPlayer.fill = color(255, 0, 0);
             }
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            formation.positions.push(newPlayer);
+            if(formation){
+              formation.positions.push(newPlayer);
+            }
           })
           formations.forEach(function(formation){
             formation.populatePositions();
@@ -318,6 +320,7 @@ function draw() {
     // intro scene
     var drawOpening = function() {
         field.drawBackground(getCurrentFormation(), height, width);
+        text(formationExample.playName, 10, 50)
         save.draw();
         clear.draw();
         trash.draw();
@@ -484,15 +487,14 @@ function draw() {
       }
       else if (save.isMouseInside()) {
         if(formationExample.validPlay()){
-          formationExample.eligibleReceivers.forEach(function(player){
-            player.convertRouteDrawingToBreakPoints();
-          })
           var newFormation = new Formation({
-              eligibleReceivers: formationExample.eligibleReceivers,
+              defensivePlayers: formationExample.defensivePlayers,
               playName: formationExample.playName,
-              qb: formationExample.qb,
-              oline: formationExample.oline,
-              offensivePlayers: formationExample.offensivePlayers
+              dline: formationExample.dline,
+              linebackers: formationExample.linebackers,
+              cornerbacks: formationExample.cornerbacks,
+              safeties: formationExample.safeties,
+              unit: formationExample.unit
           });
           newFormation.saveToDB();
           formationExample.removeAllPlayers();

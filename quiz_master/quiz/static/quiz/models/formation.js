@@ -245,7 +245,12 @@ Formation.prototype.mouseInOptionsToCreate = function() {
 };
 
 Formation.prototype.validPlay = function(){
-  return this.offensivePlayers.length === 11;
+  if(this.unit === "defense"){
+    return this.defensivePlayers.length === 11;
+  }
+  else{
+    return this.offensivePlayers.length === 11;
+  }
 }
 
 Formation.prototype.deletePlayer = function(player){

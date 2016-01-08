@@ -54,6 +54,7 @@ class Formation(models.Model):
     name = models.CharField(max_length=100)
     offensivePlayers = models.ManyToManyField(Player)
     playName = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100, default="offense")
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
@@ -63,12 +64,18 @@ class Formation(models.Model):
 
     @classmethod
     def from_json(cls, json):
-        new_formation = Formation(name=json['playName'], team=Team.objects.get(pk=1))
+        new_formation = Formation(name=json['playName'], team=Team.objects.get(pk=1), unit=json['unit'])
         new_formation.save()
-        for player in json['offensivePlayers']:
-            new_position = Position(name=player['pos'], startX=player['startX'],
-            startY=player['startY'], formation=new_formation)
-            new_position.save()
+        if(json['unit'] == "offense"):
+            for player in json['offensivePlayers']:
+                new_position = Position(name=player['pos'], startX=player['startX'],
+                startY=player['startY'], formation=new_formation)
+                new_position.save()
+        else:
+            for player in json['defensivePlayers']:
+                new_position = Position(name=player['pos'], startX=player['startX'],
+                startY=player['startY'], formation=new_formation)
+                new_position.save()
 
 class Position(models.Model):
     startX = models.FloatField()
