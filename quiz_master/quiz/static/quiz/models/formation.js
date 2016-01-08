@@ -18,6 +18,7 @@ var Formation = function(config){
   this.cornerbacks = config.cornerbacks || [];
   this.safeties = config.safeties || [];
   this.defensivePlayers = config.defensivePlayers || [];
+  this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){

@@ -54,6 +54,7 @@ class Formation(models.Model):
     name = models.CharField(max_length=100)
     offensivePlayers = models.ManyToManyField(Player)
     playName = models.CharField(max_length=100)
+    offensiveFormationID = models.IntegerField(null=True, blank=True)
     unit = models.CharField(max_length=100, default="offense")
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
@@ -72,6 +73,8 @@ class Formation(models.Model):
                 startY=player['startY'], formation=new_formation)
                 new_position.save()
         else:
+            new_formation.offensiveFormationID = json['offensiveFormationID']
+            new_formation.save()
             for player in json['defensivePlayers']:
                 new_position = Position(name=player['pos'], startX=player['startX'],
                 startY=player['startY'], formation=new_formation)

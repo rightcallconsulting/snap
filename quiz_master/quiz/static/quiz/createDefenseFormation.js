@@ -494,7 +494,8 @@ function draw() {
               linebackers: formationExample.linebackers,
               cornerbacks: formationExample.cornerbacks,
               safeties: formationExample.safeties,
-              unit: formationExample.unit
+              unit: formationExample.unit,
+              offensiveFormationID: currentOffensiveFormation.id
           });
           newFormation.saveToDB();
           formationExample.removeAllPlayers();
