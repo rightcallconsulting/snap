@@ -491,6 +491,22 @@ Player.prototype.establishFill = function(){
   }
 };
 
+Player.prototype.isALineman = function(){
+  if(this.unit ==="defense"){
+    if(this.pos === "DL" || this.pos === "DE"){
+      return true
+    }
+
+  }
+  else{
+    if(this.pos === "LT" || this.pos === "LG" || this.pos === "C" || this.pos === "RG"
+    || this.pos === "RT" || this.pos === "OT"){
+      return true
+    }
+  }
+
+};
+
 Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;

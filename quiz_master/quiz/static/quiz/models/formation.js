@@ -151,6 +151,13 @@ Formation.prototype.findSelectedWR = function(){
   return selectedWR;
 };
 
+Formation.prototype.findSelectedDefensivePlayer = function(){
+  var selectedPlayer = this.defensivePlayers.filter(function(player) {
+    return player.clicked === true;
+  })[0];
+  return selectedPlayer;
+};
+
 Formation.prototype.removeAllPlayers = function(){
   if(this.unit === "defense"){
     this.defensivePlayers = [];

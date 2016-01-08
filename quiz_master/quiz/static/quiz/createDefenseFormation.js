@@ -55,10 +55,10 @@ function draw() {
 
 
     //Field Position Variables
-    var currentFormation = formations[0];
+    var currentOffensiveFormation = formations[0];
 
     var getCurrentFormation = function(){
-      return currentFormation;
+      return currentOffensiveFormation;
     };
 
     var scoreboard = new Scoreboard({
@@ -117,6 +117,10 @@ function draw() {
             textSize(17);
             textAlign(CENTER, CENTER);
             text(this.pos, this.x, this.y);
+            if(this.CBAssignment){
+              stroke(255, 0, 0);
+              line(this.x, this.y, this.CBAssignment.x, this.CBAssignment.y);
+            }
         }
         this.drawRoute();
         noStroke();
@@ -317,8 +321,7 @@ function draw() {
         personnelButtons.forEach(function(button){
           button.draw();
         })
-        defensePlay.drawAllPlayers();
-        currentFormation.drawAllPlayers();
+        currentOffensiveFormation.drawAllPlayers();
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
@@ -402,11 +405,12 @@ function draw() {
 
     mouseClicked = function() {
       var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
-      var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-      var selectedNode = formationExample.mouseInReceiverOrNode()[1];
+      var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode()[0];
+      var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode()[1];
       var formationClicked = isFormationClicked(formationButtons);
       var personnelClicked = isPersonnelClicked(personnelButtons);
       selectedWR = formationExample.findSelectedWR();
+      var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (formationExample.establishingNewPlayer){
         if(isInsideTrash(formationExample.establishingNewPlayer)){
           formationExample.deletePlayer(formationExample.establishingNewPlayer);
@@ -426,7 +430,7 @@ function draw() {
         }
       }
       else if (formationClicked){
-        currentFormation = formations.filter(function(formation) {
+        currentOffensiveFormation = formations.filter(function(formation) {
           return formation.playName == formationClicked.label;
         })[0];
       }
@@ -434,20 +438,12 @@ function draw() {
         currentPersonnel = personnelClicked.label;
         formationExample.establishPersonnel(currentPersonnel);
       }
-      else if (receiverClicked){
-          var playerSelected = false;
-          for(var i = 0; i < formationExample.eligibleReceivers.length; i++){
-              var p = formationExample.eligibleReceivers[i];
-              if (p.isMouseInside()){
-                  if(p.clicked){
-                      p.unselect();
-                      p.showRoute = false;
-                  }else{
-                      p.select();
-                  }
-                  break;
-              }
-          }
+      else if (selectedDefensivePlayer && receiverClicked){
+        if(!selectedDefensivePlayer.isALineman()){
+          selectedDefensivePlayer.CBAssignment = receiverClicked;
+        }
+
+
       }
       else if (defensivePlayerClicked){
           var playerSelected = false;
