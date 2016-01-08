@@ -121,6 +121,14 @@ function draw() {
               stroke(255, 0, 0);
               line(this.x, this.y, this.CBAssignment.x, this.CBAssignment.y);
             }
+            else if (this.zoneXPoint && this.zoneYPoint){
+              stroke(255, 0, 0);
+              line(this.x, this.y, this.zoneXPoint, this.zoneYPoint);
+              fill(255, 0, 0);
+              // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
+              // TBD Draw an arrowhead instead of a circle using trig
+              ellipse(this.zoneXPoint, this.zoneYPoint, 10, 10);
+            }
         }
         this.drawRoute();
         noStroke();
@@ -442,9 +450,9 @@ function draw() {
         if(!selectedDefensivePlayer.isALineman()){
           selectedDefensivePlayer.CBAssignment = receiverClicked;
         }
-
-
+        receiverClicked.unselect();
       }
+
       else if (defensivePlayerClicked){
           var playerSelected = false;
           for(var i = 0; i < formationExample.defensivePlayers.length; i++){
@@ -459,6 +467,11 @@ function draw() {
                   break;
               }
           }
+      }
+      else if (selectedDefensivePlayer){
+        selectedDefensivePlayer.zoneXPoint = mouseX;
+        selectedDefensivePlayer.zoneYPoint = mouseY;
+        selectedDefensivePlayer.CBAssignment = null;
       }
       else if(selectedWR){
         selectedWR.routeCoordinates.push([mouseX, mouseY]);
