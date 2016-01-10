@@ -379,9 +379,9 @@ Player.prototype.getGapX = function(gap, center){
         offset *= -1;
     }
     if(offset === 0){
-        return center.x - 15 + 30 * gap;
+        return center.startX - 15 + 30 * gap;
     }
-    return center.x + offset*bucketSize;
+    return center.startX + offset*bucketSize;
 };
 
 Player.prototype.setCorrectCoordinates = function(){
@@ -502,21 +502,14 @@ Player.prototype.checkSelection = function(test) {
   if (this === correctPlayer || (correctPlayerIndex === this.playerIndex && correctUnitIndex === this.unitIndex)){
     var isCorrect = true
   }
-  if (isCorrect) {
+  if (isCorrect && test.questionsPerPlay > 1) {
     // clearSelection();
-    test.scoreboard.feedbackMessage = "You got it, dude";
-    test.score++;
     test.showBigPlayers = true;
-    if (test.questionNum >= test.plays.length) {
-      endTime = millis();
-    } else {
-
-    }
   } else {
-    test.scoreboard.feedbackMessage = "Wrong Answer";
-    test.incorrectGuesses++;
     //TODO: Explain what was wrong (or print right answer?)
   }
+  test.registerAnswer(isCorrect);
+  return isCorrect;
 };
 
 Player.prototype.createBigPlayer = function(height, width){
