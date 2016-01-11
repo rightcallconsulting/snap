@@ -302,7 +302,8 @@ function draw() {
             playName: formationExample.playName,
             qb: formationExample.qb,
             oline: formationExample.oline,
-            offensivePlayers: formationExample.offensivePlayers
+            offensivePlayers: formationExample.offensivePlayers,
+            unit: formationExample.unit
         });
         newFormation.saveToDB();
         formationExample.removeAllPlayers();

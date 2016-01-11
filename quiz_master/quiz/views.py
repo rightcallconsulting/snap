@@ -33,6 +33,9 @@ def cb_assignment(request):
 def create_formation(request):
     return render(request, 'quiz/create_formation.html')
 
+def create_defense_formation(request):
+    return render(request, 'quiz/create_defense_formation.html')
+
 def create_play(request):
     return render(request, 'quiz/create_play.html')
 
@@ -98,7 +101,12 @@ def new_formation(request):
 
 def team_formations(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
-    formations = team.formation_set.all()
+    formations = team.formation_set.all().filter(unit="offense")
+    return HttpResponse(serializers.serialize("json", formations))
+
+def team_defensive_formations(request, team_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    formations = team.formation_set.all().filter(unit="defense")
     return HttpResponse(serializers.serialize("json", formations))
 
 def formation_positions(request, team_id, formation_id):

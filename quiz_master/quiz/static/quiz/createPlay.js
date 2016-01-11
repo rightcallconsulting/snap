@@ -38,7 +38,10 @@ function draw() {
               newPlayer.fill = color(255, 0, 0);
             }
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            formation.positions.push(newPlayer);
+            if(formation){
+              formation.positions.push(newPlayer);
+              
+            }
           })
           formations.forEach(function(formation){
             formation.populatePositions();
@@ -160,7 +163,6 @@ function draw() {
         displayButton: true
     });
 
-    // Will need to interact with database to fetch a formation
     var getCurrentFormation = function(){
       return currentFormation;
     };
