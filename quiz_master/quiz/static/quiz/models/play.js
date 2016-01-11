@@ -14,6 +14,7 @@ var Play = function(config) {
     this.teamID = config.teamID || null;
     this.positions = config.positions || [];
     this.positionIDs = config.positionIDs || [];
+    this.runPlay = config.runPlay || null;
 };
 
 
@@ -26,6 +27,9 @@ Play.prototype.resetPlayers = function(defensivePlay){
   }
   for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
       defensivePlay.defensivePlayers[i].resetToStart();
+  }
+  if(this.runPlay !== null){
+    this.runPlay.hasExchanged = false;
   }
 };
 

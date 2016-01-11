@@ -15,7 +15,6 @@ function draw() {
     makeJSONCall = false
     $.getJSON('/quiz/players/18/tests/1', function(data, jqXHR){
       test = createTestFromJSON(data[0]);
-      test.questionsPerPlay = 2;
       var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = createUserFromJSON(data2[0]);
@@ -25,6 +24,10 @@ function draw() {
             if(testIDArray.includes(test.id)){
               var play = createPlayFromJSON(play);
               play.test = test
+              play.runPlay = new RunPlay({
+                //exchangePoints: [[play.qb.startX + 10, play.qb.startY + 10], [play.qb.startX + 10 + play.qb.siz, play.qb.startY + 10 + play.qb+siz]],
+                recipientDestination: 4
+              });
               test.plays.push(play);
             }
           })
@@ -36,9 +39,13 @@ function draw() {
             test.plays.forEach(function(play){
               play.addPositionsFromID(positions);
               play.populatePositions();
+              play.runPlay.ballCarrier = play.qb[0];
+              play.runPlay.ballRecipient = play.eligibleReceivers[4];
+              play.runPlay.exchangePoints = [[play.qb[0].startX + 20, play.qb[0].startY + 20], [play.qb[0].startX + 10 + play.qb[0].siz, play.qb[0].startY + 10 + play.qb[0].siz]];
+              play.runPlay.carrierDestination = [play.qb[0].startX - 70, play.qb[0].startY + 30];
             })
-            test.typeTest = "OLAssignment"
-            runTest("OLAssignment", currentPlayerTested, test);
+            test.typeTest = "RBQuiz"
+            runTest("RBQuiz", currentPlayerTested, test);
           })
         })
       })
@@ -103,7 +110,8 @@ function draw() {
       if (this.unit === "offense") {
         noStroke();
         if (this.clicked) {
-          fill(255, 255, 0);
+          //fill(255, 255, 0);
+          fill(this.fill);
         } else if (this === test.getCurrentPlay().bigPlayer) {
           fill(255, 0, 0);
         } else if (this.isBeingTested) {
@@ -151,11 +159,16 @@ function draw() {
     Player.prototype.select = function() {
       test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
       this.clicked = true;
-      currentDefender = this;
     };
 
     Player.prototype.unselect = function() {
       this.clicked = false;
+    };
+
+    var checkSelection = function(gapGuessed){
+      var correctGap = test.getCurrentPlay().runPlay.recipientDestination;
+      var isCorrect = (correctGap === gapGuessed);
+      test.registerAnswer(isCorrect);
     };
 
     // Create Buttons
@@ -207,14 +220,23 @@ function draw() {
       clicked: false
     });
 
+    var getSelectedPlayer = function(){
+      var players = test.getCurrentPlay().oline.slice();
+      for(var i = 0; i < players.length; i++){
+        if(players[i].clicked){
+          return players[i];
+        }
+      }
+      return null;
+    }
+
     // intro scene
     var drawOpening = function() {
-      currentPlayer = test.establishOLPlayerTested(user);
+      currentPlayer = test.getCurrentPlay().eligibleReceivers[4];//test.establishOLPlayerTested(user);
       currentPlayer.isBeingTested = true;
       if(test.getCurrentDefensivePlay().defensivePlayers.length === 0){
         test.getCurrentDefensivePlay().draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y);
       }
-      test.getCurrentPlay().oline[3].blockingAssignment = test.getCurrentDefensivePlay().defensivePlayers[2];
       if (test.startTime === 0) {
         test.startTime = millis();
       }
@@ -224,52 +246,18 @@ function draw() {
       clear.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
+
+      //draw line from RB to currently selected gap?
+      var selectedPlayer = getSelectedPlayer();
+      if(selectedPlayer !== null){
+        stroke(250,250,0);
+        line(currentPlayer.x, currentPlayer.y, selectedPlayer.x, selectedPlayer.y);
+      }
+
       fill(0, 0, 0);
       textSize(20);
       noStroke();
       text(scoreboard.feedbackMessage, 250, 360);
-      scoreboard.draw(test, user);
-    };
-
-    var drawDetail = function() {
-      field.drawBackground(test.getCurrentPlay(), height, width);
-      playButton.draw();
-      restart.draw();
-      clear.draw();
-      if (test.getCurrentPlay().bigPlayer !== null && test.getCurrentPlay().bigDefender !== null) {
-        test.getCurrentPlay().bigPlayer.draw();
-        test.getCurrentPlay().bigDefender.draw();
-      } else if (currentPlayer !== null && currentDefender !== null) {
-        test.getCurrentPlay().bigPlayer = test.getCurrentPlay().playerBeingTested().createBigPlayer(height/2 + 100, width/2);
-        test.getCurrentPlay().bigDefender = new Player({
-          x: width / 2,
-          y: height / 2 - 50,
-          unit: "defense",
-          siz: currentDefender.siz * 2.5,
-          pos: currentDefender.pos
-        });
-      } else {
-
-      }
-      fill(0, 0, 0);
-      textSize(20);
-      noStroke();
-      text(scoreboard.feedbackMessage, 120, 60);
-      scoreboard.draw(test, user);
-    };
-
-    var drawDetailScene = function() {
-      field.drawBackground(test.getCurrentPlay(), height, width);
-      playButton.draw();
-      pause.draw();
-      stop.draw();
-      test.getCurrentPlay().bigDefender.draw();
-      test.getCurrentPlay().bigPlayer.draw();
-      test.getCurrentPlay().bigPlayer.blockMan(test.getCurrentPlay().bigDefender, 0, false);
-      fill(0, 0, 0);
-      textSize(20);
-      noStroke();
-      text(scoreboard.feedbackMessage, 120, 60);
       scoreboard.draw(test, user);
     };
 
@@ -279,12 +267,29 @@ function draw() {
       stop.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
-      for (var i = 0; i < test.getCurrentPlay().oline.length; i++) {
-        var olineman = test.getCurrentPlay().oline[i];
-        olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);
+
+      var oline = test.getCurrentPlay().oline;
+
+      for (var i = 0; i < oline.length; i++) {
+        var olineman = oline[i];
+        //olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);
       }
       for (var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++) {
-        test.getCurrentDefensivePlay().defensivePlayers[i].blitzGap(test.getCurrentPlay().oline[2], test.getCurrentPlay());
+        //test.getCurrentDefensivePlay().defensivePlayers[i].blitzGap(oline[2], test.getCurrentPlay());
+      }
+      if(currentPlayer !== null && test.getCurrentPlay().runPlay !== null){
+        var runPlay = test.getCurrentPlay().runPlay;
+        if(runPlay.hasExchanged){
+          currentPlayer.moveTo(currentPlayer.getGapX(runPlay.recipientDestination, oline[2]),oline[2].startY);
+          if(runPlay.carrierDestination.length === 2){
+            runPlay.ballCarrier.moveTo(runPlay.carrierDestination[0], runPlay.carrierDestination[1]);
+          }
+        }else{
+          runPlay.ballCarrier.moveTo(runPlay.exchangePoints[0][0],runPlay.exchangePoints[0][1]);
+          if(currentPlayer.moveTo(runPlay.exchangePoints[1][0],runPlay.exchangePoints[1][1])){
+            runPlay.hasExchanged = true;
+          }
+        }
       }
       fill(0, 0, 0);
       textSize(20);
@@ -311,9 +316,6 @@ function draw() {
       playButton.changeClickStatus();
       if (pause.clicked) {
         pause.changeClickStatus();
-      }
-      if (test.showBigPlayers){
-        test.getCurrentPlay().bigPlayer.resetToStart();
       }
       test.getCurrentPlay().resetPlayers(test.getCurrentDefensivePlay());
       test.getCurrentPlay().inProgress = false;
@@ -356,37 +358,39 @@ function draw() {
       } else if (bigReset.isMouseInside()) {
         test.restartQuiz(test.defensivePlays[0]);
         test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
-      } else {
-        if (test.showBigPlayers) {
-          if (test.getCurrentPlay().bigDefender !== null && test.getCurrentPlay().bigDefender.isMouseInside()) {
-            var clickedRegion = 1;
-            if (mouseX > test.getCurrentPlay().bigDefender.x) {
-              clickedRegion = 2;
-            }
-            if (mouseY > test.getCurrentPlay().bigDefender.y + (test.getCurrentPlay().bigDefender.siz / 5)) {
-              clickedRegion = 3;
-            }
-            if (clickedRegion === test.getCurrentPlay().bigDefender.clickedRegion) {
-              // test.getCurrentPlay().bigPlayer.checkBigSelection(test);
-              test.checkBigSelection();
-            } else {
-              test.getCurrentPlay().bigDefender.clickedRegion = clickedRegion;
-            }
+      } else if (test.getCurrentPlay().runPlay !== null) {
+        var destGap = test.getCurrentPlay().runPlay.recipientDestination;
+        var ol = test.getCurrentPlay().oline;
+        for(var i = 0; i < ol.length; i++){
+          var p = ol[i];
+          var pGap = abs(i-2)*2;
+          if(i > 2){
+            pGap--;
           }
-        } else {
-          for (var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++) {
-            var p = test.getCurrentDefensivePlay().defensivePlayers[i];
-            if (p.isMouseInside()) {
-              if (p.clicked) {
-                p.checkSelection(test);
-              } else {
-                p.select();
-              }
-              break;
-            }
+          if(p.isMouseInside()){
+           if(p.clicked){
+             checkSelection(pGap);
+           }else{
+             p.select();
+           }
           }
         }
-
+      } else {
+        for (var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++) {
+          var p = test.getCurrentDefensivePlay().defensivePlayers[i];
+          if (p.isMouseInside()) {
+            if (p.clicked) {
+              if(p.checkSelection(test)){
+                test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
+              }
+            } else {
+              p.select();
+            }
+            return;
+          }
+        }
+        test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
+        scoreboard.feedbackMessage = "";
       }
     };
 
@@ -399,18 +403,10 @@ function draw() {
       } else {
         if (playButton.clicked) {
           if (!pause.clicked) {
-            if (test.showBigPlayers) {
-              drawDetailScene();
-            } else {
-              drawScene();
-            }
+            drawScene();
           }
         } else {
-          if (test.showBigPlayers) {
-            drawDetail();
-          } else {
-            drawOpening();
-          }
+          drawOpening();
         }
       }
     };

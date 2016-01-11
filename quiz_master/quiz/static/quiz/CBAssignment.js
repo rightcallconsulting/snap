@@ -88,22 +88,65 @@ function draw() {
 
     test.defensivePlays.push(cover4);
 
-    Player.prototype.draw = function() {
-      if (this.unit === "offense") {
-        noStroke();
-        if (this.clicked) {
-          fill(255, 255, 0);
-        } else if (this === test.getCurrentPlay().bigPlayer) {
-          fill(255, 0, 0);
-        } else {
-          fill(this.fill);
-        }
-        ellipse(this.x, this.y, this.siz, this.siz);
-        fill(0, 0, 0);
-        textSize(14);
-        textAlign(CENTER, CENTER);
-        text(this.num, this.x, this.y);
+
+  var cover2 = new DefensivePlay({
+    playName: "Cover 2",
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  });
+
+  test.defensivePlays.push(cover2);
+
+  var cover3 = new DefensivePlay({
+    playName: "Cover 3",
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  });
+
+  test.defensivePlays.push(cover3);
+
+  var cover4 = new DefensivePlay({
+    playName: "Cover 4",
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  });
+
+  test.defensivePlays.push(cover4);
+
+  Player.prototype.draw = function() {
+    if (this.unit === "offense") {
+      noStroke();
+      if (this.clicked) {
+        fill(255, 255, 0);
+      } else if (this === test.getCurrentPlay().bigPlayer) {
+        fill(255, 0, 0);
       } else {
+        fill(this.fill);
+      }
+      ellipse(this.x, this.y, this.siz, this.siz);
+      fill(0, 0, 0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.num, this.x, this.y);
+    } else {
         if (this.isBeingTested) {
           fill(0, 0, 250);
         } else {
@@ -111,19 +154,41 @@ function draw() {
         }
         if (this === test.getCurrentDefensivePlay().bigPlayer) {
           stroke(0, 0, 255);
+
           if (this.clicked) {
             fill(255, 255, 0);
+          } else if (this === test.getCurrentPlay().bigPlayer) {
+            fill(255, 0, 0);
           } else {
-            fill(0, 0, 255);
+            fill(this.fill);
           }
-          textSize(24);
+          ellipse(this.x, this.y, this.siz, this.siz);
+          fill(0, 0, 0);
+          textSize(14);
+          textAlign(CENTER, CENTER);
+          text(this.num, this.x, this.y);
         } else {
-          textSize(17);
+          if (this.isBeingTested) {
+            fill(0, 0, 250);
+          } else {
+            fill(this.fill);
+          }
+          if (this === test.getCurrentDefensivePlay().bigPlayer) {
+            stroke(0, 0, 255);
+            if (this.clicked) {
+              fill(255, 255, 0);
+            } else {
+              fill(0, 0, 255);
+            }
+            textSize(24);
+          } else {
+            textSize(17);
+          }
+          textAlign(CENTER, CENTER);
+          text(this.pos, this.x, this.y);
         }
-        textAlign(CENTER, CENTER);
-        text(this.pos, this.x, this.y);
-      }
-    };
+      };
+    }
 
     Player.prototype.select = function() {
       test.clearSelection()
@@ -141,6 +206,7 @@ function draw() {
     });
 
     test.scoreboard = scoreboard;
+    test.questionsPerPlay = 2;
 
     //Create Buttons
 

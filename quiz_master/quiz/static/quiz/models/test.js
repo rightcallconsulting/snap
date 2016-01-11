@@ -5,6 +5,7 @@ var Test = function(config){
     this.typeTest = config.typeTest || null;
     this.plays = config.plays || [];
     this.defensivePlays = config.defensivePlays || [];
+    this.questionsPerPlay = config.questionsPerPlay || 1;
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
     this.speed = 1;
@@ -17,6 +18,7 @@ var Test = function(config){
     this.over = false;
     this.cutOff = config.cutOff || 50;
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, bro.";
     this.timeStarted = config.timeStarted || 0;
     this.timeEnded = config.timeEnded || 0;
     this.deadline = config.deadline || null;
@@ -26,52 +28,45 @@ var Test = function(config){
     this.name = config.name || null;
 };
 
+Test.prototype.getCurrentPlayNumber = function(){
+  return floor(this.questionNum/this.questionsPerPlay);
+};
+
 Test.prototype.getCurrentPlay = function(){
-  return this.plays[this.questionNum];
+  return this.plays[this.getCurrentPlayNumber()];
 };
 
 Test.prototype.getCurrentDefensivePlay = function(){
-  return this.defensivePlays[this.questionNum];
+  return this.defensivePlays[this.getCurrentPlayNumber()];
 };
 
 Test.prototype.getScoreString = function(){
-  var questionsRemaining = this.plays.length - this.questionNum - 1;
+  var questionsRemaining = this.plays.length * this.questionsPerPlay - this.questionNum - 1;
+  var scorePercentage = this.getPercentage();
   if (this.typeTest === "QBProgression"){
-    return "Q" + (this.questionNum + 1) + ", " + this.score + "/" +
-    this.questionNum + ", " + (questionsRemaining) +
-    " remaining";
+    return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length * this.questionsPerPlay + ", " + scorePercentage;
   }
   else if (this.typeTest === "WRRoute"){
-    var scorePercentage = (100*this.score/(this.questionNum)) ? (100*this.score/(this.questionNum)).toFixed(0) + "%" : "N/A";
-    if (this.questionNum >= this.plays.length){
-      return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    } else {
-      return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    }
+    return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length * this.questionsPerPlay + ", " + scorePercentage;
   }
   else if (this.typeTest === "CBAssignment"){
-    var scorePercentage = (100*this.score/(this.questionNum)) ? (100*this.score/(this.questionNum)).toFixed(0) + "%" : "N/A";
-    if (this.questionNum >= this.plays.length){
-      return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    } else {
-      return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    }
+    return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length * this.questionsPerPlay + ", " + scorePercentage;
   }
   else if (this.typeTest === "OLAssignment"){
-    var scorePercentage = (100*this.score/(this.questionNum)) ? (100*this.score/(this.questionNum)).toFixed(0) + "%" : "N/A";
-    if (this.questionNum >= this.plays.length){
-      return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    } else {
-      return "Q" + (this.questionNum + 1) + "/" + "Q" + this.plays.length + ", " + scorePercentage;
-    }
+    return "Q" + (this.questionNum+1) + "/" + "Q" + this.plays.length*this.questionsPerPlay + ", " + scorePercentage;
   }
   else if(this.typeTest === "Option"){
     return "N/A";
+  }else if(this.typeTest === "RBQuiz"){
+    return "Q" + (this.questionNum) + "/" + "Q" + this.plays.length * this.questionsPerPlay + ", " + scorePercentage;
   }
 };
 
 Test.prototype.getPercentage = function(){
-  return 100*(this.score / (this.score + this.incorrectGuesses + this.skips))
+  if(this.questionNum === 0){
+    return "N/A";
+  }
+  return (100*((this.score - this.incorrectGuesses*this.badGuessPenalty) / (this.questionNum))).toFixed().toString() + "%";
 };
 
 Test.prototype.restartQuiz = function(defensivePlay){
@@ -82,20 +77,32 @@ Test.prototype.restartQuiz = function(defensivePlay){
   this.incorrectGuesses = 0;
   this.skips = 0;
   this.questionsAnswered = 0;
-  this.startTime = 0;
+  this.startTime = millis();
   this.endTime = 0;
   this.getCurrentPlay().resetPlayers(defensivePlay);
   this.over = false;
-  this.getCurrentDefensivePlay().bigPlayer = null;
+  if(this.defensivePlays.length > 0){
+    this.getCurrentDefensivePlay().bigPlayer = null;
+  }
   this.getCurrentPlay().bigPlayer = null;
   this.clearSelection();
 };
 
+Test.prototype.registerAnswer = function(isCorrect){
+  if(isCorrect){
+    this.score++;
+    this.advanceToNextPlay(this.correctAnswerMessage);
+  }else{
+    this.incorrectGuesses++;
+    this.scoreboard.feedbackMessage = this.incorrectAnswerMessage;
+  }
+}
+
 Test.prototype.advanceToNextPlay = function(message){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
-  if(this.questionNum >= this.plays.length){
-    this.endTime = minute() * 60 + second();
+  if(this.getCurrentPlayNumber() >= this.plays.length){
+    this.endTime = millis();
     this.over = true;
   } else{
     this.getCurrentPlay().clearProgression();
@@ -106,16 +113,17 @@ Test.prototype.advanceToNextPlay = function(message){
 };
 
 Test.prototype.drawQuizSummary = function() {
-  var timeDeduction = ((this.endTime - this.startTime) - 10 * this.plays.length)*0.01;
+  var elapsedSeconds = (this.endTime - this.startTime)/1000;
+  var timeDeduction = (elapsedSeconds - 10 * this.plays.length * this.questionsPerPlay)*0.01;
   if(timeDeduction < 0.0){
     timeDeduction = 0.0;
   }
-  var resultString = "You scored " + (this.score - this.incorrectGuesses*this.badGuessPenalty - timeDeduction).toFixed(0) + " out of " + this.plays.length;
+  var resultString = "You scored " + (this.score - this.incorrectGuesses*this.badGuessPenalty - timeDeduction).toFixed(2) + " out of " + this.plays.length*this.questionsPerPlay;
   var guessesString = "You had " + this.incorrectGuesses.toFixed(0) + " incorrect guess";
   if(this.incorrectGuesses !== 1){
     guessesString += "es";
   }
-  var timeString = "You took " + (this.endTime - this.startTime).toFixed(0) + " seconds";
+  var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";
   textAlign(CENTER);
   textSize(24);
   text(resultString, width/2, height/2-50);
@@ -138,15 +146,15 @@ Test.prototype.clearSelection = function() {
         this.getCurrentPlay().bigPlayer.unselect();
       }
     } else {
-        if (dPlay){
-          for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
-            var p = dPlay.defensivePlayers[i];
-            if (p.clicked) {
-              p.unselect();
-            }
+      if (dPlay){
+        for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
+          var p = dPlay.defensivePlayers[i];
+          if (p.clicked) {
+            p.unselect();
           }
         }
-        if (oPlay){
+      }
+      if (oPlay){
         for (var i = 0; i < oPlay.offensivePlayers.length; i++) {
           var p = oPlay.offensivePlayers[i];
           if (p.clicked) {
@@ -160,6 +168,9 @@ Test.prototype.clearSelection = function() {
 Test.prototype.checkBigSelection = function() {
     if(this.typeTest === "OLAssignment"){
       var answer = floor(this.questionNum / 2) + 1;
+      if(answer > 2){
+        answer = 2;
+      }
       var isCorrect = (this.getCurrentPlay().bigDefender !== null && this.getCurrentPlay().bigDefender.clickedRegion === answer);
     }
     else if(this.typeTest ==="CBAssignment"){
@@ -167,26 +178,20 @@ Test.prototype.checkBigSelection = function() {
       isCorrect = ((this.getCurrentPlay().bigPlayer !== null) && this.getCurrentPlay().bigPlayer.clicked);
     }
     if (isCorrect) {
-      this.scoreboard.feedbackMessage = "You got it, dude";
+      //this.scoreboard.feedbackMessage = "You got it, dude";
       this.getCurrentPlay().bigPlayer = null;
       this.getCurrentPlay().bigDefender = null;
       this.getCurrentDefensivePlay().bigDefender = null;
       this.getCurrentDefensivePlay().bigPlayer = null;
-      this.score++;
-      this.questionNum ++;
       this.showBigPlayers = false;
       this.clearSelection();
-      if(this.questionNum < this.plays.length){
+      this.registerAnswer(isCorrect);
+      if(this.getCurrentPlayNumber() < this.plays.length){
         this.getCurrentDefensivePlay().draw(this.getCurrentPlay().oline[2].x, this.getCurrentPlay().oline[2].y, this);
         this.getCurrentDefensivePlay().defensivePlayers[10].CBAssignment = this.getCurrentPlay().eligibleReceivers[4];
       }
-      if (this.questionNum  >= this.plays.length) {
-        this.endTime = millis();
-        this.over = true;
-      }
     } else {
-      this.scoreboard.feedbackMessage = "Wrong Answer";
-      this.incorrectGuesses++;
+      this.registerAnswer(isCorrect);
       //TODO: Explain what was wrong (or print right answer?)
     }
   }

@@ -31,9 +31,9 @@ var Field = function(config){
 };
 
 var field = new Field({
-  heightInYards: 50,
-  widthInYards: 50,
-  yardLine: 50,
+  heightInYards: 40,
+  widthInYards: 40,
+  yardLine: 95,
   widthOffset: -3
 });
 
@@ -52,12 +52,17 @@ Field.prototype.drawBackground = function(play, height, width) {
     background(93, 148, 81);
     for(var i = 0; i < this.heightInYards; i++){
       var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
-      if(currentYardLine === 100){
-        break;
-      }
         var yc = height * (i/this.heightInYards);
         stroke(255, 255, 255);
-        if(currentYardLine % 10 === 0){
+        if(currentYardLine <= 0 || currentYardLine >= 100){
+          currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
+            if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
+              line(0, yc, width, yc);
+            }else{
+
+            }
+        }
+        else if(currentYardLine % 10 === 0){
             line(0, yc, width, yc);
             textAlign(CENTER);
             rotate(HALF_PI);
