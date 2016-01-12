@@ -70,7 +70,7 @@ class Formation(models.Model):
         if(json['unit'] == "offense"):
             for player in json['offensivePlayers']:
                 new_position = Position(name=player['pos'], startX=player['startX'],
-                startY=player['startY'], formation=new_formation)
+                startY=player['startY'], formation=new_formation, playerIndex=player['playerIndex'])
                 new_position.save()
         else:
             new_formation.offensiveFormationID = json['offensiveFormationID']
@@ -87,6 +87,7 @@ class Position(models.Model):
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
     routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
     progressionRank = models.IntegerField(null=True, blank=True)
+    playerIndex = models.IntegerField(null=True, blank=True)
     routeNum = models.IntegerField(null=True, blank=True)
     blocker = models.NullBooleanField()
     runner = models.NullBooleanField()

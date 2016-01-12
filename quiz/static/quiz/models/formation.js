@@ -46,7 +46,8 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           red: 143,
           blue: 29,
           green: 29,
-          pos: "OL"
+          pos: "OL",
+          index: i
       });
       if(siz){tmp.siz = siz}
       this.oline.push(tmp);
