@@ -193,7 +193,7 @@ function draw() {
     if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
         formationExample.playName += key;
     }
-
+    //return false;
   }
 
   keyPressed = function() {
@@ -204,7 +204,9 @@ function draw() {
       } else{
         formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
       }
+      return false;
     }
+
   };
 
   mouseDragged = function(){

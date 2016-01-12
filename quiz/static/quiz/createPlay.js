@@ -226,6 +226,7 @@ function draw() {
       if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
           playBeingCreated.playName += key;
       }
+      //return false;
     }
 
     keyPressed = function() {
@@ -254,7 +255,9 @@ function draw() {
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
         }
+        return false;
       }
+      //return false;
     };
 
     mouseClicked = function() {
