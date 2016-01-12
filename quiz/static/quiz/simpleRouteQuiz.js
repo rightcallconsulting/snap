@@ -21,12 +21,19 @@ function draw() {
   formationExample.createOLineAndQB();
   formationExample.createSkillPlayers();
 
+  //create receiver from user variable
+  var user = new User({});
+
+  /*var routeExample = new Route({
+    receiver: null,
+    startingPoint: [width / 2, height * 0.75],
+    breakPoints: []
+  });*/
+
   var test = new FormationTest({
   	formations: [formationExample, formationExample, formationExample],
   	scoreboard: scoreboard
   });
-
-  var user = new User({});
 
   Player.prototype.draw = function() {
       if(this.unit === "offense"){
@@ -224,6 +231,18 @@ var shuffle = function(o){
       text(test.scoreboard.feedbackMessage, 160, 360);
   };
 
+  keyTyped = function(){
+    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
+    if(offset >= 0 && offset < multipleChoiceAnswers.length){
+      var answer = multipleChoiceAnswers[offset];
+      if(answer.clicked){
+        checkAnswer(answer);
+      }else{
+        clearAnswers();
+        answer.changeClickStatus();
+      }
+    }
+  };
 
   mouseClicked = function() {
     test.scoreboard.feedbackMessage = "";
@@ -261,27 +280,6 @@ var shuffle = function(o){
       		}
       	}
       }
-  };
-
-  keyTyped = function(){
-    if(test.over){
-      if(key === 'r'){
-        test.restartQuiz();
-        check.displayButton = true;
-        clear.displayButton = true;
-      }
-    }else{
-      var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-      if(offset >= 0 && offset < multipleChoiceAnswers.length){
-        var answer = multipleChoiceAnswers[offset];
-        if(answer.clicked){
-          checkAnswer(answer);
-        }else{
-          clearAnswers();
-          answer.changeClickStatus();
-        }
-      }
-    }
   };
 
   draw = function() {
