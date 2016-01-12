@@ -1,6 +1,9 @@
 var Formation = function(config){
   this.eligibleReceivers = config.eligibleReceivers || [];
   this.offensivePlayers = config.offensivePlayers || [];
+  this.wideReceivers = config.wideReceivers || [];
+  this.runningBacks = config.runningBacks || [];
+  this.tightEnds = config.tightEnds || [];
   this.name = config.name || "";
   this.playName = config.playName || "";
   this.qb = config.qb || [];
@@ -204,6 +207,18 @@ Formation.prototype.createPlayer = function(player){
       this.eligibleReceivers.push(player);
       this.changeablePlayers.push(player);
       this.establishingNewPlayer = player;
+      if(player.pos === "WR"){
+        this.wideReceivers.push(player);
+        player.playerIndex = this.wideReceivers.length;
+      }
+      else if(player.pos === "TE"){
+        this.tightEnds.push(player);
+        player.playerIndex = this.tightEnds.length;
+      }
+      else if(player.pos === "RB"){
+        this.runningBacks.push(player);
+        player.playerIndex = this.runningBacks.length;
+      }
     }
   }
 };
