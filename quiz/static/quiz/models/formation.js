@@ -924,5 +924,17 @@ var isFormationClicked = function(formationButtonArray){
   return formationClicked;
 };
 
+var createFormationFromJSON = function(jsonFormation){
+  var formation = new Formation({
+    id: jsonFormation.pk,
+    name: jsonFormation.fields.name,
+    playName: jsonFormation.fields.name,
+    offensiveFormationID: jsonFormation.fields.offensiveFormationID,
+    teamID: jsonFormation.fields.team,
+
+  });
+  return formation;
+};
+
 var formationButtons = [];
 var formations = [];

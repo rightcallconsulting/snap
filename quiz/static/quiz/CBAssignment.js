@@ -1,6 +1,8 @@
 var test
+var formationIDs
 var currentPlayerTested
-var positions = []
+var offensiveFormationIDs = [];
+var positions = [];
 var makeJSONCall = true
 
 function setup() {
@@ -13,34 +15,45 @@ function draw() {
 
   if(makeJSONCall){
     makeJSONCall = false
-    $.getJSON('/quiz/players/18/tests/1', function(data, jqXHR){
+    $.getJSON('/quiz/players/20/tests/1', function(data, jqXHR){
       test = createTestFromJSON(data[0]);
-      debugger;
+      formationIDs = data[0].fields.formations
       var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = createUserFromJSON(data2[0]);
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            if(testIDArray.includes(test.id)){
-              var play = createPlayFromJSON(play);
-              play.test = test
-              test.plays.push(play);
+        $.getJSON('/quiz/teams/1/defensive_formations', function(dataFormation, jqXHR){
+          dataFormation.forEach(function(formation){
+            if(formationIDs.includes(formation.pk)){
+              var formation = createFormationFromJSON(formation);
+              offensiveFormationIDs.push(formation.offensiveFormationID)
+              test.formations.push(formation);
             }
           })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
+          debugger;
+          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+            data3.forEach(function(play){
+              var testIDArray = play.fields.tests;
+              if(testIDArray.includes(test.id)){
+                var play = createPlayFromJSON(play);
+                play.test = test
+                test.plays.push(play);
+              }
             })
-            test.plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
+            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+              data4.forEach(function(position){
+                var player = createPlayerFromJSON(position);
+                positions.push(player);
+              })
+              test.plays.forEach(function(play){
+                play.addPositionsFromID(positions);
+                play.populatePositions();
+              })
+              test.typeTest = "CBAssignment"
+              runTest("CBAssignment", currentPlayerTested, test);
             })
-            test.typeTest = "CBAssignment"
-            runTest("CBAssignment", currentPlayerTested, test);
           })
         })
+
       })
     });
   }
