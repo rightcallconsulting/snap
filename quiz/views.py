@@ -54,6 +54,9 @@ def results_chart(request):
 def results(request):
     return render(request, 'quiz/results.html')
 
+def simple_route_quiz(request):
+    return render(request, 'quiz/simple_route_quiz.html')
+
 def wr_route(request):
     return render(request, 'quiz/wr_route.html')
 
