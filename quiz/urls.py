@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^qb_progression$', views.qb_progression, name='qb_progression'),
     url(r'^cb_assignment$', views.cb_assignment, name='cb_assignment'),
     url(r'^cadence_quiz$', views.cadence_quiz, name='cadence_quiz'),
+    url(r'^blitz_quiz$', views.blitz_quiz, name='blitz_quiz'),
     url(r'^option_quiz$', views.option_quiz, name='option_quiz'),
     url(r'^create_formation$', views.create_formation, name='create_formation'),
     url(r'^create_defense_formation$', views.create_defense_formation, name='create_defense_formation'),

@@ -27,6 +27,9 @@ def cadence_quiz(request):
 def option_quiz(request):
     return render(request, 'quiz/option_quiz.html')
 
+def blitz_quiz(request):
+    return render(request, 'quiz/blitz_quiz.html')
+
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
