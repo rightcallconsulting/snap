@@ -31,8 +31,8 @@ var Field = function(config){
 };
 
 var field = new Field({
-  heightInYards: 40,
-  widthInYards: 40,
+  heightInYards: 30,
+  widthInYards: 30,
   yardLine: 95,
   widthOffset: -3
 });

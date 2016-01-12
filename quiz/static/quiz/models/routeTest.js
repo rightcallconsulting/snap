@@ -1,5 +1,46 @@
+var Route = function(config){
+  this.startingPoint = config.startingPoint || [width/2, height/2]; //(x,y) at start
+  this.breakPoints = config.breakPoints || [];
+  this.routeName = config.routeName || "";
+};
+
+Route.prototype.getStartingPoint = function(){
+  return this.startingPoint;
+}
+
+Route.prototype.getName = function(){
+  return this.routeName;
+}
+
+Route.prototype.getBreakpoints = function(){
+  return this.breakPoints;
+}
+
+Route.prototype.draw = function(){
+  this.displayRoute();
+}
+
+Route.getDestination = function(distance, theta, x, y){
+    var xDist = distance*Math.cos(theta);
+    var yDist = -1*distance*Math.sin(theta);
+    return [x + xDist, y + yDist];
+};
+
+Route.prototype.displayRoute = function(){
+  fill(255, 255, 255);
+  strokeWeight(2);
+  stroke(100);
+  line(this.startingPoint[0], this.startingPoint[1], this.breakPoints[0][0], this.breakPoints[0][1]);
+  for (var i = 0; i < this.breakPoints.length - 1; i++) {
+    line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i+1][0], this.breakPoints[i+1][1]);
+  }
+  strokeWeight(1);
+  noStroke();
+};
+
 var RouteTest = function(config){
     this.typeTest = config.typeTest || "";
+    this.receiver = config.receiver || null;
     this.routes = config.routes || [];
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
@@ -55,7 +96,7 @@ RouteTest.prototype.drawQuizSummary = function() {
   if(secondsElapsed > this.cutOff){
     secondsElapsed = this.cutOff;
   }
-  var timeDeduction = (secondsElapsed - 10 * this.routes.length)*0.01;
+  var timeDeduction = (secondsElapsed.toFixed() - 10 * this.routes.length)*0.01;
   if(timeDeduction < 0.0){
     timeDeduction = 0.0;
   }

@@ -11,89 +11,47 @@ function draw() {
 
   });
 
-  var formationNames = ["I-Right Wing", "Doubles Bunch", "Trips Right Gun"]; //In real life, queried directly from DB by IDs
-
   var multipleChoiceAnswers = [];
-
-  var formationExample = new Formation({
-	name: formationNames[0]
-  })
-  formationExample.createOLineAndQB();
-  formationExample.createSkillPlayers();
+  var routeNames = ["Slant", "Post", "Skinny Post", "Go", "Out"];
 
   //create receiver from user variable
   var user = new User({});
-
-  /*var routeExample = new Route({
-    receiver: null,
-    startingPoint: [width / 2, height * 0.75],
-    breakPoints: []
-  });*/
-
-  var test = new FormationTest({
-  	formations: [formationExample, formationExample, formationExample],
-  	scoreboard: scoreboard
+  var receiver = new Player({
+    fill:color(255,0,0),
+    siz: 30,
+    x:width*0.3,
+    y:height/2,
+    pos:"Z",
+    num:88
   });
 
-  Player.prototype.draw = function() {
-      if(this.unit === "offense"){
-          noStroke();
-          if(this.rank > 0){
-              fill(255, 255, 0);
-          }else{
-              fill(this.fill);
-          }
-          ellipse(this.x, this.y, this.siz, this.siz);
-          fill(0,0,0);
-          textSize(14);
-          textAlign(CENTER, CENTER);
-          if(this.rank > 0){
-              text(this.rank, this.x, this.y);
-          }else{
-              text(this.num, this.x, this.y);
-          }
-          if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
-            this.displayRoute(this.breakPoints);
-          }
-      }
-      else {
-          fill(this.fill);
-          textSize(17);
-          textAlign(CENTER, CENTER);
-          text(this.pos, this.x, this.y);
-      }
-  };
+  var slantExample = new Route({
+    startingPoint: [receiver.x, receiver.y],
+    routeName: "Slant",
+    breakPoints: []
+  });
+  slantExample.breakPoints.push(Route.getDestination(20, PI/2, slantExample.startingPoint[0], slantExample.startingPoint[1]));
+  slantExample.breakPoints.push(Route.getDestination(150, PI/6, slantExample.breakPoints[0][0], slantExample.breakPoints[0][1]));
 
-  Player.prototype.select = function() {
-      //this.fill = color(255, 234, 0);
-      this.rank = Player.rank;
-      Player.rank++;
-      this.clicked = true;
-  };
+  var postExample = new Route({
+    startingPoint: [receiver.x, receiver.y],
+    routeName: "Post",
+    breakPoints: []
+  });
+  postExample.breakPoints.push(Route.getDestination(60, PI/2, postExample.startingPoint[0], postExample.startingPoint[1]));
+  postExample.breakPoints.push(Route.getDestination(100, PI/3, postExample.breakPoints[0][0], postExample.breakPoints[0][1]));
 
-  Player.prototype.unselect = function() {
-      this.clicked = false;
-      currentPlay = test.getCurrentPlay();
-      if(currentPlay && this.rank > 0 && this.rank < Player.rank - 1){
-          //decrement the later guys' ranks
-          for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
-              var p = currentPlay.eligibleReceivers[i];
-              if(p.rank > this.rank){
-                  p.rank--;
-              }
-          }
-      }
-      this.rank = 0;
-      Player.rank--;
-  };
+  var goExample = new Route({
+    startingPoint: [receiver.x, receiver.y],
+    routeName: "Go",
+    breakPoints: []
+  });
+  goExample.breakPoints.push(Route.getDestination(150, PI/2, goExample.startingPoint[0], goExample.startingPoint[1]));
 
-  var playButton = new Button({
-      x: 10,
-      y: 360,
-      width: 32,
-      label: "Play",
-      clicked: false,
-      displayButton: true
+  var test = new RouteTest({
+    receiver: receiver,
+  	routes: [slantExample, postExample, goExample],
+  	scoreboard: scoreboard
   });
 
   var check = new Button({
@@ -149,6 +107,22 @@ function draw() {
       clicked: false
   });
 
+  Player.prototype.draw = function() {
+    if(this.unit === "offense"){
+      noStroke();
+      fill(this.fill);
+      ellipse(this.x, this.y, this.siz, this.siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      if(this.num > 0){
+        text(this.num, this.x, this.y);
+      }else{
+        text(this.pos, this.x, this.y);
+      }
+    }
+  }
+
 var shuffle = function(o){
 	for(var n = 0; n < 100; n++){
     	for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
@@ -157,12 +131,12 @@ var shuffle = function(o){
 };
 	var createMultipleChoiceAnswers = function(){
 		multipleChoiceAnswers = [];
-		var availableNames = formationNames.slice(0,3);
+		var availableNames = routeNames.slice(0,4);
 		shuffle(availableNames);
 		for(var i = 0; i < availableNames.length; i++){
 			multipleChoiceAnswers.push(new MultipleChoiceAnswer({
 				x: 50 + i * width / (availableNames.length + 1),
-				y: height / 3,
+				y: height * 0.7,
 				width: width / (availableNames.length + 2),
 				height: 50,
 				label: availableNames[i],
@@ -182,9 +156,9 @@ var shuffle = function(o){
 
 	var checkAnswer = function(guess){
 		//logic
-		var isCorrect = formationExample.name === guess.label;
+		var isCorrect = test.getCurrentRoute().getName() === guess.label;
 		if(isCorrect){
-			test.advanceToNextFormation("You got it, dude");
+			test.advanceToNextRoute("You got it, dude");
     		test.score++;
     		createMultipleChoiceAnswers();
     		if(test.over){
@@ -199,7 +173,7 @@ var shuffle = function(o){
   		}
 	}
 
-  var drawBackground = function(formation, field) {
+  var drawBackground = function(route, field) {
       background(93, 148, 81);
       for(var i = 0; i < field.heightInYards; i++){
           var yc = height * (i/field.heightInYards);
@@ -218,9 +192,10 @@ var shuffle = function(o){
 
   // intro scene
   var drawOpening = function() {
-      drawBackground(formationExample, field);
+      field.drawBackground(null, height, width);
       test.scoreboard.draw(test, user);
-      formationExample.drawAllPlayers();
+      test.receiver.draw();
+      test.getCurrentRoute().draw();
       for(var i = 0; i < multipleChoiceAnswers.length; i++){
       	multipleChoiceAnswers[i].draw();
       }
@@ -232,14 +207,22 @@ var shuffle = function(o){
   };
 
   keyTyped = function(){
-    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-    if(offset >= 0 && offset < multipleChoiceAnswers.length){
-      var answer = multipleChoiceAnswers[offset];
-      if(answer.clicked){
-        checkAnswer(answer);
-      }else{
-        clearAnswers();
-        answer.changeClickStatus();
+    if(test.over){
+      if(key === 'r'){
+        test.restartQuiz();
+        check.displayButton = true;
+        clear.displayButton = true;
+      }
+    }else{
+      var offset = key.charCodeAt(0) - "1".charCodeAt(0);
+      if(offset >= 0 && offset < multipleChoiceAnswers.length){
+        var answer = multipleChoiceAnswers[offset];
+        if(answer.clicked){
+          checkAnswer(answer);
+        }else{
+          clearAnswers();
+          answer.changeClickStatus();
+        }
       }
     }
   };
