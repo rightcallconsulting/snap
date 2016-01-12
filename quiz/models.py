@@ -78,6 +78,10 @@ class Formation(models.Model):
             for player in json['defensivePlayers']:
                 new_position = Position(name=player['pos'], startX=player['startX'],
                 startY=player['startY'], formation=new_formation)
+                if(player['CBAssignment']):
+                    new_position.CBAssignmentPlayerID=player['CBAssignment']['id']
+                    new_position.CBAssignmentPlayerIndex=player['CBAssignment']['playerIndex']
+                    new_position.CBAssignmentPlayerPosition=player['CBAssignment']['pos']
                 new_position.save()
 
 class Position(models.Model):
@@ -91,6 +95,9 @@ class Position(models.Model):
     routeNum = models.IntegerField(null=True, blank=True)
     blocker = models.NullBooleanField()
     runner = models.NullBooleanField()
+    CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+    CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
+    CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
 
