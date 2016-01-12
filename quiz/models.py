@@ -116,6 +116,7 @@ class Test(models.Model):
     score = models.IntegerField()
     skips = models.IntegerField()
     incorrect_guesses = models.IntegerField()
+    formations = models.ManyToManyField(Formation, null=True, blank=True)
     deadline = models.DateTimeField()
     completed = models.BooleanField()
     in_progress = models.BooleanField()

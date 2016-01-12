@@ -15,6 +15,7 @@ function draw() {
     makeJSONCall = false
     $.getJSON('/quiz/players/18/tests/1', function(data, jqXHR){
       test = createTestFromJSON(data[0]);
+      debugger;
       var playerID = test.playerID;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = createUserFromJSON(data2[0]);
