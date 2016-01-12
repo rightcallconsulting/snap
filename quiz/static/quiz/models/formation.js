@@ -372,6 +372,9 @@ Formation.prototype.populatePositions = function(){
   var eligibleReceivers = this.positions.filter(function(player) {
     return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
   });
+  this.wideReceivers = this.positions.filter(function(player) {return player.pos ==="WR"});
+  this.runningBacks = this.positions.filter(function(player) {return player.pos ==="RB"});
+  this.tightEnds = this.positions.filter(function(player) {return player.pos ==="TE"});
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
 };
