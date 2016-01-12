@@ -187,26 +187,23 @@ function draw() {
            player.y < trash.y + trash.height
   };
 
-  keyReleased = function(){
-    if (keyCode === SHIFT){
-      capitalLetter = false;
+  keyTyped = function(){
+    var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+    var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+    if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
+        formationExample.playName += key;
     }
-  };
+
+  }
 
   keyPressed = function() {
     selectedWR = formationExample.findSelectedWR();
-    if (keyCode === SHIFT){
-      capitalLetter = true;
-    }
     if (keyCode === BACKSPACE){
       if (selectedWR){
         selectedWR.stepRouteBackward();
       } else{
         formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
       }
-    }
-    else{
-      formationExample.playName += capitalLetter ? key : key.toLowerCase();
     }
   };
 

@@ -40,7 +40,7 @@ function draw() {
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             if(formation){
               formation.positions.push(newPlayer);
-              
+
             }
           })
           formations.forEach(function(formation){
@@ -220,11 +220,13 @@ function draw() {
         text(getCurrentFormation().feedbackMessage, 120, 60);
     };
 
-    keyReleased = function(){
-      if (keyCode === SHIFT){
-        capitalLetter = false;
+    keyTyped = function(){
+      var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+      var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+      if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
+          playBeingCreated.playName += key;
       }
-    };
+    }
 
     keyPressed = function() {
       selectedWR = getCurrentFormation().findSelectedWR();
@@ -252,9 +254,6 @@ function draw() {
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
         }
-      }
-      else{
-        playBeingCreated.playName += capitalLetter ? key : key.toLowerCase();
       }
     };
 
