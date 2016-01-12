@@ -28,6 +28,7 @@ function draw() {
             position.fields.y = position.fields.startY;
             position.fields.pos = position.fields.name;
             position.fields.num = position.fields.pos;
+            position.fields.index = position.fields.playerIndex;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
               newPlayer.fill = color(212, 130, 130);
