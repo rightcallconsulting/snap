@@ -14,7 +14,7 @@ var Formation = function(config){
   this.id = config.id || null;
   this.updated_at = config.updated_at || null;
   this.created_at = config.updated_at || null;
-  this.positions = config.positions || null;
+  this.positions = config.positions || [];
   this.unit = config.unit || "offense";
   this.dline = config.dline || [];
   this.linebackers = config.linebackers || [];
@@ -931,10 +931,45 @@ var createFormationFromJSON = function(jsonFormation){
     playName: jsonFormation.fields.name,
     offensiveFormationID: jsonFormation.fields.offensiveFormationID,
     teamID: jsonFormation.fields.team,
-
+    unit: jsonFormation.fields.unit
   });
   return formation;
 };
+
+
+Formation.prototype.populatePositions = function(){
+  if(this.unit === "defense"){
+    this.positions.forEach(function(player){
+      if(player.pos === "DL" || player.pos === "DE"){
+        this.dline.push(player);
+      }
+      else if(player.pos === "W" || player.pos === "M" || player.pos === "S"){
+        this.linebackers.push(player);
+      }
+      else if(player.pos === "CB"){
+        this.cornerbacks.push(player);
+      }
+      else if(player.pos === "SS" || player.pos === "FS"){
+        this.safeties.push(player);
+      }
+    }.bind(this))
+    this.defensivePlayers = this.positions;
+  }
+  else{
+    var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+    oline.forEach(function(player){this.oline.push(player)}.bind(this));
+    var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+    this.qb = qb
+    var eligibleReceivers = this.positions.filter(function(player) {
+      return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+    });
+    this.eligibleReceivers = eligibleReceivers;
+    this.offensivePlayers = this.positions;
+  }
+
+};
+
+
 
 var formationButtons = [];
 var formations = [];

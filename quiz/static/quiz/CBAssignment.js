@@ -1,7 +1,6 @@
 var test
 var formationIDs
 var currentPlayerTested
-var offensiveFormationIDs = [];
 var positions = [];
 var makeJSONCall = true
 
@@ -24,29 +23,36 @@ function draw() {
         $.getJSON('/quiz/teams/1/defensive_formations', function(dataFormation, jqXHR){
           dataFormation.forEach(function(formation){
             if(formationIDs.includes(formation.pk)){
-              var formation = createFormationFromJSON(formation);
-              offensiveFormationIDs.push(formation.offensiveFormationID)
-              test.formations.push(formation);
+              var defensiveFormation = createFormationFromJSON(formation);
+              test.offensiveFormationIDs.push(defensiveFormation.offensiveFormationID)
+              test.defensiveFormationIDs.push(defensiveFormation.id)
+              test.defensiveFormations.push(defensiveFormation);
             }
           })
-          debugger;
-          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-            data3.forEach(function(play){
-              var testIDArray = play.fields.tests;
-              if(testIDArray.includes(test.id)){
-                var play = createPlayFromJSON(play);
-                play.test = test
-                test.plays.push(play);
+          $.getJSON('/quiz/teams/1/formations', function(data3, jqXHR){
+            data3.forEach(function(formation){
+              if(test.offensiveFormationIDs.includes(formation.pk)){
+                var offensiveFormation = createFormationFromJSON(formation);
+                offensiveFormation.test = test
+                test.offensiveFormations.push(offensiveFormation);
               }
             })
-            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+            $.getJSON('/quiz/teams/1/formations/positions', function(data4, jqXHR){
               data4.forEach(function(position){
-                var player = createPlayerFromJSON(position);
-                positions.push(player);
+                if(test.offensiveFormationIDs.includes(position.fields.formation)){
+                  var player = createPlayerFromJSON(position);
+                  test.offensiveFormations.filter(function(formation) {return formation.id === position.fields.formation})[0].positions.push(player);
+                }
+                else if (test.defensiveFormationIDs.includes(position.fields.formation)){
+                  var player = createPlayerFromJSON(position);
+                  test.defensiveFormations.filter(function(formation) {return formation.id === position.fields.formation})[0].positions.push(player);
+                }
               })
-              test.plays.forEach(function(play){
-                play.addPositionsFromID(positions);
-                play.populatePositions();
+              test.offensiveFormations.forEach(function(formation){
+                formation.populatePositions();
+              })
+              test.defensiveFormations.forEach(function(formation){
+                formation.populatePositions();
               })
               test.typeTest = "CBAssignment"
               runTest("CBAssignment", currentPlayerTested, test);

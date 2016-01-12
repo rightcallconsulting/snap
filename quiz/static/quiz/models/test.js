@@ -26,7 +26,10 @@ var Test = function(config){
     this.completed = config.completed || null;
     this.assigned = config.assigned || null;
     this.name = config.name || null;
-    this.formations = config.formations || [];
+    this.defensiveFormations = config.defensiveFormations || [];
+    this.offensiveFormations = config.offensiveFormations || [];
+    this.offensiveFormationIDs = config.offensiveFormationIDs || [];
+    this.defensiveFormationIDs = config.defensiveFormationIDs || [];
 };
 
 Test.prototype.getCurrentPlayNumber = function(){
