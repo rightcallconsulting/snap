@@ -44,6 +44,14 @@ Test.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.getCurrentPlayNumber()];
 };
 
+Test.prototype.getCurrentOffensiveFormation = function(){
+  return this.offensiveFormations[this.getCurrentPlayNumber()];
+};
+
+Test.prototype.getCurrentDefensiveFormation = function(){
+  return this.defensiveFormations[this.getCurrentPlayNumber()];
+};
+
 Test.prototype.getScoreString = function(){
   var questionsRemaining = this.plays.length * this.questionsPerPlay - this.questionNum - 1;
   var scorePercentage = this.getPercentage();

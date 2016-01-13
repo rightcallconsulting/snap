@@ -50,10 +50,13 @@ function draw() {
               })
               test.offensiveFormations.forEach(function(formation){
                 formation.populatePositions();
+                test.plays.push(formation.convertToPlayObject());
               })
               test.defensiveFormations.forEach(function(formation){
                 formation.populatePositions();
+                test.defensivePlays.push(formation.convertToPlayObject());
               })
+              debugger;
               test.typeTest = "CBAssignment"
               runTest("CBAssignment", currentPlayerTested, test);
             })
@@ -65,6 +68,7 @@ function draw() {
   }
 
   var runTest = function(type, user, test){
+    debugger;
 
     var cover2 = new DefensivePlay({
       playName: "Cover 2",

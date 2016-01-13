@@ -969,6 +969,31 @@ Formation.prototype.populatePositions = function(){
 
 };
 
+Formation.prototype.convertToPlayObject = function(){
+  if(this.unit === "defense"){
+    var play = new DefensivePlay({
+      defensivePlayers: this.defensivePlayers,
+      formation: this,
+      positions: this.positions
+    });
+
+  }
+  else {
+    var play = new Play({
+      eligibleReceivers: this.eligibleReceivers,
+      offensivePlayers: this.offensivePlayers,
+      defensivePlayers: this.defensivePlayers,
+      playName: this.playName,
+      name: this.name,
+      qb: this.qb,
+      oline: this.oline,
+      formation: this,
+      positions: this.positions
+    });
+  }
+  return play
+};
+
 
 
 var formationButtons = [];
