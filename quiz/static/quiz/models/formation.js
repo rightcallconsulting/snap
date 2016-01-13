@@ -25,6 +25,7 @@ var Formation = function(config){
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
+  var olPositions = ["LT", "LG", "C", "RG", "RT"];
   if(distance){
     var xdist = distance;
   } else {
@@ -41,7 +42,7 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       var tmp = new Player({
           x: xPos,
           y: yPos,
-          num: 70+i,
+          num: olPositions[i+2],
           fill: color(143, 29, 29),
           red: 143,
           blue: 29,
