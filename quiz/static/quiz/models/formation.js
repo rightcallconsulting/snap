@@ -241,6 +241,22 @@ Formation.prototype.mouseInReceiverOrNode = function(){
   return [receiverClicked, selectedNode];
 };
 
+Formation.prototype.mouseInQB = function(){
+  for(var i = 0; i < this.qb.length; i++){
+    var p = this.eligibleReceivers[i];
+    if (p.isMouseInside()){
+      var receiverClicked = p;
+    }
+    for(var j = 0; j < p.routeNodes.length; j++){
+      var n = p.routeNodes[j];
+      if (n.isMouseInside()){
+        var selectedNode = n;
+      }
+    }
+  }
+  return [receiverClicked, selectedNode];
+};
+
 Formation.prototype.mouseInDefensivePlayer = function(){
   for(var i = 0; i < this.defensivePlayers.length; i++){
     var p = this.defensivePlayers[i];

@@ -19,6 +19,7 @@ function draw() {
   formationExample.createOLineAndQB();
   formationExample.changeablePlayers.push(formationExample.qb[0]);
 
+
   // Global Variables
   var capitalLetter = false;
 
@@ -219,6 +220,10 @@ function draw() {
     else if (receiverClicked){
       receiverClicked.change = receiverClicked.change ?  false : true;
       formationExample.establishingNewPlayer = receiverClicked;
+    }
+    else if (formationExample.qb[0].isMouseInside()){
+      formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
+      formationExample.establishingNewPlayer = formationExample.qb[0];
     }
     else if (positionOptionSelected){
       var newPlayer = new Player({
