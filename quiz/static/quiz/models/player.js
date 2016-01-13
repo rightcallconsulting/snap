@@ -480,15 +480,21 @@ Player.prototype.saveToDB = function(){
 };
 
 Player.prototype.establishFill = function(){
-  if(this.pos==="QB"){
-    this.fill = color(212, 130, 130);
-  }
-  else if(this.pos==="OL"){
-    this.fill = color(143, 29, 29);
+  if(this.unit ==="defense"){
+    this.fill = color(0, 0, 0);
   }
   else{
-    this.fill = color(255, 0, 0);
+    if(this.pos==="QB"){
+      this.fill = color(212, 130, 130);
+    }
+    else if(this.pos==="OL"){
+      this.fill = color(143, 29, 29);
+    }
+    else{
+      this.fill = color(255, 0, 0);
+    }
   }
+
 };
 
 Player.prototype.isALineman = function(){

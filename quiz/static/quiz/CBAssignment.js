@@ -46,6 +46,7 @@ function draw() {
                 else if (test.defensiveFormationIDs.includes(position.fields.formation)){
                   var player = createPlayerFromJSON(position);
                   player.unit = "defense";
+                  player.establishFill();
                   test.defensiveFormations.filter(function(formation) {return formation.id === position.fields.formation})[0].positions.push(player);
                 }
               })
@@ -57,7 +58,6 @@ function draw() {
                 formation.populatePositions();
                 test.defensivePlays.push(formation.convertToPlayObject());
               })
-              debugger;
               test.typeTest = "CBAssignment"
               runTest("CBAssignment", currentPlayerTested, test);
             })
@@ -69,7 +69,6 @@ function draw() {
   }
 
   var runTest = function(type, user, test){
-    debugger;
 
   //   var cover2 = new DefensivePlay({
   //     playName: "Cover 2",
