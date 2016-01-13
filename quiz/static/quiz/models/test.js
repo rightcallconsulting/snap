@@ -26,6 +26,10 @@ var Test = function(config){
     this.completed = config.completed || null;
     this.assigned = config.assigned || null;
     this.name = config.name || null;
+    this.defensiveFormations = config.defensiveFormations || [];
+    this.offensiveFormations = config.offensiveFormations || [];
+    this.offensiveFormationIDs = config.offensiveFormationIDs || [];
+    this.defensiveFormationIDs = config.defensiveFormationIDs || [];
 };
 
 Test.prototype.getCurrentPlayNumber = function(){
@@ -38,6 +42,14 @@ Test.prototype.getCurrentPlay = function(){
 
 Test.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.getCurrentPlayNumber()];
+};
+
+Test.prototype.getCurrentOffensiveFormation = function(){
+  return this.offensiveFormations[this.getCurrentPlayNumber()];
+};
+
+Test.prototype.getCurrentDefensiveFormation = function(){
+  return this.defensiveFormations[this.getCurrentPlayNumber()];
 };
 
 Test.prototype.getScoreString = function(){
@@ -108,7 +120,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays'))});
+  $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations'))});
   Player.rank = 1;
 };
 
@@ -212,6 +224,31 @@ Test.prototype.checkBigSelection = function() {
       return this.getCurrentPlay().oline[3];
     }
     else if(position === "C"){
+      return this.getCurrentPlay().oline[2];
+    }
+    else if(position === "RG"){
+      return this.getCurrentPlay().oline[1];
+    }
+    else if(position === "RT"){
+      return this.getCurrentPlay().oline[0];
+    }
+  }
+
+  Test.prototype.establishCBPlayerTested = function(user, hardCodePosition) {
+    // Positions on o-line in the database go from right to left for indexing
+    if(hardCodePosition){
+      var position = hardCodePosition;
+    }
+    else{
+      var position = user.position;
+    }
+    if(position === "CB"){
+      return this.getCurrentDefensivePlay().cornerbacks[0];
+    }
+    else if(position === "SS"){
+      return this.getCurrentPlay().oline[3];
+    }
+    else if(position === "FS"){
       return this.getCurrentPlay().oline[2];
     }
     else if(position === "RG"){

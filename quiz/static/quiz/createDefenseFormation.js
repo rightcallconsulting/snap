@@ -28,6 +28,7 @@ function draw() {
             position.fields.y = position.fields.startY;
             position.fields.pos = position.fields.name;
             position.fields.num = position.fields.pos;
+            position.fields.index = position.fields.playerIndex;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
               newPlayer.fill = color(212, 130, 130);
@@ -429,6 +430,27 @@ function draw() {
         formationExample.establishingNewPlayer.change = false;
         formationExample.establishingNewPlayer = null;
       }
+      else if (save.isMouseInside()) {
+        if(formationExample.validPlay()){
+          var newFormation = new Formation({
+              defensivePlayers: formationExample.defensivePlayers,
+              playName: formationExample.playName,
+              dline: formationExample.dline,
+              linebackers: formationExample.linebackers,
+              cornerbacks: formationExample.cornerbacks,
+              safeties: formationExample.safeties,
+              unit: formationExample.unit,
+              offensiveFormationID: currentOffensiveFormation.id
+          });
+          newFormation.saveToDB();
+          formationExample.removeAllPlayers();
+          formationExample.playName = "";
+          formationExample.feedbackMessage = "Saved!"
+
+        } else{
+          formationExample.feedbackMessage = "Invalid Play"
+        }
+      }
       else if (clear.isMouseInside()){
         formationExample.removeAllPlayers();
       }
@@ -485,27 +507,7 @@ function draw() {
         });
         selectedWR.routeNodes.push(nodeObject);
       }
-      else if (save.isMouseInside()) {
-        if(formationExample.validPlay()){
-          var newFormation = new Formation({
-              defensivePlayers: formationExample.defensivePlayers,
-              playName: formationExample.playName,
-              dline: formationExample.dline,
-              linebackers: formationExample.linebackers,
-              cornerbacks: formationExample.cornerbacks,
-              safeties: formationExample.safeties,
-              unit: formationExample.unit,
-              offensiveFormationID: currentOffensiveFormation.id
-          });
-          newFormation.saveToDB();
-          formationExample.removeAllPlayers();
-          formationExample.playName = "";
-          formationExample.feedbackMessage = "Saved!"
 
-        } else{
-          formationExample.feedbackMessage = "Invalid Play"
-        }
-      }
     };
 
     createFormationButtons(formations);

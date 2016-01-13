@@ -1,6 +1,9 @@
 var Formation = function(config){
   this.eligibleReceivers = config.eligibleReceivers || [];
   this.offensivePlayers = config.offensivePlayers || [];
+  this.wideReceivers = config.wideReceivers || [];
+  this.runningBacks = config.runningBacks || [];
+  this.tightEnds = config.tightEnds || [];
   this.name = config.name || "";
   this.playName = config.playName || "";
   this.qb = config.qb || [];
@@ -11,7 +14,7 @@ var Formation = function(config){
   this.id = config.id || null;
   this.updated_at = config.updated_at || null;
   this.created_at = config.updated_at || null;
-  this.positions = config.positions || null;
+  this.positions = config.positions || [];
   this.unit = config.unit || "offense";
   this.dline = config.dline || [];
   this.linebackers = config.linebackers || [];
@@ -43,7 +46,8 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           red: 143,
           blue: 29,
           green: 29,
-          pos: "OL"
+          pos: "OL",
+          index: i
       });
       if(siz){tmp.siz = siz}
       this.oline.push(tmp);
@@ -204,6 +208,18 @@ Formation.prototype.createPlayer = function(player){
       this.eligibleReceivers.push(player);
       this.changeablePlayers.push(player);
       this.establishingNewPlayer = player;
+      if(player.pos === "WR"){
+        this.wideReceivers.push(player);
+        player.playerIndex = this.wideReceivers.length;
+      }
+      else if(player.pos === "TE"){
+        this.tightEnds.push(player);
+        player.playerIndex = this.tightEnds.length;
+      }
+      else if(player.pos === "RB"){
+        this.runningBacks.push(player);
+        player.playerIndex = this.runningBacks.length;
+      }
     }
   }
 };
@@ -357,6 +373,9 @@ Formation.prototype.populatePositions = function(){
   var eligibleReceivers = this.positions.filter(function(player) {
     return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
   });
+  this.wideReceivers = this.positions.filter(function(player) {return player.pos ==="WR"});
+  this.runningBacks = this.positions.filter(function(player) {return player.pos ==="RB"});
+  this.tightEnds = this.positions.filter(function(player) {return player.pos ==="TE"});
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
 };
@@ -904,6 +923,84 @@ var isFormationClicked = function(formationButtonArray){
   })
   return formationClicked;
 };
+
+var createFormationFromJSON = function(jsonFormation){
+  var formation = new Formation({
+    id: jsonFormation.pk,
+    name: jsonFormation.fields.name,
+    playName: jsonFormation.fields.name,
+    offensiveFormationID: jsonFormation.fields.offensiveFormationID,
+    teamID: jsonFormation.fields.team,
+    unit: jsonFormation.fields.unit
+  });
+  return formation;
+};
+
+
+Formation.prototype.populatePositions = function(){
+  if(this.unit === "defense"){
+    this.positions.forEach(function(player){
+      if(player.pos === "DL" || player.pos === "DE"){
+        this.dline.push(player);
+      }
+      else if(player.pos === "W" || player.pos === "M" || player.pos === "S"){
+        this.linebackers.push(player);
+      }
+      else if(player.pos === "CB"){
+        this.cornerbacks.push(player);
+      }
+      else if(player.pos === "SS" || player.pos === "FS"){
+        this.safeties.push(player);
+      }
+    }.bind(this))
+    this.defensivePlayers = this.positions;
+  }
+  else{
+    var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+    oline.forEach(function(player){this.oline.push(player)}.bind(this));
+    var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+    this.qb = qb
+    var eligibleReceivers = this.positions.filter(function(player) {
+      return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+    });
+    this.eligibleReceivers = eligibleReceivers;
+    this.offensivePlayers = this.positions;
+  }
+
+};
+
+Formation.prototype.convertToPlayObject = function(){
+  if(this.unit === "defense"){
+    var play = new DefensivePlay({
+      defensivePlayers: this.defensivePlayers,
+      playName: this.playName,
+      name: this.name,
+      formation: this,
+      positions: this.positions,
+      cornerbacks: this.cornerbacks,
+      safeties: this.safeties,
+      dline: this.dline,
+      linebacker: this.linebackers
+    });
+
+  }
+  else {
+    var play = new Play({
+      eligibleReceivers: this.eligibleReceivers,
+      offensivePlayers: this.offensivePlayers,
+      defensivePlayers: this.defensivePlayers,
+      playName: this.playName,
+      name: this.name,
+      qb: this.qb,
+      oline: this.oline,
+      formation: this,
+      positions: this.positions
+    });
+  }
+  return play
+};
+
+
 
 var formationButtons = [];
 var formations = [];

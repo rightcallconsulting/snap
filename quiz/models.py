@@ -70,7 +70,7 @@ class Formation(models.Model):
         if(json['unit'] == "offense"):
             for player in json['offensivePlayers']:
                 new_position = Position(name=player['pos'], startX=player['startX'],
-                startY=player['startY'], formation=new_formation)
+                startY=player['startY'], formation=new_formation, playerIndex=player['playerIndex'])
                 new_position.save()
         else:
             new_formation.offensiveFormationID = json['offensiveFormationID']
@@ -78,6 +78,10 @@ class Formation(models.Model):
             for player in json['defensivePlayers']:
                 new_position = Position(name=player['pos'], startX=player['startX'],
                 startY=player['startY'], formation=new_formation)
+                if(player['CBAssignment']):
+                    new_position.CBAssignmentPlayerID=player['CBAssignment']['id']
+                    new_position.CBAssignmentPlayerIndex=player['CBAssignment']['playerIndex']
+                    new_position.CBAssignmentPlayerPosition=player['CBAssignment']['pos']
                 new_position.save()
 
 class Position(models.Model):
@@ -87,9 +91,13 @@ class Position(models.Model):
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
     routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
     progressionRank = models.IntegerField(null=True, blank=True)
+    playerIndex = models.IntegerField(null=True, blank=True)
     routeNum = models.IntegerField(null=True, blank=True)
     blocker = models.NullBooleanField()
     runner = models.NullBooleanField()
+    CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+    CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
+    CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
 
@@ -108,6 +116,7 @@ class Test(models.Model):
     score = models.IntegerField()
     skips = models.IntegerField()
     incorrect_guesses = models.IntegerField()
+    formations = models.ManyToManyField(Formation, null=True, blank=True)
     deadline = models.DateTimeField()
     completed = models.BooleanField()
     in_progress = models.BooleanField()
