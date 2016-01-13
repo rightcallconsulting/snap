@@ -99,7 +99,7 @@ function draw() {
           } else if (this === test.getCurrentPlay().bigPlayer) {
             fill(255, 0, 0);
           } else {
-            fill(this.fill);
+            fill(0,0,255);
           }
           ellipse(this.x, this.y, this.siz, this.siz);
           fill(0, 0, 0);
