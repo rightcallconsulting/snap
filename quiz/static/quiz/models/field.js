@@ -75,7 +75,8 @@ Field.prototype.drawBackground = function(play, height, width) {
             var xc = (53.33 - 9)*yardsToPixels;
             //debugger;
             text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-xOffset)*yardsToPixels);
-            rotate(HALF_PI);
+            //rotate(HALF_PI);
+            resetMatrix();
         }else if(currentYardLine % 5 === 0){
             line(0, yc, width, yc);
         }else{
