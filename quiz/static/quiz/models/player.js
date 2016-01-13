@@ -518,7 +518,7 @@ Player.prototype.checkSelection = function(test) {
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignmentPlayerID){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().establishRightAnswerPlayer(test.getCurrentPlay());
   }
-  else if (test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex){
+  else if (test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex !== null){
     var correctPlayerIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex;
     var correctUnitIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentUnitIndex;
   }
@@ -584,7 +584,7 @@ var createPlayerFromJSON = function(jsonPosition){
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
   player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
-  player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
+  player.blockingAssignmentPlayerIndex = jsonPosition.fields.blockingAssignmentPlayerIndex
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]

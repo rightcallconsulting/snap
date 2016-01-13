@@ -3,7 +3,7 @@ var makeJSONCall = true;
 
 
 function setup() {
-  var myCanvas = createCanvas(400, 600);
+  var myCanvas = createCanvas(500, 500);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -178,7 +178,8 @@ function draw() {
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-    defensePlay.draw(getCurrentFormation().oline[2].x, getCurrentFormation().oline[2].y);
+
+    defensePlay.draw(getCurrentFormation().oline[0].x, getCurrentFormation().oline[0].y);
 
     // intro scene
     var drawOpening = function() {
@@ -223,7 +224,8 @@ function draw() {
     keyTyped = function(){
       var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
       var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-      if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
+      var numDiff = key.charCodeAt(0) - "0".charCodeAt(0);
+      if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 9) ||  key === ' ' || key === '\''){
           playBeingCreated.playName += key;
       }
       //return false;
@@ -248,6 +250,7 @@ function draw() {
           selectedWR.blocker = true;
           selectedWR.clearRoute();
         }
+        return false;
       }
       else if (keyCode === BACKSPACE){
         if (selectedWR){
