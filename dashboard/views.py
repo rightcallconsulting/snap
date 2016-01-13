@@ -42,13 +42,11 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            return HttpResponseRedirect("/books/")
-        # user = User.objects.create_user(username=request.POST['username'],
-        # password=request.POST['password'], email=request.POST['email'])
-        # return HttpResponseRedirect("/")
+            return HttpResponseRedirect("/")
+
     else:
         form = UserCreateForm()
     return render(request, 'dashboard/register.html', {
