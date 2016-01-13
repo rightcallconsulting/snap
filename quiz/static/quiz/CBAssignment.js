@@ -45,6 +45,7 @@ function draw() {
                 }
                 else if (test.defensiveFormationIDs.includes(position.fields.formation)){
                   var player = createPlayerFromJSON(position);
+                  player.unit = "defense";
                   test.defensiveFormations.filter(function(formation) {return formation.id === position.fields.formation})[0].positions.push(player);
                 }
               })
@@ -70,90 +71,90 @@ function draw() {
   var runTest = function(type, user, test){
     debugger;
 
-    var cover2 = new DefensivePlay({
-      playName: "Cover 2",
-      defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
-
-    test.defensivePlays.push(cover2);
-
-    var cover3 = new DefensivePlay({
-      playName: "Cover 3",
-      defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
-
-    test.defensivePlays.push(cover3);
-
-    var cover4 = new DefensivePlay({
-      playName: "Cover 4",
-      defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
-
-    test.defensivePlays.push(cover4);
-
-
-  var cover2 = new DefensivePlay({
-    playName: "Cover 2",
-    defensivePlayers: [],
-    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
-    lbPositions: ["W", "M", "S"],
-    dbPositions: ["CB", "SS", "F/S", "CB"],
-    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-  });
-
-  test.defensivePlays.push(cover2);
-
-  var cover3 = new DefensivePlay({
-    playName: "Cover 3",
-    defensivePlayers: [],
-    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
-    lbPositions: ["W", "M", "S"],
-    dbPositions: ["CB", "SS", "F/S", "CB"],
-    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-  });
-
-  test.defensivePlays.push(cover3);
-
-  var cover4 = new DefensivePlay({
-    playName: "Cover 4",
-    defensivePlayers: [],
-    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
-    lbPositions: ["W", "M", "S"],
-    dbPositions: ["CB", "SS", "F/S", "CB"],
-    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-  });
-
-  test.defensivePlays.push(cover4);
+  //   var cover2 = new DefensivePlay({
+  //     playName: "Cover 2",
+  //     defensivePlayers: [],
+  //     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //     dlPositions: ["DE", "NT", "DT", "RE"],
+  //     lbPositions: ["W", "M", "S"],
+  //     dbPositions: ["CB", "SS", "F/S", "CB"],
+  //     dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  //   });
+  //
+  //   test.defensivePlays.push(cover2);
+  //
+  //   var cover3 = new DefensivePlay({
+  //     playName: "Cover 3",
+  //     defensivePlayers: [],
+  //     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //     dlPositions: ["DE", "NT", "DT", "RE"],
+  //     lbPositions: ["W", "M", "S"],
+  //     dbPositions: ["CB", "SS", "F/S", "CB"],
+  //     dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  //   });
+  //
+  //   test.defensivePlays.push(cover3);
+  //
+  //   var cover4 = new DefensivePlay({
+  //     playName: "Cover 4",
+  //     defensivePlayers: [],
+  //     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //     dlPositions: ["DE", "NT", "DT", "RE"],
+  //     lbPositions: ["W", "M", "S"],
+  //     dbPositions: ["CB", "SS", "F/S", "CB"],
+  //     dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  //   });
+  //
+  //   test.defensivePlays.push(cover4);
+  //
+  //
+  // var cover2 = new DefensivePlay({
+  //   playName: "Cover 2",
+  //   defensivePlayers: [],
+  //   dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //   lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //   dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //   dlPositions: ["DE", "NT", "DT", "RE"],
+  //   lbPositions: ["W", "M", "S"],
+  //   dbPositions: ["CB", "SS", "F/S", "CB"],
+  //   dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  // });
+  //
+  // test.defensivePlays.push(cover2);
+  //
+  // var cover3 = new DefensivePlay({
+  //   playName: "Cover 3",
+  //   defensivePlayers: [],
+  //   dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //   lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //   dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //   dlPositions: ["DE", "NT", "DT", "RE"],
+  //   lbPositions: ["W", "M", "S"],
+  //   dbPositions: ["CB", "SS", "F/S", "CB"],
+  //   dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  // });
+  //
+  // test.defensivePlays.push(cover3);
+  //
+  // var cover4 = new DefensivePlay({
+  //   playName: "Cover 4",
+  //   defensivePlayers: [],
+  //   dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+  //   lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+  //   dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+  //   dlPositions: ["DE", "NT", "DT", "RE"],
+  //   lbPositions: ["W", "M", "S"],
+  //   dbPositions: ["CB", "SS", "F/S", "CB"],
+  //   dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  // });
+  //
+  // test.defensivePlays.push(cover4);
 
   Player.prototype.draw = function() {
     if (this.unit === "offense") {
@@ -305,8 +306,8 @@ function draw() {
       displayButton: true
     });
 
-    test.getCurrentDefensivePlay().draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
-
+    // test.getCurrentDefensivePlay().draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
+    test.getCurrentDefensivePlay().drawAllPlayers();
     keyPressed = function() {
       if (keyCode === 32){
         if (!test.getCurrentPlay().inProgress){
