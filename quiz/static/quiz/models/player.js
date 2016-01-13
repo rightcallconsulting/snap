@@ -488,7 +488,7 @@ Player.prototype.establishFill = function(){
     if(this.pos==="QB"){
       this.fill = color(212, 130, 130);
     }
-    else if(this.pos==="OL"){
+    else if(this.pos==="OL" || this.pos ==="LT" || this.pos ==="LG" || this.pos ==="C" || this.pos ==="RG" || this.pos ==="RT"){
       this.fill = color(143, 29, 29);
     }
     else{

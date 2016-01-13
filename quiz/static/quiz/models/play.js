@@ -147,7 +147,9 @@ Play.prototype.saveToDB = function(){
 };
 
 Play.prototype.populatePositions = function(){
-  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  var oline = this.positions.filter(function(player) {
+    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+  });
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb

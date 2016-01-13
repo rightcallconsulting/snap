@@ -25,6 +25,7 @@ var Formation = function(config){
 };
 
 Formation.prototype.createOLineAndQB = function(siz, distance){
+  var olPositions = ["LT", "LG", "C", "RG", "RT"];
   if(distance){
     var xdist = distance;
   } else {
@@ -41,12 +42,12 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       var tmp = new Player({
           x: xPos,
           y: yPos,
-          num: 70+i,
+          num: olPositions[i+2],
           fill: color(143, 29, 29),
           red: 143,
           blue: 29,
           green: 29,
-          pos: "OL",
+          pos: olPositions[i+2],
           index: i
       });
       if(siz){tmp.siz = siz}
@@ -240,6 +241,22 @@ Formation.prototype.mouseInReceiverOrNode = function(){
   return [receiverClicked, selectedNode];
 };
 
+Formation.prototype.mouseInQB = function(){
+  for(var i = 0; i < this.qb.length; i++){
+    var p = this.eligibleReceivers[i];
+    if (p.isMouseInside()){
+      var receiverClicked = p;
+    }
+    for(var j = 0; j < p.routeNodes.length; j++){
+      var n = p.routeNodes[j];
+      if (n.isMouseInside()){
+        var selectedNode = n;
+      }
+    }
+  }
+  return [receiverClicked, selectedNode];
+};
+
 Formation.prototype.mouseInDefensivePlayer = function(){
   for(var i = 0; i < this.defensivePlayers.length; i++){
     var p = this.defensivePlayers[i];
@@ -366,7 +383,9 @@ Formation.prototype.mouseInOL = function(){
 };
 
 Formation.prototype.populatePositions = function(){
-  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  var oline = this.positions.filter(function(player) {
+    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+  });
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb
@@ -956,7 +975,9 @@ Formation.prototype.populatePositions = function(){
     this.defensivePlayers = this.positions;
   }
   else{
-    var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+    var oline = this.positions.filter(function(player) {
+      return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+    });
     oline.forEach(function(player){this.oline.push(player)}.bind(this));
     var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
     this.qb = qb
