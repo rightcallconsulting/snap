@@ -727,10 +727,6 @@ aside.skin-6 .main-menu > ul > li {
   border-top-color: #506274;
   border-bottom-color: #415160;
 }
-aside.skin-6 .main-menu > ul > li.active,
-aside.skin-6 .main-menu > ul > li.display {
-  border-top-color: #415160;
-}
 aside.skin-6 .main-menu > ul > li.active > a,
 aside.skin-6 .main-menu > ul > li.display > a {
   background: #2A6205;

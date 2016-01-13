@@ -2,10 +2,10 @@
 
 <aside class="fixed skin-6">
   <div class="">
-    <img class="dash-header-logo" src="{% static 'dashboard/images/dashboard-logo.png' %}" alt="">
+    <a href="/"><img class="dash-header-logo" src="{% static 'dashboard/images/dashboard-logo.png' %}" alt=""></a>
   </div>
   <div class="sidebar-inner scrollable-sidebar">
-    <div class="main-menu">
+    <div class="main-menu" id="nav">
       <ul>
         <li class="active">
           <a href="/">
@@ -20,13 +20,13 @@
           </a>
         </li>
         <li class="openable open">
-          <a href="/quizzes">
+          <a href="/to-do">
             <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/quiz-icon.png' %}" alt="">
+              <img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
 
             </span>
             <span class="menu-text">
-              QUIZZES
+              TO DO
             </span>
             <span class="menu-hover"></span>
           </a>
@@ -55,12 +55,12 @@
           </a>
         </li>
         <li>
-          <a href="/to-do">
+          <a href="/messages">
             <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
+              <img class="menu-icon" src="{% static 'dashboard/images/messages-icon.png' %}" alt="">
             </span>
             <span class="menu-text">
-              TO DO
+              MESSAGES
             </span>
             <span class="menu-hover"></span>
           </a>

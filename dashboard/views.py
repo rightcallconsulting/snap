@@ -19,8 +19,8 @@ def register(request):
 def timeline(request):
     return render(request, 'dashboard/timeline.html')
 
-def quizzes(request):
-    return render(request, 'dashboard/quizzes.html')
+def messages(request):
+    return render(request, 'dashboard/messages.html')
 
 def analytics(request):
     return render(request, 'dashboard/analytics.html')
