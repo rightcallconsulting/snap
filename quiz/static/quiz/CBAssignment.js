@@ -58,7 +58,7 @@ function draw() {
                 formation.populatePositions();
                 test.defensivePlays.push(formation.convertToPlayObject());
               })
-              test.typeTest = "CBAssignment"
+              test.typeTest = "CBAssignment";
               runTest("CBAssignment", currentPlayerTested, test);
             })
           })
@@ -384,8 +384,6 @@ function draw() {
       if(!test.over){
         playerBeingTested = test.establishCBPlayerTested(user);
         playerBeingTested.isBeingTested = true;
-        test.getCurrentDefensivePlay().defensivePlayers[10].isBeingTested = true;
-        test.getCurrentDefensivePlay().defensivePlayers[10].CBAssignment = test.getCurrentPlay().eligibleReceivers[4];
         if(!test.getCurrentDefensivePlay().bigPlayer && !test.getCurrentPlay().bigPlayer){
           var playerBeingTested = test.getCurrentDefensivePlay().playerBeingTested();
           var rightAnswerPlayer = playerBeingTested.establishRightAnswerPlayer(test.getCurrentPlay());
