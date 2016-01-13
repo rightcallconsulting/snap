@@ -47,7 +47,7 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           red: 143,
           blue: 29,
           green: 29,
-          pos: "OL",
+          pos: olPositions[i+2],
           index: i
       });
       if(siz){tmp.siz = siz}
@@ -367,7 +367,9 @@ Formation.prototype.mouseInOL = function(){
 };
 
 Formation.prototype.populatePositions = function(){
-  var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+  var oline = this.positions.filter(function(player) {
+    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+  });
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb
@@ -957,7 +959,9 @@ Formation.prototype.populatePositions = function(){
     this.defensivePlayers = this.positions;
   }
   else{
-    var oline = this.positions.filter(function(player) {return player.pos ==="OL"});
+    var oline = this.positions.filter(function(player) {
+      return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+    });
     oline.forEach(function(player){this.oline.push(player)}.bind(this));
     var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
     this.qb = qb
