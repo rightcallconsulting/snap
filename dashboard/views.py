@@ -18,3 +18,18 @@ def register(request):
 
 def timeline(request):
     return render(request, 'dashboard/timeline.html')
+
+def quizzes(request):
+    return render(request, 'dashboard/quizzes.html')
+
+def analytics(request):
+    return render(request, 'dashboard/analytics.html')
+
+def playbook(request):
+    return render(request, 'dashboard/playbook.html')
+
+def todo(request):
+    return render(request, 'dashboard/to-do.html')
+
+def calendar(request):
+    return render(request, 'dashboard/calendar.html')
