@@ -267,6 +267,7 @@ function draw() {
         test.startTime = millis();
       }
       field.drawBackground(test.getCurrentDefensivePlay(), height, width);
+      text(test.getCurrentPlay().playName, 10, 50);
       playButton.draw();
       restart.draw();
       clear.draw();

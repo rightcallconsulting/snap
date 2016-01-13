@@ -973,6 +973,8 @@ Formation.prototype.convertToPlayObject = function(){
   if(this.unit === "defense"){
     var play = new DefensivePlay({
       defensivePlayers: this.defensivePlayers,
+      playName: this.playName,
+      name: this.name,
       formation: this,
       positions: this.positions,
       cornerbacks: this.cornerbacks,
