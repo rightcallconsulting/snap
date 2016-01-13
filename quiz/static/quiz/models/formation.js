@@ -974,7 +974,11 @@ Formation.prototype.convertToPlayObject = function(){
     var play = new DefensivePlay({
       defensivePlayers: this.defensivePlayers,
       formation: this,
-      positions: this.positions
+      positions: this.positions,
+      cornerbacks: this.cornerbacks,
+      safeties: this.safeties,
+      dline: this.dline,
+      linebacker: this.linebackers
     });
 
   }

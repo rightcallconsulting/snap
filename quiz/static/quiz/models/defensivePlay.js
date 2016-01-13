@@ -10,6 +10,13 @@ var DefensivePlay = function(config) {
     this.lbPositions = config.lbPositions || [];
     this.dlNames = config.dlNames || [];
     this.bigPlayer = config.bigPlayer || null;
+    this.dline = config.dline || [];
+    this.linebackers = config.linebackers || [];
+    this.cornerbacks = config.cornerbacks || [];
+    this.safeties = config.safeties || [];
+    this.defensivePlayers = config.defensivePlayers || [];
+    this.offensiveFormationID = config.offensiveFormationID || 0;
+    this.positions = config.positions || [];
 
 };
 

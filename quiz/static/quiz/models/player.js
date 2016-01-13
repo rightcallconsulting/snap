@@ -34,6 +34,7 @@ var Player = function(config) {
     this.speed = 1;
     this.initialRank = 1;
     this.CBAssignment = config.CBAssignment || null;
+    this.CBAssignmentPlayerID = config.CBAssignmentPlayerID || null;
     this.isBeingTested = config.isBeingTested || false;
     this.id = config.id || null;
 };
@@ -514,8 +515,8 @@ Player.prototype.isALineman = function(){
 };
 
 Player.prototype.checkSelection = function(test) {
-  if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignment){
-    var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().CBAssignment;
+  if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignmentPlayerID){
+    var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().establishRightAnswerPlayer(test.getCurrentPlay());
   }
   else if (test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex){
     var correctPlayerIndex = test.getCurrentPlay().playerBeingTested().blockingAssignmentPlayerIndex;
@@ -546,6 +547,13 @@ Player.prototype.createBigPlayer = function(height, width){
     num: this.num
   })
   return bigSelf
+};
+
+Player.prototype.establishRightAnswerPlayer = function(offensivePlay){
+  var rightPlayer = offensivePlay.offensivePlayers.filter(function(player){
+    return player.id === this.CBAssignmentPlayerID;
+  }.bind(this))
+  return rightPlayer[0];
 };
 
 var getPlayersFromZone = function(zone, play){
