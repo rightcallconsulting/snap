@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <div id="top-nav" class="main-header clearfix">
   <div class="welcome-header">
-    <h4><span class="bold">WELCOME</span> &nbsp;&nbsp;&nbsp;{{request.user.username}}</h4>
+    <h4><span class="bold">WELCOME</span> &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}</h4>
 
 
     <ul class="nav-notification clearfix">
@@ -174,7 +174,7 @@
       </li>
       <li class="profile dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <strong>{{request.user.username}}</strong>
+          <strong>{{request.user.get_full_name}}</strong>
           <span><i class="fa fa-chevron-down"></i></span>
         </a>
         <ul class="dropdown-menu">
@@ -182,7 +182,7 @@
             <a class="clearfix" href="#">
               <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
               <div class="detail">
-                <strong>{{request.user.username}}</strong>
+                <strong>{{request.user.get_full_name}}</strong>
                 <p class="grey">{{request.user.email}}</p>
               </div>
             </a>

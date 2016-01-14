@@ -40,6 +40,9 @@ class Athlete(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+    def get_full_name(self):
+        return self.first_name + " " + self.last_name
+
 class Coach(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=30, blank=True, null=True)
