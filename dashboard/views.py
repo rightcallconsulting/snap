@@ -7,7 +7,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
 
 from quiz.models import Player, Team, Play, Formation
-from dashboard.models import UserCreateForm
+from dashboard.models import UserCreateForm, RFPAuthForm
 from IPython import embed
 
 # Create your views here.
@@ -15,28 +15,27 @@ from IPython import embed
 def homepage(request):
     return render(request, 'dashboard/homepage.html')
 
-def login(request):
+def auth_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        embed()
         if user is not None:
             if user.is_active:
                 login(request, user)
-                embed()
-                # Redirect to a success page.
                 return HttpResponseRedirect("/")
             # else:
                 # Return a 'disabled account' error message
     else:
-        return render(request, 'dashboard/login.html')
+        form = RFPAuthForm()
+        return render(request, 'dashboard/login.html', {
+            'form': form,
+        })
 
-def logout(request):
+
+def auth_logout(request):
     logout(request)
-    # Redirect to a success page
-    # return render(request, '/')
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/login")
 
 
 def register(request):

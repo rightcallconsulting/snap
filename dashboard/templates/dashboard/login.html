@@ -18,15 +18,13 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<form class="form-login">
-						<div class="form-group">
-							<label>Username</label>
-							<input type="text" placeholder="Username" class="form-control input-sm bounceIn animation-delay2" >
-						</div>
-						<div class="form-group">
-							<label>Password</label>
-							<input type="password" placeholder="Password" class="form-control input-sm bounceIn animation-delay4">
-						</div>
+					<form action="/login" method="post" class=form-login> {% csrf_token %}
+						{% for field in form %}
+							<div class="form-group">
+								{{ field.label_tag }}
+								{{ field }}
+							</div>
+						{% endfor %}
 						<div class="form-group">
 							<label class="label-checkbox inline">
 								<input type="checkbox" class="regular-checkbox chk-delete" />
@@ -42,8 +40,7 @@
 						</div>
 
 						<hr/>
-
-						<a class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" href="index.html"><i class="fa fa-sign-in"></i> Sign in</a>
+						<i class="fa fa-sign-in"></i><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
 					</form>
 				</div>
 			</div><!-- /panel -->
