@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import models
@@ -48,3 +49,13 @@ class Coach(models.Model):
     title = models.CharField(max_length=30, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+class AthleteForm(ModelForm):
+    class Meta:
+        model = Athlete
+        fields = ['position', 'number']
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
