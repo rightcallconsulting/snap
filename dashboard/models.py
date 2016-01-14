@@ -50,8 +50,6 @@ class Coach(models.Model):
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
 class AthleteForm(ModelForm):
-    position = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm', 'placeholder' : 'Position'}))
-    number = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm', 'placeholder' : 'Number'}))
 
     class Meta:
         model = Athlete

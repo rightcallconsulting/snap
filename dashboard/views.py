@@ -82,8 +82,8 @@ def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
 def profile(request):
-    athlete_form = AthleteForm()
-    user_form = UserForm()
+    athlete_form = AthleteForm(instance = request.user)
+    user_form = UserForm(instance = request.user)
     return render(request, 'dashboard/profile.html', {
         'athlete_form': athlete_form,
         'user_form': user_form,
