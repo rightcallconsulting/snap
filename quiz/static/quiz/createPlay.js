@@ -178,8 +178,11 @@ function draw() {
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
 
-
-    defensePlay.draw(getCurrentFormation().oline[0].x, getCurrentFormation().oline[0].y);
+    var center = getCurrentFormation().getPlayerFromPosition("C");
+    if(center === null){
+      center = getCurrentFormation().oline[2];
+    }
+    defensePlay.draw(center.x, center.y);
 
     // intro scene
     var drawOpening = function() {

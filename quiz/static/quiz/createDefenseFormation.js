@@ -33,7 +33,7 @@ function draw() {
             if(newPlayer.pos==="QB"){
               newPlayer.fill = color(212, 130, 130);
             }
-            else if(newPlayer.pos==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT"){
+            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
               newPlayer.fill = color(143, 29, 29);
             }
             else{

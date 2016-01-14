@@ -125,6 +125,15 @@ Formation.prototype.createSkillPlayers = function(){
   this.eligibleReceivers.push(wr2);
 };
 
+//pos is a str for now, but could be an int code later
+Formation.prototype.getPlayerFromPosition = function(pos){
+  var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
+  if(players.length === 0){
+    return null;
+  }
+  return players[0];
+};
+
 Formation.prototype.drawOLQB = function(){
   this.oline.forEach(function(ol){
     ol.draw();

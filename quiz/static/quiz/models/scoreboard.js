@@ -9,6 +9,7 @@ var Scoreboard = function(config){
 
 Scoreboard.prototype.draw = function(test, user) {
     fill(0, 0, 0);
+    noStroke();
     textSize(18);
     textAlign(CENTER, CENTER);
     text(test.getScoreString(), this.x, this.y);

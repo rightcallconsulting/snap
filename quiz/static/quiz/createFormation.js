@@ -191,7 +191,8 @@ function draw() {
   keyTyped = function(){
     var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
     var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-    if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || key === ' '){
+    var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+    if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' '){
         formationExample.playName += key;
     }
     //return false;
