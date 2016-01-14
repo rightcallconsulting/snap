@@ -22,8 +22,7 @@ function draw() {
     x:width*0.3,
     y:height/2,
     pos:"Z",
-    num:88,
-    
+    num:88
   });
 
   var slantExample = new Route({
