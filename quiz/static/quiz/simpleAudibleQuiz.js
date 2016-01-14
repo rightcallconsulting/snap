@@ -50,10 +50,7 @@ function draw() {
     scoreboard: scoreboard,
     formations: [formationExample, formationExample, formationExample]
   });
-
   
-
-
   var cover2 = new DefensivePlay({
       playName: "Cover 2",
       defensivePlayers: [],
@@ -73,12 +70,12 @@ function draw() {
     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
+    dlPositions: ["RE", "DE", "NT", "DT"],
     lbPositions: ["W", "M", "S"],
     dbPositions: ["CB", "SS", "F/S", "CB"]
   });
 
-  defensiveCoverages.push(cover2);
+  defensiveCoverages.push(cover4);
 
   var createDefense = function(){
     for(var i = 0; i < cover2.dlPositions.length; i++){
@@ -153,52 +150,8 @@ createDefense(200, 200);
           text(this.num, this.x, this.y);  
   };
 
-  DefensivePlayer.prototype.draw = function(){
-    if(this.clicked){
-      fill(255,255,0);
-    }else{
-      fill(255,255,255);
-    }      //stroke(0);
-    textSize(20);
-    textAlign(CENTER, CENTER);
-    text(this.pos, this.x, this.y);  
-  };
-  /*
-  DefensivePlayer.prototype.callBlitzingPlayer = function(){
-    if (this.clicked) {
-        this.fill = color(255, 255, 0);
-        this.clicked = false;
-        this.draw();
-    } else {
-        this.fill = color(0, 0, 255);
-        for(var i = 0; i < defensivePlayers.length; i++){
-            defensivePlayers[i] = false;
-        }
-        this.clicked = true;
-        this.draw(); 
-    }
-};
-*/
-
-  var playButton = new Button({
-      x: 10,
-      y: 360,
-      width: 32,
-      label: "Play",
-      clicked: false,
-      displayButton: true
-  });
-
-  var bigReset = new Button({
-        x: width / 2 - 40,
-        y: height * 4 / 5,
-        width: 80,
-        label: "Restart Quiz",
-        clicked: false
-  });
-
   var check = new Button({
-      x: 60,
+      x: 90,
       y: 10,
       width: 43,
       label: "Check",
@@ -215,11 +168,11 @@ createDefense(200, 200);
       displayButton: true
   });
 
-  var clear = new Button({
+  var displayCoverage = new Button({
       x: 10,
       y: 10,
-      width: 43,
-      label: "Clear",
+      width: 70,
+      label: "Coverage?",
       clicked: false,
       displayButton: true
   });
@@ -232,8 +185,10 @@ var shuffle = function(o){
 };
   var createMultipleChoiceAnswers = function(){
     multipleChoiceAnswers = [];
+
     var availableNames = audibleNames.slice(0,4);
     shuffle(availableNames);
+    
     for(var i = 0; i < availableNames.length; i++){
       multipleChoiceAnswers.push(new MultipleChoiceAnswer({
         x: 50 + i * width / (availableNames.length + 1),
@@ -267,10 +222,8 @@ var makeCorrectPlayer = function(player){
   if(playerNum === -1 || defensivePlayers[playerNum].clicked){
     return; //wasn't found or already clicked - do nothing
   }
-
   clearDefendersClicked();
   defensivePlayers[playerNum].clicked = true;
-  
   };
 
 
@@ -286,11 +239,11 @@ var makeCorrectPlayer = function(player){
       if(answerIndex === guessIndex){
         isCorrect = true;
       }
-      /*
+      
       var answerIndex = multipleChoiceAnswers.indexOf(guess);
       if(playerIndex >= 0 && answerIndex >= 0 && (playerIndex % multipleChoiceAnswers.length === answerIndex)){
         isCorrect = true;
-      }*/
+      }
     }
     test.registerAnswer(isCorrect);
     clearAnswers();
@@ -299,12 +252,11 @@ var makeCorrectPlayer = function(player){
 
   var clearAnswers = function(){
     for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var a = multipleChoiceAnswers[i];
-      if(a.clicked){
-        a.changeClickStatus();
+      if(multipleChoiceAnswers[i].clicked){
+        multipleChoiceAnswers[i].changeClickStatus();
       }
     }
-  }
+  };
   
   keyPressed = function(){
     
@@ -325,7 +277,7 @@ var makeCorrectPlayer = function(player){
       }
       
       check.draw();
-      clear.draw();
+      displayCoverage.draw();
       fill(0, 0, 0);
       textSize(20);
       text(test.scoreboard.feedbackMessage, 160, 360);
@@ -345,13 +297,13 @@ var makeCorrectPlayer = function(player){
           if(selectedAnswer !== null){
             checkAnswer(selectedAnswer);
           }
-      }else if (clear.isMouseInside()){
+      }else if (displayCoverage.isMouseInside()){
           clearAnswers();
-          test.scoreboard.feedbackMessage = "";
+          test.scoreboard.feedbackMessage = cover2.playName;
       }else if (test.over) {
           test.restartQuiz();
           check.displayButton = true;
-          clear.displayButton = true;
+          displayCoverage.displayButton = true;
       }
       else{
         for(var i = 0; i < multipleChoiceAnswers.length; i++){
@@ -384,7 +336,7 @@ var makeCorrectPlayer = function(player){
       if(key === 'r'){
         test.restartQuiz();
         check.displayButton = true;
-        clear.displayButton = true;
+        displayCoverage.displayButton = true;
       }
     }else{
       var offset = key.charCodeAt(0) - "1".charCodeAt(0);
