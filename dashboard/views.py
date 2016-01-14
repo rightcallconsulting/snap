@@ -8,7 +8,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from quiz.models import Player, Team, Play, Formation
-from dashboard.models import UserCreateForm, RFPAuthForm, Athlete, Coach
+from dashboard.models import UserCreateForm, RFPAuthForm, AthleteForm, UserForm, Athlete, Coach
 from IPython import embed
 
 # Create your views here.
@@ -82,4 +82,9 @@ def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
 def profile(request):
-    return render(request, 'dashboard/profile.html')
+    athlete_form = AthleteForm()
+    user_form = UserForm()
+    return render(request, 'dashboard/profile.html', {
+        'athlete_form': athlete_form,
+        'user_form': user_form,
+    })

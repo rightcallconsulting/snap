@@ -43,42 +43,29 @@
         </div><!-- /.col -->
       </div><!-- /.row -->
       <div class="panel panel-default">
+
         <form class="form-horizontal form-border">
+
           <div class="panel-heading">
             Basic Information
           </div>
           <div class="panel-body">
-            <div class="form-group">
-              <label class="control-label col-md-2">Username</label>
-              <div class="col-md-10">
-                <input type="text" class="form-control input-sm" placeholder="Username" value="John Doe">
-              </div><!-- /.col -->
-            </div><!-- /form-group -->
-            <div class="form-group">
-              <label class="control-label col-md-2">Password</label>
-              <div class="col-md-10">
-                <input type="password" class="form-control input-sm" value="Password">
-              </div><!-- /.col -->
-            </div><!-- /form-group -->
-            <div class="form-group">
-              <label class="control-label col-md-2">Email</label>
-              <div class="col-md-10">
-                <input type="text" class="form-control input-sm" value="john_doe@email.com">
-              </div><!-- /.col -->
-            </div><!-- /form-group -->
-
-            <div class="form-group">
-              <label class="control-label col-md-2">Address</label>
-              <div class="col-md-10">
-                <textarea class="form-control" rows="3"></textarea>
-              </div><!-- /.col -->
-            </div><!-- /form-group -->
-            <div class="form-group">
-              <label class="control-label col-md-2">Phone</label>
-              <div class="col-md-10">
-                <input type="text" class="form-control input-sm">
-              </div><!-- /.col -->
-            </div><!-- /form-group -->
+						{% for field in user_form %}
+							<div class="form-group">
+								<label class="control-label col-md-2">{{ field.label }}</label>
+								<div class="col-md-10">
+									{{ field }}
+								</div>
+							</div>
+						{% endfor %}
+						{% for field in athlete_form %}
+							<div class="form-group">
+								<label class="control-label col-md-2">{{ field.label }}</label>
+								<div class="col-md-10">
+									{{ field }}
+								</div>
+							</div>
+						{% endfor %}
           </div>
           <div class="panel-footer">
             <div class="text-right">

@@ -18,7 +18,6 @@ class UserCreateForm(UserCreationForm):
     athlete = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Athlete"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
 
-
     class Meta:
         model = User
         fields = ("first_name", "last_name", "username", "email", "password1", "password2")
@@ -51,6 +50,9 @@ class Coach(models.Model):
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
 class AthleteForm(ModelForm):
+    position = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm', 'placeholder' : 'Position'}))
+    number = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm', 'placeholder' : 'Number'}))
+
     class Meta:
         model = Athlete
         fields = ['position', 'number']
@@ -58,4 +60,4 @@ class AthleteForm(ModelForm):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password']
