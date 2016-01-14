@@ -63,6 +63,16 @@ FormationTest.prototype.advanceToNextFormation = function(message){
   }
 };
 
+FormationTest.prototype.registerAnswer = function(isCorrect){
+  if(isCorrect){
+    this.score++;
+    this.advanceToNextFormation("You got it.");
+  }else{
+    this.incorrectGuesses++;
+    this.scoreboard.feedbackMessage = "Sorry, bro.";
+  }
+};
+
 FormationTest.prototype.drawQuizSummary = function() {
   var timeDeduction = ((this.endTime - this.startTime)/1000 - 10 * this.formations.length)*0.01;
   if(timeDeduction < 0.0){

@@ -24,6 +24,9 @@ def qb_progression(request):
 def cadence_quiz(request):
     return render(request, 'quiz/cadence_quiz.html')
 
+def simple_audible_quiz(request):
+    return render(request, 'quiz/simple_audible_quiz.html')
+
 def option_quiz(request):
     return render(request, 'quiz/option_quiz.html')
 
