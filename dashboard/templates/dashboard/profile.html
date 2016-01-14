@@ -1,0 +1,101 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+
+	{% include "dashboard/sidebar.html" %}
+
+  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md">
+      <div class="row">
+        <div class="col-xs-6 col-sm-12 col-md-6 text-center">
+          <a href="#">
+            <img src="img/user.jpg" alt="User Avatar" class="img-thumbnail">
+          </a>
+          <div class="seperator"></div>
+          <div class="seperator"></div>
+        </div><!-- /.col -->
+        <div class="col-xs-6 col-sm-12 col-md-6">
+          <strong class="font-14">John Doe</strong>
+          <small class="block text-muted">
+            John_Doe@email.com
+          </small>
+          <div class="seperator"></div>
+          <a class="btn btn-success btn-xs m-bottom-sm">Follow</a>
+          <div class="seperator"></div>
+          <a href="#" class="social-connect tooltip-test facebook-hover pull-left m-right-xs" data-toggle="tooltip" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+          <a href="#" class="social-connect tooltip-test twitter-hover pull-left m-right-xs" data-toggle="tooltip" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+          <a href="#" class="social-connect tooltip-test google-plus-hover pull-left" data-toggle="tooltip" data-original-title="Google Plus"><i class="fa fa-google-plus"></i></a>
+          <div class="seperator"></div>
+          <div class="seperator"></div>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+      <div class="panel panel-default">
+        <form class="form-horizontal form-border">
+          <div class="panel-heading">
+            Basic Information
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="control-label col-md-2">Username</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control input-sm" placeholder="Username" value="John Doe">
+              </div><!-- /.col -->
+            </div><!-- /form-group -->
+            <div class="form-group">
+              <label class="control-label col-md-2">Password</label>
+              <div class="col-md-10">
+                <input type="password" class="form-control input-sm" value="Password">
+              </div><!-- /.col -->
+            </div><!-- /form-group -->
+            <div class="form-group">
+              <label class="control-label col-md-2">Email</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control input-sm" value="john_doe@email.com">
+              </div><!-- /.col -->
+            </div><!-- /form-group -->
+
+            <div class="form-group">
+              <label class="control-label col-md-2">Address</label>
+              <div class="col-md-10">
+                <textarea class="form-control" rows="3"></textarea>
+              </div><!-- /.col -->
+            </div><!-- /form-group -->
+            <div class="form-group">
+              <label class="control-label col-md-2">Phone</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control input-sm">
+              </div><!-- /.col -->
+            </div><!-- /form-group -->
+          </div>
+          <div class="panel-footer">
+            <div class="text-right">
+              <button class="btn btn-sm btn-success">Update</button>
+              <button class="btn btn-sm btn-success" type="reset">Reset</button>
+            </div>
+          </div>
+        </form>
+      </div><!-- /panel -->
+
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			{% endblock %}

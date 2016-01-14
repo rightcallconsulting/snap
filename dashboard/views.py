@@ -8,7 +8,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from quiz.models import Player, Team, Play, Formation
-from dashboard.models import UserCreateForm, RFPAuthForm
+from dashboard.models import UserCreateForm, RFPAuthForm, Athlete, Coach
 from IPython import embed
 
 # Create your views here.
@@ -46,6 +46,14 @@ def register(request):
         form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
+            if request.POST['Athlete']:
+                new_athlete = Athlete(user=new_user)
+                new_athlete.save()
+            elif request.POST['Coach']:
+                new_coach = Coach(user=new_user)
+                new_coach.save()
+            user = authenticate(username=new_user.username, password=request.POST['password1'])
+            login(request, user)
             return HttpResponseRedirect("/")
 
     else:
@@ -72,3 +80,6 @@ def todo(request):
 
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
+
+def profile(request):
+    return render(request, 'dashboard/profile.html')
