@@ -16,28 +16,27 @@ def homepage(request):
     return render(request, 'dashboard/homepage.html')
 
 def login(request):
-    embed()
-    return render(request, 'dashboard/login.html')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        embed()
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                embed()
+                # Redirect to a success page.
+                return HttpResponseRedirect("/")
+            # else:
+                # Return a 'disabled account' error message
+    else:
+        return render(request, 'dashboard/login.html')
 
-# def login_user(request):
-#     embed()
-#     # username = request.POST['username']
-#     # password = request.POST['password']
-#     # user = authenticate(username=username, password=password)
-#     # if user is not None:
-#     #     if user.is_active:
-#     #         login(request, user)
-#     #         # Redirect to a success page.
-#     #     else:
-#     #         # Return a 'disabled account' error message
-#     # else:
-#     #     # Return an 'invalid login' error message.
-#     return render(request, 'dashboard/login.html')
-#
-# def logout_user(request):
-#     # logout(request)
-#     # Redirect to a success page
-#     return render(request, 'dashboard/login.html')
+def logout(request):
+    logout(request)
+    # Redirect to a success page
+    # return render(request, '/')
+    return HttpResponseRedirect("/")
 
 
 def register(request):
@@ -52,7 +51,7 @@ def register(request):
     return render(request, 'dashboard/register.html', {
         'form': form,
     })
-    # return render(request, 'dashboard/register.html')
+
 
 def timeline(request):
     return render(request, 'dashboard/timeline.html')
