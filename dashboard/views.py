@@ -5,6 +5,7 @@ from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.decorators import login_required
 
 from quiz.models import Player, Team, Play, Formation
 from dashboard.models import UserCreateForm, RFPAuthForm
@@ -12,11 +13,14 @@ from IPython import embed
 
 # Create your views here.
 
+@login_required
 def homepage(request):
     return render(request, 'dashboard/homepage.html')
 
 def auth_login(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+    elif request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
@@ -31,7 +35,6 @@ def auth_login(request):
         return render(request, 'dashboard/login.html', {
             'form': form,
         })
-
 
 def auth_logout(request):
     logout(request)
