@@ -113,11 +113,11 @@ class Position(models.Model):
 class Test(models.Model):
     type_of_test = models.CharField(max_length=100)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    skips = models.IntegerField()
-    incorrect_guesses = models.IntegerField()
+    score = models.IntegerField(null=True, blank=True)
+    skips = models.IntegerField(null=True, blank=True)
+    incorrect_guesses = models.IntegerField(null=True, blank=True)
     formations = models.ManyToManyField(Formation, null=True, blank=True)
-    deadline = models.DateTimeField()
+    deadline = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField()
     in_progress = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
