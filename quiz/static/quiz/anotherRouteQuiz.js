@@ -53,6 +53,9 @@ function draw() {
 
   //create receiver from user variable
   var user = new User({});
+
+
+
   var receiver1 = new Player({
     fill: color(255,0,0),
     siz: 30,
@@ -110,8 +113,10 @@ function draw() {
     breakPoints: []
   });
   stickExample.breakPoints.push(Route.getDestination(60, PI/2, stickExample.startingPoint[0], stickExample.startingPoint[1]));
-  stickExample.breakPoints.push(Route.getDestination(10, 5*(PI/4), stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
-  stickExample.breakPoints.push(Route.getDestination(100, PI/2, stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
+  stickExample.breakPoints.push(Route.getDestination(10, 7*(PI/4), stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
+  stickExample.breakPoints.push(Route.getDestination(80, PI/2, stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
+
+  
 
   var test = new RouteTest({
     routes: [slantExample, postExample, goExample, stickExample],
@@ -195,7 +200,7 @@ var shuffle = function(o){
 };
   var createMultipleChoiceAnswers = function(){
     multipleChoiceAnswers = [];
-    var availableNames = routeNames.slice(0,4);
+    var availableNames = routeNames.slice(0,7);
     shuffle(availableNames);
     for(var i = 0; i < availableNames.length; i++){
       multipleChoiceAnswers.push(new MultipleChoiceAnswer({
@@ -208,6 +213,7 @@ var shuffle = function(o){
       }));
     }
   };
+
 
   var clearAnswers = function(){
     for(var i = 0; i < multipleChoiceAnswers.length; i++){
