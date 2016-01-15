@@ -13,16 +13,16 @@
     this.isBeingTested = config.isBeingTested || false;
 };
 
- DefensivePlayer.prototype.draw = function(){
-      fill(this.fill);
-      stroke(0);
-      textSize(20);
-      textAlign(CENTER, CENTER);
-      for(var i = 0; i < 10; i++){
-        text(this.pos, this.x, this.y);  
-      }
-};
-
+DefensivePlayer.prototype.draw = function(){
+    if(this.clicked){
+      fill(255,255,0);
+    }else{
+      fill(255,255,255);
+    }    
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text(this.pos, this.x, this.y);  
+  };
 
 DefensivePlayer.prototype.changeClickStatus = function(){
   if (this.clicked) {

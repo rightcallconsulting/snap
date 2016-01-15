@@ -63,6 +63,9 @@ def results(request):
 def simple_route_quiz(request):
     return render(request, 'quiz/simple_route_quiz.html')
 
+def another_route_quiz(request):
+    return render(request, 'quiz/another_route_quiz.html')
+
 def wr_route(request):
     return render(request, 'quiz/wr_route.html')
 

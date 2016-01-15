@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^create_play$', views.create_play, name='create_play'),
     url(r'^formation_quiz$', views.formation_quiz, name='formation_quiz'),
     url(r'^simple_route_quiz$', views.simple_route_quiz, name='simple_route_quiz'),
+    url(r'^another_route_quiz$', views.another_route_quiz, name='another_route_quiz'),
     url(r'^ol_view$', views.ol_view, name='ol_view'),
     url(r'^rb_quiz$', views.rb_quiz, name='rb_quiz'),
     url(r'^results$', views.results, name='results'),
