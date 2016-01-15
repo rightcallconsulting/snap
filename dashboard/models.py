@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from quiz.models import Team
 
 # Create your models here.
 
@@ -39,6 +40,7 @@ class Athlete(models.Model):
     number = number = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
     def get_full_name(self):
         return self.first_name + " " + self.last_name
@@ -49,6 +51,10 @@ class Coach(models.Model):
     title = models.CharField(max_length=30, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+
+    def testing_this(self):
+        return self.first_name
 
 
 class AthleteForm(ModelForm):
@@ -61,3 +67,9 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
+
+class UserMethods(User):
+  def custom_method(self):
+    pass
+  class Meta:
+    proxy=True

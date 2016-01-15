@@ -83,11 +83,16 @@ def calendar(request):
 
 def edit_profile(request):
     if request.method == 'POST':
+        request.user.username = request.POST['username']
+        request.user.first_name = request.POST['first_name']
+        request.user.last_name = request.POST['last_name']
+        request.user.email = request.POST['email']
+        request.user.save()
         return HttpResponseRedirect("/edit_profile")
     else:
         athlete_form = AthleteForm(instance = request.user)
         user_form = UserForm(instance = request.user)
-        return render(request, 'dashboard/profile.html', {
+        return render(request, 'dashboard/edit_profile.html', {
             'athlete_form': athlete_form,
             'user_form': user_form,
         })
