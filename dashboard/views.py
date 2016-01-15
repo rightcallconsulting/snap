@@ -8,7 +8,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from quiz.models import Player, Team, Play, Formation
-from dashboard.models import UserCreateForm, RFPAuthForm
+from dashboard.models import UserCreateForm, RFPAuthForm, AthleteForm, UserForm, Athlete, Coach
 from IPython import embed
 
 # Create your views here.
@@ -46,6 +46,14 @@ def register(request):
         form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
+            if 'Athlete' in request.POST.keys():
+                new_athlete = Athlete(user=new_user)
+                new_athlete.save()
+            elif 'Coach' in request.POST.keys():
+                new_coach = Coach(user=new_user)
+                new_coach.save()
+            user = authenticate(username=new_user.username, password=request.POST['password1'])
+            login(request, user)
             return HttpResponseRedirect("/")
 
     else:
@@ -72,3 +80,19 @@ def todo(request):
 
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
+
+def edit_profile(request):
+    if request.method == 'POST':
+        request.user.username = request.POST['username']
+        request.user.first_name = request.POST['first_name']
+        request.user.last_name = request.POST['last_name']
+        request.user.email = request.POST['email']
+        request.user.save()
+        return HttpResponseRedirect("/edit_profile")
+    else:
+        athlete_form = AthleteForm(instance = request.user)
+        user_form = UserForm(instance = request.user)
+        return render(request, 'dashboard/edit_profile.html', {
+            'athlete_form': athlete_form,
+            'user_form': user_form,
+        })
