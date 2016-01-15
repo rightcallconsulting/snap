@@ -58,6 +58,7 @@ def register(request):
 def timeline(request):
     return render(request, 'dashboard/timeline.html')
 
+@login_required
 def messages(request):
     return render(request, 'dashboard/messages.html')
 
@@ -77,8 +78,10 @@ def profile(request):
 def settings(request):
     return render(request, 'dashboard/settings.html')
 
+@login_required
 def todo(request):
     return render(request, 'dashboard/to-do.html')
 
+@login_required
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
