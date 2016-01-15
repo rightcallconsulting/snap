@@ -46,10 +46,10 @@ def register(request):
         form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            if request.POST['Athlete']:
+            if 'Athlete' in request.POST.keys():
                 new_athlete = Athlete(user=new_user)
                 new_athlete.save()
-            elif request.POST['Coach']:
+            elif 'Coach' in request.POST.keys():
                 new_coach = Coach(user=new_user)
                 new_coach.save()
             user = authenticate(username=new_user.username, password=request.POST['password1'])
@@ -81,10 +81,13 @@ def todo(request):
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
-def profile(request):
-    athlete_form = AthleteForm(instance = request.user)
-    user_form = UserForm(instance = request.user)
-    return render(request, 'dashboard/profile.html', {
-        'athlete_form': athlete_form,
-        'user_form': user_form,
-    })
+def edit_profile(request):
+    if request.method == 'POST':
+        return HttpResponseRedirect("/edit_profile")
+    else:
+        athlete_form = AthleteForm(instance = request.user)
+        user_form = UserForm(instance = request.user)
+        return render(request, 'dashboard/profile.html', {
+            'athlete_form': athlete_form,
+            'user_form': user_form,
+        })

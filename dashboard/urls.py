@@ -15,6 +15,6 @@ urlpatterns = [
     url(r'^playbook$', views.playbook, name='playbook'),
     url(r'^to-do$', views.todo, name='to-do'),
     url(r'^calendar$', views.calendar, name='calendar'),
-    url(r'^profile$', views.profile, name='profile'),
+    url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 
 ]

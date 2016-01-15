@@ -1,7 +1,16 @@
 {% load staticfiles %}
 <div id="top-nav" class="main-header clearfix">
   <div class="welcome-header">
-    <h4><span class="bold">WELCOME</span> &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}</h4>
+    <h4>
+      <span class="bold">
+        WELCOME
+      </span>
+      {# {% if hasattr(user, 'coach') %}#}
+          &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}
+      {# {% elif hasattr(request.user, 'athlete') %}#}
+        
+      {# {% endif %}#}
+    </h4>
 
 
     <ul class="nav-notification clearfix">
@@ -187,7 +196,7 @@
               </div>
             </a>
           </li>
-          <li><a tabindex="-1" href="profile" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+          <li><a tabindex="-1" href="edit_profile" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
           <li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
           <li class="divider"></li>
           <li><a tabindex="-1" class="main-link logoutConfirm_open" href="/logout"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
