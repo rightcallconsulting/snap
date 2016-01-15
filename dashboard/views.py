@@ -61,11 +61,21 @@ def timeline(request):
 def messages(request):
     return render(request, 'dashboard/messages.html')
 
+@login_required
 def analytics(request):
     return render(request, 'dashboard/analytics.html')
 
+@login_required
 def playbook(request):
     return render(request, 'dashboard/playbook.html')
+
+@login_required
+def profile(request):
+    return render(request, 'dashboard/profile.html')
+
+@login_required
+def settings(request):
+    return render(request, 'dashboard/settings.html')
 
 def todo(request):
     return render(request, 'dashboard/to-do.html')
