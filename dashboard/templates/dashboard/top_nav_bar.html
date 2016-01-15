@@ -8,7 +8,7 @@
       {# {% if hasattr(user, 'coach') %}#}
           &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}
       {# {% elif hasattr(request.user, 'athlete') %}#}
-        
+
       {# {% endif %}#}
     </h4>
 
@@ -188,7 +188,7 @@
         </a>
         <ul class="dropdown-menu">
           <li>
-            <a class="clearfix" href="#">
+            <a class="clearfix" href="profile">
               <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
               <div class="detail">
                 <strong>{{request.user.get_full_name}}</strong>
@@ -196,8 +196,13 @@
               </div>
             </a>
           </li>
+<<<<<<< HEAD
           <li><a tabindex="-1" href="edit_profile" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
           <li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
+=======
+          <li><a tabindex="-1" href="profile" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+          <li><a tabindex="-1" href="settings" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
+>>>>>>> dash-views
           <li class="divider"></li>
           <li><a tabindex="-1" class="main-link logoutConfirm_open" href="/logout"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
         </ul>
