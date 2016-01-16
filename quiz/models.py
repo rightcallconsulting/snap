@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from IPython import embed
+from django.contrib.auth.models import User
 import code
 import copy
 import json
@@ -32,20 +33,24 @@ class Team(models.Model):
         return positions
 
 class Player(models.Model):
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    position = models.CharField(max_length=10) # QB, WR, RB, LT, LG, C, RG, RT, DE, DT, OLB, MLB, SS, FS, CB
-    unit = models.CharField(max_length=20) # offense or defense
-    number = models.IntegerField()
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    is_being_tested = models.BooleanField() # true if player has been assigned a test
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
+    position = models.CharField(max_length=10, blank=True, null=True) # QB, WR, RB, LT, LG, C, RG, RT, DE, DT, OLB, MLB, SS, FS, CB
+    unit = models.CharField(max_length=20, blank=True, null=True) # offense or defense
+    number = models.IntegerField(blank=True, null=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
+    is_being_tested = models.BooleanField(default=False) # true if player has been assigned a test
     image_url = models.ImageField(blank=True, null=True)
     starter = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
     def __str__(self):
-        return self.full_name()
+        if self.user is not None:
+            return self.user.get_full_name()
+        else:
+            return self.full_name()
 
     def full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
@@ -118,8 +123,8 @@ class Test(models.Model):
     incorrect_guesses = models.IntegerField(null=True, blank=True)
     formations = models.ManyToManyField(Formation, null=True, blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
-    completed = models.BooleanField()
-    in_progress = models.BooleanField()
+    completed = models.BooleanField(default=False)
+    in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 

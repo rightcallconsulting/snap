@@ -20,16 +20,25 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
-        <form action="/register" method="post" class=form-login> {% csrf_token %}
+        <form action="/create_test" method="post" class=form-login> {% csrf_token %}
           {% for field in form %}
             <div class="form-group">
               {{ field.label_tag }}
               {{ field }}
             </div>
-            
-          {% endfor %}
 
-          <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
+          {% endfor %}
+					{% for play in plays %}
+					<div class="form-group">
+						<label class="label-checkbox">
+							 <input type="checkbox" name="{{play.name}}" value="{{play.name}}"/> {{play.name}}
+							 <span class="custom-checkbox info bounceIn animation-delay6"></span>
+						</label>
+					</div><!-- /form-group -->
+					{% endfor %}
+
+
+          <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Test">
       </form>
 
 
@@ -38,101 +47,7 @@
 				</div>
 			</div><!-- /panel -->
 
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>TO DO</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>

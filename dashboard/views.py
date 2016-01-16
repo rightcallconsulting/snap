@@ -6,9 +6,10 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
-from quiz.models import Player, Team, Play, Formation
-from dashboard.models import UserCreateForm, RFPAuthForm, AthleteForm, TestForm, UserForm, Athlete, Coach
+from quiz.models import Player, Team, Play, Formation, Test
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach
 from IPython import embed
 
 # Create your views here.
@@ -46,9 +47,11 @@ def register(request):
         form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            if 'Athlete' in request.POST.keys():
-                new_athlete = Athlete(user=new_user)
-                new_athlete.save()
+            if 'Player' in request.POST.keys():
+                new_player = Player(user=new_user)
+                new_player.first_name = new_user.first_name
+                new_player.last_name = new_user.last_name
+                new_player.save()
             elif 'Coach' in request.POST.keys():
                 new_coach = Coach(user=new_user)
                 new_coach.save()
@@ -82,10 +85,19 @@ def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
 def create_test(request):
-    form = TestForm()
-    return render(request, 'dashboard/create_test.html', {
-        'form': form,
-    })
+    if request.method == 'POST':
+        player_id = Player.objects.filter(id=request.POST['player'])
+        player = Player.objects.filter(id=player_id)[0]
+        new_test = Test(player=player, type_of_test=request.POST['type_of_test'])
+        new_test.save()
+        return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
+    else:
+        form = TestForm()
+        plays = request.user.player.team.play_set.all()
+        return render(request, 'dashboard/create_test.html', {
+            'form': form,
+            'plays': plays,
+        })
 
 def edit_profile(request):
     if request.method == 'POST':
@@ -96,9 +108,21 @@ def edit_profile(request):
         request.user.save()
         return HttpResponseRedirect("/edit_profile")
     else:
-        athlete_form = AthleteForm(instance = request.user)
+        player_form = PlayerForm(instance = request.user)
         user_form = UserForm(instance = request.user)
         return render(request, 'dashboard/edit_profile.html', {
-            'athlete_form': athlete_form,
+            'player_form': player_form,
             'user_form': user_form,
         })
+
+def edit_test(request, test_id):
+    test = Test.objects.filter(id=test_id)[0]
+    player = test.player
+    team = test.player.team
+    formations = team.formation_set.all()
+    return render(request, 'dashboard/edit_test.html', {
+        'test': test,
+        'formations': formations,
+        'team': team,
+        'player': player,
+    })

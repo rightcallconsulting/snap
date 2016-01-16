@@ -28,9 +28,9 @@
           <div class="seperator"></div>
         </div><!-- /.col -->
         <div class="col-xs-6 col-sm-12 col-md-6">
-          <strong class="font-14">John Doe</strong>
+          <strong class="font-14">{{test.type_of_test}}</strong>
           <small class="block text-muted">
-            John_Doe@email.com
+            {{player.user.get_full_name}}
           </small>
           <div class="seperator"></div>
           <a class="btn btn-success btn-xs m-bottom-sm">Follow</a>
@@ -44,37 +44,22 @@
       </div><!-- /.row -->
       <div class="panel panel-default">
 
-        <form class="form-horizontal form-border" method="post" action="/edit_profile"> {% csrf_token %}
 
           <div class="panel-heading">
             Basic Information
           </div>
           <div class="panel-body">
-						{% for field in user_form %}
+						{% for formation in formations %}
 							<div class="form-group">
-								<label class="control-label col-md-2">{{ field.label }}</label>
-								<div class="col-md-10">
-									{{ field }}
-								</div>
+								<button class="col-md-10">
+									{{ formation }}
+								</button>
 							</div>
 						{% endfor %}
-						{% for field in player_form %}
-							<div class="form-group">
-								<label class="control-label col-md-2">{{ field.label }}</label>
-								<div class="col-md-10">
-									{{ field }}
-								</div>
-							</div>
-						{% endfor %}
-          </div>
-          <div class="panel-footer">
-            <div class="text-right">
-              <button class="btn btn-sm btn-success">Update</button>
-              <button class="btn btn-sm btn-success" type="reset">Reset</button>
-            </div>
-          </div>
-        </form>
-      </div><!-- /panel -->
+		      </div><!-- /panel -->
+					<div class="panel-body show-plays">
+						testing
+					</div><!-- /panel -->
 
 
 				<div class="loading-overlay">
