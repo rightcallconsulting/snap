@@ -49,18 +49,22 @@
             Basic Information
           </div>
 					{# <form id="choose-formation" class="" action="/tests/{{test.id}}/edit" method="post">#}
-	          <div class="panel-body">
+					<div class="col-lg-7 dash-col">
 							{% for formation in formations %}
 								<div class="form-group">
-									<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+									<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
 								</div>
 							{% endfor %}
-			      </div><!-- /panel -->
+					</div>
 					{# </form>#}
-					<div class="panel-body show-plays">
-						testing
-					</div><!-- /panel -->
+					<div class="col-lg-4 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>Plays</h4></span>
+						</div>
+						<div class="panel-body show-plays">
 
+						</div><!-- /panel -->
+					</div>
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
