@@ -79,16 +79,16 @@
 
 				$(".formation").click(function() {
 					var formationName = this.value;
-					var formationID = this.id;
-					debugger;
+					var formationID = Number(this.id);
+					var playArray = []
 					$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-						var playArray
 						data4.forEach(function(play){
-							var hello = formationName;
+							if(play.fields.formation === formationID){
+								playArray.push(play.fields.name);
+							}
 						})
-
+						displayPlays(playArray);
 					})
-				  displayPlays(this.value);
 
 				});
 
@@ -98,9 +98,12 @@
 				    console.log($('#post-text').val())
 				};
 
-				function displayPlays(formation) {
-						// $('.show-plays').append()
-						console.log($('#post-text').val())
+				function displayPlays(playArray) {
+						$('.show-plays').empty();
+						playArray.forEach(function(playName){
+							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play' id='4' type='submit' value='"+ playName+"'>");
+
+						})
 				};
 			</script>
 			{% endblock %}
