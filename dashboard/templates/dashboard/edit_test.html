@@ -88,7 +88,11 @@
 					$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
 						data4.forEach(function(play){
 							if(play.fields.formation === formationID){
-								playArray.push(play.fields.name);
+								var playObject = {
+								  playName : play.fields.name,
+								  ID : play.pk
+								}
+								playArray.push(playObject);
 							}
 						})
 						displayPlays(playArray);
@@ -104,8 +108,8 @@
 
 				function displayPlays(playArray) {
 						$('.show-plays').empty();
-						playArray.forEach(function(playName){
-							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play' id='4' type='submit' value='"+ playName+"'>");
+						playArray.forEach(function(play){
+							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
 
 						})
 				};
