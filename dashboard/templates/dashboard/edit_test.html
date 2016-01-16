@@ -48,15 +48,15 @@
           <div class="panel-heading">
             Basic Information
           </div>
-          <div class="panel-body">
-						{% for formation in formations %}
-							<div class="form-group">
-								<button class="col-md-10">
-									{{ formation }}
-								</button>
-							</div>
-						{% endfor %}
-		      </div><!-- /panel -->
+					{# <form id="choose-formation" class="" action="/tests/{{test.id}}/edit" method="post">#}
+	          <div class="panel-body">
+							{% for formation in formations %}
+								<div class="form-group">
+									<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+								</div>
+							{% endfor %}
+			      </div><!-- /panel -->
+					{# </form>#}
 					<div class="panel-body show-plays">
 						testing
 					</div><!-- /panel -->
@@ -70,4 +70,37 @@
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			<script type="text/javascript">
+				$('#choose-formation').on('submit', function(event){
+					event.preventDefault();
+					console.log("form submitted!")  // sanity check
+					create_post();
+				});
+
+				$(".formation").click(function() {
+					var formationName = this.value;
+					var formationID = this.id;
+					debugger;
+					$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+						var playArray
+						data4.forEach(function(play){
+							var hello = formationName;
+						})
+
+					})
+				  displayPlays(this.value);
+
+				});
+
+				// AJAX for posting
+				function create_post() {
+				    console.log("create post is working!") // sanity check
+				    console.log($('#post-text').val())
+				};
+
+				function displayPlays(formation) {
+						// $('.show-plays').append()
+						console.log($('#post-text').val())
+				};
+			</script>
 			{% endblock %}

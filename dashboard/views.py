@@ -116,13 +116,17 @@ def edit_profile(request):
         })
 
 def edit_test(request, test_id):
-    test = Test.objects.filter(id=test_id)[0]
-    player = test.player
-    team = test.player.team
-    formations = team.formation_set.all()
-    return render(request, 'dashboard/edit_test.html', {
-        'test': test,
-        'formations': formations,
-        'team': team,
-        'player': player,
-    })
+    if request.method == 'POST':
+        embed()
+        return HttpResponseRedirect("/edit_profile")
+    else:
+        test = Test.objects.filter(id=test_id)[0]
+        player = test.player
+        team = test.player.team
+        formations = team.formation_set.all()
+        return render(request, 'dashboard/edit_test.html', {
+            'test': test,
+            'formations': formations,
+            'team': team,
+            'player': player,
+        })
