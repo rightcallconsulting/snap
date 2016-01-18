@@ -56,6 +56,7 @@ function draw() {
   var runTest = function(){
 
     // Global Variables
+    var letters = ["A", "B", "C", "D", "E"];
 
     var capitalLetter = false;
     var currentFormation = formations[0];
@@ -83,6 +84,8 @@ function draw() {
             textAlign(CENTER, CENTER);
             if(this.progressionRank > 0){
                 text(this.progressionRank, this.x, this.y);
+            } else if(this.progressionRank < 0){
+              text(letters[-1 - this.progressionRank], this.x, this.y);
             }else{
                 text(this.num, this.x, this.y);
             }
@@ -240,10 +243,18 @@ function draw() {
         capitalLetter = true;
       }
       if(keyCode == 38 && selectedWR){
-        selectedWR.progressionRank++;
+        if(selectedWR.progressionRank >= 5){
+          selectedWR.progressionRank = 0;
+        }else{
+          selectedWR.progressionRank++;
+        }
       }
       else if(keyCode == 40 && selectedWR){
-        if(selectedWR.progressionRank > 0) selectedWR.progressionRank--;
+        if(selectedWR.progressionRank <= -5){
+          selectedWR.progressionRank = 0;
+        }else{
+          selectedWR.progressionRank--;
+        }
       }
       else if(keyCode == 66 && selectedWR){
         if(selectedWR.blocker){
