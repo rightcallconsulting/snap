@@ -116,10 +116,12 @@
 						if(playClicked.hasClass('play-add-button')){
 							playClicked.addClass('play-remove-button');
 							playClicked.removeClass('play-add-button');
+							playClicked.removeClass('btn-success');
 
 						}
 						else if(playClicked.hasClass('play-remove-button')){
 							playClicked.addClass('play-add-button');
+							playClicked.addClass('btn-success');
 							playClicked.removeClass('play-remove-button');
 						}
 				};
@@ -127,7 +129,7 @@
 				function displayPlays(playArray) {
 						$('.show-plays').empty();
 						playArray.forEach(function(play){
-							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
 						})
 				};
 
