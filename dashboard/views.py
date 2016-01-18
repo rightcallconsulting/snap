@@ -117,6 +117,7 @@ def edit_profile(request):
 
 def edit_test(request, test_id):
     if request.method == 'POST':
+        test = Test.objects.filter(id=test_id)[0]
         embed()
         return HttpResponseRedirect("/edit_profile")
     else:

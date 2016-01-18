@@ -48,7 +48,6 @@
           <div class="panel-heading">
             Basic Information
           </div>
-					{# <form id="choose-formation" class="" action="/tests/{{test.id}}/edit" method="post">#}
 					<div class="col-lg-7 dash-col">
 							{% for formation in formations %}
 								<div class="form-group">
@@ -56,14 +55,16 @@
 								</div>
 							{% endfor %}
 					</div>
-					{# </form>#}
 					<div class="col-lg-4 dash-col">
 						<div class="dash-header text-center">
 							<span><h4>Plays</h4></span>
 						</div>
-						<div class="panel-body show-plays">
+						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+							<div class="panel-body show-plays">
 
-						</div><!-- /panel -->
+							</div><!-- /panel -->
+						</form>
+
 					</div>
 
 				<div class="loading-overlay">
@@ -75,10 +76,18 @@
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 			<script type="text/javascript">
-				$('#choose-formation').on('submit', function(event){
+
+			var playClicked;
+
+			$('.show-plays').on('click', '.play-add-button', function(){
+		    $('#choose-play').data('button', this.name);
+					playClicked = $(this);
+			});
+
+				$('#choose-play').on('submit', function(event){
 					event.preventDefault();
 					console.log("form submitted!")  // sanity check
-					create_post();
+					modifyPlayWithTest(playClicked);
 				});
 
 				$(".formation").click(function() {
@@ -101,17 +110,28 @@
 				});
 
 				// AJAX for posting
-				function create_post() {
+				function modifyPlayWithTest(playDomElement) {
 				    console.log("create post is working!") // sanity check
 				    console.log($('#post-text').val())
+						if(playClicked.hasClass('play-add-button')){
+							playClicked.addClass('play-remove-button');
+							playClicked.removeClass('play-add-button');
+
+						}
+						else if(playClicked.hasClass('play-remove-button')){
+							playClicked.addClass('play-add-button');
+							playClicked.removeClass('play-remove-button');
+						}
 				};
 
 				function displayPlays(playArray) {
 						$('.show-plays').empty();
 						playArray.forEach(function(play){
-							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
-
+							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn login-link play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
 						})
 				};
+
+				function setColor(btn, color) {
+				}
 			</script>
 			{% endblock %}
