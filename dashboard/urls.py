@@ -18,5 +18,9 @@ urlpatterns = [
     url(r'^to-do$', views.todo, name='to-do'),
     url(r'^calendar$', views.calendar, name='calendar'),
     url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+    url(r'^create_test$', views.create_test, name='create_test'),
+    url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
+
+
 
 ]

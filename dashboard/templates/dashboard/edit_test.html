@@ -1,0 +1,158 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+
+	{% include "dashboard/sidebar.html" %}
+
+  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md">
+      <div class="row">
+        <div class="col-xs-6 col-sm-12 col-md-6 text-center">
+          <a href="#">
+            <img src="img/user.jpg" alt="User Avatar" class="img-thumbnail">
+          </a>
+          <div class="seperator"></div>
+          <div class="seperator"></div>
+        </div><!-- /.col -->
+        <div class="col-xs-6 col-sm-12 col-md-6">
+          <strong class="font-14">{{test.type_of_test}}</strong>
+          <small class="block text-muted">
+            {{player.user.get_full_name}}
+          </small>
+          <div class="seperator"></div>
+          <a class="btn btn-success btn-xs m-bottom-sm">Follow</a>
+          <div class="seperator"></div>
+          <a href="#" class="social-connect tooltip-test facebook-hover pull-left m-right-xs" data-toggle="tooltip" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+          <a href="#" class="social-connect tooltip-test twitter-hover pull-left m-right-xs" data-toggle="tooltip" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+          <a href="#" class="social-connect tooltip-test google-plus-hover pull-left" data-toggle="tooltip" data-original-title="Google Plus"><i class="fa fa-google-plus"></i></a>
+          <div class="seperator"></div>
+          <div class="seperator"></div>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+      <div class="panel panel-default">
+
+
+          <div class="panel-heading">
+		        {{player.full_name}}
+          </div>
+					<div class="col-lg-6 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>Offensive Formations</h4></span>
+						</div>
+							{% for formation in offensive_formations %}
+								<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+							{% endfor %}
+					</div>
+					<div class="col-lg-4 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>Plays</h4></span>
+						</div>
+						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+							<div class="panel-body show-plays">
+
+							</div><!-- /panel -->
+						</form>
+					</div>
+
+					<div class="col-lg-6 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>Defensive Formations</h4></span>
+						</div>
+							{% for formation in defensive_formations %}
+								<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+							{% endfor %}
+					</div>
+					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			<script type="text/javascript">
+
+				var playClicked;
+				var testID = $('#test-id').data('test-id');
+				var playIDArray = $('#play-id-array').data('play-id-array');
+				$('.show-plays').on('click', '.play', function(){
+			    $('#choose-play').data('button', this.name);
+						playClicked = $(this);
+				});
+
+					$('#choose-play').on('submit', function(event){
+						event.preventDefault();
+						modifyPlayWithTest(playClicked);
+					});
+
+					$(".formation").click(function() {
+						var formationName = this.value;
+						var formationID = Number(this.id);
+						var playArray = []
+						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+							data4.forEach(function(play){
+								if(play.fields.formation === formationID){
+									var playObject = {
+									  playName : play.fields.name,
+									  ID : play.pk
+									}
+									playArray.push(playObject);
+								}
+							})
+							displayPlays(playArray);
+						})
+
+					});
+
+					// AJAX for posting
+					function modifyPlayWithTest(playDomElement) {
+						playID = playClicked[0].id;
+						if(playClicked.hasClass('play-add-button')){
+							addOrRemovePlay = "add"
+						}
+						else if (playClicked.hasClass('play-remove-button')){
+							addOrRemovePlay = "remove"
+						}
+							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
+							if(playClicked.hasClass('play-add-button')){
+								playClicked.addClass('play-remove-button');
+								playClicked.removeClass('play-add-button');
+								playClicked.removeClass('btn-success');
+							}
+							else if(playClicked.hasClass('play-remove-button')){
+								playClicked.addClass('play-add-button');
+								playClicked.addClass('btn-success');
+								playClicked.removeClass('play-remove-button');
+							}
+					};
+
+					function displayPlays(playArray) {
+							$('.show-plays').empty();
+							playArray.forEach(function(play){
+								if(playIDArray.includes(play.ID)){
+									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+								else{
+									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+							})
+					};
+
+			</script>
+			{% endblock %}
