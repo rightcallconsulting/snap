@@ -8,7 +8,6 @@ function setup() {
 function draw() {
   //Create Scoreboard
   var scoreboard = new Scoreboard({
-
   });
 
   var field = new Field({
@@ -19,47 +18,17 @@ function draw() {
   });
 
   var multipleChoiceAnswers = [];
+  var multipleChoiceLabels = ["A", "B", "C", "D", "E"];
   var routeNames = ["Slant", "Post", "Stick", "Go", "Out", "Skinny Post"];
-  var defensiveCoverages = [];
-
   var receivers = [];
-  var QUESTION_NUM = 0;
-
-  var cover2 = new DefensivePlay({
-      playName: "Cover 2",
-      defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-    });
-
-  defensiveCoverages.push(cover2);
-
-  var cover4 = new DefensivePlay({
-    playName: "Cover 4",
-    defensivePlayers: [],
-    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["RE", "DE", "NT", "DT"],
-    lbPositions: ["W", "M", "S"],
-    dbPositions: ["CB", "SS", "F/S", "CB"]
-  });
-
-  defensiveCoverages.push(cover4);
 
   //create receiver from user variable
   var user = new User({});
 
-
-
   var receiver1 = new Player({
     fill: color(255,0,0),
     siz: 30,
-    x: width * 0.3,
+    x: width * 0.2,
     y: height/2,
     pos: "Z",
     num: 84,
@@ -75,7 +44,7 @@ function draw() {
   var receiver3 = new Player({
     fill: color(255, 0, 0),
     siz: 30,
-    x: width * 0.7,
+    x: width * 0.8,
     y: height/2,
     pos: "X",
     num: 21
@@ -84,8 +53,12 @@ function draw() {
   receivers.push(receiver2);
   receivers.push(receiver3);
 
+  Player.prototype.getStartingPoint = function(){
+    return[this.x, this.y];
+  };
+
   var slantExample = new Route({
-    startingPoint: [receiver1.x, receiver1.y],
+    startingPoint: receiver1.getStartingPoint(),
     routeName: "Slant",
     breakPoints: []
   });
@@ -93,22 +66,15 @@ function draw() {
   slantExample.breakPoints.push(Route.getDestination(150, PI/6, slantExample.breakPoints[0][0], slantExample.breakPoints[0][1]));
 
   var postExample = new Route({
-    startingPoint: [receivers[0].x, receivers[0].y],
+    startingPoint: receiver2.getStartingPoint(),
     routeName: "Post",
     breakPoints: []
   });
   postExample.breakPoints.push(Route.getDestination(60, PI/2, postExample.startingPoint[0], postExample.startingPoint[1]));
   postExample.breakPoints.push(Route.getDestination(100, PI/3, postExample.breakPoints[0][0], postExample.breakPoints[0][1]));
 
-  var goExample = new Route({
-    startingPoint: [receivers[1].x, receivers[1].y],
-    routeName: "Go",
-    breakPoints: []
-  });
-  goExample.breakPoints.push(Route.getDestination(150, PI/2, goExample.startingPoint[0], goExample.startingPoint[1]));
-
   var stickExample = new Route({
-    startingPoint: [receivers[2].x, receivers[2].y],
+    startingPoint: receiver3.getStartingPoint(),
     routeName: "Stick",
     breakPoints: []
   });
@@ -116,10 +82,11 @@ function draw() {
   stickExample.breakPoints.push(Route.getDestination(10, 7*(PI/4), stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
   stickExample.breakPoints.push(Route.getDestination(80, PI/2, stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
 
-  
 
-  var test = new RouteTest({
-    routes: [slantExample, postExample, goExample, stickExample],
+  var test = new MultiRouteTest({
+    routes: [[stickExample, postExample, slantExample],[stickExample, slantExample, postExample],[stickExample, postExample, slantExample], [slantExample, stickExample, postExample], [postExample, stickExample, slantExample]],
+    playNames: ["Apple", "Banana", "Carrot", "Bravo", "Alpha"],
+    answers: [0, 1, 2, 1, 0],
     scoreboard: scoreboard
   });
 
@@ -200,20 +167,18 @@ var shuffle = function(o){
 };
   var createMultipleChoiceAnswers = function(){
     multipleChoiceAnswers = [];
-    var availableNames = routeNames.slice(0,7);
-    shuffle(availableNames);
+    var availableNames = multipleChoiceLabels.slice(0,3);
     for(var i = 0; i < availableNames.length; i++){
       multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-        x: 50 + i * width / (availableNames.length + 1),
+        x: width*0.1 + (i) * (width*0.8)/(availableNames.length),
         y: height * 0.7,
         width: width / (availableNames.length + 2),
-        height: 50,
+        height: height * 0.1,
         label: availableNames[i],
         clicked: false
       }));
     }
   };
-
 
   var clearAnswers = function(){
     for(var i = 0; i < multipleChoiceAnswers.length; i++){
@@ -222,11 +187,10 @@ var shuffle = function(o){
         a.changeClickStatus();
       }
     }
-  }
+  };
 
-  var checkAnswer = function(guess){
-    //logic
-    var isCorrect = test.getCurrentRoute().getName() === guess.label;
+  var checkAnswer = function(guessNum){
+    var isCorrect = test.getCurrentAnswer() === guessNum;
     if(isCorrect){
       test.advanceToNextRoute("You got it, dude");
         test.score++;
@@ -243,16 +207,21 @@ var shuffle = function(o){
       }
   }
 
-  
 
   // intro scene
   var drawOpening = function() {
-      field.drawBackground("", height, width);
+      field.drawBackground(null, height, width);
+      fill(255, 255, 255);
+      text(test.getCurrentPlayName(), 10, 23);
       test.scoreboard.draw(test, user);
       for (var i = 0; i < receivers.length; i++){
       receivers[i].draw();
     }
-      test.getCurrentRoute().draw();
+      var routes = test.getCurrentRoutes();
+      for(var i = 0; i < routes.length; i++){
+        routes[i].draw();
+      }
+
       for(var i = 0; i < multipleChoiceAnswers.length; i++){
         multipleChoiceAnswers[i].draw();
       }
@@ -275,7 +244,7 @@ var shuffle = function(o){
       if(offset >= 0 && offset < multipleChoiceAnswers.length){
         var answer = multipleChoiceAnswers[offset];
         if(answer.clicked){
-          checkAnswer(answer);
+          checkAnswer(offset);
         }else{
           clearAnswers();
           answer.changeClickStatus();
@@ -294,7 +263,7 @@ var shuffle = function(o){
             }
           }
           if(selectedAnswer !== null){
-            checkAnswer(selectedAnswer);
+            checkAnswer(i);
           }
       }else if (clear.isMouseInside()){
           clearAnswers();
@@ -309,7 +278,7 @@ var shuffle = function(o){
           var answer = multipleChoiceAnswers[i];
           if(answer.clicked){
             if(answer.isMouseInside()){
-              checkAnswer(answer);
+              checkAnswer(i);
             }else{
               answer.changeClickStatus();
             }

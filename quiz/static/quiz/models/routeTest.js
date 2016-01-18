@@ -124,6 +124,7 @@ var MultiRouteTest = function(config){
     this.receivers = config.receivers || null;
     this.routes = config.routes || [];
     this.answers = config.answers || [];
+    this.playNames = config.playNames || [];
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
     this.startTime = millis();
@@ -135,6 +136,19 @@ var MultiRouteTest = function(config){
     this.over = false;
     this.cutOff = config.cutOff || 100;
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
+};
+
+
+
+MultiRouteTest.prototype.getCurrentPlayName = function(){
+  return this.playNames[this.questionNum];
+};
+MultiRouteTest.prototype.getCurrentAnswer = function(){
+  return this.answers[this.questionNum];
+};
+
+MultiRouteTest.prototype.getCurrentRoutes = function(){
+  return this.routes[this.questionNum];
 };
 
 MultiRouteTest.prototype.getCurrentRoute = function(receiverNum){
