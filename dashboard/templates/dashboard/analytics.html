@@ -20,184 +20,136 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>PLAYER ANALYTICS</h4></span>
-					</div>
-					<div class="col-lg-6">
+				<div class="col-lg-4">
+					<div class="centered">
 						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
-					</div><!-- /.col -->
-				</div>
-				<div class="col-lg-4 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>ASSIGNMENTS COMPLETED</h4></span>
 					</div>
-					<div class="col-lg-6">
+				</div>
+				<div class="col-lg-4">
+					<div class="centered">
 						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
-					</div><!-- /.col -->
+					</div>
 				</div>
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				<div class="col-lg-4">
+					<div class="centered">
+						<div class="panel-body">
+								<div id="donutChart" style="height: 250px;"></div>
+							</div>
+					</div>
 				</div>
-			</div><!-- /panel -->
+				<div class="centered">
+					<!-- BOTTOM BUTTONS GO HERE -->
+				</div>
+			</div>
 
 			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>TO DO</h4></span>
+				<div class="col-lg-11 news-col">
+					<div class="col-lg-6">
+						<!-- EXPAND TO FULL SCREEN BUTTON GOES HERE (aligned right) -->
+						<div class="panel-body" id="trafficWidget">
+								<div id="placeholder" class="graph" style="height:250px"></div>
+						</div>
+						<!-- BOTTOM-LEFT BUTTONS GO HERE (aligned center) -->
 					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+					<div class="col-lg-6">
+						<!-- EXPAND TO FULL SCREEN BUTTON GOES HERE (aligned right) -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								Work Progress
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								<span class="badge badge-info pull-right">
+									4 left
+								</span>
+							</div>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Task</th>
+										<th>Progress</th>
+										<th></th>
+										<th>Time</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Bug Fixes</td>
+										<td>
+											<div class="progress progress-striped active" style="height:8px; margin:5px 0 0 0;">
+												<div class="progress-bar" style="width: 45%">
+													<span class="sr-only">45% Complete</span>
+												</div>
+											</div>
+										</td>
+										<td>45%</td>
+										<td><span class="badge badge-info">2hr</span></td>
+									</tr>
+									<tr>
+										<td>Mobile Development</td>
+										<td>
+											<div class="progress progress-striped active" style="height:8px; margin:5px 0 0 0;">
+												<div class="progress-bar progress-bar-success" style="width: 61%">
+													<span class="sr-only">61% Complete</span>
+												</div>
+											</div>
+										</td>
+										<td>61%</td>
+										<td><span class="badge badge-info">1hr</span></td>
+									</tr>
+									<tr>
+										<td>Unit Testing</td>
+										<td>
+											<div class="progress progress-striped active" style="height:8px; margin:5px 0 0 0;">
+												<div class="progress-bar progress-bar-danger" style="width: 97%">
+													<span class="sr-only">97% Complete</span>
+												</div>
+											</div>
+										</td>
+										<td>97%</td>
+										<td><span class="badge badge-info">5m</span></td>
+									</tr>
+									<tr>
+										<td>New frontend layout</td>
+										<td>
+											<div class="progress progress-striped active" style="height:8px; margin:5px 0 0 0;">
+												<div class="progress-bar progress-bar-warning" style="width: 18%">
+													<span class="sr-only">18% Complete</span>
+												</div>
+											</div>
+										</td>
+										<td>18%</td>
+										<td><span class="badge badge-info">12hr</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- /panel -->
+						<!-- BOTTOM-RIGHT BUTTONS GO HERE (aligned center) -->
+					</div>
 				</div>
 			</div><!-- /panel -->
 
