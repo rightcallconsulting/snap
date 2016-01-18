@@ -119,12 +119,12 @@ def edit_test(request, test_id):
     if request.method == 'POST':
         play_id = request.POST['play_id']
         add_or_remove = request.POST['add_or_remove']
+        test = Test.objects.filter(id=test_id)[0]
+        play = Play.objects.filter(id=play_id)[0]
         if add_or_remove == "add":
-            test = Test.objects.filter(id=test_id)[0]
-            play = Play.objects.filter(id=play_id)[0]
             play.tests.add(test)
         else:
-            print ""
+            play.tests.remove(test)
         play.save()
         test.save()
         return HttpResponse('')
