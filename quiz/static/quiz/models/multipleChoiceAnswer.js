@@ -17,9 +17,9 @@ MultipleChoiceAnswer.prototype.draw = function() {
     fill(this.fill);
     rect(this.x, this.y, this.width, this.height);
     fill(0, 0, 0);
-    textSize(12);
-    textAlign(LEFT, TOP);
-    text(this.label, this.x+5, this.y+this.height/4, this.width, this.height);
+    textSize(14);
+    textAlign(CENTER, CENTER);
+    text(this.label, this.x, this.y, this.width, this.height);
 };
 
 MultipleChoiceAnswer.prototype.isMouseInside = function() {
