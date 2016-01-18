@@ -117,17 +117,29 @@ def edit_profile(request):
 
 def edit_test(request, test_id):
     if request.method == 'POST':
-        test = Test.objects.filter(id=test_id)[0]
-        embed()
-        return HttpResponseRedirect("/edit_profile")
+        play_id = request.POST['play_id']
+        add_or_remove = request.POST['add_or_remove']
+        if add_or_remove == "add":
+            test = Test.objects.filter(id=test_id)[0]
+            play = Play.objects.filter(id=play_id)[0]
+            play.tests.add(test)
+        else:
+            print ""
+        play.save()
+        test.save()
+        return HttpResponse('')
     else:
         test = Test.objects.filter(id=test_id)[0]
         player = test.player
         team = test.player.team
         formations = team.formation_set.all()
+        play_id_array = []
+        for play in test.play_set.all():
+            play_id_array.append(play.id)
         return render(request, 'dashboard/edit_test.html', {
             'test': test,
             'formations': formations,
             'team': team,
             'player': player,
+            'play_id_array': play_id_array,
         })

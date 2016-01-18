@@ -66,6 +66,8 @@
 						</form>
 
 					</div>
+					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
@@ -77,63 +79,71 @@
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 			<script type="text/javascript">
 
-			var playClicked;
-
-			$('.show-plays').on('click', '.play-add-button', function(){
-		    $('#choose-play').data('button', this.name);
-					playClicked = $(this);
-			});
-
-				$('#choose-play').on('submit', function(event){
-					event.preventDefault();
-					console.log("form submitted!")  // sanity check
-					modifyPlayWithTest(playClicked);
+				var playClicked;
+				var testID = $('#test-id').data('test-id');
+				var playIDArray = $('#play-id-array').data('play-id-array');
+				$('.show-plays').on('click', '.play', function(){
+			    $('#choose-play').data('button', this.name);
+						playClicked = $(this);
 				});
 
-				$(".formation").click(function() {
-					var formationName = this.value;
-					var formationID = Number(this.id);
-					var playArray = []
-					$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-						data4.forEach(function(play){
-							if(play.fields.formation === formationID){
-								var playObject = {
-								  playName : play.fields.name,
-								  ID : play.pk
+					$('#choose-play').on('submit', function(event){
+						event.preventDefault();
+						modifyPlayWithTest(playClicked);
+					});
+
+					$(".formation").click(function() {
+						var formationName = this.value;
+						var formationID = Number(this.id);
+						var playArray = []
+						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+							data4.forEach(function(play){
+								if(play.fields.formation === formationID){
+									var playObject = {
+									  playName : play.fields.name,
+									  ID : play.pk
+									}
+									playArray.push(playObject);
 								}
-								playArray.push(playObject);
-							}
+							})
+							displayPlays(playArray);
 						})
-						displayPlays(playArray);
-					})
 
-				});
+					});
 
-				// AJAX for posting
-				function modifyPlayWithTest(playDomElement) {
-				    console.log("create post is working!") // sanity check
-				    console.log($('#post-text').val())
+					// AJAX for posting
+					function modifyPlayWithTest(playDomElement) {
+						playID = playClicked[0].id;
 						if(playClicked.hasClass('play-add-button')){
-							playClicked.addClass('play-remove-button');
-							playClicked.removeClass('play-add-button');
-							playClicked.removeClass('btn-success');
-
+							addOrRemovePlay = "add"
 						}
-						else if(playClicked.hasClass('play-remove-button')){
-							playClicked.addClass('play-add-button');
-							playClicked.addClass('btn-success');
-							playClicked.removeClass('play-remove-button');
+						else if (playClicked.hasClass('play-remove-button')){
+							addOrRemovePlay = "remove"
 						}
-				};
+							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
+							if(playClicked.hasClass('play-add-button')){
+								playClicked.addClass('play-remove-button');
+								playClicked.removeClass('play-add-button');
+								playClicked.removeClass('btn-success');
+							}
+							else if(playClicked.hasClass('play-remove-button')){
+								playClicked.addClass('play-add-button');
+								playClicked.addClass('btn-success');
+								playClicked.removeClass('play-remove-button');
+							}
+					};
 
-				function displayPlays(playArray) {
-						$('.show-plays').empty();
-						playArray.forEach(function(play){
-							$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
-						})
-				};
+					function displayPlays(playArray) {
+							$('.show-plays').empty();
+							playArray.forEach(function(play){
+								if(playIDArray.includes(play.ID)){
+									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+								else{
+									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+							})
+					};
 
-				function setColor(btn, color) {
-				}
 			</script>
 			{% endblock %}
