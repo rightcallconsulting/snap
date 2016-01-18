@@ -133,12 +133,16 @@ def edit_test(request, test_id):
         player = test.player
         team = test.player.team
         formations = team.formation_set.all()
+        offensive_formations = formations.filter(unit="offense")
+        defensive_formations = formations.filter(unit="defense")
         play_id_array = []
         for play in test.play_set.all():
             play_id_array.append(play.id)
         return render(request, 'dashboard/edit_test.html', {
             'test': test,
             'formations': formations,
+            'offensive_formations': offensive_formations,
+            'defensive_formations': defensive_formations,
             'team': team,
             'player': player,
             'play_id_array': play_id_array,
