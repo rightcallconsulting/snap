@@ -80,7 +80,7 @@
 								{% endif %}
 							</td>
 							<td>{{test.coach_who_created.get_full_name}}</td>
-							<td><a href="/quiz/qb_progression"><span class="label label-success">Start Quiz</span></a></td>
+							<td><a href="/quiz/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
 						</tr>
 						{% endfor %}
 

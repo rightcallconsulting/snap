@@ -12,6 +12,7 @@ from quiz.models import Player, Team, Play, Formation, Test
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach
 from IPython import embed
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Create your views here.
 
@@ -101,8 +102,8 @@ def todo(request):
         'completed_tests': completed_tests,
         'uncompleted_tests': uncompleted_tests,
         'in_progress_tests': in_progress_tests,
-        'current_time': datetime.now(),
-        'new_time_threshold': datetime.now() + timedelta(days=3),
+        'current_time': timezone.now(),
+        'new_time_threshold': timezone.now() + timedelta(days=3),
     })
 
 @login_required

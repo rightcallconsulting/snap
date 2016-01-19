@@ -59,9 +59,18 @@ class UserForm(ModelForm):
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
 
 class TestForm(ModelForm):
+    OPTIONS = (
+            ("QB_Progression", "QB_Progression"),
+            ("WR_Route", "WR_Route"),
+            ("OL_View", "OL_View"),
+            ("CB_Assignment", "CB_Assignment"),
+        )
+    type_of_test = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                     choices=OPTIONS)
+
     class Meta:
         model = Test
-        fields = ['type_of_test', 'deadline']
+        fields = ['name','type_of_test', 'deadline']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user','')

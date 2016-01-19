@@ -118,7 +118,7 @@ class Position(models.Model):
 class Test(models.Model):
 
     types_of_tests = ["QBProgression", "CBAssignment", "OLView", "WRRoute"]
-
+    name = models.CharField(max_length=100, null=True, blank=True)
     type_of_test = models.CharField(max_length=100)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     score = models.IntegerField(null=True, blank=True)
