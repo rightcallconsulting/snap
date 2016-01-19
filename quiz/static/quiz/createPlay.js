@@ -295,6 +295,9 @@ function draw() {
         getCurrentFormation().feedbackMessage = "";
       }
       else if (save.isMouseInside()) {
+
+        //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+
           eligibleReceivers.forEach(function(player){
             player.convertRouteDrawingToBreakPoints();
           })
@@ -329,6 +332,7 @@ function draw() {
         }
       }
       else if (receiverClicked){
+
           var playerSelected = false;
           getCurrentFormation().clearPreviousRouteDisplays();
           for(var i = 0; i < eligibleReceivers.length; i++){

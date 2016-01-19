@@ -64,9 +64,13 @@ function draw() {
     var user = new User({});
 
     Player.prototype.draw = function() {
+      var letters = ["A", "B", "C", "D", "E"];
+      if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
+        this.displayRoute(this.breakPoints);
+      }
         if(this.unit === "offense"){
             noStroke();
-            if(this.rank > 0){
+            if(this.rank !== 0){
                 fill(255, 255, 0);
             }else{
                 fill(this.fill);
@@ -77,12 +81,12 @@ function draw() {
             textAlign(CENTER, CENTER);
             if(this.rank > 0){
                 text(this.rank, this.x, this.y);
+            } else if(this.rank < 0){
+              text(letters[-1 - this.rank], this.x, this.y);
             }else{
                 text(this.num, this.x, this.y);
             }
-            if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
-              this.displayRoute(this.breakPoints);
-            }
+
         }
         else {
             fill(this.red,this.green,this.blue);
@@ -93,9 +97,15 @@ function draw() {
     };
 
     Player.prototype.select = function() {
+      if(keyIsDown(SHIFT)){
+        this.rank = Player.altRank;
+        Player.altRank--;
+        this.clicked = true;
+      }else{
         this.rank = Player.rank;
         Player.rank++;
         this.clicked = true;
+      }
     };
 
     Player.prototype.unselect = function() {
@@ -109,6 +119,13 @@ function draw() {
                     p.rank--;
                 }
             }
+        }else if(currentPlay && this.rank < 0 && this.rank > Player.altRank + 1){
+          for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
+              var p = currentPlay.eligibleReceivers[i];
+              if(p.rank < this.rank){
+                  p.rank++;
+              }
+          }
         }
         this.rank = 0;
         Player.rank--;
@@ -260,7 +277,6 @@ function draw() {
       test.getCurrentPlay().inProgress = true;
     };
 
-
     mouseClicked = function() {
       currentPlay = test.getCurrentPlay();
       if(currentPlay){currentPlay.setAllRoutes();}
@@ -299,7 +315,7 @@ function draw() {
                         p.select();
                         p.showRoute = true;
                     }
-                    break;
+                    return false;
                 }
             }
         }

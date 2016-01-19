@@ -40,6 +40,7 @@ var Player = function(config) {
 };
 
 Player.rank = 1;
+Player.altRank = -1;
 
 // Instance Methods
 
