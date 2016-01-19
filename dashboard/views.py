@@ -110,6 +110,7 @@ def create_test(request):
         return render(request, 'dashboard/create_test.html', {
             'form': form,
             'plays': plays,
+            'types_of_tests': Test.types_of_tests,
         })
 
 def edit_profile(request):
@@ -149,6 +150,7 @@ def edit_test(request, test_id):
         offensive_formations = formations.filter(unit="offense")
         defensive_formations = formations.filter(unit="defense")
         play_id_array = []
+        plays_in_test = test.play_set.all()
         for play in test.play_set.all():
             play_id_array.append(play.id)
         return render(request, 'dashboard/edit_test.html', {
@@ -159,4 +161,6 @@ def edit_test(request, test_id):
             'team': team,
             'player': player,
             'play_id_array': play_id_array,
+            'plays_in_test': plays_in_test,
+
         })

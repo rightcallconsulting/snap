@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-lg-4 dash-col">
 						<div class="dash-header text-center">
-							<span><h4>Plays</h4></span>
+							<span><h4 id="change-plays-header">Change Plays</h4></span>
 						</div>
 						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
 							<div class="panel-body show-plays">
@@ -75,6 +75,29 @@
 								<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
 							{% endfor %}
 					</div>
+
+
+					{% for formation in offensive_formations %}
+					<div class="col-lg-2 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>{{ formation }}</h4></span>
+
+						</div>
+
+							<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
+
+								{% for play in plays_in_test %}
+									{% if play.formation.id == formation.id %}
+										<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+									{% endif %}
+								{% endfor %}
+							</div><!-- /panel -->
+
+					</div>
+
+					{% endfor %}
+
+
 					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
 					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
 
@@ -89,8 +112,11 @@
 			<script type="text/javascript">
 
 				var playClicked;
+				var formationID;
+				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
+
 				$('.show-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
@@ -101,10 +127,22 @@
 						modifyPlayWithTest(playClicked);
 					});
 
+					$('.existing-plays').on('click', '.play-remove', function(){
+						modifyPlayWithTest($(this));
+						$(this).fadeOut();
+						$('.show-plays #'+this.id).removeClass('play-remove-button');
+						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
+						playIDArray = _.without(playIDArray, Number(this.id))
+
+					});
+
+
+
 					$(".formation").click(function() {
 						var formationName = this.value;
-						var formationID = Number(this.id);
+						formationID = Number(this.id);
 						var playArray = []
+						$('#change-plays-header').text('Change Plays (' + this.value+')')
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
 							data4.forEach(function(play){
 								if(play.fields.formation === formationID){
@@ -122,23 +160,28 @@
 
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
-						playID = playClicked[0].id;
-						if(playClicked.hasClass('play-add-button')){
+						playID = playDomElement[0].id;
+						if(playDomElement.hasClass('play-add-button')){
 							addOrRemovePlay = "add"
 						}
-						else if (playClicked.hasClass('play-remove-button')){
+						else if (playDomElement.hasClass('play-remove-button')){
 							addOrRemovePlay = "remove"
 						}
 							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
-							if(playClicked.hasClass('play-add-button')){
-								playClicked.addClass('play-remove-button');
-								playClicked.removeClass('play-add-button');
-								playClicked.removeClass('btn-success');
+							if(playDomElement.hasClass('play-add-button')){
+								playDomElement.addClass('play-remove-button');
+								playDomElement.removeClass('play-add-button');
+								playDomElement.removeClass('btn-success');
+								playIDArray.push(Number(playDomElement[0].id));
+								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+
 							}
-							else if(playClicked.hasClass('play-remove-button')){
-								playClicked.addClass('play-add-button');
-								playClicked.addClass('btn-success');
-								playClicked.removeClass('play-remove-button');
+							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
+								playDomElement.addClass('play-add-button');
+								playDomElement.addClass('btn-success');
+								playDomElement.removeClass('play-remove-button');
+								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
+								$('#'+playDomElement[0].id+'.play-remove').remove();
 							}
 					};
 

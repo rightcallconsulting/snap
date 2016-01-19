@@ -20,7 +20,10 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
-        <form action="/create_test" method="post" class=form-login> {% csrf_token %}
+				{% for test_type in types_of_tests%}
+					<input class="btn btn-success btn-sm bounceIn animation-delay5 type-test" type="submit" value="{{ test_type }}">
+				{% endfor %}
+        <form action="/create_test" method="post" class=form-create-test> {% csrf_token %}
           {% for field in form %}
             <div class="form-group">
               {{ field.label_tag }}
