@@ -19,10 +19,84 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
+			<div class="panel panel-default table-responsive">
+				<div class="panel-heading">
+					Responsive Table
+					<span class="label label-info pull-right">790 Items</span>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-4 col-sm-4">
+							<select class="input-sm form-control inline" style="width:130px;">
+								<option value="0">All</option>
+								<option value="1">Men</option>
+								<option value="2">Women</option>
+								<option value="3">Accessary</option>
+							</select>
+							<a class="btn btn-default btn-sm">Apply</a>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div>
+				<table class="table table-striped" id="responsiveTable">
+					<thead>
+						<tr>
+							<th>
+								<label class="label-checkbox">
+									<input type="checkbox" id="chk-all">
+									<span class="custom-checkbox"></span>
+								</label>
+							</th>
+							<th>Test</th>
+							<th>Due Date</th>
+							<th>Date Assigned</th>
+							<th>[XXX]</th>
+							<th>[XXX]</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for test in uncompleted_tests %}
+
+						<tr>
+							<td>
+								<label class="label-checkbox">
+									<input type="checkbox" class="chk-row">
+									<span class="custom-checkbox"></span>
+								</label>
+							</td>
+							<td>{{test}}
+								{% if True %}
+								<span class="label label-success m-left-xs">
+									New
+								</span>
+								{% endif %}
+							</td>
+							<td>{{test.deadline}}</td>
+							<td>{{test.created_at}}</td>
+							<td></td>
+							<td></td>
+							<td><span class="label label-success">Start Quiz</span></td>
+						</tr>
+						{% endfor %}
+
+					</tbody>
+				</table>
+				<div class="panel-footer clearfix">
+					<ul class="pagination pagination-xs m-top-none pull-right">
+						<li class="disabled"><a href="#">Previous</a></li>
+						<li class="active"><a href="#">1</a></li>
+						<li><a href="#">2</a></li>
+						<li><a href="#">3</a></li>
+						<li><a href="#">4</a></li>
+						<li><a href="#">5</a></li>
+						<li><a href="#">Next</a></li>
+					</ul>
+				</div>
+			</div><!-- /panel -->
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">
 					<div class="dash-header text-center">
-						<span><h4>PLAYER ANALYTICS</h4></span>
+						<span><h4>To-Do List</h4></span>
 					</div>
 					<div class="col-lg-6">
 						<div class="panel panel-default">
@@ -35,6 +109,7 @@
 											<li><a href="#toDoListWidget" data-toggle="collapse"><i class="fa fa-arrows-v"></i></a></li>
 										</ul>
 									</div>
+
 									<div class="panel-body no-padding collapse in" id="toDoListWidget">
 										<ul class="list-group task-list no-margin collapse in">
 											<li class="list-group-item selected">
@@ -47,57 +122,23 @@
 													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
 												</span>
 											</li>
+
+											{% for test in uncompleted_tests %}
 											<li class="list-group-item">
 												<label class="label-checkbox inline">
 													 <input type="checkbox" class="task-finish">
 													 <span class="custom-checkbox"></span>
 												</label>
-												Unit Testing
+												{{test}}
+												Due Date: {{test.deadline}}
+												Date Assigned: {{test.created_at}}
+												Added by coach:
 												<span class="pull-right">
 													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
 												</span>
 											</li>
-											<li class="list-group-item">
-												<label class="label-checkbox inline">
-													 <input type="checkbox" class="task-finish">
-													 <span class="custom-checkbox"></span>
-												</label>
-												Mobile Development
-												<span class="pull-right">
-													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
-												</span>
-												<span class="badge badge-success m-right-xs">3</span>
-											</li>
-											<li class="list-group-item">
-												<label class="label-checkbox inline">
-													 <input type="checkbox" class="task-finish">
-													 <span class="custom-checkbox"></span>
-												</label>
-												Database Migration
-												<span class="pull-right">
-													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
-												</span>
-											</li>
-											<li class="list-group-item">
-												<label class="label-checkbox inline">
-													 <input type="checkbox" class="task-finish">
-													 <span class="custom-checkbox"></span>
-												</label>
-												New Frontend Layout <span class="label label-warning m-left-xs">PENDING</span>
-												<span class="pull-right">
-													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
-												</span>
-											</li>
-											<li class="list-group-item">
-												<label class="label-checkbox inline">
-													 <input type="checkbox" class="task-finish">
-													 <span class="custom-checkbox"></span>
-												</label>
-												Bug Fixes <span class="label label-danger m-left-xs">IMPORTANT</span>
-												<span class="pull-right">
-													<a href="#" class="task-del"><i class="fa fa-trash-o fa-lg text-danger"></i></a>
-												</span>
-											</li>
+											{% endfor %}
+
 										</ul><!-- /list-group -->
 									</div>
 									<div class="loading-overlay">
@@ -106,20 +147,8 @@
 								</div><!-- /panel -->
 					</div><!-- /.col -->
 					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
+
+
 					</div><!-- /.col -->
 				</div>
 				<div class="col-lg-4 dash-col">
@@ -165,106 +194,7 @@
 				</div>
 			</div><!-- /panel -->
 
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>TO DO</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
 
 
 

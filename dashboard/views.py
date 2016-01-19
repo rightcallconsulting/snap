@@ -91,17 +91,31 @@ def settings(request):
 
 @login_required
 def todo(request):
-    return render(request, 'dashboard/to-do.html')
+    player = request.user.player
+    all_tests = player.test_set.all()
+    completed_tests = all_tests.filter(completed=True)
+    uncompleted_tests = all_tests.filter(completed=False)
+    in_progress_tests = all_tests.filter(in_progress=True)
+    return render(request, 'dashboard/to-do.html', {
+        'completed_tests': completed_tests,
+        'uncompleted_tests': uncompleted_tests,
+        'in_progress_tests': in_progress_tests,
+    })
 
 @login_required
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
+@login_required
+def my_tests(request):
+    player = request.user.player
+    return render(request, 'dashboard/my_tests.html')
+
 def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
         player = Player.objects.filter(id=player_id)[0]
-        new_test = Test(player=player, type_of_test=request.POST['type_of_test'])
+        new_test = Test(player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'])
         new_test.save()
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:
