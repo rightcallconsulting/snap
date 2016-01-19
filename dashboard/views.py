@@ -119,7 +119,7 @@ def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
         player = Player.objects.filter(id=player_id)[0]
-        new_test = Test(player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
+        new_test = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
         new_test.save()
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:

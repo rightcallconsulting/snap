@@ -46,7 +46,8 @@
 									<span class="custom-checkbox"></span>
 								</label>
 							</th>
-							<th>Test</th>
+							<th>Name</th>
+							<th>Type</th>
 							<th>Due Date</th>
 							<th>Date Assigned</th>
 							<th>In Progress</th>
@@ -62,6 +63,9 @@
 									<input type="checkbox" class="chk-row">
 									<span class="custom-checkbox"></span>
 								</label>
+							</td>
+							<td>
+								{{test.name}}
 							</td>
 							<td>{{test}}
 								{% if test.created_at < new_time_threshold %}

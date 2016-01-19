@@ -25,12 +25,23 @@
 				{% endfor %}
         <form action="/create_test" method="post" class=form-create-test> {% csrf_token %}
           {% for field in form %}
-            <div class="form-group">
-              {{ field.label_tag }}
-              {{ field }}
-            </div>
-
-          {% endfor %}
+						{% if field.label == 'Type of test' %}
+							{% for type in types_of_tests %}
+							<div class="form-group">
+								<label class="label-checkbox">
+									 <input type="checkbox" name="type_of_test" value="{{type}}"/>
+									 <span class="custom-checkbox info bounceIn animation-delay6"></span>
+									 {{type}}
+								</label>
+							</div><!-- /form-group -->
+							{% endfor %}
+						{% else %}
+		            <div class="form-group">
+		              {{ field.label_tag }}
+		              {{ field }}
+		            </div>
+						{% endif %}
+	          {% endfor %}
 					{% for play in plays %}
 					<div class="form-group">
 						<label class="label-checkbox">
