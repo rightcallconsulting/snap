@@ -17,6 +17,13 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
 };
 
+Play.prototype.isValidPlay = function(){
+  if(!this.formation.isValidPlay()){
+    return false;
+  }
+  return true;
+};
+
 
 Play.prototype.resetPlayers = function(defensivePlay){
   for(var i = 0; i < this.offensivePlayers.length; i++){

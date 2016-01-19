@@ -462,13 +462,17 @@ Player.prototype.checkRoutes = function(play){
 };
 
 
-Player.prototype.movePlayer = function(){
+Player.prototype.movePlayer = function(ballY){
   this.x = mouseX;
-  this.y = mouseY;
-  this.startX = mouseX;
-  this.startY = mouseY;
-  this.routeCoordinates[0][0] = mouseX;
-  this.routeCoordinates[0][1] = mouseY;
+  if(mouseY < ballY){
+    this.y = ballY;
+  }else{
+    this.y = mouseY;
+  }
+  this.startX = this.x;
+  this.startY = this.y;
+  this.routeCoordinates[0][0] = this.x;
+  this.routeCoordinates[0][1] = this.y;
 };
 
 Player.prototype.convertRouteDrawingToBreakPoints = function(){
