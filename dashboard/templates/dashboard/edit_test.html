@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-lg-4 dash-col">
 						<div class="dash-header text-center">
-							<span><h4>Add or Remove Plays</h4></span>
+							<span><h4 id="change-plays-header">Change Plays</h4></span>
 						</div>
 						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
 							<div class="panel-body show-plays">
@@ -150,6 +150,7 @@
 						var formationName = this.value;
 						formationID = Number(this.id);
 						var playArray = []
+						$('#change-plays-header').text('Change Plays (' + this.value+')')
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
 							data4.forEach(function(play){
 								if(play.fields.formation === formationID){
