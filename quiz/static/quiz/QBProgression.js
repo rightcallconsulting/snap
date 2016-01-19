@@ -127,8 +127,12 @@ function draw() {
               }
           }
         }
+        if(this.rank > 0){
+          Player.rank--;
+        }else if(this.rank < 0){
+          Player.altRank++;
+        }
         this.rank = 0;
-        Player.rank--;
     };
 
     var playButton = new Button({
