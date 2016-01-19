@@ -116,6 +116,9 @@ class Position(models.Model):
         return json.loads(self.routeCoordinates)
 
 class Test(models.Model):
+
+    types_of_tests = ["QBProgression", "CBAssignment", "OLView", "WRRoute"]
+
     type_of_test = models.CharField(max_length=100)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     score = models.IntegerField(null=True, blank=True)
