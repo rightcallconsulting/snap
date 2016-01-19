@@ -130,6 +130,7 @@ class Test(models.Model):
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+    coach_who_created = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
 
     def __str__(self):

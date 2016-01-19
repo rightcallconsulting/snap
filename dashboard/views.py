@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from quiz.models import Player, Team, Play, Formation, Test
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach
 from IPython import embed
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -100,6 +101,8 @@ def todo(request):
         'completed_tests': completed_tests,
         'uncompleted_tests': uncompleted_tests,
         'in_progress_tests': in_progress_tests,
+        'current_time': datetime.now(),
+        'new_time_threshold': datetime.now() + timedelta(days=3),
     })
 
 @login_required
@@ -115,7 +118,7 @@ def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
         player = Player.objects.filter(id=player_id)[0]
-        new_test = Test(player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'])
+        new_test = Test(player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
         new_test.save()
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:

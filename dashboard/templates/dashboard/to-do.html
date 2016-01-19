@@ -49,15 +49,14 @@
 							<th>Test</th>
 							<th>Due Date</th>
 							<th>Date Assigned</th>
-							<th>[XXX]</th>
-							<th>[XXX]</th>
+							<th>In Progress</th>
+							<th>Added by:</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for test in uncompleted_tests %}
-
-						<tr>
+						<tr id="test-{{test.id}}">
 							<td>
 								<label class="label-checkbox">
 									<input type="checkbox" class="chk-row">
@@ -65,7 +64,7 @@
 								</label>
 							</td>
 							<td>{{test}}
-								{% if True %}
+								{% if test.created_at < new_time_threshold %}
 								<span class="label label-success m-left-xs">
 									New
 								</span>
@@ -73,9 +72,15 @@
 							</td>
 							<td>{{test.deadline}}</td>
 							<td>{{test.created_at}}</td>
-							<td></td>
-							<td></td>
-							<td><span class="label label-success">Start Quiz</span></td>
+							<td>
+								{% if test.in_progress%}
+									Yes
+								{% else %}
+									No
+								{% endif %}
+							</td>
+							<td>{{test.coach_who_created.get_full_name}}</td>
+							<td><a href="/quiz/qb_progression"><span class="label label-success">Start Quiz</span></a></td>
 						</tr>
 						{% endfor %}
 
