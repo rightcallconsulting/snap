@@ -287,12 +287,26 @@ Formation.prototype.mouseInOptionsToCreate = function() {
   return optionClicked;
 };
 
-Formation.prototype.validPlay = function(){
+Formation.prototype.validFormation = function(){
   if(this.unit === "defense"){
     return this.defensivePlayers.length === 11;
   }
   else{
-    return this.offensivePlayers.length === 11;
+    if(this.offensivePlayers.length !== 11){
+      return false;
+    }
+    var ballY = this.oline[2].startY;
+    var playersOnLine = 0;
+    for(var i = 0; i < this.offensivePlayers.length; i++){
+      var py = this.offensivePlayers[i].startY;
+      if(py >= ballY && py <= ballY + 10){
+        playersOnLine++;
+      }
+    }
+    if(playersOnLine !== 7){
+      return false;
+    }
+    return true;
   }
 }
 
