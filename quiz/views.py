@@ -161,7 +161,15 @@ def run_qb_progression_test(request, test_id):
 
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
-    return HttpResponse(serializers.serialize("json", positions))
+    return render(request, 'quiz/wr_route.html', {
+        'test': test,
+    })
+
+def run_ol_view_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
+    return render(request, 'quiz/ol_view.html', {
+        'test': test,
+    })
 
 def single_test(request, test_id):
     test = Test.objects.filter(pk=test_id)

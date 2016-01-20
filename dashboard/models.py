@@ -37,7 +37,7 @@ class RFPAuthForm(AuthenticationForm):
 
 
 class Coach(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=30, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
@@ -84,3 +84,18 @@ class UserMethods(User):
     pass
   class Meta:
     proxy=True
+
+class Authentication(object):
+    @staticmethod
+    def get_coach(user_object):
+        try:
+            return user_object.coach
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def get_player(user_object):
+        try:
+            return user_object.player
+        except AttributeError:
+            return None

@@ -98,9 +98,9 @@ def settings(request):
 def todo(request):
     player = request.user.player
     all_tests = player.test_set.all()
-    completed_tests = all_tests.filter(completed=True)
-    uncompleted_tests = all_tests.filter(completed=False)
-    in_progress_tests = all_tests.filter(in_progress=True)
+    completed_tests = all_tests.filter(completed=True).order_by('-created_at')
+    uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
+    in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
     return render(request, 'dashboard/to-do.html', {
         'completed_tests': completed_tests,
         'uncompleted_tests': uncompleted_tests,
