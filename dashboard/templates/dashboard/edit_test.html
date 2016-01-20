@@ -131,6 +131,7 @@
 				var playClicked;
 				var formationID;
 				var formationToDraw;
+				var playToDraw;
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
@@ -138,6 +139,10 @@
 				$('.show-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
+						playToDraw = plays.filter(function(play) {
+							return play.id === Number(playClicked[0].id);
+						})[0];
+						debugger;
 				});
 
 					$('#choose-play').on('submit', function(event){

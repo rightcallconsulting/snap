@@ -1,4 +1,6 @@
 var formations = [];
+var plays =[];
+var positions = [];
 var makeJSONCall = true;
 
 
@@ -46,6 +48,24 @@ function draw() {
           formations.forEach(function(formation){
             formation.populatePositions();
           })
+          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+            data3.forEach(function(play){
+              var testIDArray = play.fields.tests;
+              var play = createPlayFromJSON(play);
+              plays.push(play);
+            })
+            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+              data4.forEach(function(position){
+                var player = createPlayerFromJSON(position);
+                positions.push(player);
+              })
+              plays.forEach(function(play){
+                play.addPositionsFromID(positions);
+                play.populatePositions();
+              })
+            })
+          })
+
           runTest();
 
         })
@@ -198,7 +218,7 @@ function draw() {
         if(formationToDraw){
           formationToDraw.drawAllPlayers();
           text("Formation: "+formationToDraw.playName, 100, 20);
-          
+
         }
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);
