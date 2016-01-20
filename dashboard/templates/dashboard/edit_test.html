@@ -80,13 +80,13 @@
 						</form>
 					</div>
 
-					<div class="col-lg-6 dash-col display-play-box">
+					<div class="col-lg-6 dash-col display-play-box" id="display-play-box">
 						<div class="dash-header text-center">
 							<span><h4>View [INSERT IMAGE OF PLAY]</h4></span>
 						</div>
 					</div>
 
-					<div class="col-lg-10 dash-col display-play-box">
+					<div class="col-lg-10 dash-col display-plays-in-test">
 						<div class="dash-header text-center">
 							<span><h4>Plays in Test: {{test.name}}</h4></span>
 						</div>
@@ -116,6 +116,7 @@
 
 					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
 					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+					<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
@@ -129,6 +130,7 @@
 
 				var playClicked;
 				var formationID;
+				var formationToDraw;
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
@@ -157,6 +159,9 @@
 					$(".formation").click(function() {
 						var formationName = this.value;
 						formationID = Number(this.id);
+						formationToDraw = formations.filter(function(formation) {
+					    return formation.id === formationID;
+					  })[0];
 						var playArray = []
 						$('#change-plays-header').text('Change Plays (' + this.value+')')
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
@@ -214,4 +219,6 @@
 					};
 
 			</script>
+			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+
 			{% endblock %}
