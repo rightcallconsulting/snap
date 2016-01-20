@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -145,9 +145,14 @@ def edit_profile(request):
         request.user.last_name = request.POST['last_name']
         request.user.email = request.POST['email']
         request.user.save()
+        if(Authentication.get_player(request.user)):
+            player = Authentication.get_player(request.user)
+            player.position = request.POST['position']
+            player.number = int(request.POST['number'])
+            player.save()
         return HttpResponseRedirect("/edit_profile")
     else:
-        player_form = PlayerForm(instance = request.user)
+        player_form = PlayerForm(instance = request.user.player)
         user_form = UserForm(instance = request.user)
         return render(request, 'dashboard/edit_profile.html', {
             'player_form': player_form,

@@ -171,6 +171,12 @@ def run_ol_view_test(request, test_id):
         'test': test,
     })
 
+def run_cb_view_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
+    return render(request, 'quiz/cb_assignment.html', {
+        'test': test,
+    })
+
 def single_test(request, test_id):
     test = Test.objects.filter(pk=test_id)
     return HttpResponse(serializers.serialize("json", test))

@@ -388,6 +388,7 @@ function draw() {
         if(!test.getCurrentDefensivePlay().bigPlayer && !test.getCurrentPlay().bigPlayer){
           var playerBeingTested = test.getCurrentDefensivePlay().playerBeingTested();
           var rightAnswerPlayer = playerBeingTested.establishRightAnswerPlayer(test.getCurrentPlay());
+          debugger;
           test.getCurrentPlay().bigPlayer = rightAnswerPlayer.createBigPlayer(height / 2 + 100, width / 2);
           test.getCurrentDefensivePlay().bigPlayer = playerBeingTested.createBigPlayer(height / 2 - 50, width / 2);
         }

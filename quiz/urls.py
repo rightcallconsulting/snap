@@ -38,6 +38,8 @@ urlpatterns = [
     url(r'^QBProgression/(?P<test_id>[0-9]+)$', views.run_qb_progression_test, name='run_qb_progression_test'),
     url(r'^WRRoute/(?P<test_id>[0-9]+)$', views.run_wr_route_test, name='run_wr_route_test'),
     url(r'^OLView/(?P<test_id>[0-9]+)$', views.run_ol_view_test, name='run_ol_view_test'),
+    url(r'^CBAssignment/(?P<test_id>[0-9]+)$', views.run_cb_view_test, name='run_cb_view_test'),
+
     url(r'^tests/(?P<test_id>[0-9]+)$', views.single_test, name='single_test'),
 
 
