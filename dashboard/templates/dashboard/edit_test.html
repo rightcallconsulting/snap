@@ -136,13 +136,17 @@
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
 
+				$('.show-plays').on('mouseover', '.play', function(){
+					playToDraw = plays.filter(function(play) {
+						return play.id === Number(this.id);
+					}.bind(this))[0];
+					playToDraw.formation = formationToDraw;
+				})
+
 				$('.show-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
-						playToDraw = plays.filter(function(play) {
-							return play.id === Number(playClicked[0].id);
-						})[0];
-						playToDraw.formation = formationToDraw;
+
 				});
 
 					$('#choose-play').on('submit', function(event){
