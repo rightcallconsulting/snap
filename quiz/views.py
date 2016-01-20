@@ -92,8 +92,6 @@ def player_tests(request, player_id):
     player = Player.objects.filter(pk=player_id)[0]
     tests = player.test_set.all()
     return HttpResponse(serializers.serialize("json", tests))
-    # all = list(Play.objects.all()) + list(Test.objects.all())
-    # return HttpResponse(simplejson.dumps(all), mimetype='application/json')
 
 def player_test(request, player_id, test_id):
     player = Player.objects.filter(pk=player_id)[0]
@@ -102,7 +100,8 @@ def player_test(request, player_id, test_id):
         selected_test = tests[0]
     else:
         for test_object in tests:
-            selected_test = test if test_object.pk == test_id else None
+            if test_object.pk == int(test_id):
+                selected_test = test_object 
     return HttpResponse(serializers.serialize("json", [selected_test]))
 
 def new_formation(request):
@@ -152,4 +151,14 @@ def team_plays(request, team_id):
 def team_play_players(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
     positions = team.play_positions()
+    return HttpResponse(serializers.serialize("json", positions))
+
+def run_qb_progression_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
+    return render(request, 'quiz/qb_progression.html', {
+        'test': test,
+    })
+
+def run_wr_route_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
     return HttpResponse(serializers.serialize("json", positions))

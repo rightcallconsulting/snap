@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
     url(r'^create_test$', views.create_test, name='create_test'),
     url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
+    url(r'^tests$', views.all_tests, name='all_tests'),
     url(r'^my_tests$', views.my_tests, name='my_tests'),
 
 

@@ -13,6 +13,9 @@ from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, 
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.core import serializers
+import json
+import simplejson
 
 # Create your views here.
 
@@ -114,6 +117,10 @@ def calendar(request):
 def my_tests(request):
     player = request.user.player
     return render(request, 'dashboard/my_tests.html')
+
+def all_tests(request):
+    tests = Test.objects.all()
+    return HttpResponse(serializers.serialize("json", tests))
 
 def create_test(request):
     if request.method == 'POST':
