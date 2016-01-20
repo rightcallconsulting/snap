@@ -210,15 +210,19 @@ function draw() {
     // intro scene
     var drawOpening = function() {
         createPlayField.drawBackground(playBeingCreated, height, width)
-        save.draw();
-        clear.draw();
-        formationButtons.forEach(function(button){
-          button.draw();
-        })
-        if(formationToDraw){
-          formationToDraw.drawAllPlayers();
-          text("Formation: "+formationToDraw.playName, 100, 20);
+        // save.draw();
+        // clear.draw();
+        // formationButtons.forEach(function(button){
+        //   button.draw();
+        // })
+        // if(formationToDraw){
+        //   formationToDraw.drawAllPlayers();
+        //   text("Formation: "+formationToDraw.playName, 100, 20);
+        // }
 
+        if(playToDraw){
+          playToDraw.drawAllPlayers();
+          playToDraw.drawAllRoutes();
         }
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);

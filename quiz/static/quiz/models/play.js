@@ -52,6 +52,12 @@ Play.prototype.drawAllPlayers = function(){
   }
 };
 
+Play.prototype.drawAllRoutes = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].drawBreakPoints();
+  }
+};
+
 Play.prototype.clearProgression = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
       var p = this.eligibleReceivers[i];

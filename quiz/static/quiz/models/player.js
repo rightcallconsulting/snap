@@ -334,6 +334,29 @@ Player.prototype.drawRoute = function(){
   }
 };
 
+Player.prototype.drawBreakPoints = function(){
+  if (this.breakPoints.length > 1){
+
+    for(var i = 0; i < this.breakPoints.length - 1; i++){
+      stroke(255, 0, 0);
+      line(this.startX, this.startY, this.breakPoints[0][0], this.breakPoints[0][1]);
+      line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
+      noStroke();
+      fill(255, 0, 0)
+      node = this.routeNodes[i]
+      if (node && node.change){
+        node.x = mouseX;
+        node.y = mouseY;
+        this.breakPoints[i + 1][0] = mouseX;
+        this.breakPoints[i + 1][1] = mouseY;
+      }
+      if(node){
+        node.draw();
+      }
+    }
+  }
+};
+
 
 // Not prototype but maybe should be turned into prototypes
 
