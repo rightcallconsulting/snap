@@ -31,10 +31,6 @@ function draw() {
           }else{
               fill(this.red, this.green, this.blue);
           }
-          if (this.change){
-            this.x = mouseX;
-            this.y = mouseY;
-            }
           ellipse(this.x, this.y, this.siz, this.siz);
           fill(0,0,0);
           textSize(14);
@@ -216,7 +212,7 @@ function draw() {
     var selectedNode = formationExample.mouseInReceiverOrNode()[1];
     var positionOptionSelected = formationExample.mouseInOptionsToCreate();
     if (formationExample.establishingNewPlayer){
-      formationExample.establishingNewPlayer.movePlayer();
+      formationExample.establishingNewPlayer.movePlayer(formationExample.oline[2].y);
     }
     else if (receiverClicked){
       receiverClicked.change = receiverClicked.change ?  false : true;
@@ -298,7 +294,7 @@ function draw() {
       selectedWR.routeNodes.push(nodeObject);
     }
     else if (save.isMouseInside()) {
-      if(formationExample.validPlay()){
+      if(formationExample.validFormation()){
         formationExample.eligibleReceivers.forEach(function(player){
           player.convertRouteDrawingToBreakPoints();
         })
@@ -317,7 +313,7 @@ function draw() {
         // Logic to save the play to the database
 
       } else{
-        formationExample.feedbackMessage = "Invalid Play"
+        formationExample.feedbackMessage = "Invalid Formation"
       }
     }
   };
