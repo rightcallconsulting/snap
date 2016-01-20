@@ -82,7 +82,7 @@
 
 					<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
 						<div class="dash-header text-center">
-							<span><h4>View [INSERT IMAGE OF PLAY]</h4></span>
+							<span><h4 id="play-image-header">Play</h4></span>
 						</div>
 					</div>
 
@@ -141,6 +141,7 @@
 						return play.id === Number(this.id);
 					}.bind(this))[0];
 					playToDraw.formation = formationToDraw;
+					$('#play-image-header').text(this.value);
 				})
 
 				$('.show-plays').on('click', '.play', function(){
