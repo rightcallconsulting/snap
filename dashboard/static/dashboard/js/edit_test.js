@@ -209,7 +209,7 @@ function draw() {
 
     // intro scene
     var drawOpening = function() {
-        createPlayField.drawBackground(playBeingCreated, height, width)
+        field.drawBackground(playBeingCreated, height, width)
         // save.draw();
         // clear.draw();
         // formationButtons.forEach(function(button){
@@ -223,6 +223,9 @@ function draw() {
         if(playToDraw){
           playToDraw.drawAllPlayers();
           playToDraw.drawAllRoutes();
+          text("Formation: "+playToDraw.formation.playName, 100, 20);
+          text("Formation: "+playToDraw.playName, 100, 50);
+
         }
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);
