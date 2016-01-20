@@ -101,7 +101,7 @@ def player_test(request, player_id, test_id):
     else:
         for test_object in tests:
             if test_object.pk == int(test_id):
-                selected_test = test_object 
+                selected_test = test_object
     return HttpResponse(serializers.serialize("json", [selected_test]))
 
 def new_formation(request):
@@ -162,3 +162,7 @@ def run_qb_progression_test(request, test_id):
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     return HttpResponse(serializers.serialize("json", positions))
+
+def single_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)
+    return HttpResponse(serializers.serialize("json", test))
