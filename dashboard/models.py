@@ -19,10 +19,15 @@ class UserCreateForm(UserCreationForm):
     password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
+    team = forms.ModelChoiceField(queryset=None)
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team")
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreateForm, self).__init__(*args, **kwargs)
+        self.fields['team'].queryset = Team.objects.all()
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
