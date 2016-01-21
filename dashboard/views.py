@@ -5,7 +5,7 @@ from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
@@ -127,6 +127,7 @@ def all_tests(request):
     tests = Test.objects.all()
     return HttpResponse(serializers.serialize("json", tests))
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
@@ -136,7 +137,7 @@ def create_test(request):
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:
         form = TestForm()
-        plays = request.user.player.team.play_set.all()
+        plays = request.user.coach.team.play_set.all()
         return render(request, 'dashboard/create_test.html', {
             'form': form,
             'plays': plays,
@@ -164,6 +165,7 @@ def edit_profile(request):
             'user_form': user_form,
         })
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def edit_test(request, test_id):
     if request.method == 'POST':
         play_id = request.POST['play_id']
