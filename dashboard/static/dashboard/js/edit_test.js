@@ -2,7 +2,8 @@ var formations = [];
 var plays =[];
 var positions = [];
 var makeJSONCall = true;
-
+var playScene = false;
+var defensePlay
 
 function setup() {
   var myCanvas = createCanvas(500, 500);
@@ -190,7 +191,7 @@ function draw() {
       return currentFormation;
     };
 
-    var defensePlay = new DefensivePlay({
+    defensePlay = new DefensivePlay({
       defensePlay: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
       lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
@@ -223,8 +224,8 @@ function draw() {
         if(playToDraw){
           playToDraw.drawAllPlayers();
           playToDraw.drawAllRoutes();
-          text("Formation: "+playToDraw.formation.playName, 100, 20);
-          text("Formation: "+playToDraw.playName, 100, 50);
+          text("Formation: "+playToDraw.formation.playName, 115, 20);
+          text("Play: "+playToDraw.playName, 80, 50);
 
         }
         defensePlay.drawAllPlayers();
@@ -236,182 +237,180 @@ function draw() {
     };
 
     // game scene
-    var drawScene = function() {
-        createPlayField.drawBackground(playBeingCreated, height, width)
-        pause.draw();
-        stop.draw();
-        pause.displayButton = true;
-        stop.displayButton = true;
-        save.displayButton = false;
-        clear.displayButton = false;
-        defensePlay.drawAllPlayers();
-        for(var i = 0; i < getCurrentFormation().eligibleReceivers.length; i++){
-            getCurrentFormation().eligibleReceivers[i].runRoute();
+    var drawScene = function(play) {
+        field.drawBackground(play, height, width)
+        // defensePlay.drawAllPlayers();
+        play.drawAllPlayers();
+        for(var i = 0; i < play.eligibleReceivers.length; i++){
+            play.eligibleReceivers[i].runRoute();
         }
-        for(var i = 0; i < defensivePlayers.length; i++){
-            defensivePlayers[i].blitzGap(oline[2]);
+        for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+            defensePlay.defensivePlayers[i].blitzGap(play.oline[2]);
         }
-        qb[0].runBootleg(oline[2], 1.0);
+        play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 120, 60);
     };
 
-    keyTyped = function(){
-      var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-      var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-      var numDiff = key.charCodeAt(0) - "0".charCodeAt(0);
-      if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 9) ||  key === ' ' || key === '\''){
-          playBeingCreated.playName += key;
-      }
-      //return false;
-    }
+    // keyTyped = function(){
+    //   var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+    //   var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+    //   var numDiff = key.charCodeAt(0) - "0".charCodeAt(0);
+    //   if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 9) ||  key === ' ' || key === '\''){
+    //       playBeingCreated.playName += key;
+    //   }
+    //   //return false;
+    // }
 
-    keyPressed = function() {
-      selectedWR = getCurrentFormation().findSelectedWR();
-      if (keyCode === SHIFT){
-        capitalLetter = true;
-      }
-      if(keyCode == 38 && selectedWR){
-        if(selectedWR.progressionRank >= 5){
-          selectedWR.progressionRank = 0;
-        }else{
-          selectedWR.progressionRank++;
-        }
-      }
-      else if(keyCode == 40 && selectedWR){
-        if(selectedWR.progressionRank <= -5){
-          selectedWR.progressionRank = 0;
-        }else{
-          selectedWR.progressionRank--;
-        }
-      }
-      else if(keyCode == 66 && selectedWR){
-        if(selectedWR.blocker){
-          selectedWR.blocker = false;
-          selectedWR.blockingAssignment = null;
-        } else{
-          selectedWR.blocker = true;
-          selectedWR.clearRoute();
-        }
-        return false;
-      }
-      else if (keyCode === BACKSPACE){
-        if (selectedWR){
-          selectedWR.stepRouteBackward();
-        } else{
-          playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
-        }
-        return false;
-      }
-      //return false;
-    };
+    // keyPressed = function() {
+    //   selectedWR = getCurrentFormation().findSelectedWR();
+    //   if (keyCode === SHIFT){
+    //     capitalLetter = true;
+    //   }
+    //   if(keyCode == 38 && selectedWR){
+    //     if(selectedWR.progressionRank >= 5){
+    //       selectedWR.progressionRank = 0;
+    //     }else{
+    //       selectedWR.progressionRank++;
+    //     }
+    //   }
+    //   else if(keyCode == 40 && selectedWR){
+    //     if(selectedWR.progressionRank <= -5){
+    //       selectedWR.progressionRank = 0;
+    //     }else{
+    //       selectedWR.progressionRank--;
+    //     }
+    //   }
+    //   else if(keyCode == 66 && selectedWR){
+    //     if(selectedWR.blocker){
+    //       selectedWR.blocker = false;
+    //       selectedWR.blockingAssignment = null;
+    //     } else{
+    //       selectedWR.blocker = true;
+    //       selectedWR.clearRoute();
+    //     }
+    //     return false;
+    //   }
+    //   else if (keyCode === BACKSPACE){
+    //     if (selectedWR){
+    //       selectedWR.stepRouteBackward();
+    //     } else{
+    //       playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
+    //     }
+    //     return false;
+    //   }
+    //   //return false;
+    // };
 
-    mouseClicked = function() {
-      eligibleReceivers = getCurrentFormation().eligibleReceivers;
-      var olClicked = getCurrentFormation().mouseInOL();
-      var dlClicked = defensePlay.mouseInDL(getCurrentFormation());
-      var receiverClicked = getCurrentFormation().mouseInReceiverOrNode()[0];
-      var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
-      var formationClicked = isFormationClicked(formationButtons);
-      var selectedOL = getCurrentFormation().findSelectedOL();
-      var selectedDL = defensePlay.findSelectedDL();
-      selectedWR = getCurrentFormation().findSelectedWR();
-      if (clear.isMouseInside()){
-        getCurrentFormation().clearProgression();
-        defensePlay.clearSelections();
-        getCurrentFormation().clearRouteDrawings();
-        getCurrentFormation().clearBlockingAssignments();
-        getCurrentFormation().feedbackMessage = "";
-      }
-      else if (save.isMouseInside()) {
+    // mouseClicked = function() {
+    //   eligibleReceivers = getCurrentFormation().eligibleReceivers;
+    //   var olClicked = getCurrentFormation().mouseInOL();
+    //   var dlClicked = defensePlay.mouseInDL(getCurrentFormation());
+    //   var receiverClicked = getCurrentFormation().mouseInReceiverOrNode()[0];
+    //   var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
+    //   var formationClicked = isFormationClicked(formationButtons);
+    //   var selectedOL = getCurrentFormation().findSelectedOL();
+    //   var selectedDL = defensePlay.findSelectedDL();
+    //   selectedWR = getCurrentFormation().findSelectedWR();
+    //   if (clear.isMouseInside()){
+    //     getCurrentFormation().clearProgression();
+    //     defensePlay.clearSelections();
+    //     getCurrentFormation().clearRouteDrawings();
+    //     getCurrentFormation().clearBlockingAssignments();
+    //     getCurrentFormation().feedbackMessage = "";
+    //   }
+    //   else if (save.isMouseInside()) {
+    //
+    //     //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+    //
+    //       eligibleReceivers.forEach(function(player){
+    //         player.convertRouteDrawingToBreakPoints();
+    //       })
+    //       var newPlay = new Play({
+    //           eligibleReceivers: eligibleReceivers,
+    //           offensivePlayers: getCurrentFormation().offensivePlayers,
+    //           name: playBeingCreated.playName,
+    //           qb: getCurrentFormation().qb,
+    //           oline: getCurrentFormation().oline,
+    //           formation: getCurrentFormation()
+    //       });
+    //       // Logic to save the play to the database
+    //       newPlay.saveToDB();
+    //       getCurrentFormation().clearRouteDrawings();
+    //       getCurrentFormation().clearProgression();
+    //       getCurrentFormation().clearBlockingAssignments();
+    //       defensePlay.clearSelections();
+    //       playBeingCreated.playName = "";
+    //       getCurrentFormation().feedbackMessage = "Saved!";
+    //   }
+    //   else if (formationClicked){
+    //     currentFormation = formations.filter(function(formation) {
+    //       return formation.playName == formationClicked.label;
+    //     })[0];
+    //   }
+    //   else if(selectedNode){
+    //     if (selectedNode.change){
+    //       selectedNode.change = false;
+    //     }
+    //     else{
+    //       selectedNode.change = true;
+    //     }
+    //   }
+    //   else if (receiverClicked){
+    //
+    //       var playerSelected = false;
+    //       getCurrentFormation().clearPreviousRouteDisplays();
+    //       for(var i = 0; i < eligibleReceivers.length; i++){
+    //           if(receiverClicked.clicked){
+    //               receiverClicked.unselect();
+    //               receiverClicked.showRoute = false;
+    //           }else{
+    //               receiverClicked.select();
+    //           }
+    //           break;
+    //       }
+    //   }
+    //   else if(selectedWR){
+    //     if(!selectedWR.blocker){
+    //       selectedWR.routeCoordinates.push([mouseX, mouseY]);
+    //       var nodeObject = new Node({
+    //           x: mouseX,
+    //           y: mouseY,
+    //           siz: 10
+    //       });
+    //       selectedWR.routeNodes.push(nodeObject);
+    //     }
+    //     else if(selectedWR.blocker && dlClicked){
+    //       selectedWR.blockingAssignment = selectedDL;
+    //       selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
+    //       selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
+    //     }
+    //   }
+    //   else if(dlClicked && selectedOL){
+    //     selectedOL.blockingAssignment = selectedDL;
+    //     selectedOL.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
+    //     selectedOL.blockingAssignmentUnitIndex = selectedDL.unitIndex;
+    //   }
+    // };
 
-        //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+    // mouseDragged = function(){
+    //   var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
+    //   if(selectedNode){
+    //     selectedNode.change = true;
+    //   }
+    // };
 
-          eligibleReceivers.forEach(function(player){
-            player.convertRouteDrawingToBreakPoints();
-          })
-          var newPlay = new Play({
-              eligibleReceivers: eligibleReceivers,
-              offensivePlayers: getCurrentFormation().offensivePlayers,
-              name: playBeingCreated.playName,
-              qb: getCurrentFormation().qb,
-              oline: getCurrentFormation().oline,
-              formation: getCurrentFormation()
-          });
-          // Logic to save the play to the database
-          newPlay.saveToDB();
-          getCurrentFormation().clearRouteDrawings();
-          getCurrentFormation().clearProgression();
-          getCurrentFormation().clearBlockingAssignments();
-          defensePlay.clearSelections();
-          playBeingCreated.playName = "";
-          getCurrentFormation().feedbackMessage = "Saved!";
-      }
-      else if (formationClicked){
-        currentFormation = formations.filter(function(formation) {
-          return formation.playName == formationClicked.label;
-        })[0];
-      }
-      else if(selectedNode){
-        if (selectedNode.change){
-          selectedNode.change = false;
-        }
-        else{
-          selectedNode.change = true;
-        }
-      }
-      else if (receiverClicked){
-
-          var playerSelected = false;
-          getCurrentFormation().clearPreviousRouteDisplays();
-          for(var i = 0; i < eligibleReceivers.length; i++){
-              if(receiverClicked.clicked){
-                  receiverClicked.unselect();
-                  receiverClicked.showRoute = false;
-              }else{
-                  receiverClicked.select();
-              }
-              break;
-          }
-      }
-      else if(selectedWR){
-        if(!selectedWR.blocker){
-          selectedWR.routeCoordinates.push([mouseX, mouseY]);
-          var nodeObject = new Node({
-              x: mouseX,
-              y: mouseY,
-              siz: 10
-          });
-          selectedWR.routeNodes.push(nodeObject);
-        }
-        else if(selectedWR.blocker && dlClicked){
-          selectedWR.blockingAssignment = selectedDL;
-          selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
-          selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
-        }
-      }
-      else if(dlClicked && selectedOL){
-        selectedOL.blockingAssignment = selectedDL;
-        selectedOL.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
-        selectedOL.blockingAssignmentUnitIndex = selectedDL.unitIndex;
-      }
-    };
-
-    mouseDragged = function(){
-      var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
-      if(selectedNode){
-        selectedNode.change = true;
-      }
-    };
-
-    createFormationButtons(formations);
+    // createFormationButtons(formations);
     // Draws the animation
     draw = function() {
-      if(formationToDraw){
-        formationToDraw.drawAllPlayers();
+      if(playScene === true){
+        drawScene(playToDraw);
       }
+      else{
         drawOpening();
+
       }
     }
+  }
 };

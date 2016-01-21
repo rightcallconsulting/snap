@@ -22,16 +22,18 @@
 			<div class="panel panel-default table-responsive">
 				<div class="panel-heading">
 					Responsive Table
-					<span class="label label-info pull-right">790 Items</span>
+					<span class="label label-info pull-right">{{uncompleted_tests|length}} Items</span>
 				</div>
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-md-4 col-sm-4">
 							<select class="input-sm form-control inline" style="width:130px;">
 								<option value="0">All</option>
-								<option value="1">Men</option>
-								<option value="2">Women</option>
-								<option value="3">Accessary</option>
+								<option value="1">New</option>
+								<option value="2">Completed</option>
+								<option value="3">Uncompleted</option>
+								<option value="4">In-Progress</option>
+
 							</select>
 							<a class="btn btn-default btn-sm">Apply</a>
 						</div><!-- /.col -->

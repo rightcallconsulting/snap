@@ -339,7 +339,7 @@ Player.prototype.drawBreakPoints = function(){
 
     for(var i = 0; i < this.breakPoints.length - 1; i++){
       stroke(255, 0, 0);
-      line(this.startX, this.startY, this.breakPoints[0][0], this.breakPoints[0][1]);
+      line(this.x, this.y, this.breakPoints[0][0], this.breakPoints[0][1]);
       line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
       noStroke();
       fill(255, 0, 0)
@@ -354,6 +354,12 @@ Player.prototype.drawBreakPoints = function(){
         node.draw();
       }
     }
+  }
+  else if(this.breakPoints.length === 1) {
+    stroke(255, 0, 0);
+    line(this.x, this.y, this.breakPoints[0][0], this.breakPoints[0][1]);
+    noStroke();
+    fill(255, 0, 0)
   }
 };
 
