@@ -11,3 +11,24 @@
 #display-play-box .dash-header {
   margin-bottom: 0px;
 }
+
+.holds-play-buttons {
+  background-color: #044144;
+  height: 44px;
+}
+
+#play-image-header {
+  width: 500px;
+}
+
+.formation-button {
+  width: 237px;
+}
+
+.change-plays-box .play-remove-button {
+  width: 200px;
+}
+
+.change-plays-box .play-add-button {
+  width: 200px;
+}

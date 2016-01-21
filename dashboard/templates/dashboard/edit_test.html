@@ -54,7 +54,7 @@
 									<span><h4>Offensive Formations</h4></span>
 								</div>
 									{% for formation in offensive_formations %}
-										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 										<br>
 									{% endfor %}
 							</div>
@@ -87,10 +87,12 @@
 						<div id="display-play-box-2">
 
 						</div>
+						<div class="holds-play-buttons">
+							<button id="play-button" class="btn btn-success" name="button">Play</button>
+							<button id="pause-button" class="btn btn-success" name="button">Pause</button>
+							<button id="restart-button" class="btn btn-success" name="button">Restart</button>
+						</div>
 
-						<button id="play-button" class="btn btn-success" name="button">Play</button>
-						<button id="pause-button" class="btn btn-success" name="button">Pause</button>
-						<button id="restart-button" class="btn btn-success" name="button">Restart</button>
 					</div>
 
 					<div class="col-lg-10 dash-col display-plays-in-test">
