@@ -22,13 +22,27 @@
 }
 
 .formation-button {
-  width: 237px;
+  width: 100%;
+  margin-top:1px;
+  margin-bottom:1px;
 }
 
-.change-plays-box .play-remove-button {
-  width: 200px;
+.play-remove-button {
+  width: 100%;
+  margin-top:1px;
+  margin-bottom:1px;
 }
 
 .change-plays-box .play-add-button {
-  width: 200px;
+  width: 100%;
+  margin-top:1px;
+  margin-bottom:1px;
+}
+
+.display-plays-in-test {
+  height: 700px;
+}
+
+.display-plays-in-test .dash-col{
+  margin-bottom:10px;
 }
