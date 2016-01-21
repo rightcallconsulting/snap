@@ -208,13 +208,13 @@ function draw() {
             test.startTime = second() + minute() * 60;
         }
         field.drawBackground(test.getCurrentPlay(), height, width);
-        playButton.draw();
-        check.draw();
-        clear.draw();
-        back.draw();
+        // playButton.draw();
+        // check.draw();
+        // clear.draw();
+        // back.draw();
         test.getCurrentPlay().drawAllPlayers();
         defensePlay.drawAllPlayers();
-        nextPlay.draw();
+        // nextPlay.draw();
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 160, 360);
@@ -225,8 +225,8 @@ function draw() {
     // game scene
     var drawScene = function(play) {
         field.drawBackground(play, height, width);
-        pause.draw();
-        stop.draw();
+        // pause.draw();
+        // stop.draw();
         pause.displayButton = true;
         stop.displayButton = true;
         playButton.displayButton = false;
@@ -301,6 +301,7 @@ function draw() {
     };
 
     mouseClicked = function() {
+
       var currentPlay = test.getCurrentPlay();
       if(currentPlay){
         currentPlay.setAllRoutes();
@@ -309,7 +310,8 @@ function draw() {
         selectedWR = currentPlay.findSelectedWR();
       }
 
-      scoreboard.feedbackMessage = "";
+      // scoreboard.feedbackMessage = "";
+      if(mouseX <= 400 && mouseY <= 400){
         if (playButton.isMouseInside() && !playButton.clicked) {
           pressPlayButton();
         }else if (check.isMouseInside()){
@@ -369,6 +371,8 @@ function draw() {
           });
           selectedWR.routeNodes.push(nodeObject);
         }
+      }
+
     };
 
     draw = function() {
