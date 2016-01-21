@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'dashboard.apps.DashboardConfig',
     'debug_toolbar',
     'storages',
+    'datetimewidget',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'quiz_master.urls'

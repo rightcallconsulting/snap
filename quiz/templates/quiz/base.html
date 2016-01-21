@@ -43,7 +43,10 @@
           <div id="quiz-box">
 
           </div>
+          {% block buttons %}
+          {% endblock %}
           <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
+
         </div>
       </div>
 
@@ -57,6 +60,7 @@
   <!--<script language="javascript" src="../addons/p5.dom.js"></script>-->
   <!--<script language="javascript" src="../addons/p5.sound.js"></script>-->
   <script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
+  <script language="javascript" type="text/javascript" src="{% static 'quiz/buttons.js' %}"></script>
 
   {% block quiz_type %}
   {% endblock %}
