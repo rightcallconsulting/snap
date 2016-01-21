@@ -221,9 +221,9 @@ function draw() {
         test.startTime = millis();
       }
       field.drawBackground(test.getCurrentPlay(), height, width);
-      playButton.draw();
-      restart.draw();
-      clear.draw();
+      // playButton.draw();
+      // restart.draw();
+      // clear.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
       fill(0, 0, 0);
@@ -235,9 +235,9 @@ function draw() {
 
     var drawDetail = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      playButton.draw();
-      restart.draw();
-      clear.draw();
+      // playButton.draw();
+      // restart.draw();
+      // clear.draw();
       if (test.getCurrentPlay().bigPlayer !== null && test.getCurrentPlay().bigDefender !== null) {
         test.getCurrentPlay().bigPlayer.draw();
         test.getCurrentPlay().bigDefender.draw();
@@ -262,9 +262,9 @@ function draw() {
 
     var drawDetailScene = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      playButton.draw();
-      pause.draw();
-      stop.draw();
+      // playButton.draw();
+      // pause.draw();
+      // stop.draw();
       test.getCurrentPlay().bigDefender.draw();
       test.getCurrentPlay().bigPlayer.draw();
       test.getCurrentPlay().bigPlayer.blockMan(test.getCurrentPlay().bigDefender, 0, false);
@@ -277,8 +277,8 @@ function draw() {
 
     var drawScene = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      pause.draw();
-      stop.draw();
+      // pause.draw();
+      // stop.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
       for (var i = 0; i < test.getCurrentPlay().oline.length; i++) {
