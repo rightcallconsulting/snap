@@ -49,16 +49,17 @@ def auth_logout(request):
 
 def register(request):
     if request.method == 'POST':
+        team = Team.objects.filter(id=request.POST['team'])[0]
         form = UserCreateForm(request.POST)
         if form.is_valid():
             new_user = form.save()
             if 'Player' in request.POST.keys():
-                new_player = Player(user=new_user)
+                new_player = Player(user=new_user, team=team)
                 new_player.first_name = new_user.first_name
                 new_player.last_name = new_user.last_name
                 new_player.save()
             elif 'Coach' in request.POST.keys():
-                new_coach = Coach(user=new_user)
+                new_coach = Coach(user=new_user, team=team)
                 new_coach.save()
             user = authenticate(username=new_user.username, password=request.POST['password1'])
             login(request, user)

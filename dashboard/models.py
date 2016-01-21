@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from quiz.models import Team, Player, Formation, Play, Position, Test
 from django.contrib.admin import widgets
+from datetimewidget.widgets import DateTimeWidget
 
 # Create your models here.
 
@@ -19,10 +20,15 @@ class UserCreateForm(UserCreationForm):
     password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
+    team = forms.ModelChoiceField(queryset=None)
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2")
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team")
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreateForm, self).__init__(*args, **kwargs)
+        self.fields['team'].queryset = Team.objects.all()
 
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
@@ -67,10 +73,15 @@ class TestForm(ModelForm):
         )
     type_of_test = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                      choices=OPTIONS)
+    date_time = forms.DateTimeField(widget=DateTimeWidget(usel10n=True, bootstrap_version=3))
 
     class Meta:
         model = Test
         fields = ['name','type_of_test', 'deadline']
+        widgets = {
+        #Use localization and bootstrap 3
+        'datetime': DateTimeWidget(attrs={'id':"yourdatetimeid"}, usel10n = True, bootstrap_version=3)
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user','')

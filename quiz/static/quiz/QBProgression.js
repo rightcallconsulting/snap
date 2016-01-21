@@ -211,12 +211,12 @@ function draw() {
             test.startTime = second() + minute() * 60;
         }
         drawBackground(test.getCurrentPlay(), field);
-        playButton.draw();
-        check.draw();
-        clear.draw();
+        // playButton.draw();
+        // check.draw();
+        // clear.draw();
         defensePlay.drawAllPlayers();
         test.getCurrentPlay().drawAllPlayers();
-        nextPlay.draw();
+        // nextPlay.draw();
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 160, 360);
@@ -225,13 +225,13 @@ function draw() {
     // game scene
     var drawScene = function(play) {
         drawBackground(play, field);
-        pause.draw();
-        stop.draw();
-        pause.displayButton = true;
-        stop.displayButton = true;
-        playButton.displayButton = false;
-        check.displayButton = false;
-        clear.displayButton = false;
+        // pause.draw();
+        // stop.draw();
+        // pause.displayButton = true;
+        // stop.displayButton = true;
+        // playButton.displayButton = false;
+        // check.displayButton = false;
+        // clear.displayButton = false;
         defensePlay.drawAllPlayers();
         test.getCurrentPlay().drawAllPlayers();
         for(var i = 0; i < play.eligibleReceivers.length; i++){
@@ -285,7 +285,7 @@ function draw() {
     mouseClicked = function() {
       currentPlay = test.getCurrentPlay();
       if(currentPlay){currentPlay.setAllRoutes();}
-      scoreboard.feedbackMessage = "";
+      // scoreboard.feedbackMessage = "";
         if (playButton.isMouseInside() && !playButton.clicked) {
           pressPlayButton();
         }else if (check.isMouseInside()){
