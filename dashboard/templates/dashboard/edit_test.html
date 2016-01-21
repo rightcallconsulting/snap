@@ -48,15 +48,28 @@
           <div class="panel-heading">
 		        {{player.full_name}}
           </div>
-					<div class="col-lg-6 dash-col">
-						<div class="dash-header text-center">
-							<span><h4>Offensive Formations</h4></span>
-						</div>
-							{% for formation in offensive_formations %}
-								<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
-							{% endfor %}
-					</div>
-					<div class="col-lg-4 dash-col">
+					{% if True %}
+							<div class="col-lg-2 dash-col choose-offensive-formation-box">
+								<div class="dash-header text-center">
+									<span><h4>Offensive Formations</h4></span>
+								</div>
+									{% for formation in offensive_formations %}
+										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+										<br>
+									{% endfor %}
+							</div>
+					{% else %}
+							<div class="col-lg-1 dash-col">
+								<div class="dash-header text-center">
+									<span><h4>Defensive Formations</h4></span>
+								</div>
+									{% for formation in defensive_formations %}
+										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+									{% endfor %}
+							</div>
+					{% endif %}
+
+					<div class="col-lg-2 dash-col change-plays-box">
 						<div class="dash-header text-center">
 							<span><h4 id="change-plays-header">Change Plays</h4></span>
 						</div>
@@ -67,39 +80,52 @@
 						</form>
 					</div>
 
-					<div class="col-lg-6 dash-col">
+					<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
 						<div class="dash-header text-center">
-							<span><h4>Defensive Formations</h4></span>
+							<span><h4 id="play-image-header">Play</h4></span>
 						</div>
-							{% for formation in defensive_formations %}
-								<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
-							{% endfor %}
-					</div>
-
-
-					{% for formation in offensive_formations %}
-					<div class="col-lg-2 dash-col">
-						<div class="dash-header text-center">
-							<span><h4>{{ formation }}</h4></span>
+						<div id="display-play-box-2">
 
 						</div>
-
-							<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
-
-								{% for play in plays_in_test %}
-									{% if play.formation.id == formation.id %}
-										<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
-									{% endif %}
-								{% endfor %}
-							</div><!-- /panel -->
+						<div class="holds-play-buttons">
+							<button id="play-button" class="btn btn-success" name="button">Play</button>
+							<button id="pause-button" class="btn btn-success" name="button">Pause</button>
+							<button id="restart-button" class="btn btn-success" name="button">Restart</button>
+						</div>
 
 					</div>
 
-					{% endfor %}
+					<div class="col-lg-10 dash-col display-plays-in-test">
+						<div class="dash-header text-center">
+							<span><h4>Plays in Test: {{test.name}}</h4></span>
+						</div>
+						{% for formation in offensive_formations %}
+						<div class="col-lg-2 dash-col">
+							<div class="dash-header text-center">
+								<span><h4>{{ formation }}</h4></span>
+
+							</div>
+
+								<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
+
+									{% for play in plays_in_test %}
+										{% if play.formation.id == formation.id %}
+											<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+										{% endif %}
+									{% endfor %}
+								</div><!-- /panel -->
+
+						</div>
+
+						{% endfor %}
+					</div>
+
+
 
 
 					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
 					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+					<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
@@ -113,13 +139,29 @@
 
 				var playClicked;
 				var formationID;
+				var formationToDraw;
+				var playToDraw;
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
 
+				$('.show-plays').on('mouseover', '.play', function(){
+					if(playToDraw){
+						playToDraw.resetPlayers(defensePlay)
+						playToDraw.setAllRoutes();
+					}
+					playToDraw = plays.filter(function(play) {
+						return play.id === Number(this.id);
+					}.bind(this))[0];
+					playToDraw.formation = formationToDraw;
+					$('#play-image-header').text(this.value);
+					playScene = false;
+				})
+
 				$('.show-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
+
 				});
 
 					$('#choose-play').on('submit', function(event){
@@ -136,11 +178,26 @@
 
 					});
 
+					$("#play-button").click(function() {
+						playScene = true;
+					})
 
+					$("#pause-button").click(function() {
+						playScene = false;
+					})
+
+					$("#restart-button").click(function() {
+						playScene = false;
+						playToDraw.resetPlayers(defensePlay);
+						playToDraw.setAllRoutes();
+					})
 
 					$(".formation").click(function() {
 						var formationName = this.value;
 						formationID = Number(this.id);
+						formationToDraw = formations.filter(function(formation) {
+					    return formation.id === formationID;
+					  })[0];
 						var playArray = []
 						$('#change-plays-header').text('Change Plays (' + this.value+')')
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
@@ -198,4 +255,6 @@
 					};
 
 			</script>
+			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+
 			{% endblock %}

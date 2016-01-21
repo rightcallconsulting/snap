@@ -20,25 +20,27 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
-				{% for test_type in types_of_tests%}
-					<input class="btn btn-success btn-sm bounceIn animation-delay5 type-test" type="submit" value="{{ test_type }}">
-				{% endfor %}
+
         <form action="/create_test" method="post" class=form-create-test> {% csrf_token %}
           {% for field in form %}
-            <div class="form-group">
-              {{ field.label_tag }}
-              {{ field }}
-            </div>
+						{% if field.label == 'Type of test' %}
+							{% for type in types_of_tests %}
+							<div class="form-group">
+								<label class="label-checkbox">
+									 <input type="checkbox" name="type_of_test" value="{{type}}"/>
+									 <span class="custom-checkbox info bounceIn animation-delay6"></span>
+									 {{type}}
+								</label>
+							</div><!-- /form-group -->
+							{% endfor %}
+						{% else %}
+		            <div class="form-group">
+		              {{ field.label_tag }}
+		              {{ field }}
+		            </div>
+						{% endif %}
+	          {% endfor %}
 
-          {% endfor %}
-					{% for play in plays %}
-					<div class="form-group">
-						<label class="label-checkbox">
-							 <input type="checkbox" name="{{play.name}}" value="{{play.name}}"/> {{play.name}}
-							 <span class="custom-checkbox info bounceIn animation-delay6"></span>
-						</label>
-					</div><!-- /form-group -->
-					{% endfor %}
 
 
           <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Test">

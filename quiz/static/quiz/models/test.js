@@ -218,19 +218,19 @@ Test.prototype.checkBigSelection = function() {
     }
 
     if(position === "LT"){
-      return this.getCurrentPlay().oline[4];
+      return this.getCurrentPlay().oline[0];
     }
     else if(position === "LG"){
-      return this.getCurrentPlay().oline[3];
+      return this.getCurrentPlay().oline[1];
     }
     else if(position === "C"){
       return this.getCurrentPlay().oline[2];
     }
     else if(position === "RG"){
-      return this.getCurrentPlay().oline[1];
+      return this.getCurrentPlay().oline[3];
     }
     else if(position === "RT"){
-      return this.getCurrentPlay().oline[0];
+      return this.getCurrentPlay().oline[4];
     }
   }
 

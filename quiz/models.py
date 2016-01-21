@@ -118,7 +118,7 @@ class Position(models.Model):
 class Test(models.Model):
 
     types_of_tests = ["QBProgression", "CBAssignment", "OLView", "WRRoute"]
-
+    name = models.CharField(max_length=100, null=True, blank=True)
     type_of_test = models.CharField(max_length=100)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     score = models.IntegerField(null=True, blank=True)
@@ -130,6 +130,7 @@ class Test(models.Model):
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+    coach_who_created = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
 
     def __str__(self):

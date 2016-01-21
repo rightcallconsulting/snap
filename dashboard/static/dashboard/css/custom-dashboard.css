@@ -1,3 +1,34 @@
-.play-add-button {
-  background: red !imporant;
+.change-plays-box, .display-play-box, .choose-offensive-formation-box {
+  height: 590px;
+  margin-bottom: 50px;
+  margin-top: 50px;
+}
+
+#display-play-box {
+  width: 500px;
+}
+
+#display-play-box .dash-header {
+  margin-bottom: 0px;
+}
+
+.holds-play-buttons {
+  background-color: #044144;
+  height: 44px;
+}
+
+#play-image-header {
+  width: 500px;
+}
+
+.formation-button {
+  width: 237px;
+}
+
+.change-plays-box .play-remove-button {
+  width: 200px;
+}
+
+.change-plays-box .play-add-button {
+  width: 200px;
 }

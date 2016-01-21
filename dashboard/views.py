@@ -9,8 +9,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication
 from IPython import embed
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.core import serializers
+import json
+import simplejson
 
 # Create your views here.
 
@@ -91,17 +96,37 @@ def settings(request):
 
 @login_required
 def todo(request):
-    return render(request, 'dashboard/to-do.html')
+    player = request.user.player
+    all_tests = player.test_set.all()
+    completed_tests = all_tests.filter(completed=True).order_by('-created_at')
+    uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
+    in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
+    return render(request, 'dashboard/to-do.html', {
+        'completed_tests': completed_tests,
+        'uncompleted_tests': uncompleted_tests,
+        'in_progress_tests': in_progress_tests,
+        'current_time': timezone.now(),
+        'new_time_threshold': timezone.now() + timedelta(days=3),
+    })
 
 @login_required
 def calendar(request):
     return render(request, 'dashboard/calendar.html')
 
+@login_required
+def my_tests(request):
+    player = request.user.player
+    return render(request, 'dashboard/my_tests.html')
+
+def all_tests(request):
+    tests = Test.objects.all()
+    return HttpResponse(serializers.serialize("json", tests))
+
 def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
         player = Player.objects.filter(id=player_id)[0]
-        new_test = Test(player=player, type_of_test=request.POST['type_of_test'])
+        new_test = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
         new_test.save()
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:
@@ -120,9 +145,14 @@ def edit_profile(request):
         request.user.last_name = request.POST['last_name']
         request.user.email = request.POST['email']
         request.user.save()
+        if(Authentication.get_player(request.user)):
+            player = Authentication.get_player(request.user)
+            player.position = request.POST['position']
+            player.number = int(request.POST['number'])
+            player.save()
         return HttpResponseRedirect("/edit_profile")
     else:
-        player_form = PlayerForm(instance = request.user)
+        player_form = PlayerForm(instance = request.user.player)
         user_form = UserForm(instance = request.user)
         return render(request, 'dashboard/edit_profile.html', {
             'player_form': player_form,

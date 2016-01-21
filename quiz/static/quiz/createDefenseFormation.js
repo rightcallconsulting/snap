@@ -431,7 +431,7 @@ function draw() {
         formationExample.establishingNewPlayer = null;
       }
       else if (save.isMouseInside()) {
-        if(formationExample.validPlay()){
+        if(formationExample.validFormation()){
           var newFormation = new Formation({
               defensivePlayers: formationExample.defensivePlayers,
               playName: formationExample.playName,

@@ -37,7 +37,7 @@ class RFPAuthForm(AuthenticationForm):
 
 
 class Coach(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=30, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
@@ -59,9 +59,18 @@ class UserForm(ModelForm):
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
 
 class TestForm(ModelForm):
+    OPTIONS = (
+            ("QB_Progression", "QB_Progression"),
+            ("WR_Route", "WR_Route"),
+            ("OL_View", "OL_View"),
+            ("CB_Assignment", "CB_Assignment"),
+        )
+    type_of_test = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                     choices=OPTIONS)
+
     class Meta:
         model = Test
-        fields = ['type_of_test', 'deadline']
+        fields = ['name','type_of_test', 'deadline']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user','')
@@ -75,3 +84,18 @@ class UserMethods(User):
     pass
   class Meta:
     proxy=True
+
+class Authentication(object):
+    @staticmethod
+    def get_coach(user_object):
+        try:
+            return user_object.coach
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def get_player(user_object):
+        try:
+            return user_object.player
+        except AttributeError:
+            return None
