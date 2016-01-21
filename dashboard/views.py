@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication, myUser
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -54,11 +54,15 @@ def register(request):
         if form.is_valid():
             new_user = form.save()
             if 'Player' in request.POST.keys():
+                new_boolean_user = myUser(user=new_user, is_a_player=True)
+                new_boolean_user.save()
                 new_player = Player(user=new_user, team=team)
                 new_player.first_name = new_user.first_name
                 new_player.last_name = new_user.last_name
                 new_player.save()
             elif 'Coach' in request.POST.keys():
+                new_boolean_user = myUser(user=new_user, is_a_player=False)
+                new_boolean_user.save()
                 new_coach = Coach(user=new_user, team=team)
                 new_coach.save()
             user = authenticate(username=new_user.username, password=request.POST['password1'])

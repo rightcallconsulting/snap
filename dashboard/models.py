@@ -52,6 +52,10 @@ class Coach(models.Model):
     def testing_this(self):
         return self.first_name
 
+class myUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_a_player = models.BooleanField(default=False)
+
 
 class PlayerForm(ModelForm):
 
