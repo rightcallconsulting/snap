@@ -281,6 +281,8 @@ function draw() {
     }
   };
 
+
+/*
   pressStopButton = function(){
     playButton.changeClickStatus();
     if (pause.clicked) {
@@ -302,6 +304,8 @@ function draw() {
     scoreboard.feedbackMessage = "";
     test.getCurrentPlay().inProgress = true;
   };
+
+*/
 
   var getGap = function(x,y){
     var play = test.getCurrentPlay();
