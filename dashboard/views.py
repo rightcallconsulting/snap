@@ -218,12 +218,11 @@ def edit_test(request, test_id):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_group(request):
     if request.method == 'POST':
+        new_group = PlayerGroup(name=request.POST['name'])
+        new_group.save()
         for player_id in request.POST.getlist('players'):
             player = Player.objects.filter(pk=int(player_id))[0]
-            new_group = PlayerGroup(name=request.POST['name'])
-            new_group.save()
             new_group.players.add(player)
-            embed()
         new_group.save()
         return HttpResponseRedirect(reverse('edit_group', args=[new_group.id]))
     else:
@@ -231,3 +230,10 @@ def create_group(request):
         return render(request, 'dashboard/create_group.html', {
             'form': form,
         })
+
+def edit_group(request, group_id):
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    edit_group_form = PlayerGroupForm(instance = group)
+    return render(request, 'dashboard/edit_group.html', {
+        'edit_group_form': edit_group_form,
+    })
