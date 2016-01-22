@@ -136,9 +136,8 @@ var MultiRouteTest = function(config){
     this.over = false;
     this.cutOff = config.cutOff || 100;
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
+    this.receiverNum = config.receiverNum || 0;
 };
-
-
 
 MultiRouteTest.prototype.getCurrentPlayName = function(){
   return this.playNames[this.questionNum];

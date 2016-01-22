@@ -1,84 +1,83 @@
 var DefensivePlay = function(config) {
-    this.defensivePlayers = config.defensivePlayers || [];
-    this.playName = config.playName || "";
-    this.formation = config.formation || null;
-    this.dlAssignments = config.dlAssignments || [];
-    this.lbAssignments = config.lbAssignments || [];
-    this.dbAssignments = config.dbAssignments || [];
-    this.dlPositions = config.dlPositions || [];
-    this.dbPositions = config.dbPositions || [];
-    this.lbPositions = config.lbPositions || [];
-    this.dlNames = config.dlNames || [];
-    this.bigPlayer = config.bigPlayer || null;
-    this.dline = config.dline || [];
-    this.linebackers = config.linebackers || [];
-    this.cornerbacks = config.cornerbacks || [];
-    this.safeties = config.safeties || [];
-    this.defensivePlayers = config.defensivePlayers || [];
-    this.offensiveFormationID = config.offensiveFormationID || 0;
-    this.positions = config.positions || [];
-
+  this.defensivePlayers = config.defensivePlayers || [];
+  this.playName = config.playName || "";
+  this.formation = config.formation || null;
+  this.dlAssignments = config.dlAssignments || [];
+  this.lbAssignments = config.lbAssignments || [];
+  this.dbAssignments = config.dbAssignments || [];
+  this.dlPositions = config.dlPositions || [];
+  this.dbPositions = config.dbPositions || [];
+  this.lbPositions = config.lbPositions || [];
+  this.dlNames = config.dlNames || [];
+  this.bigPlayer = config.bigPlayer || null;
+  this.dline = config.dline || [];
+  this.linebackers = config.linebackers || [];
+  this.cornerbacks = config.cornerbacks || [];
+  this.safeties = config.safeties || [];
+  this.defensivePlayers = config.defensivePlayers || [];
+  this.offensiveFormationID = config.offensiveFormationID || 0;
+  this.positions = config.positions || [];
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
 
 DefensivePlay.prototype.draw = function(ballX, ballY, test){
   for(var i = 0; i < 4; i++){
-      var dl = new Player ({
-          x: ballX - 60 + 40 * i,
-          y: ballY - 30,
-          fill: color(0, 0, 0),
-          pos: this.dlPositions[i],
-          name: this.dlNames[i],
-          unit: "defense",
-          index: i,
-          unitIndex: 0
-      });
-      if(test) dl.gap = this.dlAssignments[test.getCurrentPlayNumber()][i]
+    var dl = new Player ({
+      x: ballX - 60 + 40 * i,
+      y: ballY - 30,
+      fill: color(255),
+      pos: this.dlPositions[i],
+      name: this.dlNames[i],
+      unit: "defense",
+      index: i,
+      unitIndex: 0
+    });
+    if(test) dl.gap = this.dlAssignments[test.getCurrentPlayNumber()][i]
       this.defensivePlayers.push(dl);
   }
 
   for(var i = 0; i < 3; i++){
-      var lb = new Player ({
-          x: ballX - 80 + 75 * i,
-          y: ballY - 75,
-          fill: color(0, 0, 0),
-          pos: this.lbPositions[i],
-          unit: "defense",
-          index: i,
-          unitIndex: 1
+    var lb = new Player ({
+      x: ballX - 80 + 75 * i,
+      y: ballY - 75,
+      fill: color(255),
+      pos: this.lbPositions[i],
+      unit: "defense",
+      index: i,
+      unitIndex: 1
 
-      });
-      if(test) lb.gap = this.lbAssignments[test.getCurrentPlayNumber()][i]
+    });
+    if(test) lb.gap = this.lbAssignments[test.getCurrentPlayNumber()][i]
       this.defensivePlayers.push(lb);
   }
 
   for(var i = 0; i < 2; i++){
-      var safety = new Player ({
-          x: ballX - 100 + 200 * i,
-          y: ballY - 125,
-          fill: color(0, 0, 0),
-          pos: this.dbPositions[i+1],
-          unit: "defense",
-          index: i,
-          unitIndex: 2
-      });
-      if(test) safety.gap = this.dbAssignments[test.getCurrentPlayNumber()][i+1]
+    var safety = new Player ({
+      x: ballX - 100 + 200 * i,
+      y: ballY - 125,
+      fill: color(255),
+      pos: this.dbPositions[i+1],
+      unit: "defense",
+      index: i,
+      unitIndex: 2
+    });
+    if(test) safety.gap = this.dbAssignments[test.getCurrentPlayNumber()][i+1]
       this.defensivePlayers.push(safety);
   }
 
   for(var i = 0; i < 2; i++){
-      var corner = new Player ({
-          x: ballX - 135 + 270 * i,
-          y: ballY - 35,
-          fill: color(0, 0, 0),
-          pos: this.dbPositions[i*3],
-          unit: "defense",
-          index: i,
-          unitIndex: 3
+    var corner = new Player ({
+      x: ballX - 135 + 270 * i,
+      y: ballY - 35,
+      fill: color(255),
+      pos: this.dbPositions[i*3],
+      unit: "defense",
+      index: i,
+      unitIndex: 3
 
-      });
-      if(test) corner.gap = this.dbAssignments[test.getCurrentPlayNumber()][i*3]
+    });
+    if(test) corner.gap = this.dbAssignments[test.getCurrentPlayNumber()][i*3]
       this.defensivePlayers.push(corner);
   }
 
@@ -87,15 +86,15 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
 DefensivePlay.prototype.drawAllPlayers = function(){
   noStroke();
   for(var i = 0; i < this.defensivePlayers.length; i++){
-      this.defensivePlayers[i].draw();
+    this.defensivePlayers[i].draw();
   }
 };
 
 DefensivePlay.prototype.clearSelections = function(){
-    for(var i = 0; i < this.defensivePlayers.length; i++){
-        var p = this.defensivePlayers[i];
-        p.unselect();
-    }
+  for(var i = 0; i < this.defensivePlayers.length; i++){
+    var p = this.defensivePlayers[i];
+    p.unselect();
+  }
 };
 
 DefensivePlay.prototype.findSelectedDL = function(){
