@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication, myUser
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, Coach, Authentication, myUser
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -21,6 +21,7 @@ import simplejson
 
 @login_required
 def homepage(request):
+    Test.objects.filter(coach_who_created=request.user)
     return render(request, 'dashboard/homepage.html')
 
 def auth_login(request):
@@ -101,18 +102,27 @@ def settings(request):
 
 @login_required
 def todo(request):
-    player = request.user.player
-    all_tests = player.test_set.all()
-    completed_tests = all_tests.filter(completed=True).order_by('-created_at')
-    uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
-    in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
-    return render(request, 'dashboard/to-do.html', {
-        'completed_tests': completed_tests,
-        'uncompleted_tests': uncompleted_tests,
-        'in_progress_tests': in_progress_tests,
-        'current_time': timezone.now(),
-        'new_time_threshold': timezone.now() + timedelta(days=3),
-    })
+    if request.user.myuser.is_a_player:
+        player = request.user.player
+        all_tests = player.test_set.all()
+        completed_tests = all_tests.filter(completed=True).order_by('-created_at')
+        uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
+        in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
+        return render(request, 'dashboard/to-do.html', {
+            'completed_tests': completed_tests,
+            'uncompleted_tests': uncompleted_tests,
+            'in_progress_tests': in_progress_tests,
+            'current_time': timezone.now(),
+            'new_time_threshold': timezone.now() + timedelta(days=3),
+        })
+    else:
+        coach = request.user.coach
+        tests_assigned = Test.objects.filter(coach_who_created=request.user)
+        return render(request, 'dashboard/to-do.html', {
+            'uncompleted_tests': tests_assigned,
+            'current_time': timezone.now(),
+            'new_time_threshold': timezone.now() + timedelta(days=3),
+        })
 
 @login_required
 def calendar(request):
@@ -158,11 +168,14 @@ def edit_profile(request):
             player.save()
         return HttpResponseRedirect("/edit_profile")
     else:
-        player_form = PlayerForm(instance = request.user.player)
+        if request.user.myuser.is_a_player:
+            edit_profile_form = PlayerForm(instance = request.user.player)
+        else:
+            edit_profile_form = CoachForm(instance = request.user.coach)
         user_form = UserForm(instance = request.user)
         return render(request, 'dashboard/edit_profile.html', {
-            'player_form': player_form,
             'user_form': user_form,
+            'edit_profile_form': edit_profile_form,
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)

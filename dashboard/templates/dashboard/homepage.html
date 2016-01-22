@@ -100,7 +100,11 @@
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">
 					<div class="text-center dash-header">
-						<span><h4>TO DO</h4></span>
+						{% if request.user.myuser.is_a_player %}
+							<span><h4>TO DO</h4></span>
+						{% else %}
+							<span><h4>Tests I Assigned</h4></span>
+						{% endif %}
 					</div>
 					<div class = "table-wrapper">
 						<table>
@@ -114,33 +118,7 @@
 								<tr>
 									<td>Data Not Available</td>
 								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
+
 							</tbody>
 						</table>
 					</div>
@@ -162,7 +140,7 @@
 									<td>Data Not Available</td>
 								</tr>
 								{% if request.user.myuser.is_a_player %}
-										<a href="#">I can't create tests</a>
+
 								{% else %}
 									<a class="btn btn-success" href="/create_test">Create Test</a>
 								{% endif %}

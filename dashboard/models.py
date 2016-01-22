@@ -56,12 +56,21 @@ class myUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     is_a_player = models.BooleanField(default=False)
 
+class PlayerGroup(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    players = models.ManyToManyField(Player)
 
 class PlayerForm(ModelForm):
 
     class Meta:
         model = Player
         fields = ['position', 'number']
+
+class CoachForm(ModelForm):
+
+    class Meta:
+        model = Coach
+        fields = ['title']
 
 class UserForm(ModelForm):
     class Meta:
