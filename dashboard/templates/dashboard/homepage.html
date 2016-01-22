@@ -130,19 +130,18 @@
 					<div class = "table-wrapper">
 						<table>
 							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
+
 								{% if request.user.myuser.is_a_player %}
 
 								{% else %}
-									<a class="btn btn-success" href="/create_test">Create Test</a>
+										<tr>
+											<td><a class="btn btn-success" href="/create_test">Create Test</a></td>
+										</tr>
+										<tr>
+											<td><a class="btn btn-success" href="/create_group">Create Group</a></td>
+										</tr>
+
+
 								{% endif %}
 							</tbody>
 						</table>

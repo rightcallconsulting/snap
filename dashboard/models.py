@@ -60,6 +60,12 @@ class PlayerGroup(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)
     players = models.ManyToManyField(Player)
 
+class PlayerGroupForm(ModelForm):
+
+    class Meta:
+        model = PlayerGroup
+        fields = ['name', 'players']
+
 class PlayerForm(ModelForm):
 
     class Meta:

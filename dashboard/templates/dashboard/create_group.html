@@ -1,0 +1,53 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+
+	{% include "dashboard/sidebar.html" %}
+
+  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md">
+			<div class="row dash-row">
+
+        <form action="/create_group" method="post" class=form-create-group> {% csrf_token %}
+          {% for field in form %}
+		            <div class="form-group">
+		              {{ field.label_tag }}
+		              {{ field }}
+		            </div>
+	          {% endfor %}
+
+
+
+          <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Test">
+      </form>
+
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			{% endblock %}

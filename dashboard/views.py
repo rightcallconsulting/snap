@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, Coach, Authentication, myUser
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -213,4 +213,21 @@ def edit_test(request, test_id):
             'play_id_array': play_id_array,
             'plays_in_test': plays_in_test,
 
+        })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_group(request):
+    if request.method == 'POST':
+        for player_id in request.POST.getlist('players'):
+            player = Player.objects.filter(pk=int(player_id))[0]
+            new_group = PlayerGroup(name=request.POST['name'])
+            new_group.save()
+            new_group.players.add(player)
+            embed()
+        new_group.save()
+        return HttpResponseRedirect(reverse('edit_group', args=[new_group.id]))
+    else:
+        form = PlayerGroupForm()
+        return render(request, 'dashboard/create_group.html', {
+            'form': form,
         })
