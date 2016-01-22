@@ -61,6 +61,9 @@ class PlayerGroup(models.Model):
     players = models.ManyToManyField(Player)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 class PlayerGroupForm(ModelForm):
 
     class Meta:

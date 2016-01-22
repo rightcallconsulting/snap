@@ -247,3 +247,20 @@ def edit_group(request, group_id):
             'edit_group_form': edit_group_form,
             'group': group
         })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def all_groups(request):
+    team = request.user.coach.team
+    groups = PlayerGroup.objects.filter(team=team)
+    return render(request, 'dashboard/all_groups.html', {
+        'team': team,
+        'groups': groups,
+    })
+
+def group_detail(request, group_id):
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    players = group.players.all()
+    return render(request, 'dashboard/group_detail.html', {
+        'group': group,
+        'players': players,
+    })
