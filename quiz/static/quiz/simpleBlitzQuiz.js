@@ -15,6 +15,8 @@ function draw() {
   });
 
   var optionResposibilities = ["Pitch", "Contain", "QB"]; 
+  
+  
 
   var multipleChoiceAnswers = [];
 
@@ -25,10 +27,48 @@ function draw() {
     widthOffset: -3
   });
 
+  var defensePlay1 = new DefensivePlay({
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"],
+    playName: "Laser Sam 3"
+  });
+  var defensePlay2 = new DefensivePlay({
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"],
+    playName: "Mike Stunt"
+  });
+  var defensePlay3 = new DefensivePlay({
+    defensivePlayers: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"],
+    playName: "Quick Will Slam"
+  });
+
   var test = new Test({
     formations: [offensiveFormation, offensiveFormation, offensiveFormation],
-    scoreboard: scoreboard
+    scoreboard: scoreboard,
+    defensivePlays: [defensePlay1, defensePlay2, defensePlay3],
+    plays: [defensePlay1, defensePlay2, defensePlay3]
+    
   });
+  
 
   Test.prototype.getCurrentDefense = function(){
     return this.defensivePlays[0];
@@ -50,7 +90,8 @@ function draw() {
     dlPositions: ["DE", "NT", "DT", "RE"],
     lbPositions: ["W", "M", "S"],
     dbPositions: ["CB", "SS", "F/S", "CB"],
-    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"],
+    playNames: ["Laser Sam 3", "Storm Rain", "Bear Hole Left", "Dog Blitz"] 
   });
 
   var createDefense = function(){
@@ -249,10 +290,11 @@ var clearAnswers = function(){
 
 var checkAnswer = function(guess){
 		//logic
-		var isCorrect = offensiveFormation.name === guess.label;
+		var isCorrect = test.plays[test.questionNum];
 		if(isCorrect){
-			test.advanceToNextFormation("You got it, dude");
+			test.advanceToNextPlay("You got it, dude");
       test.score++;
+      test.defensePlay.playNames++;
       createMultipleChoiceAnswers();
       if(test.over){
        bigReset.displayButton = true;
@@ -268,7 +310,7 @@ var checkAnswer = function(guess){
  
   // intro scene
   var drawOpening = function() {
-    field.drawBackground("", height, width);
+    field.drawBackground(test.getCurrentDefensivePlay(), height, width);
 
     scoreboard.draw(test, user);
     offensiveFormation.drawAllPlayers();
@@ -279,8 +321,6 @@ var checkAnswer = function(guess){
      multipleChoiceAnswers[i].draw();
    }
 
-   check.draw();
-   clear.draw();
    fill(0, 0, 0);
    textSize(20);
    text(test.scoreboard.feedbackMessage, 160, 360);
