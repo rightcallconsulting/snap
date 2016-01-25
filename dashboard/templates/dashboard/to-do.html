@@ -49,6 +49,9 @@
 								</label>
 							</th>
 							<th>Name</th>
+							{% if not request.user.myuser.is_a_player %}
+							<th>Player</th>
+							{% endif %}
 							<th>Type</th>
 							<th>Due Date</th>
 							<th>Date Assigned</th>
@@ -69,6 +72,11 @@
 							<td>
 								{{test.name}}
 							</td>
+							{% if not request.user.myuser.is_a_player %}
+							<td>
+								{{test.player}}
+							</td>
+							{% endif %}
 							<td>{{test}}
 								{% if test.created_at < new_time_threshold %}
 								<span class="label label-success m-left-xs">
