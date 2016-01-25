@@ -12,6 +12,18 @@ from datetimewidget.widgets import DateTimeWidget
 # Create your models here.
 
 class UserCreateForm(UserCreationForm):
+    POSITIONS = (
+            ("QB", "QB"),
+            ("WR", "WR"),
+            ("RB", "RB"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+            ("LT", "LT"),
+        )
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
     username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Username'}))
@@ -21,6 +33,7 @@ class UserCreateForm(UserCreationForm):
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)
+    position = forms.ChoiceField(choices=POSITIONS)
 
     class Meta:
         model = User
@@ -64,10 +77,10 @@ class PlayerGroup(models.Model):
     def __str__(self):
         return self.name
 
-    def duplicate_and_assign_test_to_all_players(self, test_id):
+    def duplicate_and_assign_test_to_all_players(self, test_id, coach):
         players = self.players.all()
         for player in players:
-            player.duplicate_and_assign_test(test_id)
+            player.duplicate_and_assign_test(test_id, coach)
 
 
 class PlayerGroupForm(ModelForm):

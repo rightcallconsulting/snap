@@ -36,7 +36,9 @@ def auth_login(request):
                 login(request, user)
                 return HttpResponseRedirect("/")
             # else:
-                # Return a 'disabled account' error message
+                # return HttpResponseRedirect("/login")
+        else:
+            return HttpResponseRedirect("/login")
     else:
         form = RFPAuthForm()
         return render(request, 'dashboard/login.html', {
@@ -60,6 +62,7 @@ def register(request):
                 new_player = Player(user=new_user, team=team)
                 new_player.first_name = new_user.first_name
                 new_player.last_name = new_user.last_name
+                new_player.position = request.POST['position']
                 new_player.save()
             elif 'Coach' in request.POST.keys():
                 new_boolean_user = myUser(user=new_user, is_a_player=False)
@@ -264,7 +267,7 @@ def group_detail(request, group_id):
     players = group.players.all()
     if request.POST:
         test_id = int(request.POST['testID'])
-        group.duplicate_and_assign_test_to_all_players(test_id)
+        group.duplicate_and_assign_test_to_all_players(test_id, coach)
         return HttpResponse('')
     else:
         tests = Test.objects.filter(player__team=coach.team)

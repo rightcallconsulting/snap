@@ -55,10 +55,11 @@ class Player(models.Model):
     def full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
-    def duplicate_and_assign_test(self, existing_test_id):
+    def duplicate_and_assign_test(self, existing_test_id, coach):
         new_test = Test.objects.filter(pk=existing_test_id)[0]
         new_test.pk = None
         new_test.player = self
+        new_test.coach_who_created = coach.user
         new_test.save()
 
 
