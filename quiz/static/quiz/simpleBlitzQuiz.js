@@ -14,7 +14,7 @@ function draw() {
 
   });
 
-  var formationNames = ["Mike Pinch", "Will Slam", "Sam Plug"]; 
+  var optionResposibilities = ["Pitch", "Contain", "QB"]; 
 
   var multipleChoiceAnswers = [];
 
@@ -36,7 +36,7 @@ function draw() {
 
   ///////this draws the offense///////
   var offensiveFormation = new Formation({
-   name: formationNames[0]
+   name: optionResposibilities[0]
  })
   offensiveFormation.createOLineAndQB();
   offensiveFormation.createSkillPlayers();
@@ -224,7 +224,7 @@ return o;
 };
 var createMultipleChoiceAnswers = function(){
   multipleChoiceAnswers = [];
-  var availableNames = formationNames.slice(0,3);
+  var availableNames = optionResposibilities.slice(0,3);
   shuffle(availableNames);
   for(var i = 0; i < availableNames.length; i++){
    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
