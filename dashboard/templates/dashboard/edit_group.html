@@ -44,33 +44,25 @@
       </div><!-- /.row -->
       <div class="panel panel-default">
 
-        <form class="form-horizontal form-border" method="post" action="/edit_profile"> {% csrf_token %}
+        <form class="form-horizontal form-border" method="post" action="/groups/{{group.id}}/edit"> {% csrf_token %}
 
           <div class="panel-heading">
-            Basic Information
+            Edit Group
           </div>
           <div class="panel-body">
-						{% for field in user_form %}
+						{% for field in edit_group_form %}
 							<div class="form-group">
 								<label class="control-label col-md-2">{{ field.label }}</label>
 								<div class="col-md-10">
 									{{ field }}
 								</div>
 							</div>
-						{% endfor %}
-						{% for field in edit_profile_form %}
-							<div class="form-group">
-								<label class="control-label col-md-2">{{ field.label }}</label>
-								<div class="col-md-10">
-									{{ field }}
-								</div>
-							</div>
-						{% endfor %}
+
           </div>
+            {% endfor %}
           <div class="panel-footer">
             <div class="text-right">
               <button class="btn btn-sm btn-success">Update</button>
-              <button class="btn btn-sm btn-success" type="reset">Reset</button>
             </div>
           </div>
         </form>

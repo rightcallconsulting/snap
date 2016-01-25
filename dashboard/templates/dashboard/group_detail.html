@@ -1,0 +1,81 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+
+	{% include "dashboard/sidebar.html" %}
+
+  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md">
+
+
+			<div class="row dash-row">
+				<div class="col-lg-7 dash-col">
+					<div class="text-center dash-header">
+						<span><h4 class="group-header" id="group-{{group.id}}">Group: {{group.name}}</h4></span>
+					</div>
+					<div class = "table-wrapper">
+						<table>
+							<tbody>
+                {% for player in players %}
+								<tr>
+									<td><a href="{% url 'player_detail' player.id %}">{{ player }}</a></td>
+								</tr>
+                {% endfor %}
+                <tr>
+                  <td><a class="btn btn-success" href="{% url 'edit_group' group.id %}">Edit this Group</a></td>
+                </tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="col-lg-4 news-col">
+					<div class="text-center news-header">
+						<span><h4>Tests</h4></span>
+					</div>
+					<div class = "table-wrapper">
+						<table>
+							<tbody>
+                {% for test in tests %}
+								<tr>
+									<td><a href="{% url 'group_detail' group.id %}">{{test.name}}</a>
+                    <button id="test-{{test.id}}" class="pull-right btn btn-success assign-test" type="button" name="button">Assign to Group</button>
+                  </td>
+								</tr>
+                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+      <script type="text/javascript">
+        $('.assign-test').click(function(){
+          testID = this.id.replace("test-", "");
+          $(this).removeClass('btn-success')
+          groupID = $('.group-header')[0].id.replace("group-","");
+          $.post( "/groups/"+ groupID, { testID: testID});
+        })
+      </script>
+      {% endblock %}

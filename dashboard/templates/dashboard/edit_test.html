@@ -136,7 +136,6 @@
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 			<script type="text/javascript">
-
 				var playClicked;
 				var formationID;
 				var formationToDraw;
@@ -144,7 +143,6 @@
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
-
 				$('.show-plays').on('mouseover', '.play', function(){
 					if(playToDraw){
 						playToDraw.resetPlayers(defensePlay)
@@ -157,41 +155,32 @@
 					$('#play-image-header').text(this.value);
 					playScene = false;
 				})
-
 				$('.show-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
-
 				});
-
 					$('#choose-play').on('submit', function(event){
 						event.preventDefault();
 						modifyPlayWithTest(playClicked);
 					});
-
 					$('.existing-plays').on('click', '.play-remove', function(){
 						modifyPlayWithTest($(this));
 						$(this).fadeOut();
 						$('.show-plays #'+this.id).removeClass('play-remove-button');
 						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
 						playIDArray = _.without(playIDArray, Number(this.id))
-
 					});
-
 					$("#play-button").click(function() {
 						playScene = true;
 					})
-
 					$("#pause-button").click(function() {
 						playScene = false;
 					})
-
 					$("#restart-button").click(function() {
 						playScene = false;
 						playToDraw.resetPlayers(defensePlay);
 						playToDraw.setAllRoutes();
 					})
-
 					$(".formation").click(function() {
 						var formationName = this.value;
 						formationID = Number(this.id);
@@ -212,9 +201,7 @@
 							})
 							displayPlays(playArray);
 						})
-
 					});
-
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
 						playID = playDomElement[0].id;
@@ -231,7 +218,6 @@
 								playDomElement.removeClass('btn-success');
 								playIDArray.push(Number(playDomElement[0].id));
 								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-
 							}
 							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
 								playDomElement.addClass('play-add-button');
@@ -241,7 +227,6 @@
 								$('#'+playDomElement[0].id+'.play-remove').remove();
 							}
 					};
-
 					function displayPlays(playArray) {
 							$('.show-plays').empty();
 							playArray.forEach(function(play){
@@ -253,7 +238,6 @@
 								}
 							})
 					};
-
 			</script>
 			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
 

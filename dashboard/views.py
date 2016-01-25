@@ -5,11 +5,11 @@ from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 
 from quiz.models import Player, Team, Play, Formation, Test
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, TestForm, UserForm, Coach, Authentication
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -21,6 +21,7 @@ import simplejson
 
 @login_required
 def homepage(request):
+    Test.objects.filter(coach_who_created=request.user)
     return render(request, 'dashboard/homepage.html')
 
 def auth_login(request):
@@ -35,7 +36,10 @@ def auth_login(request):
                 login(request, user)
                 return HttpResponseRedirect("/")
             # else:
-                # Return a 'disabled account' error message
+                # return HttpResponseRedirect("/login")
+        else:
+            # [TBD] Display an error message that login failed
+            return HttpResponseRedirect("/login")
     else:
         form = RFPAuthForm()
         return render(request, 'dashboard/login.html', {
@@ -54,11 +58,16 @@ def register(request):
         if form.is_valid():
             new_user = form.save()
             if 'Player' in request.POST.keys():
+                new_boolean_user = myUser(user=new_user, is_a_player=True)
+                new_boolean_user.save()
                 new_player = Player(user=new_user, team=team)
                 new_player.first_name = new_user.first_name
                 new_player.last_name = new_user.last_name
+                new_player.position = request.POST['position']
                 new_player.save()
             elif 'Coach' in request.POST.keys():
+                new_boolean_user = myUser(user=new_user, is_a_player=False)
+                new_boolean_user.save()
                 new_coach = Coach(user=new_user, team=team)
                 new_coach.save()
             user = authenticate(username=new_user.username, password=request.POST['password1'])
@@ -97,18 +106,27 @@ def settings(request):
 
 @login_required
 def todo(request):
-    player = request.user.player
-    all_tests = player.test_set.all()
-    completed_tests = all_tests.filter(completed=True).order_by('-created_at')
-    uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
-    in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
-    return render(request, 'dashboard/to-do.html', {
-        'completed_tests': completed_tests,
-        'uncompleted_tests': uncompleted_tests,
-        'in_progress_tests': in_progress_tests,
-        'current_time': timezone.now(),
-        'new_time_threshold': timezone.now() + timedelta(days=3),
-    })
+    if request.user.myuser.is_a_player:
+        player = request.user.player
+        all_tests = player.test_set.all()
+        completed_tests = all_tests.filter(completed=True).order_by('-created_at')
+        uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
+        in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
+        return render(request, 'dashboard/to-do.html', {
+            'completed_tests': completed_tests,
+            'uncompleted_tests': uncompleted_tests,
+            'in_progress_tests': in_progress_tests,
+            'current_time': timezone.now(),
+            'new_time_threshold': timezone.now() + timedelta(days=3),
+        })
+    else:
+        coach = request.user.coach
+        tests_assigned = Test.objects.filter(coach_who_created=request.user)
+        return render(request, 'dashboard/to-do.html', {
+            'uncompleted_tests': tests_assigned,
+            'current_time': timezone.now(),
+            'new_time_threshold': timezone.now() + timedelta(days=3),
+        })
 
 @login_required
 def calendar(request):
@@ -123,6 +141,7 @@ def all_tests(request):
     tests = Test.objects.all()
     return HttpResponse(serializers.serialize("json", tests))
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
@@ -132,7 +151,7 @@ def create_test(request):
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
     else:
         form = TestForm()
-        plays = request.user.player.team.play_set.all()
+        plays = request.user.coach.team.play_set.all()
         return render(request, 'dashboard/create_test.html', {
             'form': form,
             'plays': plays,
@@ -153,13 +172,17 @@ def edit_profile(request):
             player.save()
         return HttpResponseRedirect("/edit_profile")
     else:
-        player_form = PlayerForm(instance = request.user.player)
+        if request.user.myuser.is_a_player:
+            edit_profile_form = PlayerForm(instance = request.user.player)
+        else:
+            edit_profile_form = CoachForm(instance = request.user.coach)
         user_form = UserForm(instance = request.user)
         return render(request, 'dashboard/edit_profile.html', {
-            'player_form': player_form,
             'user_form': user_form,
+            'edit_profile_form': edit_profile_form,
         })
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def edit_test(request, test_id):
     if request.method == 'POST':
         play_id = request.POST['play_id']
@@ -194,4 +217,63 @@ def edit_test(request, test_id):
             'play_id_array': play_id_array,
             'plays_in_test': plays_in_test,
 
+        })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_group(request):
+    if request.method == 'POST':
+        new_group = PlayerGroup(name=request.POST['name'], team=request.user.coach.team)
+        new_group.save()
+        for player_id in request.POST.getlist('players'):
+            player = Player.objects.filter(pk=int(player_id))[0]
+            new_group.players.add(player)
+        new_group.save()
+        return HttpResponseRedirect(reverse('group_detail', args=[new_group.id]))
+    else:
+        form = PlayerGroupForm()
+        return render(request, 'dashboard/create_group.html', {
+            'form': form,
+        })
+
+def edit_group(request, group_id):
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    if request.method == 'POST':
+        group.name = request.POST['name']
+        group.players.clear()
+        for player_id in request.POST.getlist('players'):
+            player = Player.objects.filter(pk=int(player_id))[0]
+            group.players.add(player)
+        group.save()
+        return HttpResponseRedirect(reverse('group_detail', kwargs={'group_id': group.id}))
+    else:
+        edit_group_form = PlayerGroupForm(instance = group)
+        return render(request, 'dashboard/edit_group.html', {
+            'edit_group_form': edit_group_form,
+            'group': group
+        })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def all_groups(request):
+    team = request.user.coach.team
+    groups = PlayerGroup.objects.filter(team=team)
+    return render(request, 'dashboard/all_groups.html', {
+        'team': team,
+        'groups': groups,
+    })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def group_detail(request, group_id):
+    coach = request.user.coach
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    players = group.players.all()
+    if request.POST:
+        test_id = int(request.POST['testID'])
+        group.duplicate_and_assign_test_to_all_players(test_id, coach)
+        return HttpResponse('')
+    else:
+        tests = Test.objects.filter(player__team=coach.team)
+        return render(request, 'dashboard/group_detail.html', {
+            'group': group,
+            'players': players,
+            'tests': tests,
         })

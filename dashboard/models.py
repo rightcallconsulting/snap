@@ -12,6 +12,23 @@ from datetimewidget.widgets import DateTimeWidget
 # Create your models here.
 
 class UserCreateForm(UserCreationForm):
+    POSITIONS = (
+            ("", ""),
+            ("QB", "QB"),
+            ("WR", "WR"),
+            ("RB", "RB"),
+            ("TE", "TE"),
+            ("LT", "LT"),
+            ("LG", "LG"),
+            ("C", "C"),
+            ("RG", "RG"),
+            ("RT", "RT"),
+            ("LE", "LE"),
+            ("DT", "DT"),
+            ("DT", "DT"),
+            ("NT", "NT"),
+            ("ROLB", "ROLB"),
+        )
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
     username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Username'}))
@@ -21,6 +38,7 @@ class UserCreateForm(UserCreationForm):
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)
+    position = forms.ChoiceField(choices=POSITIONS)
 
     class Meta:
         model = User
@@ -52,12 +70,41 @@ class Coach(models.Model):
     def testing_this(self):
         return self.first_name
 
+class myUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_a_player = models.BooleanField(default=False)
+
+class PlayerGroup(models.Model):
+    name = models.CharField(max_length=30, blank=True, null=True)
+    players = models.ManyToManyField(Player)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def duplicate_and_assign_test_to_all_players(self, test_id, coach):
+        players = self.players.all()
+        for player in players:
+            player.duplicate_and_assign_test(test_id, coach)
+
+
+class PlayerGroupForm(ModelForm):
+
+    class Meta:
+        model = PlayerGroup
+        fields = ['name', 'players']
 
 class PlayerForm(ModelForm):
 
     class Meta:
         model = Player
         fields = ['position', 'number']
+
+class CoachForm(ModelForm):
+
+    class Meta:
+        model = Coach
+        fields = ['title']
 
 class UserForm(ModelForm):
     class Meta:

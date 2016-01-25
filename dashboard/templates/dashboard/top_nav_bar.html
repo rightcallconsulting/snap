@@ -5,12 +5,11 @@
       <span class="bold">
         WELCOME
       </span>
-      {# {% if hasattr(user, 'coach') %}#}
-          &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}
-      {# {% elif hasattr(request.user, 'player') %}#}
-      {# {% elif hasattr(request.user, 'athlete') %}#}
-
-      {# {% endif %}#}
+      {% if request.user.myuser.is_a_player %}
+          &nbsp;&nbsp;&nbsp;Player: {{request.user.get_full_name}}
+      {% else %}
+          &nbsp;&nbsp;&nbsp;Coach: {{request.user.get_full_name}}
+      {% endif %}
     </h4>
 
 

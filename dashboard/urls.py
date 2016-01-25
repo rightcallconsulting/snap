@@ -22,6 +22,13 @@ urlpatterns = [
     url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
     url(r'^tests$', views.all_tests, name='all_tests'),
     url(r'^my_tests$', views.my_tests, name='my_tests'),
+    url(r'^create_group$', views.create_group, name='create_group'),
+    url(r'^groups/(?P<group_id>[0-9]+)/edit$', views.edit_group, name='edit_group'),
+    url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
+    url(r'^groups/$', views.all_groups, name='all_groups'),
+
+
+
 
 
 
