@@ -38,7 +38,7 @@ class UserCreateForm(UserCreationForm):
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)
-    position = forms.ChoiceField(choices=POSITIONS)
+    position = forms.ChoiceField(choices=POSITIONS, required=False)
 
     class Meta:
         model = User
