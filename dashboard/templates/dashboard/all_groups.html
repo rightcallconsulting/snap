@@ -24,7 +24,7 @@
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">
 					<div class="text-center dash-header">
-						<span><h4>{{team}} Groups</h4></span>
+						<span><h4>{{team}} Custom Groups</h4></span>
 					</div>
 					<div class = "table-wrapper">
 						<table>
@@ -34,6 +34,9 @@
 									<td><a href="{% url 'group_detail' group.id %}">{{ group }}</a></td>
 								</tr>
                 {% endfor %}
+								<tr>
+									<td><a class="btn btn-success" href="/create_group">Create Group</a></td>
+								</tr>
 
 							</tbody>
 						</table>
@@ -41,7 +44,7 @@
 				</div>
 				<div class="col-lg-4 news-col">
 					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
+						<span><h4>{{team}} Units</h4></span>
 					</div>
 					<div class = "table-wrapper">
 						<table>

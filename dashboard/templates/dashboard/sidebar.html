@@ -76,7 +76,19 @@
             <span class="menu-hover"></span>
           </a>
         </li>
-
+        {% if not request.user.my_user.is_a_player %}
+        <li>
+          <a href="{% url 'all_groups' %}">
+            <span>
+              <img class="menu-icon" src="{% static 'dashboard/images/calendar-icon.png' %}" alt="">
+            </span>
+            <span class="menu-text">
+              Groups
+            </span>
+            <span class="menu-hover"></span>
+          </a>
+        </li>
+        {% endif %}
       </ul>
 
     </div><!-- /main-menu -->
