@@ -22,6 +22,7 @@ function draw() {
   var routeNames = ["Slant", "Post", "Stick", "Go", "Out", "Skinny Post"];
   var receivers = [];
 
+
   //create receiver from user variable
   var user = new User({});
 
@@ -58,7 +59,7 @@ function draw() {
   };
 
   var slantExample = new Route({
-    startingPoint: receiver1.getStartingPoint(),
+    startingPoint: receivers[0].getStartingPoint(),
     routeName: "Slant",
     breakPoints: []
   });
@@ -66,7 +67,7 @@ function draw() {
   slantExample.breakPoints.push(Route.getDestination(150, PI/6, slantExample.breakPoints[0][0], slantExample.breakPoints[0][1]));
 
   var postExample = new Route({
-    startingPoint: receiver2.getStartingPoint(),
+    startingPoint: receivers[1].getStartingPoint(),
     routeName: "Post",
     breakPoints: []
   });
@@ -74,7 +75,7 @@ function draw() {
   postExample.breakPoints.push(Route.getDestination(100, PI/3, postExample.breakPoints[0][0], postExample.breakPoints[0][1]));
 
   var stickExample = new Route({
-    startingPoint: receiver3.getStartingPoint(),
+    startingPoint: receivers[2].getStartingPoint(),
     routeName: "Stick",
     breakPoints: []
   });
@@ -82,11 +83,11 @@ function draw() {
   stickExample.breakPoints.push(Route.getDestination(10, 7*(PI/4), stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
   stickExample.breakPoints.push(Route.getDestination(80, PI/2, stickExample.breakPoints[0][0], stickExample.breakPoints[0][1]));
 
-
   var test = new MultiRouteTest({
     routes: [[stickExample, postExample, slantExample],[stickExample, slantExample, postExample],[stickExample, postExample, slantExample], [slantExample, stickExample, postExample], [postExample, stickExample, slantExample]],
-    playNames: ["Apple", "Banana", "Carrot", "Bravo", "Alpha"],
+    playNames: ["Arrow", "Bullseye", "Canada", "Bravo", "Alpha"],
     answers: [0, 1, 2, 1, 0],
+    receivers: [receiver1, receiver2, receiver3],
     scoreboard: scoreboard
   });
 
@@ -164,7 +165,8 @@ var shuffle = function(o){
       for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     }
     return o;
-};
+  };
+
   var createMultipleChoiceAnswers = function(){
     multipleChoiceAnswers = [];
     var availableNames = multipleChoiceLabels.slice(0,3);

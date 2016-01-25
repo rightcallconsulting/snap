@@ -46,3 +46,8 @@
 .display-plays-in-test .dash-col{
   margin-bottom:10px;
 }
+
+.playbook .dash-col{
+  height: 700px;
+  margin-bottom:10px;
+}
