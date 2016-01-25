@@ -64,6 +64,12 @@ class PlayerGroup(models.Model):
     def __str__(self):
         return self.name
 
+    def duplicate_and_assign_test_to_all_players(self, test_id):
+        players = self.players.all()
+        for player in players:
+            player.duplicate_and_assign_test(test_id)
+
+
 class PlayerGroupForm(ModelForm):
 
     class Meta:

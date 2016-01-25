@@ -264,8 +264,7 @@ def group_detail(request, group_id):
     players = group.players.all()
     if request.POST:
         test_id = int(request.POST['testID'])
-        for player in players:
-            player.duplicate_and_assign_test(test_id)
+        group.duplicate_and_assign_test_to_all_players(test_id)
         return HttpResponse('')
     else:
         tests = Test.objects.filter(player__team=coach.team)

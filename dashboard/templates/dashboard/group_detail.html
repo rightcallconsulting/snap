@@ -73,6 +73,7 @@
       <script type="text/javascript">
         $('.assign-test').click(function(){
           testID = this.id.replace("test-", "");
+          $(this).removeClass('btn-success')
           groupID = $('.group-header')[0].id.replace("group-","");
           $.post( "/groups/"+ groupID, { testID: testID});
         })
