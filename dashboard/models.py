@@ -13,16 +13,21 @@ from datetimewidget.widgets import DateTimeWidget
 
 class UserCreateForm(UserCreationForm):
     POSITIONS = (
+            ("", ""),
             ("QB", "QB"),
             ("WR", "WR"),
             ("RB", "RB"),
+            ("TE", "TE"),
             ("LT", "LT"),
-            ("LT", "LT"),
-            ("LT", "LT"),
-            ("LT", "LT"),
-            ("LT", "LT"),
-            ("LT", "LT"),
-            ("LT", "LT"),
+            ("LG", "LG"),
+            ("C", "C"),
+            ("RG", "RG"),
+            ("RT", "RT"),
+            ("LE", "LE"),
+            ("DT", "DT"),
+            ("DT", "DT"),
+            ("NT", "NT"),
+            ("ROLB", "ROLB"),
         )
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))

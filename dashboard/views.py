@@ -38,6 +38,7 @@ def auth_login(request):
             # else:
                 # return HttpResponseRedirect("/login")
         else:
+            # [TBD] Display an error message that login failed
             return HttpResponseRedirect("/login")
     else:
         form = RFPAuthForm()
