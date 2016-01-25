@@ -57,7 +57,9 @@
 							<th>Date Assigned</th>
 							<th>In Progress</th>
 							<th>Added by:</th>
-							<th></th>
+							{% if request.user.myuser.is_a_player %}
+								<th></th>
+							{% endif %}
 						</tr>
 					</thead>
 					<tbody>
@@ -94,7 +96,9 @@
 								{% endif %}
 							</td>
 							<td>{{test.coach_who_created.get_full_name}}</td>
+							{% if request.user.myuser.is_a_player %}
 							<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
+							{% endif %}
 						</tr>
 						{% endfor %}
 
