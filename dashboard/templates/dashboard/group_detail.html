@@ -24,7 +24,7 @@
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">
 					<div class="text-center dash-header">
-						<span><h4>Group: {{group.name}}</h4></span>
+						<span><h4 class="group-header" id="group-{{group.id}}">Group: {{group.name}}</h4></span>
 					</div>
 					<div class = "table-wrapper">
 						<table>
@@ -34,6 +34,9 @@
 									<td><a href="{% url 'player_detail' player.id %}">{{ player }}</a></td>
 								</tr>
                 {% endfor %}
+                <tr>
+                  <td><a class="btn btn-success" href="{% url 'edit_group' group.id %}">Edit this Group</a></td>
+                </tr>
 
 							</tbody>
 						</table>
@@ -41,47 +44,19 @@
 				</div>
 				<div class="col-lg-4 news-col">
 					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
+						<span><h4>Tests</h4></span>
 					</div>
 					<div class = "table-wrapper">
 						<table>
 							<tbody>
+                {% for test in tests %}
 								<tr>
-									<td>Data Not Available</td>
+									<td><a href="{% url 'group_detail' group.id %}">{{test.name}}</a>
+                    <button id="test-{{test.id}}" class="pull-right btn btn-success assign-test" type="button" name="button">Assign to Group</button>
+                  </td>
 								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
+                {% endfor %}
+
 							</tbody>
 						</table>
 					</div>
@@ -95,4 +70,11 @@
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-			{% endblock %}
+      <script type="text/javascript">
+        $('.assign-test').click(function(){
+          testID = this.id.replace("test-", "");
+          groupID = $('.group-header')[0].id.replace("group-","");
+          $.post( "/groups/"+ groupID, { testID: testID});
+        })
+      </script>
+      {% endblock %}

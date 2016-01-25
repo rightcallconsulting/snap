@@ -224,7 +224,7 @@ def create_group(request):
             player = Player.objects.filter(pk=int(player_id))[0]
             new_group.players.add(player)
         new_group.save()
-        return HttpResponseRedirect(reverse('edit_group', args=[new_group.id]))
+        return HttpResponseRedirect(reverse('group_detail', args=[new_group.id]))
     else:
         form = PlayerGroupForm()
         return render(request, 'dashboard/create_group.html', {
@@ -240,7 +240,7 @@ def edit_group(request, group_id):
             player = Player.objects.filter(pk=int(player_id))[0]
             group.players.add(player)
         group.save()
-        return HttpResponseRedirect("/groups/"+str(group.id)+"/edit")
+        return HttpResponseRedirect(reverse('group_detail', kwargs={'group_id': group.id}))
     else:
         edit_group_form = PlayerGroupForm(instance = group)
         return render(request, 'dashboard/edit_group.html', {
@@ -257,10 +257,20 @@ def all_groups(request):
         'groups': groups,
     })
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def group_detail(request, group_id):
+    coach = request.user.coach
     group = PlayerGroup.objects.filter(id=group_id)[0]
     players = group.players.all()
-    return render(request, 'dashboard/group_detail.html', {
-        'group': group,
-        'players': players,
-    })
+    if request.POST:
+        test_id = int(request.POST['testID'])
+        for player in players:
+            player.duplicate_and_assign_test(test_id)
+        return HttpResponse('')
+    else:
+        tests = Test.objects.filter(player__team=coach.team)
+        return render(request, 'dashboard/group_detail.html', {
+            'group': group,
+            'players': players,
+            'tests': tests,
+        })

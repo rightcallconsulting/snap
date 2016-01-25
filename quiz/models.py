@@ -55,6 +55,13 @@ class Player(models.Model):
     def full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
+    def duplicate_and_assign_test(self, existing_test_id):
+        new_test = Test.objects.filter(pk=existing_test_id)[0]
+        new_test.pk = None
+        new_test.player = self
+        new_test.save()
+
+
 class Formation(models.Model):
     name = models.CharField(max_length=100)
     offensivePlayers = models.ManyToManyField(Player)
