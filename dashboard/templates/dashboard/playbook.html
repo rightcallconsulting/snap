@@ -110,6 +110,7 @@
 											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 											<br>
 										{% endfor %}
+										<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
 								</div>
 						{% else %}
 								<div class="col-lg-1 dash-col">
@@ -126,11 +127,12 @@
 							<div class="dash-header text-center">
 								<span><h4 id="change-plays-header">Plays:</h4></span>
 							</div>
-							<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+							{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
 								<div class="panel-body show-plays">
 
 								</div><!-- /panel -->
-							</form>
+								<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
+							{# </form>#}
 						</div>
 
 						<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
@@ -144,6 +146,8 @@
 								<button id="play-button" class="btn btn-success" name="button">Play</button>
 								<button id="pause-button" class="btn btn-success" name="button">Pause</button>
 								<button id="restart-button" class="btn btn-success" name="button">Restart</button>
+								<button id="edit-button" class="btn btn-success" name="button">Edit Play</button>
+
 							</div>
 
 						</div>
