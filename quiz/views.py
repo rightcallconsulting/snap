@@ -49,7 +49,17 @@ def create_defense_formation(request):
     return render(request, 'quiz/create_defense_formation.html')
 
 def create_play(request):
-    return render(request, 'quiz/create_play.html')
+    coach = request.user.coach
+    team = coach.team
+    formations = team.formation_set.all()
+    offensive_formations = formations.filter(unit="offense")
+    defensive_formations = formations.filter(unit="defense")
+    return render(request, 'quiz/create_play.html', {
+        'formations': formations,
+        'offensive_formations': offensive_formations,
+        'defensive_formations': defensive_formations,
+        'team': team,
+    })
 
 def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')

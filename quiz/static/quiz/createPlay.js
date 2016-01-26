@@ -1,9 +1,9 @@
 var formations = [];
 var makeJSONCall = true;
-
+var currentFormation
 
 function setup() {
-  var myCanvas = createCanvas(500, 500);
+  var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -59,7 +59,7 @@ function draw() {
     var letters = ["A", "B", "C", "D", "E"];
 
     var capitalLetter = false;
-    var currentFormation = formations[0];
+    currentFormation = formations[0];
 
     var playBeingCreated = new Play({
       playName: "",
@@ -192,9 +192,9 @@ function draw() {
         createPlayField.drawBackground(playBeingCreated, height, width)
         save.draw();
         clear.draw();
-        formationButtons.forEach(function(button){
-          button.draw();
-        })
+        // formationButtons.forEach(function(button){
+          // button.draw();
+        // })
         currentFormation.drawAllPlayers();
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);
