@@ -164,8 +164,8 @@ function draw() {
   // intro scene
   var drawOpening = function() {
       field.drawBackground(formationExample, height, width);
-      save.draw();
-      clear.draw();
+      // save.draw();
+      // clear.draw();
       trash.draw();
       formationExample.drawOptionsToCreate();
       formationExample.drawOLQB();
@@ -322,27 +322,6 @@ function draw() {
     }
     else if (save.isMouseInside()) {
       pressSaveButton();
-      // if(formationExample.validFormation()){
-      //   formationExample.eligibleReceivers.forEach(function(player){
-      //     player.convertRouteDrawingToBreakPoints();
-      //   })
-      //   var newFormation = new Formation({
-      //       eligibleReceivers: formationExample.eligibleReceivers,
-      //       playName: formationExample.playName,
-      //       qb: formationExample.qb,
-      //       oline: formationExample.oline,
-      //       offensivePlayers: formationExample.offensivePlayers,
-      //       unit: formationExample.unit
-      //   });
-      //   newFormation.saveToDB();
-      //   formationExample.removeAllPlayers();
-      //   formationExample.playName = "";
-      //   formationExample.feedbackMessage = "Saved!"
-        // Logic to save the play to the database
-
-      // } else{
-      //   formationExample.feedbackMessage = "Invalid Formation"
-      // }
     }
   };
 
