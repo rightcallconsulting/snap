@@ -190,8 +190,8 @@ function draw() {
     // intro scene
     var drawOpening = function() {
         createPlayField.drawBackground(playBeingCreated, height, width)
-        save.draw();
-        clear.draw();
+        // save.draw();
+        // clear.draw();
         // formationButtons.forEach(function(button){
           // button.draw();
         // })
@@ -288,35 +288,30 @@ function draw() {
       var selectedDL = defensePlay.findSelectedDL();
       selectedWR = getCurrentFormation().findSelectedWR();
       if (clear.isMouseInside()){
-        getCurrentFormation().clearProgression();
-        defensePlay.clearSelections();
-        getCurrentFormation().clearRouteDrawings();
-        getCurrentFormation().clearBlockingAssignments();
-        getCurrentFormation().feedbackMessage = "";
+        pressClearButton();
       }
       else if (save.isMouseInside()) {
-
-        //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
-
-          eligibleReceivers.forEach(function(player){
-            player.convertRouteDrawingToBreakPoints();
-          })
-          var newPlay = new Play({
-              eligibleReceivers: eligibleReceivers,
-              offensivePlayers: getCurrentFormation().offensivePlayers,
-              name: playBeingCreated.playName,
-              qb: getCurrentFormation().qb,
-              oline: getCurrentFormation().oline,
-              formation: getCurrentFormation()
-          });
-          // Logic to save the play to the database
-          newPlay.saveToDB();
-          getCurrentFormation().clearRouteDrawings();
-          getCurrentFormation().clearProgression();
-          getCurrentFormation().clearBlockingAssignments();
-          defensePlay.clearSelections();
-          playBeingCreated.playName = "";
-          getCurrentFormation().feedbackMessage = "Saved!";
+        pressSaveButton();
+          // DELETE THE BELOW COMMENTS IF NO BUGS
+          // eligibleReceivers.forEach(function(player){
+          //   player.convertRouteDrawingToBreakPoints();
+          // })
+          // var newPlay = new Play({
+          //     eligibleReceivers: eligibleReceivers,
+          //     offensivePlayers: getCurrentFormation().offensivePlayers,
+          //     name: playBeingCreated.playName,
+          //     qb: getCurrentFormation().qb,
+          //     oline: getCurrentFormation().oline,
+          //     formation: getCurrentFormation()
+          // });
+          // // Logic to save the play to the database
+          // newPlay.saveToDB();
+          // getCurrentFormation().clearRouteDrawings();
+          // getCurrentFormation().clearProgression();
+          // getCurrentFormation().clearBlockingAssignments();
+          // defensePlay.clearSelections();
+          // playBeingCreated.playName = "";
+          // getCurrentFormation().feedbackMessage = "Saved!";
       }
       else if (formationClicked){
         currentFormation = formations.filter(function(formation) {
@@ -374,6 +369,41 @@ function draw() {
         selectedNode.change = true;
       }
     };
+
+    pressSaveButton = function() {
+      eligibleReceivers = getCurrentFormation().eligibleReceivers;
+      //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+
+        eligibleReceivers.forEach(function(player){
+          player.convertRouteDrawingToBreakPoints();
+        })
+        var newPlay = new Play({
+            eligibleReceivers: eligibleReceivers,
+            offensivePlayers: getCurrentFormation().offensivePlayers,
+            name: playBeingCreated.playName,
+            qb: getCurrentFormation().qb,
+            oline: getCurrentFormation().oline,
+            formation: getCurrentFormation()
+        });
+        // Logic to save the play to the database
+        newPlay.saveToDB();
+        getCurrentFormation().clearRouteDrawings();
+        getCurrentFormation().clearProgression();
+        getCurrentFormation().clearBlockingAssignments();
+        defensePlay.clearSelections();
+        playBeingCreated.playName = "";
+        getCurrentFormation().feedbackMessage = "Saved!";
+
+    };
+
+
+    pressClearButton = function() {
+      getCurrentFormation().clearProgression();
+      defensePlay.clearSelections();
+      getCurrentFormation().clearRouteDrawings();
+      getCurrentFormation().clearBlockingAssignments();
+      getCurrentFormation().feedbackMessage = "";
+    }
 
     createFormationButtons(formations);
     // Draws the animation

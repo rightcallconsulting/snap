@@ -7,12 +7,19 @@
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/createPlay.js' %}"></script>
   <script type="text/javascript">
-    // PUT IN LOGIC ON CLICK TO ESTABLISH CURRENT FORMATION
+
     $('.formation-button').click(function(){
       currentFormation = formations.filter(function(formationObject){
         return formationObject.name === this.value;
       }.bind(this))[0]
+    })
 
+    $('#save-button').click(function(){
+      pressSaveButton();
+    })
+
+    $('#clear-button').click(function(){
+      pressClearButton();
     })
   </script>
 
