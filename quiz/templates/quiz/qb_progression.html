@@ -5,6 +5,9 @@
 {% block content %}
 
 {% endblock %}
+{% block header %}
+  QB Progression
+{% endblock %}
 
 {% block buttons %}
   <div class="holds-play-buttons">
@@ -16,6 +19,11 @@
     <button id="next-play-button" class="btn btn-success" name="button">Next Play</button>
   </div>
 {% endblock %}
+
+{% block edit_test_button %}
+  <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
+{% endblock %}
+
 
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/QBProgression.js' %}"></script>

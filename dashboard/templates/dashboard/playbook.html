@@ -19,81 +19,149 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md playbook">
-			<div class="row dash-row">
-				<div class="col-lg-5 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>FORMATIONS</h4></span>
+
+			{% if request.user.myuser.is_a_player %}
+				<div class="row dash-row">
+					<div class="col-lg-5 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>FORMATIONS</h4></span>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-info">
+								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+								<h5>Server Load</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-hdd-o fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
 					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+					<div class="col-lg-5 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>PLAYS</h4></span>
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
+						</div><!-- /.col -->
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-info">
+								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+								<h5>Server Load</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-hdd-o fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
-					</div><!-- /.col -->
-				</div>
-				<div class="col-lg-5 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>PLAYS</h4></span>
+						</div><!-- /.col -->
 					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+				{% else %}
+				<div class="panel panel-default">
+						<div class="panel-heading">
+							{{player.full_name}}
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
+						{% if True %}
+								<div class="col-lg-2 dash-col choose-offensive-formation-box">
+									<div class="dash-header text-center">
+										<span><h4>Offensive Formations</h4></span>
+									</div>
+										{% for formation in offensive_formations %}
+											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+											<br>
+										{% endfor %}
+										<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
+								</div>
+						{% else %}
+								<div class="col-lg-1 dash-col">
+									<div class="dash-header text-center">
+										<span><h4>Defensive Formations</h4></span>
+									</div>
+										{% for formation in defensive_formations %}
+											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
+										{% endfor %}
+								</div>
+						{% endif %}
+
+						<div class="col-lg-2 dash-col change-plays-box">
+							<div class="dash-header text-center">
+								<span><h4 id="change-plays-header">Plays:</h4></span>
 							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+							{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
+								<div class="panel-body show-plays">
+
+								</div><!-- /panel -->
+								<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
+							{# </form>#}
 						</div>
-					</div><!-- /.col -->
-				</div>
+
+						<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
+							<div class="dash-header text-center">
+								<span><h4 id="play-image-header">Play</h4></span>
+							</div>
+							<div id="display-play-box-2">
+
+							</div>
+							<div class="holds-play-buttons">
+								<button id="play-button" class="btn btn-success" name="button">Play</button>
+								<button id="pause-button" class="btn btn-success" name="button">Pause</button>
+								<button id="restart-button" class="btn btn-success" name="button">Restart</button>
+								<button id="edit-button" class="btn btn-success" name="button">Edit Play</button>
+
+							</div>
+
+						</div>
+
+
+						<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+						<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+						<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
+
+					<div class="loading-overlay">
+						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+					</div>
+				</div><!-- /panel -->
+				{% endif %}
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
@@ -104,4 +172,110 @@
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			<script type="text/javascript">
+				var playClicked;
+				var formationID;
+				var formationToDraw;
+				var playToDraw;
+				var removedPlaysFromFormation = [];
+				var testID = $('#test-id').data('test-id');
+				var playIDArray = $('#play-id-array').data('play-id-array');
+				$('.show-plays').on('mouseover', '.play', function(){
+					if(playToDraw){
+						playToDraw.resetPlayers(defensePlay)
+						playToDraw.setAllRoutes();
+					}
+					playToDraw = plays.filter(function(play) {
+						return play.id === Number(this.id);
+					}.bind(this))[0];
+					playToDraw.formation = formationToDraw;
+					$('#play-image-header').text(this.value);
+					playScene = false;
+				})
+				$('.show-plays').on('click', '.play', function(){
+			    $('#choose-play').data('button', this.name);
+						playClicked = $(this);
+				});
+					$('#choose-play').on('submit', function(event){
+						event.preventDefault();
+						modifyPlayWithTest(playClicked);
+					});
+					$('.existing-plays').on('click', '.play-remove', function(){
+						modifyPlayWithTest($(this));
+						$(this).fadeOut();
+						$('.show-plays #'+this.id).removeClass('play-remove-button');
+						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
+						playIDArray = _.without(playIDArray, Number(this.id))
+					});
+					$("#play-button").click(function() {
+						playScene = true;
+					})
+					$("#pause-button").click(function() {
+						playScene = false;
+					})
+					$("#restart-button").click(function() {
+						playScene = false;
+						playToDraw.resetPlayers(defensePlay);
+						playToDraw.setAllRoutes();
+					})
+					$(".formation").click(function() {
+						var formationName = this.value;
+						formationID = Number(this.id);
+						formationToDraw = formations.filter(function(formation) {
+					    return formation.id === formationID;
+					  })[0];
+						var playArray = []
+						$('#change-plays-header').text('Plays: ' + this.value)
+						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+							data4.forEach(function(play){
+								if(play.fields.formation === formationID){
+									var playObject = {
+									  playName : play.fields.name,
+									  ID : play.pk
+									}
+									playArray.push(playObject);
+								}
+							})
+							displayPlays(playArray);
+						})
+					});
+					// AJAX for posting
+					function modifyPlayWithTest(playDomElement) {
+						playID = playDomElement[0].id;
+						if(playDomElement.hasClass('play-add-button')){
+							addOrRemovePlay = "add"
+						}
+						else if (playDomElement.hasClass('play-remove-button')){
+							addOrRemovePlay = "remove"
+						}
+							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
+							if(playDomElement.hasClass('play-add-button')){
+								playDomElement.addClass('play-remove-button');
+								playDomElement.removeClass('play-add-button');
+								playDomElement.removeClass('btn-success');
+								playIDArray.push(Number(playDomElement[0].id));
+								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+							}
+							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
+								playDomElement.addClass('play-add-button');
+								playDomElement.addClass('btn-success');
+								playDomElement.removeClass('play-remove-button');
+								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
+								$('#'+playDomElement[0].id+'.play-remove').remove();
+							}
+					};
+					function displayPlays(playArray) {
+							$('.show-plays').empty();
+							playArray.forEach(function(play){
+								if(playIDArray.includes(play.ID)){
+									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+								else{
+									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+								}
+							})
+					};
+			</script>
+			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+
 			{% endblock %}

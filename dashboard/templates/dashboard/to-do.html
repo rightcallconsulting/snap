@@ -49,6 +49,9 @@
 								</label>
 							</th>
 							<th>Name</th>
+							{% if not request.user.myuser.is_a_player %}
+							<th>Player</th>
+							{% endif %}
 							<th>Type</th>
 							<th>Due Date</th>
 							<th>Date Assigned</th>
@@ -69,6 +72,11 @@
 							<td>
 								{{test.name}}
 							</td>
+							{% if not request.user.myuser.is_a_player %}
+							<td>
+								{{test.player}}
+							</td>
+							{% endif %}
 							<td>{{test}}
 								{% if test.created_at < new_time_threshold %}
 								<span class="label label-success m-left-xs">
@@ -86,7 +94,12 @@
 								{% endif %}
 							</td>
 							<td>{{test.coach_who_created.get_full_name}}</td>
-							<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
+							{% if request.user.myuser.is_a_player %}
+								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
+							{% else %}
+							<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
+
+							{% endif %}
 						</tr>
 						{% endfor %}
 
