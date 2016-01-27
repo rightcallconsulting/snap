@@ -148,6 +148,7 @@ def team_formation_positions(request, team_id):
     return HttpResponse(serializers.serialize("json", positions))
 
 def update_test(request, player_id, test_id):
+    embed()
     params = request.POST
     jsTest = json.loads(params['test'])
     pythonTest = Test.objects.get(pk=jsTest['id'])
