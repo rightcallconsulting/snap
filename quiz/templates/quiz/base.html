@@ -43,23 +43,26 @@
         <div class="padding-md">
           <div class="col-lg-5 dash-col display-box" id="display-box">
             <div class="dash-header text-center">
-              <span><h4 id="play-image-header">[HEADER]</h4></span>
+              <span>
+                <h4 id="play-image-header">
+                  {% block header %}
+                  {% endblock %}
+                </h4>
+              </span>
             </div>
             <div id="quiz-box">
 
             </div>
             <div class="holds-play-buttons">
-
+              {% block buttons %}
+              {% endblock %}
             </div>
 
           </div>
-          {# <div id="quiz-box">#}
 
-          {# </div>#}
           {% block sidebar %}
           {% endblock %}
-          {% block buttons %}
-          {% endblock %}
+
           <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
 
         </div>
