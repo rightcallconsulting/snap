@@ -247,6 +247,33 @@ function draw() {
     }
   };
 
+  pressSaveButton = function() {
+    if(formationExample.validFormation()){
+      formationExample.eligibleReceivers.forEach(function(player){
+        player.convertRouteDrawingToBreakPoints();
+      })
+      var newFormation = new Formation({
+          eligibleReceivers: formationExample.eligibleReceivers,
+          playName: formationExample.playName,
+          qb: formationExample.qb,
+          oline: formationExample.oline,
+          offensivePlayers: formationExample.offensivePlayers,
+          unit: formationExample.unit
+      });
+      newFormation.saveToDB();
+      formationExample.removeAllPlayers();
+      formationExample.playName = "";
+      formationExample.feedbackMessage = "Saved!"
+
+    } else{
+      formationExample.feedbackMessage = "Invalid Formation"
+    }
+  }
+
+  pressClearButton = function() {
+    formationExample.removeAllPlayers();
+  }
+
   mouseClicked = function() {
     var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
     var selectedNode = formationExample.mouseInReceiverOrNode()[1];
@@ -259,7 +286,7 @@ function draw() {
       formationExample.establishingNewPlayer = null;
     }
     else if (clear.isMouseInside()){
-      formationExample.removeAllPlayers();
+      pressClearButton();
     }
     else if(selectedNode){
       if (selectedNode.change){
@@ -294,27 +321,28 @@ function draw() {
       selectedWR.routeNodes.push(nodeObject);
     }
     else if (save.isMouseInside()) {
-      if(formationExample.validFormation()){
-        formationExample.eligibleReceivers.forEach(function(player){
-          player.convertRouteDrawingToBreakPoints();
-        })
-        var newFormation = new Formation({
-            eligibleReceivers: formationExample.eligibleReceivers,
-            playName: formationExample.playName,
-            qb: formationExample.qb,
-            oline: formationExample.oline,
-            offensivePlayers: formationExample.offensivePlayers,
-            unit: formationExample.unit
-        });
-        newFormation.saveToDB();
-        formationExample.removeAllPlayers();
-        formationExample.playName = "";
-        formationExample.feedbackMessage = "Saved!"
+      pressSaveButton();
+      // if(formationExample.validFormation()){
+      //   formationExample.eligibleReceivers.forEach(function(player){
+      //     player.convertRouteDrawingToBreakPoints();
+      //   })
+      //   var newFormation = new Formation({
+      //       eligibleReceivers: formationExample.eligibleReceivers,
+      //       playName: formationExample.playName,
+      //       qb: formationExample.qb,
+      //       oline: formationExample.oline,
+      //       offensivePlayers: formationExample.offensivePlayers,
+      //       unit: formationExample.unit
+      //   });
+      //   newFormation.saveToDB();
+      //   formationExample.removeAllPlayers();
+      //   formationExample.playName = "";
+      //   formationExample.feedbackMessage = "Saved!"
         // Logic to save the play to the database
 
-      } else{
-        formationExample.feedbackMessage = "Invalid Formation"
-      }
+      // } else{
+      //   formationExample.feedbackMessage = "Invalid Formation"
+      // }
     }
   };
 

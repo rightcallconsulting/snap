@@ -199,7 +199,7 @@ function draw() {
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);
         textSize(20);
-        text("Formation: "+getCurrentFormation().playName, 100, 20);
+        // text("Formation: "+getCurrentFormation().playName, 100, 20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
         currentFormation.drawBlockingAssignments();
@@ -410,5 +410,7 @@ function draw() {
     draw = function() {
         drawOpening();
       }
+    $('#play-image-header').text(getCurrentFormation().playName);
+
     }
 };

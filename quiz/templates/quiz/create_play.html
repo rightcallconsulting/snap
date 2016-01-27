@@ -12,6 +12,7 @@
       currentFormation = formations.filter(function(formationObject){
         return formationObject.name === this.value;
       }.bind(this))[0]
+      $('#play-image-header').text(currentFormation.playName);
     })
 
     $('#save-button').click(function(){
