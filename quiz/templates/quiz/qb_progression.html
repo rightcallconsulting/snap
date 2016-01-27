@@ -20,6 +20,11 @@
   </div>
 {% endblock %}
 
+{% block edit_test_button %}
+  <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
+{% endblock %}
+
+
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/QBProgression.js' %}"></script>
   <script type="text/javascript">

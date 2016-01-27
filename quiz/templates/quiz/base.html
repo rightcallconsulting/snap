@@ -42,7 +42,7 @@
   			{% include "dashboard/grey_container.html" %}
         <div class="padding-md">
           <div class="col-lg-5 dash-col display-box" id="display-box">
-            <div class="dash-header text-center">
+            <div class="dash-header text-center" id="header-box">
               <span>
                 <h4 id="play-image-header">
                   {% block header %}
@@ -62,8 +62,9 @@
 
           {% block sidebar %}
           {% endblock %}
-
-          <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
+          {% block edit_test_button %}
+          {% endblock %}
+          
 
         </div>
       </div>
