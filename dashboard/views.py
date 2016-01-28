@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -7,7 +7,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-
+from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
 from IPython import embed
@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.core import serializers
 import json
 import simplejson
+
 
 # Create your views here.
 
@@ -294,6 +295,35 @@ def test_analytics(request, test_id):
     coach = request.user.coach
     test = Test.objects.filter(pk=test_id)[0]
     test_results = test.testresult_set.all()
-    return render(request, 'dashboard/analytics.html',{
-        'test': test
+    test_result_data = \
+        DataPool(
+           series=
+            [{'options': {
+               'source': test_results},
+              'terms': [
+                'id',
+                'score',
+                'skips']}
+             ])
+    cht = Chart(
+            datasource = test_result_data,
+            series_options =
+              [{'options':{
+                  'type': 'line',
+                  'stacking': False},
+                'terms':{
+                  'id': [
+                    'score',
+                    'skips']
+                  }}],
+            chart_options =
+              {'title': {
+                   'text': 'Weather Data of Boston and Houston'},
+               'xAxis': {
+                    'title': {
+                       'text': 'Month number'}}})
+
+    return render_to_response('dashboard/analytics.html',{
+        'test_result_data': cht,
+        'test': test,
     })
