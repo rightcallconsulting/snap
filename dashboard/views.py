@@ -288,3 +288,8 @@ def group_detail(request, group_id):
             'players': players,
             'tests': tests,
         })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def test_analytics(request, test_id):
+    coach = request.user.coach
+    return render(request, 'dashboard/analytics.html')
