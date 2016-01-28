@@ -326,4 +326,5 @@ def test_analytics(request, test_id):
     return render_to_response('dashboard/analytics.html',{
         'test_result_data': cht,
         'test': test,
+        'test_results': test_results,
     })
