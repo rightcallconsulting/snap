@@ -5,10 +5,11 @@ from django.http import JsonResponse
 from django.core import serializers
 import json
 import simplejson
+from django.db.models import Q
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation, Test, Position
+from .models import Player, Team, Play, Formation, Test, Position, TestResult
 from IPython import embed
 
 
@@ -101,7 +102,6 @@ def update_player(request, player_id):
     player = Player.objects.filter(pk=player_id)[0]
     test = player.test_set.all()[0]
     params = request.POST
-    embed()
     return HttpResponse('')
 
 def player_tests(request, player_id):
@@ -148,10 +148,22 @@ def team_formation_positions(request, team_id):
     return HttpResponse(serializers.serialize("json", positions))
 
 def update_test(request, player_id, test_id):
-    embed()
     params = request.POST
     jsTest = json.loads(params['test'])
     pythonTest = Test.objects.get(pk=jsTest['id'])
+    if jsTest['questionNum'] == 1:
+        # Create a new test result object assigned to the test
+        new_test_result = TestResult(test=pythonTest, most_recent=True)
+        new_test_result.save()
+        for test_result in TestResult.objects.filter(test=pythonTest):
+            if test_result != new_test_result:
+                test_result.most_recent = False
+                test_result.save()
+        embed()
+    else:
+        #update most_recent test result object
+        existing_test_result = TestResult.objects.filter(Q(test=pythonTest)&Q(most_recent=True))[0]
+        embed()
     return HttpResponse('')
 
 def new_play(request):

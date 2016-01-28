@@ -4,6 +4,7 @@ decorator==4.0.6
 dj-database-url==0.3.0
 dj-static==0.0.6
 Django==1.9
+django-bootstrap3-datetimepicker==2.2.3
 django-datetime-widget==0.9.3
 django-debug-toolbar==1.4
 django-registration==2.0.4

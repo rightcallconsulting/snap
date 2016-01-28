@@ -144,6 +144,16 @@ class Test(models.Model):
     def __str__(self):
         return self.type_of_test
 
+class TestResult(models.Model):
+    score = models.IntegerField(null=True, blank=True)
+    skips = models.IntegerField(null=True, blank=True)
+    incorrect_guesses = models.IntegerField(null=True, blank=True)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    most_recent = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
+
 class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
