@@ -112,6 +112,7 @@ Test.prototype.registerAnswer = function(isCorrect){
 
 Test.prototype.advanceToNextPlay = function(message){
   this.scoreboard.feedbackMessage = message;
+  var currentPlayID = this.getCurrentPlay().id
   this.questionNum++;
   if(this.getCurrentPlayNumber() >= this.plays.length){
     this.endTime = millis();
@@ -120,7 +121,10 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations'))});
+  $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", {
+    test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: currentPlayID
+  });
   $('#score').text("Score: " + this.score);
   $('#skips').text("Skips: " + this.skips);
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
