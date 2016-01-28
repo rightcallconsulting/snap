@@ -181,6 +181,7 @@ class TestResult(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     missed_plays = models.ManyToManyField(Play, related_name="missed_plays", null=True, blank=True)
     correct_plays = models.ManyToManyField(Play, null=True, blank=True)
+    skipped_plays = models.ManyToManyField(Play, related_name="skipped_playes", null=True, blank=True)
     most_recent = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
@@ -190,7 +191,13 @@ class TestResult(models.Model):
     class Meta:
          ordering = ['created_at']
 
-    def update_result(self, js_test_object):
+    def update_result(self, js_test_object, play_object):
+        if int(js_test_object['score']) > self.score:
+            self.correct_plays.add(play_object)
+        elif int(js_test_object['skips']) > self.skips:
+            self.skipped_plays.add(play_object)
+        elif int(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
+            self.missed_plays.add(play_object)
         self.score = js_test_object['score']
         self.skips = js_test_object['skips']
         self.incorrect_guesses = js_test_object['incorrectGuesses']

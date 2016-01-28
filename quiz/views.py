@@ -167,7 +167,7 @@ def update_test(request, player_id, test_id):
     else:
         # Update most_recent test result object
         existing_test_result = TestResult.objects.filter(Q(test=pythonTest)&Q(most_recent=True))[0]
-        existing_test_result.update_result(jsTest)
+        existing_test_result.update_result(jsTest, current_play)
     return HttpResponse('')
 
 def new_play(request):
