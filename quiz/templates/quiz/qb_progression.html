@@ -9,6 +9,39 @@
   QB Progression
 {% endblock %}
 
+{% block sidebar %}
+  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+    <div class="dash-header text-center">
+      <span><h4>Test Results</h4></span>
+    </div>
+    {% for test in test_results %}
+      Score: {{test.score}}, Skips: {{test.skips}}, Wrong: {{test.incorrect_guesses}}
+      <br>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block scoreboard %}
+  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+    <div class="dash-header text-center">
+      <span><h4>Current Test</h4></span>
+    </div>
+
+    <div id="score">
+      Score:
+    </div>
+
+    <div id="skips">
+      Skips:
+    </div>
+
+    <div id="incorrect-guesses">
+      Wrong:
+    </div>
+
+  </div>
+{% endblock %}
+
 {% block buttons %}
   <div class="holds-play-buttons">
     <button id="play-button" class="btn btn-success" name="button">Play</button>

@@ -121,6 +121,9 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().setAllRoutes();
   }
   $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations'))});
+  $('#score').text("Score: " + this.score);
+  $('#skips').text("Skips: " + this.skips);
+  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   Player.rank = 1;
 };
 

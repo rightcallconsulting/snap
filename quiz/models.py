@@ -149,10 +149,20 @@ class TestResult(models.Model):
     skips = models.IntegerField(null=True, blank=True)
     incorrect_guesses = models.IntegerField(null=True, blank=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     most_recent = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
+
+    def update_result(self, js_test_object):
+        self.score = js_test_object['score']
+        self.skips = js_test_object['skips']
+        self.incorrect_guesses = js_test_object['incorrectGuesses']
+        if len(self.test.play_set.all()) == int(js_test_object['questionNum']):
+            self.completed = True
+        self.save()
+        print('hello')
 
 class Play(models.Model):
     name = models.CharField(max_length=100)

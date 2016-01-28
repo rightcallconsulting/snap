@@ -151,19 +151,20 @@ def update_test(request, player_id, test_id):
     params = request.POST
     jsTest = json.loads(params['test'])
     pythonTest = Test.objects.get(pk=jsTest['id'])
+    test_length = len(pythonTest.play_set.all())
     if jsTest['questionNum'] == 1:
         # Create a new test result object assigned to the test
-        new_test_result = TestResult(test=pythonTest, most_recent=True)
+        new_test_result = TestResult(test=pythonTest, most_recent=True,
+        score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )
         new_test_result.save()
         for test_result in TestResult.objects.filter(test=pythonTest):
             if test_result != new_test_result:
                 test_result.most_recent = False
                 test_result.save()
-        embed()
     else:
         #update most_recent test result object
         existing_test_result = TestResult.objects.filter(Q(test=pythonTest)&Q(most_recent=True))[0]
-        embed()
+        existing_test_result.update_result(jsTest)
     return HttpResponse('')
 
 def new_play(request):
@@ -184,8 +185,10 @@ def team_play_players(request, team_id):
 
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test_results = test.testresult_set.all()
     return render(request, 'quiz/qb_progression.html', {
         'test': test,
+        'test_results': test_results,
     })
 
 def run_wr_route_test(request, test_id):
