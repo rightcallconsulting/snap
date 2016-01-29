@@ -42,7 +42,11 @@
 <!-- DateTime Picker -->
 
 <script src='{% static 'dashboard/js/jquery.datetimepicker.full.min.js' %}'></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+</script>
 
 <!-- Endless -->
 <script src="{% static 'dashboard/js/endless/endless_dashboard.js' %}"></script>

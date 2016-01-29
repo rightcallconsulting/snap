@@ -154,7 +154,7 @@ def update_test(request, player_id, test_id):
     current_play = Play.objects.filter(pk=current_play_id)[0]
     pythonTest = Test.objects.get(pk=jsTest['id'])
     test_length = len(pythonTest.play_set.all())
-    if jsTest['questionNum'] == 1:
+    if jsTest['questionNum'] == 0:
         # Create a new test result object assigned to the test
         new_test_result = TestResult(test=pythonTest, most_recent=True,
         score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )

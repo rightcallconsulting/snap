@@ -1,10 +1,12 @@
 {% extends 'dashboard/base.html' %}
 {% load staticfiles %}
+
 {% load chartit %}
 
 
 
 {% block content %}
+
 
 <!-- Overlay Div -->
 <div id="overlay" class="transparent"></div>
@@ -24,7 +26,7 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
-				<div id="chart-container"> {{ test_result_data|load_charts:"chart-container" }}Chart will be rendered here </div>
+				<div id="chart-container">{{ chart.as_html }} </div>
 				<div class="col-lg-4">
 					<div class="centered">
 						<div class="panel-stat3 bg-danger">
