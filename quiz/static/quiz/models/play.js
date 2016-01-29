@@ -82,6 +82,11 @@ Play.prototype.checkProgression = function(){
     this.test.scoreboard.feedbackMessage = "Wrong Answer";
     this.test.incorrectGuesses++;
   }
+  $.post( "/quiz/players/"+this.test.playerID+"/tests/"+this.test.id+"/update", {
+    test: JSON.stringify(_.omit(this.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: this.id
+  })
+  this.test.newTest = false;
 };
 
 Play.prototype.clearRouteDrawings = function(){

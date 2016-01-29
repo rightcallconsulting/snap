@@ -171,3 +171,37 @@ class Play(models.Model):
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()
+
+class TestResult(models.Model):
+    score = models.IntegerField(null=True, blank=True)
+    skips = models.IntegerField(null=True, blank=True)
+    incorrect_guesses = models.IntegerField(null=True, blank=True)
+    time_taken = models.IntegerField(null=True, blank=True)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
+    missed_plays = models.ManyToManyField(Play, related_name="missed_plays", null=True, blank=True)
+    correct_plays = models.ManyToManyField(Play, null=True, blank=True)
+    skipped_plays = models.ManyToManyField(Play, related_name="skipped_playes", null=True, blank=True)
+    most_recent = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
+
+
+    class Meta:
+         ordering = ['created_at']
+
+    def update_result(self, js_test_object, play_object):
+        if int(js_test_object['score']) > self.score:
+            self.correct_plays.add(play_object)
+        elif int(js_test_object['skips']) > self.skips:
+            self.skipped_plays.add(play_object)
+        elif int(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
+            self.missed_plays.add(play_object)
+        self.score = js_test_object['score']
+        self.skips = js_test_object['skips']
+        self.incorrect_guesses = js_test_object['incorrectGuesses']
+        if len(self.test.play_set.all()) == (int(js_test_object['questionNum']) + 1):
+            self.completed = True
+            self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/1000
+        self.save()

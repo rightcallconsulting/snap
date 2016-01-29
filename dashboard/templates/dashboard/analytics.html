@@ -1,7 +1,12 @@
 {% extends 'dashboard/base.html' %}
 {% load staticfiles %}
 
+
+
+
 {% block content %}
+
+
 <!-- Overlay Div -->
 <div id="overlay" class="transparent"></div>
 {% include "dashboard/theme_setting.html" %}
@@ -20,30 +25,13 @@
 
 		<div class="padding-md">
 			<div class="row dash-row">
+				<div id="chart-container">{{ chart.as_html }} </div>
 				<div class="col-lg-4">
 					<div class="centered">
 						<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-								<div class="stat-icon">
-									<i class="fa fa-user fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4">
-					<div class="centered">
-						<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<h2 class="m-top-none" id="userCount">Times Taken: {{ test_results|length }}</h2>
+								<h5>{{test.player}}</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">{{test}}</span>
 								<div class="stat-icon">
 									<i class="fa fa-user fa-3x"></i>
 								</div>
