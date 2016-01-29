@@ -7,7 +7,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
-from chartit import DataPool, Chart
+# from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
 from IPython import embed

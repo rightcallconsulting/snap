@@ -201,7 +201,7 @@ class TestResult(models.Model):
         self.score = js_test_object['score']
         self.skips = js_test_object['skips']
         self.incorrect_guesses = js_test_object['incorrectGuesses']
-        if len(self.test.play_set.all()) == int(js_test_object['questionNum']):
+        if len(self.test.play_set.all()) == (int(js_test_object['questionNum']) + 1):
             self.completed = True
             self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/1000
         self.save()
