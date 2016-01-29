@@ -86,6 +86,7 @@ Play.prototype.checkProgression = function(){
     test: JSON.stringify(_.omit(this.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
     play_id: this.id
   })
+  this.test.newTest = false;
 };
 
 Play.prototype.clearRouteDrawings = function(){

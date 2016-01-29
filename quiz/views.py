@@ -154,8 +154,9 @@ def update_test(request, player_id, test_id):
     current_play = Play.objects.filter(pk=current_play_id)[0]
     pythonTest = Test.objects.get(pk=jsTest['id'])
     test_length = len(pythonTest.play_set.all())
-    if jsTest['questionNum'] == 0:
+    if jsTest['newTest'] == True:
         # Create a new test result object assigned to the test
+        # embed()
         new_test_result = TestResult(test=pythonTest, most_recent=True,
         score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )
         new_test_result.save()
@@ -166,6 +167,7 @@ def update_test(request, player_id, test_id):
                 test_result.save()
     else:
         # Update most_recent test result object
+        # embed()
         existing_test_result = TestResult.objects.filter(Q(test=pythonTest)&Q(most_recent=True))[0]
         existing_test_result.update_result(jsTest, current_play)
     return HttpResponse('')
