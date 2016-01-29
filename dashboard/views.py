@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.core import serializers
 import json
 import simplejson
-from graphos.sources.model import ModelDataSource
+from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 
 
@@ -296,6 +296,8 @@ def group_detail(request, group_id):
 def test_analytics(request, test_id):
     coach = request.user.coach
     test = Test.objects.filter(pk=test_id)[0]
+    missed_play_dict = test.generate_missed_plays_dict()
+    formatted_list_for_graphos_missed_plays = test.format_for_graphos(missed_play_dict)
     test_results = test.testresult_set.all()
     # THIS WAS MY ATTEMPT TO usE CHARTIT - WHICH MIGHT BE BETTER IF WE CAN GET IT WORKING
     # test_result_data = \
@@ -325,14 +327,18 @@ def test_analytics(request, test_id):
     #            'xAxis': {
     #                 'title': {
     #                    'text': 'Month number'}}})
-    queryset = test_results.reverse()[:5][::-1]
-    data_source = ModelDataSource(queryset,
+    test_result_queryset = test_results.reverse()[:5][::-1]
+    data_source = ModelDataSource(test_result_queryset,
                                   fields=['id', 'score', 'skips', 'incorrect_guesses'])
     chart = gchart.ColumnChart(data_source)
+
+    missed_play_data =  formatted_list_for_graphos_missed_plays
+    missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data))
 
     return render_to_response('dashboard/analytics.html',{
         # 'test_result_data': cht,
         'test': test,
         'test_results': test_results,
-        'chart': chart
+        'chart': chart,
+        'missed_play_chart': missed_play_chart,
     })
