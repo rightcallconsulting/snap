@@ -25,7 +25,7 @@ from graphos.renderers import flot, gchart
 @login_required
 def homepage(request):
     Test.objects.filter(coach_who_created=request.user)
-    return render(request, 'dashboard/homepage.html')
+    return render(request, 'dashboard/homepage.html', {'page_header': 'DASHBOARD'})
 
 def auth_login(request):
     if request.user.is_authenticated():
@@ -342,4 +342,5 @@ def test_analytics(request, test_id):
         'test_results': test_results,
         'chart': chart,
         'missed_play_chart': missed_play_chart,
+        'page_header': 'ANALYTICS'
     })
