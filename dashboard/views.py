@@ -315,7 +315,7 @@ def test_analytics(request, test_id):
             ,
          'series': {'0': {'targetAxisIndex':'0'},
                    '1':{'targetAxisIndex':'0'},
-                   '2':{'targetAxisIndex':'1'},
+                   '2':{'targetAxisIndex':'0'},
                    '3':{'targetAxisIndex':'1', 'type': 'line'},
 
                   },
