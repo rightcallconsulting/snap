@@ -302,11 +302,27 @@ def test_analytics(request, test_id):
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
                                   fields=['id', 'score', 'skips', 'incorrect_guesses'])
-    chart = gchart.ColumnChart(data_source, options={'title': "Test Results", 'isStacked': 'true', 'xaxis': {'label': "categories", 'side': 'top'}, 'legend': { 'position': 'bottom' }})
+    chart = gchart.ColumnChart(data_source, options=
+        {'title': "Test Results",
+        'isStacked': 'true',
+        'width': 700,
+        'xaxis':
+            {'label': "categories",
+            'side': 'top'
+            },
+        'legend':
+            { 'position': 'bottom' }
+            }
+    )
 
     missed_play_data =  formatted_list_for_graphos_missed_plays
     missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data),
-    options={'title': "Missed Plays", 'legend': { 'position': 'bottom' }})
+        options=
+            {'title': "Missed Plays",
+            'legend':
+                { 'position': 'bottom' }
+            }
+    )
     test_results_length = len(test_results)
     return render_to_response('dashboard/analytics.html',{
         'test': test,
