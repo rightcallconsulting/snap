@@ -191,9 +191,9 @@ class Play(models.Model):
         new_play.save()
 
 class TestResult(models.Model):
-    score = models.IntegerField(null=True, blank=True)
-    skips = models.IntegerField(null=True, blank=True)
-    incorrect_guesses = models.IntegerField(null=True, blank=True)
+    score = models.FloatField(null=True, blank=True)
+    skips = models.FloatField(null=True, blank=True)
+    incorrect_guesses = models.FloatField(null=True, blank=True)
     time_taken = models.IntegerField(null=True, blank=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
@@ -210,11 +210,11 @@ class TestResult(models.Model):
          ordering = ['created_at']
 
     def update_result(self, js_test_object, play_object):
-        if int(js_test_object['score']) > self.score:
+        if float(js_test_object['score']) > self.score:
             self.correct_plays.add(play_object)
-        elif int(js_test_object['skips']) > self.skips:
+        elif float(js_test_object['skips']) > self.skips:
             self.skipped_plays.add(play_object)
-        elif int(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
+        elif float(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
             self.missed_plays.add(play_object)
         self.score = js_test_object['score']
         self.skips = js_test_object['skips']

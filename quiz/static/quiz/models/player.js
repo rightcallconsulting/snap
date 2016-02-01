@@ -487,6 +487,11 @@ Player.prototype.checkRoutes = function(play){
     play.test.scoreboard.feedbackMessage = "Wrong Answer";
     play.test.incorrectGuesses++;
   }
+  $.post( "/quiz/players/"+play.test.playerID+"/tests/"+play.test.id+"/update", {
+    test: JSON.stringify(_.omit(play.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: play.id
+  })
+  play.test.newTest = false;
   return isCorrect
 };
 
