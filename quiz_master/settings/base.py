@@ -41,6 +41,9 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'storages',
     'datetimewidget',
+    'bootstrap3_datetime',
+    'graphos',
+    # 'chartit',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

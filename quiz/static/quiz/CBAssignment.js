@@ -252,6 +252,9 @@ function draw() {
       clear.displayButton = true;
       pause.displayButton = false;
       stop.displayButton = false;
+      // if (pause.clicked) {
+      //   pause.changeClickStatus();
+      // }
     }
 
     pressPlayButton = function() {
@@ -261,6 +264,15 @@ function draw() {
       test.getCurrentPlay().inProgress = true;
     };
 
+    pressClearButton = function() {
+      test.clearSelection();
+      scoreboard.feedbackMessage = "";
+    };
+    pressPauseButton = function() {
+      playButton.changeClickStatus();
+      pause.displayButton = false;
+    }
+
     // intro scene
     var drawOpening = function() {
       if (test.startTime === 0) {
@@ -268,9 +280,9 @@ function draw() {
       }
       field.drawBackground(test.getCurrentDefensivePlay(), height, width);
       text(test.getCurrentPlay().playName, 10, 50);
-      playButton.draw();
-      restart.draw();
-      clear.draw();
+      // playButton.draw();
+      // restart.draw();
+      // clear.draw();
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
       fill(0, 0, 0);
@@ -295,8 +307,8 @@ function draw() {
     // game scene
     var drawScene = function() {
       field.drawBackground(test.getCurrentDefensivePlay(), height, width);
-      pause.draw();
-      stop.draw();
+      // pause.draw();
+      // stop.draw();
       test.getCurrentPlay().qb[0].runBootleg(test.getCurrentPlay().oline[2], 1.0);
       test.getCurrentDefensivePlay().drawAllPlayers();
       test.getCurrentPlay().drawAllPlayers();
@@ -316,23 +328,15 @@ function draw() {
       scoreboard.feedbackMessage = "";
       if (playButton.isMouseInside()) {
         pressPlayButton();
-        scoreboard.feedbackMessage = "";
       } else if (restart.isMouseInside()) {
         test.restartQuiz(test.defensivePlays[0]);
 
       } else if (clear.isMouseInside()) {
-        test.clearSelection();
-        scoreboard.feedbackMessage = "";
+        pressClearButton();
       } else if (pause.isMouseInside() && pause.displayButton) {
-        pause.changeClickStatus();
-        pause.displayButton = false;
+        pressPauseButton();
       } else if (stop.isMouseInside() && stop.displayButton) {
         pressStopButton();
-        stop.displayButton = false;
-        if (pause.clicked) {
-          pause.changeClickStatus();
-        }
-
       } else if (bigReset.isMouseInside()) {
         test.restartQuiz(test.defensivePlays[0]);
         nextPlay.displayButton = true;

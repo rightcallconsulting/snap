@@ -1,9 +1,9 @@
 var formations = [];
 var makeJSONCall = true;
-
+var currentFormation
 
 function setup() {
-  var myCanvas = createCanvas(500, 500);
+  var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -59,7 +59,7 @@ function draw() {
     var letters = ["A", "B", "C", "D", "E"];
 
     var capitalLetter = false;
-    var currentFormation = formations[0];
+    currentFormation = formations[0];
 
     var playBeingCreated = new Play({
       playName: "",
@@ -190,16 +190,16 @@ function draw() {
     // intro scene
     var drawOpening = function() {
         createPlayField.drawBackground(playBeingCreated, height, width)
-        save.draw();
-        clear.draw();
-        formationButtons.forEach(function(button){
-          button.draw();
-        })
+        // save.draw();
+        // clear.draw();
+        // formationButtons.forEach(function(button){
+          // button.draw();
+        // })
         currentFormation.drawAllPlayers();
         defensePlay.drawAllPlayers();
         fill(0, 0, 0);
         textSize(20);
-        text("Formation: "+getCurrentFormation().playName, 100, 20);
+        // text("Formation: "+getCurrentFormation().playName, 100, 20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
         currentFormation.drawBlockingAssignments();
@@ -288,35 +288,30 @@ function draw() {
       var selectedDL = defensePlay.findSelectedDL();
       selectedWR = getCurrentFormation().findSelectedWR();
       if (clear.isMouseInside()){
-        getCurrentFormation().clearProgression();
-        defensePlay.clearSelections();
-        getCurrentFormation().clearRouteDrawings();
-        getCurrentFormation().clearBlockingAssignments();
-        getCurrentFormation().feedbackMessage = "";
+        pressClearButton();
       }
       else if (save.isMouseInside()) {
-
-        //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
-
-          eligibleReceivers.forEach(function(player){
-            player.convertRouteDrawingToBreakPoints();
-          })
-          var newPlay = new Play({
-              eligibleReceivers: eligibleReceivers,
-              offensivePlayers: getCurrentFormation().offensivePlayers,
-              name: playBeingCreated.playName,
-              qb: getCurrentFormation().qb,
-              oline: getCurrentFormation().oline,
-              formation: getCurrentFormation()
-          });
-          // Logic to save the play to the database
-          newPlay.saveToDB();
-          getCurrentFormation().clearRouteDrawings();
-          getCurrentFormation().clearProgression();
-          getCurrentFormation().clearBlockingAssignments();
-          defensePlay.clearSelections();
-          playBeingCreated.playName = "";
-          getCurrentFormation().feedbackMessage = "Saved!";
+        pressSaveButton();
+          // DELETE THE BELOW COMMENTS IF NO BUGS
+          // eligibleReceivers.forEach(function(player){
+          //   player.convertRouteDrawingToBreakPoints();
+          // })
+          // var newPlay = new Play({
+          //     eligibleReceivers: eligibleReceivers,
+          //     offensivePlayers: getCurrentFormation().offensivePlayers,
+          //     name: playBeingCreated.playName,
+          //     qb: getCurrentFormation().qb,
+          //     oline: getCurrentFormation().oline,
+          //     formation: getCurrentFormation()
+          // });
+          // // Logic to save the play to the database
+          // newPlay.saveToDB();
+          // getCurrentFormation().clearRouteDrawings();
+          // getCurrentFormation().clearProgression();
+          // getCurrentFormation().clearBlockingAssignments();
+          // defensePlay.clearSelections();
+          // playBeingCreated.playName = "";
+          // getCurrentFormation().feedbackMessage = "Saved!";
       }
       else if (formationClicked){
         currentFormation = formations.filter(function(formation) {
@@ -375,10 +370,47 @@ function draw() {
       }
     };
 
+    pressSaveButton = function() {
+      eligibleReceivers = getCurrentFormation().eligibleReceivers;
+      //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+
+        eligibleReceivers.forEach(function(player){
+          player.convertRouteDrawingToBreakPoints();
+        })
+        var newPlay = new Play({
+            eligibleReceivers: eligibleReceivers,
+            offensivePlayers: getCurrentFormation().offensivePlayers,
+            name: playBeingCreated.playName,
+            qb: getCurrentFormation().qb,
+            oline: getCurrentFormation().oline,
+            formation: getCurrentFormation()
+        });
+        // Logic to save the play to the database
+        newPlay.saveToDB();
+        getCurrentFormation().clearRouteDrawings();
+        getCurrentFormation().clearProgression();
+        getCurrentFormation().clearBlockingAssignments();
+        defensePlay.clearSelections();
+        playBeingCreated.playName = "";
+        getCurrentFormation().feedbackMessage = "Saved!";
+
+    };
+
+
+    pressClearButton = function() {
+      getCurrentFormation().clearProgression();
+      defensePlay.clearSelections();
+      getCurrentFormation().clearRouteDrawings();
+      getCurrentFormation().clearBlockingAssignments();
+      getCurrentFormation().feedbackMessage = "";
+    }
+
     createFormationButtons(formations);
     // Draws the animation
     draw = function() {
         drawOpening();
       }
+    $('#play-image-header').text(getCurrentFormation().playName);
+
     }
 };

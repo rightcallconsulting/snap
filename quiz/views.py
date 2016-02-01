@@ -5,10 +5,11 @@ from django.http import JsonResponse
 from django.core import serializers
 import json
 import simplejson
+from django.db.models import Q
 
 # Create your views here.
 
-from .models import Player, Team, Play, Formation, Test, Position
+from .models import Player, Team, Play, Formation, Test, Position, TestResult
 from IPython import embed
 
 
@@ -49,7 +50,17 @@ def create_defense_formation(request):
     return render(request, 'quiz/create_defense_formation.html')
 
 def create_play(request):
-    return render(request, 'quiz/create_play.html')
+    coach = request.user.coach
+    team = coach.team
+    formations = team.formation_set.all()
+    offensive_formations = formations.filter(unit="offense")
+    defensive_formations = formations.filter(unit="defense")
+    return render(request, 'quiz/create_play.html', {
+        'formations': formations,
+        'offensive_formations': offensive_formations,
+        'defensive_formations': defensive_formations,
+        'team': team,
+    })
 
 def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
@@ -91,7 +102,6 @@ def update_player(request, player_id):
     player = Player.objects.filter(pk=player_id)[0]
     test = player.test_set.all()[0]
     params = request.POST
-    embed()
     return HttpResponse('')
 
 def player_tests(request, player_id):
@@ -140,7 +150,24 @@ def team_formation_positions(request, team_id):
 def update_test(request, player_id, test_id):
     params = request.POST
     jsTest = json.loads(params['test'])
+    current_play_id = int(params['play_id'])
+    current_play = Play.objects.filter(pk=current_play_id)[0]
     pythonTest = Test.objects.get(pk=jsTest['id'])
+    test_length = len(pythonTest.play_set.all())
+    if jsTest['newTest'] == True:
+        # Create a new test result object assigned to the test
+        new_test_result = TestResult(test=pythonTest, most_recent=True,
+        score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )
+        new_test_result.save()
+        # Resets any other tests that were recent
+        for test_result in TestResult.objects.filter(test=pythonTest):
+            if test_result != new_test_result:
+                test_result.most_recent = False
+                test_result.save()
+    else:
+        # Update most_recent test result object
+        existing_test_result = TestResult.objects.filter(Q(test=pythonTest)&Q(most_recent=True))[0]
+        existing_test_result.update_result(jsTest, current_play)
     return HttpResponse('')
 
 def new_play(request):
@@ -161,8 +188,10 @@ def team_play_players(request, team_id):
 
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test_results = test.testresult_set.all()
     return render(request, 'quiz/qb_progression.html', {
         'test': test,
+        'test_results': test_results,
     })
 
 def run_wr_route_test(request, test_id):

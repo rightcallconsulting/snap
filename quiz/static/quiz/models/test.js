@@ -27,6 +27,7 @@ var Test = function(config){
     this.completed = config.completed || null;
     this.assigned = config.assigned || null;
     this.name = config.name || null;
+    this.newTest = config.newTest || true;
     this.defensiveFormations = config.defensiveFormations || [];
     this.offensiveFormations = config.offensiveFormations || [];
     this.offensiveFormationIDs = config.offensiveFormationIDs || [];
@@ -93,6 +94,7 @@ Test.prototype.restartQuiz = function(defensivePlay){
   this.questionsAnswered = 0;
   this.startTime = millis();
   this.endTime = 0;
+  this.newTest = true;
   this.getCurrentPlay().resetPlayers(defensivePlay);
   this.over = false;
   if(this.defensivePlays.length > 0){
@@ -113,6 +115,14 @@ Test.prototype.registerAnswer = function(isCorrect){
 }
 
 Test.prototype.advanceToNextPlay = function(message){
+  var currentPlayID = this.getCurrentPlay().id
+  $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", {
+    test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: currentPlayID
+  });
+  $('#score').text("Score: " + this.score);
+  $('#skips').text("Skips: " + this.skips);
+  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
   if(this.getCurrentPlayNumber() >= this.plays.length){
@@ -124,8 +134,8 @@ Test.prototype.advanceToNextPlay = function(message){
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
-  $.post( "players/"+this.playerID+"/tests/"+this.id+"/update", { test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations'))});
   Player.rank = 1;
+  this.newTest = false;
 };
 
 Test.prototype.drawQuizSummary = function() {
