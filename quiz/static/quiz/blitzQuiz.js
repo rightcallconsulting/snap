@@ -401,7 +401,7 @@ function draw() {
     scoreboard.feedbackMessage = "";
     if(test.over || test.getCurrentDefensivePlay() === null){
       if(bigReset.isMouseInside()){
-        test.restartQuiz(cover2);
+        test.restartQuiz(test.defensivePlays[1]);
         selectedGap = -1;
         nextPlay.displayButton = true;
         playButton.displayButton = true;

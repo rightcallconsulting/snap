@@ -30,8 +30,8 @@ def simple_audible_quiz(request):
 def simple_route_quiz(request):
     return render(request, 'quiz/simple_route_quiz.html')
 
-def simple_blitz_quiz(request):
-    return render(request, 'quiz/simple_blitz_quiz.html')
+def audible_quiz(request):
+    return render(request, 'quiz/audible_quiz.html')
 
 def option_quiz(request):
     return render(request, 'quiz/option_quiz.html')

@@ -15,20 +15,17 @@ function draw() {
   });
 
   var optionResposibilities = ["Pitch", "Contain", "QB"]; 
-  
-  
-
   var multipleChoiceAnswers = [];
 
   var field = new Field({
-    heightInYards: 45,
-    widthInYards: 45,
+    heightInYards: 40,
+    widthInYards: 40,
     yardLine: 75,
     widthOffset: -3
   });
 
   var defensePlay1 = new DefensivePlay({
-    defensivePlayers: [],
+    defensivePlayefrs: [],
     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
@@ -38,12 +35,13 @@ function draw() {
     dlNames: ["Gronk", "Davis", "Smith", "Evans"],
     playName: "Laser Sam 3"
   });
+
   var defensePlay2 = new DefensivePlay({
     defensivePlayers: [],
     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
+    dlPositions: ["DT", "NT", "DT", "NT"],
     lbPositions: ["W", "M", "S"],
     dbPositions: ["CB", "SS", "F/S", "CB"],
     dlNames: ["Gronk", "Davis", "Smith", "Evans"],
@@ -54,33 +52,52 @@ function draw() {
     dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
     lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
     dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-    dlPositions: ["DE", "NT", "DT", "RE"],
-    lbPositions: ["W", "M", "S"],
-    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlPositions: ["DE", "LE", "RE", "DE"],
+    lbPositions: ["S", "W", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB", "N", "Dime"],
     dlNames: ["Gronk", "Davis", "Smith", "Evans"],
     playName: "Quick Will Slam"
   });
 
+    ///////this draws the offense///////
+    var offensiveFormation = new Formation({
+
+    })
+    offensiveFormation.createOLineAndQB();
+    offensiveFormation.createSkillPlayers();
+  ///////////////////////////////////
+
   var test = new Test({
-    formations: [offensiveFormation, offensiveFormation, offensiveFormation],
+    offensiveFormations: [offensiveFormation, offensiveFormation, offensiveFormation],
+    badGuessPenalty: 0.1,
     scoreboard: scoreboard,
     defensivePlays: [defensePlay1, defensePlay2, defensePlay3],
-    plays: [defensePlay1, defensePlay2, defensePlay3]
-    
+    plays: [defensePlay1, defensePlay2, defensePlay3],
+    typeTest: "Audible",
+    questionsPerPlay: 1
   });
-  
 
-  Test.prototype.getCurrentDefense = function(){
-    return this.defensivePlays[0];
+  Formation.prototype.moveReceiver = function(){
+
+    test.offensivePlayers.x += 100;
   };
 
-  ///////this draws the offense///////
-  var offensiveFormation = new Formation({
-   name: optionResposibilities[0]
- })
-  offensiveFormation.createOLineAndQB();
-  offensiveFormation.createSkillPlayers();
-  ///////////////////////////////////
+  Test.prototype.advanceToNextPlay = function(message){
+
+    this.scoreboard.feedbackMessage = message;
+    this.questionNum++;
+
+    if(this.getCurrentPlayNumber() >= this.plays.length){
+      this.endTime = millis();
+      this.over = true;
+    } else if(this.typeTest === "Audible"){
+
+    }else{
+      this.getCurrentPlay().clearProgression();
+      this.getCurrentPlay().setAllRoutes();
+      this.getCurrentOffensiveFormation().moveReceiver();
+    }
+  };
 
   var defensePlay = new DefensivePlay({
     defensivePlayers: [],
@@ -158,6 +175,7 @@ function draw() {
 
   createDefense(200, 200);
 
+
   Scoreboard.prototype.draw = function(test, user) {
     fill(0, 0, 0);
     noStroke();
@@ -171,11 +189,7 @@ function draw() {
   Player.prototype.draw = function() {
     if(this.unit === "offense"){
       noStroke();
-      if(this.rank > 0){
-        fill(255, 255, 0);
-      }else{
-        fill(this.fill);
-      }
+      fill(this.fill);
       ellipse(this.x, this.y, this.siz, this.siz);
       fill(0,0,0);
       textSize(14);
@@ -197,32 +211,9 @@ function draw() {
     }
   };
 
-  Player.prototype.select = function() {
-      //this.fill = color(255, 234, 0);
-      this.rank = Player.rank;
-      Player.rank++;
-      this.clicked = true;
-    };
-
-    Player.prototype.unselect = function() {
-      this.clicked = false;
-      currentPlay = test.getCurrentPlay();
-      if(currentPlay && this.rank > 0 && this.rank < Player.rank - 1){
-      //decrement the later guys' ranks
-      for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
-        var p = currentPlay.eligibleReceivers[i];
-        if(p.rank > this.rank){
-          p.rank--;
-        }
-      }
-    }
-    this.rank = 0;
-    Player.rank--;
-  };
-
   DefensivePlayer.prototype.getTestedPlayer = function(){
    if (this.isBeingTested) {
-    fill(255, 0, 250);
+    fill(0, 0, 250);
   } else {
     fill(0);
   }
@@ -256,17 +247,18 @@ var bigReset = new Button({
   label: "Restart Quiz",
   clicked: false
 });
-
+/*
 var shuffle = function(o){
  for(var n = 0; n < 100; n++){
    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
  }
 return o;
 };
+*/
 var createMultipleChoiceAnswers = function(){
   multipleChoiceAnswers = [];
   var availableNames = optionResposibilities.slice(0,3);
-  shuffle(availableNames);
+  
   for(var i = 0; i < availableNames.length; i++){
    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
     x: 50 + i * width / (availableNames.length + 1),
@@ -277,6 +269,23 @@ var createMultipleChoiceAnswers = function(){
     clicked: false
   }));
  }
+};
+
+var callDefense = function(player){
+
+  defensePlay.defensivePlayers[player].isBeingTested = true;
+
+  switch (player){
+    case 0: defensePlay.defensivePlayers[0].getTestedPlayer(); 
+    break;
+    case 1: defensePlay.defensivePlayers[1].getTestedPlayer(); 
+    break;
+    case 2: defensePlay.defensivePlayers[2].getTestedPlayer(); 
+    break;
+    case 3: defensePlay.defensivePlayers[3].getTestedPlayer(); 
+    break;
+  }
+  
 };
 
 var clearAnswers = function(){
@@ -290,12 +299,12 @@ var clearAnswers = function(){
 
 var checkAnswer = function(guess){
 		//logic
-		var isCorrect = test.plays[test.questionNum];
+		var isCorrect = multipleChoiceAnswers[0];
 		if(isCorrect){
 			test.advanceToNextPlay("You got it, dude");
-      test.score++;
-      test.defensePlay.playNames++;
       createMultipleChoiceAnswers();
+
+      test.getCurrentOffensiveFormation().moveReceiver;
       if(test.over){
        bigReset.displayButton = true;
        check.displayButton = false;
@@ -311,12 +320,9 @@ var checkAnswer = function(guess){
   // intro scene
   var drawOpening = function() {
     field.drawBackground(test.getCurrentDefensivePlay(), height, width);
-
     scoreboard.draw(test, user);
     offensiveFormation.drawAllPlayers();
-    defensePlay.draw(200, 200, test);
-    defensePlay.drawAllPlayers();
-
+    test.getCurrentDefensivePlay().drawAllPlayers();
     for(var i = 0; i < multipleChoiceAnswers.length; i++){
      multipleChoiceAnswers[i].draw();
    }
@@ -324,15 +330,8 @@ var checkAnswer = function(guess){
    fill(0, 0, 0);
    textSize(20);
    text(test.scoreboard.feedbackMessage, 160, 360);
-
-   defensePlay.draw(200, 200, test);
-   defensePlay.drawAllPlayers();
-
-   defensePlay.defensivePlayers[5].isBeingTested = true;
-   defensePlay.defensivePlayers[5].getTestedPlayer();
-
+   callDefense(3);
  };
-
 
  mouseClicked = function() {
   test.scoreboard.feedbackMessage = "";
@@ -350,9 +349,7 @@ var checkAnswer = function(guess){
   clearAnswers();
   test.scoreboard.feedbackMessage = "";
 }else if (bigReset.isMouseInside() && test.over) {
-  test.restartQuiz();
-  check.displayButton = true;
-  clear.displayButton = true;
+  test.restartQuiz(cover2);
 }
 else{
  for(var i = 0; i < multipleChoiceAnswers.length; i++){
@@ -372,7 +369,7 @@ else{
 }
 };
 keyPressed = function(){
-
+  debugger;
 };
 
 keyTyped = function(){
@@ -396,6 +393,7 @@ keyTyped = function(){
   }
 };
 
+
 draw = function() {
  if(multipleChoiceAnswers.length < 2){
   createMultipleChoiceAnswers();
@@ -406,7 +404,15 @@ if(test.over){
   test.drawQuizSummary();
   bigReset.draw();
 }else{
- drawOpening();
+  var play = test.getCurrentDefensivePlay();
+  if(play.defensivePlayers.length === 0){
+    play.draw(width/2, height/2, test);
+  }
+  drawOpening();
+
 }
+
+
+
 };
 }

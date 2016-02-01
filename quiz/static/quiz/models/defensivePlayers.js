@@ -18,7 +18,8 @@ DefensivePlayer.prototype.draw = function(){
       fill(255,255,0);
     }else{
       fill(255,255,255);
-    }    
+    }  
+    strokeWeight(1);  
     textSize(20);
     textAlign(CENTER, CENTER);
     text(this.pos, this.x, this.y);  

@@ -5,6 +5,7 @@ var Test = function(config){
     this.typeTest = config.typeTest || null;
     this.plays = config.plays || [];
     this.defensivePlays = config.defensivePlays || [];
+    this.offensivePlays = config.offensivePlays || [];
     this.questionsPerPlay = config.questionsPerPlay || 1;
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
@@ -43,6 +44,7 @@ Test.prototype.getCurrentPlay = function(){
 Test.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.getCurrentPlayNumber()];
 };
+
 
 Test.prototype.getCurrentOffensiveFormation = function(){
   return this.offensiveFormations[this.getCurrentPlayNumber()];
@@ -116,7 +118,9 @@ Test.prototype.advanceToNextPlay = function(message){
   if(this.getCurrentPlayNumber() >= this.plays.length){
     this.endTime = millis();
     this.over = true;
-  } else{
+  } else if(this.typeTest === "Blitz"){
+    
+  }else{
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }

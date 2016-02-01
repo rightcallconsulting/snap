@@ -84,7 +84,6 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
 };
 
 DefensivePlay.prototype.drawAllPlayers = function(){
-  noStroke();
   for(var i = 0; i < this.defensivePlayers.length; i++){
     this.defensivePlayers[i].draw();
   }
