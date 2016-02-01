@@ -189,27 +189,47 @@ def team_play_players(request, team_id):
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test_results = test.testresult_set.all()
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/qb_progression.html', {
         'test': test,
         'test_results': test_results,
+        'has_plays': has_plays,
     })
 
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/wr_route.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def run_ol_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/ol_view.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def run_cb_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/cb_assignment.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def single_test(request, test_id):
