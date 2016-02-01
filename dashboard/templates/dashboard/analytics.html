@@ -30,7 +30,13 @@
 						<span><h4>Test Results</h4></span>
 					</div>
 					<div class="col-lg-6">
-						<div id="chart-container-1">{{ chart.as_html }} </div>
+						<div id="chart-container-1">
+							{% if test_results_length > 0 %}
+								{{ chart.as_html }}
+							{% else %}
+								Test has not been started
+							{% endif %}
+						</div>
 
 					</div><!-- /.col -->
 				</div>
@@ -39,7 +45,13 @@
 						<span><h4>Missed Plays</h4></span>
 					</div>
 					<div class="col-lg-6">
-						<div id="chart-container-2">{{ missed_play_chart.as_html }} </div>
+						<div id="chart-container-2">
+							{% if test_results_length > 0 %}
+								{{ missed_play_chart.as_html }}
+							{% else %}
+								Test has not been started
+							{% endif %}
+						</div>
 					</div><!-- /.col -->
 				</div>
 
@@ -48,6 +60,7 @@
 						<div class="panel-stat3 bg-danger">
 								<h2 class="m-top-none" id="userCount">Times Taken: {{ test_results|length }}</h2>
 								<h5>{{test.player}}</h5>
+								<h5>Due: {{test.deadline}}</h5>
 								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">{{test}}</span>
 								<div class="stat-icon">
 									<i class="fa fa-user fa-3x"></i>
