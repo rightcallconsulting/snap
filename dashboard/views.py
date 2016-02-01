@@ -299,34 +299,6 @@ def test_analytics(request, test_id):
     missed_play_dict = test.generate_missed_plays_dict()
     formatted_list_for_graphos_missed_plays = test.format_for_graphos(missed_play_dict)
     test_results = test.testresult_set.all()
-    # THIS WAS MY ATTEMPT TO usE CHARTIT - WHICH MIGHT BE BETTER IF WE CAN GET IT WORKING
-    # test_result_data = \
-    #     DataPool(
-    #        series=
-    #         [{'options': {
-    #            'source': test_results},
-    #           'terms': [
-    #             'id',
-    #             'score',
-    #             'skips']}
-    #          ])
-    # cht = Chart(
-    #         datasource = test_result_data,
-    #         series_options =
-    #           [{'options':{
-    #               'type': 'line',
-    #               'stacking': False},
-    #             'terms':{
-    #               'id': [
-    #                 'score',
-    #                 'skips']
-    #               }}],
-    #         chart_options =
-    #           {'title': {
-    #                'text': 'Weather Data of Boston and Houston'},
-    #            'xAxis': {
-    #                 'title': {
-    #                    'text': 'Month number'}}})
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
                                   fields=['id', 'score', 'skips', 'incorrect_guesses'])
@@ -337,7 +309,6 @@ def test_analytics(request, test_id):
     options={'title': "Missed Plays", 'legend': { 'position': 'bottom' }})
 
     return render_to_response('dashboard/analytics.html',{
-        # 'test_result_data': cht,
         'test': test,
         'test_results': test_results,
         'chart': chart,
