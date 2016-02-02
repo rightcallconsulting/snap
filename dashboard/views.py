@@ -313,15 +313,15 @@ def test_analytics(request, test_id):
         'legend':
             { 'position': 'bottom' }
             ,
-         'series': {'0': {'targetAxisIndex':'0'},
-                   '1':{'targetAxisIndex':'0'},
-                   '2':{'targetAxisIndex':'0'},
+         'series': {'0': {'targetAxisIndex':'0', 'axis': 'score'},
+                   '1':{'targetAxisIndex':'0', 'axis': 'score'},
+                   '2':{'targetAxisIndex':'0', 'axis': 'score'},
                    '3':{'targetAxisIndex':'1', 'type': 'line'},
 
                   },
           'axes': {
               'y': {
-                '# of Questions': {'label': '# of Quesitons'},
+                'score': {'label': '# of Quesitons'},
                 'Time Taken': {'label': 'Time Taken'}
               }
             }
