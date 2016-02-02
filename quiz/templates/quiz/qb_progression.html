@@ -83,8 +83,10 @@
       })
 
       $('#next-play-button').click(function(){
+        pressStopButton();
         test.skips++;
         test.advanceToNextPlay("Boo! Weak!");
+        test.getCurrentPlay().inProgress = false;
       })
 
 

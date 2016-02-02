@@ -163,6 +163,66 @@ class Test(models.Model):
             formatted_list_for_graphos[1].append(missed_play_dict[play])
         return formatted_list_for_graphos
 
+    def get_missed_play_chart(self, num):
+        test_results = self.testresult_set.all()
+        plays = self.play_set.all()
+        formatted_list_for_graphos = [["Test ID"]]
+        for test_result in test_results:
+            new_data_row = [str(test_result.id)]
+            missed_play_dict = {}
+            for play in self.play_set.all():
+                missed_play_dict[play.name] = 0
+            # This weird way of iterating is to maintain the same order for the arrays that Graphos needs
+            for play in missed_play_dict.keys():
+                if len(formatted_list_for_graphos[0]) is not len(plays) + 1:
+                    formatted_list_for_graphos[0].append(play)
+            for test_result_play in test_result.testresultplay_set.all():
+                if test_result_play.incorrect == True:
+                    missed_play_dict[test_result_play.play.name] += 1
+
+            for play_name, times_missed in missed_play_dict.iteritems():
+                new_data_row.append(times_missed)
+            formatted_list_for_graphos.append(new_data_row)
+        header_array = formatted_list_for_graphos.pop(0)
+        if len(formatted_list_for_graphos) <= num:
+            final_data = formatted_list_for_graphos
+        else:
+            final_data = formatted_list_for_graphos[-num:]
+        final_list =[header_array]
+        for data in final_data:
+            final_list.append(data)
+        return final_list
+
+    def get_skipped_play_chart(self, num):
+        test_results = self.testresult_set.all()
+        plays = self.play_set.all()
+        formatted_list_for_graphos = [["Test ID"]]
+        for test_result in test_results:
+            new_data_row = [str(test_result.id)]
+            skipped_play_dict = {}
+            for play in self.play_set.all():
+                skipped_play_dict[play.name] = 0
+            # This weird way of iterating is to maintain the same order for the arrays that Graphos needs
+            for play in skipped_play_dict.keys():
+                if len(formatted_list_for_graphos[0]) is not len(plays) + 1:
+                    formatted_list_for_graphos[0].append(play)
+            for test_result_play in test_result.testresultplay_set.all():
+                if test_result_play.skipped == True:
+                    skipped_play_dict[test_result_play.play.name] += 1
+
+            for play_name, times_missed in skipped_play_dict.iteritems():
+                new_data_row.append(times_missed)
+            formatted_list_for_graphos.append(new_data_row)
+        header_array = formatted_list_for_graphos.pop(0)
+        if len(formatted_list_for_graphos) <= num:
+            final_data = formatted_list_for_graphos
+        else:
+            final_data = formatted_list_for_graphos[-num:]
+        final_list =[header_array]
+        for data in final_data:
+            final_list.append(data)
+        return final_list
+
 class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
@@ -241,3 +301,5 @@ class TestResultPlay(models.Model):
     correct = models.BooleanField(default=False)
     incorrect = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated

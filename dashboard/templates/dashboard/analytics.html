@@ -55,6 +55,21 @@
 					</div><!-- /.col -->
 				</div>
 
+				<div class="col-lg-7 dash-col graph-box">
+					<div class="dash-header text-center">
+						<span><h4>Missed Plays</h4></span>
+					</div>
+					<div class="col-lg-6">
+						<div id="chart-container-2">
+							{% if test_results_length > 0 %}
+								{{ skipped_play_chart.as_html }}
+							{% else %}
+								Test has not been started
+							{% endif %}
+						</div>
+					</div><!-- /.col -->
+				</div>
+
 				<div class="col-lg-4">
 					<div class="centered">
 						<div class="panel-stat3 bg-danger">

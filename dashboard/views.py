@@ -108,6 +108,7 @@ def playbook(request):
         'defensive_formations': defensive_formations,
         'team': team,
         'play_id_array': play_id_array,
+        'page_header': 'OFFENSIVE PLAYBOOK',
     })
 
 @login_required
@@ -140,11 +141,14 @@ def todo(request):
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
+            'page_header': 'TESTS',
         })
 
 @login_required
 def calendar(request):
-    return render(request, 'dashboard/calendar.html')
+    return render(request, 'dashboard/calendar.html',{
+        'page_header': 'CALENDAR',
+    })
 
 @login_required
 def my_tests(request):
@@ -273,6 +277,7 @@ def all_groups(request):
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
+        'page_header': 'GROUPS',
     })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -296,8 +301,7 @@ def group_detail(request, group_id):
 def test_analytics(request, test_id):
     coach = request.user.coach
     test = Test.objects.filter(pk=test_id)[0]
-    missed_play_dict = test.generate_missed_plays_dict()
-    formatted_list_for_graphos_missed_plays = test.format_for_graphos(missed_play_dict)
+    formatted_list_for_graphos_missed_plays = test.get_missed_play_chart(5)
     test_results = test.testresult_set.all()
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
@@ -320,6 +324,9 @@ def test_analytics(request, test_id):
 
                   },
           'axes': {
+              'x': {
+                'discrete': 'string',
+              },
               'y': {
                 'score': {'label': '# of Quesitons'},
                 'Time Taken': {'label': 'Time Taken'}
@@ -327,10 +334,19 @@ def test_analytics(request, test_id):
             }
           }
     )
-
     missed_play_data =  formatted_list_for_graphos_missed_plays
     missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
             {'title': "Missed Plays",
+            'isStacked': 'true',
+            'legend':
+                { 'position': 'bottom' }
+            }
+    )
+
+    skipped_play_data =  test.get_skipped_play_chart(5)
+    skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
+            {'title': "Skipped Plays",
+            'isStacked': 'true',
             'legend':
                 { 'position': 'bottom' }
             }
@@ -341,6 +357,7 @@ def test_analytics(request, test_id):
         'test_results': test_results,
         'chart': chart,
         'missed_play_chart': missed_play_chart,
+        'skipped_play_chart': skipped_play_chart,
         'page_header': 'ANALYTICS',
         'test_results_length': test_results_length,
     })
