@@ -164,25 +164,27 @@ class Test(models.Model):
         return formatted_list_for_graphos
 
     def get_missed_play_chart(self):
+
         test_results = self.testresult_set.all()
         plays = self.play_set.all()
         formatted_list_for_graphos = [["Test ID"]]
         for test_result in test_results:
+            new_data_row = [test_result.id]
             missed_play_dict = {}
             for play in self.play_set.all():
                 missed_play_dict[play.name] = 0
-            # This is to maintain the same order for Graphos
+            # This weird way of iterating is to maintain the same order for the arrays that Graphos needs
             for play in missed_play_dict.keys():
                 if len(formatted_list_for_graphos[0]) is not len(plays) + 1:
                     formatted_list_for_graphos[0].append(play)
             for test_result_play in test_result.testresultplay_set.all():
                 if test_result_play.incorrect == True:
                     missed_play_dict[test_result_play.play.name] += 1
-            formatted_list_for_graphos.append([test_result_play])
-            embed()
 
-        # embed()
-
+            for play_name, times_missed in missed_play_dict.iteritems():
+                new_data_row.append(times_missed)
+            formatted_list_for_graphos.append(new_data_row)
+        return formatted_list_for_graphos
 
 class Play(models.Model):
     name = models.CharField(max_length=100)
