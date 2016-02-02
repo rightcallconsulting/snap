@@ -3,6 +3,7 @@ var FormationTest = function(config){
     this.formations = config.formations || [];
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
+    this.secondsPerQuestion = config.secondsPerQuestion || 10;
     this.startTime = millis();
     this.endTime = 0;
     this.score = 0;
@@ -74,16 +75,17 @@ FormationTest.prototype.registerAnswer = function(isCorrect){
 };
 
 FormationTest.prototype.drawQuizSummary = function() {
-  var timeDeduction = ((this.endTime - this.startTime)/1000 - 10 * this.formations.length)*0.01;
+  var elapsedSeconds = (this.endTime - this.startTime)/1000;
+  var timeDeduction = (elapsedSeconds - this.secondsPerQuestion * this.formations.length)*0.01;
   if(timeDeduction < 0.0){
     timeDeduction = 0.0;
   }
-  var resultString = "You scored " + (this.score - this.incorrectGuesses*this.badGuessPenalty - timeDeduction) + " out of " + this.formations.length;
-  var guessesString = "You had " + this.incorrectGuesses + " incorrect guess";
+  var resultString = "You scored " + (this.score - this.incorrectGuesses*this.badGuessPenalty - timeDeduction).toFixed(2) + " out of " + this.formations.length;
+  var guessesString = "You had " + this.incorrectGuesses.toFixed(0) + " incorrect guess";
   if(this.incorrectGuesses !== 1){
     guessesString += "es";
   }
-  var timeString = "You took " + int((this.endTime - this.startTime)/1000) + " seconds";
+  var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";
   textAlign(CENTER);
   textSize(24);
   text(resultString, width/2, height/2-50);

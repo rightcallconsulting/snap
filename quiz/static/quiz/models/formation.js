@@ -75,6 +75,7 @@ Formation.prototype.createSkillPlayers = function(){
       x: this.qb[0].x,
       y: this.qb[0].y + 60,
       num: 22,
+      pos: "RB",
       fill: color(255, 0, 0),
       progressionRank: 3,
       routeNum: 2
@@ -84,6 +85,7 @@ Formation.prototype.createSkillPlayers = function(){
       x: this.oline[0].x - 30,
       y: this.oline[0].y,
       num: 80,
+      pos: "TE",
       fill: color(255, 0, 0),
       progressionRank: 2,
       routeNum: 3
@@ -92,6 +94,7 @@ Formation.prototype.createSkillPlayers = function(){
      x: this.oline[4].x + 40,
      y: this.oline[4].y + 30,
      num: 17,
+     pos: "TE",
      fill: color(255, 0, 0),
      progressionRank: 4,
      routeNum: 4
@@ -100,6 +103,7 @@ Formation.prototype.createSkillPlayers = function(){
      x: this.oline[0].x - 80,
      y: this.oline[4].y + 30,
      num: 88,
+     pos: "WR",
      fill: color(255, 0, 0),
      progressionRank: 1,
      routeNum: 0
@@ -108,6 +112,7 @@ Formation.prototype.createSkillPlayers = function(){
      x: this.oline[4].x + 80,
      y: this.oline[4].y,
      num: 84,
+     pos: "WR",
      fill: color(255, 0, 0),
      progressionRank: 5,
      routeNum: 1

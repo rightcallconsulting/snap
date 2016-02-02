@@ -10,7 +10,6 @@ function setup() {
 }
 
 function draw() {
-
   // Fetch player object from Django DB
   if(makeJSONCall){
     makeJSONCall = false
