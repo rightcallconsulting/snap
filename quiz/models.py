@@ -168,7 +168,7 @@ class Test(models.Model):
         plays = self.play_set.all()
         formatted_list_for_graphos = [["Test ID"]]
         for test_result in test_results:
-            new_data_row = [test_result.id]
+            new_data_row = [str(test_result.id)]
             missed_play_dict = {}
             for play in self.play_set.all():
                 missed_play_dict[play.name] = 0
@@ -198,7 +198,7 @@ class Test(models.Model):
         plays = self.play_set.all()
         formatted_list_for_graphos = [["Test ID"]]
         for test_result in test_results:
-            new_data_row = [test_result.id]
+            new_data_row = [str(test_result.id)]
             skipped_play_dict = {}
             for play in self.play_set.all():
                 skipped_play_dict[play.name] = 0

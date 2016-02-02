@@ -108,6 +108,7 @@ def playbook(request):
         'defensive_formations': defensive_formations,
         'team': team,
         'play_id_array': play_id_array,
+        'page_header': 'OFFENSIVE PLAYBOOK',
     })
 
 @login_required
@@ -140,11 +141,14 @@ def todo(request):
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
+            'page_header': 'TESTS',
         })
 
 @login_required
 def calendar(request):
-    return render(request, 'dashboard/calendar.html')
+    return render(request, 'dashboard/calendar.html',{
+        'page_header': 'CALENDAR',
+    })
 
 @login_required
 def my_tests(request):
@@ -273,6 +277,7 @@ def all_groups(request):
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
+        'page_header': 'GROUPS',
     })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -319,6 +324,9 @@ def test_analytics(request, test_id):
 
                   },
           'axes': {
+              'x': {
+                'discrete': 'string',
+              },
               'y': {
                 'score': {'label': '# of Quesitons'},
                 'Time Taken': {'label': 'Time Taken'}
