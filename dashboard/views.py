@@ -296,7 +296,7 @@ def group_detail(request, group_id):
 def test_analytics(request, test_id):
     coach = request.user.coach
     test = Test.objects.filter(pk=test_id)[0]
-    formatted_list_for_graphos_missed_plays = test.get_missed_play_chart()
+    formatted_list_for_graphos_missed_plays = test.get_missed_play_chart(5)
     test_results = test.testresult_set.all()
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
@@ -334,13 +334,22 @@ def test_analytics(request, test_id):
                 { 'position': 'bottom' }
             }
     )
+
+    skipped_play_data =  test.get_skipped_play_chart(5)
+    skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
+            {'title': "Skipped Plays",
+            'isStacked': 'true',
+            'legend':
+                { 'position': 'bottom' }
+            }
+    )
     test_results_length = len(test_results)
-    test.get_missed_play_chart()
     return render_to_response('dashboard/analytics.html',{
         'test': test,
         'test_results': test_results,
         'chart': chart,
         'missed_play_chart': missed_play_chart,
+        'skipped_play_chart': skipped_play_chart,
         'page_header': 'ANALYTICS',
         'test_results_length': test_results_length,
     })
