@@ -267,10 +267,11 @@ function draw() {
     };
 
     pressStopButton = function(){
-      playButton.changeClickStatus();
-      if (pause.clicked) {
-          pause.changeClickStatus();
-      }
+      // playButton.changeClickStatus();
+      // if (pause.clicked) {
+      //     pause.changeClickStatus();
+      // }
+      playButton.clicked = false;
       test.getCurrentPlay().resetPlayers(defensePlay);
       test.getCurrentPlay().inProgress = false;
       playButton.displayButton = true;
