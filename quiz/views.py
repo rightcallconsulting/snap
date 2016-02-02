@@ -157,8 +157,9 @@ def update_test(request, player_id, test_id):
     if jsTest['newTest'] == True:
         # Create a new test result object assigned to the test
         new_test_result = TestResult(test=pythonTest, most_recent=True,
-        score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )
+        score=0, skips=0, incorrect_guesses=0 )
         new_test_result.save()
+        new_test_result.update_result(jsTest, current_play)
         # Resets any other tests that were recent
         for test_result in TestResult.objects.filter(test=pythonTest):
             if test_result != new_test_result:

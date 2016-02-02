@@ -210,12 +210,7 @@ class TestResult(models.Model):
          ordering = ['created_at']
 
     def update_result(self, js_test_object, play_object):
-        if float(js_test_object['score']) > self.score:
-            self.correct_plays.add(play_object)
-        elif float(js_test_object['skips']) > self.skips:
-            self.skipped_plays.add(play_object)
-        elif float(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
-            self.missed_plays.add(play_object)
+        self.create_test_result_play(js_test_object, play_object)
         self.score = js_test_object['score']
         self.skips = js_test_object['skips']
         self.incorrect_guesses = js_test_object['incorrectGuesses']
@@ -223,6 +218,20 @@ class TestResult(models.Model):
             self.completed = True
             self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/-1000
         self.save()
+
+    def create_test_result_play(self, js_test_object, play_object):
+        new_test_result_play = TestResultPlay(play=play_object, testresult=self)
+        if float(js_test_object['score']) > self.score:
+            self.correct_plays.add(play_object)
+            new_test_result_play.correct = True
+        elif float(js_test_object['skips']) > self.skips:
+            self.skipped_plays.add(play_object)
+            new_test_result_play.skipped = True
+        elif float(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
+            self.missed_plays.add(play_object)
+            new_test_result_play.incorrect = True
+        new_test_result_play.save()
+
 
 class TestResultPlay(models.Model):
     testresult = models.ForeignKey(TestResult, null=True, blank=True)
