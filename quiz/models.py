@@ -163,6 +163,27 @@ class Test(models.Model):
             formatted_list_for_graphos[1].append(missed_play_dict[play])
         return formatted_list_for_graphos
 
+    def get_missed_play_chart(self):
+        test_results = self.testresult_set.all()
+        plays = self.play_set.all()
+        formatted_list_for_graphos = [["Test ID"]]
+        for test_result in test_results:
+            missed_play_dict = {}
+            for play in self.play_set.all():
+                missed_play_dict[play.name] = 0
+            # This is to maintain the same order for Graphos
+            for play in missed_play_dict.keys():
+                if len(formatted_list_for_graphos[0]) is not len(plays) + 1:
+                    formatted_list_for_graphos[0].append(play)
+            for test_result_play in test_result.testresultplay_set.all():
+                if test_result_play.incorrect == True:
+                    missed_play_dict[test_result_play.play.name] += 1
+            formatted_list_for_graphos.append([test_result_play])
+            embed()
+
+        # embed()
+
+
 class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)

@@ -336,6 +336,7 @@ def test_analytics(request, test_id):
             }
     )
     test_results_length = len(test_results)
+    test.get_missed_play_chart()
     return render_to_response('dashboard/analytics.html',{
         'test': test,
         'test_results': test_results,
