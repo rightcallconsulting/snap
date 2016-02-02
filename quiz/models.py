@@ -199,7 +199,7 @@ class TestResult(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     missed_plays = models.ManyToManyField(Play, related_name="missed_plays", null=True, blank=True)
     correct_plays = models.ManyToManyField(Play, null=True, blank=True)
-    skipped_plays = models.ManyToManyField(Play, related_name="skipped_playes", null=True, blank=True)
+    skipped_plays = models.ManyToManyField(Play, related_name="skipped_plays", null=True, blank=True)
     most_recent = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
@@ -223,3 +223,11 @@ class TestResult(models.Model):
             self.completed = True
             self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/-1000
         self.save()
+
+class TestResultPlay(models.Model):
+    testresult = models.ForeignKey(TestResult, null=True, blank=True)
+    play = models.ForeignKey(Play, null=True, blank=True)
+    count = models.IntegerField(null=True, blank=True)
+    correct = models.BooleanField(default=False)
+    incorrect = models.BooleanField(default=False)
+    skipped = models.BooleanField(default=False)
