@@ -487,6 +487,11 @@ Player.prototype.checkRoutes = function(play){
     play.test.scoreboard.feedbackMessage = "Wrong Answer";
     play.test.incorrectGuesses++;
   }
+  $.post( "/quiz/players/"+play.test.playerID+"/tests/"+play.test.id+"/update", {
+    test: JSON.stringify(_.omit(play.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: play.id
+  })
+  play.test.newTest = false;
   return isCorrect
 };
 
@@ -550,6 +555,7 @@ Player.prototype.isALineman = function(){
 };
 
 Player.prototype.checkSelection = function(test) {
+  play = test.getCurrentPlay();
   if(test.getCurrentDefensivePlay().playerBeingTested() && test.getCurrentDefensivePlay().playerBeingTested().CBAssignmentPlayerID){
     var correctPlayer = test.getCurrentDefensivePlay().playerBeingTested().establishRightAnswerPlayer(test.getCurrentPlay());
   }
@@ -567,6 +573,11 @@ Player.prototype.checkSelection = function(test) {
     //TODO: Explain what was wrong (or print right answer?)
   }
   test.registerAnswer(isCorrect);
+  $.post( "/quiz/players/"+test.playerID+"/tests/"+test.id+"/update", {
+    test: JSON.stringify(_.omit(test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: play.id
+  })
+  test.newTest = false;
   return isCorrect;
 };
 

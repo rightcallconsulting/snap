@@ -35,7 +35,10 @@
 
   $('#check-button').click(function(){
     var currentPlay = test.getCurrentPlay();
-    currentPlay.findSelectedWR().checkRoutes(currentPlay);
+    selectedWR = currentPlay.findSelectedWR()
+    if(selectedWR){
+      selectedWR.checkRoutes(currentPlay);
+    }
   })
 
   $('#clear-button').click(function(){

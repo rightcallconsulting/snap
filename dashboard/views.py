@@ -25,7 +25,7 @@ from graphos.renderers import flot, gchart
 @login_required
 def homepage(request):
     Test.objects.filter(coach_who_created=request.user)
-    return render(request, 'dashboard/homepage.html')
+    return render(request, 'dashboard/homepage.html', {'page_header': 'DASHBOARD'})
 
 def auth_login(request):
     if request.user.is_authenticated():
@@ -299,46 +299,48 @@ def test_analytics(request, test_id):
     missed_play_dict = test.generate_missed_plays_dict()
     formatted_list_for_graphos_missed_plays = test.format_for_graphos(missed_play_dict)
     test_results = test.testresult_set.all()
-    # THIS WAS MY ATTEMPT TO usE CHARTIT - WHICH MIGHT BE BETTER IF WE CAN GET IT WORKING
-    # test_result_data = \
-    #     DataPool(
-    #        series=
-    #         [{'options': {
-    #            'source': test_results},
-    #           'terms': [
-    #             'id',
-    #             'score',
-    #             'skips']}
-    #          ])
-    # cht = Chart(
-    #         datasource = test_result_data,
-    #         series_options =
-    #           [{'options':{
-    #               'type': 'line',
-    #               'stacking': False},
-    #             'terms':{
-    #               'id': [
-    #                 'score',
-    #                 'skips']
-    #               }}],
-    #         chart_options =
-    #           {'title': {
-    #                'text': 'Weather Data of Boston and Houston'},
-    #            'xAxis': {
-    #                 'title': {
-    #                    'text': 'Month number'}}})
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
-                                  fields=['id', 'score', 'skips', 'incorrect_guesses'])
-    chart = gchart.ColumnChart(data_source)
+                                  fields=['id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
+    chart = gchart.ColumnChart(data_source, options=
+        {'title': "Test Results",
+        'isStacked': 'true',
+        'width': 700,
+        'xaxis':
+            {'label': "categories",
+            'side': 'top'
+            },
+        'legend':
+            { 'position': 'bottom' }
+            ,
+         'series': {'0': {'targetAxisIndex':'0', 'axis': 'score'},
+                   '1':{'targetAxisIndex':'0', 'axis': 'score'},
+                   '2':{'targetAxisIndex':'0', 'axis': 'score'},
+                   '3':{'targetAxisIndex':'1', 'type': 'line'},
+
+                  },
+          'axes': {
+              'y': {
+                'score': {'label': '# of Quesitons'},
+                'Time Taken': {'label': 'Time Taken'}
+              }
+            }
+          }
+    )
 
     missed_play_data =  formatted_list_for_graphos_missed_plays
-    missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data))
-
+    missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
+            {'title': "Missed Plays",
+            'legend':
+                { 'position': 'bottom' }
+            }
+    )
+    test_results_length = len(test_results)
     return render_to_response('dashboard/analytics.html',{
-        # 'test_result_data': cht,
         'test': test,
         'test_results': test_results,
         'chart': chart,
         'missed_play_chart': missed_play_chart,
+        'page_header': 'ANALYTICS',
+        'test_results_length': test_results_length,
     })

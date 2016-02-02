@@ -148,15 +148,16 @@ class Test(models.Model):
         missed_play_dict = {}
         test_results = self.testresult_set.all()
         for test_result in test_results:
-            for missed_play in test_result.missed_plays.all():
-                if missed_play.name in missed_play_dict.keys():
-                    missed_play_dict[missed_play.name] += 1
+            for test_result_play in test_result.testresultplay_set.all():
+                if test_result_play.play.name in missed_play_dict.keys():
+                    if test_result_play.incorrect == True:
+                        missed_play_dict[test_result_play.play.name] += 1
                 else:
-                    missed_play_dict[missed_play.name] = 1
+                    missed_play_dict[test_result_play.play.name] = 1
         return missed_play_dict
 
     def format_for_graphos(self, missed_play_dict):
-        formatted_list_for_graphos = [[], []]
+        formatted_list_for_graphos = [["Test Result"], [self.name]]
         for play in missed_play_dict.keys():
             formatted_list_for_graphos[0].append(play)
             formatted_list_for_graphos[1].append(missed_play_dict[play])
@@ -191,15 +192,15 @@ class Play(models.Model):
         new_play.save()
 
 class TestResult(models.Model):
-    score = models.IntegerField(null=True, blank=True)
-    skips = models.IntegerField(null=True, blank=True)
-    incorrect_guesses = models.IntegerField(null=True, blank=True)
+    score = models.FloatField(null=True, blank=True)
+    skips = models.FloatField(null=True, blank=True)
+    incorrect_guesses = models.FloatField(null=True, blank=True)
     time_taken = models.IntegerField(null=True, blank=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     missed_plays = models.ManyToManyField(Play, related_name="missed_plays", null=True, blank=True)
     correct_plays = models.ManyToManyField(Play, null=True, blank=True)
-    skipped_plays = models.ManyToManyField(Play, related_name="skipped_playes", null=True, blank=True)
+    skipped_plays = models.ManyToManyField(Play, related_name="skipped_plays", null=True, blank=True)
     most_recent = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
@@ -210,16 +211,33 @@ class TestResult(models.Model):
          ordering = ['created_at']
 
     def update_result(self, js_test_object, play_object):
-        if int(js_test_object['score']) > self.score:
-            self.correct_plays.add(play_object)
-        elif int(js_test_object['skips']) > self.skips:
-            self.skipped_plays.add(play_object)
-        elif int(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
-            self.missed_plays.add(play_object)
+        self.create_test_result_play(js_test_object, play_object)
         self.score = js_test_object['score']
         self.skips = js_test_object['skips']
         self.incorrect_guesses = js_test_object['incorrectGuesses']
         if len(self.test.play_set.all()) == (int(js_test_object['questionNum']) + 1):
             self.completed = True
-            self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/1000
+            self.time_taken = (js_test_object['endTime'] - js_test_object['startTime'])/-1000
         self.save()
+
+    def create_test_result_play(self, js_test_object, play_object):
+        new_test_result_play = TestResultPlay(play=play_object, testresult=self)
+        if float(js_test_object['score']) > self.score:
+            self.correct_plays.add(play_object)
+            new_test_result_play.correct = True
+        elif float(js_test_object['skips']) > self.skips:
+            self.skipped_plays.add(play_object)
+            new_test_result_play.skipped = True
+        elif float(js_test_object['incorrectGuesses']) > self.incorrect_guesses:
+            self.missed_plays.add(play_object)
+            new_test_result_play.incorrect = True
+        new_test_result_play.save()
+
+
+class TestResultPlay(models.Model):
+    testresult = models.ForeignKey(TestResult, null=True, blank=True)
+    play = models.ForeignKey(Play, null=True, blank=True)
+    count = models.IntegerField(null=True, blank=True)
+    correct = models.BooleanField(default=False)
+    incorrect = models.BooleanField(default=False)
+    skipped = models.BooleanField(default=False)

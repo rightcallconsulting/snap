@@ -99,9 +99,9 @@
 								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
 							{% else %}
 							<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
-
-							{% endif %}
 							<td><a href="{% url 'test_analytics' test.id %}"><span class="label label-success">Analytics</span></a></td>
+							
+							{% endif %}
 						</tr>
 						{% endfor %}
 

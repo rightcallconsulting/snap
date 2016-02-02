@@ -157,8 +157,9 @@ def update_test(request, player_id, test_id):
     if jsTest['newTest'] == True:
         # Create a new test result object assigned to the test
         new_test_result = TestResult(test=pythonTest, most_recent=True,
-        score=jsTest['score'], skips=jsTest['skips'], incorrect_guesses=jsTest['incorrectGuesses'] )
+        score=0, skips=0, incorrect_guesses=0 )
         new_test_result.save()
+        new_test_result.update_result(jsTest, current_play)
         # Resets any other tests that were recent
         for test_result in TestResult.objects.filter(test=pythonTest):
             if test_result != new_test_result:
@@ -189,27 +190,47 @@ def team_play_players(request, team_id):
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test_results = test.testresult_set.all()
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/qb_progression.html', {
         'test': test,
         'test_results': test_results,
+        'has_plays': has_plays,
     })
 
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/wr_route.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def run_ol_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/ol_view.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def run_cb_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    if len(test.play_set.all()) > 0:
+        has_plays = True
+    else:
+        has_plays = False
     return render(request, 'quiz/cb_assignment.html', {
         'test': test,
+        'has_plays': has_plays,
     })
 
 def single_test(request, test_id):
