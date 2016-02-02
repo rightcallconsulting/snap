@@ -148,15 +148,16 @@ class Test(models.Model):
         missed_play_dict = {}
         test_results = self.testresult_set.all()
         for test_result in test_results:
-            for missed_play in test_result.missed_plays.all():
-                if missed_play.name in missed_play_dict.keys():
-                    missed_play_dict[missed_play.name] += 1
+            for test_result_play in test_result.testresultplay_set.all():
+                if test_result_play.play.name in missed_play_dict.keys():
+                    if test_result_play.incorrect == True:
+                        missed_play_dict[test_result_play.play.name] += 1
                 else:
-                    missed_play_dict[missed_play.name] = 1
+                    missed_play_dict[test_result_play.play.name] = 1
         return missed_play_dict
 
     def format_for_graphos(self, missed_play_dict):
-        formatted_list_for_graphos = [[], []]
+        formatted_list_for_graphos = [["Test Result"], [self.name]]
         for play in missed_play_dict.keys():
             formatted_list_for_graphos[0].append(play)
             formatted_list_for_graphos[1].append(missed_play_dict[play])
