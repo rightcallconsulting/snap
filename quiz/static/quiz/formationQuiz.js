@@ -11,16 +11,17 @@ function setup() {
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
+  multipleChoiceAnswers = [];
   bigReset = new Button({
-    x: width/2,
+    x: width*0.5 - 25,
     y: height*0.8,
     width: 50,
     label: "Restart"
   })
 
-  if(makeJSONCall){
+  /*if(makeJSONCall){
     makeJSONCall = false
-    //REMOVE WHEN DB ACCESS WORKS:
+    REMOVE WHEN DB ACCESS WORKS:
     var formationExample = new Formation({
       name: 'BROWN'
     })
@@ -45,40 +46,63 @@ function setup() {
     });
   }
 
-  runTest("FormationTest", null, test); //completes any setup I think?
+  runTest("FormationTest", null, test); //completes any setup I think?*/
 
-  /*
   if(makeJSONCall){
-    makeJSONCall = false
-    $.getJSON('/quiz/tests/'+testIDFromHTML, function(data, jqXHR){
-      test = createTestFromJSON(data[0]);
-      var playerID = test.playerID;
-      $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = createUserFromJSON(data2[0]);
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            if(testIDArray.includes(test.id)){
-              var play = createPlayFromJSON(play);
-              play.test = test
-              test.plays.push(play);
+    var scoreboard = new Scoreboard({
+
+    });
+    test = new FormationTest({
+      formations: [],
+      scoreboard: scoreboard
+    });
+    var formations = [];
+    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
+      data.forEach(function(formationObject){
+        formationObject.fields.id = formationObject.pk;
+        formationObject.fields.positions = [];
+        var newFormation = new Formation(formationObject.fields);
+        newFormation.playName = formationObject.fields.name;
+        newFormation.name = newFormation.playName
+        if(formations.length < 5){
+          formations.push(newFormation);
+        }
+      })
+        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+          data.forEach(function(position){
+            position.fields.id = position.pk;
+            position.fields.x = position.fields.startX;
+            position.fields.y = position.fields.startY;
+            position.fields.pos = position.fields.name;
+            position.fields.num = position.fields.pos;
+            var newPlayer = new Player(position.fields)
+            if(newPlayer.pos==="QB"){
+              newPlayer.fill = color(212, 130, 130);
+            }
+            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
+              newPlayer.fill = color(143, 29, 29);
+            }
+            else{
+              newPlayer.fill = color(255, 0, 0);
+            }
+            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            if(formation){
+              formation.positions.push(newPlayer);
             }
           })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
-            })
-            test.plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
-            })
-            runTest("QBProgression", currentPlayerTested, test);
+          formationNames = [];
+          formations.forEach(function(formation){
+            formationNames.push(formation.name);
+            formation.populatePositions();
           })
+
+          test.formations = formations;
+          runTest("Formation Test", null, test);
         })
-      })
+
     });
-  }*/
+  }
+
 }
 
 
@@ -91,6 +115,8 @@ function runTest(type, playerTested, test){
     formationNames.push(test.formations[i].name);
   }
   multipleChoiceAnswers = [];
+  test.restartQuiz();
+  makeJSONCall = false
 }
 
 function shuffle(o) {
@@ -229,14 +255,17 @@ keyTyped = function(){
 };
 
 function draw() {
-  if(test.over){
+  if(makeJSONCall){
+    //WAIT
+  }
+  else if(test.over){
     //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
     bigReset.draw();
   }else{
-    if(multipleChoiceAnswers.length < 2){
+    if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;
       createMultipleChoiceAnswers(correctAnswer);
     }
