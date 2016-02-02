@@ -44,6 +44,18 @@ Player.altRank = -1;
 
 // Instance Methods
 
+Player.prototype.draw = function(){
+  if(this.unit === "offense"){
+      noStroke();
+      fill(this.fill)
+      ellipse(this.x, this.y, this.siz, this.siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.pos, this.x, this.y);
+  }
+};
+
 Player.prototype.setColor = function(newFillColor) {
       this.fill = newFillColor;
 };
