@@ -241,3 +241,5 @@ class TestResultPlay(models.Model):
     correct = models.BooleanField(default=False)
     incorrect = models.BooleanField(default=False)
     skipped = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
