@@ -261,8 +261,13 @@ function draw() {
       else if (keyCode === 81){
         pressStopButton();
       }
-      else if (keyCode === 8){
-        if (selectedWR) selectedWR.stepRouteBackward();
+      else if (keyCode === BACKSPACE){
+        if (selectedWR){
+          selectedWR.stepRouteBackward();
+        } else{
+          playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
+        }
+        return false;
       }
     };
 
@@ -271,21 +276,25 @@ function draw() {
       // if (pause.clicked) {
       //     pause.changeClickStatus();
       // }
+      if (test.getCurrentPlay()){
       playButton.clicked = false;
-      test.getCurrentPlay().resetPlayers(defensePlay);
-      test.getCurrentPlay().inProgress = false;
-      playButton.displayButton = true;
-      check.displayButton = true;
-      clear.displayButton = true;
-      pause.displayButton = false;
-      stop.displayButton = false;
+        test.getCurrentPlay().resetPlayers(defensePlay);
+        test.getCurrentPlay().inProgress = false;
+        // playButton.displayButton = true;
+        // check.displayButton = true;
+        // clear.displayButton = true;
+        // pause.displayButton = false;
+        // stop.displayButton = false;
+      }
     }
 
     pressPlayButton = function() {
-      playButton.changeClickStatus();
-      test.getCurrentPlay().setAllRoutes();
-      scoreboard.feedbackMessage = "";
-      test.getCurrentPlay().inProgress = true;
+      if (test.getCurrentPlay()){
+        playButton.changeClickStatus();
+        test.getCurrentPlay().setAllRoutes();
+        scoreboard.feedbackMessage = "";
+        test.getCurrentPlay().inProgress = true;
+      }
     }
 
 
