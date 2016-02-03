@@ -133,7 +133,7 @@ function draw() {
         width: 32,
         label: "Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     // Create Buttons
@@ -143,7 +143,7 @@ function draw() {
         width: 43,
         label: "Check",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var nextPlay = new Button({
@@ -152,7 +152,7 @@ function draw() {
         width: 60,
         label: "Next Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var clear = new Button({
@@ -161,7 +161,7 @@ function draw() {
         width: 43,
         label: "Clear",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var back = new Button({
@@ -170,7 +170,7 @@ function draw() {
         width: 35,
         label: "Back",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var pause = new Button({
@@ -261,8 +261,13 @@ function draw() {
       else if (keyCode === 81){
         pressStopButton();
       }
-      else if (keyCode === 8){
-        if (selectedWR) selectedWR.stepRouteBackward();
+      else if (keyCode === BACKSPACE){
+        if (selectedWR){
+          selectedWR.stepRouteBackward();
+        } else{
+          playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
+        }
+        return false;
       }
     };
 
@@ -271,21 +276,25 @@ function draw() {
       // if (pause.clicked) {
       //     pause.changeClickStatus();
       // }
+      if (test.getCurrentPlay()){
       playButton.clicked = false;
-      test.getCurrentPlay().resetPlayers(defensePlay);
-      test.getCurrentPlay().inProgress = false;
-      playButton.displayButton = true;
-      check.displayButton = true;
-      clear.displayButton = true;
-      pause.displayButton = false;
-      stop.displayButton = false;
+        test.getCurrentPlay().resetPlayers(defensePlay);
+        test.getCurrentPlay().inProgress = false;
+        // playButton.displayButton = true;
+        // check.displayButton = true;
+        // clear.displayButton = true;
+        // pause.displayButton = false;
+        // stop.displayButton = false;
+      }
     }
 
     pressPlayButton = function() {
-      playButton.changeClickStatus();
-      test.getCurrentPlay().setAllRoutes();
-      scoreboard.feedbackMessage = "";
-      test.getCurrentPlay().inProgress = true;
+      if (test.getCurrentPlay()){
+        playButton.changeClickStatus();
+        test.getCurrentPlay().setAllRoutes();
+        scoreboard.feedbackMessage = "";
+        test.getCurrentPlay().inProgress = true;
+      }
     }
 
 
@@ -329,11 +338,11 @@ function draw() {
           pressStopButton();
         }else if (bigReset.isMouseInside() && test.isLastQuestion) {
           test.restartQuiz(defensePlay);
-          nextPlay.displayButton = true;
-          playButton.displayButton = true;
-          check.displayButton = true;
-          clear.displayButton = true;
-          back.displayButton = true;
+          // nextPlay.displayButton = true;
+          // playButton.displayButton = true;
+          // check.displayButton = true;
+          // clear.displayButton = true;
+          // back.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
           test.skips++;

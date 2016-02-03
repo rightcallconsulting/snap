@@ -35,23 +35,29 @@
 
   $('#check-button').click(function(){
     var currentPlay = test.getCurrentPlay();
-    selectedWR = currentPlay.findSelectedWR()
-    if(selectedWR){
-      selectedWR.checkRoutes(currentPlay);
+    if (currentPlay){
+      selectedWR = currentPlay.findSelectedWR()
+      if(selectedWR){
+        selectedWR.checkRoutes(currentPlay);
+      }
     }
   })
 
   $('#clear-button').click(function(){
     var currentPlay = test.getCurrentPlay();
-    currentPlay.clearProgression();
-    currentPlay.clearRouteDrawings();
-    test.scoreboard.feedbackMessage = "";
+    if (currentPlay){
+      currentPlay.clearProgression();
+      currentPlay.clearRouteDrawings();
+      test.scoreboard.feedbackMessage = "";
+    }
   })
 
   $('#back-button').click(function(){
     var currentPlay = test.getCurrentPlay();
-    var selectedWR = currentPlay.findSelectedWR();
-    if(selectedWR)selectedWR.stepRouteBackward();
+    if (currentPlay){
+      var selectedWR = currentPlay.findSelectedWR();
+      if(selectedWR)selectedWR.stepRouteBackward();
+    }
   })
 
   $('#restart-button').click(function(){
@@ -59,9 +65,11 @@
   })
 
   $('#next-play-button').click(function(){
-    test.skips++;
-    pressStopButton();
-    test.advanceToNextPlay("Boo! Weak!");
+    if (test.getCurrentPlay()){
+      test.skips++;
+      pressStopButton();
+      test.advanceToNextPlay("Boo! Weak!");
+    }
   })
 </script>
   </script>

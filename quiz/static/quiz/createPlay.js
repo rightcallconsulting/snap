@@ -1,6 +1,7 @@
 var formations = [];
 var makeJSONCall = true;
 var currentFormation
+var teamIDFromHTML = $('#team-id').data('team-id')
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -12,7 +13,7 @@ function draw() {
 
   if(makeJSONCall){
     makeJSONCall = false
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
+    $.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         formationObject.fields.id = formationObject.pk;
         formationObject.fields.positions = [];
@@ -20,7 +21,7 @@ function draw() {
         newFormation.playName = formationObject.fields.name;
         formations.push(newFormation);
       })
-        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+        $.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations/positions', function(data, jqXHR){
           data.forEach(function(position){
             position.fields.id = position.pk;
             position.fields.x = position.fields.startX;

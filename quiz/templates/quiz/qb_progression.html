@@ -70,12 +70,16 @@
       })
 
       $('#check-button').click(function(){
-        test.getCurrentPlay().checkProgression();
+        if (test.getCurrentPlay()){
+          test.getCurrentPlay().checkProgression();
+        }
       })
 
       $('#clear-button').click(function(){
-        test.getCurrentPlay().clearProgression();
-        test.scoreboard.feedbackMessage = "";
+        if (test.getCurrentPlay()){
+          test.getCurrentPlay().clearProgression();
+          test.scoreboard.feedbackMessage = "";
+        }
       })
 
       $('#restart-button').click(function(){
@@ -83,10 +87,14 @@
       })
 
       $('#next-play-button').click(function(){
-        pressStopButton();
-        test.skips++;
-        test.advanceToNextPlay("Boo! Weak!");
-        test.getCurrentPlay().inProgress = false;
+        if (test.getCurrentPlay()){
+          pressStopButton();
+          test.skips++;
+          test.advanceToNextPlay("Boo! Weak!");
+          if (test.getCurrentPlay()){
+          test.getCurrentPlay().inProgress = false;
+          }
+        }
       })
 
 
