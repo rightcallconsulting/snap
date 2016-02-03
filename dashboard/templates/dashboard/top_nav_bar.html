@@ -132,7 +132,7 @@
           <li><a>You have 4 new unread messages</a></li>
           <li>
             <a class="clearfix" href="#">
-              <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
+              <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="Peyton Manning">
               <div class="detail">
                 <strong>Peyton Manning</strong>
                 <p class="no-margin">
@@ -142,30 +142,8 @@
               </div>
             </a>
           </li>
-          <li>
-            <a class="clearfix" href="#">
-              <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
-              <div class="detail">
-                <strong>Jane Doe</strong>
-                <p class="no-margin">
-                  Lorem ipsum dolor sit amet...
-                </p>
-                <small class="text-muted"><i class="fa fa-check text-success"></i> 5hr ago</small>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a class="clearfix" href="#">
-              <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
-              <div class="detail">
-                <strong>Bill Doe</strong>
-                <p class="no-margin">
-                  Lorem ipsum dolor sit amet...
-                </p>
-                <small class="text-muted"><i class="fa fa-reply"></i> Yesterday</small>
-              </div>
-            </a>
-          </li>
+
+
           <li>
             <a class="clearfix" href="#">
               <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
@@ -189,7 +167,7 @@
         <ul class="dropdown-menu">
           <li>
             <a class="clearfix" href="profile">
-              <img src="{% static 'dashboard/images/peyton_manning.jpg' %}" alt="Peyton Manning">
+              <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
               <div class="detail">
                 <strong>{{request.user.get_full_name}}</strong>
                 <p class="grey">{{request.user.email}}</p>
