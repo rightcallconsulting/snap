@@ -13,6 +13,8 @@ var FormationTest = function(config){
     this.over = false;
     this.cutOff = config.cutOff || 50;
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
+    this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
 };
 
 FormationTest.prototype.getCurrentFormation = function(){

@@ -19,35 +19,6 @@ function setup() {
     label: "Restart"
   })
 
-  /*if(makeJSONCall){
-    makeJSONCall = false
-    REMOVE WHEN DB ACCESS WORKS:
-    var formationExample = new Formation({
-      name: 'BROWN'
-    })
-    formationExample.createOLineAndQB();
-    formationExample.createSkillPlayers();
-    var formationExample2 = new Formation({
-      name: 'PAPER'
-    })
-    formationExample2.createOLineAndQB();
-    formationExample2.createSkillPlayers();
-    var formationExample3 = new Formation({
-      name: 'BAG'
-    })
-    formationExample3.createOLineAndQB();
-    formationExample3.createSkillPlayers();
-    var scoreboard = new Scoreboard({
-
-    });
-    test = new FormationTest({
-      formations: [formationExample, formationExample2, formationExample3],
-      scoreboard: scoreboard
-    });
-  }
-
-  runTest("FormationTest", null, test); //completes any setup I think?*/
-
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
 
@@ -57,6 +28,7 @@ function setup() {
       scoreboard: scoreboard
     });
     var formations = [];
+    formationNames = [];
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         formationObject.fields.id = formationObject.pk;
@@ -65,6 +37,7 @@ function setup() {
         newFormation.playName = formationObject.fields.name;
         newFormation.name = newFormation.playName
         formations.push(newFormation);
+        formationNames.push(newFormation.name);
       })
       formations.sort(function(a, b){
         var date1 = new Date(a.created_at);
@@ -98,35 +71,18 @@ function setup() {
               formation.positions.push(newPlayer);
             }
           })
-          formationNames = [];
           formations.forEach(function(formation){
-            formationNames.push(formation.name);
             formation.populatePositions();
           })
 
           test.formations = formations;
-          runTest("Formation Test", null, test);
-        })
+          multipleChoiceAnswers = [];
+          test.restartQuiz();
+          makeJSONCall = false
 
+        })
     });
   }
-
-}
-
-function sortByCreationTime(formations){
-
-}
-
-function runTest(type, playerTested, test){
-  //REPLACE THIS LINE WITH OPTIONS WE QUERIED FROM DB THAT ARE NOW IN TEST.FORMATIONS
-  //var formationNames = ["I-Right Wing", "Doubles Bunch", "Trips Right Gun"];
-  formationNames = [];
-  for(var i = 0; i < test.formations.length; i++){
-    formationNames.push(test.formations[i].name);
-  }
-  multipleChoiceAnswers = [];
-  test.restartQuiz();
-  makeJSONCall = false
 }
 
 function shuffle(o) {
@@ -172,42 +128,20 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-  //logic
   var isCorrect = test.getCurrentFormation().name === guess.label;
   if(isCorrect){
-    test.advanceToNextFormation("You got it, dude");
+    test.advanceToNextFormation(test.correctAnswerMessage);
     test.score++;
     multipleChoiceAnswers = [];
-    if(test.over){
-      /*bigReset.displayButton = true;
-      check.displayButton = false;
-      clear.displayButton = false;*/
-    }
   }else{
     clearAnswers();
-    test.scoreboard.feedbackMessage = "Wrong Answer";
+    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
   }
 }
 
-function drawBackground(formation, field) {
-  background(93, 148, 81);
-  for(var i = 0; i < field.heightInYards; i++){
-    var yc = height * (i/field.heightInYards);
-    stroke(255, 255, 255);
-    if(i % 10 === 0){
-      line(0, yc, width, yc);
-    }else if(i % 5 === 0){
-      line(0, yc, width, yc);
-    }else{
-      line(width*0.24, yc, width*0.25, yc);
-      line(width*0.74, yc, width*0.75, yc);
-    }
-  }
-}
-
 function drawOpening(){
-  drawBackground(test.getCurrentFormation(), field);
+  field.drawBackground(null, height, width);
   test.scoreboard.draw(test, null);
   test.getCurrentFormation().drawAllPlayers();
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
