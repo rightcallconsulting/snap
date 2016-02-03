@@ -265,9 +265,11 @@ function draw() {
       // if (pause.clicked) {
       //     pause.changeClickStatus();
       // }
-      playButton.clicked = false;
-      test.getCurrentPlay().resetPlayers(defensePlay);
-      test.getCurrentPlay().inProgress = false;
+      if (test.getCurrentPlay()){
+        playButton.clicked = false;
+        test.getCurrentPlay().resetPlayers(defensePlay);
+        test.getCurrentPlay().inProgress = false;
+      }
       // playButton.displayButton = true;
       // check.displayButton = true;
       // clear.displayButton = true;
@@ -276,10 +278,12 @@ function draw() {
     }
 
     pressPlayButton = function() {
-      playButton.changeClickStatus();
-      test.getCurrentPlay().setAllRoutes();
-      scoreboard.feedbackMessage = "";
-      test.getCurrentPlay().inProgress = true;
+      if (test.getCurrentPlay()){
+        playButton.changeClickStatus();
+        test.getCurrentPlay().setAllRoutes();
+        scoreboard.feedbackMessage = "";
+        test.getCurrentPlay().inProgress = true;
+      }
     };
 
     mouseClicked = function() {
