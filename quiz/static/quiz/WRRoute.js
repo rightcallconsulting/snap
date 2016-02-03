@@ -133,7 +133,7 @@ function draw() {
         width: 32,
         label: "Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     // Create Buttons
@@ -143,7 +143,7 @@ function draw() {
         width: 43,
         label: "Check",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var nextPlay = new Button({
@@ -152,7 +152,7 @@ function draw() {
         width: 60,
         label: "Next Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var clear = new Button({
@@ -161,7 +161,7 @@ function draw() {
         width: 43,
         label: "Clear",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var back = new Button({
@@ -170,7 +170,7 @@ function draw() {
         width: 35,
         label: "Back",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var pause = new Button({
@@ -338,11 +338,11 @@ function draw() {
           pressStopButton();
         }else if (bigReset.isMouseInside() && test.isLastQuestion) {
           test.restartQuiz(defensePlay);
-          nextPlay.displayButton = true;
-          playButton.displayButton = true;
-          check.displayButton = true;
-          clear.displayButton = true;
-          back.displayButton = true;
+          // nextPlay.displayButton = true;
+          // playButton.displayButton = true;
+          // check.displayButton = true;
+          // clear.displayButton = true;
+          // back.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
           test.skips++;
