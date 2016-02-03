@@ -29,8 +29,4 @@ urlpatterns = [
     url(r'^groups/$', views.all_groups, name='all_groups'),
 
 
-
-
-
-
 ]
