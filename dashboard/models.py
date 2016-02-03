@@ -39,10 +39,11 @@ class UserCreateForm(UserCreationForm):
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)
     position = forms.ChoiceField(choices=POSITIONS, required=False)
+    avatar_image = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team")
+        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team", "avatar_image")
 
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
@@ -73,6 +74,7 @@ class Coach(models.Model):
 class myUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     is_a_player = models.BooleanField(default=False)
+    avatar_image  = models.ImageField(blank=True, null=True, upload_to='profile')
 
 class PlayerGroup(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)
