@@ -3,6 +3,7 @@ var testIDFromHTML = 33;
 var test;
 var multipleChoiceAnswers;
 var formationNames;
+var maxFormations = 5;
 var bigReset;
 
 function setup() {
@@ -39,12 +40,8 @@ function setup() {
         formations.push(newFormation);
         formationNames.push(newFormation.name);
       })
-      formations.sort(sortByCreationDecreasing);
-      formations = formations.slice(0,5);
-      var formationTimes = "";
-      for(var i = 0; i < formations.length; i++){
-        formationTimes += formations[i].created_at + "\n";
-      }
+      formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
+      formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
         $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
           data.forEach(function(position){
             position.fields.id = position.pk;
