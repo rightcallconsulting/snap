@@ -6,4 +6,4 @@ DEBUG = True
 
 DATABASES['default'] =  dj_database_url.parse('postgres://localhost:5432/quizdb')
 MEDIA_ROOT = os.path.join(BASE_DIR, '../../media')
-MEDIA_URL = '../../media/'
+MEDIA_URL = '/media/'

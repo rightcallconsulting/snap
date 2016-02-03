@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.views import login
 from django.contrib.auth.decorators import user_passes_test
+from django.conf import settings
 
 from . import views
 
