@@ -39,11 +39,7 @@ function setup() {
         formations.push(newFormation);
         formationNames.push(newFormation.name);
       })
-      formations.sort(function(a, b){
-        var date1 = new Date(a.created_at);
-        var date2 = new Date(b.created_at);
-        return date2 - date1;
-      });
+      formations.sort(sortByCreationDecreasing);
       formations = formations.slice(0,5);
       var formationTimes = "";
       for(var i = 0; i < formations.length; i++){
@@ -84,6 +80,12 @@ function setup() {
     });
   }
 }
+
+var sortByCreationDecreasing = function(a, b){
+  var date1 = new Date(a.created_at);
+  var date2 = new Date(b.created_at);
+  return date2 - date1;
+};
 
 function shuffle(o) {
   for(var n = 0; n < 100; n++){
