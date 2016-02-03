@@ -18,6 +18,7 @@ import json
 import simplejson
 from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 # Create your views here.
