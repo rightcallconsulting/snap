@@ -315,6 +315,9 @@ Player.prototype.runBootleg = function(Player, direction) {
 
 // Display a lines that shows the player's route
 Player.prototype.displayRoute = function(coords){
+  if(coords.length < 1){
+    return;
+  }
   fill(255, 255, 255);
   strokeWeight(2);
   stroke(100);

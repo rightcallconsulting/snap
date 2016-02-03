@@ -65,6 +65,9 @@ def create_play(request):
 def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
 
+def play_quiz(request):
+    return render(request, 'quiz/play_quiz.html')
+
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
