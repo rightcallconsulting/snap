@@ -141,7 +141,7 @@ function draw() {
         width: 32,
         label: "Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var check = new Button({
@@ -150,7 +150,7 @@ function draw() {
         width: 43,
         label: "Check",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var nextPlay = new Button({
@@ -159,7 +159,7 @@ function draw() {
         width: 60,
         label: "Next Play",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var clear = new Button({
@@ -168,7 +168,7 @@ function draw() {
         width: 43,
         label: "Clear",
         clicked: false,
-        displayButton: true
+        displayButton: false
     });
 
     var pause = new Button({
@@ -268,11 +268,11 @@ function draw() {
       playButton.clicked = false;
       test.getCurrentPlay().resetPlayers(defensePlay);
       test.getCurrentPlay().inProgress = false;
-      playButton.displayButton = true;
-      check.displayButton = true;
-      clear.displayButton = true;
-      pause.displayButton = false;
-      stop.displayButton = false;
+      // playButton.displayButton = true;
+      // check.displayButton = true;
+      // clear.displayButton = true;
+      // pause.displayButton = false;
+      // stop.displayButton = false;
     }
 
     pressPlayButton = function() {
@@ -299,10 +299,10 @@ function draw() {
             pressStopButton();
         }else if (bigReset.isMouseInside() && test.questionNum === test.plays.length) {
             test.restartQuiz(defensePlay);
-            nextPlay.displayButton = true;
-            playButton.displayButton = true;
-            check.displayButton = true;
-            clear.displayButton = true;
+            // nextPlay.displayButton = true;
+            // playButton.displayButton = true;
+            // check.displayButton = true;
+            // clear.displayButton = true;
         }
         else if (nextPlay.isMouseInside()){
           test.skips++;
