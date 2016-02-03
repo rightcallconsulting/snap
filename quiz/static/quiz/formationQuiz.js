@@ -222,8 +222,6 @@ mouseClicked = function() {
   test.scoreboard.feedbackMessage = "";
   if (bigReset.isMouseInside() && test.over) {
     test.restartQuiz();
-    check.displayButton = true;
-    clear.displayButton = true;
   }
   else{
     for(var i = 0; i < multipleChoiceAnswers.length; i++){
