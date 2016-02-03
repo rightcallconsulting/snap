@@ -64,10 +64,18 @@ function setup() {
         var newFormation = new Formation(formationObject.fields);
         newFormation.playName = formationObject.fields.name;
         newFormation.name = newFormation.playName
-        if(formations.length < 5){
-          formations.push(newFormation);
-        }
+        formations.push(newFormation);
       })
+      formations.sort(function(a, b){
+        var date1 = new Date(a.created_at);
+        var date2 = new Date(b.created_at);
+        return date2 - date1;
+      });
+      formations = formations.slice(0,5);
+      var formationTimes = "";
+      for(var i = 0; i < formations.length; i++){
+        formationTimes += formations[i].created_at + "\n";
+      }
         $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
           data.forEach(function(position){
             position.fields.id = position.pk;
@@ -105,7 +113,9 @@ function setup() {
 
 }
 
+function sortByCreationTime(formations){
 
+}
 
 function runTest(type, playerTested, test){
   //REPLACE THIS LINE WITH OPTIONS WE QUERIED FROM DB THAT ARE NOW IN TEST.FORMATIONS
@@ -126,24 +136,24 @@ function shuffle(o) {
   return o;
 }
 
-function createMultipleChoiceAnswers(correctAnswer){
+function createMultipleChoiceAnswers(correctAnswer, numOptions){
+  var correctIndex = Math.floor((Math.random() * numOptions));
   multipleChoiceAnswers = [];
-  var availableNames = formationNames.slice(0,3);
+  var availableNames = formationNames.slice();
   shuffle(availableNames);
   var i = 0;
-  while(multipleChoiceAnswers.length < 3){
+  while(multipleChoiceAnswers.length < numOptions){
     var label = availableNames[i];
-    if(i === 0){
+    if(multipleChoiceAnswers.length === correctIndex){
       label = correctAnswer;
     }else if(label === correctAnswer){
       i++;
       label = availableNames[i];
     }
-    //debugger;
     multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (availableNames.length + 1),
+      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
       y: height / 3,
-      width: width / (availableNames.length + 2),
+      width: width / (numOptions + 2),
       height: 50,
       label: label,
       clicked: false
@@ -237,8 +247,6 @@ keyTyped = function(){
   if(test.over){
     if(key === 'r'){
       test.restartQuiz();
-      check.displayButton = true;
-      clear.displayButton = true;
     }
   }else{
     var offset = key.charCodeAt(0) - "1".charCodeAt(0);
@@ -256,7 +264,7 @@ keyTyped = function(){
 
 function draw() {
   if(makeJSONCall){
-    //WAIT
+    //WAIT - still executing JSON
   }
   else if(test.over){
     //debugger;
@@ -267,7 +275,7 @@ function draw() {
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;
-      createMultipleChoiceAnswers(correctAnswer);
+      createMultipleChoiceAnswers(correctAnswer,3);
     }
     drawOpening();
   }

@@ -76,6 +76,9 @@ FormationTest.prototype.registerAnswer = function(isCorrect){
 
 FormationTest.prototype.drawQuizSummary = function() {
   var elapsedSeconds = (this.endTime - this.startTime)/1000;
+  if(elapsedSeconds > this.cutOff * this.formations.length){
+    elapsedSeconds = this.cutOff * this.formations.length;
+  }
   var timeDeduction = (elapsedSeconds - this.secondsPerQuestion * this.formations.length)*0.01;
   if(timeDeduction < 0.0){
     timeDeduction = 0.0;
