@@ -54,8 +54,10 @@
 
   $('#back-button').click(function(){
     var currentPlay = test.getCurrentPlay();
-    var selectedWR = currentPlay.findSelectedWR();
-    if(selectedWR)selectedWR.stepRouteBackward();
+    if (currentPlay){
+      var selectedWR = currentPlay.findSelectedWR();
+      if(selectedWR)selectedWR.stepRouteBackward();
+    }
   })
 
   $('#restart-button').click(function(){
