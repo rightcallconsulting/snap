@@ -255,6 +255,7 @@ class TestResult(models.Model):
     score = models.FloatField(null=True, blank=True)
     skips = models.FloatField(null=True, blank=True)
     incorrect_guesses = models.FloatField(null=True, blank=True)
+    string_id = models.CharField(null=True, blank=True, default="Temp", max_length=100)
     time_taken = models.IntegerField(null=True, blank=True)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)

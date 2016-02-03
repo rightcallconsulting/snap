@@ -305,7 +305,7 @@ def test_analytics(request, test_id):
     test_results = test.testresult_set.all()
     test_result_queryset = test_results.reverse()[:5][::-1]
     data_source = ModelDataSource(test_result_queryset,
-                                  fields=['id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
+                                  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
     chart = gchart.ColumnChart(data_source, options=
         {'title': "Test Results",
         'isStacked': 'true',
