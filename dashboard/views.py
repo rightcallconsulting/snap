@@ -62,7 +62,7 @@ def register(request):
         if form.is_valid():
             new_user = form.save()
             if 'Player' in request.POST.keys():
-                new_boolean_user = myUser(user=new_user, is_a_player=True, avatar_image=request.POST['avatar_image'])
+                new_boolean_user = myUser(user=new_user, is_a_player=True, avatar_image=request.FILES['avatar_image'])
                 new_boolean_user.save()
                 new_player = Player(user=new_user, team=team)
                 new_player.first_name = new_user.first_name
@@ -70,7 +70,7 @@ def register(request):
                 new_player.position = request.POST['position']
                 new_player.save()
             elif 'Coach' in request.POST.keys():
-                new_boolean_user = myUser(user=new_user, is_a_player=False, avatar_image=request.POST['avatar_image'])
+                new_boolean_user = myUser(user=new_user, is_a_player=False, avatar_image=request.FILES['avatar_image'])
                 new_boolean_user.save()
                 new_coach = Coach(user=new_user, team=team)
                 new_coach.save()
