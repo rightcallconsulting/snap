@@ -1,13 +1,14 @@
-from django.conf.urls import url
+from django.conf.urls import url, patterns, include
 from django.contrib.auth.views import login
 from django.contrib.auth.decorators import user_passes_test
 from django.conf import settings
 
 from . import views
 
-urlpatterns = [
+urlpatterns = patterns('',
     url(r'^$', views.homepage, name='homepage'),
     url(r'^login$', views.auth_login, name='auth_login'),
+    url(r'^$', views.homepage, name='homepage'),
     url(r'^logout$', views.auth_logout, name='auth_logout'),
     url(r'^register$', views.register, name='register'),
     url(r'^timeline$', views.timeline, name='timeline'),
@@ -30,4 +31,11 @@ urlpatterns = [
     url(r'^groups/$', views.all_groups, name='all_groups'),
 
 
-]
+)
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    )
