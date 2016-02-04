@@ -101,6 +101,22 @@
 						<div class="panel-heading">
 							{{player.full_name}}
 						</div>
+						<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
+							<div class="dash-header text-center">
+								<span><h4 id="play-image-header">Play</h4></span>
+							</div>
+							<div id="display-play-box-2">
+
+							</div>
+							<div class="holds-play-buttons">
+								<button id="play-button" class="btn btn-success" name="button">Play</button>
+								<button id="pause-button" class="btn btn-success" name="button">Pause</button>
+								<button id="restart-button" class="btn btn-success" name="button">Restart</button>
+								<button id="edit-button" class="btn btn-success" name="button">Edit Play</button>
+
+							</div>
+
+						</div>
 						{% if True %}
 								<div class="col-lg-2 dash-col choose-offensive-formation-box">
 									<div class="dash-header text-center">
@@ -133,23 +149,6 @@
 								</div><!-- /panel -->
 								<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
 							{# </form>#}
-						</div>
-
-						<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
-							<div class="dash-header text-center">
-								<span><h4 id="play-image-header">Play</h4></span>
-							</div>
-							<div id="display-play-box-2">
-
-							</div>
-							<div class="holds-play-buttons">
-								<button id="play-button" class="btn btn-success" name="button">Play</button>
-								<button id="pause-button" class="btn btn-success" name="button">Pause</button>
-								<button id="restart-button" class="btn btn-success" name="button">Restart</button>
-								<button id="edit-button" class="btn btn-success" name="button">Edit Play</button>
-
-							</div>
-
 						</div>
 
 
