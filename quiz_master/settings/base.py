@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'datetimewidget',
     'bootstrap3_datetime',
     'graphos',
+    'avatar',
     # 'chartit',
 )
 
