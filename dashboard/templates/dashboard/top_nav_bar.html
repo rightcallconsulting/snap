@@ -132,7 +132,10 @@
           <li><a>You have 4 new unread messages</a></li>
           <li>
             <a class="clearfix" href="#">
+              {% if request.user.myuser.avatar_image %}
               <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="Peyton Manning">
+              {% endif %}
+
               <div class="detail">
                 <strong>Peyton Manning</strong>
                 <p class="no-margin">
@@ -167,7 +170,9 @@
         <ul class="dropdown-menu">
           <li>
             <a class="clearfix" href="profile">
-              <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
+              {% if request.user.myuser.avatar_image %}
+                <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
+              {% endif %}
               <div class="detail">
                 <strong>{{request.user.get_full_name}}</strong>
                 <p class="grey">{{request.user.email}}</p>
