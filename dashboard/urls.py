@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^groups/(?P<group_id>[0-9]+)/edit$', views.edit_group, name='edit_group'),
     url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
     url(r'^groups/$', views.all_groups, name='all_groups'),
+    url(r'^avatar/', include('avatar.urls')),
 
 
 )

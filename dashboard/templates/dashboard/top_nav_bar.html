@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load avatar_tags %}
+
 <div id="top-nav" class="main-header clearfix">
   <div class="welcome-header">
     <h4>
@@ -133,7 +135,9 @@
           <li>
             <a class="clearfix" href="#">
               {% if request.user.myuser.avatar_image %}
-              <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="Peyton Manning">
+                <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="Peyton Manning">
+              {% else %}
+                <img src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
               {% endif %}
 
               <div class="detail">
@@ -172,6 +176,8 @@
             <a class="clearfix" href="profile">
               {% if request.user.myuser.avatar_image %}
                 <img src="{{ MEDIA_URL }}{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
+              {% else %}
+                <img src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
               {% endif %}
               <div class="detail">
                 <strong>{{request.user.get_full_name}}</strong>
