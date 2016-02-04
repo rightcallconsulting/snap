@@ -196,3 +196,13 @@ var createPlayFromJSON = function(jsonPlay){
   play.positionIDs = jsonPlay.fields.positions;
   return play;
 };
+
+Play.prototype.drawBlockingAssignments = function(){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignment){
+      strokeWeight(1);
+      stroke(100);
+      line(player.x,player.y, player.blockingAssignment.x, player.blockingAssignment.y);
+    }
+  })
+};
