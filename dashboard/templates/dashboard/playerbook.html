@@ -1,0 +1,218 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+	{% include "dashboard/sidebar.html" %}
+
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md playerbook">
+			<div class="row dash-row">
+				<div class="col-lg-7 dash-col">
+					<div class="dash-header text-center">
+						<span><h4>PLAYBOOK</h4></span>
+					</div>
+					<div class="tile-row">
+						<div class="col-lg-4">
+							<a href="/quiz/formation_quiz"><div class="panel-stat3 bg-danger">
+								<h3>FORMATIONS</h3>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div></a>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<a href="/quiz/play_quiz"><div class="panel-stat3 bg-danger">
+								<h3>PLAYS</h3>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div></a>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div>
+					<div class="tile-row">
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div>
+					<div class="tile-row">
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-4">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div>
+				</div>
+				<div class="col-lg-4 dash-col">
+					<div class="dash-header text-center">
+						<span><h4>RECENTLY TAKEN</h4></span>
+					</div>
+					<div class="col-lg-6">
+						<div class="panel-stat3 bg-danger">
+							<h2 class="m-top-none" id="userCount">362</h2>
+							<h5>Registered users</h5>
+							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
+							<div class="stat-icon">
+								<i class="fa fa-user fa-3x"></i>
+							</div>
+							<div class="refresh-button">
+								<i class="fa fa-refresh"></i>
+							</div>
+							<div class="loading-overlay">
+								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+							</div>
+						</div>
+					</div><!-- /.col -->
+					<div class="col-lg-6">
+						<div class="panel-stat3 bg-info">
+							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+							<h5>Server Load</h5>
+							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
+							<div class="stat-icon">
+								<i class="fa fa-hdd-o fa-3x"></i>
+							</div>
+							<div class="refresh-button">
+								<i class="fa fa-refresh"></i>
+							</div>
+							<div class="loading-overlay">
+								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+							</div>
+						</div>
+					</div><!-- /.col -->
+				</div>
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+			</div><!-- /panel -->
+
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			{% endblock %}
