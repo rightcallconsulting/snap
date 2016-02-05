@@ -60,6 +60,7 @@
 .graph-carousel {
   height: 455px;
   width: 90%;
+  margin-left: 20px;
 }
 
 #pause-image-button, #play-image-button, #refresh-image-button {
