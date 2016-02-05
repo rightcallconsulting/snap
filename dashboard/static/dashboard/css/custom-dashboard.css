@@ -59,6 +59,7 @@
 
 .graph-carousel {
   height: 455px;
+  width: 90%;
 }
 
 #pause-image-button, #play-image-button, #refresh-image-button {
@@ -79,4 +80,5 @@
 
 .donut-wrapper {
   clear: both;
+  width: 90%;
 }
