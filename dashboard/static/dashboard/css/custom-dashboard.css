@@ -55,3 +55,15 @@
 .graph-box {
   height: 500px;
 }
+
+#pause-image-button, #play-image-button, #refresh-image-button {
+  height: 20px;
+}
+
+#restart-button {
+  margin-right: 150px;
+}
+
+#edit-button {
+  float: right;
+}
