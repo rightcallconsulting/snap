@@ -72,3 +72,11 @@
 #edit-button {
   float: right;
 }
+
+.donut-chart {
+  margin: 20px;
+}
+
+.donut-wrapper {
+  clear: both;
+}
