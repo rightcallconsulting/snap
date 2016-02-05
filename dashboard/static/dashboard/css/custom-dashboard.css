@@ -69,5 +69,33 @@
 }
 
 .graph-box {
-  height: 500px;
+  height: 100%;
+  width: 100%;
+}
+
+.graph-carousel {
+  height: 455px;
+  width: 90%;
+  margin-left: 20px;
+}
+
+#pause-image-button, #play-image-button, #refresh-image-button {
+  height: 20px;
+}
+
+#restart-button {
+  margin-right: 150px;
+}
+
+#edit-button {
+  float: right;
+}
+
+.donut-chart {
+  margin: 20px;
+}
+
+.donut-wrapper {
+  clear: both;
+  width: 90%;
 }

@@ -16,3 +16,7 @@
 #header-box {
   margin-bottom: 0px;
 }
+
+#pause-image-button, #play-image-button, #refresh-image-button {
+  height: 20px;
+}

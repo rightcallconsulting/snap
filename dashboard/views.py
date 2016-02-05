@@ -361,6 +361,8 @@ def test_analytics(request, test_id):
     missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
             {'title': "Missed Plays",
             'isStacked': 'true',
+            'width': 700,
+            'height': 300,
             'legend':
                 { 'position': 'bottom' }
             }
@@ -370,6 +372,7 @@ def test_analytics(request, test_id):
     skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
             {'title': "Skipped Plays",
             'isStacked': 'true',
+            'width': 700,
             'legend':
                 { 'position': 'bottom' }
             }
