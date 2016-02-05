@@ -119,6 +119,22 @@ def playbook(request):
         })
 
 @login_required
+def playbook_defense(request):
+    team = request.user.coach.team
+    formations = team.formation_set.all()
+    offensive_formations = formations.filter(unit="offense")
+    defensive_formations = formations.filter(unit="defense")
+    play_id_array = []
+    return render(request, 'dashboard/playbook.html', {
+        'formations': formations,
+        'offensive_formations': offensive_formations,
+        'defensive_formations': defensive_formations,
+        'team': team,
+        'play_id_array': play_id_array,
+        'page_header': 'OFFENSIVE PLAYBOOK',
+    })
+
+@login_required
 def profile(request):
     return render(request, 'dashboard/profile.html')
 
