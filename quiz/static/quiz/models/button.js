@@ -3,8 +3,8 @@
 var Button = function(config) {
     this.x = config.x || 0;
     this.y = config.y || 360;
-    this.width = config.width || 60;
-    this.height = config.height || 30;
+    this.width = config.width || 4;
+    this.height = config.height || 3;
     this.label = config.label || "";
     this.clicked = config.clicked || false;
     this.fill = config.fill || color(255, 255, 255);
@@ -15,13 +15,17 @@ var Button = function(config) {
 
 // Prototype Methods
 
-Button.prototype.draw = function() {
+Button.prototype.draw = function(field) {
     fill(this.fill);
-    rect(this.x, this.y, this.width, this.height);
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var width = field.yardsToPixels(this.width);
+    var height = field.yardsToPixels(this.height);
+    rect(x, y, width, height);
     fill(0, 0, 0);
     textSize(12);
     textAlign(LEFT, TOP);
-    text(this.label, this.x+5, this.y+this.height/4);
+    text(this.label, x, y);
     this.displayButton = true; // COULD CAUSE SOME BUGS SO COME BACK TO THIS IF BUTTONS ARE WEIRD
 };
 
