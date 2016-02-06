@@ -24,73 +24,34 @@ function draw() {
   var capitalLetter = false;
 
   Player.prototype.draw = function() {
-      if(this.unit === "offense"){
-          noStroke();
-          if(this.rank > 0){
-              fill(255, 255, 0);
-          }else{
-              fill(this.red, this.green, this.blue);
-          }
-          ellipse(this.x, this.y, this.siz, this.siz);
-          fill(0,0,0);
-          textSize(14);
-          textAlign(CENTER, CENTER);
-          if(this.rank > 0){
-              text(this.rank, this.x, this.y);
-          }else{
-              text(this.num, this.x, this.y);
-          }
-          if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
-            this.displayRoute(this.breakPoints);
-          }
-          if (this.showPreviousRoute){
-            stroke(0, 255, 0);
-            this.displayRoute(this.previousRouteBreakpoints);
-          }
-          if (this.showPreviousRouteGuess){
-            stroke(255, 0, 0);
-            this.displayRoute(this.previousRouteGuess);
-          }
-      }
-      else {
-          fill(this.red, this.green, this.blue);
-          textSize(17);
-          textAlign(CENTER, CENTER);
-          text(this.pos, this.x, this.y);
-      }
-      this.drawRoute();
+    var x = field.getTranslatedX(this.x);
+    if(!x){
+      //debugger;
+    }
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
+    if(this.unit === "offense"){
       noStroke();
-  };
-
-  Player.prototype.select = function() {
-      //this.red, this.green, this.blue = color(255, 234, 0);
-      this.rank = 1;
-      this.clicked = true;
-      // Unselect all other players to isolate one route
-      for(var i = 0; i < formationExample.eligibleReceivers.length; i++){
-        var p = formationExample.eligibleReceivers[i];
-        if(p !== this){
-          p.clicked = false;
-          p.rank = 0;
-        }
+      fill(this.red, this.green, this.blue);
+      if(this.num === "WR"){
+        //debugger;
       }
-  };
-
-  Player.prototype.unselect = function() {
-      this.clicked = false;
-      this.rank = 0;
+      ellipse(x, y, siz, siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.num, x, y);
+    }
+    else {
+      noStroke();
+      fill(this.red, this.green, this.blue);
+      textSize(17);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
   };
 
   // Create Buttons
-  var save = new Button({
-      x: 10,
-      y: 360,
-      width: 35,
-      label: "Save",
-      clicked: false,
-      displayButton: true
-  });
-
   var trash = new Button({
       x: 330,
       y: 360,
@@ -100,20 +61,12 @@ function draw() {
       displayButton: true
   });
 
-  var clear = new Button({
-      x: 53,
-      y: 360,
-      width: 40,
-      label: "Clear",
-      clicked: false,
-      displayButton: true
-  });
-
   // Create Position groups
 
   var rb = new Player ({
-      x: 130,
-      y: 375,
+      x: field.getXOffset() + 15,
+      y: field.getYardY(height)+3,
+      siz:3,
       num: 'RB',
       // fill: color(255, 0, 0)
       red: 255,
@@ -123,8 +76,9 @@ function draw() {
   });
 
   var te = new Player ({
-      x: 170,
-      y: 375,
+    x: field.getXOffset() + 20,
+    y: field.getYardY(height)+3,
+    siz:3,
       num: 'TE',
       // fill: color(255, 0, 0)
       red: 255,
@@ -134,8 +88,9 @@ function draw() {
   });
 
   var wr = new Player({
-     x: 210,
-     y: 375,
+    x: field.getXOffset() + 25,
+    y: field.getYardY(height)+3,
+    siz:3,
      num: 'WR',
     //  fill: color(255, 0, 0)
     red: 255,
@@ -143,6 +98,8 @@ function draw() {
     blue: 0,
     pos: 'WR'
   });
+
+  //debugger;
 
   formationExample.optionsToCreate.push(rb);
   formationExample.optionsToCreate.push(wr);
@@ -164,8 +121,6 @@ function draw() {
   // intro scene
   var drawOpening = function() {
       field.drawBackground(formationExample, height, width);
-      // save.draw();
-      // clear.draw();
       trash.draw();
       formationExample.drawOptionsToCreate();
       formationExample.drawOLQB();
@@ -208,17 +163,16 @@ function draw() {
   };
 
   mouseDragged = function(){
-    var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-    var selectedNode = formationExample.mouseInReceiverOrNode()[1];
-    var positionOptionSelected = formationExample.mouseInOptionsToCreate();
+    var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+    var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
     if (formationExample.establishingNewPlayer){
-      formationExample.establishingNewPlayer.movePlayer(formationExample.oline[2].y);
+      formationExample.establishingNewPlayer.movePlayer(field);
     }
     else if (receiverClicked){
       receiverClicked.change = receiverClicked.change ?  false : true;
       formationExample.establishingNewPlayer = receiverClicked;
     }
-    else if (formationExample.qb[0].isMouseInside()){
+    else if (formationExample.qb[0].isMouseInside(field)){
       formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
       formationExample.establishingNewPlayer = formationExample.qb[0];
     }
@@ -227,6 +181,7 @@ function draw() {
         x: positionOptionSelected.x,
         y: positionOptionSelected.y,
         num: positionOptionSelected.num,
+        siz:2.99,
         // fill: color(255, 0, 0),
         red: 255,
         green: 0,
@@ -236,15 +191,8 @@ function draw() {
       })
       formationExample.createPlayer(newPlayer);
     }
-    else if (clear.isMouseInside()){
-      formationExample.removeAllPlayers();
-    }
-    var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-    var selectedNode = formationExample.mouseInReceiverOrNode()[1];
+    var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
     selectedWR = formationExample.findSelectedWR();
-    if(selectedNode){
-      selectedNode.change = true;
-    }
   };
 
   pressSaveButton = function() {
@@ -275,8 +223,7 @@ function draw() {
   }
 
   mouseClicked = function() {
-    var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-    var selectedNode = formationExample.mouseInReceiverOrNode()[1];
+    var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
     selectedWR = formationExample.findSelectedWR();
     if (formationExample.establishingNewPlayer){
       if(isInsideTrash(formationExample.establishingNewPlayer)){
@@ -284,44 +231,6 @@ function draw() {
       }
       formationExample.establishingNewPlayer.change = false;
       formationExample.establishingNewPlayer = null;
-    }
-    else if (clear.isMouseInside()){
-      pressClearButton();
-    }
-    else if(selectedNode){
-      if (selectedNode.change){
-        selectedNode.change = false;
-      }
-      else{
-        selectedNode.change = true;
-      }
-    }
-    else if (receiverClicked){
-        var playerSelected = false;
-        for(var i = 0; i < formationExample.eligibleReceivers.length; i++){
-            var p = formationExample.eligibleReceivers[i];
-            if (p.isMouseInside()){
-                if(p.clicked){
-                    p.unselect();
-                    p.showRoute = false;
-                }else{
-                    p.select();
-                }
-                break;
-            }
-        }
-    }
-    else if(selectedWR){
-      selectedWR.routeCoordinates.push([mouseX, mouseY]);
-      var nodeObject = new Node({
-          x: mouseX,
-          y: mouseY,
-          siz: 10
-      });
-      selectedWR.routeNodes.push(nodeObject);
-    }
-    else if (save.isMouseInside()) {
-      pressSaveButton();
     }
   };
 

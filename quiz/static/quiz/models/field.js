@@ -24,35 +24,75 @@ FieldNumber.prototype.draw = function(){
 var Field = function(config){
 
     this.heightInYards = config.heightInYards || 30;
-    this.widthInYards = config.widthInYards || 30;
+    this.height = config.height || 400;
+    this.width = config.width || 400;
     this.typeField = config.typeField || null;
     this.ballYardLine = config.yardLine || 50;
     this.ballWidthOffset = config.widthOffset || 0; //not using yet, but allows ball on a hash
 };
 
+Field.LENGTH = 120;
+Field.WIDTH = 53.33;
+
 var field = new Field({
   heightInYards: 40,
-  widthInYards: 40,
   yardLine: 75,
   widthOffset: -3
 });
 
 var createPlayField = new Field({
   heightInYards: 50,
-  widthInYards: 50,
   typeField: "Create"
 });
 
+Field.prototype.getWidthInYards = function(){
+  return this.heightInYards * (width / height);
+}
+
+Field.prototype.getTranslatedX = function(x){
+  return this.yardsToPixels(x - this.getXOffset());
+}
+
+Field.prototype.getTranslatedY = function(y){
+  return this.height - this.yardsToPixels(y - this.getYOffset());
+}
+
+Field.prototype.getYardX = function(x){
+  return this.pixelsToYards(x)+this.getXOffset();
+}
+
+Field.prototype.getYardY = function(y){
+  return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
+}
+
+Field.prototype.translateCoords = function(yardCoords){
+  return [this.getTranslatedX(yardCoords[0]), this.getTranslatedY(yardCoords[1])];
+}
+
+Field.prototype.pixelsToYards = function(pixels){
+  return pixels * this.heightInYards / this.height;
+}
+
+Field.prototype.yardsToPixels = function(yards){
+  return yards * this.height / (this.heightInYards);
+}
+
+Field.prototype.getXOffset = function(){
+  return (Field.WIDTH - this.getWidthInYards())/2; //doesn't have capability for non-centered fields yet
+}
+
+Field.prototype.getYOffset = function(){
+  return this.ballYardLine - this.heightInYards/2;
+}
 
 Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);
-  var xOffset = (53.33 - this.widthInYards) / 2;
   var pixelsToYards = this.heightInYards / height;
   var yardsToPixels = height / this.heightInYards;
     background(93, 148, 81);
     for(var i = 0; i < this.heightInYards; i++){
       var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
-        var yc = height * (i/this.heightInYards);
+        var yc = height - height * (i/this.heightInYards);
         stroke(255, 255, 255);
         if(currentYardLine <= 0 || currentYardLine >= 100){
           currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
@@ -70,19 +110,19 @@ Field.prototype.drawBackground = function(play, height, width) {
             textSize(26); //the one thing that isn't adjusting for screen size...
 
             //debugger;
-            text(min(currentYardLine,100-currentYardLine), yc, (xOffset-9)*yardsToPixels);
+            text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels);
             rotate(PI);
             var xc = (53.33 - 9)*yardsToPixels;
             //debugger;
-            text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-xOffset)*yardsToPixels);
+            text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-this.getXOffset())*yardsToPixels);
             //rotate(HALF_PI);
             resetMatrix();
         }else if(currentYardLine % 5 === 0){
             line(0, yc, width, yc);
         }else{
-            line((0.33 - xOffset)*yardsToPixels, yc, (1 - xOffset)*yardsToPixels, yc);
-            line((19.67-xOffset)*yardsToPixels, yc, (20.33 - xOffset)*yardsToPixels, yc);
-            line((33 - xOffset)*yardsToPixels, yc, (33.67 - xOffset)*yardsToPixels, yc);
+            line((0.33 - this.getXOffset())*yardsToPixels, yc, (1 - this.getXOffset())*yardsToPixels, yc);
+            line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
+            line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
             line((52.33)*yardsToPixels, yc, (53)*yardsToPixels, yc);
         }
     }

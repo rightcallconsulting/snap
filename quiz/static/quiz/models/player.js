@@ -44,6 +44,22 @@ Player.altRank = -1;
 
 // Instance Methods
 
+Player.prototype.getX = function(field){
+  return field.yardsToPixels(this.getYardX() - field.getXOffset());
+}
+
+Player.prototype.getY = function(field){
+  return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset());
+}
+
+Player.prototype.getYardX = function(){
+  return this.x;
+}
+
+Player.prototype.getYardY = function(){
+  return this.y;
+}
+
 Player.prototype.draw = function(){
   if(this.unit === "offense"){
       noStroke();
@@ -68,11 +84,17 @@ Player.prototype.clearRoute = function(){
   this.showPreviousRouteGuess = false;
 };
 
-Player.prototype.isMouseInside = function() {
-    return mouseX > this.x-this.siz/1 &&
-           mouseX < (this.x + this.siz/1) &&
-           mouseY > this.y - this.siz/1 &&
-           mouseY < (this.y + this.siz/1);
+Player.prototype.isMouseInside = function(field) {
+  var siz = field.yardsToPixels(this.siz);
+  var x = this.getX(field);
+  var y = this.getY(field);
+  var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
+  return dist <= siz/2;
+  /*
+  return mouseX > this.x-this.siz/1 &&
+         mouseX < (this.x + this.siz/1) &&
+         mouseY > this.y - this.siz/1 &&
+         mouseY < (this.y + this.siz/1);*/
 };
 
 Player.prototype.resetToStart = function(){
@@ -511,12 +533,13 @@ Player.prototype.checkRoutes = function(play){
 };
 
 
-Player.prototype.movePlayer = function(ballY){
-  this.x = mouseX;
-  if(mouseY < ballY){
-    this.y = ballY;
+Player.prototype.movePlayer = function(field){
+  this.x = field.getYardX(mouseX);
+  var newY = field.getYardY(mouseY);
+  if(newY > field.ballYardLine - this.siz/2){
+    this.y = field.ballYardLine - this.siz/2;
   }else{
-    this.y = mouseY;
+    this.y = newY;
   }
   this.startX = this.x;
   this.startY = this.y;

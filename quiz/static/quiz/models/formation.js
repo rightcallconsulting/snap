@@ -239,16 +239,17 @@ Formation.prototype.createPlayer = function(player){
   }
 };
 
-Formation.prototype.mouseInReceiverOrNode = function(){
+Formation.prototype.mouseInReceiverOrNode = function(field){
+  var receiverClicked = null; var selectedNode = null;
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     var p = this.eligibleReceivers[i];
-    if (p.isMouseInside()){
-      var receiverClicked = p;
+    if (p.isMouseInside(field)){
+      receiverClicked = p;
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
       if (n.isMouseInside()){
-        var selectedNode = n;
+        selectedNode = n;
       }
     }
   }
@@ -282,11 +283,12 @@ Formation.prototype.mouseInDefensivePlayer = function(){
   return defensivePlayer
 };
 
-Formation.prototype.mouseInOptionsToCreate = function() {
+Formation.prototype.mouseInOptionsToCreate = function(field) {
+  var optionClicked = null;
   for(var i = 0; i < this.optionsToCreate.length; i++){
     var p = this.optionsToCreate[i];
-    if (p.isMouseInside()){
-      var optionClicked = p;
+    if (p.isMouseInside(field)){
+      optionClicked = p;
     }
   }
   return optionClicked;
