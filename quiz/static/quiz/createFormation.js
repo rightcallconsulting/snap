@@ -16,7 +16,7 @@ function draw() {
   // Create Position groups
   var formationExample = new Formation({
   })
-  formationExample.createOLineAndQB();
+  formationExample.createOLineAndQB(field.ballYardLine);
   formationExample.changeablePlayers.push(formationExample.qb[0]);
 
 

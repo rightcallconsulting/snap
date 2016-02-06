@@ -24,20 +24,13 @@ var Formation = function(config){
   this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
-Formation.prototype.createOLineAndQB = function(siz, distance){
+Formation.prototype.createOLineAndQB = function(ballY){
   var olPositions = ["LT", "LG", "C", "RG", "RT"];
-  if(distance){
-    var xdist = distance;
-  } else {
-    xdist = 28;
-  }
   for (var i = -2; i < 3; i++) {
-      var xPos = 200 + i*xdist;
-      var yPos;
-      if (i === 0) {
-          yPos = 220;
-      } else {
-          yPos = 225;
+      var xPos = Field.WIDTH / 2 + i*3.5;
+      var yPos = ballY-1.5;
+      if (i !== 0) {
+          yPos -= 0.5;
       }
       var tmp = new Player({
           x: xPos,
@@ -50,14 +43,13 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
           pos: olPositions[i+2],
           index: i
       });
-      if(siz){tmp.siz = siz}
       this.oline.push(tmp);
       this.offensivePlayers.push(tmp);
   }
   currentPlayer = this.oline[3];
   var tmp = new Player ({
       x: this.oline[2].x,
-      y: this.oline[2].y + xdist,
+      y: this.oline[2].y-3.5,
       num: 12,
       fill: color(212, 130, 130),
       red: 212,
@@ -65,7 +57,6 @@ Formation.prototype.createOLineAndQB = function(siz, distance){
       green: 130,
       pos: "QB"
   });
-  if(siz){tmp.siz = siz}
   this.qb.push(tmp);
   this.offensivePlayers.push(tmp);
 };
