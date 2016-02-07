@@ -7,6 +7,7 @@ var defensePlay
 
 function setup() {
   var myCanvas = createCanvas(500, 500);
+  field.height = 500;
   background(58, 135, 70);
   myCanvas.parent('display-play-box-2');
 }
@@ -87,54 +88,26 @@ function draw() {
       newPlay: true
     });
 
-    Player.prototype.draw = function() {
-        if(this.unit === "offense"){
-            noStroke();
-            if(this.clicked){
-                fill(255, 255, 0);
-            }else{
-                fill(this.fill);
-            }
-            if (this.change){
-              this.x = mouseX;
-              this.y = mouseY;
-              }
-            ellipse(this.x, this.y, this.siz, this.siz);
-            fill(0,0,0);
-            textSize(14);
-            textAlign(CENTER, CENTER);
-            if(this.progressionRank > 0){
-                text(this.progressionRank, this.x, this.y);
-            } else if(this.progressionRank < 0){
-              text(letters[-1 - this.progressionRank], this.x, this.y);
-            }else{
-                text(this.num, this.x, this.y);
-            }
-            if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
-              this.displayRoute(this.breakPoints);
-            }
-            if (this.showPreviousRoute){
-              stroke(0, 255, 0);
-              this.displayRoute(this.previousRouteBreakpoints);
-            }
-            if (this.showPreviousRouteGuess){
-              stroke(255, 0, 0);
-              this.displayRoute(this.previousRouteGuess);
-            }
-        }
-        else {
-            if(this.clicked){
-              fill(0, 0, 255);
-            }
-            else{
-              fill(this.fill);
-            }
-            textSize(17);
-            textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
-        }
-        this.drawRoute();
+    Player.prototype.draw = function(field){
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
+      if(this.unit === "offense"){
         noStroke();
+        fill(this.fill);
+        ellipse(x, y, siz, siz);
+        fill(0,0,0);
+        textSize(14);
+        textAlign(CENTER, CENTER);
+        text(this.num, x, y);
+      }
+      else {
+        noStroke();
+        fill(this.fill);
+        textSize(17);
+        textAlign(CENTER, CENTER);
+        text(this.pos, x, y);
+      }
     };
 
     // NEEDS TO STAY HERE
@@ -206,19 +179,19 @@ function draw() {
     if(center === null){
       center = getCurrentFormation().oline[2];
     }
-    defensePlay.draw(center.x, center.y);
+    defensePlay.draw(field);
 
     // intro scene
     var drawOpening = function() {
         field.drawBackground(playBeingCreated, height, width)
 
         if(playToDraw){
-          playToDraw.drawAllPlayers();
-          playToDraw.drawAllRoutes();
+          playToDraw.drawAllPlayers(field);
+          playToDraw.drawAllRoutes(field);
           text("Formation: "+playToDraw.formation.playName, 115, 20);
 
         }
-        defensePlay.drawAllPlayers();
+        defensePlay.drawAllPlayers(field);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
