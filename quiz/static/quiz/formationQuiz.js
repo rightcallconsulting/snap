@@ -51,13 +51,19 @@ function setup() {
             position.fields.num = position.fields.pos;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
-              newPlayer.fill = color(212, 130, 130);
+              newPlayer.red = 212;
+              newPlayer.green = 130;
+              newPlayer.blue = 130;
             }
             else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.fill = color(143, 29, 29);
+              newPlayer.red = 143;
+              newPlayer.green = 29;
+              newPlayer.blue = 29;
             }
             else{
-              newPlayer.fill = color(255, 0, 0);
+              newPlayer.red = 255;
+              newPlayer.green = 0;
+              newPlayer.blue = 0;
             }
             var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             if(formation){
@@ -142,7 +148,7 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.scoreboard.draw(test, null);
-  test.getCurrentFormation().drawAllPlayers();
+  test.getCurrentFormation().drawAllPlayers(field);
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
@@ -193,7 +199,32 @@ keyTyped = function(){
   }
 };
 
+
+
 function draw() {
+  Player.prototype.draw = function(field){
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
+    if(this.unit === "offense"){
+      debugger;
+      noStroke();
+      fill(this.red, this.green, this.blue);
+      ellipse(x, y, siz, siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.num, x, y);
+    }
+    else {
+      noStroke();
+      fill(this.red, this.green, this.blue);
+      textSize(17);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
+  };
+
   if(makeJSONCall){
     //WAIT - still executing JSON
   }

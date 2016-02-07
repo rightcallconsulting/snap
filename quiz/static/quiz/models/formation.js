@@ -139,12 +139,12 @@ Formation.prototype.drawOLQB = function(){
   })
 };
 
-Formation.prototype.drawAllPlayers = function(){
+Formation.prototype.drawAllPlayers = function(field){
   this.offensivePlayers.forEach(function(player){
-    player.draw();
+    player.draw(field);
   })
   this.changeablePlayers.forEach(function(player){
-    player.draw();
+    player.draw(field);
   })
 
 };
@@ -297,7 +297,7 @@ Formation.prototype.validFormation = function(){
     var playersOnLine = 0;
     for(var i = 0; i < this.offensivePlayers.length; i++){
       var py = this.offensivePlayers[i].startY;
-      if(py >= ballY && py <= ballY + 10){
+      if(py <= ballY && py >= ballY - 1){
         playersOnLine++;
       }
     }

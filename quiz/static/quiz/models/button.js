@@ -24,17 +24,21 @@ Button.prototype.draw = function(field) {
     rect(x, y, width, height);
     fill(0, 0, 0);
     textSize(12);
-    textAlign(LEFT, TOP);
-    text(this.label, x, y);
+    textAlign(CENTER, CENTER);
+    text(this.label, x, y, width, height);
     this.displayButton = true; // COULD CAUSE SOME BUGS SO COME BACK TO THIS IF BUTTONS ARE WEIRD
 };
 
-Button.prototype.isMouseInside = function() {
+Button.prototype.isMouseInside = function(field) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var width = field.yardsToPixels(this.width);
+  var height = field.yardsToPixels(this.height);
     return this.displayButton &&
-           mouseX > this.x &&
-           mouseX < (this.x + this.width) &&
-           mouseY > this.y &&
-           mouseY < (this.y + this.height);
+           mouseX > x &&
+           mouseX < (x + width) &&
+           mouseY > y &&
+           mouseY < (y + height);
 };
 
 Button.prototype.changeClickStatus = function() {

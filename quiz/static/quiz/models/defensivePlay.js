@@ -21,11 +21,14 @@ var DefensivePlay = function(config) {
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
 
-DefensivePlay.prototype.draw = function(ballX, ballY, test){
+DefensivePlay.prototype.draw = function(field, test){
+  var ballX = Field.WIDTH / 2;
+  var ballY = field.ballYardLine;
   for(var i = 0; i < 4; i++){
     var dl = new Player ({
-      x: ballX - 60 + 40 * i,
-      y: ballY - 30,
+      x: ballX - 7 + 5 * i,
+      y: ballY + 1.5,
+      siz: 2.5,
       fill: color(255),
       pos: this.dlPositions[i],
       name: this.dlNames[i],
@@ -39,8 +42,9 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
 
   for(var i = 0; i < 3; i++){
     var lb = new Player ({
-      x: ballX - 80 + 75 * i,
-      y: ballY - 75,
+      x: ballX - 9 + 9 * i,
+      y: ballY + 6,
+      siz: 2.5,
       fill: color(255),
       pos: this.lbPositions[i],
       unit: "defense",
@@ -54,8 +58,9 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
 
   for(var i = 0; i < 2; i++){
     var safety = new Player ({
-      x: ballX - 100 + 200 * i,
-      y: ballY - 125,
+      x: ballX - 7 + 14 * i,
+      y: ballY + 12,
+      siz: 2.5,
       fill: color(255),
       pos: this.dbPositions[i+1],
       unit: "defense",
@@ -68,8 +73,9 @@ DefensivePlay.prototype.draw = function(ballX, ballY, test){
 
   for(var i = 0; i < 2; i++){
     var corner = new Player ({
-      x: ballX - 135 + 270 * i,
-      y: ballY - 35,
+      x: ballX - 15 + 30 * i,
+      y: ballY + 3,
+      siz: 2.5,
       fill: color(255),
       pos: this.dbPositions[i*3],
       unit: "defense",

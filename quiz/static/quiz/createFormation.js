@@ -117,7 +117,7 @@ function draw() {
     dlNames: ["Gronk", "Davis", "Smith", "Evans"]
   });
 
-  defensePlay.draw(formationExample.oline[2].x, formationExample.oline[2].y);
+  defensePlay.draw(field);
 
   // intro scene
   var drawOpening = function() {
