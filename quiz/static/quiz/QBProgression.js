@@ -63,10 +63,13 @@ function draw() {
 
     var user = new User({});
 
-    Player.prototype.draw = function() {
+    Player.prototype.draw = function(field) {
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
       var letters = ["A", "B", "C", "D", "E"];
       if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
-        this.displayRoute(this.breakPoints);
+        this.drawBreakPoints(field);
       }
         if(this.unit === "offense"){
             noStroke();
@@ -75,16 +78,16 @@ function draw() {
             }else{
                 fill(this.fill);
             }
-            ellipse(this.x, this.y, this.siz, this.siz);
+            ellipse(x, y, siz, siz);
             fill(0,0,0);
             textSize(14);
             textAlign(CENTER, CENTER);
             if(this.rank > 0){
-                text(this.rank, this.x, this.y);
+                text(this.rank, x, y);
             } else if(this.rank < 0){
-              text(letters[-1 - this.rank], this.x, this.y);
+              text(letters[-1 - this.rank], x, y);
             }else{
-                text(this.num, this.x, this.y);
+                text(this.num, x, y);
             }
 
         }
@@ -92,7 +95,7 @@ function draw() {
             fill(this.red,this.green,this.blue);
             textSize(17);
             textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
+            text(this.pos, x, y);
         }
     };
 
@@ -190,15 +193,15 @@ function draw() {
     });
 
     var bigReset = new Button({
-        x: width / 2 - 40,
-        y: height * 4 / 5,
-        width: 80,
+        x: field.getYardX(width/2)-4,
+        y: field.getYardY(height * 0.8),
+        width: 8,
         label: "Restart Quiz",
         clicked: false
     });
 
     // Draw Defense
-    defensePlay.draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
+    defensePlay.draw(field, test);
 
     var drawBackground = function(play, field) {
         field.drawBackground(play, height, width);
@@ -213,8 +216,8 @@ function draw() {
         // playButton.draw();
         // check.draw();
         // clear.draw();
-        defensePlay.drawAllPlayers();
-        test.getCurrentPlay().drawAllPlayers();
+        defensePlay.drawAllPlayers(field);
+        test.getCurrentPlay().drawAllPlayers(field);
         // nextPlay.draw();
         fill(0, 0, 0);
         textSize(20);
@@ -224,22 +227,15 @@ function draw() {
     // game scene
     var drawScene = function(play) {
         drawBackground(play, field);
-        // pause.draw();
-        // stop.draw();
-        // pause.displayButton = true;
-        // stop.displayButton = true;
-        // playButton.displayButton = false;
-        // check.displayButton = false;
-        // clear.displayButton = false;
-        defensePlay.drawAllPlayers();
-        test.getCurrentPlay().drawAllPlayers();
+        defensePlay.drawAllPlayers(field);
+        test.getCurrentPlay().drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
             play.eligibleReceivers[i].runRoute();
         }
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
             defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
         }
-        play.qb[0].runBootleg(play.oline[2], 1.0);
+        //play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(scoreboard.feedbackMessage, 120, 60);
@@ -290,25 +286,25 @@ function draw() {
       currentPlay = test.getCurrentPlay();
       if(currentPlay){currentPlay.setAllRoutes();}
       // scoreboard.feedbackMessage = "";
-        if (playButton.isMouseInside() && !playButton.clicked) {
+        if (playButton.isMouseInside(field) && !playButton.clicked) {
           pressPlayButton();
-        }else if (check.isMouseInside()){
+        }else if (check.isMouseInside(field)){
             currentPlay.checkProgression();
-        }else if (clear.isMouseInside()){
+        }else if (clear.isMouseInside(field)){
             test.getCurrentPlay().clearProgression();
             scoreboard.feedbackMessage = "";
-        }else if (pause.isMouseInside()) {
+        }else if (pause.isMouseInside(field)) {
             pause.changeClickStatus();
-        } else if (stop.isMouseInside()&& playButton.clicked) {
+        } else if (stop.isMouseInside(field)&& playButton.clicked) {
             pressStopButton();
-        }else if (bigReset.isMouseInside() && test.questionNum === test.plays.length) {
+        }else if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
             test.restartQuiz(defensePlay);
             // nextPlay.displayButton = true;
             // playButton.displayButton = true;
             // check.displayButton = true;
             // clear.displayButton = true;
         }
-        else if (nextPlay.isMouseInside()){
+        else if (nextPlay.isMouseInside(field)){
           test.skips++;
           test.advanceToNextPlay("Boo! Weak!");
         }
@@ -316,7 +312,7 @@ function draw() {
             var playerSelected = false;
             for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
                 var p = currentPlay.eligibleReceivers[i];
-                if (p.isMouseInside()){
+                if (p.isMouseInside(field)){
                     if(p.clicked){
                         p.unselect();
                         p.showRoute = false;
@@ -332,9 +328,10 @@ function draw() {
 
     draw = function() {
       if(test.endTime > 0){
+        debugger;
         bigReset.displayButton = true;
-        drawBackground("", field);
-        bigReset.draw();
+        field.drawBackground(null, height, width);
+        bigReset.draw(field);
         test.drawQuizSummary();
       }else{
         if (playButton.clicked) {

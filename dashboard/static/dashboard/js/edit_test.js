@@ -203,14 +203,14 @@ function draw() {
     var drawScene = function(play) {
         field.drawBackground(play, height, width)
         // defensePlay.drawAllPlayers();
-        play.drawAllPlayers();
+        play.drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
             play.eligibleReceivers[i].runRoute();
         }
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
             defensePlay.defensivePlayers[i].blitzGap(play.oline[2]);
         }
-        play.qb[0].runBootleg(play.oline[2], 1.0);
+        //play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 120, 60);
