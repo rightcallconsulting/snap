@@ -30,51 +30,6 @@ function setup() {
     });
     var plays = [];
     playNames = [];
-    /*$.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
-        newFormation.name = newFormation.playName
-        formations.push(newFormation);
-        formationNames.push(newFormation.name);
-      })
-      formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
-      formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-          data.forEach(function(position){
-            position.fields.id = position.pk;
-            position.fields.x = position.fields.startX;
-            position.fields.y = position.fields.startY;
-            position.fields.pos = position.fields.name;
-            position.fields.num = position.fields.pos;
-            var newPlayer = new Player(position.fields)
-            if(newPlayer.pos==="QB"){
-              newPlayer.fill = color(212, 130, 130);
-            }
-            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.fill = color(143, 29, 29);
-            }
-            else{
-              newPlayer.fill = color(255, 0, 0);
-            }
-            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            if(formation){
-              formation.positions.push(newPlayer);
-            }
-          })
-          formations.forEach(function(formation){
-            formation.populatePositions();
-          })
-
-          test.formations = formations;
-          multipleChoiceAnswers = [];
-          test.restartQuiz();
-          makeJSONCall = false
-
-        })
-    });*/
     $.getJSON('/quiz/teams/1/plays', function(data, jqXHR){
       data.forEach(function(play){
         var play = createPlayFromJSON(play);
@@ -116,7 +71,7 @@ var sortByPlayName = function(a, b){
     return 1;
   }else if(name2.length < 1){
     return -1;
-  }else if(name1 > name2){
+  }else if(name1 < name2){
     return -1;
   }else{
     return 1;
@@ -181,8 +136,8 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.scoreboard.draw(test, null);
-  test.getCurrentPlay().drawAllPlayers();
-  test.getCurrentPlay().drawAllRoutes();
+  test.getCurrentPlay().drawAllRoutes(field);
+  test.getCurrentPlay().drawAllPlayers(field);
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
@@ -193,7 +148,7 @@ function drawOpening(){
 
 mouseClicked = function() {
   test.scoreboard.feedbackMessage = "";
-  if (bigReset.isMouseInside() && test.over) {
+  if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
   else{
@@ -234,6 +189,27 @@ keyTyped = function(){
 };
 
 function draw() {
+  Player.prototype.draw = function(field){
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
+    if(this.unit === "offense"){
+      noStroke();
+      fill(this.fill);
+      ellipse(x, y, siz, siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.num, x, y);
+    }
+    else {
+      noStroke();
+      fill(this.fill);
+      textSize(17);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
+  };
   if(makeJSONCall){
     //WAIT - still executing JSON
   }

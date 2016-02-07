@@ -6,9 +6,9 @@ var Node = function(config){
 };
 
 Node.prototype.isMouseInside = function() {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
   var siz = field.yardsToPixels(this.siz);
-  var x = this.getX(field) + siz/2;
-  var y = this.getY(field) + siz/2;
   var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
   return dist <= siz/2;
   /*
@@ -21,7 +21,7 @@ Node.prototype.isMouseInside = function() {
 Node.prototype.draw = function(field) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
-  var siz = this.siz * field.yardsToPixels();
+  var siz = field.yardsToPixels(this.siz);
   noStroke();
   fill(255, 0, 0);
   ellipse(x, y, siz, siz);

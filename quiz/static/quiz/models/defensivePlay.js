@@ -89,9 +89,9 @@ DefensivePlay.prototype.draw = function(field, test){
 
 };
 
-DefensivePlay.prototype.drawAllPlayers = function(){
+DefensivePlay.prototype.drawAllPlayers = function(field){
   for(var i = 0; i < this.defensivePlayers.length; i++){
-    this.defensivePlayers[i].draw();
+    this.defensivePlayers[i].draw(field);
   }
 };
 
@@ -109,11 +109,11 @@ DefensivePlay.prototype.findSelectedDL = function(){
   return selectedDL;
 };
 
-DefensivePlay.prototype.mouseInDL = function(formation){
+DefensivePlay.prototype.mouseInDL = function(formation, field){
   var selectedWR = formation.findSelectedWR();
   if(!selectedWR || selectedWR.blocker){
     var selectedDL = this.defensivePlayers.filter(function(dl) {
-      return dl.isMouseInside() === true;
+      return dl.isMouseInside(field) === true;
     })[0];
     if (selectedDL) selectedDL.select();
   }

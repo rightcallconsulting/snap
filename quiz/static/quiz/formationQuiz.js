@@ -51,19 +51,13 @@ function setup() {
             position.fields.num = position.fields.pos;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
-              newPlayer.red = 212;
-              newPlayer.green = 130;
-              newPlayer.blue = 130;
+              newPlayer.setFill(212,130,130);
             }
             else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.red = 143;
-              newPlayer.green = 29;
-              newPlayer.blue = 29;
+              newPlayer.setFill(143,29,29);
             }
             else{
-              newPlayer.red = 255;
-              newPlayer.green = 0;
-              newPlayer.blue = 0;
+              newPlayer.setFill(255,0,0);
             }
             var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             if(formation){

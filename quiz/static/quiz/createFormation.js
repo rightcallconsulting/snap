@@ -25,17 +25,11 @@ function draw() {
 
   Player.prototype.draw = function() {
     var x = field.getTranslatedX(this.x);
-    if(!x){
-      //debugger;
-    }
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
       noStroke();
       fill(this.red, this.green, this.blue);
-      if(this.num === "WR"){
-        //debugger;
-      }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
       textSize(14);

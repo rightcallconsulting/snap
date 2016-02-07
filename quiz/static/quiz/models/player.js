@@ -44,6 +44,12 @@ Player.altRank = -1;
 
 // Instance Methods
 
+Player.prototype.setFill = function(r,g,b){
+  this.red = r;
+  this.green = g;
+  this.blue = b;
+}
+
 Player.prototype.getX = function(field){
   return field.yardsToPixels(this.getYardX() - field.getXOffset());
 }
@@ -350,53 +356,56 @@ Player.prototype.displayRoute = function(coords){
   strokeWeight(1);
 };
 
-Player.prototype.drawRoute = function(){
+Player.prototype.drawRoute = function(field){
   if (this.routeCoordinates.length > 1){
     for(var i = 0; i < this.routeCoordinates.length - 1; i++){
+      var x1 = field.getTranslatedX(this.routeCoordinates[i][0]);
+      var y1 = field.getTranslatedY(this.routeCoordinates[i][1]);
+      var x2 = field.getTranslatedX(this.routeCoordinates[i+1][0]);
+      var y2 = field.getTranslatedY(this.routeCoordinates[i+1][1]);
       stroke(255, 0, 0);
-      line(this.routeCoordinates[i][0], this.routeCoordinates[i][1], this.routeCoordinates[i + 1][0], this.routeCoordinates[i + 1][1]);
+      line(x1,y1,x2,y2);
       noStroke();
       fill(255, 0, 0)
       node = this.routeNodes[i]
       if (node && node.change){
-        node.x = mouseX;
-        node.y = mouseY;
-        this.routeCoordinates[i + 1][0] = mouseX;
-        this.routeCoordinates[i + 1][1] = mouseY;
+        node.x = field.getYardX(mouseX);
+        node.y = field.getYardY(mouseY);
+        this.routeCoordinates[i + 1][0] = node.x;
+        this.routeCoordinates[i + 1][1] = node.y;
       }
       if(node){
-        node.draw();
+        node.draw(field);
       }
     }
   }
 };
 
-Player.prototype.drawBreakPoints = function(){
-  if (this.breakPoints.length > 1){
-
-    for(var i = 0; i < this.breakPoints.length - 1; i++){
-      stroke(255, 0, 0);
-      line(this.x, this.y, this.breakPoints[0][0], this.breakPoints[0][1]);
-      line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
-      noStroke();
-      fill(255, 0, 0)
-      node = this.routeNodes[i]
-      if (node && node.change){
-        node.x = mouseX;
-        node.y = mouseY;
-        this.breakPoints[i + 1][0] = mouseX;
-        this.breakPoints[i + 1][1] = mouseY;
-      }
-      if(node){
-        node.draw();
-      }
-    }
-  }
-  else if(this.breakPoints.length === 1) {
+Player.prototype.drawBreakPoints = function(field){
+  var x1 = field.getTranslatedX(this.startX);
+  var y1 = field.getTranslatedY(this.startY);
+  if(this.breakPoints.length > 0){
+    var x2 = field.getTranslatedX(this.breakPoints[0][0]);
+    var y2 = field.getTranslatedY(this.breakPoints[0][1]);
     stroke(255, 0, 0);
-    line(this.x, this.y, this.breakPoints[0][0], this.breakPoints[0][1]);
+    line(x1,y1,x2,y2);
     noStroke();
     fill(255, 0, 0)
+  }
+  for(var i = 0; i < this.breakPoints.length - 1; i++){
+    x1 = field.getTranslatedX(this.breakPoints[i][0]);
+    y1 = field.getTranslatedY(this.breakPoints[i][1]);
+    var x2 = field.getTranslatedX(this.breakPoints[i+1][0]);
+    var y2 = field.getTranslatedY(this.breakPoints[i+1][1]);
+    stroke(255, 0, 0);
+    line(x1, y1, x2, y2);
+    line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
+    noStroke();
+    fill(255, 0, 0)
+    node = this.routeNodes[i]
+    if(node){
+      node.draw();
+    }
   }
 };
 

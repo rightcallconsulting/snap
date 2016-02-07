@@ -30,18 +30,17 @@ function draw() {
             position.fields.num = position.fields.pos;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
-              newPlayer.fill = color(212, 130, 130);
+              newPlayer.setFill(212, 130, 130);
             }
             else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.fill = color(143, 29, 29);
+              newPlayer.setFill(143, 29, 29);
             }
             else{
-              newPlayer.fill = color(255, 0, 0);
+              newPlayer.setFill(255, 0, 0);
             }
             formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             if(formation){
               formation.positions.push(newPlayer);
-
             }
           })
           formations.forEach(function(formation){
@@ -67,28 +66,31 @@ function draw() {
       newPlay: true
     });
 
-    Player.prototype.draw = function() {
+    Player.prototype.draw = function(field) {
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
         if(this.unit === "offense"){
             noStroke();
             if(this.clicked){
                 fill(255, 255, 0);
             }else{
-                fill(this.fill);
+                fill(this.red, this.blue, this.green);
             }
             if (this.change){
-              this.x = mouseX;
-              this.y = mouseY;
-              }
-            ellipse(this.x, this.y, this.siz, this.siz);
+              this.x = field.getYardX(mouseX);
+              this.y = field.getYardY(mouseY);
+            }
+            ellipse(x, y, siz, siz);
             fill(0,0,0);
             textSize(14);
             textAlign(CENTER, CENTER);
             if(this.progressionRank > 0){
-                text(this.progressionRank, this.x, this.y);
+                text(this.progressionRank, x, y);
             } else if(this.progressionRank < 0){
-              text(letters[-1 - this.progressionRank], this.x, this.y);
+              text(letters[-1 - this.progressionRank], x, y);
             }else{
-                text(this.num, this.x, this.y);
+                text(this.num, x, y);
             }
             if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
               this.displayRoute(this.breakPoints);
@@ -111,9 +113,9 @@ function draw() {
             }
             textSize(17);
             textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
+            text(this.pos, x, y);
         }
-        this.drawRoute();
+        this.drawRoute(field);
         noStroke();
     };
 
@@ -186,7 +188,7 @@ function draw() {
     if(center === null){
       center = getCurrentFormation().oline[2];
     }
-    defensePlay.draw(center.x, center.y);
+    defensePlay.draw(field);
 
     // intro scene
     var drawOpening = function() {
@@ -196,8 +198,8 @@ function draw() {
         // formationButtons.forEach(function(button){
           // button.draw();
         // })
-        currentFormation.drawAllPlayers();
-        defensePlay.drawAllPlayers();
+        currentFormation.drawAllPlayers(field);
+        defensePlay.drawAllPlayers(field);
         fill(0, 0, 0);
         textSize(20);
         // text("Formation: "+getCurrentFormation().playName, 100, 20);
@@ -215,7 +217,7 @@ function draw() {
         stop.displayButton = true;
         save.displayButton = false;
         clear.displayButton = false;
-        defensePlay.drawAllPlayers();
+        defensePlay.drawAllPlayers(field);
         for(var i = 0; i < getCurrentFormation().eligibleReceivers.length; i++){
             getCurrentFormation().eligibleReceivers[i].runRoute();
         }
@@ -280,18 +282,18 @@ function draw() {
 
     mouseClicked = function() {
       eligibleReceivers = getCurrentFormation().eligibleReceivers;
-      var olClicked = getCurrentFormation().mouseInOL();
-      var dlClicked = defensePlay.mouseInDL(getCurrentFormation());
-      var receiverClicked = getCurrentFormation().mouseInReceiverOrNode()[0];
-      var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
-      var formationClicked = isFormationClicked(formationButtons);
+      var olClicked = getCurrentFormation().mouseInOL(field);
+      var dlClicked = defensePlay.mouseInDL(getCurrentFormation(), field);
+      var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
+      var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
+      var formationClicked = isFormationClicked(formationButtons, field);
       var selectedOL = getCurrentFormation().findSelectedOL();
       var selectedDL = defensePlay.findSelectedDL();
       selectedWR = getCurrentFormation().findSelectedWR();
-      if (clear.isMouseInside()){
+      if (clear.isMouseInside(field)){
         pressClearButton();
       }
-      else if (save.isMouseInside()) {
+      else if (save.isMouseInside(field)) {
         pressSaveButton();
           // DELETE THE BELOW COMMENTS IF NO BUGS
           // eligibleReceivers.forEach(function(player){
@@ -343,11 +345,13 @@ function draw() {
       }
       else if(selectedWR){
         if(!selectedWR.blocker){
-          selectedWR.routeCoordinates.push([mouseX, mouseY]);
+          var x = field.getYardX(mouseX);
+          var y = field.getYardY(mouseY);
+          selectedWR.routeCoordinates.push([x, y]);
           var nodeObject = new Node({
-              x: mouseX,
-              y: mouseY,
-              siz: 10
+              x: x,
+              y: y,
+              siz: 1
           });
           selectedWR.routeNodes.push(nodeObject);
         }

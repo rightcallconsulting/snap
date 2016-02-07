@@ -263,10 +263,10 @@ Formation.prototype.mouseInQB = function(){
   return [receiverClicked, selectedNode];
 };
 
-Formation.prototype.mouseInDefensivePlayer = function(){
+Formation.prototype.mouseInDefensivePlayer = function(field){
   for(var i = 0; i < this.defensivePlayers.length; i++){
     var p = this.defensivePlayers[i];
-    if (p.isMouseInside()){
+    if (p.isMouseInside(field)){
       var defensivePlayer = p;
     }
 
@@ -395,9 +395,9 @@ Formation.prototype.findSelectedOL = function(){
   return selectedOL;
 };
 
-Formation.prototype.mouseInOL = function(){
+Formation.prototype.mouseInOL = function(field){
   var selectedOL = this.oline.filter(function(ol) {
-    return ol.isMouseInside() === true;
+    return ol.isMouseInside(field) === true;
   })[0];
   if (selectedOL) selectedOL.select();
   return selectedOL;
@@ -954,10 +954,10 @@ Formation.prototype.establishPersonnel = function(personnel){
   this.establishingNewPlayer = null;
 };
 
-var isFormationClicked = function(formationButtonArray){
+var isFormationClicked = function(formationButtonArray, field){
   var formationClicked;
   formationButtonArray.forEach(function(button){
-    if (button.isMouseInside()){
+    if (button.isMouseInside(field)){
       formationClicked = button;
     }
   })

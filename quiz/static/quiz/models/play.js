@@ -46,15 +46,15 @@ Play.prototype.setAllRoutes = function(){
   }
 };
 
-Play.prototype.drawAllPlayers = function(){
+Play.prototype.drawAllPlayers = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].draw();
+      this.offensivePlayers[i].draw(field);
   }
 };
 
-Play.prototype.drawAllRoutes = function(){
+Play.prototype.drawAllRoutes = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].drawBreakPoints();
+      this.offensivePlayers[i].drawBreakPoints(field);
   }
 };
 
