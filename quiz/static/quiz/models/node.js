@@ -5,7 +5,7 @@ var Node = function(config){
   this.change = false;
 };
 
-Node.prototype.isMouseInside = function() {
+Node.prototype.isMouseInside = function(field) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
   var siz = field.yardsToPixels(this.siz);

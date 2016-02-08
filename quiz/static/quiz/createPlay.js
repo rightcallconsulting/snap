@@ -205,7 +205,7 @@ function draw() {
         // text("Formation: "+getCurrentFormation().playName, 100, 20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
-        currentFormation.drawBlockingAssignments();
+        currentFormation.drawBlockingAssignments(field);
     };
 
     // game scene
@@ -369,7 +369,7 @@ function draw() {
     };
 
     mouseDragged = function(){
-      var selectedNode = getCurrentFormation().mouseInReceiverOrNode()[1];
+      var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
       if(selectedNode){
         selectedNode.change = true;
       }

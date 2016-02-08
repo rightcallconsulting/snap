@@ -102,6 +102,9 @@ function draw() {
     test.scoreboard = scoreboard;
 
     Player.prototype.draw = function() {
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
       if (this.unit === "offense") {
         noStroke();
         if (this.clicked) {
@@ -113,11 +116,11 @@ function draw() {
         } else {
           fill(this.fill);
         }
-        ellipse(this.x, this.y, this.siz, this.siz);
+        ellipse(x, y, siz, siz);
         fill(0, 0, 0);
         textSize(14);
         textAlign(CENTER, CENTER);
-        text(this.num, this.x, this.y);
+        text(this.num, x, y);
       } else {
         if (this.isBeingTested) {
           fill(0, 0, 250);
@@ -128,16 +131,16 @@ function draw() {
         }
         if (this === test.getCurrentPlay().bigDefender) {
           fill(0, 0, 255);
-          ellipse(this.x, this.y, this.siz, this.siz);
+          ellipse(x, y, siz, siz);
           if (this.clickedRegion === 1) {
             fill(235, 235, 29);
-            ellipse(this.x - this.siz / 4, this.y, this.siz / 2, this.siz * 0.9);
+            ellipse(x - siz / 4, y, siz / 2, siz * 0.9);
           } else if (this.clickedRegion === 2) {
             fill(235, 235, 29);
-            ellipse(this.x + this.siz / 4, this.y, this.siz / 2, this.siz * 0.9);
+            ellipse(x + siz / 4, y, siz / 2, siz * 0.9);
           } else if (this.clickedRegion === 3) {
             fill(235, 235, 29);
-            ellipse(this.x, this.y + this.siz / 3.3, this.siz * 0.75, this.siz * 0.4);
+            ellipse(x, y + siz / 3.3, siz * 0.75, siz * 0.4);
           }
           stroke(0, 0, 255);
           fill(0, 0, 0);
@@ -146,7 +149,7 @@ function draw() {
           textSize(20);
         }
         textAlign(CENTER, CENTER);
-        text(this.pos, this.x, this.y);
+        text(this.pos, x, y);
       }
     };
 
@@ -214,18 +217,15 @@ function draw() {
       currentPlayer = test.establishOLPlayerTested(user);
       currentPlayer.isBeingTested = true;
       if(test.getCurrentDefensivePlay().defensivePlayers.length === 0){
-        test.getCurrentDefensivePlay().draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y);
+        test.getCurrentDefensivePlay().draw(field);
       }
       test.getCurrentPlay().oline[3].blockingAssignment = test.getCurrentDefensivePlay().defensivePlayers[2];
       if (test.startTime === 0) {
         test.startTime = millis();
       }
       field.drawBackground(test.getCurrentPlay(), height, width);
-      // playButton.draw();
-      // restart.draw();
-      // clear.draw();
-      test.getCurrentDefensivePlay().drawAllPlayers();
-      test.getCurrentPlay().drawAllPlayers();
+      test.getCurrentDefensivePlay().drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
       fill(0, 0, 0);
       textSize(20);
       noStroke();
@@ -235,17 +235,14 @@ function draw() {
 
     var drawDetail = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      // playButton.draw();
-      // restart.draw();
-      // clear.draw();
       if (test.getCurrentPlay().bigPlayer !== null && test.getCurrentPlay().bigDefender !== null) {
-        test.getCurrentPlay().bigPlayer.draw();
-        test.getCurrentPlay().bigDefender.draw();
+        test.getCurrentPlay().bigPlayer.draw(field);
+        test.getCurrentPlay().bigDefender.draw(field);
       } else if (currentPlayer !== null && currentDefender !== null) {
-        test.getCurrentPlay().bigPlayer = test.getCurrentPlay().playerBeingTested().createBigPlayer(height/2 + 100, width/2);
+        test.getCurrentPlay().bigPlayer = test.getCurrentPlay().playerBeingTested().createBigPlayer(field.getYardX(height/2 + 100), field.getYardY(width/2));
         test.getCurrentPlay().bigDefender = new Player({
-          x: width / 2,
-          y: height / 2 - 50,
+          x: field.getYardX(width / 2),
+          y: field.getYardY(height / 2 - 50),
           unit: "defense",
           siz: currentDefender.siz * 2.5,
           pos: currentDefender.pos
@@ -262,11 +259,8 @@ function draw() {
 
     var drawDetailScene = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      // playButton.draw();
-      // pause.draw();
-      // stop.draw();
-      test.getCurrentPlay().bigDefender.draw();
-      test.getCurrentPlay().bigPlayer.draw();
+      test.getCurrentPlay().bigDefender.draw(field);
+      test.getCurrentPlay().bigPlayer.draw(field);
       test.getCurrentPlay().bigPlayer.blockMan(test.getCurrentPlay().bigDefender, 0, false);
       fill(0, 0, 0);
       textSize(20);
@@ -277,10 +271,8 @@ function draw() {
 
     var drawScene = function() {
       field.drawBackground(test.getCurrentPlay(), height, width);
-      // pause.draw();
-      // stop.draw();
-      test.getCurrentDefensivePlay().drawAllPlayers();
-      test.getCurrentPlay().drawAllPlayers();
+      test.getCurrentDefensivePlay().drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
       for (var i = 0; i < test.getCurrentPlay().oline.length; i++) {
         var olineman = test.getCurrentPlay().oline[i];
         olineman.blockMan(test.getCurrentDefensivePlay().defensivePlayers[i], 0, false);
@@ -335,27 +327,7 @@ function draw() {
 
     mouseClicked = function() {
       scoreboard.feedbackMessage = "";
-      if (playButton.isMouseInside()) {
-        pressPlayButton();
-        for (var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++) {
-          var receiver = test.getCurrentPlay().eligibleReceivers[i]
-          receiver.setRoute(receiver.routeNum, test.getCurrentPlay().oline[2]);
-        }
-        scoreboard.feedbackMessage = "";
-      } else if (restart.isMouseInside()) {
-        test.restartQuiz(test.defensivePlays[0]);
-        test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
-      } else if (clear.isMouseInside()) {
-        test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
-        scoreboard.feedbackMessage = "";
-      } else if (pause.isMouseInside()) {
-        pause.changeClickStatus();
-      } else if (stop.isMouseInside()) {
-          pressStopButton();
-        if (pause.clicked) {
-          pause.changeClickStatus();
-        }
-      } else if (bigReset.isMouseInside()) {
+      if (bigReset.isMouseInside(field) && test.over) {
         test.restartQuiz(test.defensivePlays[0]);
         test.getCurrentPlay().clearSelection(test, test.getCurrentDefensivePlay());
       } else {
@@ -378,7 +350,7 @@ function draw() {
         } else {
           for (var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++) {
             var p = test.getCurrentDefensivePlay().defensivePlayers[i];
-            if (p.isMouseInside()) {
+            if (p.isMouseInside(field)) {
               if (p.clicked) {
                 p.checkSelection(test);
               } else {
@@ -394,7 +366,7 @@ function draw() {
 
     draw = function() {
       if (test.endTime > 0) {
-        field.drawBackground(test.getCurrentPlay(),height, width)
+        field.drawBackground(null,height, width)
         test.drawQuizSummary();
         bigReset.displayButton = true;
         bigReset.draw();

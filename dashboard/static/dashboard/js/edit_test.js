@@ -202,14 +202,15 @@ function draw() {
     // game scene
     var drawScene = function(play) {
         field.drawBackground(play, height, width)
-        // defensePlay.drawAllPlayers();
+        //defensePlay.drawAllPlayers(field);
+        play.drawAllRoutes(field);
         play.drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
             play.eligibleReceivers[i].runRoute();
         }
-        for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+        /*for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
             defensePlay.defensivePlayers[i].blitzGap(play.oline[2]);
-        }
+        }*/
         //play.qb[0].runBootleg(play.oline[2], 1.0);
         fill(0, 0, 0);
         textSize(20);

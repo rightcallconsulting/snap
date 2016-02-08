@@ -239,7 +239,7 @@ Formation.prototype.mouseInReceiverOrNode = function(field){
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
-      if (n.isMouseInside()){
+      if (n.isMouseInside(field)){
         selectedNode = n;
       }
     }
@@ -378,12 +378,16 @@ Formation.prototype.clearBlockingAssignments = function(){
   }
 };
 
-Formation.prototype.drawBlockingAssignments = function(){
+Formation.prototype.drawBlockingAssignments = function(field){
   this.offensivePlayers.forEach(function(player){
     if(player.blockingAssignment){
+      var x1 = field.getTranslatedX(player.x);
+      var y1 = field.getTranslatedY(player.y);
+      var x2 = field.getTranslatedX(player.blockingAssignment.x);
+      var y2 = field.getTranslatedY(player.blockingAssignment.y);
       strokeWeight(1);
       stroke(100);
-      line(player.x,player.y, player.blockingAssignment.x, player.blockingAssignment.y);
+      line(x1, y1, x2, y2);
     }
   })
 };
