@@ -14,9 +14,9 @@ function setup() {
 
   multipleChoiceAnswers = [];
   bigReset = new Button({
-    x: width*0.5 - 25,
-    y: height*0.8,
-    width: 50,
+    x: field.getYardX(width*0.5 - 25),
+    y: field.getYardY(height*0.8),
+    width: 5,
     label: "Restart"
   })
 
@@ -153,7 +153,7 @@ function drawOpening(){
 
 mouseClicked = function() {
   test.scoreboard.feedbackMessage = "";
-  if (bigReset.isMouseInside() && test.over) {
+  if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
   else{
@@ -201,7 +201,6 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      debugger;
       noStroke();
       fill(this.red, this.green, this.blue);
       ellipse(x, y, siz, siz);
@@ -223,11 +222,10 @@ function draw() {
     //WAIT - still executing JSON
   }
   else if(test.over){
-    //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
-    bigReset.draw();
+    bigReset.draw(field);
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;

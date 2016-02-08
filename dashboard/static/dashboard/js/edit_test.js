@@ -196,7 +196,7 @@ function draw() {
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
-        currentFormation.drawBlockingAssignments();
+        currentFormation.drawBlockingAssignments(field, defensePlay);
     };
 
     // game scene

@@ -231,6 +231,11 @@ function draw() {
     };
 
     keyTyped = function(){
+      selectedWR = getCurrentFormation().findSelectedWR();
+      if(selectedWR && key === 'r'){
+        //do run play stuff
+        return true;
+      }
       var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
       var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
       var numDiff = key.charCodeAt(0) - "0".charCodeAt(0);
@@ -359,6 +364,13 @@ function draw() {
           selectedWR.blockingAssignment = selectedDL;
           selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
           selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
+        }else if(selectedWR.runner){
+          //do run play things
+          playBeingCreated.runPlay = new RunPlay({
+            ballCarrier: getCurrentFormation().qb[0],
+            ballRecipient: selectedWR,
+          });
+          playBeingCreated.runPlay.exchangePoints.push([field.getYardX(mouseX)])
         }
       }
       else if(dlClicked && selectedOL){

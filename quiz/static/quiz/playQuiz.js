@@ -14,9 +14,9 @@ function setup() {
 
   multipleChoiceAnswers = [];
   bigReset = new Button({
-    x: width*0.5 - 25,
-    y: height*0.8,
-    width: 50,
+    x: field.getYardX(width*0.5 - 25),
+    y: field.getYardY(height*0.8),
+    width: 5,
     label: "Restart"
   })
 
@@ -218,7 +218,7 @@ function draw() {
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
-    bigReset.draw();
+    bigReset.draw(field);
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;

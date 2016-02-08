@@ -89,6 +89,27 @@ DefensivePlay.prototype.draw = function(field, test){
 
 };
 
+DefensivePlay.prototype.getPlayer = function(unitIndex, playerIndex){
+  if(unitIndex === 0){
+    if(this.dline.length > playerIndex){
+      return this.dline[playerIndex];
+    }
+  }else if(unitIndex === 1){
+    if(this.linebackers.length > playerIndex){
+      return this.dline[playerIndex];
+    }
+  }else if(unitIndex === 2){
+    if(this.cornerbacks.length > playerIndex){
+      return this.cornerbacks[playerIndex];
+    }
+  }else if(unitIndex === 3){
+    if(this.safeties.length > playerIndex){
+      return this.safeties[playerIndex];
+    }
+  }
+  return null;
+}
+
 DefensivePlay.prototype.drawAllPlayers = function(field){
   for(var i = 0; i < this.defensivePlayers.length; i++){
     this.defensivePlayers[i].draw(field);

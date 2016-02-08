@@ -378,8 +378,11 @@ Formation.prototype.clearBlockingAssignments = function(){
   }
 };
 
-Formation.prototype.drawBlockingAssignments = function(field){
+Formation.prototype.drawBlockingAssignments = function(field, defensivePlay){
   this.offensivePlayers.forEach(function(player){
+    if(!player.blockingAssignment && defensivePlay && player.blockingAssignmentUnitIndex && player.blockingAssignmentPlayerIndex){
+      player.blockingAssignment = defensivePlay.getPlayer(player.blockingAssignmentUnitIndex, player.blockingAssignmentPlayerIndex);
+    }
     if(player.blockingAssignment){
       var x1 = field.getTranslatedX(player.x);
       var y1 = field.getTranslatedY(player.y);
