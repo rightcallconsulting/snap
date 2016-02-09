@@ -328,7 +328,6 @@ function draw() {
 
     draw = function() {
       if(test.endTime > 0){
-        debugger;
         bigReset.displayButton = true;
         field.drawBackground(null, height, width);
         bigReset.draw(field);
