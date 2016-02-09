@@ -322,16 +322,16 @@ function draw() {
     var drawOpening = function() {
         field.drawBackground(getCurrentFormation(), height, width);
         text(formationExample.playName, 10, 50)
-        save.draw();
-        clear.draw();
-        trash.draw();
+        save.draw(field);
+        clear.draw(field);
+        trash.draw(field);
         formationExample.drawOptionsToCreate();
         formationExample.drawAllPlayers();
         formationButtons.forEach(function(button){
-          button.draw();
+          button.draw(field);
         })
         personnelButtons.forEach(function(button){
-          button.draw();
+          button.draw(field);
         })
         currentOffensiveFormation.drawAllPlayers();
         fill(0, 0, 0);
