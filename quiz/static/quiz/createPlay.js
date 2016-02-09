@@ -233,7 +233,7 @@ function draw() {
     keyTyped = function(){
       selectedWR = getCurrentFormation().findSelectedWR();
       if(selectedWR && key === 'r'){
-        //do run play stuff
+        selectedWR.runner = true;
         return true;
       }
       var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
@@ -349,7 +349,20 @@ function draw() {
           }
       }
       else if(selectedWR){
-        if(!selectedWR.blocker){
+        if(selectedWR.runner){
+          if(!playBeingCreated.runPlay){
+            playBeingCreated.runPlay = new RunPlay({
+              ballCarrier: getCurrentFormation().qb[0],
+              ballRecipient: selectedWR
+            });
+          }
+          /*if(playBeingCreated.runPlay.exchangePoints.length < 1){
+            playBeingCreated.runPlay.exchangePoints.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
+          }else{
+            playBeingCreated.runPlay.recipientDestination.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
+          }*/
+        }
+        else if(!selectedWR.blocker){
           var x = field.getYardX(mouseX);
           var y = field.getYardY(mouseY);
           selectedWR.routeCoordinates.push([x, y]);
@@ -364,13 +377,6 @@ function draw() {
           selectedWR.blockingAssignment = selectedDL;
           selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
           selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
-        }else if(selectedWR.runner){
-          //do run play things
-          playBeingCreated.runPlay = new RunPlay({
-            ballCarrier: getCurrentFormation().qb[0],
-            ballRecipient: selectedWR,
-          });
-          playBeingCreated.runPlay.exchangePoints.push([field.getYardX(mouseX)])
         }
       }
       else if(dlClicked && selectedOL){

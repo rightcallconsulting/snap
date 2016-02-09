@@ -58,6 +58,12 @@ Play.prototype.drawAllRoutes = function(field){
   }
 };
 
+Play.prototype.drawRunPlay = function(field){
+  if(this.runPlay){
+    this.runPlay.draw(field);
+  }
+};
+
 Play.prototype.clearProgression = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
       var p = this.eligibleReceivers[i];

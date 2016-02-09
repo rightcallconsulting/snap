@@ -129,7 +129,7 @@ Test.prototype.advanceToNextPlay = function(message){
     this.endTime = millis();
     this.over = true;
   } else if(this.typeTest === "Blitz"){
-    
+
   }else{
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
