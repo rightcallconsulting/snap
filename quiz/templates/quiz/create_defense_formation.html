@@ -5,4 +5,37 @@
 
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/createDefenseFormation.js' %}"></script>
+  <script type="text/javascript">
+
+    $('.formation-button').click(function(){
+      currentFormation = formations.filter(function(formationObject){
+        return formationObject.name === this.value;
+      }.bind(this))[0]
+      $('#play-image-header').text(currentFormation.playName);
+    })
+
+    $('#save-button').click(function(){
+      pressSaveButton();
+    })
+
+    $('#clear-button').click(function(){
+      pressClearButton();
+    })
+  </script>
+{% endblock %}
+
+{% block buttons %}
+  <div class="holds-play-buttons">
+    <button id="save-button" class="btn btn-success" name="button">Save</button>
+    <button id="clear-button" class="btn btn-success" name="button">Clear</button>
+  </div>
+{% endblock %}
+
+{% block sidebar %}
+  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+    <div class="dash-header text-center">
+      <span><h4>Defensive Personnel</h4></span>
+    </div>
+
+  </div>
 {% endblock %}

@@ -59,7 +59,7 @@ function draw() {
 
     //Field Position Variables
     var currentOffensiveFormation = formations[0];
-
+    debugger;
     var getCurrentFormation = function(){
       return currentOffensiveFormation;
     };
