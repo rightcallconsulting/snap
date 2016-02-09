@@ -111,13 +111,13 @@ class Position(models.Model):
     CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
     CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+    CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
     zoneYardX = models.IntegerField(null=True, blank=True)
     zoneYardY = models.CharField(max_length=200, null=True, blank=True)
     zoneHeight = models.CharField(max_length=200, null=True, blank=True)
     zoneWidth = models.CharField(max_length=200, null=True, blank=True)
     gapYardX = models.CharField(max_length=200, null=True, blank=True)
     gapYardY = models.CharField(max_length=200, null=True, blank=True)
-
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
 
