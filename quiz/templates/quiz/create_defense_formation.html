@@ -8,10 +8,11 @@
   <script type="text/javascript">
 
     $('.formation-button').click(function(){
-      currentFormation = formations.filter(function(formationObject){
+      currentOffensiveFormation = formations.filter(function(formationObject){
         return formationObject.name === this.value;
       }.bind(this))[0]
-      $('#play-image-header').text(currentFormation.playName);
+      debugger;
+      $('#play-image-header').text(currentOffensiveFormation.playName);
     })
 
     $('#save-button').click(function(){

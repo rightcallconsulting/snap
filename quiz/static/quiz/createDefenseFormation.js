@@ -2,6 +2,7 @@ var formations = [];
 var makeJSONCall = true;
 var personnelButtons = [];
 var currentPersonnel = "Base";
+var currentOffensiveFormation
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -58,7 +59,7 @@ function draw() {
 
 
     //Field Position Variables
-    var currentOffensiveFormation = formations[0];
+    currentOffensiveFormation = formations[0];
     var getCurrentFormation = function(){
       return currentOffensiveFormation;
     };
@@ -76,7 +77,10 @@ function draw() {
     // Global Variables
     var capitalLetter = false;
 
-    Player.prototype.draw = function() {
+    Player.prototype.draw = function(field) {
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
         if(this.unit === "offense"){
             noStroke();
             if(this.rank > 0){
@@ -85,17 +89,17 @@ function draw() {
                 fill(this.fill);
             }
             if (this.change){
-              this.x = mouseX;
-              this.y = mouseY;
+              this.x = field.getYardX(mouseX);
+              this.y = field.getYardY(mouseY);
               }
-            ellipse(this.x, this.y, this.siz, this.siz);
+            ellipse(x, y, siz, siz);
             fill(0,0,0);
             textSize(14);
             textAlign(CENTER, CENTER);
             if(this.rank > 0){
-                text(this.rank, this.x, this.y);
+                text(this.rank, x, y);
             }else{
-                text(this.num, this.x, this.y);
+                text(this.num, x, y);
             }
             if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
               this.displayRoute(this.breakPoints);
@@ -118,14 +122,14 @@ function draw() {
             }
             textSize(17);
             textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
+            text(this.pos, x, y);
             if(this.CBAssignment){
               stroke(255, 0, 0);
-              line(this.x, this.y, this.CBAssignment.x, this.CBAssignment.y);
+              line(x, y, this.CBAssignment.x, this.CBAssignment.y);
             }
             else if (this.zoneXPoint && this.zoneYPoint){
               stroke(255, 0, 0);
-              line(this.x, this.y, this.zoneXPoint, this.zoneYPoint);
+              line(x, y, this.zoneXPoint, this.zoneYPoint);
               fill(255, 0, 0);
               // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
               // TBD Draw a rectangle
@@ -324,15 +328,15 @@ function draw() {
         save.draw(field);
         clear.draw(field);
         trash.draw(field);
-        formationExample.drawOptionsToCreate();
-        formationExample.drawAllPlayers();
+        formationExample.drawOptionsToCreate(field);
+        formationExample.drawAllPlayers(field);
         formationButtons.forEach(function(button){
           button.draw(field);
         })
         personnelButtons.forEach(function(button){
           button.draw(field);
         })
-        currentOffensiveFormation.drawAllPlayers();
+        currentOffensiveFormation.drawAllPlayers(field);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);

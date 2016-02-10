@@ -151,7 +151,7 @@ Formation.prototype.drawAllPlayers = function(field){
 
 Formation.prototype.drawOptionsToCreate = function() {
   this.optionsToCreate.forEach(function(player){
-    player.draw();
+    player.draw(field);
   })
 };
 
