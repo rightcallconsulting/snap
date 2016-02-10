@@ -243,6 +243,12 @@ Formation.prototype.mouseInReceiverOrNode = function(field){
         selectedNode = n;
       }
     }
+    for(var k = 0; k < p.runNodes.length; k++){
+      var n = p.runNodes[k];
+      if (n.isMouseInside(field)){
+        selectedNode = n;
+      }
+    }
   }
   return [receiverClicked, selectedNode];
 };

@@ -23,6 +23,7 @@ var Player = function(config) {
     this.showRoute = false;
     this.routeCoordinates = config.routeCoordinates || [[this.startX, this.startY]];
     this.routeNodes = [];
+    this.runNodes = [];
     this.change = config.change || false;
     this.progressionRank = config.progressionRank || 0;
     this.routeNum = config.routeNum || null;

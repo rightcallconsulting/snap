@@ -122,10 +122,11 @@ function draw() {
     // NEEDS TO STAY HERE
     Player.prototype.select = function() {
         //this.fill = color(255, 234, 0);
-        this.rank = 1;
-        this.clicked = true;
+
         // Unselect all other players to isolate one route
         if (this.unit == "offense"){
+          this.rank = 1;
+          this.clicked = true;
           for(var i = 0; i < getCurrentFormation().offensivePlayers.length; i++){
             var p = getCurrentFormation().offensivePlayers[i];
             if(p !== this){
@@ -134,13 +135,13 @@ function draw() {
             }
           }
         } else{
-          for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+          /*for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
             var p = defensePlay.defensivePlayers[i];
             if(p !== this){
               p.clicked = false;
               p.rank = 0;
             }
-          }
+          }*/
         }
     };
 
@@ -206,6 +207,9 @@ function draw() {
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
         currentFormation.drawBlockingAssignments(field);
+        if(playBeingCreated && playBeingCreated.runPlay){
+          playBeingCreated.runPlay.draw(field);
+        }
     };
 
     // game scene
@@ -233,8 +237,31 @@ function draw() {
     keyTyped = function(){
       selectedWR = getCurrentFormation().findSelectedWR();
       if(selectedWR && key === 'r'){
-        selectedWR.runner = true;
-        return true;
+        if(selectedWR.runner){
+          selectedWR.runner = false;
+          selectedWR.runNodes = [];
+          playBeingCreated.runPlay = null;
+        } else{
+          selectedWR.blocker = false;
+          selectedWR.blockingAssignment = null;
+          selectedWR.runner = true;
+          selectedWR.clearRoute();
+        }
+        return false;
+      }else if(selectedWR && key === 'b'){
+        if(selectedWR.blocker){
+          selectedWR.blocker = false;
+          selectedWR.blockingAssignment = null;
+        } else if(selectedWR.runner){
+          selectedWR.blocker = true;
+          selectedWR.runner = false;
+          selectedWR.runNodes = [];
+          playBeingCreated.runPlay = null;
+        } else{
+          selectedWR.blocker = true;
+          selectedWR.clearRoute();
+        }
+        return false;
       }
       var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
       var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
@@ -264,19 +291,13 @@ function draw() {
           selectedWR.progressionRank--;
         }
       }
-      else if(keyCode == 66 && selectedWR){
-        if(selectedWR.blocker){
-          selectedWR.blocker = false;
-          selectedWR.blockingAssignment = null;
-        } else{
-          selectedWR.blocker = true;
-          selectedWR.clearRoute();
-        }
-        return false;
-      }
       else if (keyCode === BACKSPACE){
         if (selectedWR){
-          selectedWR.stepRouteBackward();
+          if(selectedWR.runner){
+            playBeingCreated.runPlay.stepRunBackward();
+          }else{
+            selectedWR.stepRouteBackward();
+          }
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
         }
@@ -350,12 +371,21 @@ function draw() {
       }
       else if(selectedWR){
         if(selectedWR.runner){
-          if(!playBeingCreated.runPlay){
+          if(!playBeingCreated.runPlay || playBeingCreated.runPlay.ballRecipient !== selectedWR){
             playBeingCreated.runPlay = new RunPlay({
               ballCarrier: getCurrentFormation().qb[0],
               ballRecipient: selectedWR
             });
+            playBeingCreated.runPlay.carrierBreakPoints.push([playBeingCreated.runPlay.ballCarrier.x, playBeingCreated.runPlay.ballCarrier.y]);
+            playBeingCreated.runPlay.recipientBreakPoints.push([playBeingCreated.runPlay.ballRecipient.x, playBeingCreated.runPlay.ballRecipient.y]);
           }
+          playBeingCreated.runPlay.recipientBreakPoints.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
+          selectedWR.runNodes.push(new Node({
+            fill: color(0,0,255),
+            x: field.getYardX(mouseX),
+            y: field.getYardY(mouseY),
+            siz: 1
+          }));
           /*if(playBeingCreated.runPlay.exchangePoints.length < 1){
             playBeingCreated.runPlay.exchangePoints.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
           }else{
@@ -374,15 +404,15 @@ function draw() {
           selectedWR.routeNodes.push(nodeObject);
         }
         else if(selectedWR.blocker && dlClicked){
-          selectedWR.blockingAssignment = selectedDL;
-          selectedWR.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
-          selectedWR.blockingAssignmentUnitIndex = selectedDL.unitIndex;
+          selectedWR.blockingAssignment = dlClicked;
+          selectedWR.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+          selectedWR.blockingAssignmentUnitIndex = dlClicked.unitIndex;
         }
       }
       else if(dlClicked && selectedOL){
-        selectedOL.blockingAssignment = selectedDL;
-        selectedOL.blockingAssignmentPlayerIndex = selectedDL.playerIndex;
-        selectedOL.blockingAssignmentUnitIndex = selectedDL.unitIndex;
+        selectedOL.blockingAssignment = dlClicked;
+        selectedOL.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+        selectedOL.blockingAssignmentUnitIndex = dlClicked.unitIndex;
       }
     };
 
