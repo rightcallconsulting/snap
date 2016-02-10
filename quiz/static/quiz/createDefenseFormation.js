@@ -358,17 +358,32 @@ function draw() {
       }
     };
 
+    keyTyped = function(){
+
+    }
+
     keyPressed = function() {
       selectedWR = formationExample.findSelectedWR();
+      var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (keyCode === SHIFT){
         capitalLetter = true;
       }
+
       if (keyCode === BACKSPACE){
         if (selectedWR){
           selectedWR.stepRouteBackward();
         } else{
           formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
         }
+      }
+      else if (selectedDefensivePlayer && keyCode == 80){
+        if(selectedDefensivePlayer.rusher){
+          selectedDefensivePlayer.rusher = false;
+        }
+        else {
+          selectedDefensivePlayer.rusher = true;
+        }
+        return true;
       }
       else{
         formationExample.playName += capitalLetter ? key : key.toLowerCase();
