@@ -178,9 +178,10 @@ function draw() {
     });
 
     var trash = new Button({
-        x: 330,
-        y: 360,
-        width: 40,
+        x: field.getYardX(width * 0.8),
+        y: field.getYardY(height * 0.88),
+        width: field.pixelsToYards(width * 0.12),
+        height: field.pixelsToYards(width * 0.08),
         label: "Trash",
         clicked: false,
         displayButton: true
@@ -356,7 +357,7 @@ function draw() {
     var isInsideTrash = function(player){
       return player.x > trash.x &&
              player.x < trash.x + trash.width &&
-             player.y > trash.y &&
+             player.y < trash.y &&
              player.y < trash.y + trash.height
     };
 

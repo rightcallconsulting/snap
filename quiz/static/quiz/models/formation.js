@@ -465,8 +465,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
   this.removeAllPlayers();
   if(personnel === "Base"){
     var de1 = new Player({
-      x: field.getYardX(128),
-      y: field.getYardY(197.33),
+      x: 20,
+      y: 76,
       num: "DE",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -476,8 +476,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(de1);
 
     var de2 = new Player({
-      x: field.getYardX(264),
-      y: field.getYardY(191.33),
+      x: 33,
+      y: 76,
       num: "DE",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -487,8 +487,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(de2);
 
     var dl1 = new Player({
-      x: 176,
-      y: 195.33,
+      x: 24,
+      y: 76,
       num: "DL",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -498,8 +498,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(dl1);
 
     var dl2 = new Player({
-      x: 219,
-      y: 191,
+      x: 28,
+      y: 76,
       num: "DL",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -509,8 +509,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(dl2);
 
     var will = new Player({
-      x: 136,
-      y: 137,
+      x: 21,
+      y: 79,
       num: "W",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -520,8 +520,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(will);
 
     var mike = new Player({
-      x: 204,
-      y: 131,
+      x: 27,
+      y: 80,
       num: "M",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -531,8 +531,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(mike);
 
     var sam = new Player({
-      x: 271,
-      y: 133,
+      x: 32,
+      y: 79,
       num: "S",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -542,8 +542,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(sam);
 
     var cb1 = new Player({
-      x: 342,
-      y: 175,
+      x: 12,
+      y: 76,
       num: "CB",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -553,8 +553,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(cb1);
 
     var cb2 = new Player({
-      x: 52,
-      y: 175,
+      x: 40,
+      y: 77,
       num: "CB",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -564,8 +564,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(cb2);
 
     var ss = new Player({
-      x: 308,
-      y: 63,
+      x: 29,
+      y: 85,
       num: "SS",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -575,8 +575,8 @@ Formation.prototype.establishPersonnel = function(personnel, field){
     this.createPlayer(ss);
 
     var fs = new Player({
-      x: 147,
-      y: 60,
+      x: 20,
+      y: 85,
       num: "FS",
       fill: color(0, 0, 0),
       unit: "defense",
