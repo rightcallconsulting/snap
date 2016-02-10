@@ -125,7 +125,7 @@ function draw() {
             text(this.pos, x, y);
             if(this.CBAssignment){
               stroke(255, 0, 0);
-              line(x, y, this.CBAssignment.x, this.CBAssignment.y);
+              line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
             }
             else if (this.zoneXPoint && this.zoneYPoint){
               stroke(255, 0, 0);
@@ -133,7 +133,8 @@ function draw() {
               fill(255, 0, 0);
               // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
               // TBD Draw a rectangle
-              ellipse(this.zoneXPoint, this.zoneYPoint, 10, 10);
+              noFill()
+              rect(this.zoneXPoint, this.zoneYPoint, 40, 40);
             }
         }
         this.drawRoute();
@@ -232,6 +233,7 @@ function draw() {
     var dl = new Player ({
         x: 20,
         y: 100-field.heightInYards,
+        siz: 3,
         num: 'DL',
         fill: color(0, 0, 0),
         pos: 'DL',
@@ -397,7 +399,7 @@ function draw() {
         })
         formationExample.createPlayer(newPlayer);
       }
-      else if (clear.isMouseInside()){
+      else if (clear.isMouseInside(field)){
         formationExample.removeAllPlayers();
       }
       var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
@@ -411,7 +413,7 @@ function draw() {
     var isPersonnelClicked = function(personnelButtonArray){
       var personnelClicked;
       personnelButtonArray.forEach(function(button){
-        if (button.isMouseInside()){
+        if (button.isMouseInside(field)){
           personnelClicked = button;
         }
       })
@@ -433,7 +435,7 @@ function draw() {
         formationExample.establishingNewPlayer.change = false;
         formationExample.establishingNewPlayer = null;
       }
-      else if (save.isMouseInside()) {
+      else if (save.isMouseInside(field)) {
         if(formationExample.validFormation()){
           var newFormation = new Formation({
               defensivePlayers: formationExample.defensivePlayers,
@@ -454,7 +456,7 @@ function draw() {
           formationExample.feedbackMessage = "Invalid Play"
         }
       }
-      else if (clear.isMouseInside()){
+      else if (clear.isMouseInside(field)){
         formationExample.removeAllPlayers();
       }
       else if(selectedNode){
@@ -465,15 +467,11 @@ function draw() {
           selectedNode.change = true;
         }
       }
-      else if (formationClicked){
-        currentOffensiveFormation = formations.filter(function(formation) {
-          return formation.playName == formationClicked.label;
-        })[0];
-      }
-      else if (personnelClicked){
-        currentPersonnel = personnelClicked.label;
-        formationExample.establishPersonnel(currentPersonnel);
-      }
+
+      // else if (personnelClicked){
+      //   currentPersonnel = personnelClicked.label;
+      //   formationExample.establishPersonnel(currentPersonnel);
+      // }
       else if (selectedDefensivePlayer && receiverClicked){
         if(!selectedDefensivePlayer.isALineman()){
           selectedDefensivePlayer.CBAssignment = receiverClicked;
@@ -485,7 +483,7 @@ function draw() {
           var playerSelected = false;
           for(var i = 0; i < formationExample.defensivePlayers.length; i++){
               var p = formationExample.defensivePlayers[i];
-              if (p.isMouseInside()){
+              if (p.isMouseInside(field)){
                   if(p.clicked){
                       p.unselect();
                       p.showRoute = false;
