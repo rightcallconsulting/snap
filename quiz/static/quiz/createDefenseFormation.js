@@ -136,6 +136,13 @@ function draw() {
               noFill()
               rect(this.zoneXPoint, this.zoneYPoint, 40, 40);
             }
+            else if (this.rusher && this.gapXPoint){
+              stroke(255, 0, 0);
+              line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
+              fill(255, 0, 0);
+              noFill()
+              ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 50);
+            }
         }
         this.drawRoute();
         noStroke();
@@ -379,9 +386,14 @@ function draw() {
       else if (selectedDefensivePlayer && keyCode == 80){
         if(selectedDefensivePlayer.rusher){
           selectedDefensivePlayer.rusher = false;
+          selectedDefensivePlayer.gapXPoint = null;
+          selectedDefensivePlayer.gapYPoint = null;
         }
         else {
           selectedDefensivePlayer.rusher = true;
+          selectedDefensivePlayer.zoneXPoint = null;
+          selectedDefensivePlayer.zoneYPoint = null;
+          selectedDefensivePlayer.CBAssignment = null;
         }
         return true;
       }
@@ -493,7 +505,10 @@ function draw() {
         }
         receiverClicked.unselect();
       }
-
+      else if (selectedDefensivePlayer && selectedDefensivePlayer.rusher){
+        selectedDefensivePlayer.gapXPoint = field.getYardX(mouseX);
+        selectedDefensivePlayer.gapYPoint = field.getYardY(mouseY);
+      }
       else if (defensivePlayerClicked){
           var playerSelected = false;
           for(var i = 0; i < formationExample.defensivePlayers.length; i++){
