@@ -461,12 +461,12 @@ var createFormationButtons = function(formationArray){
   }
 };
 
-Formation.prototype.establishPersonnel = function(personnel){
+Formation.prototype.establishPersonnel = function(personnel, field){
   this.removeAllPlayers();
   if(personnel === "Base"){
     var de1 = new Player({
-      x: 128,
-      y: 197.33,
+      x: field.getYardX(128),
+      y: field.getYardY(197.33),
       num: "DE",
       fill: color(0, 0, 0),
       unit: "defense",
@@ -476,8 +476,8 @@ Formation.prototype.establishPersonnel = function(personnel){
     this.createPlayer(de1);
 
     var de2 = new Player({
-      x: 264,
-      y: 191.33,
+      x: field.getYardX(264),
+      y: field.getYardY(191.33),
       num: "DE",
       fill: color(0, 0, 0),
       unit: "defense",

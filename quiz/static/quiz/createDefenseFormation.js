@@ -2,7 +2,8 @@ var formations = [];
 var makeJSONCall = true;
 var personnelButtons = [];
 var currentPersonnel = "Base";
-var currentOffensiveFormation
+var currentOffensiveFormation;
+var formationExample;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -69,7 +70,7 @@ function draw() {
     });
 
     // Create Position groups
-    var formationExample = new Formation({
+    formationExample = new Formation({
       unit: "defense"
     })
 
