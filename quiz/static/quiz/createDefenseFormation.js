@@ -205,9 +205,9 @@ function draw() {
     });
 
     var jumbo = new Button({
-        x: 450,
-        y: 90,
-        width: 70,
+        x: 200,
+        y: 75,
+        width: 5,
         label: "Jumbo",
         clicked: false,
         displayButton: true
@@ -230,8 +230,8 @@ function draw() {
     // Create Position groups
 
     var dl = new Player ({
-        x: 120,
-        y: 375,
+        x: 20,
+        y: 100-field.heightInYards,
         num: 'DL',
         fill: color(0, 0, 0),
         pos: 'DL',
@@ -239,8 +239,8 @@ function draw() {
     });
 
     var de = new Player ({
-        x: 150,
-        y: 375,
+        x: 23,
+        y: 100-field.heightInYards,
         num: 'DE',
         fill: color(0, 0, 0),
         pos: 'DE',
@@ -248,8 +248,8 @@ function draw() {
     });
 
     var mike = new Player ({
-      x: 180,
-      y: 375,
+      x: 26,
+      y: 100-field.heightInYards,
       num: 'M',
       fill: color(0, 0, 0),
       pos: 'M',
@@ -257,8 +257,8 @@ function draw() {
     });
 
     var will = new Player ({
-      x: 205,
-      y: 375,
+      x: 29,
+      y: 100-field.heightInYards,
       num: 'W',
       fill: color(0, 0, 0),
       pos: 'W',
@@ -266,8 +266,8 @@ function draw() {
     });
 
     var sam = new Player ({
-      x: 230,
-      y: 375,
+      x: 32,
+      y: 100-field.heightInYards,
       num: 'S',
       fill: color(0, 0, 0),
       pos: 'S',
@@ -275,8 +275,8 @@ function draw() {
     });
 
     var cb = new Player({
-      x: 260,
-      y: 375,
+      x: 35,
+      y: 100-field.heightInYards,
       num: 'CB',
       fill: color(0, 0, 0),
       pos: 'CB',
@@ -284,8 +284,8 @@ function draw() {
     });
 
     var ss = new Player({
-      x: 290,
-      y: 375,
+      x: 38,
+      y: 100-field.heightInYards,
       num: 'SS',
       fill: color(0, 0, 0),
       pos: 'SS',
@@ -293,8 +293,8 @@ function draw() {
     });
 
     var fs = new Player({
-      x: 320,
-      y: 375,
+      x: 41,
+      y: 100-field.heightInYards,
       num: 'FS',
       fill: color(0, 0, 0),
       pos: 'FS',
@@ -374,12 +374,12 @@ function draw() {
     };
 
     mouseDragged = function(){
-      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
-      var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-      var selectedNode = formationExample.mouseInReceiverOrNode()[1];
-      var positionOptionSelected = formationExample.mouseInOptionsToCreate();
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer(field);
+      var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+      var selectedNode = formationExample.mouseInReceiverOrNode(field)[1];
+      var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
       if (formationExample.establishingNewPlayer){
-        formationExample.establishingNewPlayer.movePlayer();
+        formationExample.establishingNewPlayer.movePlayer(field);
       }
       else if (defensivePlayerClicked){
         defensivePlayerClicked.change = defensivePlayerClicked.change ?  false : true;
@@ -400,8 +400,8 @@ function draw() {
       else if (clear.isMouseInside()){
         formationExample.removeAllPlayers();
       }
-      var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-      var selectedNode = formationExample.mouseInReceiverOrNode()[1];
+      var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+      var selectedNode = formationExample.mouseInReceiverOrNode(field)[1];
       selectedWR = formationExample.findSelectedWR();
       if(selectedNode){
         selectedNode.change = true;
@@ -419,11 +419,11 @@ function draw() {
     };
 
     mouseClicked = function() {
-      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
-      var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode()[0];
-      var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode()[1];
-      var formationClicked = isFormationClicked(formationButtons);
-      var personnelClicked = isPersonnelClicked(personnelButtons);
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer(field);
+      var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode(field)[0];
+      var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode(field)[1];
+      // var formationClicked = isFormationClicked(formationButtons);
+      // var personnelClicked = isPersonnelClicked(personnelButtons);
       selectedWR = formationExample.findSelectedWR();
       var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (formationExample.establishingNewPlayer){

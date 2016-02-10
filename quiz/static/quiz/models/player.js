@@ -545,11 +545,17 @@ Player.prototype.checkRoutes = function(play){
 Player.prototype.movePlayer = function(field){
   this.x = field.getYardX(mouseX);
   var newY = field.getYardY(mouseY);
-  if(newY > field.ballYardLine - this.siz/2){
-    this.y = field.ballYardLine - this.siz/2;
-  }else{
+  if (this.unit != "defense"){
+    if(newY > field.ballYardLine - this.siz/2){
+      this.y = field.ballYardLine - this.siz/2;
+    }else{
+      this.y = newY;
+    }
+  }
+  else{
     this.y = newY;
   }
+
   this.startX = this.x;
   this.startY = this.y;
   this.routeCoordinates[0][0] = this.x;
