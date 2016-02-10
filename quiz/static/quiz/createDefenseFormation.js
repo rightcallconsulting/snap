@@ -240,7 +240,7 @@ function draw() {
     // Create Position groups
 
     var dl = new Player ({
-        x: 20,
+        x: 10,
         y: 100-field.heightInYards,
         siz: 3,
         num: 'DL',
@@ -250,7 +250,7 @@ function draw() {
     });
 
     var de = new Player ({
-        x: 23,
+        x: 13,
         y: 100-field.heightInYards,
         num: 'DE',
         fill: color(0, 0, 0),
@@ -259,7 +259,7 @@ function draw() {
     });
 
     var mike = new Player ({
-      x: 26,
+      x: 16,
       y: 100-field.heightInYards,
       num: 'M',
       fill: color(0, 0, 0),
@@ -268,7 +268,7 @@ function draw() {
     });
 
     var will = new Player ({
-      x: 29,
+      x: 19,
       y: 100-field.heightInYards,
       num: 'W',
       fill: color(0, 0, 0),
@@ -277,7 +277,7 @@ function draw() {
     });
 
     var sam = new Player ({
-      x: 32,
+      x: 22,
       y: 100-field.heightInYards,
       num: 'S',
       fill: color(0, 0, 0),
@@ -286,7 +286,7 @@ function draw() {
     });
 
     var cb = new Player({
-      x: 35,
+      x: 25,
       y: 100-field.heightInYards,
       num: 'CB',
       fill: color(0, 0, 0),
@@ -295,7 +295,7 @@ function draw() {
     });
 
     var ss = new Player({
-      x: 38,
+      x: 28,
       y: 100-field.heightInYards,
       num: 'SS',
       fill: color(0, 0, 0),
@@ -304,7 +304,7 @@ function draw() {
     });
 
     var fs = new Player({
-      x: 41,
+      x: 31,
       y: 100-field.heightInYards,
       num: 'FS',
       fill: color(0, 0, 0),
@@ -384,6 +384,7 @@ function draw() {
         } else{
           formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
         }
+        return false
       }
       else if (selectedDefensivePlayer && keyCode == 80){
         if(selectedDefensivePlayer.rusher){
@@ -497,10 +498,6 @@ function draw() {
         }
       }
 
-      // else if (personnelClicked){
-      //   currentPersonnel = personnelClicked.label;
-      //   formationExample.establishPersonnel(currentPersonnel);
-      // }
       else if (selectedDefensivePlayer && receiverClicked){
         if(!selectedDefensivePlayer.isALineman()){
           selectedDefensivePlayer.CBAssignment = receiverClicked;
