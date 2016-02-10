@@ -95,6 +95,7 @@ class Formation(models.Model):
                     new_position.CBAssignmentPlayerID=player['CBAssignment']['id']
                     new_position.CBAssignmentPlayerIndex=player['CBAssignment']['playerIndex']
                     new_position.CBAssignmentPlayerPosition=player['CBAssignment']['pos']
+                    
                 new_position.save()
 
 class Position(models.Model):

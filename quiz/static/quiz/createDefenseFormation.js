@@ -4,7 +4,7 @@ var personnelButtons = [];
 var currentPersonnel = "Base";
 
 function setup() {
-  var myCanvas = createCanvas(600, 600);
+  var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -59,7 +59,6 @@ function draw() {
 
     //Field Position Variables
     var currentOffensiveFormation = formations[0];
-    debugger;
     var getCurrentFormation = function(){
       return currentOffensiveFormation;
     };
@@ -129,7 +128,7 @@ function draw() {
               line(this.x, this.y, this.zoneXPoint, this.zoneYPoint);
               fill(255, 0, 0);
               // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
-              // TBD Draw an arrowhead instead of a circle using trig
+              // TBD Draw a rectangle
               ellipse(this.zoneXPoint, this.zoneYPoint, 10, 10);
             }
         }
