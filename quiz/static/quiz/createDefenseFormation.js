@@ -429,9 +429,7 @@ function draw() {
         })
         formationExample.createPlayer(newPlayer);
       }
-      else if (clear.isMouseInside(field)){
-        formationExample.removeAllPlayers();
-      }
+
       var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
       var selectedNode = formationExample.mouseInReceiverOrNode(field)[1];
       selectedWR = formationExample.findSelectedWR();
@@ -465,27 +463,7 @@ function draw() {
         formationExample.establishingNewPlayer.change = false;
         formationExample.establishingNewPlayer = null;
       }
-      else if (save.isMouseInside(field)) {
-        if(formationExample.validFormation()){
-          var newFormation = new Formation({
-              defensivePlayers: formationExample.defensivePlayers,
-              playName: formationExample.playName,
-              dline: formationExample.dline,
-              linebackers: formationExample.linebackers,
-              cornerbacks: formationExample.cornerbacks,
-              safeties: formationExample.safeties,
-              unit: formationExample.unit,
-              offensiveFormationID: currentOffensiveFormation.id
-          });
-          newFormation.saveToDB();
-          formationExample.removeAllPlayers();
-          formationExample.playName = "";
-          formationExample.feedbackMessage = "Saved!"
 
-        } else{
-          formationExample.feedbackMessage = "Invalid Play"
-        }
-      }
       else if (clear.isMouseInside(field)){
         formationExample.removeAllPlayers();
       }
@@ -539,6 +517,32 @@ function draw() {
       }
 
     };
+
+    pressSaveButton = function() {
+      if(formationExample.validFormation()){
+        var newFormation = new Formation({
+            defensivePlayers: formationExample.defensivePlayers,
+            playName: formationExample.playName,
+            dline: formationExample.dline,
+            linebackers: formationExample.linebackers,
+            cornerbacks: formationExample.cornerbacks,
+            safeties: formationExample.safeties,
+            unit: formationExample.unit,
+            offensiveFormationID: currentOffensiveFormation.id
+        });
+        newFormation.saveToDB();
+        formationExample.removeAllPlayers();
+        formationExample.playName = "";
+        formationExample.feedbackMessage = "Saved!"
+
+      } else{
+        formationExample.feedbackMessage = "Invalid Play"
+      }
+    }
+
+    pressClearButton = function() {
+      formationExample.removeAllPlayers();
+    }
 
     createFormationButtons(formations);
 

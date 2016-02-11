@@ -89,13 +89,14 @@ class Formation(models.Model):
             new_formation.offensiveFormationID = json['offensiveFormationID']
             new_formation.save()
             for player in json['defensivePlayers']:
+                embed()
                 new_position = Position(name=player['pos'], startX=player['startX'],
                 startY=player['startY'], formation=new_formation)
                 if(player['CBAssignment']):
                     new_position.CBAssignmentPlayerID=player['CBAssignment']['id']
                     new_position.CBAssignmentPlayerIndex=player['CBAssignment']['playerIndex']
                     new_position.CBAssignmentPlayerPosition=player['CBAssignment']['pos']
-                    
+
                 new_position.save()
 
 class Position(models.Model):
