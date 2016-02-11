@@ -37,6 +37,10 @@ var Player = function(config) {
     this.CBAssignmentPlayerID = config.CBAssignmentPlayerID || null;
     this.isBeingTested = config.isBeingTested || false;
     this.id = config.id || null;
+    this.zoneXPoint = config.zoneXPoint || null;
+    this.zoneYPoint = config.zoneYPoint || null;
+    this.gapXPoint = config.gapXPoint || null;
+    this.gapYPoint = config.gapYPoint || null;
 };
 
 Player.rank = 1;

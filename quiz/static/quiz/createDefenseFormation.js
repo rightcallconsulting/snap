@@ -482,10 +482,7 @@ function draw() {
         }
         receiverClicked.unselect();
       }
-      else if (selectedDefensivePlayer && selectedDefensivePlayer.rusher){
-        selectedDefensivePlayer.gapXPoint = field.getYardX(mouseX);
-        selectedDefensivePlayer.gapYPoint = field.getYardY(mouseY);
-      }
+
       else if (defensivePlayerClicked){
           var playerSelected = false;
           for(var i = 0; i < formationExample.defensivePlayers.length; i++){
@@ -500,6 +497,10 @@ function draw() {
                   break;
               }
           }
+      }
+      else if (selectedDefensivePlayer && selectedDefensivePlayer.rusher){
+        selectedDefensivePlayer.gapXPoint = field.getYardX(mouseX);
+        selectedDefensivePlayer.gapYPoint = field.getYardY(mouseY);
       }
       else if (selectedDefensivePlayer){
         selectedDefensivePlayer.zoneXPoint = mouseX;
