@@ -400,13 +400,8 @@ Player.prototype.drawBreakPoints = function(field){
     var y2 = field.getTranslatedY(this.breakPoints[i+1][1]);
     stroke(255, 0, 0);
     line(x1, y1, x2, y2);
-    line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
     noStroke();
     fill(255, 0, 0)
-    node = this.routeNodes[i]
-    if(node){
-      node.draw();
-    }
   }
 };
 
@@ -558,7 +553,7 @@ Player.prototype.movePlayer = function(field){
 };
 
 Player.prototype.convertRouteDrawingToBreakPoints = function(){
-  this.breakPoints = this.routeCoordinates.slice(1, this.routeCoordinates.length);
+  this.breakPoints = this.routeCoordinates.slice(1);
 };
 
 Player.prototype.saveToDB = function(){
