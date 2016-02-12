@@ -674,6 +674,7 @@ var createPlayerFromJSON = function(jsonPosition){
   player.id = jsonPosition.pk;
   player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
   player.blockingAssignmentPlayerIndex = jsonPosition.fields.blockingAssignmentPlayerIndex
+  player.runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]
