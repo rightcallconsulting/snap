@@ -59,13 +59,24 @@
 }
 
 .playerbook .tile-row {
-  height: 30%;
-  margin-top: 3%;
+  height: 25%;
+  margin-top: 5%;
   margin-bottom: 0%;
 }
 
 .tile-row .col-lg-4{
   height: 100%;
+}
+
+.tile-row .panel-stat3{
+  height: 100%;
+  text-align:center;
+}
+
+.tile-row .panel-stat3 span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
 }
 
 .graph-box {
