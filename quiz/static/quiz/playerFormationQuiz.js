@@ -1,11 +1,12 @@
 var makeJSONCall = true;
 var testIDFromHTML = 33;
 var test;
-var multipleChoiceAnswers;
 var formationNames;
 var maxFormations = 5;
 var bigReset;
 var testPlayer = null;
+var currentPlayerTested = null;
+var answers = [];
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -13,7 +14,6 @@ function setup() {
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
-  multipleChoiceAnswers = [];
   bigReset = new Button({
     x: width*0.5 - 25,
     y: height*0.8,
@@ -31,6 +31,13 @@ function setup() {
     });
     var formations = [];
     formationNames = [];
+
+    var playerID = 37;//test.playerID;
+    $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
+      currentPlayerTested = createUserFromJSON(data2[0]);
+      currentPlayerTested.pos = "WR";
+    })
+
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         formationObject.fields.id = formationObject.pk;
@@ -43,6 +50,9 @@ function setup() {
       })
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
       formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
+
+
+
       $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
         data.forEach(function(position){
           position.fields.id = position.pk;
@@ -73,17 +83,18 @@ function setup() {
           var formation = formations[i];
           for(var j = 0; j < formation.offensivePlayers.length; j++){
             var p = formation.offensivePlayers[j];
-            if(p.num === playerBeingTested.num){
+            if(p.pos === currentPlayerTested.pos){
               answers.push([p.x, p.y]);
+              
               var oldCopy = formation.offensivePlayers.slice();
               formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
-              formation.offensivePlayers.concat(oldCopy.slice(j+1));
+              formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
             }
           }
         }
 
         test.formations = formations;
-        multipleChoiceAnswers = [];
+
         test.restartQuiz();
         makeJSONCall = false
 
@@ -105,103 +116,70 @@ function shuffle(o) {
 return o;
 }
 
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
-  multipleChoiceAnswers = [];
-  var availableNames = formationNames.slice();
-  shuffle(availableNames);
-  var i = 0;
-  while(multipleChoiceAnswers.length < numOptions){
-    var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
-    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-      y: height / 3,
-      width: width / (numOptions + 2),
-      height: 50,
-      label: label,
-      clicked: false
-    }));
-    i++;
-  }
-}
+function checkAnswer(){
+  var answer = answers[test.questionNum];
+  var dx = Math.abs(answer[0] - testPlayer.x);
+  var dy = Math.abs(answer[1] - testPlayer.y);
+  var dist = Math.sqrt(dx*dx+dy*dy);
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
-function checkAnswer(guess){
-  var isCorrect = test.getCurrentFormation().name === guess.label;
+  var isCorrect = (dist < 3);
+  //debugger;
   if(isCorrect){
     test.advanceToNextFormation(test.correctAnswerMessage);
+    testPlayer = null;
     test.score++;
-    multipleChoiceAnswers = [];
   }else{
-    clearAnswers();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
   }
 }
-/*
-Formation.prototype.drawTenPlayers = function(player){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    if(i === player){
-      continue;
-      offensivePlayers.draw();
-    } 
-  }
-}
-*/
-
 
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.scoreboard.draw(test, null);
- 
-    test.getCurrentFormation().drawAllPlayers(field);
-  //test.getCurrentFormation().drawTenPlayers(5);
+
+  test.getCurrentFormation().drawAllPlayers(field);
   if(testPlayer){
     testPlayer.draw(field);
   }
 
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    multipleChoiceAnswers[i].draw();
-  }
   fill(0, 0, 0);
   textSize(20);
   text(test.scoreboard.feedbackMessage, 160, 360);
+  text(test.getCurrentFormation().name, 10, 23);
 }
+
 
 mouseClicked = function() {
   test.scoreboard.feedbackMessage = "";
-  if (bigReset.isMouseInside() && test.over) {
-    test.restartQuiz();
+  if (test.over) {
+    if(bigReset.isMouseInside(field)){
+      test.restartQuiz();
+    } 
   }
   else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
+    var y = field.getYardY(mouseY);
+    if(y > field.ballYardLine){
+      y = field.ballYardLine;
+    }
+    if(testPlayer){
+      if(testPlayer.isMouseInside(field)){
+        checkAnswer();
       }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
+        testPlayer.x = field.getYardX(mouseX);
+        testPlayer.y = y;
+
       }
+
+    }else{
+      testPlayer = new Player({
+        x: field.getYardX(mouseX),
+        y: y,
+        fill: color(0, 0, 220),
+        pos: currentPlayerTested.pos,
+        num: currentPlayerTested.num
+      });
     }
   }
 };
@@ -231,7 +209,30 @@ keyTyped = function(){
 };
 
 function draw() {
-  if(makeJSONCall){
+
+ Player.prototype.draw = function(field){
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  if(this.unit === "offense"){
+    noStroke();
+    fill(this.fill);
+    ellipse(x, y, siz, siz);
+    fill(0,0,0);
+    textSize(14);
+    textAlign(CENTER, CENTER);
+    text(this.num, x, y);
+  }
+  else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
+  }
+};
+
+if(makeJSONCall){
     //WAIT - still executing JSON
   }
   else if(test.over){
@@ -241,10 +242,7 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw();
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
-      var correctAnswer = test.getCurrentFormation().name;
-      createMultipleChoiceAnswers(correctAnswer,3);
-    }
-    drawOpening();
-  }
+  drawOpening();
 }
+}
+
