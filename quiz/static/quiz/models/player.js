@@ -670,6 +670,7 @@ var createPlayerFromJSON = function(jsonPosition){
   jsonPosition.fields.x = jsonPosition.fields.startX;
   jsonPosition.fields.y = jsonPosition.fields.startY;
   var routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
+  //var runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
   player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
@@ -681,6 +682,9 @@ var createPlayerFromJSON = function(jsonPosition){
   if(routeCoordinates){
     player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
+  /*if(runCoordinates){
+    player.runCoordinates = runCoordinates.slice(1, runCoordinates.length);
+  }*/
   player.establishFill();
 
   return player
