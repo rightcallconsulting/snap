@@ -15,6 +15,8 @@ var Play = function(config) {
     this.positions = config.positions || [];
     this.positionIDs = config.positionIDs || [];
     this.runPlay = config.runPlay || null;
+    this.updated_at = config.updated_at || null;
+    this.created_at = config.created_at || null;
 };
 
 Play.prototype.isValidPlay = function(){
@@ -200,6 +202,8 @@ var createPlayFromJSON = function(jsonPlay){
   play.teamID = jsonPlay.fields.team;
   play.formation = jsonPlay.fields.formation;
   play.positionIDs = jsonPlay.fields.positions;
+  play.created_at = jsonPlay.fields.created_at;
+  play.updated_at = jsonPlay.fields.updated_at;
   return play;
 };
 
