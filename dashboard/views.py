@@ -125,13 +125,13 @@ def playbook_defense(request):
     offensive_formations = formations.filter(unit="offense")
     defensive_formations = formations.filter(unit="defense")
     play_id_array = []
-    return render(request, 'dashboard/playbook.html', {
+    return render(request, 'dashboard/defense_playbook.html', {
         'formations': formations,
         'offensive_formations': offensive_formations,
         'defensive_formations': defensive_formations,
         'team': team,
         'play_id_array': play_id_array,
-        'page_header': 'OFFENSIVE PLAYBOOK',
+        'page_header': 'DEFENSIVE PLAYBOOK',
     })
 
 @login_required

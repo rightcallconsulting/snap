@@ -2,9 +2,11 @@ var formations = [];
 var makeJSONCall = true;
 var personnelButtons = [];
 var currentPersonnel = "Base";
+var currentOffensiveFormation;
+var formationExample;
 
 function setup() {
-  var myCanvas = createCanvas(600, 600);
+  var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }
@@ -58,8 +60,7 @@ function draw() {
 
 
     //Field Position Variables
-    var currentOffensiveFormation = formations[0];
-
+    currentOffensiveFormation = formations[0];
     var getCurrentFormation = function(){
       return currentOffensiveFormation;
     };
@@ -69,7 +70,7 @@ function draw() {
     });
 
     // Create Position groups
-    var formationExample = new Formation({
+    formationExample = new Formation({
       unit: "defense"
     })
 
@@ -77,7 +78,10 @@ function draw() {
     // Global Variables
     var capitalLetter = false;
 
-    Player.prototype.draw = function() {
+    Player.prototype.draw = function(field) {
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
         if(this.unit === "offense"){
             noStroke();
             if(this.rank > 0){
@@ -86,17 +90,17 @@ function draw() {
                 fill(this.fill);
             }
             if (this.change){
-              this.x = mouseX;
-              this.y = mouseY;
+              this.x = field.getYardX(mouseX);
+              this.y = field.getYardY(mouseY);
               }
-            ellipse(this.x, this.y, this.siz, this.siz);
+            ellipse(x, y, siz, siz);
             fill(0,0,0);
             textSize(14);
             textAlign(CENTER, CENTER);
             if(this.rank > 0){
-                text(this.rank, this.x, this.y);
+                text(this.rank, x, y);
             }else{
-                text(this.num, this.x, this.y);
+                text(this.num, x, y);
             }
             if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
               this.displayRoute(this.breakPoints);
@@ -119,18 +123,16 @@ function draw() {
             }
             textSize(17);
             textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
+            text(this.pos, x, y);
             if(this.CBAssignment){
               stroke(255, 0, 0);
-              line(this.x, this.y, this.CBAssignment.x, this.CBAssignment.y);
+              line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
             }
             else if (this.zoneXPoint && this.zoneYPoint){
-              stroke(255, 0, 0);
-              line(this.x, this.y, this.zoneXPoint, this.zoneYPoint);
-              fill(255, 0, 0);
-              // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
-              // TBD Draw an arrowhead instead of a circle using trig
-              ellipse(this.zoneXPoint, this.zoneYPoint, 10, 10);
+              this.drawZoneAssignments();
+            }
+            else if (this.rusher && this.gapXPoint){
+              this.drawGapAssignments();
             }
         }
         this.drawRoute();
@@ -166,9 +168,10 @@ function draw() {
     });
 
     var trash = new Button({
-        x: 330,
-        y: 360,
-        width: 40,
+        x: field.getYardX(width * 0.8),
+        y: field.getYardY(height * 0.88),
+        width: field.pixelsToYards(width * 0.12),
+        height: field.pixelsToYards(width * 0.08),
         label: "Trash",
         clicked: false,
         displayButton: true
@@ -202,9 +205,9 @@ function draw() {
     });
 
     var jumbo = new Button({
-        x: 450,
-        y: 90,
-        width: 70,
+        x: 200,
+        y: 75,
+        width: 5,
         label: "Jumbo",
         clicked: false,
         displayButton: true
@@ -227,8 +230,9 @@ function draw() {
     // Create Position groups
 
     var dl = new Player ({
-        x: 120,
-        y: 375,
+        x: 10,
+        y: 100-field.heightInYards,
+        siz: 3,
         num: 'DL',
         fill: color(0, 0, 0),
         pos: 'DL',
@@ -236,8 +240,8 @@ function draw() {
     });
 
     var de = new Player ({
-        x: 150,
-        y: 375,
+        x: 13,
+        y: 100-field.heightInYards,
         num: 'DE',
         fill: color(0, 0, 0),
         pos: 'DE',
@@ -245,8 +249,8 @@ function draw() {
     });
 
     var mike = new Player ({
-      x: 180,
-      y: 375,
+      x: 16,
+      y: 100-field.heightInYards,
       num: 'M',
       fill: color(0, 0, 0),
       pos: 'M',
@@ -254,8 +258,8 @@ function draw() {
     });
 
     var will = new Player ({
-      x: 205,
-      y: 375,
+      x: 19,
+      y: 100-field.heightInYards,
       num: 'W',
       fill: color(0, 0, 0),
       pos: 'W',
@@ -263,8 +267,8 @@ function draw() {
     });
 
     var sam = new Player ({
-      x: 230,
-      y: 375,
+      x: 22,
+      y: 100-field.heightInYards,
       num: 'S',
       fill: color(0, 0, 0),
       pos: 'S',
@@ -272,8 +276,8 @@ function draw() {
     });
 
     var cb = new Player({
-      x: 260,
-      y: 375,
+      x: 25,
+      y: 100-field.heightInYards,
       num: 'CB',
       fill: color(0, 0, 0),
       pos: 'CB',
@@ -281,8 +285,8 @@ function draw() {
     });
 
     var ss = new Player({
-      x: 290,
-      y: 375,
+      x: 28,
+      y: 100-field.heightInYards,
       num: 'SS',
       fill: color(0, 0, 0),
       pos: 'SS',
@@ -290,8 +294,8 @@ function draw() {
     });
 
     var fs = new Player({
-      x: 320,
-      y: 375,
+      x: 31,
+      y: 100-field.heightInYards,
       num: 'FS',
       fill: color(0, 0, 0),
       pos: 'FS',
@@ -322,18 +326,18 @@ function draw() {
     var drawOpening = function() {
         field.drawBackground(getCurrentFormation(), height, width);
         text(formationExample.playName, 10, 50)
-        save.draw();
-        clear.draw();
-        trash.draw();
-        formationExample.drawOptionsToCreate();
-        formationExample.drawAllPlayers();
+        save.draw(field);
+        clear.draw(field);
+        trash.draw(field);
+        formationExample.drawOptionsToCreate(field);
+        formationExample.drawAllPlayers(field);
         formationButtons.forEach(function(button){
-          button.draw();
+          button.draw(field);
         })
         personnelButtons.forEach(function(button){
-          button.draw();
+          button.draw(field);
         })
-        currentOffensiveFormation.drawAllPlayers();
+        currentOffensiveFormation.drawAllPlayers(field);
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
@@ -343,7 +347,7 @@ function draw() {
     var isInsideTrash = function(player){
       return player.x > trash.x &&
              player.x < trash.x + trash.width &&
-             player.y > trash.y &&
+             player.y < trash.y &&
              player.y < trash.y + trash.height
     };
 
@@ -353,17 +357,38 @@ function draw() {
       }
     };
 
+    keyTyped = function(){
+
+    }
+
     keyPressed = function() {
       selectedWR = formationExample.findSelectedWR();
+      var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (keyCode === SHIFT){
         capitalLetter = true;
       }
+
       if (keyCode === BACKSPACE){
         if (selectedWR){
           selectedWR.stepRouteBackward();
         } else{
           formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
         }
+        return false
+      }
+      else if (selectedDefensivePlayer && keyCode == 80){
+        if(selectedDefensivePlayer.rusher){
+          selectedDefensivePlayer.rusher = false;
+          selectedDefensivePlayer.gapXPoint = null;
+          selectedDefensivePlayer.gapYPoint = null;
+        }
+        else {
+          selectedDefensivePlayer.rusher = true;
+          selectedDefensivePlayer.zoneXPoint = null;
+          selectedDefensivePlayer.zoneYPoint = null;
+          selectedDefensivePlayer.CBAssignment = null;
+        }
+        return true;
       }
       else{
         formationExample.playName += capitalLetter ? key : key.toLowerCase();
@@ -371,12 +396,12 @@ function draw() {
     };
 
     mouseDragged = function(){
-      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
-      var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-      var selectedNode = formationExample.mouseInReceiverOrNode()[1];
-      var positionOptionSelected = formationExample.mouseInOptionsToCreate();
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer(field);
+      var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+      var selectedNode = formationExample.mouseInReceiverOrNode(field)[1];
+      var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
       if (formationExample.establishingNewPlayer){
-        formationExample.establishingNewPlayer.movePlayer();
+        formationExample.establishingNewPlayer.movePlayer(field);
       }
       else if (defensivePlayerClicked){
         defensivePlayerClicked.change = defensivePlayerClicked.change ?  false : true;
@@ -394,11 +419,9 @@ function draw() {
         })
         formationExample.createPlayer(newPlayer);
       }
-      else if (clear.isMouseInside()){
-        formationExample.removeAllPlayers();
-      }
-      var receiverClicked = formationExample.mouseInReceiverOrNode()[0];
-      var selectedNode = formationExample.mouseInReceiverOrNode()[1];
+
+      var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+      var selectedNode = formationExample.mouseInReceiverOrNode(field)[1];
       selectedWR = formationExample.findSelectedWR();
       if(selectedNode){
         selectedNode.change = true;
@@ -408,7 +431,7 @@ function draw() {
     var isPersonnelClicked = function(personnelButtonArray){
       var personnelClicked;
       personnelButtonArray.forEach(function(button){
-        if (button.isMouseInside()){
+        if (button.isMouseInside(field)){
           personnelClicked = button;
         }
       })
@@ -416,11 +439,11 @@ function draw() {
     };
 
     mouseClicked = function() {
-      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer();
-      var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode()[0];
-      var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode()[1];
-      var formationClicked = isFormationClicked(formationButtons);
-      var personnelClicked = isPersonnelClicked(personnelButtons);
+      var defensivePlayerClicked = formationExample.mouseInDefensivePlayer(field);
+      var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode(field)[0];
+      var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode(field)[1];
+      // var formationClicked = isFormationClicked(formationButtons);
+      // var personnelClicked = isPersonnelClicked(personnelButtons);
       selectedWR = formationExample.findSelectedWR();
       var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (formationExample.establishingNewPlayer){
@@ -430,28 +453,8 @@ function draw() {
         formationExample.establishingNewPlayer.change = false;
         formationExample.establishingNewPlayer = null;
       }
-      else if (save.isMouseInside()) {
-        if(formationExample.validFormation()){
-          var newFormation = new Formation({
-              defensivePlayers: formationExample.defensivePlayers,
-              playName: formationExample.playName,
-              dline: formationExample.dline,
-              linebackers: formationExample.linebackers,
-              cornerbacks: formationExample.cornerbacks,
-              safeties: formationExample.safeties,
-              unit: formationExample.unit,
-              offensiveFormationID: currentOffensiveFormation.id
-          });
-          newFormation.saveToDB();
-          formationExample.removeAllPlayers();
-          formationExample.playName = "";
-          formationExample.feedbackMessage = "Saved!"
 
-        } else{
-          formationExample.feedbackMessage = "Invalid Play"
-        }
-      }
-      else if (clear.isMouseInside()){
+      else if (clear.isMouseInside(field)){
         formationExample.removeAllPlayers();
       }
       else if(selectedNode){
@@ -462,15 +465,7 @@ function draw() {
           selectedNode.change = true;
         }
       }
-      else if (formationClicked){
-        currentOffensiveFormation = formations.filter(function(formation) {
-          return formation.playName == formationClicked.label;
-        })[0];
-      }
-      else if (personnelClicked){
-        currentPersonnel = personnelClicked.label;
-        formationExample.establishPersonnel(currentPersonnel);
-      }
+
       else if (selectedDefensivePlayer && receiverClicked){
         if(!selectedDefensivePlayer.isALineman()){
           selectedDefensivePlayer.CBAssignment = receiverClicked;
@@ -482,7 +477,7 @@ function draw() {
           var playerSelected = false;
           for(var i = 0; i < formationExample.defensivePlayers.length; i++){
               var p = formationExample.defensivePlayers[i];
-              if (p.isMouseInside()){
+              if (p.isMouseInside(field)){
                   if(p.clicked){
                       p.unselect();
                       p.showRoute = false;
@@ -493,9 +488,13 @@ function draw() {
               }
           }
       }
+      else if (selectedDefensivePlayer && selectedDefensivePlayer.rusher){
+        selectedDefensivePlayer.gapXPoint = field.getYardX(mouseX);
+        selectedDefensivePlayer.gapYPoint = field.getYardY(mouseY);
+      }
       else if (selectedDefensivePlayer){
-        selectedDefensivePlayer.zoneXPoint = mouseX;
-        selectedDefensivePlayer.zoneYPoint = mouseY;
+        selectedDefensivePlayer.zoneXPoint = field.getYardX(mouseX);
+        selectedDefensivePlayer.zoneYPoint = field.getYardY(mouseY);
         selectedDefensivePlayer.CBAssignment = null;
       }
       else if(selectedWR){
@@ -509,6 +508,32 @@ function draw() {
       }
 
     };
+
+    pressSaveButton = function() {
+      if(formationExample.validFormation()){
+        var newFormation = new Formation({
+            defensivePlayers: formationExample.defensivePlayers,
+            playName: formationExample.playName,
+            dline: formationExample.dline,
+            linebackers: formationExample.linebackers,
+            cornerbacks: formationExample.cornerbacks,
+            safeties: formationExample.safeties,
+            unit: formationExample.unit,
+            offensiveFormationID: currentOffensiveFormation.id
+        });
+        newFormation.saveToDB();
+        formationExample.removeAllPlayers();
+        formationExample.playName = "";
+        formationExample.feedbackMessage = "Saved!"
+
+      } else{
+        formationExample.feedbackMessage = "Invalid Play"
+      }
+    }
+
+    pressClearButton = function() {
+      formationExample.removeAllPlayers();
+    }
 
     createFormationButtons(formations);
 

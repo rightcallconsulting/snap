@@ -38,6 +38,10 @@ var Player = function(config) {
     this.CBAssignmentPlayerID = config.CBAssignmentPlayerID || null;
     this.isBeingTested = config.isBeingTested || false;
     this.id = config.id || null;
+    this.zoneXPoint = config.zoneXPoint || null;
+    this.zoneYPoint = config.zoneYPoint || null;
+    this.gapXPoint = config.gapXPoint || null;
+    this.gapYPoint = config.gapYPoint || null;
 };
 
 Player.rank = 1;
@@ -541,11 +545,17 @@ Player.prototype.checkRoutes = function(play){
 Player.prototype.movePlayer = function(field){
   this.x = field.getYardX(mouseX);
   var newY = field.getYardY(mouseY);
-  if(newY > field.ballYardLine - this.siz/2){
-    this.y = field.ballYardLine - this.siz/2;
-  }else{
+  if (this.unit != "defense"){
+    if(newY > field.ballYardLine - this.siz/2){
+      this.y = field.ballYardLine - this.siz/2;
+    }else{
+      this.y = newY;
+    }
+  }
+  else{
     this.y = newY;
   }
+
   this.startX = this.x;
   this.startY = this.y;
   this.routeCoordinates[0][0] = this.x;
@@ -682,10 +692,45 @@ var createPlayerFromJSON = function(jsonPosition){
   if(routeCoordinates){
     player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
+
+  if(jsonPosition.fields.gapYardY){
+    debugger;
+    player.gapYPoint = jsonPosition.fields.gapYardY;
+    player.gapXPoint = jsonPosition.fields.gapYardX;
+  }
+  if(jsonPosition.fields.zoneYardY){
+    debugger;
+    player.zoneYPoint = jsonPosition.fields.zoneYardY;
+    player.zoneXPoint = jsonPosition.fields.zoneYardX;
+  }
+
   /*if(runCoordinates){
     player.runCoordinates = runCoordinates.slice(1, runCoordinates.length);
   }*/
+
   player.establishFill();
 
   return player
+};
+
+Player.prototype.drawGapAssignments = function(test) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  stroke(255, 0, 0);
+  line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
+  fill(255, 0, 0);
+  noFill()
+  ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 10, 10);
+};
+
+Player.prototype.drawZoneAssignments = function(test) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  stroke(255, 0, 0);
+  line(x, y, field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint));
+  fill(255, 0, 0);
+  noFill()
+  rect(field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint), 40, 40);
 };
