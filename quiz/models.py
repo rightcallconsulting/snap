@@ -101,9 +101,7 @@ class Formation(models.Model):
                 if(player['zoneXPoint']):
                     new_position.zoneYardX = player['zoneXPoint'];
                     new_position.zoneYardY = player['zoneYPoint'];
-                    embed()
                 new_position.save()
-                embed()
 
 class Position(models.Model):
     startX = models.FloatField()
@@ -120,12 +118,12 @@ class Position(models.Model):
     CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
     CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
-    zoneYardX = models.IntegerField(null=True, blank=True)
-    zoneYardY = models.IntegerField(max_length=200, null=True, blank=True)
-    zoneHeight = models.IntegerField(max_length=200, null=True, blank=True)
-    zoneWidth = models.IntegerField(max_length=200, null=True, blank=True)
-    gapYardX = models.IntegerField(max_length=200, null=True, blank=True)
-    gapYardY = models.IntegerField(max_length=200, null=True, blank=True)
+    zoneYardX = models.FloatField(null=True, blank=True)
+    zoneYardY = models.FloatField(max_length=200, null=True, blank=True)
+    zoneHeight = models.FloatField(max_length=200, null=True, blank=True)
+    zoneWidth = models.FloatField(max_length=200, null=True, blank=True)
+    gapYardX = models.FloatField(max_length=200, null=True, blank=True)
+    gapYardY = models.FloatField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
 

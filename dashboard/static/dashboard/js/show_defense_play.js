@@ -88,7 +88,7 @@ function draw() {
       newPlay: true
     });
 
-
+    debugger;
     Player.prototype.draw = function(field){
       var x = field.getTranslatedX(this.x);
       var y = field.getTranslatedY(this.y);
