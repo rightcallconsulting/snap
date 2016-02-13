@@ -96,11 +96,11 @@ class Formation(models.Model):
                     new_position.CBAssignmentPlayerIndex=player['CBAssignment']['playerIndex']
                     new_position.CBAssignmentPlayerPosition=player['CBAssignment']['pos']
                 if(player['gapXPoint']):
-                    new_position.gapXPoint = player['gapXPoint'];
-                    new_position.gapYPoint = player['gapYPoint'];
+                    new_position.gapYardX = player['gapXPoint'];
+                    new_position.gapYardY = player['gapYPoint'];
                 if(player['zoneXPoint']):
-                    new_position.zoneXPoint = player['zoneXPoint'];
-                    new_position.zoneYPoint = player['zoneYPoint'];
+                    new_position.zoneYardX = player['zoneXPoint'];
+                    new_position.zoneYardY = player['zoneYPoint'];
                     embed()
                 new_position.save()
                 embed()
