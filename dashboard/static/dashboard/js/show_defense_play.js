@@ -31,6 +31,10 @@ function draw() {
             position.fields.y = position.fields.startY;
             position.fields.pos = position.fields.name;
             position.fields.num = position.fields.pos;
+            position.fields.gapYPoint = position.fields.gapYardY;
+            position.fields.gapXPoint = position.fields.gapYardX;
+            position.fields.zoneYPoint = position.fields.zoneYardY;
+            position.fields.zoneXPoint = position.fields.zoneYardX;
             var newPlayer = new Player(position.fields)
             if(newPlayer.pos==="QB"){
               newPlayer.fill = color(212, 130, 130);
@@ -69,7 +73,6 @@ function draw() {
           })
 
           runTest();
-
         })
 
     });
@@ -88,7 +91,6 @@ function draw() {
       newPlay: true
     });
 
-    debugger;
     Player.prototype.draw = function(field){
       var x = field.getTranslatedX(this.x);
       var y = field.getTranslatedY(this.y);
