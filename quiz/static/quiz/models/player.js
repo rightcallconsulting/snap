@@ -694,6 +694,16 @@ var createPlayerFromJSON = function(jsonPosition){
   if(routeCoordinates){
     player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
+  if(jsonPosition.fields.gapYardY){
+    debugger;
+    player.gapYPoint = jsonPosition.fields.gapYardY;
+    player.gapXPoint = jsonPosition.fields.gapYardX;
+  }
+  if(jsonPosition.fields.zoneYardY){
+    debugger;
+    player.zoneYPoint = jsonPosition.fields.zoneYardY;
+    player.zoneXPoint = jsonPosition.fields.zoneYardX;
+  }
   player.establishFill();
 
   return player

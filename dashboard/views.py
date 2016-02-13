@@ -131,7 +131,7 @@ def playbook_defense(request):
         'defensive_formations': defensive_formations,
         'team': team,
         'play_id_array': play_id_array,
-        'page_header': 'OFFENSIVE PLAYBOOK',
+        'page_header': 'DEFENSIVE PLAYBOOK',
     })
 
 @login_required

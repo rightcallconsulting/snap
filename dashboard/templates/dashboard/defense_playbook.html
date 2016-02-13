@@ -122,7 +122,7 @@
 									<div class="dash-header text-center">
 										<span><h4>Offensive Formations</h4></span>
 									</div>
-										{% for formation in offensive_formations %}
+										{% for formation in defensive_formations %}
 											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 											<br>
 										{% endfor %}
@@ -275,6 +275,6 @@
 							})
 					};
 			</script>
-			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
 
 			{% endblock %}
