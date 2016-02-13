@@ -3,6 +3,7 @@ var Node = function(config){
   this.y = config.y;
   this.siz = config.siz;
   this.change = false;
+  this.fill = config.fill || color(255,0,0);
 };
 
 Node.prototype.isMouseInside = function(field) {
@@ -23,6 +24,6 @@ Node.prototype.draw = function(field) {
   var y = field.getTranslatedY(this.y);
   var siz = field.yardsToPixels(this.siz);
   noStroke();
-  fill(255, 0, 0);
+  fill(this.fill);
   ellipse(x, y, siz, siz);
 };

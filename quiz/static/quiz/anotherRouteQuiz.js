@@ -1,3 +1,11 @@
+var makeJSONCall = true;
+var testIDFromHTML = 33;
+var test;
+var multipleChoiceAnswers;
+var playNames;
+var maxPlays = 5;
+var bigReset;
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);

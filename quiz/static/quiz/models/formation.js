@@ -13,7 +13,7 @@ var Formation = function(config){
   this.feedbackMessage = "";
   this.id = config.id || null;
   this.updated_at = config.updated_at || null;
-  this.created_at = config.updated_at || null;
+  this.created_at = config.created_at || null;
   this.positions = config.positions || [];
   this.unit = config.unit || "offense";
   this.dline = config.dline || [];
@@ -239,6 +239,12 @@ Formation.prototype.mouseInReceiverOrNode = function(field){
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
+      if (n.isMouseInside(field)){
+        selectedNode = n;
+      }
+    }
+    for(var k = 0; k < p.runNodes.length; k++){
+      var n = p.runNodes[k];
       if (n.isMouseInside(field)){
         selectedNode = n;
       }

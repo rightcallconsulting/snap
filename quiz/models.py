@@ -109,6 +109,7 @@ class Position(models.Model):
     name = models.CharField(max_length=100)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
     routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
+    runCoordinates = models.CharField(max_length=200, null=True, blank=True)
     progressionRank = models.IntegerField(null=True, blank=True)
     playerIndex = models.IntegerField(null=True, blank=True)
     routeNum = models.IntegerField(null=True, blank=True)
@@ -134,6 +135,12 @@ class Position(models.Model):
         self.routeCoordinates = json.dumps(coords)
 
     def get_route_coordinates(self):
+        return json.loads(self.routeCoordinates)
+
+    def set_run_coordinates(self, coords):
+        self.routeCoordinates = json.dumps(coords)
+
+    def get_run_coordinates(self):
         return json.loads(self.routeCoordinates)
 
 class Test(models.Model):

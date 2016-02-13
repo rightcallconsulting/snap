@@ -132,8 +132,9 @@ DefensivePlay.prototype.findSelectedDL = function(){
 
 DefensivePlay.prototype.mouseInDL = function(formation, field){
   var selectedWR = formation.findSelectedWR();
+  var selectedDL = null;
   if(!selectedWR || selectedWR.blocker){
-    var selectedDL = this.defensivePlayers.filter(function(dl) {
+    selectedDL = this.defensivePlayers.filter(function(dl) {
       return dl.isMouseInside(field) === true;
     })[0];
     if (selectedDL) selectedDL.select();

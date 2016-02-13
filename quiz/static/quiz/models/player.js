@@ -23,6 +23,7 @@ var Player = function(config) {
     this.showRoute = false;
     this.routeCoordinates = config.routeCoordinates || [[this.startX, this.startY]];
     this.routeNodes = [];
+    this.runNodes = [];
     this.change = config.change || false;
     this.progressionRank = config.progressionRank || 0;
     this.routeNum = config.routeNum || null;
@@ -403,13 +404,8 @@ Player.prototype.drawBreakPoints = function(field){
     var y2 = field.getTranslatedY(this.breakPoints[i+1][1]);
     stroke(255, 0, 0);
     line(x1, y1, x2, y2);
-    line(this.breakPoints[i][0], this.breakPoints[i][1], this.breakPoints[i + 1][0], this.breakPoints[i + 1][1]);
     noStroke();
     fill(255, 0, 0)
-    node = this.routeNodes[i]
-    if(node){
-      node.draw();
-    }
   }
 };
 
@@ -567,7 +563,7 @@ Player.prototype.movePlayer = function(field){
 };
 
 Player.prototype.convertRouteDrawingToBreakPoints = function(){
-  this.breakPoints = this.routeCoordinates.slice(1, this.routeCoordinates.length);
+  this.breakPoints = this.routeCoordinates.slice(1);
 };
 
 Player.prototype.saveToDB = function(){
@@ -684,16 +680,19 @@ var createPlayerFromJSON = function(jsonPosition){
   jsonPosition.fields.x = jsonPosition.fields.startX;
   jsonPosition.fields.y = jsonPosition.fields.startY;
   var routeCoordinates = JSON.parse(jsonPosition.fields.routeCoordinates);
+  //var runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
   var player = new Player(jsonPosition.fields)
   player.id = jsonPosition.pk;
   player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
   player.blockingAssignmentPlayerIndex = jsonPosition.fields.blockingAssignmentPlayerIndex
+  player.runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]
   if(routeCoordinates){
     player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
   }
+
   if(jsonPosition.fields.gapYardY){
     debugger;
     player.gapYPoint = jsonPosition.fields.gapYardY;
@@ -704,6 +703,11 @@ var createPlayerFromJSON = function(jsonPosition){
     player.zoneYPoint = jsonPosition.fields.zoneYardY;
     player.zoneXPoint = jsonPosition.fields.zoneYardX;
   }
+
+  /*if(runCoordinates){
+    player.runCoordinates = runCoordinates.slice(1, runCoordinates.length);
+  }*/
+
   player.establishFill();
 
   return player

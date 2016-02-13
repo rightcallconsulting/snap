@@ -28,6 +28,9 @@ def cadence_quiz(request):
 def simple_audible_quiz(request):
     return render(request, 'quiz/simple_audible_quiz.html')
 
+def the_route_quiz(request):
+    return render(request, 'quiz/the_route_quiz.html')
+
 def simple_route_quiz(request):
     return render(request, 'quiz/simple_route_quiz.html')
 
@@ -76,6 +79,9 @@ def create_play(request):
 
 def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
+
+def player_formation_quiz(request):
+    return render(request, 'quiz/player_formation_quiz.html')
 
 def play_quiz(request):
     return render(request, 'quiz/play_quiz.html')
