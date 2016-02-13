@@ -698,3 +698,25 @@ var createPlayerFromJSON = function(jsonPosition){
 
   return player
 };
+
+Player.prototype.drawGapAssignments = function(test) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  stroke(255, 0, 0);
+  line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
+  fill(255, 0, 0);
+  noFill()
+  ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 10, 10);
+};
+
+Player.prototype.drawZoneAssignments = function(test) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  stroke(255, 0, 0);
+  line(x, y, field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint));
+  fill(255, 0, 0);
+  noFill()
+  rect(field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint), 40, 40);
+};

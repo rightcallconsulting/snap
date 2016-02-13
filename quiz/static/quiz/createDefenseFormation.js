@@ -129,20 +129,10 @@ function draw() {
               line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
             }
             else if (this.zoneXPoint && this.zoneYPoint){
-              stroke(255, 0, 0);
-              line(x, y, field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint));
-              fill(255, 0, 0);
-              // triangle(this.zoneXPoint, this.zoneYPoint, 100, 100, 200, 200);
-              // TBD Draw a rectangle
-              noFill()
-              rect(field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint), 40, 40);
+              this.drawZoneAssignments();
             }
             else if (this.rusher && this.gapXPoint){
-              stroke(255, 0, 0);
-              line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
-              fill(255, 0, 0);
-              noFill()
-              ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 50);
+              this.drawGapAssignments();
             }
         }
         this.drawRoute();
@@ -531,7 +521,6 @@ function draw() {
             unit: formationExample.unit,
             offensiveFormationID: currentOffensiveFormation.id
         });
-        debugger;
         newFormation.saveToDB();
         formationExample.removeAllPlayers();
         formationExample.playName = "";
