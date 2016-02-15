@@ -2,6 +2,7 @@ var DefensivePlay = function(config) {
   this.defensivePlayers = config.defensivePlayers || [];
   this.playName = config.playName || "";
   this.formation = config.formation || null;
+  this.offensiveFormationID = config.offensiveFormationID || null;
   this.dlAssignments = config.dlAssignments || [];
   this.lbAssignments = config.lbAssignments || [];
   this.dbAssignments = config.dbAssignments || [];
@@ -147,4 +148,16 @@ DefensivePlay.prototype.playerBeingTested = function(){
     return player.isBeingTested === true;
   })[0];
   return playerBeingTested;
+};
+
+var createDefensivePlayFromJSON = function(jsonPlay){
+  var formation = new Formation({
+    id: jsonPlay.pk,
+    name: jsonPlay.fields.name,
+    playName: jsonPlay.fields.name,
+    offensiveFormationID: jsonPlay.fields.offensiveFormationID,
+    teamID: jsonPlay.fields.team,
+    unit: jsonPlay.fields.unit
+  });
+  return formation;
 };

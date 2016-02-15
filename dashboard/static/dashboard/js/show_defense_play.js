@@ -1,5 +1,5 @@
 var formations = [];
-var plays =[];
+var defensivePlays =[];
 var positions = [];
 var makeJSONCall = true;
 var playScene = false;
@@ -53,6 +53,7 @@ function draw() {
           })
           formations.forEach(function(formation){
             formation.populatePositions();
+            defensivePlays.push(formation.createDefensivePlay());
           })
           $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
             data3.forEach(function(play){
@@ -82,7 +83,6 @@ function draw() {
 
     // Global Variables
     var letters = ["A", "B", "C", "D", "E"];
-
     var capitalLetter = false;
     var currentFormation = formations[0];
 
@@ -110,6 +110,7 @@ function draw() {
         textSize(17);
         textAlign(CENTER, CENTER);
         text(this.pos, x, y);
+        debugger;
       }
     };
 
@@ -190,11 +191,15 @@ function draw() {
 
         if(playToDraw){
           playToDraw.drawAllPlayers(field);
-          playToDraw.drawAllRoutes(field);
           text("Formation: "+playToDraw.formation.playName, 115, 20);
 
         }
-        defensePlay.drawAllPlayers(field);
+        else if(formationToDraw){
+          formationToDraw.drawAllPlayers(field);
+          debugger;
+          text("Formation: "+formationToDraw.playName, 115, 20);
+
+        }
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);

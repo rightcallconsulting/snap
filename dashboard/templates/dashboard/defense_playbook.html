@@ -118,9 +118,9 @@
 
 						</div>
 						{% if True %}
-								<div class="col-lg-2 dash-col choose-offensive-formation-box">
+								<div class="col-lg-2 dash-col choose-defensive-formation-box">
 									<div class="dash-header text-center">
-										<span><h4>Offensive Formations</h4></span>
+										<span><h4>Defensive Plays</h4></span>
 									</div>
 										{% for formation in defensive_formations %}
 											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
@@ -141,7 +141,7 @@
 
 						<div class="col-lg-2 dash-col change-plays-box">
 							<div class="dash-header text-center">
-								<span><h4 id="change-plays-header">Plays:</h4></span>
+								<span><h4 id="change-plays-header">Offensive Formation:</h4></span>
 							</div>
 							{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
 								<div class="panel-body show-plays">
@@ -179,6 +179,12 @@
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
+        $('.formation-button').click(function(){
+					formationToDraw = formations.filter(function(formation) {
+						return formation.id === Number(this.id);
+					}.bind(this))[0]
+
+        })
 				$('.show-plays').on('mouseover', '.play', function(){
 					if(playToDraw){
 						playToDraw.resetPlayers(defensePlay)
@@ -224,7 +230,7 @@
 					    return formation.id === formationID;
 					  })[0];
 						var playArray = []
-						$('#change-plays-header').text('Plays: ' + this.value)
+						$('#change-plays-header').text('Offensive Formation: ' + this.value)
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
 							data4.forEach(function(play){
 								if(play.fields.formation === formationID){
@@ -238,31 +244,7 @@
 							displayPlays(playArray);
 						})
 					});
-					// AJAX for posting
-					function modifyPlayWithTest(playDomElement) {
-						playID = playDomElement[0].id;
-						if(playDomElement.hasClass('play-add-button')){
-							addOrRemovePlay = "add"
-						}
-						else if (playDomElement.hasClass('play-remove-button')){
-							addOrRemovePlay = "remove"
-						}
-							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
-							if(playDomElement.hasClass('play-add-button')){
-								playDomElement.addClass('play-remove-button');
-								playDomElement.removeClass('play-add-button');
-								playDomElement.removeClass('btn-success');
-								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-							}
-							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
-								playDomElement.addClass('play-add-button');
-								playDomElement.addClass('btn-success');
-								playDomElement.removeClass('play-remove-button');
-								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-								$('#'+playDomElement[0].id+'.play-remove').remove();
-							}
-					};
+
 					function displayPlays(playArray) {
 							$('.show-plays').empty();
 							playArray.forEach(function(play){

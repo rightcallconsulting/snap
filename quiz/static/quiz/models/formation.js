@@ -146,6 +146,11 @@ Formation.prototype.drawAllPlayers = function(field){
   this.changeablePlayers.forEach(function(player){
     player.draw(field);
   })
+  if(this.unit === "defense"){
+    this.defensivePlayers.forEach(function(player){
+      player.draw(field);
+    })
+  }
 
 };
 
@@ -153,6 +158,17 @@ Formation.prototype.drawOptionsToCreate = function() {
   this.optionsToCreate.forEach(function(player){
     player.draw(field);
   })
+};
+
+Formation.prototype.createDefensivePlay = function() {
+  var defensivePlay = new DefensivePlay({});
+  defensivePlay.defensivePlayers = this.defensivePlayers;
+  defensivePlay.offensiveFormationID = this.offensiveFormationID;
+  defensivePlay.dline = this.dline;
+  defensivePlay.linebacker = this.linebacker;
+  defensivePlay.cornerbacks = this.cornerbacks;
+  defensivePlay.safeties = this.safeties;
+  return defensivePlay
 };
 
 Formation.prototype.findSelectedWR = function(){

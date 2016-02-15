@@ -81,6 +81,7 @@ def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
 
 def player_formation_quiz(request):
+    embed()
     return render(request, 'quiz/player_formation_quiz.html')
 
 def play_quiz(request):
