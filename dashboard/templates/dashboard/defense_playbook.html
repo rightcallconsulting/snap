@@ -180,8 +180,8 @@
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
         $('.formation-button').click(function(){
-					formationToDraw = formations.filter(function(formation) {
-						return formation.id === Number(this.id);
+					playToDraw = defensivePlays.filter(function(play) {
+						return play.id === Number(this.id);
 					}.bind(this))[0]
 
         })

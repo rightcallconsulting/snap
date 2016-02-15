@@ -1,5 +1,6 @@
 var formations = [];
 var defensivePlays =[];
+var plays = [];
 var positions = [];
 var makeJSONCall = true;
 var playScene = false;
@@ -110,7 +111,6 @@ function draw() {
         textSize(17);
         textAlign(CENTER, CENTER);
         text(this.pos, x, y);
-        debugger;
       }
     };
 
@@ -191,15 +191,11 @@ function draw() {
 
         if(playToDraw){
           playToDraw.drawAllPlayers(field);
-          text("Formation: "+playToDraw.formation.playName, 115, 20);
+
+          text("Formation: "+playToDraw.playName, 115, 20);
 
         }
-        else if(formationToDraw){
-          formationToDraw.drawAllPlayers(field);
-          debugger;
-          text("Formation: "+formationToDraw.playName, 115, 20);
 
-        }
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);

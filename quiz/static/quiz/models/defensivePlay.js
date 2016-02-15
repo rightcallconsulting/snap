@@ -18,6 +18,7 @@ var DefensivePlay = function(config) {
   this.defensivePlayers = config.defensivePlayers || [];
   this.offensiveFormationID = config.offensiveFormationID || 0;
   this.positions = config.positions || [];
+  this.id = config.id || null;
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs

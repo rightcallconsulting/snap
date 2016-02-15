@@ -168,6 +168,11 @@ Formation.prototype.createDefensivePlay = function() {
   defensivePlay.linebacker = this.linebacker;
   defensivePlay.cornerbacks = this.cornerbacks;
   defensivePlay.safeties = this.safeties;
+  defensivePlay.id = this.id;
+  defensivePlay.playName = this.playName;
+  defensivePlay.defensivePlayers.forEach(function(player){
+    player.unit = "defense";
+  })
   return defensivePlay
 };
 
