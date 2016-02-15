@@ -48,8 +48,10 @@ function setup() {
         formations.push(newFormation);
         formationNames.push(newFormation.name);
       })
+
+
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
-      formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
+      //formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
 
 
 
@@ -101,7 +103,7 @@ function setup() {
           }
         }
 
-        test.formations = formations;
+        test.formations = formations.slice(0,maxFormations);
 
         test.restartQuiz();
         makeJSONCall = false
@@ -230,7 +232,7 @@ function draw() {
     fill(0,0,0);
     textSize(14);
     textAlign(CENTER, CENTER);
-    text(this.num, x, y);
+    text(this.pos, x, y);
   }
   else {
     noStroke();
