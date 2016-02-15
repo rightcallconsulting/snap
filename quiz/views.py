@@ -81,7 +81,12 @@ def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
 
 def player_formation_quiz(request):
-    return render(request, 'quiz/player_formation_quiz.html')
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/player_formation_quiz.html', {
+        'player': player
+    })
 
 def play_quiz(request):
     return render(request, 'quiz/play_quiz.html')
