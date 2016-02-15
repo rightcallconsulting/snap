@@ -694,12 +694,10 @@ var createPlayerFromJSON = function(jsonPosition){
   }
 
   if(jsonPosition.fields.gapYardY){
-    debugger;
     player.gapYPoint = jsonPosition.fields.gapYardY;
     player.gapXPoint = jsonPosition.fields.gapYardX;
   }
   if(jsonPosition.fields.zoneYardY){
-    debugger;
     player.zoneYPoint = jsonPosition.fields.zoneYardY;
     player.zoneXPoint = jsonPosition.fields.zoneYardX;
   }
