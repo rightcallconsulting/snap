@@ -134,7 +134,9 @@
 						}.bind(this))[0]
 						// Want to finish the below function which handles finding the righ offensive formation and drawing it all in one function instead of all of this array stuff. Having issues with JSON delayed execution
 						// playToDraw.drawAllPlayersWithOffense(field);
+						// offensivePlayToDraw = playToDraw.offensiveFormationObject;
 						offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
+
 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
 							return play.playName === this.value;
 						}.bind(this))
@@ -170,6 +172,7 @@
 					offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
+					playToDraw.establishCBAssignments(offensivePlayToDraw);
 
 				});
 					$('#choose-play').on('submit', function(event){
