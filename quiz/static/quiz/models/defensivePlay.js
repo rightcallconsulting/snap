@@ -159,6 +159,13 @@ DefensivePlay.prototype.establishCBAssignments = function(offensiveFormation){
   })
 };
 
+DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){
+  offensivePlayToDraw = offensiveFormations.filter(function(formation) {
+    return formation.id === this.offensiveFormationID;
+  }.bind(this))[0]
+  return offensivePlayToDraw
+};
+
 var createDefensivePlayFromJSON = function(jsonPlay){
   var formation = new Formation({
     id: jsonPlay.pk,

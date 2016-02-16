@@ -188,9 +188,7 @@
 						playToDraw = defensivePlays.filter(function(play) {
 							return play.id === Number(this.id);
 						}.bind(this))[0]
-						offensivePlayToDraw = offensiveFormations.filter(function(formation) {
-							return formation.id === playToDraw.offensiveFormationID;
-						}.bind(this))[0]
+						offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
 							return play.playName === this.value;
 						}.bind(this))
@@ -223,9 +221,7 @@
 					playToDraw = duplicateDefensiveFormations.filter(function(formation) {
 						return formation.offensiveFormationID === Number(this.id);
 					}.bind(this))[0]
-					offensivePlayToDraw = offensiveFormations.filter(function(formation) {
-						return formation.id === playToDraw.offensiveFormationID;
-					}.bind(this))[0]
+					offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
 
@@ -285,6 +281,8 @@
 								}
 							})
 					};
+
+
 			</script>
 			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
 
