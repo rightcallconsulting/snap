@@ -132,14 +132,13 @@ function draw() {
         textAlign(CENTER, CENTER);
         text(this.pos, x, y);
         if(this.CBAssignment){
-          debugger;
           stroke(255, 0, 0);
           line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
         }
         else if (this.zoneXPoint && this.zoneYPoint){
           this.drawZoneAssignments();
         }
-        else if (this.rusher && this.gapXPoint){
+        else if (this.gapXPoint){
           this.drawGapAssignments();
         }
       }
