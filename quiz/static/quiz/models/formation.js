@@ -130,6 +130,12 @@ Formation.prototype.getPlayerFromPosition = function(pos){
   return players[0];
 };
 
+Formation.prototype.establishZoneHotSpots = function(){
+  var centerYardX = this.getPlayerFromPosition("C").startX;
+  var centerYardY = this.getPlayerFromPosition("C").startY;
+
+};
+
 Formation.prototype.drawOLQB = function(){
   this.oline.forEach(function(ol){
     ol.draw();

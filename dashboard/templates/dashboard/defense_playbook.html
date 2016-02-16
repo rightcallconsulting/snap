@@ -181,12 +181,25 @@
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
         $('.formation-button').click(function(){
+					 var offensiveFormationOptions = [];
+					 $('.show-plays').text('');
 						playToDraw = defensivePlays.filter(function(play) {
 							return play.id === Number(this.id);
 						}.bind(this))[0]
 						offensivePlayToDraw = offensiveFormations.filter(function(formation) {
 							return formation.id === playToDraw.offensiveFormationID;
 						}.bind(this))[0]
+						var duplicateDefensiveFormations = defensivePlays.filter(function(play) {
+							return play.playName === this.value;
+						}.bind(this))
+						duplicateDefensiveFormations.forEach(function(defensiveFormation){
+							offensiveFormations.forEach(function(offensiveFormation){
+								if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
+									offensiveFormationOptions.push(offensiveFormation);
+									$('.show-plays').append('<input class="btn btn-success btn-sm bounceIn login-link formation formation-button" id="{{formation.id}}" type="submit" value="'+ offensiveFormation.playName +'">');
+								}
+							})
+						})
 						playToDraw.establishCBAssignments(offensivePlayToDraw);
 						$('#play-image-header').text("Defense: " + this.value);
         })
@@ -247,7 +260,7 @@
 									playArray.push(playObject);
 								}
 							})
-							displayPlays(playArray);
+							// displayPlays(playArray);
 						})
 					});
 
