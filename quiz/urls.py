@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^teams/(?P<team_id>[0-9]+)/formations$', views.team_formations, name='team_formations'),
     url(r'^teams/(?P<team_id>[0-9]+)/defensive_formations$', views.team_defensive_formations, name='team_defensive_formations'),
     url(r'^teams/(?P<team_id>[0-9]+)/formations/positions$', views.team_formation_positions, name='team_formation_positions'),
+    url(r'^teams/(?P<team_id>[0-9]+)/formations/(?P<formation_id>[0-9]+)$', views.formation_detail, name='formation_detail'),
     url(r'^teams/(?P<team_id>[0-9]+)/formations/(?P<formation_id>[0-9]+)/positions$', views.formation_positions, name='formation_positions'),
     url(r'^teams/broncos/plays/new$', views.new_play, name='new_play'),
     url(r'^teams/(?P<team_id>[0-9]+)/plays$', views.team_plays, name='team_plays'),

@@ -694,12 +694,10 @@ var createPlayerFromJSON = function(jsonPosition){
   }
 
   if(jsonPosition.fields.gapYardY){
-    debugger;
     player.gapYPoint = jsonPosition.fields.gapYardY;
     player.gapXPoint = jsonPosition.fields.gapYardX;
   }
   if(jsonPosition.fields.zoneYardY){
-    debugger;
     player.zoneYPoint = jsonPosition.fields.zoneYardY;
     player.zoneXPoint = jsonPosition.fields.zoneYardX;
   }
@@ -733,4 +731,12 @@ Player.prototype.drawZoneAssignments = function(test) {
   fill(255, 0, 0);
   noFill()
   rect(field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint), 40, 40);
+};
+
+Player.prototype.establishCBAssignment = function(offensiveFormation) {
+  offensiveFormation.offensivePlayers.forEach(function(oPlayer){
+    if(oPlayer.id === this.CBAssignmentPlayerID){
+      this.CBAssignment = oPlayer;
+    }
+  }.bind(this))
 };

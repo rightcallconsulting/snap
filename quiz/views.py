@@ -81,12 +81,17 @@ def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
 
 def player_formation_quiz(request):
+<<<<<<< HEAD
+    embed()
+    return render(request, 'quiz/player_formation_quiz.html')
+=======
     if(request.user.myuser.is_a_player):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/player_formation_quiz.html', {
         'player': player
     })
+>>>>>>> 9acf178af8f9a59c2e46481247d78959ace832d7
 
 def play_quiz(request):
     return render(request, 'quiz/play_quiz.html')
@@ -172,6 +177,11 @@ def team_formation_positions(request, team_id):
     team = Team.objects.filter(pk=team_id)[0]
     positions = team.formations()
     return HttpResponse(serializers.serialize("json", positions))
+
+def formation_detail(request, team_id, formation_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    formation = Formation.objects.filter(pk=formation_id)
+    return HttpResponse(serializers.serialize("json", formation))
 
 def update_test(request, player_id, test_id):
     params = request.POST
