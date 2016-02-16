@@ -402,7 +402,6 @@ function draw() {
               siz: 1
           });
           selectedWR.routeNodes.push(nodeObject);
-          debugger;
         }
         else if(selectedWR.blocker && dlClicked){
           selectedWR.blockingAssignment = dlClicked;

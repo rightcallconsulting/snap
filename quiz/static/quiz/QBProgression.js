@@ -16,7 +16,6 @@ function draw() {
     $.getJSON('/quiz/tests/'+testIDFromHTML, function(data, jqXHR){
       test = createTestFromJSON(data[0]);
       var playerID = test.playerID;
-      debugger;
       $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
         currentPlayerTested = createUserFromJSON(data2[0]);
         $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){

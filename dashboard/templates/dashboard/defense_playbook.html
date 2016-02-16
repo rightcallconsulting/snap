@@ -27,74 +27,18 @@
 							<span><h4>FORMATIONS</h4></span>
 						</div>
 						<div class="col-lg-6">
-							<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-								<div class="stat-icon">
-									<i class="fa fa-user fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
+
 						</div><!-- /.col -->
 						<div class="col-lg-6">
-							<div class="panel-stat3 bg-info">
-								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-								<h5>Server Load</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-								<div class="stat-icon">
-									<i class="fa fa-hdd-o fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
+
 						</div><!-- /.col -->
 					</div>
 					<div class="col-lg-5 dash-col">
 						<div class="dash-header text-center">
 							<span><h4>PLAYS</h4></span>
 						</div>
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
-								<div class="stat-icon">
-									<i class="fa fa-user fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-info">
-								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-								<h5>Server Load</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
-								<div class="stat-icon">
-									<i class="fa fa-hdd-o fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
+
+
 					</div>
 				{% else %}
 				<div class="panel panel-default">
@@ -122,7 +66,7 @@
 									<div class="dash-header text-center">
 										<span><h4>Defensive Plays</h4></span>
 									</div>
-										{% for formation in defensive_formations %}
+										{% for formation in unique_defensive_formations %}
 											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 											<br>
 										{% endfor %}
@@ -188,6 +132,8 @@
 						playToDraw = defensivePlays.filter(function(play) {
 							return play.id === Number(this.id);
 						}.bind(this))[0]
+						// Want to finish the below function which handles finding the righ offensive formation and drawing it all in one function instead of all of this array stuff. Having issues with JSON delayed execution
+						// playToDraw.drawAllPlayersWithOffense(field);
 						offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
 							return play.playName === this.value;
