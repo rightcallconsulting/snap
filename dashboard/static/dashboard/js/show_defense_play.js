@@ -221,12 +221,10 @@ function draw() {
 
         if(playToDraw){
           playToDraw.drawAllPlayers(field);
-          text("Formation: "+playToDraw.playName, 115, 20);
         }
 
         if(offensivePlayToDraw){
           offensivePlayToDraw.drawAllPlayers(field);
-          text("Formation: "+offensivePlayToDraw.playName, 115, 20);
         }
 
         fill(0, 0, 0);

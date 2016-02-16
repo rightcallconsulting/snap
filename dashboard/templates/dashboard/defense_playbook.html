@@ -103,7 +103,7 @@
 						</div>
 						<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
 							<div class="dash-header text-center">
-								<span><h4 id="play-image-header">Play</h4></span>
+								<span><h4 id="play-image-header">Defense</h4></span>
 							</div>
 							<div id="display-play-box-2">
 
@@ -181,14 +181,16 @@
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
         $('.formation-button').click(function(){
-					playToDraw = defensivePlays.filter(function(play) {
-						return play.id === Number(this.id);
-					}.bind(this))[0]
-					offensivePlayToDraw = offensiveFormations.filter(function(formation) {
-						return formation.id === playToDraw.offensiveFormationID;
-					}.bind(this))[0]
-					playToDraw.establishCBAssignments(offensivePlayToDraw);
+						playToDraw = defensivePlays.filter(function(play) {
+							return play.id === Number(this.id);
+						}.bind(this))[0]
+						offensivePlayToDraw = offensiveFormations.filter(function(formation) {
+							return formation.id === playToDraw.offensiveFormationID;
+						}.bind(this))[0]
+						playToDraw.establishCBAssignments(offensivePlayToDraw);
+						$('#play-image-header').text("Defense: " + this.value);
         })
+
 				$('.show-plays').on('mouseover', '.play', function(){
 					if(playToDraw){
 						playToDraw.resetPlayers(defensePlay)
@@ -234,7 +236,7 @@
 					    return formation.id === formationID;
 					  })[0];
 						var playArray = []
-						$('#change-plays-header').text('Offensive Formation: ' + this.value)
+						$('#change-plays-header').text('Offensive Formation: ' + offensivePlayToDraw.playName)
 						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
 							data4.forEach(function(play){
 								if(play.fields.formation === formationID){
