@@ -151,6 +151,14 @@ DefensivePlay.prototype.playerBeingTested = function(){
   return playerBeingTested;
 };
 
+DefensivePlay.prototype.establishCBAssignments = function(offensiveFormation){
+  this.defensivePlayers.forEach(function(player){
+    if (player.CBAssignmentPlayerID){
+      player.establishCBAssignment(offensiveFormation);
+    }
+  })
+};
+
 var createDefensivePlayFromJSON = function(jsonPlay){
   var formation = new Formation({
     id: jsonPlay.pk,

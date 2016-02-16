@@ -176,6 +176,7 @@
 				var formationID;
 				var formationToDraw;
 				var playToDraw;
+				var offensivePlayToDraw;
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
@@ -183,7 +184,10 @@
 					playToDraw = defensivePlays.filter(function(play) {
 						return play.id === Number(this.id);
 					}.bind(this))[0]
-
+					offensivePlayToDraw = offensiveFormations.filter(function(formation) {
+						return formation.id === playToDraw.offensiveFormationID;
+					}.bind(this))[0]
+					playToDraw.establishCBAssignments(offensivePlayToDraw);
         })
 				$('.show-plays').on('mouseover', '.play', function(){
 					if(playToDraw){

@@ -732,3 +732,11 @@ Player.prototype.drawZoneAssignments = function(test) {
   noFill()
   rect(field.getTranslatedX(this.zoneXPoint), field.getTranslatedY(this.zoneYPoint), 40, 40);
 };
+
+Player.prototype.establishCBAssignment = function(offensiveFormation) {
+  offensiveFormation.offensivePlayers.forEach(function(oPlayer){
+    if(oPlayer.id === this.CBAssignmentPlayerID){
+      this.CBAssignment = oPlayer;
+    }
+  }.bind(this))
+};
