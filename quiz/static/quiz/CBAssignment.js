@@ -3,6 +3,7 @@ var formationIDs
 var currentPlayerTested
 var positions = [];
 var makeJSONCall = true
+var testIDFromHTML = $('#test-id').data('test-id')
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -14,7 +15,7 @@ function draw() {
 
   if(makeJSONCall){
     makeJSONCall = false
-    $.getJSON('/quiz/players/20/tests/1', function(data, jqXHR){
+    $.getJSON('/quiz/tests/'+testIDFromHTML, function(data, jqXHR){
       test = createTestFromJSON(data[0]);
       formationIDs = data[0].fields.formations
       var playerID = test.playerID;

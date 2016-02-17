@@ -277,7 +277,6 @@ def edit_test(request, test_id):
             'plays_in_test': plays_in_test,
             'unit': unit,
             'unique_defensive_formations': unique_defensive_formations,
-
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
