@@ -5,7 +5,6 @@ var plays = [];
 var positions = [];
 var makeJSONCall = true;
 var playScene = false;
-var defensePlay
 
 function setup() {
   var myCanvas = createCanvas(500, 500);
@@ -137,13 +136,13 @@ function draw() {
             }
           }
         } else{
-          for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            var p = defensePlay.defensivePlayers[i];
-            if(p !== this){
-              p.clicked = false;
-              p.rank = 0;
-            }
-          }
+          // for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+          //   var p = defensePlay.defensivePlayers[i];
+          //   if(p !== this){
+          //     p.clicked = false;
+          //     p.rank = 0;
+          //   }
+          // }
         }
     };
 
@@ -153,45 +152,9 @@ function draw() {
         this.rank = 0;
     };
 
-    // Create Buttons
-    var save = new Button({
-        x: 10,
-        y: 360,
-        width: 35,
-        label: "Save",
-        clicked: false,
-        displayButton: true
-    });
-
-    var clear = new Button({
-        x: 53,
-        y: 360,
-        width: 40,
-        label: "Clear",
-        clicked: false,
-        displayButton: true
-    });
-
     var getCurrentFormation = function(){
       return currentFormation;
     };
-
-    defensePlay = new DefensivePlay({
-      defensePlay: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
-
-    var center = getCurrentFormation().getPlayerFromPosition("C");
-    if(center === null){
-      center = getCurrentFormation().oline[2];
-    }
-    defensePlay.draw(field);
 
     // intro scene
     var drawOpening = function() {
@@ -209,22 +172,17 @@ function draw() {
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
-        currentFormation.drawBlockingAssignments(field, defensePlay);
     };
 
     // game scene
     var drawScene = function(play) {
         field.drawBackground(play, height, width)
-        //defensePlay.drawAllPlayers(field);
         play.drawAllRoutes(field);
         play.drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
             play.eligibleReceivers[i].runRoute();
         }
-        /*for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.oline[2]);
-        }*/
-        //play.qb[0].runBootleg(play.oline[2], 1.0);
+
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 120, 60);
