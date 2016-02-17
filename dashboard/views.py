@@ -244,6 +244,7 @@ def edit_test(request, test_id):
         return HttpResponse('')
     else:
         test = Test.objects.filter(id=test_id)[0]
+        unit = test.unit()
         player = test.player
         team = test.player.team
         formations = team.formation_set.all()
@@ -253,6 +254,10 @@ def edit_test(request, test_id):
         plays_in_test = test.play_set.all()
         for play in test.play_set.all():
             play_id_array.append(play.id)
+        unique_defensive_formations_dict = {}
+        for formation in defensive_formations:
+            unique_defensive_formations_dict[formation.name] = formation
+            unique_defensive_formations = unique_defensive_formations_dict.values()
         return render(request, 'dashboard/edit_test.html', {
             'test': test,
             'formations': formations,
@@ -262,6 +267,8 @@ def edit_test(request, test_id):
             'player': player,
             'play_id_array': play_id_array,
             'plays_in_test': plays_in_test,
+            'unit': unit,
+            'unique_defensive_formations': unique_defensive_formations,
 
         })
 
