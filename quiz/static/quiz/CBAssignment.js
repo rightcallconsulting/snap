@@ -297,11 +297,11 @@ function draw() {
 
     var drawDetail = function(offensivePlayer, defensivePlayer) {
       field.drawBackground(test.getCurrentDefensivePlay(), height, width);
-      playButton.draw();
-      restart.draw();
-      clear.draw();
-      offensivePlayer.draw();
-      defensivePlayer.draw();
+      playButton.draw(field);
+      restart.draw(field);
+      clear.draw(field);
+      offensivePlayer.draw(field);
+      defensivePlayer.draw(field);
       fill(0, 0, 0);
       textSize(20);
       text(scoreboard.feedbackMessage, 120, 60);
@@ -330,18 +330,18 @@ function draw() {
 
     mouseClicked = function() {
       scoreboard.feedbackMessage = "";
-      if (playButton.isMouseInside()) {
+      if (playButton.isMouseInside(field)) {
         pressPlayButton();
-      } else if (restart.isMouseInside()) {
+      } else if (restart.isMouseInside(field)) {
         test.restartQuiz(test.defensivePlays[0]);
 
-      } else if (clear.isMouseInside()) {
+      } else if (clear.isMouseInside(field)) {
         pressClearButton();
-      } else if (pause.isMouseInside() && pause.displayButton) {
+      } else if (pause.isMouseInside(field) && pause.displayButton) {
         pressPauseButton();
-      } else if (stop.isMouseInside() && stop.displayButton) {
+      } else if (stop.isMouseInside(field) && stop.displayButton) {
         pressStopButton();
-      } else if (bigReset.isMouseInside()) {
+      } else if (bigReset.isMouseInside(field)) {
         test.restartQuiz(test.defensivePlays[0]);
         nextPlay.displayButton = true;
         playButton.displayButton = true;
@@ -353,14 +353,14 @@ function draw() {
       } else {
 
         if (test.showBigPlayers) {
-          if (test.getCurrentPlay().bigPlayer.isMouseInside()) {
+          if (test.getCurrentPlay().bigPlayer.isMouseInside(field)) {
 
             if (test.getCurrentPlay().bigPlayer.clicked) {
               test.checkBigSelection();
             } else {
               test.getCurrentPlay().bigPlayer.select();
             }
-          } else if (test.getCurrentDefensivePlay().bigDefender !== null && test.getCurrentDefensivePlay().bigDefender.isMouseInside()) {
+          } else if (test.getCurrentDefensivePlay().bigDefender !== null && test.getCurrentDefensivePlay().bigDefender.isMouseInside(field)) {
             if (test.getCurrentDefensivePlay().bigDefender.clicked) {
               test.checkBigSelection();
             } else {
@@ -375,7 +375,7 @@ function draw() {
 
           for (var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++) {
             var p = test.getCurrentPlay().eligibleReceivers[i];
-            if (p.isMouseInside()) {
+            if (p.isMouseInside(field)) {
               if (p.clicked) {
                 p.checkSelection(test);
               } else {
@@ -391,7 +391,7 @@ function draw() {
     draw = function() {
 
       if(!test.over){
-        playerBeingTested = test.establishCBPlayerTested(user);
+        playerBeingTested = test.establishCBPlayerTested(user, "CB");
         playerBeingTested.isBeingTested = true;
         if(!test.getCurrentDefensivePlay().bigPlayer && !test.getCurrentPlay().bigPlayer){
           var playerBeingTested = test.getCurrentDefensivePlay().playerBeingTested();
@@ -404,7 +404,7 @@ function draw() {
         field.drawBackground("",height, width)
         test.drawQuizSummary();
         bigReset.displayButton = true;
-        bigReset.draw();
+        bigReset.draw(field);
       } else {
         if (playButton.clicked) {
           if (!pause.clicked) {
