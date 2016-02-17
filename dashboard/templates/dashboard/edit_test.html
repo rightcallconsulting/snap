@@ -235,7 +235,7 @@
 						else if (playDomElement.hasClass('play-remove-button')){
 							addOrRemovePlay = "remove"
 						}
-							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
+							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay, defense: false });
 							if(playDomElement.hasClass('play-add-button')){
 								playDomElement.addClass('play-remove-button');
 								playDomElement.removeClass('play-add-button');
@@ -313,7 +313,7 @@
 						else if (playDomElement.hasClass('play-remove-button')){
 							addOrRemovePlay = "remove"
 						}
-							$.post( "/tests/"+ testID + "/edit", { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay });
+							$.post( "/tests/"+ testID + "/edit", { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
 							if(playDomElement.hasClass('play-add-button')){
 								playDomElement.addClass('play-remove-button');
 								playDomElement.removeClass('play-add-button');
