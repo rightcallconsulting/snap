@@ -297,9 +297,9 @@ function draw() {
 
     var drawDetail = function(offensivePlayer, defensivePlayer) {
       field.drawBackground(test.getCurrentDefensivePlay(), height, width);
-      playButton.draw(field);
-      restart.draw(field);
-      clear.draw(field);
+      // playButton.draw(field);
+      // restart.draw(field);
+      // clear.draw(field);
       offensivePlayer.draw(field);
       defensivePlayer.draw(field);
       fill(0, 0, 0);
@@ -396,8 +396,8 @@ function draw() {
         if(!test.getCurrentDefensivePlay().bigPlayer && !test.getCurrentPlay().bigPlayer){
           var playerBeingTested = test.getCurrentDefensivePlay().playerBeingTested();
           var rightAnswerPlayer = playerBeingTested.establishRightAnswerPlayer(test.getCurrentPlay());
-          test.getCurrentPlay().bigPlayer = rightAnswerPlayer.createBigPlayer(height / 2 + 100, width / 2);
-          test.getCurrentDefensivePlay().bigPlayer = playerBeingTested.createBigPlayer(height / 2 - 50, width / 2);
+          test.getCurrentPlay().bigPlayer = rightAnswerPlayer.createBigPlayer(65, 25);
+          test.getCurrentDefensivePlay().bigPlayer = playerBeingTested.createBigPlayer(80, 25);
         }
       }
       if (test.endTime > 0) {
