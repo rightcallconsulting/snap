@@ -43,15 +43,16 @@ function draw() {
 
               }
             })
+            offensiveFormations.forEach(function(formation){
+              formation.populatePositions();
+            })
             formations.forEach(function(formation){
               formation.populatePositions();
               var defensivePlay = formation.createDefensivePlay();
               defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
               defensivePlays.push(defensivePlay);
             })
-            offensiveFormations.forEach(function(formation){
-              formation.populatePositions();
-            })
+
             $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
               data3.forEach(function(play){
                 var testIDArray = play.fields.tests;
@@ -159,15 +160,9 @@ function draw() {
     // intro scene
     var drawOpening = function() {
         field.drawBackground(playBeingCreated, height, width)
-
         if(playToDraw){
-          playToDraw.drawAllPlayers(field);
+          playToDraw.drawAllPlayersWithOffense(field);
         }
-
-        if(offensivePlayToDraw){
-          offensivePlayToDraw.drawAllPlayers(field);
-        }
-
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);

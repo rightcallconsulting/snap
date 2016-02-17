@@ -124,6 +124,7 @@ DefensivePlay.prototype.establishOffensiveFormationFromArray = function(arrayOfO
     return formation.id === this.offensiveFormationID;
   }.bind(this))[0];
   this.offensiveFormationObject = offensiveFormation;
+  this.establishCBAssignments();
 };
 
 DefensivePlay.prototype.establishOffenseToDraw = function(){
@@ -168,10 +169,10 @@ DefensivePlay.prototype.establishOffenseToDraw = function(){
 
 
 DefensivePlay.prototype.drawAllPlayersWithOffense = function(field){
-    formation.defensivePlayers.forEach(function(player){
+    this.defensivePlayers.forEach(function(player){
       player.draw(field)
     })
-    formation.offensiveFormationObject.offensivePlayers.forEach(function(player){
+    this.offensiveFormationObject.offensivePlayers.forEach(function(player){
       player.draw(field)
     })
 };
@@ -210,11 +211,21 @@ DefensivePlay.prototype.playerBeingTested = function(){
 };
 
 DefensivePlay.prototype.establishCBAssignments = function(offensiveFormation){
-  this.defensivePlayers.forEach(function(player){
-    if (player.CBAssignmentPlayerID){
-      player.establishCBAssignment(offensiveFormation);
-    }
-  })
+  if(offensiveFormation){
+    this.defensivePlayers.forEach(function(player){
+      if (player.CBAssignmentPlayerID){
+        player.establishCBAssignment(offensiveFormation);
+      }
+    })
+  }
+  else{
+    this.defensivePlayers.forEach(function(player){
+      if (player.CBAssignmentPlayerID){
+        player.establishCBAssignment(this.offensiveFormationObject);
+      }
+    }.bind(this))
+  }
+
 };
 
 DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){

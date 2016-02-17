@@ -132,9 +132,7 @@
 						playToDraw = defensivePlays.filter(function(play) {
 							return play.id === Number(this.id);
 						}.bind(this))[0]
-						// Want to finish the below function which handles finding the righ offensive formation and drawing it all in one function instead of all of this array stuff. Having issues with JSON delayed execution
-						// playToDraw.drawAllPlayersWithOffense(field);
-						offensivePlayToDraw = playToDraw.offensiveFormationObject;
+
 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
 							return play.playName === this.value;
 						}.bind(this))
@@ -146,44 +144,20 @@
 								}
 							})
 						})
-						playToDraw.establishCBAssignments(offensivePlayToDraw);
 						$('#play-image-header').text("Defense: " + this.value);
         })
 
-				// $('.show-plays').on('mouseover', '.play', function(){
-				// 	if(playToDraw){
-				// 		playToDraw.resetPlayers(defensePlay)
-				// 		playToDraw.setAllRoutes();
-				// 	}
-				// 	playToDraw = plays.filter(function(play) {
-				// 		return play.id === Number(this.id);
-				// 	}.bind(this))[0];
-				// 	playToDraw.formation = formationToDraw;
-				// 	$('#play-image-header').text(this.value);
-				// 	playScene = false;
-				// })
 
 				$('.show-plays').on('click', '.offensive-formation', function(){
 					playToDraw = duplicateDefensiveFormations.filter(function(formation) {
 						return formation.offensiveFormationID === Number(this.id);
 					}.bind(this))[0]
-					offensivePlayToDraw = playToDraw.establishOffensiveFormation(offensiveFormations);
-			    $('#choose-play').data('button', this.name);
-						playClicked = $(this);
-					playToDraw.establishCBAssignments(offensivePlayToDraw);
+					$('#change-plays-header').text('Offensive Formation: ' + playToDraw.offensiveFormationObject.playName)
+
 
 				});
-					$('#choose-play').on('submit', function(event){
-						event.preventDefault();
-						modifyPlayWithTest(playClicked);
-					});
-					$('.existing-plays').on('click', '.play-remove', function(){
-						modifyPlayWithTest($(this));
-						$(this).fadeOut();
-						$('.show-plays #'+this.id).removeClass('play-remove-button');
-						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
-						playIDArray = _.without(playIDArray, Number(this.id))
-					});
+
+
 					$("#play-button").click(function() {
 						playScene = true;
 					})
@@ -195,39 +169,8 @@
 						playToDraw.resetPlayers(defensePlay);
 						playToDraw.setAllRoutes();
 					})
-					$(".formation").click(function() {
-						var formationName = this.value;
-						formationID = Number(this.id);
-						formationToDraw = formations.filter(function(formation) {
-					    return formation.id === formationID;
-					  })[0];
-						var playArray = []
-						$('#change-plays-header').text('Offensive Formation: ' + offensivePlayToDraw.playName)
-						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-							data4.forEach(function(play){
-								if(play.fields.formation === formationID){
-									var playObject = {
-									  playName : play.fields.name,
-									  ID : play.pk
-									}
-									playArray.push(playObject);
-								}
-							})
-							// displayPlays(playArray);
-						})
-					});
 
-					function displayPlays(playArray) {
-							$('.show-plays').empty();
-							playArray.forEach(function(play){
-								if(playIDArray.includes(play.ID)){
-									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
-								}
-								else{
-									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
-								}
-							})
-					};
+
 
 
 			</script>
