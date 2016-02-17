@@ -70,27 +70,38 @@
 										<br>
 									{% endfor %}
 							</div>
+							<div class="col-lg-2 dash-col change-plays-box">
+								<div class="dash-header text-center">
+									<span><h4 id="change-plays-header">Change Plays</h4></span>
+								</div>
+								<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+									<div class="panel-body show-plays">
+
+									</div><!-- /panel -->
+								</form>
+							</div>
 					{% else %}
 							<div class="col-lg-2 dash-col choose-defensive-formation-box">
 								<div class="dash-header text-center">
 									<span><h4>Defensive Formations</h4></span>
 								</div>
 									{% for formation in unique_defensive_formations %}
-										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
 									{% endfor %}
+							</div>
+							<div class="col-lg-2 dash-col change-plays-box">
+								<div class="dash-header text-center">
+									<span><h4 id="change-plays-header">Offensive Formation:</h4></span>
+								</div>
+								<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+									<div class="panel-body show-plays-defense">
+
+									</div><!-- /panel -->
+								</form>
 							</div>
 					{% endif %}
 
-					<div class="col-lg-2 dash-col change-plays-box">
-						<div class="dash-header text-center">
-							<span><h4 id="change-plays-header">Change Plays</h4></span>
-						</div>
-						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-							<div class="panel-body show-plays">
 
-							</div><!-- /panel -->
-						</form>
-					</div>
 
 
 
@@ -138,6 +149,8 @@
 				var playClicked;
 				var formationID;
 				var formationToDraw;
+				var offensivePlayToDraw;
+				var duplicateDefensiveFormations;
 				var playToDraw;
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
@@ -237,7 +250,52 @@
 								}
 							})
 					};
-			</script>
-			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
 
+					$('.formation-button-defense').click(function(){
+						 var offensiveFormationOptions = [];
+						 $('.show-plays-defense').text('');
+							playToDraw = defensivePlays.filter(function(play) {
+								return play.id === Number(this.id);
+							}.bind(this))[0]
+
+							duplicateDefensiveFormations = defensivePlays.filter(function(play) {
+								return play.playName === this.value;
+							}.bind(this))
+							duplicateDefensiveFormations.forEach(function(defensiveFormation){
+								offensiveFormations.forEach(function(offensiveFormation){
+									if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
+										offensiveFormationOptions.push(offensiveFormation);
+										$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+									}
+								})
+							})
+							$('#play-image-header').text("Defense: " + this.value);
+					})
+
+					$('.show-plays-defense').on('mouseover', '.offensive-formation', function(){
+						playToDraw = duplicateDefensiveFormations.filter(function(formation) {
+							return formation.offensiveFormationID === Number(this.id);
+						}.bind(this))[0]
+						$('#change-plays-header').text('Offensive Formation: ' + playToDraw.offensiveFormationObject.playName);
+					});
+
+						$("#play-button").click(function() {
+							playScene = true;
+						})
+						$("#pause-button").click(function() {
+							playScene = false;
+						})
+						$("#restart-button").click(function() {
+							playScene = false;
+							playToDraw.resetPlayers(defensePlay);
+							playToDraw.setAllRoutes();
+						})
+
+			</script>
+			{% if unit == "offense" %}
+				<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+			{% else %}
+			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
+
+			{% endif %}
 			{% endblock %}
