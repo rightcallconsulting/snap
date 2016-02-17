@@ -152,11 +152,8 @@
 					playToDraw = duplicateDefensiveFormations.filter(function(formation) {
 						return formation.offensiveFormationID === Number(this.id);
 					}.bind(this))[0]
-					$('#change-plays-header').text('Offensive Formation: ' + playToDraw.offensiveFormationObject.playName)
-
-
+					$('#change-plays-header').text('Offensive Formation: ' + playToDraw.offensiveFormationObject.playName);
 				});
-
 
 					$("#play-button").click(function() {
 						playScene = true;
@@ -169,9 +166,6 @@
 						playToDraw.resetPlayers(defensePlay);
 						playToDraw.setAllRoutes();
 					})
-
-
-
 
 			</script>
 			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
