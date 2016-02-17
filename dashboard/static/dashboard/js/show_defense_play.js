@@ -5,7 +5,6 @@ var plays = [];
 var positions = [];
 var makeJSONCall = true;
 var playScene = false;
-var defensePlay
 
 function setup() {
   var myCanvas = createCanvas(500, 500);
@@ -21,41 +20,17 @@ function draw() {
     makeJSONCall = false
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
+        var newFormation = createFormationFromJSON(formationObject);
         offensiveFormations.push(newFormation);
       })
       $.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
         data.forEach(function(formationObject){
-          formationObject.fields.id = formationObject.pk;
-          formationObject.fields.positions = [];
-          var newFormation = new Formation(formationObject.fields);
-          newFormation.playName = formationObject.fields.name;
+          var newFormation = createFormationFromJSON(formationObject);
           formations.push(newFormation);
         })
           $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
             data.forEach(function(position){
-              position.fields.id = position.pk;
-              position.fields.x = position.fields.startX;
-              position.fields.y = position.fields.startY;
-              position.fields.pos = position.fields.name;
-              position.fields.num = position.fields.pos;
-              position.fields.gapYPoint = position.fields.gapYardY;
-              position.fields.gapXPoint = position.fields.gapYardX;
-              position.fields.zoneYPoint = position.fields.zoneYardY;
-              position.fields.zoneXPoint = position.fields.zoneYardX;
-              var newPlayer = new Player(position.fields)
-              if(newPlayer.pos==="QB"){
-                newPlayer.fill = color(212, 130, 130);
-              }
-              else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-                newPlayer.fill = color(143, 29, 29);
-              }
-              else{
-                newPlayer.fill = color(255, 0, 0);
-              }
+              var newPlayer = createPlayerFromJSON(position);
               formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
               offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
 
@@ -68,13 +43,16 @@ function draw() {
 
               }
             })
-            formations.forEach(function(formation){
-              formation.populatePositions();
-              defensivePlays.push(formation.createDefensivePlay());
-            })
             offensiveFormations.forEach(function(formation){
               formation.populatePositions();
             })
+            formations.forEach(function(formation){
+              formation.populatePositions();
+              var defensivePlay = formation.createDefensivePlay();
+              defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
+              defensivePlays.push(defensivePlay);
+            })
+
             $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
               data3.forEach(function(play){
                 var testIDArray = play.fields.tests;
@@ -159,13 +137,13 @@ function draw() {
             }
           }
         } else{
-          for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            var p = defensePlay.defensivePlayers[i];
-            if(p !== this){
-              p.clicked = false;
-              p.rank = 0;
-            }
-          }
+          // for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+          //   var p = defensePlay.defensivePlayers[i];
+          //   if(p !== this){
+          //     p.clicked = false;
+          //     p.rank = 0;
+          //   }
+          // }
         }
     };
 
@@ -175,78 +153,31 @@ function draw() {
         this.rank = 0;
     };
 
-    // Create Buttons
-    var save = new Button({
-        x: 10,
-        y: 360,
-        width: 35,
-        label: "Save",
-        clicked: false,
-        displayButton: true
-    });
-
-    var clear = new Button({
-        x: 53,
-        y: 360,
-        width: 40,
-        label: "Clear",
-        clicked: false,
-        displayButton: true
-    });
-
     var getCurrentFormation = function(){
       return currentFormation;
     };
 
-    defensePlay = new DefensivePlay({
-      defensePlay: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
-
-    var center = getCurrentFormation().getPlayerFromPosition("C");
-    if(center === null){
-      center = getCurrentFormation().oline[2];
-    }
-    defensePlay.draw(field);
-
     // intro scene
     var drawOpening = function() {
         field.drawBackground(playBeingCreated, height, width)
-
         if(playToDraw){
-          playToDraw.drawAllPlayers(field);
+          playToDraw.drawAllPlayersWithOffense(field);
         }
-
-        if(offensivePlayToDraw){
-          offensivePlayToDraw.drawAllPlayers(field);
-        }
-
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 330, 20);
         fill(176,176,176)
-        currentFormation.drawBlockingAssignments(field, defensePlay);
     };
 
     // game scene
     var drawScene = function(play) {
         field.drawBackground(play, height, width)
-        //defensePlay.drawAllPlayers(field);
         play.drawAllRoutes(field);
         play.drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
             play.eligibleReceivers[i].runRoute();
         }
-        /*for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.oline[2]);
-        }*/
-        //play.qb[0].runBootleg(play.oline[2], 1.0);
+
         fill(0, 0, 0);
         textSize(20);
         text(getCurrentFormation().feedbackMessage, 120, 60);
