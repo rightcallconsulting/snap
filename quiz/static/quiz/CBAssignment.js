@@ -72,6 +72,9 @@ function draw() {
   var runTest = function(type, user, test){
 
   Player.prototype.draw = function() {
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
     if (this.unit === "offense") {
       noStroke();
       if (this.clicked) {
@@ -81,11 +84,11 @@ function draw() {
       } else {
         fill(this.fill);
       }
-      ellipse(this.x, this.y, this.siz, this.siz);
+      ellipse(x, y, siz, siz);
       fill(0, 0, 0);
       textSize(14);
       textAlign(CENTER, CENTER);
-      text(this.num, this.x, this.y);
+      text(this.num, x, y);
     } else {
         if (this.isBeingTested) {
           fill(0, 0, 250);
@@ -102,11 +105,11 @@ function draw() {
           } else {
             fill(0,0,255);
           }
-          ellipse(this.x, this.y, this.siz, this.siz);
+          ellipse(x, y, siz, siz);
           fill(0, 0, 0);
           textSize(14);
           textAlign(CENTER, CENTER);
-          text(this.num, this.x, this.y);
+          text(this.num, x, y);
         } else {
           if (this.isBeingTested) {
             fill(0, 0, 250);
@@ -125,7 +128,7 @@ function draw() {
             textSize(17);
           }
           textAlign(CENTER, CENTER);
-          text(this.pos, this.x, this.y);
+          text(this.pos, x, y);
         }
       };
     }
