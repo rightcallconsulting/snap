@@ -231,19 +231,23 @@ def edit_profile(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def edit_test(request, test_id):
     if request.method == 'POST':
+        test = Test.objects.filter(id=test_id)[0]
+        add_or_remove = request.POST['add_or_remove']
         if request.POST['defense'] == "false":
             play_id = request.POST['play_id']
+            play = Play.objects.filter(id=play_id)[0]
+            if add_or_remove == "add":
+                play.tests.add(test)
+            else:
+                play.tests.remove(test)
+            play.save()
         else:
-            offensive_formation_id = request.POST['offensive_formation_id']
             defensive_formation_id = request.POST['defensive_formation_id']
-        add_or_remove = request.POST['add_or_remove']
-        test = Test.objects.filter(id=test_id)[0]
-        play = Play.objects.filter(id=play_id)[0]
-        if add_or_remove == "add":
-            play.tests.add(test)
-        else:
-            play.tests.remove(test)
-        play.save()
+            defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
+            if add_or_remove == "add":
+                test.formations.add(defensive_formation)
+            else:
+                test.formations.remove(test)
         test.save()
         return HttpResponse('')
     else:
