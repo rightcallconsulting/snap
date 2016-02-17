@@ -231,19 +231,28 @@ def edit_profile(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def edit_test(request, test_id):
     if request.method == 'POST':
-        play_id = request.POST['play_id']
-        add_or_remove = request.POST['add_or_remove']
         test = Test.objects.filter(id=test_id)[0]
-        play = Play.objects.filter(id=play_id)[0]
-        if add_or_remove == "add":
-            play.tests.add(test)
+        add_or_remove = request.POST['add_or_remove']
+        if request.POST['defense'] == "false":
+            play_id = request.POST['play_id']
+            play = Play.objects.filter(id=play_id)[0]
+            if add_or_remove == "add":
+                play.tests.add(test)
+            else:
+                play.tests.remove(test)
+            play.save()
         else:
-            play.tests.remove(test)
-        play.save()
+            defensive_formation_id = request.POST['defensive_formation_id']
+            defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
+            if add_or_remove == "add":
+                test.formations.add(defensive_formation)
+            else:
+                test.formations.remove(test)
         test.save()
         return HttpResponse('')
     else:
         test = Test.objects.filter(id=test_id)[0]
+        unit = test.unit()
         player = test.player
         team = test.player.team
         formations = team.formation_set.all()
@@ -253,6 +262,10 @@ def edit_test(request, test_id):
         plays_in_test = test.play_set.all()
         for play in test.play_set.all():
             play_id_array.append(play.id)
+        unique_defensive_formations_dict = {}
+        for formation in defensive_formations:
+            unique_defensive_formations_dict[formation.name] = formation
+            unique_defensive_formations = unique_defensive_formations_dict.values()
         return render(request, 'dashboard/edit_test.html', {
             'test': test,
             'formations': formations,
@@ -262,7 +275,8 @@ def edit_test(request, test_id):
             'player': player,
             'play_id_array': play_id_array,
             'plays_in_test': plays_in_test,
-
+            'unit': unit,
+            'unique_defensive_formations': unique_defensive_formations,
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)

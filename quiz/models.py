@@ -243,6 +243,12 @@ class Test(models.Model):
             final_list.append(data)
         return final_list
 
+    def unit(self):
+        if self.type_of_test == "CBAssignment":
+            return "defense"
+        else:
+            return "offense"
+
 class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
