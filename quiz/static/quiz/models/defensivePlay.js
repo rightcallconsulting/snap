@@ -119,6 +119,13 @@ DefensivePlay.prototype.drawAllPlayers = function(field){
   }
 };
 
+DefensivePlay.prototype.establishOffensiveFormationFromArray = function(arrayOfOffensiveFormations){
+  var offensiveFormation = arrayOfOffensiveFormations.filter(function(formation) {
+    return formation.id === this.offensiveFormationID;
+  }.bind(this))[0];
+  this.offensiveFormationObject = offensiveFormation;
+};
+
 DefensivePlay.prototype.establishOffenseToDraw = function(){
   var offensiveFormationID = this.offensiveFormationID;
   var newFormation;

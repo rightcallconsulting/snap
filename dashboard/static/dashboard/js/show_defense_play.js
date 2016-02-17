@@ -21,41 +21,17 @@ function draw() {
     makeJSONCall = false
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
+        var newFormation = createFormationFromJSON(formationObject);
         offensiveFormations.push(newFormation);
       })
       $.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
         data.forEach(function(formationObject){
-          formationObject.fields.id = formationObject.pk;
-          formationObject.fields.positions = [];
-          var newFormation = new Formation(formationObject.fields);
-          newFormation.playName = formationObject.fields.name;
+          var newFormation = createFormationFromJSON(formationObject);
           formations.push(newFormation);
         })
           $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
             data.forEach(function(position){
-              position.fields.id = position.pk;
-              position.fields.x = position.fields.startX;
-              position.fields.y = position.fields.startY;
-              position.fields.pos = position.fields.name;
-              position.fields.num = position.fields.pos;
-              position.fields.gapYPoint = position.fields.gapYardY;
-              position.fields.gapXPoint = position.fields.gapYardX;
-              position.fields.zoneYPoint = position.fields.zoneYardY;
-              position.fields.zoneXPoint = position.fields.zoneYardX;
-              var newPlayer = new Player(position.fields)
-              if(newPlayer.pos==="QB"){
-                newPlayer.fill = color(212, 130, 130);
-              }
-              else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-                newPlayer.fill = color(143, 29, 29);
-              }
-              else{
-                newPlayer.fill = color(255, 0, 0);
-              }
+              var newPlayer = createPlayerFromJSON(position);
               formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
               offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
 
@@ -70,7 +46,9 @@ function draw() {
             })
             formations.forEach(function(formation){
               formation.populatePositions();
-              defensivePlays.push(formation.createDefensivePlay());
+              var defensivePlay = formation.createDefensivePlay();
+              defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
+              defensivePlays.push(defensivePlay);
             })
             offensiveFormations.forEach(function(formation){
               formation.populatePositions();
