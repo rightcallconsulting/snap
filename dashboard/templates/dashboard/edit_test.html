@@ -104,7 +104,7 @@
 
 
 
-
+					{% if unit == "offense" %}
 					<div class="col-lg-10 dash-col display-plays-in-test">
 						<div class="dash-header text-center">
 							<span><h4>Plays in Test: {{test.name}}</h4></span>
@@ -129,6 +129,33 @@
 
 						{% endfor %}
 					</div>
+					{% else %}
+					<div class="col-lg-10 dash-col display-plays-in-test">
+						<div class="dash-header text-center">
+							<span><h4>Plays in Test: {{test.name}}</h4></span>
+						</div>
+						{% for formation in unique_defensive_formations %}
+						<div class="col-lg-2 dash-col">
+							<div class="dash-header text-center">
+								<span><h4>{{ formation }}</h4></span>
+
+							</div>
+
+								<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
+
+									{% for play in plays_in_test %}
+										{% if play.formation.id == formation.id %}
+											<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+										{% endif %}
+									{% endfor %}
+								</div><!-- /panel -->
+
+						</div>
+
+						{% endfor %}
+					</div>
+
+					{% endif %}
 
 
 
