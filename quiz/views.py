@@ -94,6 +94,14 @@ def play_quiz(request):
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
 
+def coverage_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/coverage_quiz.html', {
+        'player': player
+    })
+
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
