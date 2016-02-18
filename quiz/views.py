@@ -94,6 +94,9 @@ def play_quiz(request):
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
 
+def coverage_quiz(request):
+    return render(request, 'quiz/coverage_quiz.html')
+
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
