@@ -247,7 +247,7 @@ def edit_test(request, test_id):
             if add_or_remove == "add":
                 test.formations.add(defensive_formation)
             else:
-                test.formations.remove(test)
+                test.formations.remove(defensive_formation)
         test.save()
         return HttpResponse('')
     else:
