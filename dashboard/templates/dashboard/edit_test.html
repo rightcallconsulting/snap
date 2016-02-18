@@ -304,20 +304,26 @@
 							duplicateDefensiveFormations = defensivePlays.filter(function(play) {
 								return play.playName === this.value;
 							}.bind(this))
+							var in_test = false;
 							duplicateDefensiveFormations.forEach(function(defensiveFormation){
 								offensiveFormations.forEach(function(offensiveFormation){
 									if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
 										offensiveFormationOptions.push(offensiveFormation);
 										defensive_formation_id_array.forEach(function(IDsArray){
-											debugger;
-											if(true){
-												$('.show-plays-defense').append('<input class="btn  btn-sm bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+											if(IDsArray[0] == playToDraw.playName && IDsArray[1] == offensiveFormation.id){
+												in_test = true;
+											}
 
-											}
-											else {
-												$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
-											}
 										})
+										if (in_test){
+											$('.show-plays-defense').append('<input class="btn  btn-sm bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+										}
+										else {
+											$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+											
+										}
+
+
 									}
 								})
 							})
