@@ -208,9 +208,9 @@ function draw() {
     });
 
     var bigReset = new Button({
-        x: width / 2 - 40,
-        y: height * 4 / 5,
-        width: 80,
+        x: field.getYardX(width/2)-4,
+        y: field.getYardY(height * 0.8),
+        width: 8,
         label: "Restart Quiz",
         clicked: false
     });
