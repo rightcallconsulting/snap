@@ -1,6 +1,7 @@
 var PlayTest = function(config){
     this.typeTest = config.typeTest || "";
     this.plays = config.plays || [];
+    this.defensivePlays = config.defensivePlays || [];
     this.questionNum = 0;
     this.badGuessPenalty = config.badGuessPenalty || 0.1;
     this.secondsPerQuestion = config.secondsPerQuestion || 10;
@@ -19,6 +20,10 @@ var PlayTest = function(config){
 
 PlayTest.prototype.getCurrentPlay = function(){
   return this.plays[this.questionNum];
+};
+
+PlayTest.prototype.getCurrentDefensivePlay = function(){
+  return this.defensivePlays[this.questionNum];
 };
 
 PlayTest.prototype.getScoreString = function(){
