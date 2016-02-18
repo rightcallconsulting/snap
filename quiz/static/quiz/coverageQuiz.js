@@ -1,10 +1,11 @@
 var makeJSONCall = true;
-var testIDFromHTML = 33;
+var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
+var currentPlayerTested = null;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -34,6 +35,12 @@ function setup() {
     var plays = [];
     var positions = [];
     playNames = [];
+
+    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
+      currentPlayerTested = createUserFromJSON(data2[0]);
+      currentPlayerTested.position = "M"; //remove when done testing
+    })
+
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         var newFormation = createFormationFromJSON(formationObject);
@@ -91,12 +98,28 @@ function setup() {
         })
 
     });
-    playNames.push("Cover 3");
-    playNames.push("Cover 4");
-    playNames.push("Mike Laser");
+
+    for(var i = 0; i < defensivePlays.length; i++){
+      var play = defensivePlays[i];
+      var inCoverage = false;
+      for(var j = 0; j < play.defensivePlayers.length; j++){
+        var p = play.defensivePlayers[j];
+        if(p.pos === currentPlayerTested.position){
+          //check if he's in coverage
+          if(p.CBAssignment){
+            inCoverage = true;
+          }
+          break;
+        }
+      }
+      if(!inCoverage){
+        defensivePlays = defensivePlays.slice(0, i).concat(defensivePlays.slice(i+1));
+        i--;
+      }
+    }
+
     test.plays = defensivePlays;
     test.defensivePlays = defensivePlays;
-    multipleChoiceAnswers = [];
     test.restartQuiz();
     makeJSONCall = false;
   }
@@ -122,56 +145,24 @@ var sortByPlayName = function(a, b){
   }
 }
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-  }
-  return o;
-}
-
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
-  multipleChoiceAnswers = [];
-  var availableNames = playNames.slice();
-  shuffle(availableNames);
-  var i = 0;
-  while(multipleChoiceAnswers.length < numOptions){
-    var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
-    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-      y: height - 60,
-      width: width / (numOptions + 2),
-      height: 50,
-      label: label,
-      clicked: false
-    }));
-    i++;
-  }
-}
-
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
+function clearSelections(){
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+      var p = play.offensiveFormationObject.eligibleReceivers[i];
+      p.clicked = false;
     }
   }
 }
 
 function checkAnswer(guess){
-  var isCorrect = test.getCurrentDefensivePlay().playName === guess.label;
+  var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentPlayerTested.position})[0]
+  var isCorrect = guess === p.CBAssignment;
   if(isCorrect){
     test.advanceToNextPlay(test.correctAnswerMessage);
     test.score++;
-    multipleChoiceAnswers = [];
   }else{
-    clearAnswers();
+    clearSelections();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
   }
@@ -184,9 +175,7 @@ function drawOpening(){
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    multipleChoiceAnswers[i].draw();
-  }
+
   fill(0, 0, 0);
   textSize(20);
   text(test.scoreboard.feedbackMessage, width/4, 30);
@@ -197,18 +186,20 @@ mouseClicked = function() {
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
-  else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
+  else if(test.getCurrentDefensivePlay()){
+    for(var i = 0; i < test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers.length; i++){
+      var answer = test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
-        if(answer.isMouseInside()){
+        if(answer.isMouseInside(field)){
           checkAnswer(answer);
         }else{
-          answer.changeClickStatus();
+          clearSelections();
+          answer.clicked = true;
         }
       }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
+        if(answer.isMouseInside(field)){
+          clearSelections();
+          answer.clicked = true;
         }
       }
     }
@@ -221,16 +212,7 @@ keyTyped = function(){
       test.restartQuiz();
     }
   }else{
-    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-    if(offset >= 0 && offset < multipleChoiceAnswers.length){
-      var answer = multipleChoiceAnswers[offset];
-      if(answer.clicked){
-        checkAnswer(answer);
-      }else{
-        clearAnswers();
-        answer.changeClickStatus();
-      }
-    }
+
   }
 };
 
@@ -242,6 +224,9 @@ function draw() {
     if(this.unit === "offense"){
       noStroke();
       fill(this.fill);
+      if(this.clicked){
+        fill(220, 220, 0);
+      }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
       textSize(14);
@@ -276,11 +261,6 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
-      var correctAnswer = test.getCurrentDefensivePlay().playName;
-      debugger;
-      createMultipleChoiceAnswers(correctAnswer,3);
-    }
     drawOpening();
   }
 }
