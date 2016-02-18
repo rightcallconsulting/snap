@@ -181,7 +181,6 @@ function drawOpening(){
     textAlign(LEFT);
     text(play.playName, 10, 23);
   }
-
   fill(0, 0, 0);
   textSize(20);
   textAlign(CENTER);
@@ -189,8 +188,18 @@ function drawOpening(){
 
 }
 
+pressPlayButton = function() {
+  if (test.getCurrentDefensivePlay()){
+    test.getCurrentPlay().setAllRoutes();
+    scoreboard.feedbackMessage = "";
+    test.getCurrentPlay().inProgress = true;
+  }
+};
+
 mouseClicked = function() {
-  test.scoreboard.feedbackMessage = "";
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
