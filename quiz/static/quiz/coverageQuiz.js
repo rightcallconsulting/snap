@@ -5,6 +5,7 @@ var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
+var currentUserTested = null;
 var currentPlayerTested = null;
 
 function setup() {
@@ -37,8 +38,8 @@ function setup() {
     playNames = [];
 
     $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentPlayerTested = createUserFromJSON(data2[0]);
-      currentPlayerTested.position = "M"; //remove when done testing
+      currentUserTested = createUserFromJSON(data2[0]);
+      currentUserTested.position = "M"; //remove when done testing
     })
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -104,7 +105,7 @@ function setup() {
       var inCoverage = false;
       for(var j = 0; j < play.defensivePlayers.length; j++){
         var p = play.defensivePlayers[j];
-        if(p.pos === currentPlayerTested.position){
+        if(p.pos === currentUserTested.position){
           //check if he's in coverage
           if(p.CBAssignment){
             inCoverage = true;
@@ -156,10 +157,12 @@ function clearSelections(){
 }
 
 function checkAnswer(guess){
-  var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentPlayerTested.position})[0]
+  var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0]
   var isCorrect = guess === p.CBAssignment;
   if(isCorrect){
+    clearSelections();
     test.advanceToNextPlay(test.correctAnswerMessage);
+    currentPlayerTested = null;
     test.score++;
   }else{
     clearSelections();
@@ -170,15 +173,20 @@ function checkAnswer(guess){
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
   var play = test.getCurrentDefensivePlay();
   if(play){
+    test.scoreboard.draw(test, null);
     play.drawAllPlayersWithOffense(field);
+    textSize(20);
+    textAlign(LEFT);
+    text(play.playName, 10, 23);
   }
 
   fill(0, 0, 0);
   textSize(20);
-  text(test.scoreboard.feedbackMessage, width/4, 30);
+  textAlign(CENTER);
+  text(test.scoreboard.feedbackMessage, width/2, height * 0.92);
+
 }
 
 mouseClicked = function() {
@@ -186,12 +194,14 @@ mouseClicked = function() {
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
-  else if(test.getCurrentDefensivePlay()){
-    for(var i = 0; i < test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers.length; i++){
-      var answer = test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[i];
+  else if(!test.over){
+    var play = test.getCurrentDefensivePlay();
+    for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+      var answer = play.offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
         if(answer.isMouseInside(field)){
           checkAnswer(answer);
+          return;
         }else{
           clearSelections();
           answer.clicked = true;
@@ -200,6 +210,7 @@ mouseClicked = function() {
         if(answer.isMouseInside(field)){
           clearSelections();
           answer.clicked = true;
+          return;
         }
       }
     }
@@ -226,6 +237,9 @@ function draw() {
       fill(this.fill);
       if(this.clicked){
         fill(220, 220, 0);
+        stroke(220, 220, 0);
+        line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
+        noStroke();
       }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
@@ -236,23 +250,17 @@ function draw() {
     else {
       noStroke();
       fill(0,0,0);
+      if(this === currentPlayerTested){
+        fill(0, 0, 220);
+      }
       textSize(17);
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
-      if(this.CBAssignment){
-        stroke(255, 0, 0);
-        line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
-      }
-      else if (this.zoneXPoint && this.zoneYPoint){
-        this.drawZoneAssignments();
-      }
-      else if (this.gapXPoint){
-        this.drawGapAssignments();
-      }
     }
   };
   if(makeJSONCall){
     //WAIT - still executing JSON
+    background(93, 148, 81);
   }
   else if(test.over){
     //debugger;
@@ -261,6 +269,9 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
+    if(!currentPlayerTested){
+      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+    }
     drawOpening();
   }
 }

@@ -34,6 +34,12 @@ var Test = function(config){
     this.defensiveFormationIDs = config.defensiveFormationIDs || [];
 };
 
+Test.prototype.getCurrentPlayerTested = function(currentUserTested){
+  var play = this.getCurrentDefensivePlay();
+  var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
+  return player;
+};
+
 Test.prototype.getCurrentPlayNumber = function(){
   return floor(this.questionNum/this.questionsPerPlay);
 };
@@ -46,7 +52,7 @@ Test.prototype.getCurrentPlay = function(){
   }
   else {
     return this.plays[this.getCurrentPlayNumber()];
-    
+
   }
 };
 

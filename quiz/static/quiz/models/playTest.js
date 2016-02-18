@@ -18,6 +18,15 @@ var PlayTest = function(config){
     this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
 };
 
+PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){
+  var play = this.getCurrentDefensivePlay();
+  if(play){
+    var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
+    return player;
+  }
+  return null;
+};
+
 PlayTest.prototype.getCurrentPlay = function(){
   return this.plays[this.questionNum];
 };
