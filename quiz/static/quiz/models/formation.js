@@ -1062,7 +1062,9 @@ Formation.prototype.convertToPlayObject = function(){
       cornerbacks: this.cornerbacks,
       safeties: this.safeties,
       dline: this.dline,
-      linebacker: this.linebackers
+      linebacker: this.linebackers,
+      id: this.id,
+      offensiveFormationID: this.offensiveFormationID
     });
 
   }
@@ -1076,7 +1078,8 @@ Formation.prototype.convertToPlayObject = function(){
       qb: this.qb,
       oline: this.oline,
       formation: this,
-      positions: this.positions
+      positions: this.positions,
+      id: this.id
     });
   }
   return play

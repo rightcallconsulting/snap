@@ -39,7 +39,21 @@ Test.prototype.getCurrentPlayNumber = function(){
 };
 
 Test.prototype.getCurrentPlay = function(){
-  return this.plays[this.getCurrentPlayNumber()];
+  if(this.typeTest == "CBAssignment"){
+    var id = this.getCurrentDefensivePlay().offensiveFormationID;
+    var play = this.plays.filter(function(play) {return play.id === id})[0];
+    return play;
+  }
+  else {
+    return this.plays[this.getCurrentPlayNumber()];
+    
+  }
+};
+
+Test.prototype.getCurrentPlayFromDefensePlay = function(){
+  var id = this.getCurrentDefensivePlay().offensiveFormationID;
+  var play = this.plays.filter(function(play) {return play.id === id})[0];
+  return play;
 };
 
 Test.prototype.getCurrentDefensivePlay = function(){
