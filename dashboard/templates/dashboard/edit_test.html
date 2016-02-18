@@ -182,6 +182,7 @@
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
+				var defensive_formation_id_array = {{defensive_formation_id_array|safe}}
 
 				// For Offense:
 
@@ -307,7 +308,16 @@
 								offensiveFormations.forEach(function(offensiveFormation){
 									if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
 										offensiveFormationOptions.push(offensiveFormation);
-										$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+										defensive_formation_id_array.forEach(function(IDsArray){
+											debugger;
+											if(true){
+												$('.show-plays-defense').append('<input class="btn  btn-sm bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+
+											}
+											else {
+												$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+											}
+										})
 									}
 								})
 							})

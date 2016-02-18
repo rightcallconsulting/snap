@@ -265,7 +265,7 @@ def edit_test(request, test_id):
         defensive_formation_id_array = []
         defensive_formations_in_test = test.formations.all()
         for formation in defensive_formations_in_test:
-            defensive_formation_id_array.append(formation.id)
+            defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
         unique_defensive_formations_dict = {}
         for formation in defensive_formations:
             unique_defensive_formations_dict[formation.name] = formation
@@ -281,7 +281,7 @@ def edit_test(request, test_id):
             'plays_in_test': plays_in_test,
             'unit': unit,
             'unique_defensive_formations': unique_defensive_formations,
-            'defensive_formation_id_array': defensive_formation_id_array,
+            'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
