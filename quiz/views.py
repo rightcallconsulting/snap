@@ -80,11 +80,11 @@ def create_play(request):
 def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html')
 
-def player_formation_quiz(request):
+def alignment_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
         #playerID = player.id
-    return render(request, 'quiz/player_formation_quiz.html', {
+    return render(request, 'quiz/alignment_quiz.html', {
         'player': player
     })
 
