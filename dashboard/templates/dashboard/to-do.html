@@ -21,7 +21,7 @@
 		<div class="padding-md">
 			<div class="panel panel-default table-responsive">
 				<div class="panel-heading">
-					Responsive Table
+					Assigned Tests
 					<span class="label label-info pull-right">{{uncompleted_tests|length}} Items</span>
 				</div>
 				<div class="panel-body">
@@ -100,7 +100,7 @@
 							{% else %}
 							<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
 							<td><a href="{% url 'test_analytics' test.id %}"><span class="label label-success">Analytics</span></a></td>
-							
+
 							{% endif %}
 						</tr>
 						{% endfor %}

@@ -241,6 +241,7 @@ def team_play_players(request, team_id):
 
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
     test_results = test.testresult_set.all()
     if len(test.play_set.all()) > 0:
         has_plays = True
@@ -254,6 +255,7 @@ def run_qb_progression_test(request, test_id):
 
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
     if len(test.play_set.all()) > 0:
         has_plays = True
     else:
@@ -265,6 +267,7 @@ def run_wr_route_test(request, test_id):
 
 def run_ol_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
     if len(test.play_set.all()) > 0:
         has_plays = True
     else:
@@ -276,6 +279,7 @@ def run_ol_view_test(request, test_id):
 
 def run_cb_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
     if len(test.play_set.all()) > 0:
         has_plays = True
     else:
