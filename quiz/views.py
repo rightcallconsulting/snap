@@ -102,6 +102,14 @@ def coverage_quiz(request):
         'player': player
     })
 
+def pass_rush_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/pass_rush_quiz.html', {
+        'player': player
+    })
+
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
