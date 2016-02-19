@@ -16,9 +16,9 @@ function setup() {
   myCanvas.parent('quiz-box');
 
   bigReset = new Button({
-    x: width*0.5 - 25,
-    y: height*0.8,
-    width: 50,
+    x: field.getYardX(width*0.5 - 25),
+    y: field.getYardY(height*0.8),
+    width: field.pixelsToYards(50),
     label: "Restart"
   })
 
@@ -251,7 +251,7 @@ if(makeJSONCall){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
-    bigReset.draw();
+    bigReset.draw(field);
   }else{
   drawOpening();
 }
