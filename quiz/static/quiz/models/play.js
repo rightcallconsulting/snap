@@ -125,12 +125,12 @@ Play.prototype.findSelectedWR = function(){
 Play.prototype.mouseInReceiverOrNode = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     var p = this.eligibleReceivers[i];
-    if (p.isMouseInside()){
+    if (p.isMouseInside(field)){
       var receiverClicked = true;
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
-      if (n.isMouseInside()){
+      if (n.isMouseInside(field)){
         var selectedNode = n;
       }
     }

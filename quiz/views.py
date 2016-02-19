@@ -47,7 +47,9 @@ def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
 def create_formation(request):
-    return render(request, 'quiz/create_formation.html')
+    return render(request, 'quiz/create_formation.html', {
+        'page_header': 'CREATE FORMATION',
+    })
 
 def create_defense_formation(request):
     coach = request.user.coach
@@ -62,6 +64,7 @@ def create_defense_formation(request):
         'defensive_formations': defensive_formations,
         'team': team,
         'personnel': personnel,
+        'page_header': 'CREATE DEFENSIVE FORMATION',
     })
 
 def create_play(request):
@@ -75,6 +78,7 @@ def create_play(request):
         'offensive_formations': offensive_formations,
         'defensive_formations': defensive_formations,
         'team': team,
+        'page_header': 'CREATE PLAY',
     })
 
 def formation_quiz(request):
@@ -251,6 +255,7 @@ def run_qb_progression_test(request, test_id):
         'test': test,
         'test_results': test_results,
         'has_plays': has_plays,
+        'page_header': 'QB PROGRESSION',
     })
 
 def run_wr_route_test(request, test_id):
@@ -263,6 +268,7 @@ def run_wr_route_test(request, test_id):
     return render(request, 'quiz/wr_route.html', {
         'test': test,
         'has_plays': has_plays,
+        'page_header': 'WR ROUTE',
     })
 
 def run_ol_view_test(request, test_id):
@@ -275,6 +281,7 @@ def run_ol_view_test(request, test_id):
     return render(request, 'quiz/ol_view.html', {
         'test': test,
         'has_plays': has_plays,
+        'page_header': 'OL TEST',
     })
 
 def run_cb_view_test(request, test_id):
@@ -287,6 +294,7 @@ def run_cb_view_test(request, test_id):
     return render(request, 'quiz/cb_assignment.html', {
         'test': test,
         'has_plays': has_plays,
+        'page_header': 'CB TEST',
     })
 
 def single_test(request, test_id):
