@@ -163,7 +163,11 @@ function drawOpening(){
 
 
 mouseClicked = function() {
-  test.scoreboard.feedbackMessage = "";
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
+  }
   if (test.over) {
     if(bigReset.isMouseInside(field)){
       test.restartQuiz();
@@ -204,17 +208,6 @@ keyTyped = function(){
   if(test.over){
     if(key === 'r'){
       test.restartQuiz();
-    }
-  }else{
-    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-    if(offset >= 0 && offset < multipleChoiceAnswers.length){
-      var answer = multipleChoiceAnswers[offset];
-      if(answer.clicked){
-        checkAnswer(answer);
-      }else{
-        clearAnswers();
-        answer.changeClickStatus();
-      }
     }
   }
 };

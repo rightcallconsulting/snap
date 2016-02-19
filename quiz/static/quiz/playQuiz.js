@@ -147,7 +147,9 @@ function drawOpening(){
 }
 
 mouseClicked = function() {
-  test.scoreboard.feedbackMessage = "";
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
