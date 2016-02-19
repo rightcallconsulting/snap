@@ -94,7 +94,15 @@ def messages(request):
 
 @login_required
 def analytics(request):
-    return render(request, 'dashboard/analytics.html')
+    if request.user.myuser.is_a_player:
+        team = request.user.player.team
+    else:
+        team = request.user.coach.team
+    players = team.player_set.all()
+    return render(request, 'dashboard/show_player_list.html', {
+        'team': team,
+        'players': players,
+    })
 
 @login_required
 def playbook(request):

@@ -67,6 +67,9 @@ function draw() {
     // Global Variables
 
     Player.prototype.draw = function() {
+        var x = field.getTranslatedX(this.x);
+        var y = field.getTranslatedY(this.y);
+        var siz = field.yardsToPixels(this.siz);
         if(this.unit === "offense"){
             noStroke();
             if(this.rank > 0){
@@ -74,14 +77,14 @@ function draw() {
             }else{
                 fill(this.fill);
             }
-            ellipse(this.x, this.y, this.siz, this.siz);
+            ellipse(x, y, siz, siz);
             fill(0,0,0);
             textSize(14);
             textAlign(CENTER, CENTER);
             if(this.rank > 0){
-                text(this.rank, this.x, this.y);
+                text(this.rank, x, y);
             }else{
-                text(this.num, this.x, this.y);
+                text(this.num, x, y);
             }
             if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
               this.displayRoute(this.breakPoints);
@@ -99,9 +102,9 @@ function draw() {
             fill(this.fill);
             textSize(17);
             textAlign(CENTER, CENTER);
-            text(this.pos, this.x, this.y);
+            text(this.pos, x, y);
         }
-        this.drawRoute();
+        this.drawRoute(field);
         noStroke();
     };
 
@@ -192,15 +195,15 @@ function draw() {
     });
 
     var bigReset = new Button({
-        x: width / 2 - 40,
-        y: height * 4 / 5,
-        width: 80,
+        x: field.getYardX(width/2)-4,
+        y: field.getYardY(height * 0.8),
+        width: 8,
         label: "Restart Quiz",
         clicked: false
     });
 
     //Create defense
-    defensePlay.draw(test.getCurrentPlay().oline[2].x, test.getCurrentPlay().oline[2].y, test);
+    defensePlay.draw(field, test);
 
     // intro scene
     var drawOpening = function(test) {
@@ -301,8 +304,8 @@ function draw() {
     mouseDragged = function(){
       var currentPlay = test.getCurrentPlay();
       if (currentPlay){
-        var receiverClicked = currentPlay.mouseInReceiverOrNode()[0];
-        var selectedNode = currentPlay.mouseInReceiverOrNode()[1];
+        var receiverClicked = currentPlay.mouseInReceiverOrNode(field)[0];
+        var selectedNode = currentPlay.mouseInReceiverOrNode(field)[1];
         selectedWR = currentPlay.findSelectedWR();
         if(selectedNode){
           selectedNode.change = true;
@@ -315,28 +318,28 @@ function draw() {
       var currentPlay = test.getCurrentPlay();
       if(currentPlay){
         currentPlay.setAllRoutes();
-        var receiverClicked = currentPlay.mouseInReceiverOrNode()[0];
-        var selectedNode = currentPlay.mouseInReceiverOrNode()[1];
+        var receiverClicked = currentPlay.mouseInReceiverOrNode(field)[0];
+        var selectedNode = currentPlay.mouseInReceiverOrNode(field)[1];
         selectedWR = currentPlay.findSelectedWR();
       }
 
       // scoreboard.feedbackMessage = "";
       if(mouseX <= 400 && mouseY <= 400){
-        if (playButton.isMouseInside() && !playButton.clicked) {
+        if (playButton.isMouseInside(field) && !playButton.clicked) {
           pressPlayButton();
-        }else if (check.isMouseInside()){
+        }else if (check.isMouseInside(field)){
           selectedWR.checkRoutes(currentPlay);
-        }else if (clear.isMouseInside()){
+        }else if (clear.isMouseInside(field)){
           currentPlay.clearProgression();
           currentPlay.clearRouteDrawings();
           scoreboard.feedbackMessage = "";
-        }else if (back.isMouseInside()){
+        }else if (back.isMouseInside(field)){
           if(selectedWR)selectedWR.stepRouteBackward();
-        }else if (pause.isMouseInside()) {
+        }else if (pause.isMouseInside(field)) {
           pause.changeClickStatus();
-        } else if (stop.isMouseInside()&& playButton.clicked) {
+        } else if (stop.isMouseInside(field)&& playButton.clicked) {
           pressStopButton();
-        }else if (bigReset.isMouseInside() && test.isLastQuestion) {
+        }else if (bigReset.isMouseInside(field) && test.isLastQuestion) {
           test.restartQuiz(defensePlay);
           // nextPlay.displayButton = true;
           // playButton.displayButton = true;
@@ -344,7 +347,7 @@ function draw() {
           // clear.displayButton = true;
           // back.displayButton = true;
         }
-        else if (nextPlay.isMouseInside()){
+        else if (nextPlay.isMouseInside(field)){
           test.skips++;
           test.advanceToNextPlay("Boo! Weak!");
         }
@@ -361,7 +364,7 @@ function draw() {
             currentPlay.clearPreviousRouteDisplays();
             for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
                 var p = currentPlay.eligibleReceivers[i];
-                if (p.isMouseInside()){
+                if (p.isMouseInside(field)){
                     if(p.clicked){
                         p.unselect();
                         p.showRoute = false;
@@ -373,11 +376,11 @@ function draw() {
             }
         }
         else if(selectedWR){
-          selectedWR.routeCoordinates.push([mouseX, mouseY]);
+          selectedWR.routeCoordinates.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
           var nodeObject = new Node({
-              x: mouseX,
-              y: mouseY,
-              siz: 10
+              x: field.getYardX(mouseX),
+              y: field.getYardY(mouseY),
+              siz: 1
           });
           selectedWR.routeNodes.push(nodeObject);
         }
@@ -389,7 +392,7 @@ function draw() {
       if(test.endTime > 0){
         bigReset.displayButton = true;
         field.drawBackground("", height, width);
-        bigReset.draw();
+        bigReset.draw(field);
         test.drawQuizSummary();
       }else{
         if (playButton.clicked) {

@@ -61,7 +61,6 @@
 							</div>
 
 						</div>
-						{% if True %}
 								<div class="col-lg-2 dash-col choose-defensive-formation-box">
 									<div class="dash-header text-center">
 										<span><h4>Defensive Plays</h4></span>
@@ -70,18 +69,9 @@
 											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 											<br>
 										{% endfor %}
-										<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
+										<a href="{% url 'create_defense_formation' %}"><button type="button" name="button">Create New Formation</button></a>
 								</div>
-						{% else %}
-								<div class="col-lg-1 dash-col">
-									<div class="dash-header text-center">
-										<span><h4>Defensive Formations</h4></span>
-									</div>
-										{% for formation in defensive_formations %}
-											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation" id="{{formation.id}}" type="submit" value="{{formation}}">
-										{% endfor %}
-								</div>
-						{% endif %}
+
 
 						<div class="col-lg-2 dash-col change-plays-box">
 							<div class="dash-header text-center">
@@ -91,7 +81,6 @@
 								<div class="panel-body show-plays">
 
 								</div><!-- /panel -->
-								<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
 							{# </form>#}
 						</div>
 

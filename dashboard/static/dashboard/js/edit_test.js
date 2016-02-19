@@ -188,7 +188,7 @@ function draw() {
         if(playToDraw){
           playToDraw.drawAllPlayers(field);
           playToDraw.drawAllRoutes(field);
-          text("Formation: "+playToDraw.formation.playName, 115, 20);
+          // text("Formation: "+playToDraw.formation.playName, 115, 20);
 
         }
         defensePlay.drawAllPlayers(field);

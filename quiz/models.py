@@ -164,6 +164,12 @@ class Test(models.Model):
     def __str__(self):
         return self.type_of_test
 
+    def change_in_progress_status(self, user):
+        if user.myuser.is_a_player:
+            if user.player == self.player:
+                self.in_progress = True
+                self.save()
+
     def generate_missed_plays_dict(self):
         missed_play_dict = {}
         test_results = self.testresult_set.all()

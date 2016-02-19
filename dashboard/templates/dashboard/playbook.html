@@ -188,7 +188,7 @@
 						return play.id === Number(this.id);
 					}.bind(this))[0];
 					playToDraw.formation = formationToDraw;
-					$('#play-image-header').text(this.value);
+					$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
 					playScene = false;
 				})
 				$('.show-plays').on('click', '.play', function(){
@@ -237,6 +237,7 @@
 							})
 							displayPlays(playArray);
 						})
+						$('#play-image-header').text(formationToDraw.name+ ": ");
 					});
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
