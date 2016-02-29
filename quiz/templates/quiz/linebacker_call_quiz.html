@@ -6,7 +6,7 @@
 
 {% endblock %}
 {% block header %}
-CALL QUIZ
+PASS STRENGTH QUIZ
 {% endblock %}
 
 {% block quiz_type %}
@@ -26,7 +26,7 @@ $('#check-button').click(function(){
 			var answer = multipleChoiceAnswers[i];
 			if(answer.clicked){
 				checkAnswer(answer);
-			}	
+			}
 		}
 	}
 })
@@ -56,4 +56,3 @@ $('#next-play-button').click(function(){
 	<button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
 </div>
 {% endblock %}
-

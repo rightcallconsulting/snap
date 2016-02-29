@@ -19,6 +19,20 @@ var Play = function(config) {
     this.created_at = config.created_at || null;
 };
 
+//POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
+Play.prototype.getPassStrength = function(){
+  var centerX = this.oline[2].x;
+  var count = 0;
+  this.eligibleReceivers.forEach(function(wr){
+    if(wr.x > centerX){
+      count++;
+    }else{
+      count--;
+    }
+  })
+  return count;
+};
+
 Play.prototype.isValidPlay = function(){
   if(!this.formation.isValidPlay()){
     return false;

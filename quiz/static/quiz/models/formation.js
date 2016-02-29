@@ -24,6 +24,20 @@ var Formation = function(config){
   this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
+//POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
+Formation.prototype.getPassStrength = function(){
+  var centerX = this.oline[2].x;
+  var count = 0;
+  this.eligibleReceivers.forEach(function(wr){
+    if(wr.x > centerX){
+      count++;
+    }else{
+      count--;
+    }
+  })
+  return count;
+};
+
 Formation.prototype.createOLineAndQB = function(ballY){
   var olPositions = ["LT", "LG", "C", "RG", "RT"];
   for (var i = -2; i < 3; i++) {

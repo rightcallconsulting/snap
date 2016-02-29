@@ -1,10 +1,13 @@
 var makeJSONCall = true;
 var testIDFromHTML = 33;
+var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
+var currentUserTested = null;
+var currentPlayerTested = null;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -34,6 +37,10 @@ function setup() {
     var plays = [];
     var positions = [];
     playNames = [];
+    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
+      currentUserTested = createUserFromJSON(data2[0]);
+      currentUserTested.position = "M"; //remove when done testing
+    })
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         var newFormation = createFormationFromJSON(formationObject);
@@ -127,20 +134,12 @@ function shuffle(o) {
   return o;
 }
 
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
+function createMultipleChoiceAnswers(numOptions){
   multipleChoiceAnswers = [];
-  var availableNames = playNames.slice();
-  shuffle(availableNames);
+  var availableNames = ["LEFT", "RIGHT", "BALANCED"];
   var i = 0;
   while(multipleChoiceAnswers.length < numOptions){
     var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
     multipleChoiceAnswers.push(new MultipleChoiceAnswer({
       x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
       y: height - 60,
@@ -174,10 +173,15 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-  guess = multipleChoiceAnswers[0].label;
-  var isCorrect = guess;
+  var passStrength = test.getCurrentPlay().offensiveFormationObject.getPassStrength();
+  var isCorrect = false;
+  if((passStrength < 0 && guess === 0) || (passStrength > 0 && guess === 1) || (passStrength === 0 && guess === 2)){
+    isCorrect = true;
+  }
+
   if(isCorrect){
     test.advanceToNextPlay(test.correctAnswerMessage);
+    currentPlayerTested = null;
     test.score++;
     multipleChoiceAnswers = [];
   }else{
@@ -214,7 +218,7 @@ mouseClicked = function() {
       var answer = multipleChoiceAnswers[i];
       if(answer.clicked){
         if(answer.isMouseInside()){
-          checkAnswer(answer);
+          checkAnswer(i);
         }else{
           answer.changeClickStatus();
         }
@@ -237,7 +241,7 @@ keyTyped = function(){
     if(offset >= 0 && offset < multipleChoiceAnswers.length){
       var answer = multipleChoiceAnswers[offset];
       if(answer.clicked){
-        checkAnswer(answer);
+        checkAnswer(offset);
       }else{
         clearAnswers();
         answer.changeClickStatus();
@@ -263,35 +267,29 @@ function draw() {
     else {
       noStroke();
       fill(0,0,0);
+      if(this === currentPlayerTested){
+        fill(0, 0, 220);
+      }
       textSize(17);
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
-      /*if(this.CBAssignment){
-        stroke(255, 0, 0);
-        line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
-      }
-      else if (this.zoneXPoint && this.zoneYPoint){
-        this.drawZoneAssignments();
-      }
-      else if (this.gapXPoint){
-        this.drawGapAssignments();
-      }
-      */
     }
   };
   if(makeJSONCall){
     //WAIT - still executing JSON
   }
   else if(test.over){
-    
+
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
-      var correctAnswer = test.getCurrentDefensivePlay().playName;
-      createMultipleChoiceAnswers(correctAnswer,3);
+      createMultipleChoiceAnswers(3);
+    }
+    if(!currentPlayerTested){
+      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
     drawOpening();
   }

@@ -44,7 +44,12 @@ def blitz_quiz(request):
     return render(request, 'quiz/blitz_quiz.html')
 
 def linebacker_call_quiz(request):
-    return render(request, 'quiz/linebacker_call_quiz.html')
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/linebacker_call_quiz.html', {
+        'player': player
+    })
 
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
