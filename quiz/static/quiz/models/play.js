@@ -6,6 +6,7 @@ var Play = function(config) {
     this.qb = config.qb || null;
     this.oline = config.oline || [];
     this.formation = config.formation || null;
+    this.checks = config.checks || [];
     this.test = config.test || null;
     this.inProgress = false;
     this.newPlay = config.newPlay || false;
@@ -17,6 +18,20 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
+};
+
+//POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
+Play.prototype.getPassStrength = function(){
+  var centerX = this.oline[2].x;
+  var count = 0;
+  this.eligibleReceivers.forEach(function(wr){
+    if(wr.x > centerX){
+      count++;
+    }else{
+      count--;
+    }
+  })
+  return count;
 };
 
 Play.prototype.isValidPlay = function(){
