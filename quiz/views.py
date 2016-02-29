@@ -51,6 +51,14 @@ def linebacker_call_quiz(request):
         'player': player
     })
 
+def qb_call_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/qb_call_quiz.html', {
+        'player': player
+    })
+
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 

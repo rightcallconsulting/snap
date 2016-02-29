@@ -6,6 +6,7 @@ var Play = function(config) {
     this.qb = config.qb || null;
     this.oline = config.oline || [];
     this.formation = config.formation || null;
+    this.checks = config.checks || [];
     this.test = config.test || null;
     this.inProgress = false;
     this.newPlay = config.newPlay || false;
