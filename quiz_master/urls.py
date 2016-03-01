@@ -23,9 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^quiz/', include('quiz.urls')),
     url(r'', include('dashboard.urls')),
-
 ]
-
 
 #if settings.DEBUG:
 #    urlpatterns += patterns(' ',
