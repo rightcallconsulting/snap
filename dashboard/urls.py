@@ -33,11 +33,8 @@ urlpatterns = [
     url(r'^create_group$', views.create_group, name='create_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/edit$', views.edit_group, name='edit_group'),
     url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
-    url(r'^groups/$', views.all_groups, name='all_groups')
-    #url(r'^avatar/', include('avatar.urls')),
-    # What is avatar (^) being used for? It redirects to a 404 and causes a build warning so I'm comenting it out
-
-
+    url(r'^groups/$', views.all_groups, name='all_groups'),
+    url(r'^avatar/', include('avatar.urls')),
 ]
 
 if settings.DEBUG:
