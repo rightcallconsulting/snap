@@ -21,8 +21,7 @@ from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
-# Create your views here.
-
+# Create your views here
 @login_required
 def homepage(request):
     Test.objects.filter(coach_who_created=request.user)

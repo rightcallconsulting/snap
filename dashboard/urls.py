@@ -1,14 +1,18 @@
-from django.conf.urls import url, patterns, include
+from django.conf.urls import url, include
 from django.contrib.auth.views import login
 from django.contrib.auth.decorators import user_passes_test
 from django.conf import settings
 
+from django.views import static
+
 from . import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.homepage, name='homepage'),
     url(r'^login$', views.auth_login, name='auth_login'),
-    url(r'^$', views.homepage, name='homepage'),
+    #url(r'^$', views.homepage, name='homepage'),
+    # Why is homepage (^) listed twice? Shouldn't it just be first and thats all
+    # Seems to work just fine with second instance commented out
     url(r'^logout$', views.auth_logout, name='auth_logout'),
     url(r'^register$', views.register, name='register'),
     url(r'^timeline$', views.timeline, name='timeline'),
@@ -29,15 +33,16 @@ urlpatterns = patterns('',
     url(r'^create_group$', views.create_group, name='create_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/edit$', views.edit_group, name='edit_group'),
     url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
-    url(r'^groups/$', views.all_groups, name='all_groups'),
-    url(r'^avatar/', include('avatar.urls')),
+    url(r'^groups/$', views.all_groups, name='all_groups')
+    #url(r'^avatar/', include('avatar.urls')),
+    # What is avatar (^) being used for? It redirects to a 404 and causes a build warning so I'm comenting it out
 
 
-)
+]
 
 if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', static.serve, {
             'document_root': settings.MEDIA_ROOT,
         }),
-    )
+    ]
