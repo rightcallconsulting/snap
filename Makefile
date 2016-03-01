@@ -1,5 +1,9 @@
 all: local
 
+# Install required libraries
+install:
+	sudo pip install -r requirements.txt
+
 ###############################################################################
 # Local build 
 ###############################################################################
@@ -7,10 +11,6 @@ all: local
 # Flush the database
 flush:
 	python manage.py flush --settings=quiz_master.settings.local
-
-# Install required libraries
-install:
-	sudo pip install -r requirements.txt
 
 # Make migrations to the database
 migrations:
@@ -56,7 +56,7 @@ dylan_local:
 	python manage.py runserver --settings=quiz_master.settings.local
 
 ###############################################################################
-# Django development commands 
+# Django/python development commands 
 ###############################################################################
 shell:
 	python manage.py shell --settings=quiz_master.settings.local
