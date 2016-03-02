@@ -110,3 +110,58 @@
   clear: both;
   width: 90%;
 }
+
+.coach-home-col {
+  height: 90%;
+}
+
+.coach-action-row{
+  height: 40%;
+  width: 90%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  text-align: center;
+}
+
+.coach-action-row a{
+  margin: auto;
+  font-size: 18px;
+  color: #2A6205;
+}
+
+.coach-action-icon{
+  height: 70%;
+  width: 70%;
+  margin-bottom: 7%;
+}
+
+.coach-dash-analytics{
+  height: 100%;
+}
+
+.coach-progress-wheel{
+  width: 100%;
+  height: 90%;
+}
+
+.coach-progress-wheel tr{
+  line-height: 220px;
+}
+
+.coach-progress-wheel td{
+  text-align: center;
+  line-height: 220px;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.coach-progress-wheel img{
+  max-height: 220px;
+  vertical-align: middle;
+  display: inline;
+}
+
+.content-container{
+  height: 600px;
+  width: 100%;
+}

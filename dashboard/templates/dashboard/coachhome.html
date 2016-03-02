@@ -1,0 +1,77 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<!-- Overlay Div -->
+<div id="overlay" class="transparent"></div>
+{% include "dashboard/theme_setting.html" %}
+
+<div id="wrapper" class="preload">
+	{% include "dashboard/sidebar.html" %}
+
+
+	<div id="main-container">
+		{% include "dashboard/top_nav_bar.html" %}
+
+		{% include "dashboard/grey_container.html" %}
+
+		<div class="padding-md">
+			<div class="content-container">
+				<div class="col-lg-8 coach-home-col">
+					<div class="coach-action-row">
+						<div class="col-lg-4">
+							<a href="/quiz/create_formation">
+							<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt=""><br /></span>
+							<span>NEW<br />FORMATION</span></a>
+						</div>
+						<div class="col-lg-4">
+							<a href="/quiz/create_play">
+							<img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt=""><br />
+							<span>NEW<br />PLAY</span></a>
+						</div>
+						<div class="col-lg-4">
+							<a href="/create_test">
+							<img class="coach-action-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt=""><br />
+							<span>NEW<br />QUIZ</span></a>
+						</div>
+					</div>
+					<div class="coach-action-row">
+						<div class="col-lg-4">
+							<a href="/quiz/create_formation">
+							<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt=""><br /></span>
+							<span>NEW<br />FORMATION</span></a>
+						</div>
+						<div class="col-lg-4">
+							<a href="/quiz/create_play">
+							<img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt=""><br />
+							<span>NEW<br />PLAY</span></a>
+						</div>
+						<div class="col-lg-4">
+							<a href="/create_test">
+							<img class="coach-action-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt=""><br />
+							<span>NEW<br />QUIZ</span></a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 dash-col coach-home-col">
+					<div class="dash-header text-center">
+						<span><h4>ANALYTICS</h4></span>
+					</div>
+					<div class="col-lg-12 coach-home-col">
+						<div class="coach-dash-analytics">
+							<table class="coach-progress-wheel">
+								<tr><td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""></td></tr>
+								<tr><td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""></td></tr>
+							</table>
+						</div>
+					</div><!-- /.col -->
+				</div>
+			</div>
+
+				<div class="loading-overlay">
+					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				</div>
+
+
+			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			{% endblock %}

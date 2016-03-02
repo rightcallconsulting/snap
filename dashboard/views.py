@@ -24,8 +24,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 # Create your views here
 @login_required
 def homepage(request):
-    Test.objects.filter(coach_who_created=request.user)
-    return render(request, 'dashboard/homepage.html', {'page_header': 'DASHBOARD'})
+    if request.user.myuser.is_a_player:
+        return render(request, 'dashboard/homepage.html', {'page_header': 'DASHBOARD'})
+    else:
+        Test.objects.filter(coach_who_created=request.user)
+        return render(request, 'dashboard/coachhome.html', {'page_header': 'DASHBOARD'})
 
 def auth_login(request):
     if request.user.is_authenticated():
