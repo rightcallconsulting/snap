@@ -29,7 +29,8 @@ function setup() {
     });
     test = new PlayTest({
       plays: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
     var formations = [];
     var offensiveFormations = [];
@@ -91,19 +92,21 @@ function setup() {
                   play.addPositionsFromID(positions);
                   play.populatePositions();
                 })
+                playNames.push("Cover 3");
+                playNames.push("Cover 4");
+                playNames.push("Mike Laser");
+                test.plays = defensivePlays;
+                test.defensivePlays = defensivePlays;
+                multipleChoiceAnswers = [];
+                test.restartQuiz();
+                test.updateProgress();
+                test.updateScoreboard();
+                makeJSONCall = false;
               })
             })
           })
         })
     });
-    playNames.push("Cover 3");
-    playNames.push("Cover 4");
-    playNames.push("Mike Laser");
-    test.plays = defensivePlays;
-    test.defensivePlays = defensivePlays;
-    multipleChoiceAnswers = [];
-    test.restartQuiz();
-    makeJSONCall = false;
   }
 }
 
@@ -180,20 +183,20 @@ function checkAnswer(guess){
   }
 
   if(isCorrect){
-    test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
     test.score++;
     multipleChoiceAnswers = [];
+    test.advanceToNextPlay(test.correctAnswerMessage);
   }else{
     clearAnswers();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
@@ -201,9 +204,6 @@ function drawOpening(){
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
-  fill(0, 0, 0);
-  textSize(20);
-  text(test.scoreboard.feedbackMessage, width/4, 30);
 }
 
 mouseClicked = function() {
@@ -287,6 +287,7 @@ function draw() {
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       createMultipleChoiceAnswers(3);
+      test.updateMultipleChoiceLables();
     }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);

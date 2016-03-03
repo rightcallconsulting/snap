@@ -28,7 +28,8 @@ function setup() {
     });
     test = new PlayTest({
       plays: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
     var formations = [];
     var offensiveFormations = [];
@@ -93,6 +94,31 @@ function setup() {
                   play.addPositionsFromID(positions);
                   play.populatePositions();
                 })
+                for(var i = 0; i < defensivePlays.length; i++){
+                  var play = defensivePlays[i];
+                  var inCoverage = false;
+                  for(var j = 0; j < play.defensivePlayers.length; j++){
+                    var p = play.defensivePlayers[j];
+                    if(p.pos === currentUserTested.position){
+                      //check if he's in coverage
+                      if(p.CBAssignment){
+                        inCoverage = true;
+                      }
+                      break;
+                    }
+                  }
+                  if(!inCoverage){
+                    defensivePlays = defensivePlays.slice(0, i).concat(defensivePlays.slice(i+1));
+                    i--;
+                  }
+                }
+
+                test.plays = defensivePlays;
+                test.defensivePlays = defensivePlays;
+                test.restartQuiz();
+                test.updateScoreboard();
+                test.updateProgress();
+                makeJSONCall = false;
               })
             })
           })
@@ -100,29 +126,7 @@ function setup() {
 
     });
 
-    for(var i = 0; i < defensivePlays.length; i++){
-      var play = defensivePlays[i];
-      var inCoverage = false;
-      for(var j = 0; j < play.defensivePlayers.length; j++){
-        var p = play.defensivePlayers[j];
-        if(p.pos === currentUserTested.position){
-          //check if he's in coverage
-          if(p.CBAssignment){
-            inCoverage = true;
-          }
-          break;
-        }
-      }
-      if(!inCoverage){
-        defensivePlays = defensivePlays.slice(0, i).concat(defensivePlays.slice(i+1));
-        i--;
-      }
-    }
 
-    test.plays = defensivePlays;
-    test.defensivePlays = defensivePlays;
-    test.restartQuiz();
-    makeJSONCall = false;
   }
 }
 
@@ -161,13 +165,14 @@ function checkAnswer(guess){
   var isCorrect = guess === p.CBAssignment;
   if(isCorrect){
     clearSelections();
+    test.score++;
     test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
-    test.score++;
   }else{
     clearSelections();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
 }
 
@@ -175,16 +180,8 @@ function drawOpening(){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
-    test.scoreboard.draw(test, null);
     play.drawAllPlayersWithOffense(field);
-    textSize(20);
-    textAlign(LEFT);
-    text(play.playName, 10, 23);
   }
-  fill(0, 0, 0);
-  textSize(20);
-  textAlign(CENTER);
-  text(test.scoreboard.feedbackMessage, width/2, height * 0.92);
 
 }
 

@@ -31,7 +31,8 @@ function setup() {
     });
     test = new PlayTest({
       plays: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
     var plays = [];
     playNames = [];
@@ -165,19 +166,19 @@ function clearAnswers(){
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().checks[0].name === guess.label;
   if(isCorrect){
-    test.advanceToNextPlay(test.correctAnswerMessage);
     test.score++;
     multipleChoiceAnswers = [];
+    test.advanceToNextPlay(test.correctAnswerMessage);
   }else{
     clearAnswers();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
   if(test.getCurrentPlay().checks[0].defensiveFormation){
@@ -186,10 +187,6 @@ function drawOpening(){
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
-  fill(0, 0, 0);
-  textSize(20);
-  text(test.scoreboard.feedbackMessage, width/4, 70);
-  text(test.getCurrentPlay().playName, width/4, 30);
 }
 
 mouseClicked = function() {
@@ -274,6 +271,7 @@ function draw() {
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().checks[0].name;
       createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateMultipleChoiceLables();
     }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);

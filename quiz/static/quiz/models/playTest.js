@@ -98,7 +98,11 @@ PlayTest.prototype.updateScoreboard = function(){
 PlayTest.prototype.updateProgress = function(){
   $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.plays.length);
   if(this.displayName && this.getCurrentPlay()){
-    $('#play-name').text(this.getCurrentPlay().name);
+    var name = this.getCurrentPlay().name;
+    if(!name){
+      name = this.getCurrentPlay().playName;
+    }
+    $('#play-name').text(name);
   }
 }
 

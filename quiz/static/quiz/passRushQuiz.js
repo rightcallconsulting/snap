@@ -29,7 +29,8 @@ function setup() {
     });
     test = new PlayTest({
       plays: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
     var formations = [];
     var offensiveFormations = [];
@@ -116,6 +117,8 @@ function setup() {
                 test.plays = defensivePlays;
                 test.defensivePlays = defensivePlays;
                 test.restartQuiz();
+                test.updateScoreboard();
+                test.updateProgress();
                 makeJSONCall = false;
               })
             })
@@ -161,13 +164,14 @@ function checkAnswer(x, y){
   var isCorrect = dist < 2;
   if(isCorrect){
     clearSelection();
-    test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
     test.score++;
+    test.advanceToNextPlay(test.correctAnswerMessage);
   }else{
     clearSelection();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
 }
 
@@ -175,7 +179,6 @@ function drawOpening(){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
-    test.scoreboard.draw(test, null);
     play.drawAllPlayersWithOffense(field);
     if(currentGuessNode && currentPlayerTested){
       stroke(220,220,0);
@@ -183,16 +186,7 @@ function drawOpening(){
       currentGuessNode.draw(field);
       noStroke();
     }
-    fill(0,0,0);
-    textSize(20);
-    textAlign(LEFT);
-    text(play.playName, 10, 23);
   }
-  fill(0, 0, 0);
-  textSize(20);
-  textAlign(CENTER);
-  text(test.scoreboard.feedbackMessage, width/2, height * 0.92);
-
 }
 
 pressPlayButton = function() {

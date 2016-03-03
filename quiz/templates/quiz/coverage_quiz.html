@@ -39,8 +39,11 @@
       })
 
       $('#next-play-button').click(function(){
-        test.skips++;
-        test.advanceToNextPlay("Boo! Weak!");
+        if(test && !test.over){
+          test.skips++;
+          test.advanceToNextPlay("Boo! Weak!");
+          currentPlayerTested = null;
+        }
       })
   </script>
 {% endblock %}
