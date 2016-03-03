@@ -66,7 +66,7 @@
           {% block sidebar %}
           <div class="col-lg-2 dash-col quiz-sidebar">
             <div class="dash-header text-center">
-              <span><h4 id="play-name"></h4></span>
+              <span><h4 id="play-name">SCOREBOARD</h4></span>
             </div>
             {% if False %}
             {% for test in test_results %}
@@ -79,13 +79,13 @@
           </div>
             {% block multipleChoiceAnswers %}
               <table class="multiple-choice-answers">
-                <tr><td>ANSWER 1</td></tr>
-                <tr><td>ANSWER 2</td></tr>
-                <tr><td>ANSWER 3</td></tr>
+                <tr><td id="mc-answer-1">ANSWER 1</td></tr>
+                <tr><td id="mc-answer-2">ANSWER 2</td></tr>
+                <tr><td id="mc-answer-3">ANSWER 3</td></tr>
               </table>
             {% endblock %}
             <div class="feedback-message text-area">
-              <span><h3>FEEDBACK MESSAGE</h3></span>
+              <span><h3 id="feedback-message"></h3></span>
             </div>
           </div>
           {% endblock %}

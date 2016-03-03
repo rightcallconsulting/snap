@@ -37,6 +37,7 @@ function draw() {
               play.populatePositions();
             })
             test.updateProgress();
+            test.updateScoreboard();
             runTest("QBProgression", currentPlayerTested, test);
           })
         })
@@ -228,11 +229,6 @@ function draw() {
         for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
             defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
         }
-        //play.qb[0].runBootleg(play.oline[2], 1.0);
-        fill(0, 0, 0);
-        textSize(20);
-        text(scoreboard.feedbackMessage, 120, 60);
-        scoreboard.draw(test, user);
     };
 
     keyPressed = function() {
@@ -284,28 +280,12 @@ function draw() {
     mouseClicked = function() {
       currentPlay = test.getCurrentPlay();
       if(currentPlay){currentPlay.setAllRoutes();}
-      // scoreboard.feedbackMessage = "";
-        if (playButton.isMouseInside(field) && !playButton.clicked) {
-          pressPlayButton();
-        }else if (check.isMouseInside(field)){
-            currentPlay.checkProgression();
-        }else if (clear.isMouseInside(field)){
-            test.getCurrentPlay().clearProgression();
-            scoreboard.feedbackMessage = "";
-        }else if (pause.isMouseInside(field)) {
-            pause.changeClickStatus();
-        } else if (stop.isMouseInside(field)&& playButton.clicked) {
-            pressStopButton();
-        }else if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
+        if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
             test.restartQuiz(defensePlay);
             // nextPlay.displayButton = true;
             // playButton.displayButton = true;
             // check.displayButton = true;
             // clear.displayButton = true;
-        }
-        else if (nextPlay.isMouseInside(field)){
-          test.skips++;
-          test.advanceToNextPlay("Boo! Weak!");
         }
         else if (currentPlay){
             var playerSelected = false;

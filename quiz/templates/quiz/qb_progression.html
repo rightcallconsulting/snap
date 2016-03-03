@@ -40,6 +40,7 @@
       $('#check-button').click(function(){
         if (test.getCurrentPlay()){
           test.getCurrentPlay().checkProgression();
+          test.updateScoreboard();
         }
       })
 

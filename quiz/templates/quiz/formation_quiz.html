@@ -37,8 +37,11 @@
       })
 
       $('#next-play-button').click(function(){
-        test.skips++;
-        test.advanceToNextFormation("Boo! Weak!");
+        if(test && !test.over){
+          test.skips++;
+          test.advanceToNextFormation("Boo! Weak!");
+          multipleChoiceAnswers = [];
+        }
       })
   </script>
 {% endblock %}

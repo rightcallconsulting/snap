@@ -15,6 +15,7 @@ var FormationTest = function(config){
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
     this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
     this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
+    this.displayName = config.displayName || false;
 };
 
 FormationTest.prototype.getCurrentFormation = function(){
@@ -53,16 +54,40 @@ FormationTest.prototype.restartQuiz = function(){
   this.startTime = millis();
   this.endTime = 0;
   this.over = false;
+  this.updateScoreboard();
+  this.updateProgress();
 };
+
+FormationTest.prototype.updateMultipleChoiceLables = function(){
+  $('#mc-answer-1').text(multipleChoiceAnswers[0].label);
+  $('#mc-answer-2').text(multipleChoiceAnswers[1].label);
+  $('#mc-answer-3').text(multipleChoiceAnswers[2].label);
+}
+
+FormationTest.prototype.updateScoreboard = function(){
+  $('#score').text("Score: " + this.score);
+  $('#skips').text("Skips: " + this.skips);
+  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+  $('#feedback-message').text(this.scoreboard.feedbackMessage);
+}
+
+FormationTest.prototype.updateProgress = function(){
+  $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.formations.length);
+  if(this.displayName && this.getCurrentFormation()){
+    $('#play-name').text(this.getCurrentFormation().name);
+  }
+}
 
 FormationTest.prototype.advanceToNextFormation = function(message){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
+  this.updateScoreboard();
   if(this.questionNum >= this.formations.length){
     this.endTime = millis();
     this.over = true;
   } else{
     //reset elements of formation?
+    this.updateProgress();
   }
 };
 

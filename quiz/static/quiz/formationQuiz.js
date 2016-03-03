@@ -72,6 +72,7 @@ function setup() {
           test.formations = formations;
           multipleChoiceAnswers = [];
           test.restartQuiz();
+          test.updateScoreboard();
           makeJSONCall = false
 
         })
@@ -138,11 +139,11 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
   }
+  test.updateScoreboard();
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
   test.getCurrentFormation().drawAllPlayers(field);
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
@@ -233,6 +234,8 @@ function draw() {
     if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;
       createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateProgress(false);
+      test.updateMultipleChoiceLables();
     }
     drawOpening();
   }

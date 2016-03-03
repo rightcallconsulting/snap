@@ -16,6 +16,7 @@ var PlayTest = function(config){
     this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
     this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
     this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
+    this.displayName = config.displayName || false;
 };
 
 PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){
@@ -81,14 +82,24 @@ PlayTest.prototype.restartQuiz = function(){
   this.updateProgress();
 };
 
+PlayTest.prototype.updateMultipleChoiceLables = function(){
+  $('#mc-answer-1').text(multipleChoiceAnswers[0].label);
+  $('#mc-answer-2').text(multipleChoiceAnswers[1].label);
+  $('#mc-answer-3').text(multipleChoiceAnswers[2].label);
+}
+
 PlayTest.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
   $('#skips').text("Skips: " + this.skips);
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+  $('#feedback-message').text(this.scoreboard.feedbackMessage);
 }
 
 PlayTest.prototype.updateProgress = function(){
   $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.plays.length);
+  if(this.displayName && this.getCurrentPlay()){
+    $('#play-name').text(this.getCurrentPlay().name);
+  }
 }
 
 PlayTest.prototype.advanceToNextPlay = function(message){
@@ -100,6 +111,7 @@ PlayTest.prototype.advanceToNextPlay = function(message){
     this.over = true;
   } else{
     this.updateProgress();
+    //this.updateMultipleChoiceLables();
     //reset elements of play?
   }
 };

@@ -28,7 +28,8 @@ function setup() {
     });
     test = new FormationTest({
       formations: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
     var formations = [];
     formationNames = [];
@@ -106,6 +107,8 @@ function setup() {
         test.formations = formations.slice(0,maxFormations);
 
         test.restartQuiz();
+        test.updateScoreboard();
+        test.updateProgress();
         makeJSONCall = false
 
       })
@@ -141,24 +144,18 @@ function checkAnswer(){
   }else{
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
 }
 
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
 
   test.getCurrentFormation().drawAllPlayers(field);
   if(testPlayer){
     testPlayer.draw(field);
   }
-
-  fill(0, 0, 0);
-  textSize(20);
-  text(test.scoreboard.feedbackMessage, 160, 360);
-  textAlign(LEFT);
-  text(test.getCurrentFormation().name, 10, 23);
 }
 
 

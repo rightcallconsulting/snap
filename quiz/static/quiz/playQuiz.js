@@ -52,6 +52,8 @@ function setup() {
         test.plays = plays;
         multipleChoiceAnswers = [];
         test.restartQuiz();
+        test.updateScoreboard();
+        test.updateProgress();
         makeJSONCall = false;
       })
     })
@@ -131,19 +133,16 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
   }
+  test.updateScoreboard();
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.scoreboard.draw(test, null);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
-  fill(0, 0, 0);
-  textSize(20);
-  text(test.scoreboard.feedbackMessage, width/4, 30);
 }
 
 mouseClicked = function() {
@@ -225,6 +224,7 @@ function draw() {
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateMultipleChoiceLables();
     }
     drawOpening();
   }

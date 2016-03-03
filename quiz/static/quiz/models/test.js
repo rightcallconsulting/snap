@@ -149,11 +149,17 @@ Test.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
   $('#skips').text("Skips: " + this.skips);
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+  if(this.scoreboard){
+    $('#feedback-message').text(this.scoreboard.feedbackMessage);
+  }
+
 }
 
 Test.prototype.updateProgress = function(){
   $('#progress').text("Q" + (this.getCurrentPlayNumber()+1) + "/Q" + this.plays.length);
-  $('#play-name').text(this.getCurrentPlay().name);
+  if(this.getCurrentPlay()){
+    $('#play-name').text(this.getCurrentPlay().name);
+  }
 }
 
 Test.prototype.advanceToNextPlay = function(message){
