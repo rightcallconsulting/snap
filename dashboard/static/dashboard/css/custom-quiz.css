@@ -52,3 +52,23 @@
   background-color: #EEEEEE;
   padding: 5px;
 }
+
+#skip-button{
+  border-radius: 25px;
+  background: #5AB71E;
+  padding: 20px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  height: 50px;
+}
+
+#skip-button span{
+  margin-top: -5px;
+}
+
+#skip-button #skips{
+  float: right;
+  margin-top: -5px;
+}

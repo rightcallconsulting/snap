@@ -2,161 +2,160 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <style> body {padding: 0; margin: 0;} </style>
-    <meta charset="utf-8">
-    <title>Right Call Consulting</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'dashboard/css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <style> body {padding: 0; margin: 0;} </style>
+  <meta charset="utf-8">
+  <title>Right Call Consulting</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'dashboard/css/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css">
-    <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css">
+  <!-- Font Awesome -->
 
-    <!-- Pace -->
-    <link href="{% static 'dashboard/css/pace.css' %}" rel="stylesheet">
-    <link href="{% static 'dashboard/css/custom-quiz.css' %}" rel="stylesheet">
+  <!-- Pace -->
+  <link href="{% static 'dashboard/css/pace.css' %}" rel="stylesheet">
+  <link href="{% static 'dashboard/css/custom-quiz.css' %}" rel="stylesheet">
 
-    <!-- Color box -->
-    <link href="{% static 'dashboard/css/colorbox/colorbox.css' %}" rel="stylesheet">
+  <!-- Color box -->
+  <link href="{% static 'dashboard/css/colorbox/colorbox.css' %}" rel="stylesheet">
 
-    <!-- Morris -->
-    <link href="{% static 'dashboard/css/morris.css' %}" rel="stylesheet"/>
+  <!-- Morris -->
+  <link href="{% static 'dashboard/css/morris.css' %}" rel="stylesheet"/>
 
-    <!-- Endless -->
-    <link href="{% static 'dashboard/css/endless.min.css' %}" rel="stylesheet">
-    <link href="{% static 'dashboard/css/endless-skin.css' %}" rel="stylesheet">
-  </head>
+  <!-- Endless -->
+  <link href="{% static 'dashboard/css/endless.min.css' %}" rel="stylesheet">
+  <link href="{% static 'dashboard/css/endless-skin.css' %}" rel="stylesheet">
+</head>
 
-  <body class="overflow-hidden">
-    {% include "dashboard/theme_setting.html" %}
-    <div id="wrapper" class="preload">
-  		{% include "dashboard/sidebar.html" %}
+<body class="overflow-hidden">
+  {% include "dashboard/theme_setting.html" %}
+  <div id="wrapper" class="preload">
+    {% include "dashboard/sidebar.html" %}
 
 
-  		<div id="main-container">
-        {% include "dashboard/top_nav_bar.html" %}
-  			{% include "dashboard/grey_container.html" %}
-        <div class="padding-md">
-          <div class="col-lg-5 dash-col display-box" id="display-box">
-            <div class="dash-header text-center" id="header-box">
-              <span>
-                <h4 id="play-image-header">
-                  {% block header %}
-                  {% endblock %}
-                </h4>
-              </span>
-            </div>
-            <div id="quiz-box">
-              {% if not has_plays %}
-                <!--[DISPLAY THAT NO PLAYS IN THIS TEST YET]-->
-              {% endif %}
-
-            </div>
-            <div class="holds-play-buttons">
-              {% block buttons %}
-              {% endblock %}
-            </div>
-
+    <div id="main-container">
+      {% include "dashboard/top_nav_bar.html" %}
+      {% include "dashboard/grey_container.html" %}
+      <div class="padding-md">
+        <div class="col-lg-5 dash-col display-box" id="display-box">
+          <div class="dash-header text-center" id="header-box">
+            <span>
+              <h4 id="play-image-header">
+                {% block header %}
+                {% endblock %}
+              </h4>
+            </span>
           </div>
-
-          {% block sidebar %}
-          <div class="col-lg-2 dash-col quiz-sidebar">
-            <div class="dash-header text-center">
-              <span><h4 id="play-name">SCOREBOARD</h4></span>
-            </div>
-            {% if False %}
-            {% for test in test_results %}
-              Score: {{test.score}}, Skips: {{test.skips}}, Wrong: {{test.incorrect_guesses}}
-              <br>
-            {% endfor %}
+          <div id="quiz-box">
+            {% if not has_plays %}
+            <!--[DISPLAY THAT NO PLAYS IN THIS TEST YET]-->
             {% endif %}
-            <div class="text-area">
-            <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
+
           </div>
-            {% block multipleChoiceAnswers %}
-              <table class="multiple-choice-answers">
-                <tr><td id="mc-answer-1">ANSWER 1</td></tr>
-                <tr><td id="mc-answer-2">ANSWER 2</td></tr>
-                <tr><td id="mc-answer-3">ANSWER 3</td></tr>
-              </table>
+          <div class="holds-play-buttons">
+            {% block buttons %}
             {% endblock %}
-            <div class="feedback-message text-area">
-              <span><h3 id="feedback-message"></h3></span>
-            </div>
           </div>
-          {% endblock %}
-
-          {% block scoreboard %}
-          <div class="col-lg-2 dash-col choose-offensive-formation-box">
-            <div class="dash-header text-center">
-              <span><h4>Results</h4></span>
-            </div>
-
-            <div id="score">
-              Score:
-            </div>
-
-            <div id="skips">
-              Skips:
-            </div>
-
-            <div id="incorrect-guesses">
-              Wrong:
-            </div>
-
-          </div>
-          {% endblock %}
-
 
         </div>
+
+        {% block sidebar %}
+        <div class="col-lg-2 dash-col quiz-sidebar">
+          <div class="dash-header text-center">
+            <span><h4 id="play-name">SCOREBOARD</h4></span>
+          </div>
+          {% if False %}
+          {% for test in test_results %}
+          Score: {{test.score}}, Skips: {{test.skips}}, Wrong: {{test.incorrect_guesses}}
+          <br>
+          {% endfor %}
+          {% endif %}
+          <div class="text-area">
+            <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
+          </div>
+          {% block multipleChoiceAnswers %}
+          <table class="multiple-choice-answers">
+            <tr><td id="mc-answer-1">ANSWER 1</td></tr>
+            <tr><td id="mc-answer-2">ANSWER 2</td></tr>
+            <tr><td id="mc-answer-3">ANSWER 3</td></tr>
+          </table>
+          <div id="skip-button">
+            <span>Skip<h3 id="skips"></h3></span>
+          </div>
+          {% endblock %}
+          <div class="feedback-message text-area">
+            <span><h3 id="feedback-message"></h3></span>
+          </div>
+        </div>
+        {% endblock %}
+
+        {% block scoreboard %}
+        <div class="col-lg-2 dash-col choose-offensive-formation-box">
+          <div class="dash-header text-center">
+            <span><h4>Results</h4></span>
+          </div>
+
+          <div id="score">
+            Score:
+          </div>
+
+          <div id="incorrect-guesses">
+            Wrong:
+          </div>
+
+        </div>
+        {% endblock %}
+
+
       </div>
-
     </div>
-    <div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-    <div id="team-id" data-team-id="{{team.id}}" style="display: none;"></div>
-    <div id="player-id" data-player-id="{{player.id}}" style="display: none;"></div>
 
-  </body>
-  <script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
+  </div>
+  <div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+  <div id="team-id" data-team-id="{{team.id}}" style="display: none;"></div>
+  <div id="player-id" data-player-id="{{player.id}}" style="display: none;"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
-  <!--<script language="javascript" src="../addons/p5.dom.js"></script>-->
-  <!--<script language="javascript" src="../addons/p5.sound.js"></script>-->
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/buttons.js' %}"></script>
+</body>
+<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 
-  {% comment %}{% if has_plays %}{% endcomment %}
-  {% block quiz_type %}
-  {% endblock %}
-  {% comment %}{% endif %}{% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
+<!--<script language="javascript" src="../addons/p5.dom.js"></script>-->
+<!--<script language="javascript" src="../addons/p5.sound.js"></script>-->
+<script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/buttons.js' %}"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js" type="text/javascript"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/ajaxMethods.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/player.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/defensivePlayers.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/play.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/runPlay.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/test.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/button.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/user.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/scoreboard.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/defensivePlay.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/formation.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/field.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/formationTest.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/playTest.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/routeTest.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/multipleChoiceAnswer.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/node.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/summary.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/team.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/cadence.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/cadenceTest.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/sampleFormations.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/models/offenseCheck.js' %}"></script>
-  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+{% comment %}{% if has_plays %}{% endcomment %}
+{% block quiz_type %}
+{% endblock %}
+{% comment %}{% endif %}{% endcomment %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/ajaxMethods.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/player.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/defensivePlayers.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/play.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/runPlay.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/test.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/button.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/user.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/scoreboard.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/defensivePlay.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/formation.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/field.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/formationTest.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/playTest.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/routeTest.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/multipleChoiceAnswer.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/node.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/summary.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/team.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/cadence.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/cadenceTest.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/sampleFormations.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/offenseCheck.js' %}"></script>
+<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 </html>

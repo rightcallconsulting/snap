@@ -90,7 +90,7 @@ PlayTest.prototype.updateMultipleChoiceLables = function(){
 
 PlayTest.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
-  $('#skips').text("Skips: " + this.skips);
+  $('#skips').text(this.skips);
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   $('#feedback-message').text(this.scoreboard.feedbackMessage);
 }

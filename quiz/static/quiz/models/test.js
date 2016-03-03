@@ -32,6 +32,7 @@ var Test = function(config){
     this.offensiveFormations = config.offensiveFormations || [];
     this.offensiveFormationIDs = config.offensiveFormationIDs || [];
     this.defensiveFormationIDs = config.defensiveFormationIDs || [];
+    this.displayName = config.displayName || false;
 };
 
 Test.prototype.unit = function(){
@@ -147,7 +148,7 @@ Test.prototype.registerAnswer = function(isCorrect){
 
 Test.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
-  $('#skips').text("Skips: " + this.skips);
+  $('#skips').text(this.skips);
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   if(this.scoreboard){
     $('#feedback-message').text(this.scoreboard.feedbackMessage);
@@ -157,7 +158,7 @@ Test.prototype.updateScoreboard = function(){
 
 Test.prototype.updateProgress = function(){
   $('#progress').text("Q" + (this.getCurrentPlayNumber()+1) + "/Q" + this.plays.length);
-  if(this.getCurrentPlay()){
+  if(this.displayName && this.getCurrentPlay()){
     $('#play-name').text(this.getCurrentPlay().name);
   }
 }
@@ -328,7 +329,8 @@ Test.prototype.checkBigSelection = function() {
       score: jsonTest.fields.score,
       incorrectGuesses: jsonTest.fields.incorrect_guesses,
       skips: jsonTest.fields.skips,
-      id: jsonTest.pk
+      id: jsonTest.pk,
+      displayName: true
     });
     return test
   };
