@@ -64,12 +64,51 @@
           </div>
 
           {% block sidebar %}
+          <div class="col-lg-2 dash-col quiz-sidebar">
+            <div class="dash-header text-center">
+              <span><h4>PLAY NAME</h4></span>
+            </div>
+            {% if False %}
+            {% for test in test_results %}
+              Score: {{test.score}}, Skips: {{test.skips}}, Wrong: {{test.incorrect_guesses}}
+              <br>
+            {% endfor %}
+            {% endif %}
+            <div class="text-area">
+            <span><h3>Q1/Q4</h3></span>
+          </div>
+            {% block multipleChoiceAnswers %}
+              <table class="multiple-choice-answers">
+                <tr><td>ANSWER 1</td></tr>
+                <tr><td>ANSWER 2</td></tr>
+                <tr><td>ANSWER 3</td></tr>
+              </table>
+            {% endblock %}
+            <div class="feedback-message text-area">
+              <span><h3>FEEDBACK MESSAGE</h3></span>
+            </div>
+          </div>
           {% endblock %}
 
           {% block scoreboard %}
-          {% endblock %}
+          <div class="col-lg-2 dash-col choose-offensive-formation-box">
+            <div class="dash-header text-center">
+              <span><h4>Results</h4></span>
+            </div>
 
-          {% block edit_test_button %}
+            <div id="score">
+              Score:
+            </div>
+
+            <div id="skips">
+              Skips:
+            </div>
+
+            <div id="incorrect-guesses">
+              Wrong:
+            </div>
+
+          </div>
           {% endblock %}
 
 

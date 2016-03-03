@@ -3,8 +3,25 @@
   width: 402px;
 }
 
-.choose-offensive-formation-box, #display-box {
+.choose-offensive-formation-box, .quiz-sidebar, #display-box {
   height: 500px;
+}
+
+.quiz-sidebar{
+  margin-left: -2.4%;
+}
+
+.quiz-sidebar .text-area{
+  height: 100px;
+  text-align: center;
+}
+
+.quiz-sidebar span h3{
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .formation-button {
@@ -19,4 +36,19 @@
 
 #pause-image-button, #play-image-button, #refresh-image-button {
   height: 20px;
+}
+
+.multiple-choice-answers{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.multiple-choice-answers td{
+  text-align: center;
+  vertical-align: middle;
+  line-height: 50px;
+  border: 1px solid black;
+  background-color: #EEEEEE;
+  padding: 5px;
 }
