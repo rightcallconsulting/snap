@@ -118,7 +118,8 @@
 
 						</div>
 						{% if True %}
-								<div class="col-lg-2 dash-col choose-offensive-formation-box">
+							<div class = "playbook-col">
+								<div class="col-lg-4 choose-offensive-formation-box">
 									<div class="dash-header text-center">
 										<span><h4>Offensive Formations</h4></span>
 									</div>
@@ -128,6 +129,18 @@
 										{% endfor %}
 										<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
 								</div>
+								<div class="col-lg-4 change-plays-box">
+									<div class="dash-header text-center">
+										<span><h4 id="change-plays-header">Plays:</h4></span>
+									</div>
+									{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
+										<div class="panel-body show-plays">
+
+										</div><!-- /panel -->
+										<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
+									{# </form>#}
+								</div>
+							</div>
 						{% else %}
 								<div class="col-lg-1 dash-col">
 									<div class="dash-header text-center">
@@ -138,18 +151,6 @@
 										{% endfor %}
 								</div>
 						{% endif %}
-
-						<div class="col-lg-2 dash-col change-plays-box">
-							<div class="dash-header text-center">
-								<span><h4 id="change-plays-header">Plays:</h4></span>
-							</div>
-							{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
-								<div class="panel-body show-plays">
-
-								</div><!-- /panel -->
-								<a href="{% url 'create_play' %}"><button type="button" name="button">Create New Play</button></a>
-							{# </form>#}
-						</div>
 
 
 						<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
