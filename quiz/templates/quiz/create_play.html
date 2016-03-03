@@ -12,6 +12,7 @@
       currentFormation = formations.filter(function(formationObject){
         return formationObject.name === this.value;
       }.bind(this))[0]
+      playBeingCreated.playName = "";
       $('#play-image-header').text(currentFormation.playName);
     })
 

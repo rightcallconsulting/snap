@@ -126,9 +126,4 @@ Field.prototype.drawBackground = function(play, height, width) {
             line((52.33)*yardsToPixels, yc, (53)*yardsToPixels, yc);
         }
     }
-    textSize(18);
-    textAlign(LEFT);
-    if(this.typeField == "Create"){
-      text("Play: "+ play.playName, 10, 23);
-    }
 };

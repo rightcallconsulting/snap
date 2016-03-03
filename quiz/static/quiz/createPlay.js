@@ -1,6 +1,7 @@
 var formations = [];
 var makeJSONCall = true;
-var currentFormation
+var currentFormation;
+var playBeingCreated;
 var teamIDFromHTML = $('#team-id').data('team-id')
 
 function setup() {
@@ -61,7 +62,7 @@ function draw() {
     var capitalLetter = false;
     currentFormation = formations[0];
 
-    var playBeingCreated = new Play({
+    playBeingCreated = new Play({
       playName: "",
       newPlay: true
     });
@@ -201,11 +202,6 @@ function draw() {
         // })
         currentFormation.drawAllPlayers(field);
         defensePlay.drawAllPlayers(field);
-        fill(0, 0, 0);
-        textSize(20);
-        // text("Formation: "+getCurrentFormation().playName, 100, 20);
-        text(getCurrentFormation().feedbackMessage, 330, 20);
-        fill(176,176,176)
         currentFormation.drawBlockingAssignments(field);
         if(playBeingCreated && playBeingCreated.runPlay){
           playBeingCreated.runPlay.draw(field);
@@ -268,6 +264,8 @@ function draw() {
       var numDiff = key.charCodeAt(0) - "0".charCodeAt(0);
       if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 9) ||  key === ' ' || key === '\''){
           playBeingCreated.playName += key;
+          var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
+          $('#play-image-header').text(compoundName);
       }
       //return false;
     }
@@ -300,6 +298,8 @@ function draw() {
           }
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
+          var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
+          $('#play-image-header').text(compoundName);
         }
         return false;
       }
