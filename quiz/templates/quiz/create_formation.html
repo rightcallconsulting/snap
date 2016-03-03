@@ -9,13 +9,23 @@
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/createFormation.js' %}"></script>
   <script type="text/javascript">
-    $('#save-button').click(function(){
-      pressSaveButton();
-    })
 
-    $('#clear-button').click(function(){
-      pressClearButton();
-    })
+  $('.formation-button').click(function(){
+    var starterFormation = formations.filter(function(formationObject){
+      return formationObject.name === this.value;
+    }.bind(this))[0]
+    starterFormation.optionsToCreate = formationExample.optionsToCreate;
+    formationExample = starterFormation;
+    formationExample.playName = "";
+    $('#play-image-header').text("New Formation: " + formationExample.playName);
+  })
+  $('#save-button').click(function(){
+    pressSaveButton();
+  })
+
+  $('#clear-button').click(function(){
+    pressClearButton();
+  })
   </script>
 {% endblock %}
 
@@ -23,5 +33,20 @@
   <div class="holds-play-buttons">
     <button id="save-button" class="btn btn-success" name="button">Save</button>
     <button id="clear-button" class="btn btn-success" name="button">Clear</button>
+  </div>
+{% endblock %}
+
+{% block scoreboard %}
+{% endblock %}
+
+{% block sidebar %}
+  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+    <div class="dash-header text-center">
+      <span><h4>Starter Formations</h4></span>
+    </div>
+      {% for formation in offensive_formations %}
+        <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+        <br>
+      {% endfor %}
   </div>
 {% endblock %}

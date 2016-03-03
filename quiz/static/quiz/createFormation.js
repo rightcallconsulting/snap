@@ -1,3 +1,8 @@
+var formations = [];
+var formationExample;
+var makeJSONCall = true;
+var teamIDFromHTML = $('#team-id').data('team-id');
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   background(58, 135, 70);
@@ -6,6 +11,50 @@ function setup() {
 
 function draw() {
 
+  if(makeJSONCall){
+    makeJSONCall = false
+    $.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR){
+      data.forEach(function(formationObject){
+        formationObject.fields.id = formationObject.pk;
+        formationObject.fields.positions = [];
+        var newFormation = new Formation(formationObject.fields);
+        newFormation.playName = formationObject.fields.name;
+        formations.push(newFormation);
+      })
+        $.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations/positions', function(data, jqXHR){
+          data.forEach(function(position){
+            position.fields.id = position.pk;
+            position.fields.x = position.fields.startX;
+            position.fields.y = position.fields.startY;
+            position.fields.pos = position.fields.name;
+            position.fields.num = position.fields.pos;
+            var newPlayer = new Player(position.fields)
+            if(newPlayer.pos==="QB"){
+              newPlayer.setFill(212, 130, 130);
+            }
+            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
+              newPlayer.setFill(143, 29, 29);
+            }
+            else{
+              newPlayer.setFill(255, 0, 0);
+            }
+            formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            if(formation){
+              formation.positions.push(newPlayer);
+            }
+          })
+          formations.forEach(function(formation){
+            formation.populatePositions();
+          })
+          runTest();
+
+        })
+
+    });
+  }
+}
+
+var runTest = function(){
   //Field Position Variables
 
   //Field Position Variables
@@ -14,7 +63,7 @@ function draw() {
   });
 
   // Create Position groups
-  var formationExample = new Formation({
+  formationExample = new Formation({
   })
   formationExample.createOLineAndQB(field.ballYardLine);
   formationExample.changeablePlayers.push(formationExample.qb[0]);
@@ -140,17 +189,20 @@ function draw() {
     var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
     if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' '){
         formationExample.playName += key;
+        $('#play-image-header').text("New Formation: " + formationExample.playName);
+        //debugger;
     }
     //return false;
   }
 
   keyPressed = function() {
-    selectedWR = formationExample.findSelectedWR();
-    if (keyCode === BACKSPACE){
+    if(keyCode === BACKSPACE){
+      selectedWR = formationExample.findSelectedWR();
       if (selectedWR){
         selectedWR.stepRouteBackward();
       } else{
         formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
+        $('#play-image-header').text("New Formation: " + formationExample.playName);
       }
       return false;
     }

@@ -63,7 +63,16 @@ def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
 def create_formation(request):
+    coach = request.user.coach
+    team = coach.team
+    formations = team.formation_set.all()
+    offensive_formations = formations.filter(unit="offense")
+    defensive_formations = formations.filter(unit="defense")
     return render(request, 'quiz/create_formation.html', {
+        'formations': formations,
+        'offensive_formations': offensive_formations,
+        'defensive_formations': defensive_formations,
+        'team': team,
         'page_header': 'CREATE FORMATION',
     })
 
