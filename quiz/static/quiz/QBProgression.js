@@ -36,6 +36,7 @@ function draw() {
               play.addPositionsFromID(positions);
               play.populatePositions();
             })
+            test.updateProgress();
             runTest("QBProgression", currentPlayerTested, test);
           })
         })
@@ -213,16 +214,8 @@ function draw() {
             test.startTime = second() + minute() * 60;
         }
         drawBackground(test.getCurrentPlay(), field);
-        // playButton.draw();
-        // check.draw();
-        // clear.draw();
         defensePlay.drawAllPlayers(field);
         test.getCurrentPlay().drawAllPlayers(field);
-        // nextPlay.draw();
-        fill(0, 0, 0);
-        textSize(20);
-        text(scoreboard.feedbackMessage, 160, 360);
-        scoreboard.draw(test, user);
     };
     // game scene
     var drawScene = function(play) {
@@ -255,6 +248,12 @@ function draw() {
         pressStopButton();
       }
     };
+
+    keyTyped = function(){
+      if(key === 'r' && test.over){
+        test.restartQuiz(defensePlay);
+      }
+    }
 
     pressStopButton = function(){
       // playButton.changeClickStatus();

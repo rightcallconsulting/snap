@@ -128,11 +128,7 @@ Field.prototype.drawBackground = function(play, height, width) {
     }
     textSize(18);
     textAlign(LEFT);
-    if(play && !play.newPlay){
-      fill(255,255,255);
-      text(play.playName,10,23);
-    }
-    else if(this.typeField == "Create"){
+    if(this.typeField == "Create"){
       text("Play: "+ play.playName, 10, 23);
     }
 };

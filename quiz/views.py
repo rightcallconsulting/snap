@@ -263,6 +263,7 @@ def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test.change_in_progress_status(request.user)
     test_results = test.testresult_set.all()
+    num_plays = len(test.play_set.all())
     if len(test.play_set.all()) > 0:
         has_plays = True
     else:
@@ -271,6 +272,7 @@ def run_qb_progression_test(request, test_id):
         'test': test,
         'test_results': test_results,
         'has_plays': has_plays,
+        'num_plays': num_plays,
         'page_header': 'QB PROGRESSION',
     })
 

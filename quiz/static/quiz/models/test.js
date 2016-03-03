@@ -131,6 +131,8 @@ Test.prototype.restartQuiz = function(defensivePlay){
   }
   this.getCurrentPlay().bigPlayer = null;
   this.clearSelection();
+  this.updateScoreboard();
+  this.updateProgress();
 };
 
 Test.prototype.registerAnswer = function(isCorrect){
@@ -143,23 +145,34 @@ Test.prototype.registerAnswer = function(isCorrect){
   }
 }
 
+Test.prototype.updateScoreboard = function(){
+  $('#score').text("Score: " + this.score);
+  $('#skips').text("Skips: " + this.skips);
+  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+}
+
+Test.prototype.updateProgress = function(){
+  $('#progress').text("Q" + (this.getCurrentPlayNumber()+1) + "/Q" + this.plays.length);
+  $('#play-name').text(this.getCurrentPlay().name);
+}
+
 Test.prototype.advanceToNextPlay = function(message){
   var currentPlayID = this.getCurrentPlay().id
   $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", {
     test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
     play_id: currentPlayID
   });
-  $('#score').text("Score: " + this.score);
-  $('#skips').text("Skips: " + this.skips);
-  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
+  this.updateScoreboard();
+
   if(this.getCurrentPlayNumber() >= this.plays.length){
     this.endTime = millis();
     this.over = true;
   } else if(this.typeTest === "Blitz"){
 
   }else{
+    this.updateProgress();
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }

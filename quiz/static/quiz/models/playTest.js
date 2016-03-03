@@ -77,15 +77,29 @@ PlayTest.prototype.restartQuiz = function(){
   this.startTime = millis();
   this.endTime = 0;
   this.over = false;
+  this.updateScoreboard();
+  this.updateProgress();
 };
+
+PlayTest.prototype.updateScoreboard = function(){
+  $('#score').text("Score: " + this.score);
+  $('#skips').text("Skips: " + this.skips);
+  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+}
+
+PlayTest.prototype.updateProgress = function(){
+  $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.plays.length);
+}
 
 PlayTest.prototype.advanceToNextPlay = function(message){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
+  this.updateScoreboard();
   if(this.questionNum >= this.plays.length){
     this.endTime = millis();
     this.over = true;
   } else{
+    this.updateProgress();
     //reset elements of play?
   }
 };
