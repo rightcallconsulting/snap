@@ -148,9 +148,6 @@ function drawOpening(){
   for(var i = 0; i < multipleChoiceAnswers.length; i++){
     multipleChoiceAnswers[i].draw();
   }
-  fill(0, 0, 0);
-  textSize(20);
-  text(test.scoreboard.feedbackMessage, 160, 360);
 }
 
 mouseClicked = function() {
