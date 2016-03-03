@@ -116,10 +116,13 @@
 }
 
 .coach-action-row{
+  display:table;
   height: 40%;
   width: 90%;
-  margin-top: 5%;
-  margin-bottom: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 7.5%;
+  margin-bottom: 7.5%;
   text-align: center;
 }
 
@@ -129,9 +132,15 @@
   color: #2A6205;
 }
 
+.coach-action{
+  display:table-cell;
+}
+
 .coach-action-icon{
-  height: 70%;
-  width: 70%;
+  height: 50%;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 7%;
 }
 
