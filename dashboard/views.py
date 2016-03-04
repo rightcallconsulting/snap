@@ -25,7 +25,19 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 @login_required
 def homepage(request):
     if request.user.myuser.is_a_player:
-        return render(request, 'dashboard/homepage.html', {'page_header': 'DASHBOARD'})
+        player = request.user.player
+        all_tests = player.test_set.all()
+        completed_tests = all_tests.filter(completed=True).order_by('-created_at')
+        uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
+        in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
+        return render(request, 'dashboard/homepage.html', {
+            'completed_tests': completed_tests,
+            'uncompleted_tests': uncompleted_tests,
+            'in_progress_tests': in_progress_tests,
+            'current_time': timezone.now(),
+            'new_time_threshold': timezone.now() + timedelta(days=3),
+            'page_header': 'DASHBOARD'
+        })
     else:
         Test.objects.filter(coach_who_created=request.user)
         return render(request, 'dashboard/coachhome.html', {'page_header': 'DASHBOARD'})
@@ -202,6 +214,7 @@ def create_test(request):
     if request.method == 'POST':
         player_id = Player.objects.filter(id=request.POST['player'])
         player = Player.objects.filter(id=player_id)[0]
+        type_of_test = request.POST['type_of_test']
         new_test = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
         new_test.save()
         return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))

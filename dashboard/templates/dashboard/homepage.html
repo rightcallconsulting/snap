@@ -26,17 +26,50 @@
 						{% endif %}
 					</div>
 					<div class = "table-wrapper">
-						<table>
+						<table class="table table-striped" id="responsiveTable">
 							<tbody>
-								<tr>
-									<td>Data Not Available</td>
+								{% for test in uncompleted_tests %}
+								<tr id="test-{{test.id}}">
+									<td>
+										<label class="label-checkbox">
+											<input type="checkbox" class="chk-row">
+											<span class="custom-checkbox"></span>
+										</label>
+									</td>
+									<td>
+										{{test.name}}
+									</td>
+									{% if not request.user.myuser.is_a_player %}
+									<td>
+										{{test.player}}
+									</td>
+									{% endif %}
+									<td>{{test}}
+										{% if test.created_at < new_time_threshold %}
+										<span class="label label-success m-left-xs">
+											New
+										</span>
+										{% endif %}
+									</td>
+									<td>{{test.deadline}}</td>
+									<td>{{test.created_at}}</td>
+									<td>
+										{% if test.in_progress%}
+											Yes
+										{% else %}
+											No
+										{% endif %}
+									</td>
+									<td>{{test.coach_who_created.get_full_name}}</td>
+									{% if request.user.myuser.is_a_player %}
+										<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
+									{% else %}
+									<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
+									<td><a href="{% url 'test_analytics' test.id %}"><span class="label label-success">Analytics</span></a></td>
+
+									{% endif %}
 								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
+								{% endfor %}
 
 							</tbody>
 						</table>
@@ -67,7 +100,7 @@
 								<tr>
 									<td><a class="btn btn-success" href="/create_group">Create Group</a></td>
 								</tr>
-								
+
 
 								{% endif %}
 							</tbody>
@@ -85,11 +118,11 @@
 					<div class="dash-header text-center">
 						<span><h4>ANALYTICS</h4></span>
 					</div>
-					<div class="col-lg-6">
-
+					<div class="col-lg-6 progress-wheel">
+						<img src="{% static 'dashboard/images/progress-wheel.png' %}" alt="">
 					</div><!-- /.col -->
-					<div class="col-lg-6">
-
+					<div class="col-lg-6 progress-wheel">
+						<img src="{% static 'dashboard/images/progress-wheel.png' %}" alt="">
 					</div><!-- /.col -->
 				</div>
 				<div class="col-lg-4 dash-col">

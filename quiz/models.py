@@ -32,6 +32,7 @@ class Team(models.Model):
                 positions.append(position)
         return positions
 
+
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
@@ -62,6 +63,17 @@ class Player(models.Model):
         new_test.coach_who_created = coach.user
         new_test.save()
 
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True) # set when it's created
+    updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+    members = models.ManyToManyField(Player)
+
+    def __str__(self):
+        return self.name
+
+    def players(self):
+        return self.members
 
 class Formation(models.Model):
     name = models.CharField(max_length=100)

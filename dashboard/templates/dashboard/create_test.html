@@ -23,27 +23,35 @@
 
         <form action="/create_test" method="post" class=form-create-test> {% csrf_token %}
           {% for field in form %}
-						{% if field.label == 'Type of test' %}
-							{% for type in types_of_tests %}
-							<div class="form-group">
-								<label class="label-checkbox">
-									 <input type="checkbox" name="type_of_test" value="{{type}}"/>
-									 <span class="custom-checkbox info bounceIn animation-delay6"></span>
-									 {{type}}
-								</label>
-							</div><!-- /form-group -->
-							{% endfor %}
-						{% else %}
-		            <div class="form-group">
-		              {{ field.label_tag }}
-		              {{ field }}
-		            </div>
+					{% if field.label == "Group" %}
+					<br />
+					<hr>
+					{% endif %}
+					{% if field.label == False %}
+					{% for type in types_of_tests %}
+					<div class="form-group">
+						<label class="label-checkbox">
+							<input type="checkbox" name="type_of_test" value="{{type}}"/>
+							<span class="custom-checkbox info bounceIn animation-delay6"></span>
+							{{type}}
+						</label>
+					</div><!-- /form-group -->
+					{% endfor %}
+					{% else %}
+					<div class="form-group">
+						{% if field.label != "Deadline" %}
+						{{ field.label_tag }}
 						{% endif %}
-	          {% endfor %}
+						{{ field }}
+
+					</div>
+					{% endif %}
+
+					{% endfor %}
 
 
 
-          <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Test">
+          <input class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
       </form>
 
 

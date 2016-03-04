@@ -48,7 +48,7 @@
 }
 
 .playbook .dash-col{
-  height: 700px;
+  height: 600px;
   margin-bottom:10px;
 }
 
@@ -56,6 +56,11 @@
   height: 700px;
   margin-bottom:10px;
   text-align: center;
+}
+
+.dash-col .progress-wheel img{
+  height: 150px;
+  margin: auto;
 }
 
 .playerbook .tile-row {
@@ -176,7 +181,7 @@
 }
 
 .playbook-col{
-    height: 700px;
+    height: 600px;
     margin-bottom: 10px;
 }
 
@@ -187,4 +192,23 @@
   padding-right: 0px;
   margin-top: 50px;
   margin-bottom: -50px;
+}
+
+input.create-quiz{
+  background-color: #517B36;
+  color: #FFFFFF;
+  height: 40px;
+  font-size: 18px;
+}
+
+.datetime{
+  display: inline-block;
+}
+.datetime br{
+  display: none;
+}
+
+.datetime input{
+  margin-left: 2px;
+  margin-right: 25px;
 }

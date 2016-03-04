@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from quiz.models import Team, Player, Formation, Play, Position, Test
+from quiz.models import Team, Player, Formation, Play, Position, Test, Group
 from django.contrib.admin import widgets
 from datetimewidget.widgets import DateTimeWidget
 
@@ -67,7 +67,7 @@ class Coach(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-    
+
     def testing_this(self):
         return self.first_name
 
@@ -120,21 +120,25 @@ class TestForm(ModelForm):
             ("OL_View", "OL_View"),
             ("CB_Assignment", "CB_Assignment"),
         )
-    type_of_test = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                     choices=OPTIONS)
-    date_time = forms.DateTimeField(widget=DateTimeWidget(usel10n=True, bootstrap_version=3))
 
     class Meta:
         model = Test
         fields = ['name','type_of_test', 'deadline']
         widgets = {
         #Use localization and bootstrap 3
-        'datetime': DateTimeWidget(attrs={'id':"yourdatetimeid"}, usel10n = True, bootstrap_version=3)
         }
 
     def __init__(self, *args, **kwargs):
+        OPTIONS = (
+                ("QBProgression", "QB Progression"),
+                ("WRRoute", "WR Route"),
+                ("OLView", "OL View"),
+                ("CBAssignment", "CB Assignment"),
+            )
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
+        self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
+        self.fields['group']=forms.ModelChoiceField(queryset=Group.objects.all()) #Replace with 'group' once we have groups in database
         self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
         self.fields['deadline'].widget = widgets.AdminSplitDateTime()
 
