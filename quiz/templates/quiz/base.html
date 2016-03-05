@@ -78,6 +78,40 @@
             <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
           </div>
           {% block multipleChoiceAnswers %}
+          <script type="text/javascript">
+              document.getElementById("mc-button-1").onclick = function(){
+                var answer = multipleChoiceAnswers[0];
+                debugger;
+                if(answer.clicked){
+                  checkAnswer(0);
+                }else{
+                  clearAnswers();
+                  answer.changeClickStatus();
+                }
+              };
+
+              document.getElementById('mc-button-2').onclick = function(){
+                var answer = multipleChoiceAnswers[1];
+                if(answer.clicked){
+                  checkAnswer(0);
+                }else{
+                  clearAnswers();
+                  answer.changeClickStatus();
+                }
+              }
+
+              document.getElementById('mc-button-3').onclick = function(){
+                var answer = multipleChoiceAnswers[2];
+                if(answer.clicked){
+                  checkAnswer(2);
+                }else{
+                  clearAnswers();
+                  answer.changeClickStatus();
+                }
+              }
+
+
+          </script>
           <table class="multiple-choice-answers">
             <tr><td id="mc-answer-1">ANSWER 1</td></tr>
             <tr><td id="mc-answer-2">ANSWER 2</td></tr>
