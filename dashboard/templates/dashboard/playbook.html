@@ -97,6 +97,17 @@
 						</div><!-- /.col -->
 					</div>
 				{% else %}
+				<div class="panel playbook-top-panel">
+					<div class="col-lg-3">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt=""></span>
+					</div>
+					<div class="col-lg-3">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">CREATE FORMATION</span>
+					</div>
+					<div class="col-lg-3">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">CREATE PLAY</span>
+					</div>
+				</div>
 				<div class="panel panel-default">
 						<div class="panel-heading">
 							{{player.full_name}}
