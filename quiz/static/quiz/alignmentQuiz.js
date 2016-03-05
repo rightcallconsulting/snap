@@ -5,8 +5,8 @@ var test;
 var formationNames;
 var maxFormations = 5;
 var bigReset;
-var testPlayer = null;
 var currentPlayerTested = null;
+var currentUserTested = null;
 var answers = [];
 
 function setup() {
@@ -35,8 +35,8 @@ function setup() {
     formationNames = [];
 
     $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentPlayerTested = createUserFromJSON(data2[0]);
-      //currentPlayerTested.pos = "WR";
+      currentUserTested = createUserFromJSON(data2[0]);
+      //currentUserTested.pos = "WR";
     })
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -87,7 +87,7 @@ function setup() {
           var hasChanged = false;
           for(var j = 0; j < formation.offensivePlayers.length; j++){
             var p = formation.offensivePlayers[j];
-            if(p.pos === currentPlayerTested.position){
+            if(p.pos === currentUserTested.position){
               answers.push([p.x, p.y]);
 
               var oldCopy = formation.offensivePlayers.slice();
@@ -98,7 +98,6 @@ function setup() {
             }
           }
           if(!hasChanged){
-            debugger;
             formations = formations.slice(0, i).concat(formations.slice(i+1));
             i--;
           }
@@ -131,15 +130,15 @@ return o;
 
 function checkAnswer(){
   var answer = answers[test.questionNum];
-  var dx = Math.abs(answer[0] - testPlayer.x);
-  var dy = Math.abs(answer[1] - testPlayer.y);
+  var dx = Math.abs(answer[0] - currentPlayerTested.x);
+  var dy = Math.abs(answer[1] - currentPlayerTested.y);
   var dist = Math.sqrt(dx*dx+dy*dy);
 
   var isCorrect = (dist < 3);
   //debugger;
   if(isCorrect){
     test.advanceToNextFormation(test.correctAnswerMessage);
-    testPlayer = null;
+    currentPlayerTested = null;
     test.score++;
   }else{
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
@@ -153,8 +152,8 @@ function drawOpening(){
   field.drawBackground(null, height, width);
 
   test.getCurrentFormation().drawAllPlayers(field);
-  if(testPlayer){
-    testPlayer.draw(field);
+  if(currentPlayerTested){
+    currentPlayerTested.draw(field);
   }
 }
 
@@ -175,22 +174,22 @@ mouseClicked = function() {
     if(y > field.ballYardLine){
       y = field.ballYardLine;
     }
-    if(testPlayer){
-      if(testPlayer.isMouseInside(field)){
+    if(currentPlayerTested){
+      if(currentPlayerTested.isMouseInside(field)){
         checkAnswer();
       }else{
-        testPlayer.x = field.getYardX(mouseX);
-        testPlayer.y = y;
+        currentPlayerTested.x = field.getYardX(mouseX);
+        currentPlayerTested.y = y;
 
       }
 
     }else{
-      testPlayer = new Player({
+      currentPlayerTested = new Player({
         x: field.getYardX(mouseX),
         y: y,
         fill: color(0, 0, 220),
-        pos: currentPlayerTested.position,
-        num: currentPlayerTested.num
+        pos: currentUserTested.position,
+        num: currentUserTested.num
       });
     }
   }

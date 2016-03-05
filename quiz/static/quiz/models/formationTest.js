@@ -59,9 +59,12 @@ FormationTest.prototype.restartQuiz = function(){
 };
 
 FormationTest.prototype.updateMultipleChoiceLables = function(){
-  $('#mc-answer-1').text(multipleChoiceAnswers[0].label);
-  $('#mc-answer-2').text(multipleChoiceAnswers[1].label);
-  $('#mc-answer-3').text(multipleChoiceAnswers[2].label);
+  document.getElementById("mc-answer-1").innerHTML = multipleChoiceAnswers[0].getHTMLButton(1);
+  document.getElementById("mc-answer-2").innerHTML = multipleChoiceAnswers[1].getHTMLButton(2);
+  document.getElementById("mc-answer-3").innerHTML = multipleChoiceAnswers[2].getHTMLButton(3);
+  document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
+  document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
+  document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
 }
 
 FormationTest.prototype.updateScoreboard = function(){
@@ -98,6 +101,7 @@ FormationTest.prototype.registerAnswer = function(isCorrect){
   }else{
     this.incorrectGuesses++;
     this.scoreboard.feedbackMessage = "Sorry, bro.";
+    this.updateScoreboard();
   }
 };
 

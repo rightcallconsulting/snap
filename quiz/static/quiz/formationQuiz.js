@@ -95,6 +95,7 @@ function shuffle(o) {
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
   var correctIndex = Math.floor((Math.random() * numOptions));
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
   multipleChoiceAnswers = [];
   var availableNames = formationNames.slice();
   shuffle(availableNames);
@@ -145,9 +146,6 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    multipleChoiceAnswers[i].draw();
-  }
 }
 
 mouseClicked = function() {

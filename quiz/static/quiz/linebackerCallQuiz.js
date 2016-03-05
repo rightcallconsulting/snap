@@ -139,6 +139,14 @@ function shuffle(o) {
 
 function createMultipleChoiceAnswers(numOptions){
   multipleChoiceAnswers = [];
+  var passStrength = test.getCurrentPlay().offensiveFormationObject.getPassStrength();
+  var correctIndex = 1;
+  if(passStrength === 0){
+    correctIndex = 3;
+  }else if(passStrength >= 0){
+    correctIndex = 2;
+  }
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex);
   var availableNames = ["LEFT", "RIGHT", "BALANCED"];
   var i = 0;
   while(multipleChoiceAnswers.length < numOptions){
@@ -200,9 +208,6 @@ function drawOpening(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-  }
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    multipleChoiceAnswers[i].draw();
   }
 }
 

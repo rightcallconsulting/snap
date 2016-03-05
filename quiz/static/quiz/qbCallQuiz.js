@@ -130,6 +130,7 @@ function shuffle(o) {
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
   var correctIndex = Math.floor((Math.random() * numOptions));
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
   multipleChoiceAnswers = [];
   var availableNames = checkNames.slice();
   shuffle(availableNames);
@@ -183,9 +184,6 @@ function drawOpening(){
   test.getCurrentPlay().drawAllPlayers(field);
   if(test.getCurrentPlay().checks[0].defensiveFormation){
     test.getCurrentPlay().checks[0].defensiveFormation.drawAllPlayers(field);
-  }
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    multipleChoiceAnswers[i].draw();
   }
 }
 

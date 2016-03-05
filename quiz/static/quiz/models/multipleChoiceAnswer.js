@@ -43,5 +43,5 @@ MultipleChoiceAnswer.prototype.changeClickStatus = function() {
 };
 
 MultipleChoiceAnswer.prototype.getHTMLButton = function(index) {
-  return "<button id=\"mc-button-" + index + "\" class=\"btn btn-success\" name=\"button\">" + this.label + "</button>";
+  return "<button id=\"mc-button-" + index + "\" class=\"\" name=\"button\">" + this.label + "</button>";
 };

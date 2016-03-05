@@ -78,48 +78,68 @@
             <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
           </div>
           {% block multipleChoiceAnswers %}
+          <div id="correct-answer-index">0</div>
+          <table class="multiple-choice-answers">
+            <tr><td id="mc-answer-1"><button id="mc-button-1">ANSWER 1</button></td></tr>
+            <tr><td id="mc-answer-2"><button id="mc-button-2">ANSWER 2</button></td></tr>
+            <tr><td id="mc-answer-3"><button id="mc-button-3">ANSWER 3</button></td></tr>
+          </table>
+          <button id="skip-button">
+            <span>Skip<h3 id="skips"></h3></span>
+          </button>
           <script type="text/javascript">
-              document.getElementById("mc-button-1").onclick = function(){
-                var answer = multipleChoiceAnswers[0];
-                debugger;
-                if(answer.clicked){
-                  checkAnswer(0);
-                }else{
-                  clearAnswers();
-                  answer.changeClickStatus();
+
+          var checkMultipleChoiceAnswer = function(index){
+            var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
+            test.registerAnswer(isCorrect);
+            if(isCorrect){
+              currentPlayerTested = null;
+              multipleChoiceAnswers = [];
+            }
+          };
+
+          var clearMultipleChoiceAnswers = function(){
+            for(var i = 1; i <= 3; i++){
+              var answer = document.getElementById("mc-button-"+i);
+              if(answer && answer.classList.contains('clicked')){
+                answer.classList.remove('clicked')
+              }
+            }
+          };
+            var clickButton = function(index){
+              var answer = document.getElementById("mc-button-"+index);
+              if(answer && answer.classList.contains('clicked')){
+                checkMultipleChoiceAnswer(index);
+                clearMultipleChoiceAnswers();
+              }else if(answer){
+                clearMultipleChoiceAnswers();
+                answer.classList.add('clicked')
+              }
+            }
+
+              document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
+
+              document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
+
+              document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
+
+              document.getElementById("skip-button").onclick = function(){
+                currentPlayerTested = null;
+                if(test && !test.over){
+                  test.skips++;
+                  multipleChoiceAnswers = [];
+                  if(test.advanceToNextPlay){
+                    test.advanceToNextPlay("Boo! Weak!");
+                  }else{
+                    test.advanceToNextFormation("Boo! Weak!");
+                  }
                 }
               };
 
-              document.getElementById('mc-button-2').onclick = function(){
-                var answer = multipleChoiceAnswers[1];
-                if(answer.clicked){
-                  checkAnswer(0);
-                }else{
-                  clearAnswers();
-                  answer.changeClickStatus();
-                }
-              }
-
-              document.getElementById('mc-button-3').onclick = function(){
-                var answer = multipleChoiceAnswers[2];
-                if(answer.clicked){
-                  checkAnswer(2);
-                }else{
-                  clearAnswers();
-                  answer.changeClickStatus();
-                }
-              }
-
 
           </script>
-          <table class="multiple-choice-answers">
-            <tr><td id="mc-answer-1">ANSWER 1</td></tr>
-            <tr><td id="mc-answer-2">ANSWER 2</td></tr>
-            <tr><td id="mc-answer-3">ANSWER 3</td></tr>
-          </table>
-          <div id="skip-button">
-            <span>Skip<h3 id="skips"></h3></span>
-          </div>
+
+
           {% endblock %}
           <div class="feedback-message text-area">
             <span><h3 id="feedback-message"></h3></span>

@@ -53,13 +53,30 @@
   padding: 5px;
 }
 
+.multiple-choice-answers button{
+  background-color: #5AB71E;
+  width: 90%;
+}
+
+.multiple-choice-answers button:hover{
+  background-color: #B7E798;
+}
+
+.multiple-choice-answers button.clicked{
+  background-color: #2A6205;
+}
+
+#correct-answer-index{
+  display: none;
+}
+
 #skip-button{
   border-radius: 25px;
   background: #5AB71E;
   padding: 20px;
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 5%;
+  margin-right: 5%;
   margin-top: 10px;
   height: 50px;
 }
