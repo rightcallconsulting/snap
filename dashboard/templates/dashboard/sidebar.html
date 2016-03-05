@@ -23,9 +23,9 @@
           <a href="/to-do">
             <span>
               <img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
-
             </span>
             <span class="menu-text">
+              <span class="notification-label bounceIn animation-delay6">3</span>
               {% if request.user.myuser.is_a_player %}
                 TO DO
               {% else %}

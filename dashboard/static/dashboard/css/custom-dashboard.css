@@ -252,3 +252,8 @@ input.create-quiz{
   height: 2px;
   background: #333;
 }
+
+.openable .notification-label{
+  margin-left: -15px;
+  position: relative;
+}
