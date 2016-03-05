@@ -257,3 +257,14 @@ input.create-quiz{
   margin-left: -15px;
   position: relative;
 }
+
+.scrollable-table{
+  overflow-y: auto;
+  height: 80%;
+}
+
+.formation-list, .play-list{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
