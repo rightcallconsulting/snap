@@ -51,6 +51,7 @@
 }
 
 .playbook .dash-col{
+  margin-top: 10px;
   height: 600px;
   margin-bottom:10px;
 }
@@ -193,8 +194,8 @@
   border: 2px solid;
   padding-left: 0px;
   padding-right: 0px;
-  margin-top: 50px;
-  margin-bottom: -50px;
+  margin-top: 10px;
+  margin-bottom: -10px;
 }
 
 input.create-quiz{
@@ -284,6 +285,7 @@ input.create-quiz{
 
 .playbook-top-panel{
   height: 100px;
+  margin-bottom: 10px;
 }
 
 .playbook-top-panel .col-lg-3{
