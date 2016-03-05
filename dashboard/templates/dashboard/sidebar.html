@@ -25,8 +25,8 @@
               <img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
             </span>
             <span class="menu-text">
-              <span class="notification-label bounceIn animation-delay6">3</span>
               {% if request.user.myuser.is_a_player %}
+                <span class="notification-label bounceIn animation-delay6">3</span>
                 TO DO
               {% else %}
                 ASSIGNED TESTS
