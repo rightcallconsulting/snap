@@ -124,15 +124,21 @@
 										<span><h4>Formations</h4></span>
 									</div>
 									<div class="scrollable-table">
-									<table class="formation-list">
-										{% for formation in offensive_formations %}
-											<tr><td>
-											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-											<br>
-										</tr></td>
-										{% endfor %}
-									</table>
-								</div>
+										<table class="formation-list three-column-table">
+											{% for formation in offensive_formations %}
+											{% if forloop.counter|add:"-1"|divisibleby:3 %}
+												<tr>
+											{% endif %}
+
+
+												<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}{{forloop.counter}}"></td>
+
+												{% if forloop.counter|divisibleby:3 %}
+													</tr>
+												{% endif %}
+											{% endfor %}
+										</table>
+									</div>
 								</div>
 								<div class="col-lg-4 change-plays-box">
 									<div class="dash-header text-center">

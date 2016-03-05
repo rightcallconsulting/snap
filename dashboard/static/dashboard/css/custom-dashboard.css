@@ -22,9 +22,12 @@
 }
 
 .formation-button {
-  width: 100%;
-  margin-top:1px;
-  margin-bottom:1px;
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top:5%;
+  margin-bottom:5%;
 }
 
 .play-remove-button {
@@ -261,6 +264,16 @@ input.create-quiz{
 .scrollable-table{
   overflow-y: auto;
   height: 80%;
+}
+
+.two-column-table td{
+  width: 50%;
+  height: 50px;
+}
+
+.three-column-table td{
+  width: 33.33%;
+  height: 75px;
 }
 
 .formation-list, .play-list{

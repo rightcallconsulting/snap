@@ -129,6 +129,8 @@ def playbook(request):
         team = request.user.coach.team
         formations = team.formation_set.all()
         offensive_formations = formations.filter(unit="offense")
+        #offensive_formations = list(offensive_formations)
+        #embed()
         defensive_formations = formations.filter(unit="defense")
         play_id_array = []
         return render(request, 'dashboard/playbook.html', {
