@@ -31,12 +31,6 @@
 								{% for test in uncompleted_tests %}
 								<tr id="test-{{test.id}}">
 									<td>
-										<label class="label-checkbox">
-											<input type="checkbox" class="chk-row">
-											<span class="custom-checkbox"></span>
-										</label>
-									</td>
-									<td>
 										{{test.name}}
 									</td>
 									{% if not request.user.myuser.is_a_player %}
