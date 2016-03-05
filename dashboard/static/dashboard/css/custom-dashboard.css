@@ -198,7 +198,7 @@ input.create-quiz{
   background-color: #517B36;
   color: #FFFFFF;
   height: 40px;
-  font-size: 18px;
+  width: 15%;
 }
 
 .datetime{
@@ -211,4 +211,37 @@ input.create-quiz{
 .datetime input{
   margin-left: 2px;
   margin-right: 25px;
+}
+
+.form-group{
+  margin-left: 5%;
+  font-size: 18px;
+  width: 70%;
+}
+
+.create-quiz{
+  margin-left: 10%;
+  font-size: 18px;
+}
+
+.form-create-test label, .datetime label{
+  font-size: 18px;
+  width: 30%;
+  text-align: center;
+}
+
+.form-create-test input, .form-create-test select{
+  width: 50%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.form-create-test p{
+  font-size: 18px;
+}
+
+.form-create-test hr{
+  border: 0;
+  height: 2px;
+  background: #333;
 }
