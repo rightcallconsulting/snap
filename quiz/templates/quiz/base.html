@@ -108,10 +108,10 @@
           };
             var clickButton = function(index){
               var answer = document.getElementById("mc-button-"+index);
-              if(answer && answer.classList.contains('clicked')){
+              if(test && !test.over && answer && answer.classList.contains('clicked')){
                 checkMultipleChoiceAnswer(index);
                 clearMultipleChoiceAnswers();
-              }else if(answer){
+              }else if(test && !test.over && answer){
                 clearMultipleChoiceAnswers();
                 answer.classList.add('clicked')
               }
