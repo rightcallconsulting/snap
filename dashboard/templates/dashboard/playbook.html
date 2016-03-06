@@ -101,12 +101,12 @@
 					<div class="col-lg-3">
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt=""></span>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-3"><a href="/quiz/create_formation">
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">CREATE FORMATION</span>
-					</div>
-					<div class="col-lg-3">
+					</a></div>
+					<div class="col-lg-3"><a href="/quiz/create_play">
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">CREATE PLAY</span>
-					</div>
+					</a></div>
 				</div>
 				<div class="panel panel-default">
 						<div class="panel-heading">
@@ -142,7 +142,7 @@
 											{% endif %}
 
 
-												<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}{{forloop.counter}}"></td>
+												<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
 
 												{% if forloop.counter|divisibleby:3 %}
 													</tr>
