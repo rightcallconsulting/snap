@@ -38,23 +38,11 @@
 										{{test.player}}
 									</td>
 									{% endif %}
-									<td>{{test}}
-										{% if test.created_at < new_time_threshold %}
-										<span class="label label-success m-left-xs">
-											New
-										</span>
-										{% endif %}
-									</td>
-									<td>{{test.deadline}}</td>
-									<td>{{test.created_at}}</td>
 									<td>
-										{% if test.in_progress%}
-											Yes
-										{% else %}
-											No
-										{% endif %}
+										{{test}}
 									</td>
-									<td>{{test.coach_who_created.get_full_name}}</td>
+									<td>Due: {{test.deadline}}</td>
+									<td>Coach: {{test.coach_who_created.get_full_name}}</td>
 									{% if request.user.myuser.is_a_player %}
 										<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
 									{% else %}
