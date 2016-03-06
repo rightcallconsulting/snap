@@ -89,3 +89,8 @@
   float: right;
   margin-top: -5px;
 }
+
+.openable .notification-label{
+  margin-left: -15px;
+  position: relative;
+}
