@@ -299,3 +299,13 @@ input.create-quiz{
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.playbook-action{
+  background-color: #5AB71E;
+}
+
+.playbook-action h3{
+  margin-top: 25%;
+  margin-bottom: 25%;
+  height: 50%;
+}
