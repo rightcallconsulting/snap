@@ -80,9 +80,9 @@
           {% block multipleChoiceAnswers %}
           <div id="correct-answer-index">0</div>
           <table class="multiple-choice-answers">
-            <tr><td id="mc-answer-1"><button id="mc-button-1">ANSWER 1</button></td></tr>
-            <tr><td id="mc-answer-2"><button id="mc-button-2">ANSWER 2</button></td></tr>
-            <tr><td id="mc-answer-3"><button id="mc-button-3">ANSWER 3</button></td></tr>
+            <tr><td id="mc-answer-1"><button id="mc-button-1" class="disabled">ANSWER 1</button></td></tr>
+            <tr><td id="mc-answer-2"><button id="mc-button-2" class="disabled">ANSWER 2</button></td></tr>
+            <tr><td id="mc-answer-3"><button id="mc-button-3" class="disabled">ANSWER 3</button></td></tr>
           </table>
           <button id="skip-button">
             <span>Skip<h3 id="skips"></h3></span>
@@ -111,7 +111,7 @@
               if(test && !test.over && answer && answer.classList.contains('clicked')){
                 checkMultipleChoiceAnswer(index);
                 clearMultipleChoiceAnswers();
-              }else if(test && !test.over && answer){
+              }else if(test && !test.over && answer && !answer.classList.contains('disabled')){
                 clearMultipleChoiceAnswers();
                 answer.classList.add('clicked')
               }
