@@ -146,11 +146,10 @@
 }
 
 .coach-action-icon{
-  height: 100px;
-  width: 100px;
+  height: 75px;
+  width: 75px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 7%;
 }
 
 .coach-dash-analytics{
@@ -269,7 +268,7 @@ input.create-quiz{
 
 .two-column-table td{
   width: 50%;
-  height: 50px;
+  height: 100px;
 }
 
 .three-column-table td{
@@ -286,7 +285,8 @@ input.create-quiz{
 
 .playbook-top-panel{
   height: 100px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+  border: none;
 }
 
 .playbook-top-panel .col-lg-3{
