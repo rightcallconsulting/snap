@@ -101,16 +101,24 @@
 					<div class="col-lg-3">
 						<script type="text/javascript">
 							var changeUnit = function(sel){
-								var offenseBox = document.getElementById('offensive-playbook-col');
-								//var defenseBox = document.getElementById('defensive-playbook-col');
+								var offenseBox = document.getElementById('choose-offensive-formation-box');
+								var defenseBox = document.getElementById('choose-defensive-formation-box');
+								var formationLink = document.getElementById('formation-link')
+								var playLink = document.getElementById('play-link')
 								if(sel.selectedIndex === 0){
 									//OFFENSE
-									//defenseBox.classList.add('hidden');
+									defenseBox.classList.add('hidden');
 									offenseBox.classList.remove('hidden');
+									//set href of image links to link to offensive play/formation
+									formationLink.href = "/quiz/create_formation"
+									playLink.href = "/quiz/create_play"
 								}else{
 									//DEFENSE
 									offenseBox.classList.add('hidden');
-									//defenseBox.classList.remove('hidden');
+									defenseBox.classList.remove('hidden');
+									formationLink.href = "/quiz/create_defense_formation"
+									playLink.href = "/quiz/create_defense_formation"
+									//set href of image links to link to defensive play/formation
 								}
 							};
 						</script>
@@ -121,10 +129,10 @@
 							</select>
 						</form>
 					</div>
-					<div class="col-lg-3"><a href="/quiz/create_formation">
+					<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE FORMATION</span>
 					</a></div>
-					<div class="col-lg-3"><a href="/quiz/create_play">
+					<div class="col-lg-3"><a href="/quiz/create_play" id="play-link">
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE PLAY</span>
 					</a></div>
 				</div>
@@ -149,7 +157,7 @@
 
 						</div>
 							<div class = "playbook-col" id="offensive-playbook-col">
-								<div class="col-lg-4 choose-offensive-formation-box">
+								<div class="col-lg-4 choose-offensive-formation-box" id="choose-offensive-formation-box">
 									<div class="dash-header text-center">
 										<span><h4>Formations</h4></span>
 									</div>
@@ -169,6 +177,24 @@
 											{% endfor %}
 										</table>
 									</div>
+								</div>
+								<div class="col-lg-4 choose-offensive-formation-box hidden" id="choose-defensive-formation-box">
+									<div class="dash-header text-center">
+										<span><h4>Defensive Plays</h4></span>
+									</div>
+									<div class="scrollable-table">
+										<table class="formation-list three-column-table">
+										{% for formation in unique_defensive_formations %}
+										{% if forloop.counter|add:"-1"|divisibleby:3 %}
+											<tr>
+										{% endif %}
+											<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+											{% if forloop.counter|divisibleby:3 %}
+												</tr>
+											{% endif %}
+										{% endfor %}
+									</table>
+								</div>
 								</div>
 								<div class="col-lg-4 change-plays-box">
 									<div class="dash-header text-center">

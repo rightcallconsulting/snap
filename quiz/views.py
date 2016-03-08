@@ -48,7 +48,8 @@ def linebacker_call_quiz(request):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/linebacker_call_quiz.html', {
-        'player': player
+        'player': player,
+        'page_header': 'PASS STRENGTH CALL QUIZ'
     })
 
 def call_quiz(request):
@@ -64,7 +65,8 @@ def qb_call_quiz(request):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/qb_call_quiz.html', {
-        'player': player
+        'player': player,
+        'page_header': 'QB CHECK QUIZ'
     })
 
 def cb_assignment(request):
@@ -115,18 +117,23 @@ def create_play(request):
     })
 
 def formation_quiz(request):
-    return render(request, 'quiz/formation_quiz.html')
+    return render(request, 'quiz/formation_quiz.html', {
+        'page_header': 'FORMATION QUIZ'
+    })
 
 def alignment_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/alignment_quiz.html', {
-        'player': player
+        'player': player,
+        'page_header': 'ALIGNMENT QUIZ'
     })
 
 def play_quiz(request):
-    return render(request, 'quiz/play_quiz.html')
+    return render(request, 'quiz/play_quiz.html', {
+        'page_header': 'PLAY QUIZ'
+    })
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
@@ -136,7 +143,8 @@ def coverage_quiz(request):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/coverage_quiz.html', {
-        'player': player
+        'player': player,
+        'page_header': 'COVERAGE QUIZ'
     })
 
 def pass_rush_quiz(request):
@@ -144,7 +152,8 @@ def pass_rush_quiz(request):
         player = request.user.player
         #playerID = player.id
     return render(request, 'quiz/pass_rush_quiz.html', {
-        'player': player
+        'player': player,
+        'page_header': 'PASS RUSH QUIZ'
     })
 
 def ol_view(request):
