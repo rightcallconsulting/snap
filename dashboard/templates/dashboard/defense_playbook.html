@@ -61,19 +61,27 @@
 							</div>
 
 						</div>
-								<div class="col-lg-2 dash-col choose-defensive-formation-box">
+						<div class="playbook-col" id="defensive-playbook-col">
+								<div class="col-lg-4 dash-col choose-offensive-formation-box" id="choose-defensive-formation-box">
 									<div class="dash-header text-center">
 										<span><h4>Defensive Plays</h4></span>
 									</div>
+									<div class="scrollable-table">
+										<table class="formation-list three-column-table">
 										{% for formation in unique_defensive_formations %}
-											<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-											<br>
+										{% if forloop.counter|add:"-1"|divisibleby:3 %}
+											<tr>
+										{% endif %}
+											<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+											{% if forloop.counter|divisibleby:3 %}
+												</tr>
+											{% endif %}
 										{% endfor %}
-										<a href="{% url 'create_defense_formation' %}"><button type="button" name="button">Create New Formation</button></a>
+									</table>
+								</div>
 								</div>
 
-
-						<div class="col-lg-2 dash-col change-plays-box">
+						<div class="col-lg-4 dash-col change-plays-box">
 							<div class="dash-header text-center">
 								<span><h4 id="change-plays-header">Offensive Formation:</h4></span>
 							</div>
@@ -83,6 +91,7 @@
 								</div><!-- /panel -->
 							{# </form>#}
 						</div>
+					</div>
 
 
 						<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
