@@ -309,3 +309,16 @@ input.create-quiz{
   margin-bottom: 25%;
   height: 50%;
 }
+
+.unit-form{
+  width: 70%;
+  font-size: 17px;
+  margin-top: 20px;
+  background-color: #FFFFFF;
+  border: 3px solid #517B36;
+  color: #555555;
+}
+
+.hidden{
+  display: none;
+}
