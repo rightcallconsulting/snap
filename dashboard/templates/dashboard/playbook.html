@@ -200,11 +200,11 @@
 									<div class="dash-header text-center">
 										<span><h4 id="change-plays-header">Plays</h4></span>
 									</div>
+									<div class="scrollable-table" id="draw-plays">
 									{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
-										<div class="show-plays play-list">
 
-										</div><!-- /panel -->
 									{# </form>#}
+								</div>
 								</div>
 							</div>
 
@@ -236,7 +236,7 @@
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
-				$('.show-plays').on('mouseover', '.play', function(){
+				$('#draw-plays').on('mouseover', '.play', function(){
 					if(playToDraw){
 						playToDraw.resetPlayers(defensePlay)
 						playToDraw.setAllRoutes();
@@ -248,7 +248,7 @@
 					$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
 					playScene = false;
 				})
-				$('.show-plays').on('click', '.play', function(){
+				$('#draw-plays').on('click', '.play', function(){
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
 				});
@@ -322,15 +322,32 @@
 							}
 					};
 					function displayPlays(playArray) {
-							$('.show-plays').empty();
-							playArray.forEach(function(play){
+						while(playArray.length < 6 && playArray.length > 0){
+							playArray.push(playArray[0]);
+						}
+						debugger;
+						var drawPlays = document.getElementById('draw-plays');
+							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
+							for(var i = 0; i < playArray.length; i++){
+								if(i % 3 === 0){
+									newHTML += "<tr>";
+								}
+								var play = playArray[i];
 								if(playIDArray.includes(play.ID)){
-									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									newHTML += "<td><input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
 								}
 								else{
-									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									newHTML += "<td><input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
 								}
-							})
+								if(i % 3 === 2){
+									newHTML += "</tr>";
+								}
+							}
+							if(playArray.length % 3 !== 0){
+								newHTML += "</tr>";
+							}
+							newHTML += "</table></div>";
+							drawPlays.innerHTML = newHTML;
 					};
 			</script>
 			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
