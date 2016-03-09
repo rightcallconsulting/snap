@@ -26,10 +26,13 @@
 						{% endif %}
 					</div>
 					<div class = "table-wrapper">
-						<table class="table table-striped" id="responsiveTable">
+						<table class="table to-do-table" id="responsiveTable">
 							<tbody>
 								{% for test in uncompleted_tests %}
 								<tr id="test-{{test.id}}">
+									<td>
+										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
+									</td>
 									<td>
 										{{test.name}}
 									</td>

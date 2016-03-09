@@ -322,3 +322,14 @@ input.create-quiz{
 .hidden{
   display: none;
 }
+
+.test-row-icon{
+  height: 30px;
+  width: 30px;
+}
+
+.to-do-table td{
+  height: 50px;
+  font-size: 14px;
+  vertical-align: middle;
+}
