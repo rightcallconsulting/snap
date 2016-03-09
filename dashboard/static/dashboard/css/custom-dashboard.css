@@ -336,8 +336,15 @@ input.create-quiz{
   width: 30px;
 }
 
-.to-do-table td{
+.to-do-table tbody tr td{
   height: 50px;
   font-size: 14px;
   vertical-align: middle;
+}
+
+.start-quiz{
+  background-color: #8CD0D3;
+  height: 30px;
+  padding: 8px;
+  width: 70%;
 }
