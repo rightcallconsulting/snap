@@ -189,7 +189,7 @@ var runTest = function(){
     var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
     if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' '){
         formationExample.playName += key;
-        $('#play-image-header').text("New Formation: " + formationExample.playName);
+        $('#play-name').text("New Formation: " + formationExample.playName);
         //debugger;
     }
     //return false;
@@ -202,7 +202,7 @@ var runTest = function(){
         selectedWR.stepRouteBackward();
       } else{
         formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
-        $('#play-image-header').text("New Formation: " + formationExample.playName);
+        $('#play-name').text("New Formation: " + formationExample.playName);
       }
       return false;
     }

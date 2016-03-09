@@ -265,7 +265,7 @@ function draw() {
       if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 9) ||  key === ' ' || key === '\''){
           playBeingCreated.playName += key;
           var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
-          $('#play-image-header').text(compoundName);
+          $('#play-name').text(compoundName);
       }
       //return false;
     }
@@ -299,7 +299,7 @@ function draw() {
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
           var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
-          $('#play-image-header').text(compoundName);
+          $('#play-name').text(compoundName);
         }
         return false;
       }
@@ -463,7 +463,7 @@ function draw() {
     draw = function() {
         drawOpening();
       }
-    $('#play-image-header').text(getCurrentFormation().playName);
+    $('#play-name').text(getCurrentFormation().playName);
 
     }
 };
