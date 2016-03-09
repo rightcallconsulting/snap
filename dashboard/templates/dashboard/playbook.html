@@ -169,7 +169,7 @@
 											{% endif %}
 
 
-												<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+												<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
 
 												{% if forloop.counter|divisibleby:3 %}
 													</tr>
@@ -325,7 +325,6 @@
 						while(playArray.length < 6 && playArray.length > 0){
 							playArray.push(playArray[0]);
 						}
-						debugger;
 						var drawPlays = document.getElementById('draw-plays');
 							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
 							for(var i = 0; i < playArray.length; i++){
@@ -334,10 +333,10 @@
 								}
 								var play = playArray[i];
 								if(playIDArray.includes(play.ID)){
-									newHTML += "<td><input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
+									newHTML += "<td><input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
 								}
 								else{
-									newHTML += "<td><input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
+									newHTML += "<td><input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
 								}
 								if(i % 3 === 2){
 									newHTML += "</tr>";

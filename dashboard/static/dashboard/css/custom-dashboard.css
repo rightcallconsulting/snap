@@ -28,18 +28,26 @@
   margin-right: 5%;
   margin-top:5%;
   margin-bottom:5%;
+  background-color: #157970;
+  color: #FFFFFF;
 }
 
 .play-remove-button {
-  width: 100%;
+  width: 90%;
+  height: 90%;
   margin-top:1px;
   margin-bottom:1px;
+  background-color: #777777;
+  color: #FFFFFF;
 }
 
-.change-plays-box .play-add-button {
-  width: 100%;
+.play-add-button {
+  width: 90%;
+  height: 90%;
   margin-top:1px;
   margin-bottom:1px;
+  background-color: #D07322;
+  color: #FFFFFF;
 }
 
 .display-plays-in-test {
