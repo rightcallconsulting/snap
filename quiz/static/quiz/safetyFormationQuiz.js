@@ -251,7 +251,6 @@ function drawOpening(){
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
-    checkAnswer(guess);
   }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
