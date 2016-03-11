@@ -44,8 +44,7 @@ var Player = function(config) {
     this.gapYPoint = config.gapYPoint || null;
     this.motionCoords = config.motionCoords || []; // assume (x, y)   };
     this.currentMotionBreak = config.currentMotionBreak || 0;   
-  }
-};
+  };
 
 Player.rank = 1;
 Player.altRank = -1;
