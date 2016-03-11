@@ -80,6 +80,12 @@ PlayTest.prototype.restartQuiz = function(){
   this.over = false;
   this.updateScoreboard();
   this.updateProgress();
+  for(var i = 0; i < this.plays.length; i++){   
+    var offense = this.plays[i].offensivePlayers;   
+    for(var j = 0; j < offense.length; j++){    
+      offense[j].resetToStart();    
+    }   
+  }
 };
 
 PlayTest.prototype.updateMultipleChoiceLables = function(){

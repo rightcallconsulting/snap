@@ -60,6 +60,22 @@ def call_quiz(request):
         'player': player
     })
 
+def db_call_quiz(request):      
+    if(request.user.myuser.is_a_player):        
+        player = request.user.player        
+        #playerID = player.id       
+    return render(request, 'quiz/db_call_quiz.html', {      
+        'player': player        
+    })      
+
+def safety_formation_quiz(request):     
+    if(request.user.myuser.is_a_player):        
+        player = request.user.player        
+        #playerID = player.id       
+    return render(request, 'quiz/safety_formation_quiz.html', {     
+        'player': player        
+    })
+
 def qb_call_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player

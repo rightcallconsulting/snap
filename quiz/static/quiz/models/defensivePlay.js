@@ -20,6 +20,7 @@ var DefensivePlay = function(config) {
   this.offensiveFormationObject = config.offensiveFormationObject || null;
   this.positions = config.positions || [];
   this.id = config.id || null;
+  this.dbCall = config.dbCall || null;
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
@@ -111,6 +112,10 @@ DefensivePlay.prototype.getPlayer = function(unitIndex, playerIndex){
     }
   }
   return null;
+}
+
+DefensivePlay.prototype.getDbCall = function(){     
+    return this.dbCall;   
 }
 
 DefensivePlay.prototype.drawAllPlayers = function(field){
