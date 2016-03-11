@@ -81,7 +81,13 @@ PlayTest.prototype.restartQuiz = function(){
   this.updateScoreboard();
   this.updateProgress();
   for(var i = 0; i < this.plays.length; i++){   
-    var offense = this.plays[i].offensivePlayers;   
+    var offense = this.plays[i].offensivePlayers;
+    if(!offense){
+      offense = this.plays[i].offensiveFormationObject.offensivePlayers;
+    }   
+    if(!offense){
+      return;
+    }
     for(var j = 0; j < offense.length; j++){    
       offense[j].resetToStart();    
     }   
