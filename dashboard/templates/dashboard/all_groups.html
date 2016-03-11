@@ -19,7 +19,17 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
-
+			<div class="panel playbook-top-panel">
+				<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
+				</a></div>
+				<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
+				</a></div>
+				<div class="col-lg-3"><a href="/quiz/create_play" id="play-link">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;MANAGE GROUPS</span>
+				</a></div>
+			</div>
 
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">
