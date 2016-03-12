@@ -23,70 +23,70 @@ FieldNumber.prototype.draw = function(){
 
 var Field = function(config){
 
-    this.heightInYards = config.heightInYards || 30;
-    this.height = config.height || 400;
-    this.width = config.width || 400;
-    this.typeField = config.typeField || null;
-    this.ballYardLine = config.yardLine || 50;
+  this.heightInYards = config.heightInYards || 30;
+  this.height = config.height || 400;
+  this.width = config.width || 400;
+  this.typeField = config.typeField || null;
+  this.ballYardLine = config.yardLine || 50;
     this.ballWidthOffset = config.widthOffset || 0; //not using yet, but allows ball on a hash
-};
+  };
 
-Field.prototype.defensiveFlat = function(ballX, ballY){
-  var leftBoundary = ballX - (0.4*(field.getWidthInYards));
-  var topBoundary = ballY + (0.1*(field.getHeightInYards));
-  rect(leftBoundary, topBoundary, field.getWidthInYards / 10, field.getHeightInYards / 10);
-};
-
-
-Field.LENGTH = 120;
-Field.WIDTH = 53.33;
-
-var field = new Field({
-  heightInYards: 40,
-  yardLine: 75,
-  widthOffset: -3
-});
+  Field.prototype.defensiveFlat = function(ballX, ballY){
+    var leftBoundary = ballX - (0.4*(field.getWidthInYards));
+    var topBoundary = ballY + (0.1*(field.getHeightInYards));
+    rect(leftBoundary, topBoundary, field.getWidthInYards / 10, field.getHeightInYards / 10);
+  };
 
 
+  Field.LENGTH = 120;
+  Field.WIDTH = 53.33;
 
-var createPlayField = new Field({
-  heightInYards: 50,
-  typeField: "Create"
-});
+  var field = new Field({
+    heightInYards: 40,
+    yardLine: 75,
+    widthOffset: -3
+  });
 
-Field.prototype.getWidthInYards = function(){
-  return this.heightInYards * (width / height);
-}
 
-Field.prototype.getTranslatedX = function(x){
-  return this.yardsToPixels(x - this.getXOffset());
-}
 
-Field.prototype.getTranslatedY = function(y){
-  return this.height - this.yardsToPixels(y - this.getYOffset());
-}
+  var createPlayField = new Field({
+    heightInYards: 50,
+    typeField: "Create"
+  });
 
-Field.prototype.getYardX = function(x){
-  return this.pixelsToYards(x)+this.getXOffset();
-}
+  Field.prototype.getWidthInYards = function(){
+    return this.heightInYards * (width / height);
+  }
 
-Field.prototype.getYardY = function(y){
-  return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
-}
+  Field.prototype.getTranslatedX = function(x){
+    return this.yardsToPixels(x - this.getXOffset());
+  }
 
-Field.prototype.translateCoords = function(yardCoords){
-  return [this.getTranslatedX(yardCoords[0]), this.getTranslatedY(yardCoords[1])];
-}
+  Field.prototype.getTranslatedY = function(y){
+    return this.height - this.yardsToPixels(y - this.getYOffset());
+  }
 
-Field.prototype.pixelsToYards = function(pixels){
-  return pixels * this.heightInYards / this.height;
-}
+  Field.prototype.getYardX = function(x){
+    return this.pixelsToYards(x)+this.getXOffset();
+  }
 
-Field.prototype.yardsToPixels = function(yards){
-  return yards * this.height / (this.heightInYards);
-}
+  Field.prototype.getYardY = function(y){
+    return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
+  }
 
-Field.prototype.getXOffset = function(){
+  Field.prototype.translateCoords = function(yardCoords){
+    return [this.getTranslatedX(yardCoords[0]), this.getTranslatedY(yardCoords[1])];
+  }
+
+  Field.prototype.pixelsToYards = function(pixels){
+    return pixels * this.heightInYards / this.height;
+  }
+
+  Field.prototype.yardsToPixels = function(yards){
+    return yards * this.height / (this.heightInYards);
+  }
+
+  Field.prototype.getXOffset = function(){
   return (Field.WIDTH - this.getWidthInYards())/2; //doesn't have capability for non-centered fields yet
 }
 
@@ -98,24 +98,24 @@ Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);
   var pixelsToYards = this.heightInYards / height;
   var yardsToPixels = height / this.heightInYards;
-    background(93, 148, 81);
-    for(var i = 0; i < this.heightInYards; i++){
-      var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
-        var yc = height - height * (i/this.heightInYards);
-        stroke(255, 255, 255);
-        if(currentYardLine <= 0 || currentYardLine >= 100){
-          currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
-            if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
-              line(0, yc, width, yc);
-            }else{
+  background(93, 148, 81);
+  for(var i = 0; i < this.heightInYards; i++){
+    var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
+    var yc = height - height * (i/this.heightInYards);
+    stroke(255, 255, 255);
+    if(currentYardLine <= 0 || currentYardLine >= 100){
+      currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
+      if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
+        line(0, yc, width, yc);
+      }else{
 
-            }
-        }
-        else if(currentYardLine % 10 === 0){
-            line(0, yc, width, yc);
-            textAlign(CENTER);
-            rotate(HALF_PI);
-            fill(255,255,255);
+      }
+    }
+    else if(currentYardLine % 10 === 0){
+      line(0, yc, width, yc);
+      textAlign(CENTER);
+      rotate(HALF_PI);
+      fill(255,255,255);
             textSize(26); //the one thing that isn't adjusting for screen size...
 
             //debugger;
@@ -126,13 +126,13 @@ Field.prototype.drawBackground = function(play, height, width) {
             text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-this.getXOffset())*yardsToPixels);
             //rotate(HALF_PI);
             resetMatrix();
-        }else if(currentYardLine % 5 === 0){
+          }else if(currentYardLine % 5 === 0){
             line(0, yc, width, yc);
-        }else{
+          }else{
             line((0.33 - this.getXOffset())*yardsToPixels, yc, (1 - this.getXOffset())*yardsToPixels, yc);
             line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
             line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
             line((52.33)*yardsToPixels, yc, (53)*yardsToPixels, yc);
+          }
         }
-    }
-};
+      };
