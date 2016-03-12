@@ -31,6 +31,13 @@ var Field = function(config){
     this.ballWidthOffset = config.widthOffset || 0; //not using yet, but allows ball on a hash
 };
 
+Field.prototype.defensiveFlat = function(ballX, ballY){
+  var leftBoundary = ballX - (0.4*(field.getWidthInYards));
+  var topBoundary = ballY + (0.1*(field.getHeightInYards));
+  rect(leftBoundary, topBoundary, field.getWidthInYards / 10, field.getHeightInYards / 10);
+};
+
+
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
 
@@ -39,6 +46,8 @@ var field = new Field({
   yardLine: 75,
   widthOffset: -3
 });
+
+
 
 var createPlayField = new Field({
   heightInYards: 50,

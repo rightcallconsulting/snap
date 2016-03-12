@@ -68,12 +68,13 @@ def db_call_quiz(request):
         'player': player        
     })      
 
-def safety_formation_quiz(request):     
+def motion_quiz(request):     
     if(request.user.myuser.is_a_player):        
         player = request.user.player        
         #playerID = player.id       
-    return render(request, 'quiz/safety_formation_quiz.html', {     
-        'player': player        
+    return render(request, 'quiz/motion_quiz.html', {     
+        'player': player,
+        'page_header': 'MOTION QUIZ'   
     })
 
 def qb_call_quiz(request):
