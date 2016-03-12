@@ -20,21 +20,21 @@ function setup(){
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
-  var left = new DefensiveCall({
-    name: "LEFT"
+  var zMo = new DefensiveCall({
+    name: "Z-MO"
   });
 
-  var right = new DefensiveCall({
-    name: "RIGHT"
+  var yMo = new DefensiveCall({
+    name: "Y-MO"
   });
 
-  var balanced = new DefensiveCall({
-    name: "BALANCED"
+  var sMo = new DefensiveCall({
+    name: "S-MO"
   });
 
-  dbCalls.push(left);
-  dbCalls.push(right);
-  dbCalls.push(balanced);
+  dbCalls.push(zMo);
+  dbCalls.push(yMo);
+  dbCalls.push(sMo);
 
   multipleChoiceAnswers = [];
   bigReset = new Button({
@@ -124,7 +124,7 @@ function setup(){
                   player = play.eligibleReceivers[i];
                   i++;
                 }
-                var dx = -10;
+                var dx = -30;
                 if(player.startX < play.oline[2].startX){
                   dx = -dx;
                 }
@@ -177,33 +177,13 @@ function shuffle(o) {
 return o;
 }
 
-function checkAnswer(guess){
-  var passStrength = test.getCurrentPlay().offensiveFormationObject.getPassStrength();
-  var isCorrect = false;
-  if((passStrength < 0 && guess === 0) || (passStrength > 0 && guess === 1) || (passStrength === 0 && guess === 2)){
-    isCorrect = true;
-  }
-
-  if(isCorrect){
-    currentPlayerTested = null;
-    test.score++;
-    multipleChoiceAnswers = [];
-    test.advanceToNextPlay(test.correctAnswerMessage);
-  }else{
-    clearAnswers();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
-    test.updateScoreboard();
-  }
-}
-
 
 function createMultipleChoiceAnswers(numOptions){
   multipleChoiceAnswers = [];
   var correctIndex = Math.floor((Math.random() * numOptions));
   var correctAnswer = test.getCurrentDefensivePlay().getDbCall().name;
   document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-  var availableNames = ["ROLL LEFT", "SHIFT RIGHT", "SLIDE UP"];
+  var availableNames = ["Z-MO", "Y-MO", "S-MO"];
   var i = 0;
   while(multipleChoiceAnswers.length < numOptions){
     var label = availableNames[i];
@@ -222,15 +202,6 @@ function createMultipleChoiceAnswers(numOptions){
   }
 }
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
 function drawOpening(){
   field.drawBackground(null, height, width);
   var defensivePlay = test.getCurrentDefensivePlay();
@@ -240,10 +211,7 @@ function drawOpening(){
   }
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);
-    for(var i = 0; i < dbCalls.length; i++){
-      textSize(16);
-      text(test.getCurrentDefensivePlay().getDbCall().name, 70, 20);
-    }
+    
   }
 
 }
