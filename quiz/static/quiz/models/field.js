@@ -113,7 +113,7 @@ Field.prototype.getHook = function(ballX, ballY, strength){
     // WEAK HOOK ZONE
     var xCoord = ballX - 16;
     var yCoord = ballY - 5;
-  } 
+  } ß
   return [xCoord, yCoord, 10.666, 10];
 };
 
@@ -123,11 +123,14 @@ Field.prototype.getHole = function(ballX, ballY){
   return [xCoord, yCoord, 10.666, 10];
 };
 
-Field.prototype.drawZones = function(){ 
-  
-  fill(220, 220, 0);
-  rect(170, 5, 60, 10);
-};
+Field.prototype.getPixelZone = function(zone){
+  var pixelZone = [0.0, 0.0, 0.0, 0.0];
+  pixelZone[0] = this.getTranslatedX(zone[0]);
+  pixelZone[1] = this.getTranslatedY(zone[1]);
+  pixelZone[2] = this.yardsToPixels(zone[2]);
+  pixelZone[3] = this.yardsToPixels(zone[3]);
+  return pixelZone;
+}
 
 /*
 Player.prototype.drawGapAssignments = function(test) {

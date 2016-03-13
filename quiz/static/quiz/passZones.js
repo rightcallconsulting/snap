@@ -9,7 +9,7 @@ var bigReset;
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 40;
+  field.heightInYards = 50;
 
   background(58, 135, 70);
   randomSeed(millis());
@@ -45,41 +45,41 @@ function setup() {
       })
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
       formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-          data.forEach(function(position){
-            position.fields.id = position.pk;
-            position.fields.x = position.fields.startX;
-            position.fields.y = position.fields.startY;
-            position.fields.pos = position.fields.name;
-            position.fields.num = position.fields.pos;
-            var newPlayer = new Player(position.fields)
-            if(newPlayer.pos==="QB"){
-              newPlayer.setFill(212,130,130);
-            }
-            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.setFill(143,29,29);
-            }
-            else{
-              newPlayer.setFill(255,0,0);
-            }
-            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            if(formation){
-              formation.positions.push(newPlayer);
-            }
-          })
-          formations.forEach(function(formation){
-            formation.populatePositions();
-          })
-
-          test.formations = formations;
-          multipleChoiceAnswers = [];
-          test.restartQuiz();
-          test.updateScoreboard();
-          makeJSONCall = false
-
+      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+        data.forEach(function(position){
+          position.fields.id = position.pk;
+          position.fields.x = position.fields.startX;
+          position.fields.y = position.fields.startY;
+          position.fields.pos = position.fields.name;
+          position.fields.num = position.fields.pos;
+          var newPlayer = new Player(position.fields)
+          if(newPlayer.pos==="QB"){
+            newPlayer.setFill(212,130,130);
+          }
+          else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
+            newPlayer.setFill(143,29,29);
+          }
+          else{
+            newPlayer.setFill(255,0,0);
+          }
+          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+          if(formation){
+            formation.positions.push(newPlayer);
+          }
         })
-    });
-  }
+        formations.forEach(function(formation){
+          formation.populatePositions();
+        })
+
+        test.formations = formations;
+        multipleChoiceAnswers = [];
+        test.restartQuiz();
+        test.updateScoreboard();
+        makeJSONCall = false
+
+      })
+});
+}
 }
 
 var sortByCreationDecreasing = function(a, b){
@@ -92,7 +92,7 @@ function shuffle(o) {
   for(var n = 0; n < 100; n++){
     for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
   }
-  return o;
+return o;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -146,14 +146,22 @@ function checkAnswer(guess){
 }
 
 function drawCoverageZones(){
+
+  var ballX = test.getCurrentFormation().oline[2].x;
+  var ballY = test.getCurrentFormation().oline[2].y;
+
+  var leftFlat = field.getPixelZone(field.getFlat(ballX, ballY, 0));
+  var rightFlat = field.getPixelZone(field.getFlat(ballX, ballY, 1));
+
+
   fill(220, 220, 0);
-  rect(26.2, 75, 20, 80);
+  rect(leftFlat[0], leftFlat[1], leftFlat[2], leftFlat[3]);
+  rect(rightFlat[0], rightFlat[1], rightFlat[2], rightFlat[3]);
 
 };
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  debugger;
   test.getCurrentFormation().drawAllPlayers(field);
   drawCoverageZones();
 }
