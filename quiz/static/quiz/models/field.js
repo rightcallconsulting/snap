@@ -28,71 +28,120 @@ var Field = function(config){
   this.width = config.width || 400;
   this.typeField = config.typeField || null;
   this.ballYardLine = config.yardLine || 50;
-    this.ballWidthOffset = config.widthOffset || 0; //not using yet, but allows ball on a hash
-  };
-
-  Field.prototype.defensiveFlat = function(ballX, ballY){
-    var leftBoundary = ballX - (0.4*(field.getWidthInYards));
-    var topBoundary = ballY + (0.1*(field.getHeightInYards));
-    rect(leftBoundary, topBoundary, field.getWidthInYards / 10, field.getHeightInYards / 10);
-  };
+  this.ballWidthOffset = config.widthOffset || 0;   //not using yet, but allows ball on a hash
+  this.coverageZones = config.coverageZones || [];
+};
 
 
-  Field.LENGTH = 120;
-  Field.WIDTH = 53.33;
+Field.LENGTH = 120;
+Field.WIDTH = 53.33;
 
-  var field = new Field({
-    heightInYards: 40,
-    yardLine: 75,
-    widthOffset: -3
-  });
-
+var field = new Field({
+  heightInYards: 40,
+  yardLine: 75
+});
 
 
-  var createPlayField = new Field({
-    heightInYards: 50,
-    typeField: "Create"
-  });
+var createPlayField = new Field({
+  heightInYards: 40,
+  typeField: "Create"
+});
 
-  Field.prototype.getWidthInYards = function(){
-    return this.heightInYards * (width / height);
-  }
 
-  Field.prototype.getTranslatedX = function(x){
-    return this.yardsToPixels(x - this.getXOffset());
-  }
 
-  Field.prototype.getTranslatedY = function(y){
-    return this.height - this.yardsToPixels(y - this.getYOffset());
-  }
+Field.prototype.getWidthInYards = function(){
+  return this.heightInYards * (width / height);
+}
 
-  Field.prototype.getYardX = function(x){
-    return this.pixelsToYards(x)+this.getXOffset();
-  }
+Field.prototype.getTranslatedX = function(x){
+  return this.yardsToPixels(x - this.getXOffset());
+}
 
-  Field.prototype.getYardY = function(y){
-    return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
-  }
+Field.prototype.getTranslatedY = function(y){
+  return this.height - this.yardsToPixels(y - this.getYOffset());
+}
 
-  Field.prototype.translateCoords = function(yardCoords){
-    return [this.getTranslatedX(yardCoords[0]), this.getTranslatedY(yardCoords[1])];
-  }
+Field.prototype.getYardX = function(x){
+  return this.pixelsToYards(x)+this.getXOffset();
+}
 
-  Field.prototype.pixelsToYards = function(pixels){
-    return pixels * this.heightInYards / this.height;
-  }
+Field.prototype.getYardY = function(y){
+  return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
+}
 
-  Field.prototype.yardsToPixels = function(yards){
-    return yards * this.height / (this.heightInYards);
-  }
+Field.prototype.translateCoords = function(yardCoords){
+  return [this.getTranslatedX(yardCoords[0]), this.getTranslatedY(yardCoords[1])];
+}
 
-  Field.prototype.getXOffset = function(){
+Field.prototype.pixelsToYards = function(pixels){
+  return pixels * this.heightInYards / this.height;
+}
+
+Field.prototype.yardsToPixels = function(yards){
+  return yards * this.height / (this.heightInYards);
+}
+
+Field.prototype.getXOffset = function(){
   return (Field.WIDTH - this.getWidthInYards())/2; //doesn't have capability for non-centered fields yet
 }
 
 Field.prototype.getYOffset = function(){
   return this.ballYardLine - this.heightInYards/2;
 }
+
+//// CREATING FIELD ZONES FOR PASS COVERAGE ////
+
+Field.prototype.getFlat = function(ballX, ballY, strength){
+  if(strength === 0){
+    var xCoord = ballX - 26.65;
+    var yCoord = ballY;
+
+  }else if(strength === 1){
+    var xCoord = ballX + 21.335;
+    var yCoord = ballY;
+  }
+  return [xCoord, yCoord, 5.333, 5];
+};
+
+Field.prototype.getHook = function(ballX, ballY, strength){
+  if(strength === 0){
+    // STRONG HOOK ZONE
+    var xCoord = ballX - 16;
+    var yCoord = ballY - 5;
+
+  } else if(strength === 1){
+    // WEAK HOOK ZONE
+    var xCoord = ballX - 16;
+    var yCoord = ballY - 5;
+  } 
+  return [xCoord, yCoord, 10.666, 10];
+};
+
+Field.prototype.getHole = function(ballX, ballY){
+  var xCoord = ballX - (5.333);
+  var yCoord = ballY;
+  return [xCoord, yCoord, 10.666, 10];
+};
+
+Field.prototype.drawZones = function(){ 
+  
+  fill(220, 220, 0);
+  rect(170, 5, 60, 10);
+};
+
+/*
+Player.prototype.drawGapAssignments = function(test) {
+  var x = field.getTranslatedX(this.x);
+  var y = field.getTranslatedY(this.y);
+  var siz = field.yardsToPixels(this.siz);
+  stroke(255, 0, 0);
+  line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
+  fill(255, 0, 0);
+  noFill()
+  ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 10, 10);
+};
+*/
+//
 
 Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);

@@ -11,11 +11,11 @@ var currentPlayerTested = null;
 var dbCalls = [];
 
 
-
 function setup(){
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
   field.heightInYards = 40;
+
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -208,12 +208,14 @@ function drawOpening(){
   var play = test.getCurrentPlay();
   if(play){
     play.drawAllPlayers(field);
+    
+    
   }
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);
     
   }
-
+  
 }
 
 mouseClicked = function() {
