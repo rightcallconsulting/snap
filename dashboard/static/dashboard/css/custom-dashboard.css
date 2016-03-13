@@ -348,3 +348,32 @@ input.create-quiz{
   padding: 8px;
   width: 70%;
 }
+
+.group-select-panel{
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.group-select-panel .unit-form{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 1%;
+  height: 30px;
+  width: 30%;
+}
+
+.player-list{
+  width: 100%;
+  max-height: 90%;
+  table-layout: fixed;
+}
+
+.player-list th, .player-list td{
+  height: 40px;
+}
+
+.group-home .news-col{
+  height: 350px;
+}

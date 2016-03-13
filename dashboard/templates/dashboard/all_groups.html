@@ -20,36 +20,94 @@
 
 		<div class="padding-md">
 			<div class="panel playbook-top-panel">
-				<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
-					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
-				</a></div>
-				<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
+				<div class="col-lg-3">
+					<a href="/create_group">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
+					</a>
+				</div>
+				<div class="col-lg-3"><a href="/quiz/create_formation" id="add-player-link">
 					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
 				</a></div>
-				<div class="col-lg-3"><a href="/quiz/create_play" id="play-link">
+				<div class="col-lg-3"><a href="/quiz/create_play" id="manage-groups-link">
 					<span><img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;MANAGE GROUPS</span>
 				</a></div>
 			</div>
 
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>{{team}} Custom Groups</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-                {% for group in groups %}
-								<tr>
-									<td><a href="{% url 'group_detail' group.id %}">{{ group }}</a></td>
-								</tr>
-                {% endfor %}
-								<tr>
-									<td><a class="btn btn-success" href="/create_group">Create Group</a></td>
-								</tr>
+			<div class="panel group-select-panel">
+				<script type="text/javascript">
+					var createUserTable = function(users){
+						var innerHTML = "<table class=\"player-list\">";
+						innerHTML += "<tr>"
+						innerHTML += "<th>Player</th><th>Position</th><th>Year</th><th>Starter</th><th>Overall</th>"
+						innerHTML += "</tr>"
+						for(var i = 0; i < users.length; i++){
+							var user = users[i];
+							innerHTML += "<tr>"
+							innerHTML += "<td>" + user.getFullName() + "</td>"
+							innerHTML += "<td>" + user.position + "</td>"
+							innerHTML += "<td>SR</td>"
+							innerHTML += "<td>1st</td>"
+							innerHTML += "<td>96%</td>"
+							innerHTML += "</tr>"
+						}
+						innerHTML += "</table>"
+						return innerHTML;
+					}
 
-							</tbody>
-						</table>
+					var changeGroup = function(sel){
+						var groupTableWrapper = document.getElementById('group-table-wrapper');
+						var playerLink = document.getElementById('add-player-link');
+						var manageLink = document.getElementById('manage-groups-link');
+						var groupID = sel.value;
+						var queryString = "/groups/" + groupID + "/json";
+						var users = [];
+						$.getJSON(queryString, function(data, jqXHR){
+				      data.forEach(function(userObject){
+								var u = createUserFromJSON(userObject);
+								users.push(u);
+								groupTableWrapper.innerHTML = createUserTable(users);
+							});
+						});
+
+						var initGroupTable = function(){
+							debugger;
+							var sel = document.getElementById('group-form');
+							changeGroup(sel);
+						};
+						/*
+						if(sel.selectedIndex === 0){
+							//OFFENSE
+							defenseBox.classList.add('hidden');
+							offenseBox.classList.remove('hidden');
+							//set href of image links to link to offensive play/formation
+							formationLink.href = "/quiz/create_formation"
+							playLink.href = "/quiz/create_play"
+						}else{
+							//DEFENSE
+							offenseBox.classList.add('hidden');
+							defenseBox.classList.remove('hidden');
+							formationLink.href = "/quiz/create_defense_formation"
+							playLink.href = "/quiz/create_defense_formation"
+							//set href of image links to link to defensive play/formation
+						}*/
+					};
+			</script>
+			<form>
+				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
+						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+						{% for group in groups %}
+						<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+			</form>
+			</div>
+
+			<div class="row dash-row group-home">
+				<div class="col-lg-7 news-col" id="display-group-box">
+					<div class = "table-wrapper" id="group-table-wrapper">
+
 					</div>
 				</div>
 				<div class="col-lg-4 news-col">

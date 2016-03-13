@@ -17,8 +17,14 @@ var User = function(config){
     this.init = function(){
       this.createPlayerButton();
     };
-    this.init();
+    if(!config.ignoreInit){
+      this.init();
+    }
 };
+
+User.prototype.getFullName = function(){
+  return this.firstName + " " + this.lastName;
+}
 
 User.prototype.createPlayerButton = function(){
   var button = new Button({
@@ -168,7 +174,8 @@ var createUserFromJSON = function(jsonUser){
     id: jsonUser.pk,
     firstName: jsonUser.fields.first_name,
     lastName: jsonUser.fields.last_name,
-    position: jsonUser.fields.position
+    position: jsonUser.fields.position,
+    ignoreInit: true
   });
   return user
 };

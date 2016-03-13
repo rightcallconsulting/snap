@@ -375,6 +375,12 @@ def group_detail(request, group_id):
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
+def group_json(request, group_id):
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    players = group.players.all()
+    return HttpResponse(serializers.serialize("json", players))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def test_analytics(request, test_id):
     coach = request.user.coach
     test = Test.objects.filter(pk=test_id)[0]

@@ -89,7 +89,6 @@ class PlayerGroup(models.Model):
         for player in players:
             player.duplicate_and_assign_test(test_id, coach)
 
-
 class PlayerGroupForm(ModelForm):
 
     class Meta:
