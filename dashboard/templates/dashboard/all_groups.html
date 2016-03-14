@@ -28,7 +28,7 @@
 				<div class="col-lg-3"><a href="/quiz/create_formation" id="add-player-link">
 					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
 				</a></div>
-				<div class="col-lg-3"><a href="/quiz/create_play" id="manage-groups-link">
+				<div class="col-lg-3"><a href="/groups/1" id="manage-groups-link">
 					<span><img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;MANAGE GROUPS</span>
 				</a></div>
 			</div>
@@ -58,6 +58,7 @@
 						var playerLink = document.getElementById('add-player-link');
 						var manageLink = document.getElementById('manage-groups-link');
 						var groupID = sel.value;
+						manageLink.href = '/groups/' + groupID;
 						var queryString = "/groups/" + groupID + "/json";
 						var users = [];
 						$.getJSON(queryString, function(data, jqXHR){
