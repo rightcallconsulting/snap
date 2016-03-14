@@ -18,6 +18,74 @@
 
 		{% include "dashboard/grey_container.html" %}
 
+		<script type="text/javascript">
+			var createUserTable = function(users){
+				var innerHTML = "<table class=\"player-list\">";
+				innerHTML += "<tr>"
+				innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
+				innerHTML += "</tr>"
+				for(var i = 0; i < users.length; i++){
+					var user = users[i];
+					innerHTML += "<tr>"
+					innerHTML += "<td>" + user.getFullName() + "</td>"
+					innerHTML += "<td>" + user.position + "</td>"
+					innerHTML += "<td>SR</td>"
+					innerHTML += "<td>96%</td>"
+					innerHTML += "<td><button onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
+					innerHTML += "</tr>"
+				}
+				innerHTML += "</table>"
+				return innerHTML;
+			}
+
+			var createMiniUserTable = function(users){
+				var innerHTML = "<table class=\"player-list\">";
+				for(var i = 0; i < users.length; i++){
+					var user = users[i];
+					innerHTML += "<tr>"
+					innerHTML += "<td>" + user.getFullName() + "</td>"
+					innerHTML += "<td>" + user.position + "</td>"
+					innerHTML += "<td>SR</td>"
+					innerHTML += "<td><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/move-icon.png' %}\" alt=\"\"></td>"
+					innerHTML += "</tr>"
+				}
+				innerHTML += "</table>"
+				return innerHTML;
+			}
+
+			var changeGroup = function(sel){
+				var groupTableWrapper = document.getElementById('group-table-wrapper');
+				var playerLink = document.getElementById('add-player-link');
+				var groupID = sel.value;
+				var queryString = "/groups/" + groupID + "/json";
+				var users = [];
+				$.getJSON(queryString, function(data, jqXHR){
+					data.forEach(function(userObject){
+						var u = createUserFromJSON(userObject);
+						users.push(u);
+						groupTableWrapper.innerHTML = createUserTable(users);
+					});
+				});
+			}
+
+			var initGroupTable = function(){
+				debugger;
+				var sel = document.getElementById('group-form');
+				changeGroup(sel);
+			};
+
+			var clickRemoveButton = function(button){
+				debugger;
+				if(button.classList.contains('inverted')){
+					button.classList.remove('inverted');
+					button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\">"
+				}else{
+					button.classList.add('inverted');
+					button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon-inverted.png' %}\" alt=\"\">"
+				}
+			};
+			</script>
+
 		<div class="padding-md">
 			<div class="panel playbook-top-panel">
 				<div class="col-lg-2">
@@ -32,62 +100,6 @@
 			</div>
 
 			<div class="panel group-select-panel">
-				<script type="text/javascript">
-					var createUserTable = function(users){
-						var innerHTML = "<table class=\"player-list\">";
-						innerHTML += "<tr>"
-						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
-						innerHTML += "</tr>"
-						for(var i = 0; i < users.length; i++){
-							var user = users[i];
-							innerHTML += "<tr>"
-							innerHTML += "<td>" + user.getFullName() + "</td>"
-							innerHTML += "<td>" + user.position + "</td>"
-							innerHTML += "<td>SR</td>"
-							innerHTML += "<td>96%</td>"
-							innerHTML += "<td>ICON</td>"
-							innerHTML += "</tr>"
-						}
-						innerHTML += "</table>"
-						return innerHTML;
-					}
-
-					var createMiniUserTable = function(users){
-						var innerHTML = "<table class=\"player-list\">";
-						for(var i = 0; i < users.length; i++){
-							var user = users[i];
-							innerHTML += "<tr>"
-							innerHTML += "<td>" + user.getFullName() + "</td>"
-							innerHTML += "<td>" + user.position + "</td>"
-							innerHTML += "<td>SR</td>"
-							innerHTML += "<td>ICON</td>"
-							innerHTML += "</tr>"
-						}
-						innerHTML += "</table>"
-						return innerHTML;
-					}
-
-					var changeGroup = function(sel){
-						var groupTableWrapper = document.getElementById('group-table-wrapper');
-						var playerLink = document.getElementById('add-player-link');
-						var groupID = sel.value;
-						var queryString = "/groups/" + groupID + "/json";
-						var users = [];
-						$.getJSON(queryString, function(data, jqXHR){
-				      data.forEach(function(userObject){
-								var u = createUserFromJSON(userObject);
-								users.push(u);
-								groupTableWrapper.innerHTML = createUserTable(users);
-							});
-						});
-					}
-
-					var initGroupTable = function(){
-						debugger;
-						var sel = document.getElementById('group-form');
-						changeGroup(sel);
-					};
-			</script>
 			<form>
 				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
 					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
@@ -118,7 +130,7 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td>ICON</td>
+								<td><button onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
 							</tr>
                 {% endfor %}
 							</tbody>
@@ -168,7 +180,7 @@
 									<td>{{player.first_name}} {{player.last_name}}</td>
 									<td>{{player.position}}</td>
 									<td>SR</td>
-									<td>BUTTON</td>
+									<td><img class="remove-player-icon" src="{% static 'dashboard/images/move-icon.png' %}" alt=""></td>
 								</tr>
 	                {% endfor %}
 								</tbody>

@@ -38,7 +38,7 @@
 					var createUserTable = function(users){
 						var innerHTML = "<table class=\"player-list\">";
 						innerHTML += "<tr>"
-						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
+						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
 						innerHTML += "</tr>"
 						for(var i = 0; i < users.length; i++){
 							var user = users[i];
@@ -57,8 +57,10 @@
 						var groupTableWrapper = document.getElementById('group-table-wrapper');
 						var playerLink = document.getElementById('add-player-link');
 						var manageLink = document.getElementById('manage-groups-link');
+						var subManageLink = document.getElementById('manage-group-link');
 						var groupID = sel.value;
 						manageLink.href = '/groups/' + groupID;
+						subManageLink.href = manageLink.href;
 						var queryString = "/groups/" + groupID + "/json";
 						var users = [];
 						$.getJSON(queryString, function(data, jqXHR){
@@ -105,12 +107,12 @@
 			</div>
 
 			<div class="row dash-row group-home">
-				<div class="col-lg-7 news-col" id="display-group-box">
+				<div class="col-lg-8 news-col" id="display-group-box">
 					<div class = "table-wrapper" id="group-table-wrapper">
 						<table class="player-list">
 							<tbody>
 								<tr>
-									<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>
+									<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>
 								</tr>
 								{% if first_players %}
                 {% for player in first_players %}
@@ -119,56 +121,36 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td>ICON</td>
 							</tr>
                 {% endfor %}
 								{% endif %}
 							</tbody>
 						</table>
 					</div>
-				</div>
-				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>{{team}} Units [TBD]</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
+					<div class = "table-footer">
+						<table class="group-footer-table">
 							<tbody>
 								<tr>
-									<td>Data Not Available</td>
+									<td>edit name</td>
+									<td>color</td>
+									<td><a href="/groups/1" id="manage-group-link">manage group</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="col-lg-3 group-analytics-col no-border">
+					<div class = "table-wrapper">
+						<table class = "group-analytics">
+							<tbody>
+								<tr>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>SPEED</h3></td>
 								</tr>
 								<tr>
-									<td>Data Not Available</td>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>ACCURACY</h3></td>
 								</tr>
 								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>OVERALL</h3></td>
 								</tr>
 							</tbody>
 						</table>

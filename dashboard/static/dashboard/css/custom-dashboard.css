@@ -370,9 +370,38 @@ input.create-quiz{
   table-layout: fixed;
 }
 
+.group-home .table-wrapper{
+  width: 100.4%;
+  overflow-x: hidden;
+  margin-left: -1px;
+}
+
 .player-list th, .player-list td{
   height: 40px;
   text-align: center;
+}
+
+.player-list td{
+  border-top: 1px solid #777;
+  border-bottom: 1px solid #777;
+  border-right: 1px dashed #777;
+  border-left: 1px dashed #777;
+}
+
+.player-list img{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-height: 20px;
+}
+
+.player-list button{
+  background: none;
+  border: none;
+}
+
+.player-list th{
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .group-home .news-col{
@@ -381,14 +410,66 @@ input.create-quiz{
 
 .stacked-row{
   height: 50%;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  width: 95%;
-  margin-left: 2.5%;
-  margin-right: 2.5%;
+  margin: 0px;
+  width: 100%;
 }
 
 .group-table{
   width: 100%;
   text-align: center;
+}
+
+.no-border{
+  border: none;
+}
+
+.table-wrapper{
+  height: 100%;
+}
+
+.table-with-footer{
+  height: 90%;
+}
+
+.group-analytics-col{
+  height: 400px;
+}
+
+.group-analytics{
+  max-height: 100%;
+  width: 100%;
+  text-align: center;
+  table-layout: fixed;
+  overflow: hidden;
+}
+
+.group-analytics img{
+  height: 140px;
+  margin-top: -15px;
+  margin-bottom: 0px;
+}
+
+.group-analytics h3{
+  font-size: 14px;
+  margin-top: -15px;
+  margin-bottom: 0px;
+}
+
+.table-footer{
+  width: 100%;
+  margin: 0px;
+  height: 10%;
+  border-top: 3px solid #2A6205;
+}
+
+.group-footer-table{
+  table-layout: fixed;
+  margin-left: 10%;
+  width: 80%;
+  height: 100%;
+  text-align: center;
+}
+
+.group-home #display-group-box .table-wrapper{
+  height: 90%;
 }
