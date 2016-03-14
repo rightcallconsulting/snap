@@ -42,7 +42,7 @@ var Player = function(config) {
     this.zoneYPoint = config.zoneYPoint || null;
     this.gapXPoint = config.gapXPoint || null;
     this.gapYPoint = config.gapYPoint || null;
-    this.motionCoords = config.motionCoords || []; // assume (x, y)   };
+    this.motionCoords = config.motionCoords || []; // assume (x, y) 
     this.currentMotionBreak = config.currentMotionBreak || 0;   
   };
 

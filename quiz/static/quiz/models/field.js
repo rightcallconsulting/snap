@@ -23,27 +23,31 @@ FieldNumber.prototype.draw = function(){
 
 var Field = function(config){
 
-    this.heightInYards = config.heightInYards || 30;
-    this.height = config.height || 400;
-    this.width = config.width || 400;
-    this.typeField = config.typeField || null;
-    this.ballYardLine = config.yardLine || 50;
-    this.ballWidthOffset = config.widthOffset || 0; //not using yet, but allows ball on a hash
+  this.heightInYards = config.heightInYards || 30;
+  this.height = config.height || 400;
+  this.width = config.width || 400;
+  this.typeField = config.typeField || null;
+  this.ballYardLine = config.yardLine || 50;
+  this.ballWidthOffset = config.widthOffset || 0;   //not using yet, but allows ball on a hash
+  this.coverageZones = config.coverageZones || [];
 };
+
 
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
 
 var field = new Field({
   heightInYards: 40,
-  yardLine: 75,
-  widthOffset: -3
+  yardLine: 75
 });
 
+
 var createPlayField = new Field({
-  heightInYards: 50,
+  heightInYards: 40,
   typeField: "Create"
 });
+
+
 
 Field.prototype.getWidthInYards = function(){
   return this.heightInYards * (width / height);
@@ -85,28 +89,29 @@ Field.prototype.getYOffset = function(){
   return this.ballYardLine - this.heightInYards/2;
 }
 
+
 Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);
   var pixelsToYards = this.heightInYards / height;
   var yardsToPixels = height / this.heightInYards;
-    background(93, 148, 81);
-    for(var i = 0; i < this.heightInYards; i++){
-      var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
-        var yc = height - height * (i/this.heightInYards);
-        stroke(255, 255, 255);
-        if(currentYardLine <= 0 || currentYardLine >= 100){
-          currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
-            if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
-              line(0, yc, width, yc);
-            }else{
+  background(93, 148, 81);
+  for(var i = 0; i < this.heightInYards; i++){
+    var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
+    var yc = height - height * (i/this.heightInYards);
+    stroke(255, 255, 255);
+    if(currentYardLine <= 0 || currentYardLine >= 100){
+      currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
+      if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
+        line(0, yc, width, yc);
+      }else{
 
-            }
-        }
-        else if(currentYardLine % 10 === 0){
-            line(0, yc, width, yc);
-            textAlign(CENTER);
-            rotate(HALF_PI);
-            fill(255,255,255);
+      }
+    }
+    else if(currentYardLine % 10 === 0){
+      line(0, yc, width, yc);
+      textAlign(CENTER);
+      rotate(HALF_PI);
+      fill(255,255,255);
             textSize(26); //the one thing that isn't adjusting for screen size...
 
             //debugger;
@@ -117,13 +122,13 @@ Field.prototype.drawBackground = function(play, height, width) {
             text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-this.getXOffset())*yardsToPixels);
             //rotate(HALF_PI);
             resetMatrix();
-        }else if(currentYardLine % 5 === 0){
+          }else if(currentYardLine % 5 === 0){
             line(0, yc, width, yc);
-        }else{
+          }else{
             line((0.33 - this.getXOffset())*yardsToPixels, yc, (1 - this.getXOffset())*yardsToPixels, yc);
             line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
             line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
             line((52.33)*yardsToPixels, yc, (53)*yardsToPixels, yc);
+          }
         }
-    }
-};
+      };
