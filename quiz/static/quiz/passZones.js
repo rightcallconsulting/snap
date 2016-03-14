@@ -145,25 +145,13 @@ function checkAnswer(guess){
   test.updateScoreboard();
 }
 
-function drawCoverageZones(){
 
-  var ballX = test.getCurrentFormation().oline[2].x;
-  var ballY = test.getCurrentFormation().oline[2].y;
-
-  var leftFlat = field.getPixelZone(field.getFlat(ballX, ballY, 0));
-  var rightFlat = field.getPixelZone(field.getFlat(ballX, ballY, 1));
-
-
-  fill(220, 220, 0);
-  rect(leftFlat[0], leftFlat[1], leftFlat[2], leftFlat[3]);
-  rect(rightFlat[0], rightFlat[1], rightFlat[2], rightFlat[3]);
-
-};
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
-  drawCoverageZones();
+  field.drawAllCoverageZones();
+
 }
 
 mouseClicked = function() {

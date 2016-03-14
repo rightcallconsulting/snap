@@ -89,62 +89,6 @@ Field.prototype.getYOffset = function(){
   return this.ballYardLine - this.heightInYards/2;
 }
 
-//// CREATING FIELD ZONES FOR PASS COVERAGE ////
-
-Field.prototype.getFlat = function(ballX, ballY, strength){
-  if(strength === 0){
-    var xCoord = ballX - 26.65;
-    var yCoord = ballY;
-
-  }else if(strength === 1){
-    var xCoord = ballX + 21.335;
-    var yCoord = ballY;
-  }
-  return [xCoord, yCoord, 5.333, 5];
-};
-
-Field.prototype.getHook = function(ballX, ballY, strength){
-  if(strength === 0){
-    // STRONG HOOK ZONE
-    var xCoord = ballX - 16;
-    var yCoord = ballY - 5;
-
-  } else if(strength === 1){
-    // WEAK HOOK ZONE
-    var xCoord = ballX - 16;
-    var yCoord = ballY - 5;
-  } ß
-  return [xCoord, yCoord, 10.666, 10];
-};
-
-Field.prototype.getHole = function(ballX, ballY){
-  var xCoord = ballX - (5.333);
-  var yCoord = ballY;
-  return [xCoord, yCoord, 10.666, 10];
-};
-
-Field.prototype.getPixelZone = function(zone){
-  var pixelZone = [0.0, 0.0, 0.0, 0.0];
-  pixelZone[0] = this.getTranslatedX(zone[0]);
-  pixelZone[1] = this.getTranslatedY(zone[1]);
-  pixelZone[2] = this.yardsToPixels(zone[2]);
-  pixelZone[3] = this.yardsToPixels(zone[3]);
-  return pixelZone;
-}
-
-/*
-Player.prototype.drawGapAssignments = function(test) {
-  var x = field.getTranslatedX(this.x);
-  var y = field.getTranslatedY(this.y);
-  var siz = field.yardsToPixels(this.siz);
-  stroke(255, 0, 0);
-  line(x, y, field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint));
-  fill(255, 0, 0);
-  noFill()
-  ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 10, 10);
-};
-*/
-//
 
 Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);
