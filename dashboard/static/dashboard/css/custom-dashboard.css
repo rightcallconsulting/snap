@@ -372,8 +372,23 @@ input.create-quiz{
 
 .player-list th, .player-list td{
   height: 40px;
+  text-align: center;
 }
 
 .group-home .news-col{
   height: 350px;
+}
+
+.stacked-row{
+  height: 50%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  width: 95%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
+
+.group-table{
+  width: 100%;
+  text-align: center;
 }

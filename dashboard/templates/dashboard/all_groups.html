@@ -13,7 +13,7 @@
   <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 
 
-	<div id="main-container">
+	<div id="main-container" onload="initGroupTable()">
 		{% include "dashboard/top_nav_bar.html" %}
 
 		{% include "dashboard/grey_container.html" %}
@@ -38,7 +38,7 @@
 					var createUserTable = function(users){
 						var innerHTML = "<table class=\"player-list\">";
 						innerHTML += "<tr>"
-						innerHTML += "<th>Player</th><th>Position</th><th>Year</th><th>Starter</th><th>Overall</th>"
+						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
 						innerHTML += "</tr>"
 						for(var i = 0; i < users.length; i++){
 							var user = users[i];
@@ -46,7 +46,6 @@
 							innerHTML += "<td>" + user.getFullName() + "</td>"
 							innerHTML += "<td>" + user.position + "</td>"
 							innerHTML += "<td>SR</td>"
-							innerHTML += "<td>1st</td>"
 							innerHTML += "<td>96%</td>"
 							innerHTML += "</tr>"
 						}
@@ -68,36 +67,36 @@
 								groupTableWrapper.innerHTML = createUserTable(users);
 							});
 						});
-
-						var initGroupTable = function(){
-							debugger;
-							var sel = document.getElementById('group-form');
-							changeGroup(sel);
-						};
-						/*
-						if(sel.selectedIndex === 0){
-							//OFFENSE
-							defenseBox.classList.add('hidden');
-							offenseBox.classList.remove('hidden');
-							//set href of image links to link to offensive play/formation
-							formationLink.href = "/quiz/create_formation"
-							playLink.href = "/quiz/create_play"
-						}else{
-							//DEFENSE
-							offenseBox.classList.add('hidden');
-							defenseBox.classList.remove('hidden');
-							formationLink.href = "/quiz/create_defense_formation"
-							playLink.href = "/quiz/create_defense_formation"
-							//set href of image links to link to defensive play/formation
-						}*/
 					};
+
+					var initGroupTable = function(){
+						debugger;
+						var sel = document.getElementById('group-form');
+						changeGroup(sel);
+					};
+					/*
+					if(sel.selectedIndex === 0){
+						//OFFENSE
+						defenseBox.classList.add('hidden');
+						offenseBox.classList.remove('hidden');
+						//set href of image links to link to offensive play/formation
+						formationLink.href = "/quiz/create_formation"
+						playLink.href = "/quiz/create_play"
+					}else{
+						//DEFENSE
+						offenseBox.classList.add('hidden');
+						defenseBox.classList.remove('hidden');
+						formationLink.href = "/quiz/create_defense_formation"
+						playLink.href = "/quiz/create_defense_formation"
+						//set href of image links to link to defensive play/formation
+					}*/
 			</script>
 			<form>
 				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
 					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
 						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
 						{% for group in groups %}
-						<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
+							<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
 						{% endfor %}
 					</optgroup>
 				</select>
@@ -107,7 +106,24 @@
 			<div class="row dash-row group-home">
 				<div class="col-lg-7 news-col" id="display-group-box">
 					<div class = "table-wrapper" id="group-table-wrapper">
-
+						<table class="player-list">
+							<tbody>
+								<tr>
+									<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>
+								</tr>
+								{% if first_players %}
+                {% for player in first_players %}
+								<tr>
+								<td>{{player.first_name}} {{player.last_name}}</td>
+								<td>{{player.position}}</td>
+								<td>SR</td>
+								<td>96%</td>
+								<td>ICON</td>
+							</tr>
+                {% endfor %}
+								{% endif %}
+							</tbody>
+						</table>
 					</div>
 				</div>
 				<div class="col-lg-4 news-col">

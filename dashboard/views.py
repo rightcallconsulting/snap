@@ -351,9 +351,11 @@ def edit_group(request, group_id):
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
+    first_group = groups[0]
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
+        'first_players': first_group.players.all(),
         'page_header': 'GROUPS',
     })
 
@@ -368,8 +370,10 @@ def group_detail(request, group_id):
         return HttpResponse('')
     else:
         tests = Test.objects.filter(player__team=coach.team)
+        groups = PlayerGroup.objects.filter(team=coach.team)
         return render(request, 'dashboard/group_detail.html', {
             'group': group,
+            'groups': groups,
             'players': players,
             'tests': tests,
         })

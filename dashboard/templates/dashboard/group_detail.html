@@ -19,46 +19,161 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
+			<div class="panel playbook-top-panel">
+				<div class="col-lg-2">
+					<!-- EMPTY COLUMN FOR SPACING -->
+				</div>
+				<div class="col-lg-4"><a href="/create_group" id="create-group-link">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
+				</a></div>
+				<div class="col-lg-4"><a href="#" id="add-player-link">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
+				</a></div>
+			</div>
 
+			<div class="panel group-select-panel">
+				<script type="text/javascript">
+					var createUserTable = function(users){
+						var innerHTML = "<table class=\"player-list\">";
+						innerHTML += "<tr>"
+						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
+						innerHTML += "</tr>"
+						for(var i = 0; i < users.length; i++){
+							var user = users[i];
+							innerHTML += "<tr>"
+							innerHTML += "<td>" + user.getFullName() + "</td>"
+							innerHTML += "<td>" + user.position + "</td>"
+							innerHTML += "<td>SR</td>"
+							innerHTML += "<td>96%</td>"
+							innerHTML += "<td>ICON</td>"
+							innerHTML += "</tr>"
+						}
+						innerHTML += "</table>"
+						return innerHTML;
+					}
 
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4 class="group-header" id="group-{{group.id}}">Group: {{group.name}}</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
+					var createMiniUserTable = function(users){
+						var innerHTML = "<table class=\"player-list\">";
+						for(var i = 0; i < users.length; i++){
+							var user = users[i];
+							innerHTML += "<tr>"
+							innerHTML += "<td>" + user.getFullName() + "</td>"
+							innerHTML += "<td>" + user.position + "</td>"
+							innerHTML += "<td>SR</td>"
+							innerHTML += "<td>ICON</td>"
+							innerHTML += "</tr>"
+						}
+						innerHTML += "</table>"
+						return innerHTML;
+					}
+
+					var changeGroup = function(sel){
+						var groupTableWrapper = document.getElementById('group-table-wrapper');
+						var playerLink = document.getElementById('add-player-link');
+						var groupID = sel.value;
+						var queryString = "/groups/" + groupID + "/json";
+						var users = [];
+						$.getJSON(queryString, function(data, jqXHR){
+				      data.forEach(function(userObject){
+								var u = createUserFromJSON(userObject);
+								users.push(u);
+								groupTableWrapper.innerHTML = createUserTable(users);
+							});
+						});
+					}
+
+					var initGroupTable = function(){
+						debugger;
+						var sel = document.getElementById('group-form');
+						changeGroup(sel);
+					};
+			</script>
+			<form>
+				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
+						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+						{% for g in groups %}
+						{% if g.pk == group.pk %}
+						<option value="{{g.id}}" selected>&nbsp;&nbsp;&nbsp;{{g}}</option>
+						{% else %}
+						<option value="{{g.id}}">&nbsp;&nbsp;&nbsp;{{g}}</option>
+						{% endif %}
+						{% endfor %}
+					</optgroup>
+				</select>
+			</form>
+			</div>
+
+			<div class="row news-row group-home">
+				<div class="col-lg-7 news-col">
+					<div class = "table-wrapper" id="group-table-wrapper">
+						<table class="player-list">
 							<tbody>
+								<tr>
+									<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>
+								</tr>
                 {% for player in players %}
 								<tr>
-									<td><a href="{% url 'player_detail' player.id %}">{{ player }}</a></td>
-								</tr>
+								<td>{{player.first_name}} {{player.last_name}}</td>
+								<td>{{player.position}}</td>
+								<td>SR</td>
+								<td>96%</td>
+								<td>ICON</td>
+							</tr>
                 {% endfor %}
-                <tr>
-                  <td><a class="btn btn-success" href="{% url 'edit_group' group.id %}">Edit this Group</a></td>
-                </tr>
-
 							</tbody>
 						</table>
 					</div>
 				</div>
 				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>Tests</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-                {% for test in tests %}
-								<tr>
-									<td><a href="{% url 'group_detail' group.id %}">{{test.name}}</a>
-                    <button id="test-{{test.id}}" class="pull-right btn btn-success assign-test" type="button" name="button">Assign to Group</button>
-                  </td>
-								</tr>
-                {% endfor %}
+					<div class="row stacked-row">
+						<div class="text-center news-header">
+							<span><h4>GROUPS</h4></span>
+						</div>
+						<div class = "table-wrapper scrollable-table three-column-table" id="groups-table-wrapper">
+							<table class="group-table">
+								<tbody>
+									{% for group in groups %}
+									{% if forloop.counter|add:"-1"|divisibleby:3 %}
+										<tr>
+									{% endif %}
 
-							</tbody>
-						</table>
+
+										<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{group.id}}" type="submit" value="{{group}}"></td>
+
+										{% if forloop.counter|divisibleby:3 %}
+											</tr>
+										{% endif %}
+									{% endfor %}
+									{% if groups|length|add:"1"|divisibleby:3 %}
+										<td></td><td></td></tr>
+									{% elif groups|length|add:"2"|divisibleby:3 %}
+										<td></td></tr>
+									{% endif %}
+
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row stacked-row">
+						<div class="text-center news-header">
+							<span><h4>PLAYERS</h4></span>
+						</div>
+						<div class = "table-wrapper scrollable-table" id="players-table-wrapper">
+							<table class="player-list">
+								<tbody>
+	                {% for player in players %}
+									<tr>
+									<td>{{player.first_name}} {{player.last_name}}</td>
+									<td>{{player.position}}</td>
+									<td>SR</td>
+									<td>BUTTON</td>
+								</tr>
+	                {% endfor %}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 
