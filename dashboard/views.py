@@ -348,6 +348,22 @@ def edit_group(request, group_id):
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
+def delete_group(request):
+    if request.method == 'POST':
+        group_id = request.POST['group_id']
+        group = PlayerGroup.objects.filter(id=group_id)[0]
+        group.delete()
+        return HttpResponse('')
+
+def delete_player_from_group(request):
+    if request.method == 'POST':
+        group_id = request.POST['group_id']
+        player_id = request.POST['player_id']
+        group = PlayerGroup.objects.filter(pk=group_id)[0]
+        group.players.remove(group.players.all().filter(pk=player_id)[0])
+        return HttpResponse('')
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)

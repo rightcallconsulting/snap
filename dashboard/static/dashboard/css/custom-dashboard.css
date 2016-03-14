@@ -388,6 +388,14 @@ input.create-quiz{
   border-left: 1px dashed #777;
 }
 
+.player-list .clicked span{
+  border: 1 px solid #777;
+  font-size: 16px;
+  color: #FFF;
+  padding: 5px;
+  background-color: #D80027;
+}
+
 .player-list img{
   margin-top: 10px;
   margin-bottom: 10px;
@@ -400,18 +408,19 @@ input.create-quiz{
 }
 
 .player-list th{
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
+  border-bottom: 3px solid #2A6205;
+  border-right: 3px solid #2A6205;
 }
 
 .group-home .news-col{
-  height: 350px;
+  height: 550px;
 }
 
 .stacked-row{
   height: 50%;
   margin: 0px;
   width: 100%;
+  border-bottom: 1px solid #777;
 }
 
 .group-table{
@@ -432,7 +441,7 @@ input.create-quiz{
 }
 
 .group-analytics-col{
-  height: 400px;
+  height: 575px;
 }
 
 .group-analytics{
@@ -444,7 +453,7 @@ input.create-quiz{
 }
 
 .group-analytics img{
-  height: 140px;
+  height: 200px;
   margin-top: -15px;
   margin-bottom: 0px;
 }

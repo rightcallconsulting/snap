@@ -31,7 +31,7 @@
 					innerHTML += "<td>" + user.position + "</td>"
 					innerHTML += "<td>SR</td>"
 					innerHTML += "<td>96%</td>"
-					innerHTML += "<td><button onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
+					innerHTML += "<td><button id=\"" + user.id + "\" onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
 					innerHTML += "</tr>"
 				}
 				innerHTML += "</table>"
@@ -75,13 +75,18 @@
 			};
 
 			var clickRemoveButton = function(button){
-				debugger;
-				if(button.classList.contains('inverted')){
-					button.classList.remove('inverted');
-					button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\">"
+				if(button.classList.contains('clicked')){
+					var groupID = document.getElementById('group-form').value;
+					//button.classList.remove('clicked');
+					//button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\">"
+					var xhttp = new XMLHttpRequest();
+					var postString = "/groups/" + groupID + "/delete/" + button.value;
+					xhttp.open("POST", postString, true);
+  				//xhttp.send();
+					debugger;
 				}else{
-					button.classList.add('inverted');
-					button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon-inverted.png' %}\" alt=\"\">"
+					button.classList.add('clicked');
+					button.innerHTML = "<span>REMOVE</span>"
 				}
 			};
 			</script>
@@ -130,7 +135,7 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td><button onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
+								<td><button value="{{player.id}}" onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
 							</tr>
                 {% endfor %}
 							</tbody>
