@@ -60,6 +60,28 @@ Field.prototype.getHole = function(ballX, ballY){
   var yCoord = ballY + 11;
   return [xCoord, yCoord, 11, 9];
 };
+Field.prototype.getDeeps = function(ballX, ballY, strength){
+  if(strength === 0){
+    var xCoord = ballX - 26.666;
+    var yCoord = ballY + 26.666;
+  } else if(strength === 1){
+    // WEAK HOOK ZONE
+    var xCoord = ballX;
+    var yCoord = ballY + 26.666;
+  } 
+  return [xCoord, yCoord, ballX, 15.333];
+};
+
+Field.prototype.getFades = function(ballX, ballY, strength){
+  if(strength === 0){
+    var xCoord = ballX - 26.666;
+    var yCoord = ballY + 13.333;
+  } else if(strength === 1){
+    var xCoord = ballX + 19.333;
+    var yCoord = ballY + 13.333;
+  } 
+  return [xCoord, yCoord, 5.666, 7.666];
+};
 
 Field.prototype.getPixelZone = function(zone){
   var pixelZone = [0.0, 0.0, 0.0, 0.0];
@@ -105,7 +127,7 @@ Field.prototype.drawStops = function(){
   var ballY = test.getCurrentFormation().oline[2].y;
   var leftStop = this.getPixelZone(this.getStops(ballX, ballY, 0));
   var rightStop = this.getPixelZone(this.getStops(ballX, ballY, 1));
-  fill(220, 80, 230);
+  fill(85, 190, 230);
   rect(leftStop[0], leftStop[1], leftStop[2], leftStop[3]);
   rect(rightStop[0], rightStop[1], rightStop[2], rightStop[3]);
 };
@@ -115,7 +137,7 @@ Field.prototype.drawCurls = function(){
   var ballY = test.getCurrentFormation().oline[2].y;
   var leftCurl = this.getPixelZone(this.getCurls(ballX, ballY, 0));
   var rightCurl = this.getPixelZone(this.getCurls(ballX, ballY, 1));
-  fill(180, 80, 240);
+  fill(85, 230, 100);
   rect(leftCurl[0], leftCurl[1], leftCurl[2], leftCurl[3]);
   rect(rightCurl[0], rightCurl[1], rightCurl[2], rightCurl[3]);
 };
@@ -128,6 +150,30 @@ Field.prototype.drawHole = function(){
   rect(hole[0], hole[1], hole[2], hole[3]);
 };
 
+
+Field.prototype.drawDeeps = function(){
+  var ballX = test.getCurrentFormation().oline[2].x;
+  var ballY = test.getCurrentFormation().oline[2].y;
+  var leftDeep = this.getPixelZone(this.getDeeps(ballX, ballY, 0));
+  var rightDeep = this.getPixelZone(this.getDeeps(ballX, ballY, 1));
+  fill(85, 190, 230);
+  rect(leftDeep[0], leftDeep[1], leftDeep[2], leftDeep[3]);
+  fill(220, 220, 0);
+  rect(rightDeep[0], rightDeep[1], rightDeep[2], rightDeep[3]);
+};
+
+Field.prototype.drawFades = function(){
+  var ballX = test.getCurrentFormation().oline[2].x;
+  var ballY = test.getCurrentFormation().oline[2].y;
+  var leftFade = this.getPixelZone(this.getFades(ballX, ballY, 0));
+  var rightFade = this.getPixelZone(this.getFades(ballX, ballY, 1));
+  fill(215, 150, 25);
+  rect(leftFade[0], leftFade[1], leftFade[2], leftFade[3]);
+  rect(rightFade[0], rightFade[1], rightFade[2], rightFade[3]);
+};
+
+
+
 /// 3 DEEP ZONE ///
 Field.prototype.drawAllCoverageZones = function(){
   stroke(0);
@@ -137,4 +183,6 @@ Field.prototype.drawAllCoverageZones = function(){
   this.drawStops();
   this.drawCurls();
   this.drawHole();
+  this.drawDeeps();
+  this.drawFades();
 };
