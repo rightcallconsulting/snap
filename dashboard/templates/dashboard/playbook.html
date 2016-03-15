@@ -19,84 +19,6 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md playbook">
-
-			{% if request.user.myuser.is_a_player %}
-				<div class="row dash-row">
-					<div class="col-lg-5 dash-col">
-						<div class="dash-header text-center">
-							<span><h4>FORMATIONS</h4></span>
-						</div>
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-								<div class="stat-icon">
-									<i class="fa fa-user fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-info">
-								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-								<h5>Server Load</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-								<div class="stat-icon">
-									<i class="fa fa-hdd-o fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
-					</div>
-					<div class="col-lg-5 dash-col">
-						<div class="dash-header text-center">
-							<span><h4>PLAYS</h4></span>
-						</div>
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-danger">
-								<h2 class="m-top-none" id="userCount">362</h2>
-								<h5>Registered users</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
-								<div class="stat-icon">
-									<i class="fa fa-user fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
-						<div class="col-lg-6">
-							<div class="panel-stat3 bg-info">
-								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-								<h5>Server Load</h5>
-								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
-								<div class="stat-icon">
-									<i class="fa fa-hdd-o fa-3x"></i>
-								</div>
-								<div class="refresh-button">
-									<i class="fa fa-refresh"></i>
-								</div>
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-							</div>
-						</div><!-- /.col -->
-					</div>
-				{% else %}
 				<div class="panel playbook-top-panel">
 					<div class="col-lg-3">
 						<script type="text/javascript">
@@ -175,6 +97,11 @@
 													</tr>
 												{% endif %}
 											{% endfor %}
+											{% if offensive_formations|add:"-1"|length|divisibleby:3 %}
+												<td></td><td></td></tr>
+											{% elif offensive_formations|add:"-2"|length|divisibleby:3 %}
+												<td></td></tr>
+											{% endif %}
 										</table>
 									</div>
 								</div>
@@ -188,11 +115,16 @@
 										{% if forloop.counter|add:"-1"|divisibleby:3 %}
 											<tr>
 										{% endif %}
-											<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+											<td><input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
 											{% if forloop.counter|divisibleby:3 %}
 												</tr>
 											{% endif %}
 										{% endfor %}
+										{% if unique_defensive_formations|add:"-1"|length|divisibleby:3 %}
+											<td></td><td></td></tr>
+										{% elif unique_defensive_formations|add:"-2"|length|divisibleby:3 %}
+											<td></td></tr>
+										{% endif %}
 									</table>
 								</div>
 								</div>
@@ -217,7 +149,6 @@
 						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
 					</div>
 				</div><!-- /panel -->
-				{% endif %}
 
 				<div class="loading-overlay">
 					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
@@ -233,6 +164,8 @@
 				var formationID;
 				var formationToDraw;
 				var playToDraw;
+				var offensivePlayToDraw; //defense
+				var duplicateDefensiveFormations; //defense
 				var removedPlaysFromFormation = [];
 				var testID = $('#test-id').data('test-id');
 				var playIDArray = $('#play-id-array').data('play-id-array');
@@ -296,6 +229,26 @@
 						})
 						$('#play-image-header').text(formationToDraw.name+ ": ");
 					});
+					$(".defensive-play").click(function() {
+						var offensiveFormationOptions = [];
+ 					 $('.show-plays').text('');
+ 						/*playToDraw = defensivePlays.filter(function(play) {
+ 							return play.id === Number(this.id);
+ 						}.bind(this))[0]
+
+ 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
+ 							return play.playName === this.value;
+ 						}.bind(this))*/
+ 						duplicateDefensiveFormations.forEach(function(defensiveFormation){
+ 							offensiveFormations.forEach(function(offensiveFormation){
+ 								if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
+ 									offensiveFormationOptions.push(offensiveFormation);
+ 									$('.show-plays').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+ 								}
+ 							})
+ 						})
+ 						$('#play-image-header').text("Defense: " + this.value);
+					});
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
 						playID = playDomElement[0].id;
@@ -322,9 +275,6 @@
 							}
 					};
 					function displayPlays(playArray) {
-						while(playArray.length < 6 && playArray.length > 0){
-							playArray.push(playArray[0]);
-						}
 						var drawPlays = document.getElementById('draw-plays');
 							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
 							for(var i = 0; i < playArray.length; i++){
@@ -342,8 +292,10 @@
 									newHTML += "</tr>";
 								}
 							}
-							if(playArray.length % 3 !== 0){
-								newHTML += "</tr>";
+							if(playArray.length % 3 === 1){
+								newHTML += "<td></td><td></td></tr>";
+							}else if(playArray.length % 3 === 2){
+								newHTML += "<td></td></tr>";
 							}
 							newHTML += "</table></div>";
 							drawPlays.innerHTML = newHTML;

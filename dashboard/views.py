@@ -385,6 +385,7 @@ def group_detail(request, group_id):
         group.duplicate_and_assign_test_to_all_players(test_id, coach)
         return HttpResponse('')
     else:
+        delete_group_form = PlayerGroupForm(instance = group)
         tests = Test.objects.filter(player__team=coach.team)
         groups = PlayerGroup.objects.filter(team=coach.team)
         return render(request, 'dashboard/group_detail.html', {
@@ -392,6 +393,7 @@ def group_detail(request, group_id):
             'groups': groups,
             'players': players,
             'tests': tests,
+            'form': delete_group_form
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)

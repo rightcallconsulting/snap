@@ -32,6 +32,17 @@
   color: #FFFFFF;
 }
 
+.defensive-play-button {
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top:5%;
+  margin-bottom:5%;
+  background-color: #D07322;
+  color: #FFFFFF;
+}
+
 .play-remove-button {
   width: 90%;
   height: 90%;
@@ -394,6 +405,10 @@ input.create-quiz{
   color: #FFF;
   padding: 5px;
   background-color: #D80027;
+}
+
+.player-list .ui-draggable-dragging td{
+  width: 100px;
 }
 
 .player-list img{

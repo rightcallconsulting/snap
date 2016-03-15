@@ -21,7 +21,7 @@
 		<div class="padding-md">
 			<div class="row dash-row">
 
-        <form action="/create_test" method="post" class=form-create-test> {% csrf_token %}
+        <form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
           {% for field in form %}
 					{% if field.label == "Group" %}
 					<br />
@@ -50,7 +50,7 @@
 					{% endfor %}
 
 
-					
+
           <input class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
       </form>
 

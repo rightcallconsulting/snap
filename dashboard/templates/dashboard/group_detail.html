@@ -31,7 +31,7 @@
 					innerHTML += "<td>" + user.position + "</td>"
 					innerHTML += "<td>SR</td>"
 					innerHTML += "<td>96%</td>"
-					innerHTML += "<td><button id=\"" + user.id + "\" onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
+					innerHTML += "<td id=\"remove-player-" + user.id + "\"><button id=\"" + user.id + "\" onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
 					innerHTML += "</tr>"
 				}
 				innerHTML += "</table>"
@@ -42,7 +42,7 @@
 				var innerHTML = "<table class=\"player-list\">";
 				for(var i = 0; i < users.length; i++){
 					var user = users[i];
-					innerHTML += "<tr>"
+					innerHTML += "<tr id=\"" + user.id + "\">"
 					innerHTML += "<td>" + user.getFullName() + "</td>"
 					innerHTML += "<td>" + user.position + "</td>"
 					innerHTML += "<td>SR</td>"
@@ -57,6 +57,7 @@
 				var groupTableWrapper = document.getElementById('group-table-wrapper');
 				var playerLink = document.getElementById('add-player-link');
 				var groupID = sel.value;
+				document.getElementById('current-group-id').innerHTML = groupID;
 				var queryString = "/groups/" + groupID + "/json";
 				var users = [];
 				$.getJSON(queryString, function(data, jqXHR){
@@ -74,19 +75,15 @@
 				changeGroup(sel);
 			};
 
+			var dragPlayerRow = function(row){
+
+			};
+
 			var clickRemoveButton = function(button){
-				if(button.classList.contains('clicked')){
-					var groupID = document.getElementById('group-form').value;
-					//button.classList.remove('clicked');
-					//button.innerHTML = "<img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\">"
-					var xhttp = new XMLHttpRequest();
-					var postString = "/groups/" + groupID + "/delete/" + button.value;
-					xhttp.open("POST", postString, true);
-  				//xhttp.send();
-					debugger;
-				}else{
+				if(!button.classList.contains('clicked')){
 					button.classList.add('clicked');
 					button.innerHTML = "<span>REMOVE</span>"
+					return false;
 				}
 			};
 			</script>
@@ -105,12 +102,13 @@
 			</div>
 
 			<div class="panel group-select-panel">
+				<div id="current-group-id" class="hidden">{{group.id}}</div>
 			<form>
 				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
 					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
 						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
 						{% for g in groups %}
-						{% if g.pk == group.pk %}
+						{% if g.id == group.id %}
 						<option value="{{g.id}}" selected>&nbsp;&nbsp;&nbsp;{{g}}</option>
 						{% else %}
 						<option value="{{g.id}}">&nbsp;&nbsp;&nbsp;{{g}}</option>
@@ -135,7 +133,7 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td><button value="{{player.id}}" onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
+								<td id="remove-player-{{player.id}}"><button value="{{player.id}}" onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
 							</tr>
                 {% endfor %}
 							</tbody>
@@ -181,7 +179,7 @@
 							<table class="player-list">
 								<tbody>
 	                {% for player in players %}
-									<tr>
+									<tr id="{{player.id}}">
 									<td>{{player.first_name}} {{player.last_name}}</td>
 									<td>{{player.position}}</td>
 									<td>SR</td>
