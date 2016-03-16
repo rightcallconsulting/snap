@@ -25,19 +25,25 @@
 							var changeUnit = function(sel){
 								var offenseBox = document.getElementById('choose-offensive-formation-box');
 								var defenseBox = document.getElementById('choose-defensive-formation-box');
+								var selectPlayBox = document.getElementById('select-play-box');
+								var selectOffenseBox = document.getElementById('select-offense-box');
 								var formationLink = document.getElementById('formation-link')
 								var playLink = document.getElementById('play-link')
 								if(sel.selectedIndex === 0){
 									//OFFENSE
 									defenseBox.classList.add('hidden');
+									selectOffenseBox.classList.add('hidden');
 									offenseBox.classList.remove('hidden');
+									selectPlayBox.classList.remove('hidden')
 									//set href of image links to link to offensive play/formation
 									formationLink.href = "/quiz/create_formation"
 									playLink.href = "/quiz/create_play"
 								}else{
 									//DEFENSE
+									selectPlayBox.classList.add('hidden');
 									offenseBox.classList.add('hidden');
 									defenseBox.classList.remove('hidden');
+									selectOffenseBox.classList.remove('hidden');
 									formationLink.href = "/quiz/create_defense_formation"
 									playLink.href = "/quiz/create_defense_formation"
 									//set href of image links to link to defensive play/formation
@@ -128,12 +134,22 @@
 									</table>
 								</div>
 								</div>
-								<div class="col-lg-4 change-plays-box">
+								<div class="col-lg-4 change-plays-box" id="select-play-box">
 									<div class="dash-header text-center">
 										<span><h4 id="change-plays-header">Plays</h4></span>
 									</div>
 									<div class="scrollable-table" id="draw-plays">
 									{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
+
+									{# </form>#}
+								</div>
+								</div>
+								<div class="col-lg-4 change-plays-box hidden" id="select-offense-box">
+									<div class="dash-header text-center">
+										<span><h4 id="change-plays-header">Offense</h4></span>
+									</div>
+									<div class="scrollable-table" id="draw-plays">
+									{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
 
 									{# </form>#}
 								</div>
