@@ -16,6 +16,7 @@ var FormationTest = function(config){
     this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
     this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
     this.displayName = config.displayName || false;
+    this.coverageMap = config.coverageMap || null;
 };
 
 FormationTest.prototype.getCurrentFormation = function(){
@@ -42,6 +43,10 @@ FormationTest.prototype.getScoreString = function(){
     " remaining";
   }
 };
+FormationTest.prototype.getCurrentCoverageMap = function(){
+  return this.coverageMap;
+};
+
 
 FormationTest.prototype.restartQuiz = function(){
   //this.formations[0] ==> reset of some variety ???

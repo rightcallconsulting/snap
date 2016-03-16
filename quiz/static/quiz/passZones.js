@@ -6,6 +6,7 @@ var formationNames;
 var maxFormations = 5;
 var bigReset;
 
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
@@ -14,7 +15,7 @@ function setup() {
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
-
+  
   multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
@@ -23,14 +24,24 @@ function setup() {
     label: "Restart"
   })
 
+  var twoDeepZone = new CoverageMap({
+    name: "Two Deep Zone"
+  });
+
+  twoDeepZone.fillTwoDeepZone(field);
+
+  
+
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
 
     });
     test = new FormationTest({
       formations: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      coverageMap: twoDeepZone
     });
+    
     var formations = [];
     formationNames = [];
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -150,8 +161,10 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
-  field.drawAllCoverageZones();
-
+  var map = test.getCurrentCoverageMap();
+  if(map){
+    map.draw(field);
+  }
 }
 
 mouseClicked = function() {
