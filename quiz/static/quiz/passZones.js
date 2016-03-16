@@ -163,6 +163,7 @@ function drawOpening(){
   test.getCurrentFormation().drawAllPlayers(field);
   var map = test.getCurrentCoverageMap();
   if(map){
+    stroke(0);
     map.draw(field);
   }
 }
@@ -175,20 +176,20 @@ mouseClicked = function() {
     test.restartQuiz();
   }
   else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
-      }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
-      }
+    var mouseYardX = field.getYardX(mouseX);
+    var mouseYardY = field.getYardY(mouseY);
+
+    var coverageMap = test.getCurrentCoverageMap();
+    var clickedZone = coverageMap.getClickedZone(mouseYardX, mouseYardY);
+
+    if(clickedZone.clicked){
+      //check answer
+    }else{
+      coverageMap.clearClicks();
+      clickedZone.clicked = true;
     }
+    //debugger;
+
   }
 };
 

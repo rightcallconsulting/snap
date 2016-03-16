@@ -2,8 +2,9 @@ CoverageZone = function(config){
 	this.x = config.x || 50;
 	this.y = config.y || 50;
 	this.width = config.width || 10;
-	this.height = config.width || 10;
+	this.height = config.height || 10;
 	this.fill = config.fill || color(0, 0, 0);
+	this.clicked = config.clicked || false;
 };
 
 CoverageZone.prototype.getPixelZone = function(field){
@@ -18,7 +19,17 @@ CoverageZone.prototype.getPixelZone = function(field){
 CoverageZone.prototype.draw = function(field){
 	var pixels = this.getPixelZone(field);
 	fill(this.fill);
+	if(this.clicked){
+		fill(220, 220, 0);
+	}
 	rect(pixels[0], pixels[1], pixels[2], pixels[3]);
+};
+
+CoverageZone.prototype.isMouseInside = function(mouseX, mouseY){
+	return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > (this.y - this.height) &&
+           mouseY < (this.y);
 };
 
 CoverageMap = function(config){
@@ -33,22 +44,58 @@ CoverageMap.prototype.draw = function(field){
 	}
 };
 
+CoverageMap.prototype.getClickedZone = function(mouseX, mouseY){
+	for(var i = 0; i < this.zones.length; i++){
+		var zone = this.zones[this.zones.length - i - 1];
+		if(zone.isMouseInside(mouseX, mouseY)){
+			return zone;
+		}
+	}
+	return null;
+};
+
+CoverageMap.prototype.clearClicks = function(){
+	for(var i = 0; i < this.zones.length; i++){
+		var zone = this.zones[i];
+		zone.clicked = false;
+	}
+};
+
 CoverageMap.prototype.fillTwoDeepZone = function(field){
 	var ballX = Field.WIDTH / 2;
 	var ballY = field.ballYardLine;
+
+	var leftDeep = new CoverageZone({
+		x: 0.01,
+		y: ballY + 26.666,
+		width: 26.666,
+		height: 25,
+		fill: color(85, 190, 230)
+	});
+
+	var rightDeep = new CoverageZone({
+		x: ballX,
+		y: ballY + 26.666,
+		width: 26.666,
+		height: 25,
+		fill: color(85, 190, 230)
+	});
+	this.zones.push(leftDeep);
+	this.zones.push(rightDeep);
+
 	var leftOut = new CoverageZone({
 		x: 0.01,
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(220, 80, 230),
+		fill: color(220, 80, 230)
 	});
 	var rightOut = new CoverageZone({
 		x: Field.WIDTH - 5.333, 
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(220, 80, 230),
+		fill: color(220, 80, 230)
 	});
 	this.zones.push(leftOut);
 	this.zones.push(rightOut);
@@ -71,18 +118,18 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 	this.zones.push(rightFlat);
 
 	var leftCurl = new CoverageZone({
-		x: 5.333,
+		x: Field.WIDTH - 21.333,
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(85, 230, 100)
+		fill: color(0, 0, 0)
 	});
 	var rightCurl = new CoverageZone({
-		x: 42.666,
+		x: Field.WIDTH + 16,
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(85, 230, 100)
+		fill: color(0, 0, 0)
 	});
 	this.zones.push(leftCurl);
 	this.zones.push(rightCurl);
@@ -92,11 +139,11 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
-		fill: color(85, 190, 230)
+		fill: color(255)
 	});
 
 	var rightStop = new CoverageZone({
-		x: 42.666,
+		x: 41.666,
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
@@ -130,39 +177,23 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		fill: color(108, 190, 130)
 	});
 	this.zones.push(hole);
-/*
-	var leftDeep = new CoverageZone({
-		x: 0.01,
-		y: ballY + 11,
-		width: 26.666,
-		height: 9,
-		fill: color(85, 190, 230)
-	});
-	var rightDeep = new CoverageZone({
-		x: 26.666,
-		y: ballY + 11,
-		width: 26.666,
-		height: 9,
-		fill: color(85, 190, 230)
-	});
-	this.zones.push(leftDeep);
-	this.zones.push(rightDeep);
-*/
+
 	var leftFade = new CoverageZone({
 		x: 0.01,
-		y: ballY + 8.5,
+		y: ballY + 5.5,
 		width: 6,
-		height: 10.666,
+		height: 5,
 		fill: color(215, 150, 25)
 	});
 
 	var rightFade = new CoverageZone({
-		x: 0.01,
-		y: ballY + 8.5,
+		x: 48,
+		y: ballY + 5.5,
 		width: 6,
-		height: 10.666,
+		height: 5,
 		fill: color(215, 150, 25)
 	});
 	this.zones.push(leftFade);
 	this.zones.push(rightFade);
+
 };
