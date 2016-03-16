@@ -229,7 +229,8 @@
 						})
 						$('#play-image-header').text(formationToDraw.name+ ": ");
 					});
-					$(".defensive-play").click(function() {
+					$(".defensive-play-button").click(function() {
+
 						var offensiveFormationOptions = [];
  					 $('.show-plays').text('');
  						/*playToDraw = defensivePlays.filter(function(play) {
@@ -239,15 +240,15 @@
  						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
  							return play.playName === this.value;
  						}.bind(this))*/
- 						duplicateDefensiveFormations.forEach(function(defensiveFormation){
+ 						/*duplicateDefensiveFormations.forEach(function(defensiveFormation){
  							offensiveFormations.forEach(function(offensiveFormation){
  								if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
  									offensiveFormationOptions.push(offensiveFormation);
  									$('.show-plays').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
  								}
  							})
- 						})
- 						$('#play-image-header').text("Defense: " + this.value);
+ 						})*/
+ 						$('#play-image-header').text(this.value);
 					});
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
