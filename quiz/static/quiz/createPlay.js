@@ -17,7 +17,6 @@ function setup() {
   createPlayField.height = 600;
   createPlayField.heightInYards = 60;
   createPlayField.ballYardLine = 75;
-  debugger;
 }
 
 function draw() {
@@ -317,6 +316,7 @@ function draw() {
     };
 
     mouseClicked = function() {
+      var field = createPlayField;
       eligibleReceivers = getCurrentFormation().eligibleReceivers;
       var olClicked = getCurrentFormation().mouseInOL(field);
       var dlClicked = defensePlay.mouseInDL(getCurrentFormation(), field);
