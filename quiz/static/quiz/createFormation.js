@@ -15,7 +15,7 @@ function setup() {
   //sidebar.style.width = '300px';
   field.height = 600;
   field.heightInYards = 54;
-  field.ballYardLine = 65;
+  field.ballYardLine = 75;
   debugger;
 }
 
