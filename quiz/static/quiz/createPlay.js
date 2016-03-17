@@ -15,7 +15,7 @@ function setup() {
   sidebar.style.height = '700px';
   //sidebar.style.width = '300px';
   createPlayField.height = 600;
-  createPlayField.heightInYards = 53.33;
+  createPlayField.heightInYards = 60;
   createPlayField.ballYardLine = 75;
   debugger;
 }

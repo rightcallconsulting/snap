@@ -95,20 +95,24 @@ Field.prototype.drawBackground = function(play, height, width) {
   var pixelsToYards = this.heightInYards / height;
   var yardsToPixels = height / this.heightInYards;
   background(93, 148, 81);
+  stroke(255, 255, 255);
+  line(this.getTranslatedX(0), this.getTranslatedY(-10), this.getTranslatedX(0), this.getTranslatedY(110));
+  line(this.getTranslatedX(Field.WIDTH), this.getTranslatedY(-10), this.getTranslatedX(Field.WIDTH), this.getTranslatedY(110));
+  debugger;
   for(var i = 0; i < this.heightInYards; i++){
-    var currentYardLine = (field.ballYardLine + i - this.heightInYards/2).toFixed();
+    var currentYardLine = (this.ballYardLine + i - this.heightInYards/2).toFixed();
     var yc = height - height * (i/this.heightInYards);
     stroke(255, 255, 255);
     if(currentYardLine <= 0 || currentYardLine >= 100){
       currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
       if(currentYardLine === (-10).toFixed() || currentYardLine === (0).toFixed()){
-        line(0, yc, width, yc);
+        line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
       }else{
 
       }
     }
     else if(currentYardLine % 10 === 0){
-      line(0, yc, width, yc);
+      line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
       textAlign(CENTER);
       rotate(HALF_PI);
       fill(255,255,255);
@@ -123,13 +127,12 @@ Field.prototype.drawBackground = function(play, height, width) {
             //rotate(HALF_PI);
             resetMatrix();
           }else if(currentYardLine % 5 === 0){
-            line(0, yc, width, yc);
+            line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
           }else{
             line(this.getTranslatedX(0), yc, this.getTranslatedX(1), yc);
             line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
             line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
             line(this.getTranslatedX(Field.WIDTH - 1), yc, this.getTranslatedX(Field.WIDTH), yc);
-            debugger;
           }
         }
       };
