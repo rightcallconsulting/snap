@@ -10,7 +10,7 @@ var bigReset;
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 50;
+  field.heightInYards = 53.333;
 
   background(58, 135, 70);
   randomSeed(millis());
@@ -155,8 +155,6 @@ function checkAnswer(guess){
   }
   test.updateScoreboard();
 }
-
-
 
 function drawOpening(){
   field.drawBackground(null, height, width);
