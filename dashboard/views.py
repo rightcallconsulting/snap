@@ -119,7 +119,7 @@ def analytics(request):
     })
 
 @login_required
-def playbook(request):
+def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
         team = request.user.player.team
         pos = request.user.player.position
@@ -143,7 +143,8 @@ def playbook(request):
             'defensive_formations': defensive_formations,
             'team': team,
             'play_id_array': play_id_array,
-            'page_header': 'OFFENSIVE PLAYBOOK',
+            'page_header': 'PLAYBOOK',
+            'selected_unit': unit,
             'unique_defensive_formations': unique_defensive_formations,
         })
 
@@ -348,6 +349,22 @@ def edit_group(request, group_id):
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
+def delete_group(request):
+    if request.method == 'POST':
+        group_id = request.POST['group_id']
+        group = PlayerGroup.objects.filter(id=group_id)[0]
+        group.delete()
+        return HttpResponse('')
+
+def delete_player_from_group(request):
+    if request.method == 'POST':
+        group_id = request.POST['group_id']
+        player_id = request.POST['player_id']
+        group = PlayerGroup.objects.filter(pk=group_id)[0]
+        group.players.remove(group.players.all().filter(pk=player_id)[0])
+        return HttpResponse('')
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
@@ -369,6 +386,7 @@ def group_detail(request, group_id):
         group.duplicate_and_assign_test_to_all_players(test_id, coach)
         return HttpResponse('')
     else:
+        delete_group_form = PlayerGroupForm(instance = group)
         tests = Test.objects.filter(player__team=coach.team)
         groups = PlayerGroup.objects.filter(team=coach.team)
         return render(request, 'dashboard/group_detail.html', {
@@ -376,6 +394,7 @@ def group_detail(request, group_id):
             'groups': groups,
             'players': players,
             'tests': tests,
+            'form': delete_group_form
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)

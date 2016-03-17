@@ -65,10 +65,9 @@ function draw() {
                 play.addPositionsFromID(positions);
                 play.populatePositions();
               })
+              runTest();
             })
           })
-
-          runTest();
 
         })
 

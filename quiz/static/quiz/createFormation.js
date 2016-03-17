@@ -4,9 +4,19 @@ var makeJSONCall = true;
 var teamIDFromHTML = $('#team-id').data('team-id');
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
+  var myCanvas = createCanvas(600, 600);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
+  var m = document.getElementById('display-box');
+  m.style.width = '602px';
+  m.style.height = '700px';
+  var sidebar = document.getElementById('choose-offensive-formation-box');
+  sidebar.style.height = '700px';
+  //sidebar.style.width = '300px';
+  field.height = 600;
+  field.heightInYards = 54;
+  field.ballYardLine = 65;
+  debugger;
 }
 
 function draw() {

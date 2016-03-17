@@ -2,6 +2,7 @@ var User = function(config){
     this.firstName = config.firstName || null;
     this.lastName = config.lastName || null;
     this.name = config.name || null;
+    this.id = config.id || -1;
     this.position = config.position || null;
     this.score = 0;
     this.incorrectGuesses = 0;

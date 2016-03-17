@@ -337,10 +337,10 @@ Player.prototype.runRoute = function(){
   }
 };
 
-Player.prototype.runMotion = function(){    
-  if(this.currentMotionBreak < 0 || this.currentMotionBreak >= this.motionCoords.length){   
-    return; //TODO - dono   
-  }   
+Player.prototype.runMotion = function(){
+  if(this.currentMotionBreak < 0 || this.currentMotionBreak >= this.motionCoords.length){
+    return; //TODO - dono
+  }
   if(this.moveTo(this.motionCoords[this.currentMotionBreak][0], this.motionCoords[this.currentMotionBreak][1])){
     this.currentMotionBreak++;
   }

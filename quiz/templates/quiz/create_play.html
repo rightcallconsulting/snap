@@ -2,8 +2,6 @@
 {% load static %}
 {% load staticfiles %}
 
-
-
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/createPlay.js' %}"></script>
   <script type="text/javascript">
@@ -35,7 +33,7 @@
 {% endblock %}
 
 {% block sidebar %}
-  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+  <div class="col-lg-2 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
       <span><h4>Offensive Formations</h4></span>
     </div>
