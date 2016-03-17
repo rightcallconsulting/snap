@@ -226,7 +226,7 @@ function draw() {
         stop.displayButton = true;
         save.displayButton = false;
         clear.displayButton = false;
-        defensePlay.drawAllPlayers(field);
+        defensePlay.drawAllPlayers(createPlayField);
         for(var i = 0; i < getCurrentFormation().eligibleReceivers.length; i++){
             getCurrentFormation().eligibleReceivers[i].runRoute();
         }
@@ -427,7 +427,7 @@ function draw() {
     };
 
     mouseDragged = function(){
-      var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
+      var selectedNode = getCurrentFormation().mouseInReceiverOrNode(createPlayField)[1];
       if(selectedNode){
         selectedNode.change = true;
       }
