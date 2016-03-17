@@ -6,6 +6,7 @@ CoverageZone = function(config){
 	this.fill = config.fill || color(0, 0, 0);
 	this.clicked = config.clicked || false;
 	this.name = config.name || "";
+	this.type = config.type || 0;
 };
 
 CoverageZone.prototype.getPixelZone = function(field){
@@ -45,6 +46,22 @@ CoverageMap = function(config){
 	this.zones = config.zones || [];
 };
 
+CoverageMap.LEFT_DEEP = 1;
+CoverageMap.RIGHT_DEEP = 2;
+CoverageMap.HOLE = 3;
+CoverageMap.LEFT_HOOK = 4;
+CoverageMap.RIGHT_HOOK = 5;
+CoverageMap.LEFT_CURL = 6;
+CoverageMap.RIGHT_CURL = 7;
+CoverageMap.LEFT_OUT = 8;
+CoverageMap.RIGHT_OUT = 9;
+CoverageMap.LEFT_STOP = 10;
+CoverageMap.RIGHT_STOP = 11;
+CoverageMap.LEFT_FLAT = 12;
+CoverageMap.RIGHT_FLAT = 13;
+CoverageMap.LEFT_FADE = 14;
+CoverageMap.RIGHT_FADE = 15;
+
 CoverageMap.prototype.draw = function(field){
 	for(var i = 0; i < this.zones.length; i++){
 		var zone = this.zones[i];
@@ -79,7 +96,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 26.666,
 		width: 26.666,
 		height: 15,
-		fill: color(85, 190, 230)
+		fill: color(85, 190, 230),
+		type: CoverageMap.LEFT_DEEP
 	});
 	var rightDeep = new CoverageZone({
 		name: "DEEP",
@@ -87,7 +105,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 26.666,
 		width: 26.666,
 		height: 15,
-		fill: color(85, 190, 230)
+		fill: color(85, 190, 230),
+		type: CoverageMap.RIGHT_DEEP
 	});
 	this.zones.push(leftDeep);
 	this.zones.push(rightDeep);
@@ -98,7 +117,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 10.666,
 		height: 9,
-		fill: color(100, 100, 100)
+		fill: color(100, 100, 100),
+		type: CoverageMap.HOLE
 	});
 	this.zones.push(hole);
 
@@ -108,7 +128,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 10.666,
 		height: 9,
-		fill: color(255, 100, 135)
+		fill: color(255, 100, 135),
+		type: CoverageMap.LEFT_HOOK
 	});
 	var rightHook = new CoverageZone({
 		name: "HOOK",
@@ -116,14 +137,11 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 10.666,
 		height: 9,
-		fill: color(255, 100, 135)
+		fill: color(255, 100, 135),
+		type: CoverageMap.RIGHT_HOOK
 	});
 	this.zones.push(leftHook);
 	this.zones.push(rightHook);
-
-	
-
-	
 
 	var leftCurl = new CoverageZone({
 		name: "CURL",
@@ -131,7 +149,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(100, 0, 100)
+		fill: color(100, 0, 100),
+		type: CoverageMap.LEFT_CURL
 	});
 	var rightCurl = new CoverageZone({
 		name: "CURL",
@@ -139,7 +158,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(100, 0, 100)
+		fill: color(100, 0, 100),
+		type: CoverageMap.RIGHT_CURL
 	});
 	this.zones.push(leftCurl);
 	this.zones.push(rightCurl);
@@ -150,7 +170,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(204, 0, 0)
+		fill: color(204, 0, 0),
+		type: CoverageMap.LEFT_OUT
 	});
 	var rightOut = new CoverageZone({
 		name: "OUT",
@@ -158,7 +179,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 11.5,
 		width: 5.333,
 		height: 5,
-		fill: color(204, 0, 0)
+		fill: color(204, 0, 0),
+		type: CoverageMap.RIGHT_OUT
 	});
 	this.zones.push(leftOut);
 	this.zones.push(rightOut);
@@ -169,7 +191,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
-		fill: color(255, 102, 0)
+		fill: color(255, 102, 0),
+		type: CoverageMap.LEFT_STOP
 	});
 
 	var rightStop = new CoverageZone({
@@ -178,7 +201,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
-		fill: color(255, 102, 0)
+		fill: color(255, 102, 0),
+		type: CoverageMap.RIGHT_STOP
 	});
 	this.zones.push(leftStop);
 	this.zones.push(rightStop);
@@ -189,7 +213,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
-		fill: color(220, 220, 0)
+		fill: color(220, 220, 0),
+		type: CoverageMap.LEFT_FLAT
 	});
 	var rightFlat = new CoverageZone({
 		name: "FLAT",
@@ -197,7 +222,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 6.5,
 		width: 5.333,
 		height: 5,
-		fill: color(220, 220, 0)
+		fill: color(220, 220, 0),
+		type: CoverageMap.RIGHT_FLAT
 	});
 	this.zones.push(leftFlat);
 	this.zones.push(rightFlat);
@@ -208,7 +234,8 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 18.333,
 		width: 6,
 		height: 6.666,
-		fill: color(215, 150, 25)
+		fill: color(215, 150, 25),
+		type: CoverageMap.LEFT_FADE
 	});
 
 	var rightFade = new CoverageZone({
@@ -217,10 +244,10 @@ CoverageMap.prototype.fillTwoDeepZone = function(field){
 		y: ballY + 18.333,
 		width: 6,
 		height: 6.666,
-		fill: color(215, 150, 25)
+		fill: color(215, 150, 25),
+		type: CoverageMap.RIGHT_FADE
 	});
 	this.zones.push(leftFade);
 	this.zones.push(rightFade);
-	debugger;
 
 };

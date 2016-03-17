@@ -5,6 +5,9 @@ var multipleChoiceAnswers;
 var formationNames;
 var maxFormations = 5;
 var bigReset;
+var currentUserTested = null;
+var currentPlayerTested = null;
+
 
 
 function setup() {
@@ -15,8 +18,6 @@ function setup() {
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
-  
-  multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
@@ -86,6 +87,9 @@ function setup() {
         multipleChoiceAnswers = [];
         test.restartQuiz();
         test.updateScoreboard();
+        currentPlayerTested = new Player({
+          zoneAssignment: CoverageMap.LEFT_DEEP
+        });
         makeJSONCall = false
 
       })
@@ -142,18 +146,18 @@ function clearAnswers(){
   }
 }
 
+//guess is a CoverageZone object
 function checkAnswer(guess){
-  var isCorrect = test.getCurrentFormation().name === guess.label;
+  var assignment = currentPlayerTested.zoneAssignment;
+  var isCorrect = guess.type === assignment;
   if(isCorrect){
-    test.advanceToNextFormation(test.correctAnswerMessage);
-    test.score++;
-    multipleChoiceAnswers = [];
+    test.registerAnswer(isCorrect);
+    test.getCurrentCoverageMap().clearClicks();
+    //update current player tested
   }else{
-    clearAnswers();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
+    test.registerAnswer(isCorrect);
   }
-  test.updateScoreboard();
+
 }
 
 function drawOpening(){
@@ -181,13 +185,11 @@ mouseClicked = function() {
     var clickedZone = coverageMap.getClickedZone(mouseYardX, mouseYardY);
 
     if(clickedZone.clicked){
-      //check answer
+      checkAnswer(clickedZone);
     }else{
       coverageMap.clearClicks();
       clickedZone.clicked = true;
     }
-    //debugger;
-
   }
 };
 
@@ -197,16 +199,7 @@ keyTyped = function(){
       test.restartQuiz();
     }
   }else{
-    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-    if(offset >= 0 && offset < multipleChoiceAnswers.length){
-      var answer = multipleChoiceAnswers[offset];
-      if(answer.clicked){
-        checkAnswer(answer);
-      }else{
-        clearAnswers();
-        answer.changeClickStatus();
-      }
-    }
+    
   }
 };
 
