@@ -148,7 +148,7 @@
 									<div class="dash-header text-center">
 										<span><h4 id="change-plays-header">Offense</h4></span>
 									</div>
-									<div class="scrollable-table" id="draw-plays">
+									<div class="scrollable-table" id="draw-offensive-formations">
 									{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
 
 									{# </form>#}
@@ -201,10 +201,6 @@
 			    $('#choose-play').data('button', this.name);
 						playClicked = $(this);
 				});
-					$('#choose-play').on('submit', function(event){
-						event.preventDefault();
-						modifyPlayWithTest(playClicked);
-					});
 					$('.existing-plays').on('click', '.play-remove', function(){
 						modifyPlayWithTest($(this));
 						$(this).fadeOut();
@@ -246,25 +242,46 @@
 						$('#play-image-header').text(formationToDraw.name+ ": ");
 					});
 					$(".defensive-play-button").click(function() {
+						var playID = Number(this.id);
+						var playName = this.value;
+						var defensivePlay = null;
+						var duplicateDefensiveFormations = [];
+						var offensiveFormationIDs = [];
+						var offensiveFormationObjects = [];
+						$('.show-plays').text('');
+						$.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
+							data.forEach(function(defensiveFormation){
+								if(defensiveFormation.fields.name === playName){
+									defensivePlay = createFormationFromJSON(defensiveFormation);
+									if(defensiveFormation.fields.offensiveFormationID){
+										offensiveFormationIDs.push(defensiveFormation.fields.offensiveFormationID);
+										duplicateDefensiveFormations.push(defensivePlay);
+									}
+								}
+							});
+							$.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
+								data.forEach(function(formation){
+									if(offensiveFormationIDs.indexOf(formation.pk) >= 0){
+										var newFormation = createFormationFromJSON(formation);
+										offensiveFormationObjects.push(newFormation);
+									}
+								});
 
-						var offensiveFormationOptions = [];
- 					 $('.show-plays').text('');
- 						/*playToDraw = defensivePlays.filter(function(play) {
- 							return play.id === Number(this.id);
- 						}.bind(this))[0]
 
- 						duplicateDefensiveFormations = defensivePlays.filter(function(play) {
- 							return play.playName === this.value;
- 						}.bind(this))*/
- 						/*duplicateDefensiveFormations.forEach(function(defensiveFormation){
- 							offensiveFormations.forEach(function(offensiveFormation){
- 								if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
- 									offensiveFormationOptions.push(offensiveFormation);
- 									$('.show-plays').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
- 								}
- 							})
- 						})*/
- 						$('#play-image-header').text(this.value);
+
+								//Create the player objects from json for the offensive and defensive formations
+
+								//Create buttons from offensiveFormationObjects array
+								displayOffensiveFormations(offensiveFormationObjects);
+								debugger;
+
+								//Change the main play view to display the first version of the play
+								$('#play-image-header').text(this.value);
+
+							});
+						});
+
+
 					});
 					// AJAX for posting
 					function modifyPlayWithTest(playDomElement) {
@@ -291,6 +308,30 @@
 								$('#'+playDomElement[0].id+'.play-remove').remove();
 							}
 					};
+
+					function displayOffensiveFormations(formationArray){
+						var drawPlays = document.getElementById('draw-offensive-formations');
+						var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
+						for(var i = 0; i < formationArray.length; i++){
+							if(i % 3 === 0){
+								newHTML += "<tr>";
+							}
+							var formation = formationArray[i];
+							newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.ID+"' type='submit' value='"+ formation.name+"'></td>";
+							if(i % 3 === 2){
+								newHTML += "</tr>";
+							}
+						}
+						if(formationArray.length % 3 === 1){
+							newHTML += "<td></td><td></td></tr>";
+						}else if(formationArray.length % 3 === 2){
+							newHTML += "<td></td></tr>";
+						}
+						newHTML += "</table></div>";
+						drawPlays.innerHTML = newHTML;
+					};
+
+
 					function displayPlays(playArray) {
 						var drawPlays = document.getElementById('draw-plays');
 							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";

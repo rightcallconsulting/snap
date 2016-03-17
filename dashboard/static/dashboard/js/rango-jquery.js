@@ -23,4 +23,10 @@ $(document).ready(function(){
         }
     });
 
+    $("input.offensive-formation-button").hover(function(){
+      $(this).css("background-color", "yellow"); debugger;
+      }, function(){
+      $(this).css("background-color", "pink");
+    });
+
 });
