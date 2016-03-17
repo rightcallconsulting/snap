@@ -6,6 +6,7 @@ var formationNames;
 var maxFormations = 5;
 var bigReset;
 
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
@@ -14,7 +15,7 @@ function setup() {
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
-
+  
   multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
@@ -23,14 +24,24 @@ function setup() {
     label: "Restart"
   })
 
+  var twoDeepZone = new CoverageMap({
+    name: "Two Deep Zone"
+  });
+
+  twoDeepZone.fillTwoDeepZone(field);
+
+  
+
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
 
     });
     test = new FormationTest({
       formations: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      coverageMap: twoDeepZone
     });
+    
     var formations = [];
     formationNames = [];
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -150,8 +161,11 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
-  field.drawAllCoverageZones();
-
+  var map = test.getCurrentCoverageMap();
+  if(map){
+    stroke(0);
+    map.draw(field);
+  }
 }
 
 mouseClicked = function() {
@@ -162,20 +176,20 @@ mouseClicked = function() {
     test.restartQuiz();
   }
   else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
-      }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
-      }
+    var mouseYardX = field.getYardX(mouseX);
+    var mouseYardY = field.getYardY(mouseY);
+
+    var coverageMap = test.getCurrentCoverageMap();
+    var clickedZone = coverageMap.getClickedZone(mouseYardX, mouseYardY);
+
+    if(clickedZone.clicked){
+      //check answer
+    }else{
+      coverageMap.clearClicks();
+      clickedZone.clicked = true;
     }
+    //debugger;
+
   }
 };
 

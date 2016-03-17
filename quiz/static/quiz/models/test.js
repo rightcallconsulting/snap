@@ -33,6 +33,7 @@ var Test = function(config){
     this.offensiveFormationIDs = config.offensiveFormationIDs || [];
     this.defensiveFormationIDs = config.defensiveFormationIDs || [];
     this.displayName = config.displayName || false;
+    
 };
 
 Test.prototype.unit = function(){
