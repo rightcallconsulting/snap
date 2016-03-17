@@ -50,7 +50,7 @@ var createPlayField = new Field({
 
 
 Field.prototype.getWidthInYards = function(){
-  return this.heightInYards * (width / height);
+  return this.heightInYards;// * (width / height);
 }
 
 Field.prototype.getTranslatedX = function(x){
@@ -125,10 +125,11 @@ Field.prototype.drawBackground = function(play, height, width) {
           }else if(currentYardLine % 5 === 0){
             line(0, yc, width, yc);
           }else{
-            line((0.33 - this.getXOffset())*yardsToPixels, yc, (1 - this.getXOffset())*yardsToPixels, yc);
+            line(this.getTranslatedX(0), yc, this.getTranslatedX(1), yc);
             line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
             line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
-            line((52.33)*yardsToPixels, yc, (53)*yardsToPixels, yc);
+            line(this.getTranslatedX(Field.WIDTH - 1), yc, this.getTranslatedX(Field.WIDTH), yc);
+            debugger;
           }
         }
       };

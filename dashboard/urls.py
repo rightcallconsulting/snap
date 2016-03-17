@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^timeline$', views.timeline, name='timeline'),
     url(r'^messages$', views.messages, name='messages'),
     url(r'^analytics$', views.analytics, name='analytics'),
+    url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
     url(r'^playbook$', views.playbook, name='playbook'),
     url(r'^playbook-defense$', views.playbook_defense, name='playbook_defense'),
     url(r'^profile$', views.profile, name='profile'),

@@ -5,9 +5,19 @@ var playBeingCreated;
 var teamIDFromHTML = $('#team-id').data('team-id')
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
+  var myCanvas = createCanvas(600, 600);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
+  var m = document.getElementById('display-box');
+  m.style.width = '602px';
+  m.style.height = '700px';
+  var sidebar = document.getElementById('choose-offensive-formation-box');
+  sidebar.style.height = '700px';
+  //sidebar.style.width = '300px';
+  createPlayField.height = 600;
+  createPlayField.heightInYards = 53.33;
+  createPlayField.ballYardLine = 75;
+  debugger;
 }
 
 function draw() {
@@ -190,7 +200,7 @@ function draw() {
     if(center === null){
       center = getCurrentFormation().oline[2];
     }
-    defensePlay.draw(field);
+    defensePlay.draw(createPlayField);
 
     // intro scene
     var drawOpening = function() {
@@ -200,11 +210,11 @@ function draw() {
         // formationButtons.forEach(function(button){
           // button.draw();
         // })
-        currentFormation.drawAllPlayers(field);
-        defensePlay.drawAllPlayers(field);
-        currentFormation.drawBlockingAssignments(field);
+        currentFormation.drawAllPlayers(createPlayField);
+        defensePlay.drawAllPlayers(createPlayField);
+        currentFormation.drawBlockingAssignments(createPlayField);
         if(playBeingCreated && playBeingCreated.runPlay){
-          playBeingCreated.runPlay.draw(field);
+          playBeingCreated.runPlay.draw(createPlayField);
         }
     };
 

@@ -29,7 +29,7 @@
 								var selectOffenseBox = document.getElementById('select-offense-box');
 								var formationLink = document.getElementById('formation-link')
 								var playLink = document.getElementById('play-link')
-								if(sel.selectedIndex === 0){
+								if(sel.value === 'offense'){
 									//OFFENSE
 									defenseBox.classList.add('hidden');
 									selectOffenseBox.classList.add('hidden');
@@ -52,15 +52,30 @@
 						</script>
 						<form>
 							<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
+								{% if selected_unit == "offense" %}
 								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
 								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
+								{% else %}
+								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
+								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
+								{% endif %}
 							</select>
 						</form>
 					</div>
-					<div class="col-lg-3"><a href="/quiz/create_formation" id="formation-link">
+					<div class="col-lg-3">
+						{% if selected_unit == "offense" %}
+						<a href="/quiz/create_formation" id="formation-link">
+						{% else %}
+						<a href="/quiz/create_defense_formation" id="formation-link">
+						{% endif %}
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE FORMATION</span>
 					</a></div>
-					<div class="col-lg-3"><a href="/quiz/create_play" id="play-link">
+					<div class="col-lg-3">
+						{% if selected_unit == "offense" %}
+						<a href="/quiz/create_play" id="play-link">
+						{% else %}
+						<a href="/quiz/create_defense_formation" id="play-link">
+						{% endif %}
 						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE PLAY</span>
 					</a></div>
 				</div>
@@ -85,7 +100,11 @@
 
 						</div>
 							<div class = "playbook-col" id="offensive-playbook-col">
+								{% if selected_unit == "offense" %}
 								<div class="col-lg-4 choose-offensive-formation-box" id="choose-offensive-formation-box">
+								{% else %}
+								<div class="col-lg-4 choose-offensive-formation-box hidden" id="choose-offensive-formation-box">
+								{% endif %}
 									<div class="dash-header text-center">
 										<span><h4>Formations</h4></span>
 									</div>
@@ -111,7 +130,12 @@
 										</table>
 									</div>
 								</div>
+								{% if selected_unit == "offense" %}
 								<div class="col-lg-4 choose-offensive-formation-box hidden" id="choose-defensive-formation-box">
+								{% else %}
+								<div class="col-lg-4 choose-offensive-formation-box" id="choose-defensive-formation-box">
+								{% endif %}
+
 									<div class="dash-header text-center">
 										<span><h4>Defensive Plays</h4></span>
 									</div>
@@ -134,7 +158,11 @@
 									</table>
 								</div>
 								</div>
+								{% if selected_unit == "offense" %}
 								<div class="col-lg-4 change-plays-box" id="select-play-box">
+								{% else %}
+								<div class="col-lg-4 change-plays-box hidden" id="select-play-box">
+								{% endif %}
 									<div class="dash-header text-center">
 										<span><h4 id="change-plays-header">Plays</h4></span>
 									</div>
@@ -144,7 +172,11 @@
 									{# </form>#}
 								</div>
 								</div>
+								{% if selected_unit == "offense" %}
 								<div class="col-lg-4 change-plays-box hidden" id="select-offense-box">
+								{% else %}
+								<div class="col-lg-4 change-plays-box" id="select-offense-box">
+								{% endif %}
 									<div class="dash-header text-center">
 										<span><h4 id="change-plays-header">Offense</h4></span>
 									</div>

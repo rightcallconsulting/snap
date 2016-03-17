@@ -119,7 +119,7 @@ def analytics(request):
     })
 
 @login_required
-def playbook(request):
+def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
         team = request.user.player.team
         pos = request.user.player.position
@@ -143,7 +143,8 @@ def playbook(request):
             'defensive_formations': defensive_formations,
             'team': team,
             'play_id_array': play_id_array,
-            'page_header': 'OFFENSIVE PLAYBOOK',
+            'page_header': 'PLAYBOOK',
+            'selected_unit': unit,
             'unique_defensive_formations': unique_defensive_formations,
         })
 
