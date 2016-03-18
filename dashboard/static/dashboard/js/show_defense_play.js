@@ -46,7 +46,7 @@ function draw() {
             offensiveFormations.forEach(function(formation){
               formation.populatePositions();
             })
-            formations.forEach(function(formation){
+            defensive_formations.forEach(function(formation){
               formation.populatePositions();
               var defensivePlay = formation.createDefensivePlay();
               defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);

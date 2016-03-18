@@ -29,4 +29,24 @@ $(document).ready(function(){
       $(this).css("background-color", "pink");
     });
 
+    $('#select-offense-box').on('mouseover', '.offensive-formation-button', function(){
+      $('#choose-play').data('button', this.name);
+        playClicked = $(this);
+        playToDraw = null;
+        var offensiveFormationID = Number(this.id);
+        var options = defensive_plays.filter(function(play){ return play.playName === defensePlayName; });
+        if(options) defensePlayToDraw = options.find(function(play){ return play.offensiveFormationID === offensiveFormationID; });
+        document.getElementById('play-image-header').innerHTML = defensePlayToDraw.playName + " vs. " + this.value;
+    });
+
+    $('#select-offense-box').on('click', '.offensive-formation-button', function(){
+      $('#choose-play').data('button', this.name);
+        playClicked = $(this);
+        playToDraw = null;
+        var offensiveFormationID = Number(this.id);
+        var options = defensive_plays.filter(function(play){ return play.playName === defensePlayName; });
+        if(options) defensePlayToDraw = options.find(function(play){ return play.offensiveFormationID === offensiveFormationID; });
+        document.getElementById('play-image-header').innerHTML = defensePlayToDraw.playName + " vs. " + this.value;
+    });
+
 });

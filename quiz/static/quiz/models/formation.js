@@ -344,7 +344,7 @@ Formation.prototype.validFormation = function(){
     var playersOnLine = 0;
     for(var i = 0; i < this.offensivePlayers.length; i++){
       var py = this.offensivePlayers[i].startY;
-      if(py <= ballY && py >= ballY - 1){
+      if(py <= ballY + 0.5 && py >= ballY - 1){
         playersOnLine++;
       }
     }

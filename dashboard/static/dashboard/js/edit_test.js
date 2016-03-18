@@ -1,9 +1,13 @@
 var formations = [];
-var plays =[];
+var defensive_formations = [];
+var plays = [];
+var defensive_plays = [];
 var positions = [];
 var makeJSONCall = true;
 var playScene = false;
-var defensePlay
+var defensePlay;
+var defensePlayToDraw = null;
+var defensePlayName = "";
 
 function setup() {
   var myCanvas = createCanvas(500, 500);
@@ -24,6 +28,11 @@ function draw() {
         newFormation.playName = formationObject.fields.name;
         formations.push(newFormation);
       })
+      $.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
+        data.forEach(function(formationObject){
+          var newFormation = createFormationFromJSON(formationObject);
+          defensive_formations.push(newFormation);
+        })
         $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
           data.forEach(function(position){
             position.fields.id = position.pk;
@@ -41,14 +50,22 @@ function draw() {
             else{
               newPlayer.fill = color(255, 0, 0);
             }
-            formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            var defensive_formation = defensive_formations.filter(function(formation){return formation.id == position.fields.formation})[0]
             if(formation){
               formation.positions.push(newPlayer);
-
+            }else if(defensive_formation){
+              defensive_formation.positions.push(newPlayer);
             }
           })
           formations.forEach(function(formation){
             formation.populatePositions();
+          })
+          defensive_formations.forEach(function(formation){
+            formation.populatePositions();
+            var defensivePlay = formation.createDefensivePlay();
+            defensivePlay.establishOffensiveFormationFromArray(formations);
+            defensive_plays.push(defensivePlay);
           })
           $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
             data3.forEach(function(play){
@@ -70,6 +87,7 @@ function draw() {
           })
 
         })
+      })
 
     });
   }
@@ -102,10 +120,20 @@ function draw() {
       }
       else {
         noStroke();
-        fill(this.fill);
+        fill(0,0,0);
         textSize(17);
         textAlign(CENTER, CENTER);
         text(this.pos, x, y);
+        if(this.CBAssignment){
+          stroke(255, 0, 0);
+          line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
+        }
+        else if (this.zoneXPoint && this.zoneYPoint){
+          this.drawZoneAssignments(field);
+        }
+        else if (this.gapXPoint){
+          this.drawGapAssignments(field);
+        }
       }
     };
 
@@ -187,15 +215,13 @@ function draw() {
         if(playToDraw){
           playToDraw.drawAllPlayers(field);
           playToDraw.drawAllRoutes(field);
+          defensePlay.drawAllPlayers(field);
           // text("Formation: "+playToDraw.formation.playName, 115, 20);
-
+        }else if(defensePlayToDraw){
+          defensePlayToDraw.drawAllPlayersWithOffense(field);
         }
-        defensePlay.drawAllPlayers(field);
-        fill(0, 0, 0);
-        textSize(20);
-        text(getCurrentFormation().feedbackMessage, 330, 20);
-        fill(176,176,176)
-        currentFormation.drawBlockingAssignments(field, defensePlay);
+
+        //currentFormation.drawBlockingAssignments(field, defensePlay);
     };
 
     // game scene

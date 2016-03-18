@@ -42,8 +42,8 @@ var Player = function(config) {
     this.zoneYPoint = config.zoneYPoint || null;
     this.gapXPoint = config.gapXPoint || null;
     this.gapYPoint = config.gapYPoint || null;
-    this.motionCoords = config.motionCoords || []; // assume (x, y) 
-    this.currentMotionBreak = config.currentMotionBreak || 0;   
+    this.motionCoords = config.motionCoords || []; // assume (x, y)
+    this.currentMotionBreak = config.currentMotionBreak || 0;
     this.zoneAssignment = config.zoneAssignment || 0;
   };
 
@@ -723,7 +723,7 @@ var createPlayerFromJSON = function(jsonPosition){
   return player
 };
 
-Player.prototype.drawGapAssignments = function(test) {
+Player.prototype.drawGapAssignments = function(field) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
   var siz = field.yardsToPixels(this.siz);
@@ -734,7 +734,7 @@ Player.prototype.drawGapAssignments = function(test) {
   ellipse(field.getTranslatedX(this.gapXPoint), field.getTranslatedY(this.gapYPoint), 10, 10);
 };
 
-Player.prototype.drawZoneAssignments = function(test) {
+Player.prototype.drawZoneAssignments = function(field) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
   var siz = field.yardsToPixels(this.siz);

@@ -316,18 +316,6 @@
 							$('#play-image-header').text("Defense: " + this.value);
 					})
 
-					$('.show-plays-defense').on('mouseover', '.offensive-formation', function(){
-						playToDraw = duplicateDefensiveFormations.filter(function(formation) {
-							return formation.offensiveFormationID === Number(this.id);
-						}.bind(this))[0]
-						$('#change-plays-header').text('Offensive Formation: ' + playToDraw.offensiveFormationObject.playName);
-					});
-
-					$('.show-plays-defense').on('click', '.offensive-formation', function(){
-						$('#choose-play').data('button', this.name);
-							playClicked = $(this);
-					});
-
 					$('#choose-play-defense').on('submit', function(event){
 						event.preventDefault();
 						modifyPlayWithTestDefense(playClicked);

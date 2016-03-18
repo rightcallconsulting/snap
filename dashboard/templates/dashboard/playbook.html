@@ -29,8 +29,10 @@
 								var selectOffenseBox = document.getElementById('select-offense-box');
 								var formationLink = document.getElementById('formation-link')
 								var playLink = document.getElementById('play-link')
+								document.getElementById('play-image-header').innerHTML = "Play";
 								if(sel.value === 'offense'){
 									//OFFENSE
+									defensePlayToDraw = null;
 									defenseBox.classList.add('hidden');
 									selectOffenseBox.classList.add('hidden');
 									offenseBox.classList.remove('hidden');
@@ -39,6 +41,7 @@
 									formationLink.href = "/quiz/create_formation"
 									playLink.href = "/quiz/create_play"
 								}else{
+									playToDraw = null;
 									//DEFENSE
 									selectPlayBox.classList.add('hidden');
 									offenseBox.classList.add('hidden');
@@ -276,11 +279,13 @@
 					$(".defensive-play-button").click(function() {
 						var playID = Number(this.id);
 						var playName = this.value;
+						defensePlayName = playName;
 						var defensivePlay = null;
 						var duplicateDefensiveFormations = [];
 						var offensiveFormationIDs = [];
 						var offensiveFormationObjects = [];
 						$('.show-plays').text('');
+						document.getElementById('play-image-header').innerHTML = playName;
 						$.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
 							data.forEach(function(defensiveFormation){
 								if(defensiveFormation.fields.name === playName){
@@ -305,7 +310,6 @@
 
 								//Create buttons from offensiveFormationObjects array
 								displayOffensiveFormations(offensiveFormationObjects);
-								debugger;
 
 								//Change the main play view to display the first version of the play
 								$('#play-image-header').text(this.value);
@@ -349,7 +353,7 @@
 								newHTML += "<tr>";
 							}
 							var formation = formationArray[i];
-							newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.ID+"' type='submit' value='"+ formation.name+"'></td>";
+							newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.id+"' type='submit' value='"+ formation.name+"'></td>";
 							if(i % 3 === 2){
 								newHTML += "</tr>";
 							}
