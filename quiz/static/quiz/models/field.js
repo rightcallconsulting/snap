@@ -96,7 +96,6 @@ Field.prototype.drawBackground = function(play, height, width) {
   stroke(255, 255, 255);
   line(this.getTranslatedX(0), this.getTranslatedY(-10), this.getTranslatedX(0), this.getTranslatedY(110));
   line(this.getTranslatedX(Field.WIDTH), this.getTranslatedY(-10), this.getTranslatedX(Field.WIDTH), this.getTranslatedY(110));
-  debugger;
   for(var i = 0; i < this.heightInYards; i++){
     var currentYardLine = (this.ballYardLine + i - this.heightInYards/2).toFixed();
     var yc = height - height * (i/this.heightInYards);

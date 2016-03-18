@@ -8,8 +8,6 @@ var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
 
-
-
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
@@ -31,12 +29,11 @@ function setup() {
 
   twoDeepZone.fillTwoDeepZone(field);
 
-  
-
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
 
     });
+
     test = new FormationTest({
       formations: [],
       scoreboard: scoreboard,
@@ -88,7 +85,7 @@ function setup() {
         test.restartQuiz();
         test.updateScoreboard();
         currentPlayerTested = new Player({
-          zoneAssignment: CoverageMap.LEFT_DEEP
+          zoneAssignment: CoverageMap.LEFT_OUT
         });
         makeJSONCall = false
 
@@ -153,6 +150,7 @@ function checkAnswer(guess){
   if(isCorrect){
     test.registerAnswer(isCorrect);
     test.getCurrentCoverageMap().clearClicks();
+
     //update current player tested
   }else{
     test.registerAnswer(isCorrect);
@@ -180,10 +178,8 @@ mouseClicked = function() {
   else{
     var mouseYardX = field.getYardX(mouseX);
     var mouseYardY = field.getYardY(mouseY);
-
     var coverageMap = test.getCurrentCoverageMap();
     var clickedZone = coverageMap.getClickedZone(mouseYardX, mouseYardY);
-
     if(clickedZone.clicked){
       checkAnswer(clickedZone);
     }else{
@@ -199,7 +195,7 @@ keyTyped = function(){
       test.restartQuiz();
     }
   }else{
-    
+
   }
 };
 
@@ -237,12 +233,6 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
-      var correctAnswer = test.getCurrentFormation().name;
-      createMultipleChoiceAnswers(correctAnswer,3);
-      test.updateProgress(false);
-      test.updateMultipleChoiceLables();
-    }
     drawOpening();
   }
 }
