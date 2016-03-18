@@ -45,6 +45,7 @@ var Player = function(config) {
     this.motionCoords = config.motionCoords || []; // assume (x, y)
     this.currentMotionBreak = config.currentMotionBreak || 0;
     this.zoneAssignment = config.zoneAssignment || 0;
+    this.optionAssignment = config.optionAssignment || [];
   };
 
 Player.rank = 1;
