@@ -53,28 +53,11 @@
               <img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
             </span>
             <span class="menu-text">
-            {% if request.user.myuser.is_a_player %}
               PLAYBOOK
-            {% else %}
-              OFFENSE
-            {% endif %}
             </span>
             <span class="menu-hover"></span>
           </a>
         </li>
-        {% if not request.user.myuser.is_a_player %}
-        <li>
-          <a href="/playbook-defense">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
-            </span>
-            <span class="menu-text">
-              DEFENSE
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
-        {% endif %}
         {% if not request.user.myuser.is_a_player %}
         <li>
           <a href="{% url 'all_groups' %}">

@@ -20,7 +20,6 @@ urlpatterns = [
     url(r'^analytics$', views.analytics, name='analytics'),
     url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
     url(r'^playbook$', views.playbook, name='playbook'),
-    url(r'^playbook-defense$', views.playbook_defense, name='playbook_defense'),
     url(r'^profile$', views.profile, name='profile'),
     url(r'^settings$', views.settings, name='settings'),
     url(r'^to-do$', views.todo, name='to-do'),
