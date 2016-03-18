@@ -64,10 +64,28 @@
 					data.forEach(function(userObject){
 						var u = createUserFromJSON(userObject);
 						users.push(u);
-						groupTableWrapper.innerHTML = createUserTable(users);
 					});
+					groupTableWrapper.innerHTML = createUserTable(users);
 				});
 			}
+
+			var selectGroup = function(button){
+				var groupID = button.id;
+				var groupName = button.value;
+				var queryString = "/groups/" + groupID + "/json";
+				var users = [];
+				$.getJSON(queryString, function(data, jqXHR){
+					data.forEach(function(userObject){
+						var u = createUserFromJSON(userObject);
+						users.push(u);
+					});
+					var newMiniTable = createMiniUserTable(users);
+					var playersTableWrapper = document.getElementById('players-table-wrapper');
+					if(playersTableWrapper){
+						playersTableWrapper.innerHTML = newMiniTable;
+					}
+				});
+			};
 
 			var initGroupTable = function(){
 				debugger;
@@ -146,7 +164,7 @@
 							<span><h4>GROUPS</h4></span>
 						</div>
 						<div class = "table-wrapper scrollable-table three-column-table" id="groups-table-wrapper">
-							<table class="group-table">
+							<table class="group-table" id="select-group-box">
 								<tbody>
 									{% for group in groups %}
 									{% if forloop.counter|add:"-1"|divisibleby:3 %}
@@ -154,7 +172,7 @@
 									{% endif %}
 
 
-										<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{group.id}}" type="submit" value="{{group}}"></td>
+										<td><input class="bounceIn animation-delay5 group-button" id="{{group.id}}" type="submit" value="{{group}}"></td>
 
 										{% if forloop.counter|divisibleby:3 %}
 											</tr>

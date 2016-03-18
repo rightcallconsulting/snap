@@ -1,6 +1,7 @@
 $(document).ready(function(){
     //this will hold reference to the tr we have dragged and its helper
     var c = {};
+    var groups = [];
 
     $("#players-table-wrapper tr").draggable({
             helper: "clone",
@@ -47,6 +48,10 @@ $(document).ready(function(){
         var options = defensive_plays.filter(function(play){ return play.playName === defensePlayName; });
         if(options) defensePlayToDraw = options.find(function(play){ return play.offensiveFormationID === offensiveFormationID; });
         document.getElementById('play-image-header').innerHTML = defensePlayToDraw.playName + " vs. " + this.value;
+    });
+
+    $('#select-group-box').on('click', '.group-button', function(){
+      selectGroup(this);
     });
 
 });

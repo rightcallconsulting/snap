@@ -377,6 +377,12 @@ def group_detail(request, group_id):
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
+def all_groups_json(request):
+    groups = PlayerGroup.objects.all()
+    players = Player.objects.filter(playergroup__in=groups)
+    return HttpResponse(serializers.serialize("json", players))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def group_json(request, group_id):
     group = PlayerGroup.objects.filter(id=group_id)[0]
     players = group.players.all()

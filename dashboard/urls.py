@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^groups/(?P<group_id>[0-9]+)/delete$', views.delete_group, name='delete_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/json$', views.group_json, name='group_json'),
     url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
+    url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
     url(r'^groups/$', views.all_groups, name='all_groups'),
     url(r'^avatar/', include('avatar.urls')),
 ]
