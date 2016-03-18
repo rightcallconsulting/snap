@@ -12,8 +12,6 @@ from django.db.models import Q
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
 from IPython import embed
 
-
-
 def index(request):
     player_list = Player.objects.all()
     context = {'player_list': player_list}
@@ -38,7 +36,13 @@ def audible_quiz(request):
     return render(request, 'quiz/audible_quiz.html')
 
 def option_quiz(request):
-    return render(request, 'quiz/option_quiz.html')
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/option_quiz.html', {
+        'player': player,
+        'page_header': 'OPTION ASSIGNMENT'
+    })
 
 def blitz_quiz(request):
     return render(request, 'quiz/blitz_quiz.html')

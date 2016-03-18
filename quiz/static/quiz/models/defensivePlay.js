@@ -40,7 +40,7 @@ DefensivePlay.prototype.draw = function(field, test){
       index: i,
       unitIndex: 0
     });
-    if(test) dl.gap = this.dlAssignments[test.getCurrentPlayNumber()][i]
+    //if(test) dl.gap = this.dlAssignments[test.getCurrentPlayNumber()][i]
       this.defensivePlayers.push(dl);
   }
 
@@ -56,7 +56,7 @@ DefensivePlay.prototype.draw = function(field, test){
       unitIndex: 1
 
     });
-    if(test) lb.gap = this.lbAssignments[test.getCurrentPlayNumber()][i]
+    //if(test) lb.gap = this.lbAssignments[test.getCurrentPlayNumber()][i]
       this.defensivePlayers.push(lb);
   }
 
@@ -71,7 +71,7 @@ DefensivePlay.prototype.draw = function(field, test){
       index: i,
       unitIndex: 2
     });
-    if(test) safety.gap = this.dbAssignments[test.getCurrentPlayNumber()][i+1]
+    //if(test) safety.gap = this.dbAssignments[test.getCurrentPlayNumber()][i+1]
       this.defensivePlayers.push(safety);
   }
 
@@ -87,7 +87,7 @@ DefensivePlay.prototype.draw = function(field, test){
       unitIndex: 3
 
     });
-    if(test) corner.gap = this.dbAssignments[test.getCurrentPlayNumber()][i*3]
+    //if(test) corner.gap = this.dbAssignments[test.getCurrentPlayNumber()][i*3]
       this.defensivePlayers.push(corner);
   }
 
