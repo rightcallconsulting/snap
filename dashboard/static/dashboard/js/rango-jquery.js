@@ -12,6 +12,17 @@ $(document).ready(function(){
             }
     });
 
+    var resetPlayersTable = function(){
+      $("#players-table-wrapper tr").draggable({
+              helper: "clone",
+              start: function(event, ui) {
+                  c.tr = this;
+                  c.helper = ui.helper;
+                  //debugger;
+              }
+      });
+    };
+
 
     $("#group-table-wrapper").droppable({
         drop: function(event, ui) {
@@ -19,7 +30,7 @@ $(document).ready(function(){
           var currentPlayerID = c.tr.id;
           //post request to add_player_to_group with above two variables
           //on success, add row to table? Refresh table? Might be tricky here with edge cases/load time
-            debugger;
+            //debugger;
             //TBI
         }
     });
@@ -50,8 +61,38 @@ $(document).ready(function(){
         document.getElementById('play-image-header').innerHTML = defensePlayToDraw.playName + " vs. " + this.value;
     });
 
+    var selectGroup = function(button){
+      var groupID = button.id;
+      var groupName = button.value;
+      var queryString = "/groups/" + groupID + "/json";
+      var users = [];
+      var newMiniTable = "";
+      var jqxhr = $.getJSON(queryString, function(data){
+        data.forEach(function(userObject){
+          var u = createUserFromJSON(userObject);
+          users.push(u);
+        });
+        newMiniTable = createMiniUserTable(users);
+        /*var playersTableWrapper = document.getElementById('players-table-wrapper');
+        if(playersTableWrapper){
+          playersTableWrapper.innerHTML = newMiniTable;
+        }*/
+
+
+      });
+
+      jqxhr.complete(function(){
+        $('#players-table-wrapper').html(newMiniTable);
+        $('#players-table-wrapper').hide();
+        $('#players-table-wrapper').show();
+        resetPlayersTable();
+      })
+
+    };
+
     $('#select-group-box').on('click', '.group-button', function(){
       selectGroup(this);
+
     });
 
 });
