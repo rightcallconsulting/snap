@@ -103,3 +103,7 @@
 .hidden{
   display: none;
 }
+
+.main-sidebar{
+  width: 12%;
+}

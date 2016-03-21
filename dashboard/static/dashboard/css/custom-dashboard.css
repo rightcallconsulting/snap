@@ -497,3 +497,7 @@ input.create-quiz{
 .group-home #display-group-box .table-wrapper{
   height: 90%;
 }
+
+.main-sidebar{
+  width: 12%;
+}
