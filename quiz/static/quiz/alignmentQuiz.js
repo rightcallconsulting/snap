@@ -12,7 +12,7 @@ var answers = [];
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 40;
+  field.heightInYards = 53;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
