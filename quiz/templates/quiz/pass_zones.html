@@ -38,8 +38,7 @@ TWO DEEP ZONE
 
       $('#next-play-button').click(function(){
         if(test && !test.over){
-          test.skips++;
-          test.advanceToNextFormation("Boo! Weak!");
+          test.skipQuestion();
           multipleChoiceAnswers = [];
         }
       })

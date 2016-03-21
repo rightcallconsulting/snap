@@ -126,13 +126,8 @@
               document.getElementById("skip-button").onclick = function(){
                 currentPlayerTested = null;
                 if(test && !test.over){
-                  test.skips++;
+                  test.skipQuestion();
                   multipleChoiceAnswers = [];
-                  if(test.advanceToNextPlay){
-                    test.advanceToNextPlay("Boo! Weak!");
-                  }else{
-                    test.advanceToNextFormation("Boo! Weak!");
-                  }
                 }
               };
 

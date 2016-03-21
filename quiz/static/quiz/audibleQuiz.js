@@ -14,7 +14,7 @@ function draw() {
 
   });
 
-  var optionResposibilities = ["Pitch", "Contain", "QB"]; 
+  var optionResposibilities = ["Pitch", "Contain", "QB"];
   var multipleChoiceAnswers = [];
 
   var field = new Field({
@@ -108,7 +108,7 @@ function draw() {
     lbPositions: ["W", "M", "S"],
     dbPositions: ["CB", "SS", "F/S", "CB"],
     dlNames: ["Gronk", "Davis", "Smith", "Evans"],
-    playNames: ["Laser Sam 3", "Storm Rain", "Bear Hole Left", "Dog Blitz"] 
+    playNames: ["Laser Sam 3", "Storm Rain", "Bear Hole Left", "Dog Blitz"]
   });
 
   var createDefense = function(){
@@ -126,7 +126,7 @@ function draw() {
 
       defensePlay.defensivePlayers.push(dl);
     }
-    
+
     for(var i = 0; i < defensePlay.lbPositions.length; i++){
       var lb = new DefensivePlayer ({
         x: 120 + (75 * i),
@@ -141,7 +141,7 @@ function draw() {
 
       defensePlay.defensivePlayers.push(lb);
     }
-    
+
     for(var i = 0; i < 2; i++){
       var safety = new DefensivePlayer ({
         x: 100 + (200 * i),
@@ -157,7 +157,7 @@ function draw() {
       defensePlay.defensivePlayers.push(safety);
     }
 
-    
+
     for(var i = 0; i < 2; i++){
       var corner = new DefensivePlayer ({
         x: 65 + (270 * i),
@@ -170,7 +170,7 @@ function draw() {
         clicked: false
       });
       defensePlay.defensivePlayers.push(corner);
-    } 
+    }
   };
 
   createDefense(200, 200);
@@ -258,7 +258,7 @@ return o;
 var createMultipleChoiceAnswers = function(){
   multipleChoiceAnswers = [];
   var availableNames = optionResposibilities.slice(0,3);
-  
+
   for(var i = 0; i < availableNames.length; i++){
    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
     x: 50 + i * width / (availableNames.length + 1),
@@ -276,16 +276,16 @@ var callDefense = function(player){
   defensePlay.defensivePlayers[player].isBeingTested = true;
 
   switch (player){
-    case 0: defensePlay.defensivePlayers[0].getTestedPlayer(); 
+    case 0: defensePlay.defensivePlayers[0].getTestedPlayer();
     break;
-    case 1: defensePlay.defensivePlayers[1].getTestedPlayer(); 
+    case 1: defensePlay.defensivePlayers[1].getTestedPlayer();
     break;
-    case 2: defensePlay.defensivePlayers[2].getTestedPlayer(); 
+    case 2: defensePlay.defensivePlayers[2].getTestedPlayer();
     break;
-    case 3: defensePlay.defensivePlayers[3].getTestedPlayer(); 
+    case 3: defensePlay.defensivePlayers[3].getTestedPlayer();
     break;
   }
-  
+
 };
 
 var clearAnswers = function(){
@@ -301,7 +301,7 @@ var checkAnswer = function(guess){
 		//logic
 		var isCorrect = multipleChoiceAnswers[0];
 		if(isCorrect){
-			test.advanceToNextPlay("You got it, dude");
+			test.advanceToNextPlay(test.correctAnswerMessage);
       createMultipleChoiceAnswers();
 
       test.getCurrentOffensiveFormation().moveReceiver;
@@ -312,11 +312,11 @@ var checkAnswer = function(guess){
      }
    }else{
      clearAnswers();
-     test.scoreboard.feedbackMessage = "Wrong Answer";
+     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
      test.incorrectGuesses++;
    }
  };
- 
+
   // intro scene
   var drawOpening = function() {
     field.drawBackground(test.getCurrentDefensivePlay(), height, width);

@@ -348,8 +348,7 @@ function draw() {
           // back.displayButton = true;
         }
         else if (nextPlay.isMouseInside(field)){
-          test.skips++;
-          test.advanceToNextPlay("Boo! Weak!");
+          test.skipQuestion();
         }
         else if(selectedNode){
           if (selectedNode.change){

@@ -202,7 +202,7 @@ var shuffle = function(o){
   var checkAnswer = function(guessNum){
     var isCorrect = test.getCurrentAnswer() === guessNum;
     if(isCorrect){
-      test.advanceToNextRoute("You got it, dude");
+      test.advanceToNextRoute(this.correctAnswerMessage);
         test.score++;
         createMultipleChoiceAnswers();
         if(test.over){
@@ -212,7 +212,7 @@ var shuffle = function(o){
         }
       }else{
         clearAnswers();
-          test.scoreboard.feedbackMessage = "Wrong Answer";
+          test.scoreboard.feedbackMessage = this.incorrectAnswerMessage;
           test.incorrectGuesses++;
       }
   }

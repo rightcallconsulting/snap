@@ -10,7 +10,6 @@ function draw() {
 
 
   // Global Variables
-var correctAnswerMessage = "You got it, dude";
 var SPEED = 1;
 var changeablePlayers = [];
 var RANK = 1;

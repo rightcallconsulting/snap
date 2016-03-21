@@ -23,7 +23,7 @@ function draw() {
     y:height/2,
     pos:"Z",
     num:88,
-    
+
   });
 
   var slantExample = new Route({
@@ -159,7 +159,7 @@ var shuffle = function(o){
 		//logic
 		var isCorrect = test.getCurrentRoute().getName() === guess.label;
 		if(isCorrect){
-			test.advanceToNextRoute("You got it, dude");
+			test.advanceToNextRoute(test.correctAnswerMessage);
     		test.score++;
     		createMultipleChoiceAnswers();
     		if(test.over){

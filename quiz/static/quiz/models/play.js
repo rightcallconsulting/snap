@@ -100,7 +100,7 @@ Play.prototype.checkProgression = function(){
   })
   if (isCorrect){
     this.test.score++;
-    this.test.advanceToNextPlay("You got it, dude", this.test.pk);
+    this.test.advanceToNextPlay(this.test.correctAnswerMessage, this.test.pk);
   }else{
     this.test.scoreboard.feedbackMessage = "Wrong Answer";
     this.test.incorrectGuesses++;
