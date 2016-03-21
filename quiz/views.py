@@ -181,6 +181,15 @@ def pass_rush_quiz(request):
         'page_header': 'PASS RUSH QUIZ'
     })
 
+def stunt_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/stunt_quiz.html', {
+        'player': player,
+        'page_header': 'STUNT QUIZ'
+    })
+
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
