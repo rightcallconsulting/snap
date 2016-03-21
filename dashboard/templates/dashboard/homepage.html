@@ -15,9 +15,9 @@
 
 		{% include "dashboard/grey_container.html" %}
 
-		<div class="padding-md">
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
+		<div class="padding-md player-home">
+			<div class="col-lg-7 dash-col">
+			<div class="dash-row top">
 					<div class="text-center dash-header">
 						{% if request.user.myuser.is_a_player %}
 							<span><h4>TO DO</h4></span>
@@ -59,46 +59,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="col-lg-4 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>NEWS FEED</h4></span>
-					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-
-								{% if request.user.myuser.is_a_player %}
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								{% else %}
-								<tr>
-									<td><a class="btn btn-success" href="/create_test">Create Test</a></td>
-								</tr>
-								<tr>
-									<td><a class="btn btn-success" href="/create_group">Create Group</a></td>
-								</tr>
-
-
-								{% endif %}
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
-
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
+				<div class="dash-row bottom">
 					<div class="dash-header text-center">
 						<span><h4>ANALYTICS</h4></span>
 					</div>
@@ -109,19 +70,52 @@
 						<img src="{% static 'dashboard/images/progress-wheel.png' %}" alt="">
 					</div><!-- /.col -->
 				</div>
-				<div class="col-lg-4 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>PLAYBOOK</h4></span>
+			</div>
+			<div class="col-lg-4 news-col">
+					<div class="text-center news-header">
+						<span><h4>NEWS FEED</h4></span>
 					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
+					<div class = "table-wrapper">
+						<table class="table to-do-table" id="responsiveTable">
+							<tbody>
+								{% for test in uncompleted_tests %}
+								<tr>
+									<td>
+										<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
+									</td>
+									<td>
+										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="play-link" href="#">PLAY</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
+									</td>
+									<td>
+										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
+									</td>
+									<td>
+										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="play-link" href="#">PLAY</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
+									</td>
+									<td>
+										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
+									</td>
+								</tr>
+								{% endfor %}
 
-						</div>
-					</div><!-- /.col -->
+							</tbody>
+						</table>
+					</div>
 				</div>
 
 				<div class="loading-overlay">
