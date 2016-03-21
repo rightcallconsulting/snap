@@ -21,11 +21,7 @@
       })
 
       $('#check-button').click(function(){
-        for(var i = 0; i < multipleChoiceAnswers.length; i++){
-          if(multipleChoiceAnswers[i].clicked){
-            checkAnswer(multipleChoiceAnswers[i]);
-          }
-        }
+        checkAnswer();
       })
 
       $('#clear-button').click(function(){
@@ -41,6 +37,9 @@
           test.skips++;
           multipleChoiceAnswers = [];
           test.advanceToNextPlay("Boo! Weak!");
+          currentPlayerTested = null;
+          clearSelection();
+
         }
       })
   </script>

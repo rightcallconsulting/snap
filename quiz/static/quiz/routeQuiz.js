@@ -1,7 +1,6 @@
 var makeJSONCall = true;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
-var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
@@ -18,7 +17,6 @@ function setup() {
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
-  multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
@@ -138,56 +136,41 @@ function shuffle(o) {
 return o;
 }
 
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
-  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-  multipleChoiceAnswers = [];
-  var availableNames = playNames.slice();
-  shuffle(availableNames);
-  var i = 0;
-  while(multipleChoiceAnswers.length < numOptions){
-    var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
-    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-      y: height - 60,
-      width: width / (numOptions + 2),
-      height: 50,
-      label: label,
-      clicked: false
-    }));
-    i++;
-  }
+function clearSelection(){
+  currentRouteGuess = [];
+  currentRouteNodes = [];
 }
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
+function checkAnswer(){
+  var isCorrect = true;
+  if(currentRouteGuess.length !== currentPlayerTested.breakPoints.length){
+    isCorrect = false;
+  }
+  
+  for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
+    var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
+    var dy = abs(currentRouteGuess[i][1] - currentPlayerTested.breakPoints[i][1]);
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist > 2){
+      isCorrect = false;
     }
   }
-}
 
-function checkAnswer(guess){
-  var isCorrect = test.getCurrentPlay().name === guess.label;
+  debugger;
+
   if(isCorrect){
-    test.advanceToNextPlay(test.correctAnswerMessage);
-    test.score++;
-    multipleChoiceAnswers = [];
+    clearSelection();
     currentPlayerTested = null;
+    test.score++;
+    test.advanceToNextPlay(test.correctAnswerMessage);
   }else{
-    clearAnswers();
+    clearSelection();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.updateScoreboard();
   }
-  test.updateScoreboard();
 }
+
 function drawCurrentRoute(){
   var x1 = field.getTranslatedX(currentPlayerTested.startX);
   var y1 = field.getTranslatedY(currentPlayerTested.startY);
@@ -230,6 +213,8 @@ function drawOpening(){
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
   }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
@@ -301,11 +286,6 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
-      var correctAnswer = test.getCurrentPlay().name;
-      createMultipleChoiceAnswers(correctAnswer,3);
-      test.updateMultipleChoiceLables();
-    }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
