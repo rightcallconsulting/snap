@@ -30,7 +30,7 @@ $(document).ready(function(){
           var currentPlayerID = c.tr.id;
           //post request to add_player_to_group with above two variables
           //on success, add row to table? Refresh table? Might be tricky here with edge cases/load time
-            //debugger;
+            debugger;
             //TBI
         }
     });
