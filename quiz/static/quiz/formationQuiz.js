@@ -9,7 +9,7 @@ var bigReset;
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 40;
+  field.heightInYards = 53;
 
   background(58, 135, 70);
   randomSeed(millis());
@@ -19,7 +19,7 @@ function setup() {
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
-    width: 5,
+    width: field.heightInYards / 6,
     label: "Restart"
   })
 

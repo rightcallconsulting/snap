@@ -12,9 +12,9 @@ var FormationTest = function(config){
     this.scoreboard = config.scoreboard || null;
     this.over = false;
     this.cutOff = config.cutOff || 50;
-    this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
-    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
-    this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
+    this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
+    this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
     this.displayName = config.displayName || false;
     this.coverageMap = config.coverageMap || null;
 };
@@ -99,13 +99,18 @@ FormationTest.prototype.advanceToNextFormation = function(message){
   }
 };
 
+FormationTest.prototype.skipQuestion = function(){
+  this.skips++;
+  this.advanceToNextFormation(this.skippedAnswerMessage);
+}
+
 FormationTest.prototype.registerAnswer = function(isCorrect){
   if(isCorrect){
     this.score++;
-    this.advanceToNextFormation("You got it.");
+    this.advanceToNextFormation(test.correctAnswerMessage);
   }else{
     this.incorrectGuesses++;
-    this.scoreboard.feedbackMessage = "Sorry, bro.";
+    this.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     this.updateScoreboard();
   }
 };

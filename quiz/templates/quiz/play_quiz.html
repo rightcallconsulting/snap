@@ -38,9 +38,8 @@
 
       $('#next-play-button').click(function(){
         if(test && !test.over){
-          test.skips++;
+          test.skipQuestion();
           multipleChoiceAnswers = [];
-          test.advanceToNextPlay("Boo! Weak!");
         }
       })
   </script>

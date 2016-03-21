@@ -58,8 +58,7 @@
       $('#next-play-button').click(function(){
         if (test.getCurrentPlay()){
           pressStopButton();
-          test.skips++;
-          test.advanceToNextPlay("Boo! Weak!");
+          test.skipQuestion();
           if (test.getCurrentPlay()){
           test.getCurrentPlay().inProgress = false;
           }

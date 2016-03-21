@@ -18,8 +18,9 @@ var Test = function(config){
     this.scoreboard = config.scoreboard || null;
     this.over = false;
     this.cutOff = config.cutOff || 4;
-    this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
-    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, bro.";
+    this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
+    this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
     this.timeStarted = config.timeStarted || 0;
     this.timeEnded = config.timeEnded || 0;
     this.deadline = config.deadline || null;
@@ -33,7 +34,7 @@ var Test = function(config){
     this.offensiveFormationIDs = config.offensiveFormationIDs || [];
     this.defensiveFormationIDs = config.defensiveFormationIDs || [];
     this.displayName = config.displayName || false;
-    
+
 };
 
 Test.prototype.unit = function(){
@@ -136,6 +137,11 @@ Test.prototype.restartQuiz = function(defensivePlay){
   this.updateScoreboard();
   this.updateProgress();
 };
+
+Test.prototype.skipQuestion = function(){
+  this.skips++;
+  this.advanceToNextPlay(this.skippedAnswerMessage);
+}
 
 Test.prototype.registerAnswer = function(isCorrect){
   if(isCorrect){
@@ -254,7 +260,6 @@ Test.prototype.checkBigSelection = function() {
       isCorrect = ((this.getCurrentPlay().bigPlayer !== null) && this.getCurrentPlay().bigPlayer.clicked);
     }
     if (isCorrect) {
-      //this.scoreboard.feedbackMessage = "You got it, dude";
       this.getCurrentPlay().bigPlayer = null;
       this.getCurrentPlay().bigDefender = null;
       this.getCurrentDefensivePlay().bigDefender = null;

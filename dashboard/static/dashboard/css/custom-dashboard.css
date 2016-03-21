@@ -431,6 +431,28 @@ input.create-quiz{
   height: 550px;
 }
 
+.player-home .news-col, .player-home .dash-col{
+  height: 600px;
+}
+
+.player-home .news-col{
+  color: #2A6205;
+}
+
+.player-home .dash-row{
+  height: 250px;
+  width: 100%;
+}
+
+.coach-link{
+  color: #15797E;
+}
+
+.play-link, .formation-link{
+  margin-left: 4px;
+  color: #5AB71E;
+}
+
 .stacked-row{
   height: 50%;
   margin: 0px;
@@ -496,4 +518,8 @@ input.create-quiz{
 
 .group-home #display-group-box .table-wrapper{
   height: 90%;
+}
+
+.main-sidebar{
+  width: 12%;
 }

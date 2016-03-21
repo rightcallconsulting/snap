@@ -9,7 +9,9 @@ var CadenceTest = function(config){
     this.scoreboard = config.scoreboard || null;
     this.over = false;
     this.cutOff = config.cutOff || 1000;
-    this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
+    this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
+    this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
 };
 
 CadenceTest.prototype.getCurrentCadence = function(){

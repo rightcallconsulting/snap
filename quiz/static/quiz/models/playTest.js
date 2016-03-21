@@ -13,9 +13,9 @@ var PlayTest = function(config){
     this.scoreboard = config.scoreboard || null;
     this.over = false;
     this.cutOff = config.cutOff || 50;
-    this.correctAnswerMessage = config.correctAnswerMessage || "You got it, dude.";
-    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Sorry, Bro.";
-    this.skippedAnswerMessage = config.correctAnswerMessage || "Aw, weak!";
+    this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
+    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
+    this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
     this.displayName = config.displayName || false;
 };
 
@@ -80,17 +80,17 @@ PlayTest.prototype.restartQuiz = function(){
   this.over = false;
   this.updateScoreboard();
   this.updateProgress();
-  for(var i = 0; i < this.plays.length; i++){   
+  for(var i = 0; i < this.plays.length; i++){
     var offense = this.plays[i].offensivePlayers;
     if(!offense){
       offense = this.plays[i].offensiveFormationObject.offensivePlayers;
-    }   
+    }
     if(!offense){
       return;
     }
-    for(var j = 0; j < offense.length; j++){    
-      offense[j].resetToStart();    
-    }   
+    for(var j = 0; j < offense.length; j++){
+      offense[j].resetToStart();
+    }
   }
 };
 
@@ -121,6 +121,11 @@ PlayTest.prototype.updateProgress = function(){
   }
 }
 
+PlayTest.prototype.skipQuestion = function(){
+  this.skips++;
+  this.advanceToNextPlay(this.skippedAnswerMessage);
+}
+
 PlayTest.prototype.advanceToNextPlay = function(message){
   this.scoreboard.feedbackMessage = message;
   this.questionNum++;
@@ -138,10 +143,10 @@ PlayTest.prototype.advanceToNextPlay = function(message){
 PlayTest.prototype.registerAnswer = function(isCorrect){
   if(isCorrect){
     this.score++;
-    this.advanceToNextPlay("You got it.");
+    this.advanceToNextPlay(test.correctAnswerMessage);
   }else{
     this.incorrectGuesses++;
-    this.scoreboard.feedbackMessage = "Sorry, bro.";
+    this.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     this.updateScoreboard();
   }
 };
