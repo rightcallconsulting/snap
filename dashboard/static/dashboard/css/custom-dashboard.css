@@ -351,6 +351,33 @@ input.create-quiz{
   height: 50px;
   font-size: 14px;
   vertical-align: middle;
+  text-align: center;
+  color: #000000;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #2A6205;
+}
+
+.to-do-table th{
+  background-color: #D0D3D5;
+  font-size: 16px;
+  color: #000000;
+  text-align: center;
+}
+
+.news-feed-table tbody tr{
+  border: none;
+}
+
+.news-feed-table tbody tr td{
+  height: 50px;
+  font-size: 16px;
+  vertical-align: middle;
+  text-align: left;
+  color: #2A6205;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border: none;
 }
 
 .start-quiz{

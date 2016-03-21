@@ -28,30 +28,21 @@
 					<div class = "table-wrapper">
 						<table class="table to-do-table" id="responsiveTable">
 							<tbody>
+								<tr>
+									<th>NAME</th><th>TYPE</th><th>DUE</th><th>ASSIGNED BY</th><th>STATUS</th>
+								</tr>
 								{% for test in uncompleted_tests %}
 								<tr id="test-{{test.id}}">
 									<td>
-										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
-									</td>
-									<td>
 										{{test.name}}
 									</td>
-									{% if not request.user.myuser.is_a_player %}
-									<td>
-										{{test.player}}
-									</td>
-									{% endif %}
 									<td>
 										{{test}}
 									</td>
-									<td>Due: {{test.deadline}}</td>
-									{% if request.user.myuser.is_a_player %}
-										<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="start-quiz">Start Quiz</span></a></td>
-									{% else %}
-									<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
-									<td><a href="{% url 'test_analytics' test.id %}"><span class="label label-success">Analytics</span></a></td>
+									<td>{{test.deadline}}</td>
+									<td>{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</td>
+									<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="start-quiz">Start Quiz</span></a></td>
 
-									{% endif %}
 								</tr>
 								{% endfor %}
 
@@ -76,7 +67,7 @@
 						<span><h4>NEWS FEED</h4></span>
 					</div>
 					<div class = "table-wrapper">
-						<table class="table to-do-table" id="responsiveTable">
+						<table class="table news-feed-table">
 							<tbody>
 								{% for test in uncompleted_tests %}
 								<tr>
@@ -84,7 +75,7 @@
 										<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
 									</td>
 									<td>
-										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="play-link" href="#">PLAY</a>
+										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="play-link" href="#">PLAY</a>
 									</td>
 								</tr>
 								<tr>
@@ -92,7 +83,7 @@
 										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
 									</td>
 									<td>
-										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
+										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
 									</td>
 								</tr>
 								<tr>
@@ -100,7 +91,7 @@
 										<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
 									</td>
 									<td>
-										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="play-link" href="#">PLAY</a>
+										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="play-link" href="#">PLAY</a>
 									</td>
 								</tr>
 								<tr>
@@ -108,7 +99,7 @@
 										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
 									</td>
 									<td>
-										<a class="coach-link" href="#">Coach S</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
+										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
 									</td>
 								</tr>
 								{% endfor %}
