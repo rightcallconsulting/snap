@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^qb_call_quiz$', views.qb_call_quiz, name='qb_call_quiz'),
     url(r'^coverage_quiz$', views.coverage_quiz, name='coverage_quiz'),
     url(r'^pass_rush_quiz$', views.pass_rush_quiz, name='pass_rush_quiz'),
+    url(r'^stunt_quiz$', views.stunt_quiz, name='stunt_quiz'),
     url(r'^play_quiz$', views.play_quiz, name='play_quiz'),
     url(r'^simple_route_quiz$', views.simple_route_quiz, name='simple_route_quiz'),
     url(r'^another_route_quiz$', views.another_route_quiz, name='another_route_quiz'),
