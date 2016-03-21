@@ -17,7 +17,7 @@
 
 		<div class="padding-md player-home">
 			<div class="col-lg-7 dash-col">
-			<div class="dash-row top">
+			<div class="top-row dash-row">
 					<div class="text-center dash-header">
 						{% if request.user.myuser.is_a_player %}
 							<span><h4>TO DO</h4></span>
@@ -50,19 +50,24 @@
 						</table>
 					</div>
 				</div>
-				<div class="dash-row bottom">
+				<div class="dash-row">
 					<div class="dash-header text-center">
 						<span><h4>ANALYTICS</h4></span>
 					</div>
-					<div class="col-lg-6 progress-wheel">
-						<img src="{% static 'dashboard/images/progress-wheel.png' %}" alt="">
-					</div><!-- /.col -->
-					<div class="col-lg-6 progress-wheel">
-						<img src="{% static 'dashboard/images/progress-wheel.png' %}" alt="">
-					</div><!-- /.col -->
+					<div class="table-wrapper">
+						<table class="home-analytics-table">
+							<tbody>
+								<tr>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""></td>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""></td>
+									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""></td>
+								</tr>
+							</tbody>
+						</table>
+				</div>
 				</div>
 			</div>
-			<div class="col-lg-4 news-col">
+			<div class="col-lg-3 news-col">
 					<div class="text-center news-header">
 						<span><h4>NEWS FEED</h4></span>
 					</div>

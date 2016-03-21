@@ -355,7 +355,7 @@ input.create-quiz{
   color: #000000;
   padding-top: 25px;
   padding-bottom: 25px;
-  border-bottom: 1px solid #2A6205;
+  border-bottom: 2px solid #5AB71E;
 }
 
 .to-do-table th{
@@ -378,6 +378,16 @@ input.create-quiz{
   padding-top: 25px;
   padding-bottom: 25px;
   border: none;
+}
+
+.home-analytics-table{
+  table-layout: fixed;
+  width: 100%;
+  text-align: center;
+}
+
+.home-analytics-table img{
+  height: 200px;
 }
 
 .start-quiz{
@@ -462,13 +472,31 @@ input.create-quiz{
   height: 600px;
 }
 
+.player-home .dash-col{
+  width: 60%;
+  border: none;
+}
+
 .player-home .news-col{
   color: #2A6205;
 }
 
-.player-home .dash-row{
-  height: 250px;
+.player-home .dash-row, .player-home .top-row{
+  height: 40%;
   width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.player-home .top-row{
+  margin-bottom: 100px;
+}
+
+.player-home .dash-row .table-wrapper{
+  border-left: 2px solid #5AB71E;
+  border-right: 2px solid #5AB71E;
+  border-bottom: 2px solid #5AB71E;
+  height: 220px;
 }
 
 .coach-link{
