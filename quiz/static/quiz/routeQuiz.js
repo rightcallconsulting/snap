@@ -156,8 +156,6 @@ function checkAnswer(){
     }
   }
 
-  debugger;
-
   if(isCorrect){
     clearSelection();
     currentPlayerTested = null;
@@ -168,6 +166,7 @@ function checkAnswer(){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedBackScreenStartTime = millis();
   }
 }
 
@@ -195,8 +194,14 @@ function drawCurrentRoute(){
 
 }
 
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  test.getCurrentPlay().drawAllPlayers(field);
+  test.getCurrentPlay().drawAllRoutes(field);
+}
+
 function drawOpening(){
-  field.drawBackground(null, height, width);
+  field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentPlay().drawAllPlayers(field);
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
@@ -217,7 +222,10 @@ mouseClicked = function() {
     return true;
   }
   if (bigReset.isMouseInside(field) && test.over) {
+    clearSelection();
+    currentPlayerTested = null;
     test.restartQuiz();
+    return true;
   }
   var x = field.getYardX(mouseX);
   var y = field.getYardY(mouseY);
@@ -285,11 +293,24 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackMessage){
+
+
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 1000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }
+      drawFeedbackScreen();
+    }else{
+      drawOpening();
+    }
 
   }
 }
