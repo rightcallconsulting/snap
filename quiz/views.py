@@ -160,6 +160,15 @@ def play_quiz(request):
         'page_header': 'PLAY QUIZ'
     })
 
+def route_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/route_quiz.html', {
+        'player': player,
+        'page_header': 'ROUTE QUIZ'
+    })
+    
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
 
