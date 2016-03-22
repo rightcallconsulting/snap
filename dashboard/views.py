@@ -7,6 +7,8 @@ from django.template import RequestContext, loader
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
+from django.conf import settings
+
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
@@ -40,7 +42,15 @@ def homepage(request):
         })
     else:
         Test.objects.filter(coach_who_created=request.user)
-        return render(request, 'dashboard/coachhome.html', {'page_header': 'DASHBOARD'})
+        groups = PlayerGroup.objects.filter(team=request.user.coach.team)
+        first_group = groups[0]
+        players = first_group.players.all()
+        return render(request, 'dashboard/coachhome.html', {
+            'groups': groups,
+            'players': players,
+            'page_header': 'DASHBOARD',
+            'MEDIA_ROOT': '/media/'
+        })
 
 def auth_login(request):
     if request.user.is_authenticated():
