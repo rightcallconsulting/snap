@@ -30,7 +30,6 @@ var Field = function(config){
   this.coverageZones = config.coverageZones || [];
 };
 
-
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
 
@@ -39,13 +38,10 @@ var field = new Field({
   yardLine: 75
 });
 
-
 var createPlayField = new Field({
   heightInYards: 40,
   typeField: "Create"
 });
-
-
 
 Field.prototype.getWidthInYards = function(){
   return this.heightInYards;// * (width / height);

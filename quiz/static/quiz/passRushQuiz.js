@@ -19,7 +19,6 @@ function setup() {
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
-  multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
@@ -193,7 +192,6 @@ function drawFeedbackScreen(){
   var pixelY1 = field.getTranslatedY(y1);
   var pixelY2 = field.getTranslatedY(y2);
   
-
   var node = new Node({
     x: x2,
     y: y2,
