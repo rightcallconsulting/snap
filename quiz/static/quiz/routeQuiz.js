@@ -9,6 +9,7 @@ var currentPlayerTested = null;
 var currentRouteGuess = [];
 var currentRouteNodes = [];
 
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
@@ -139,6 +140,7 @@ return o;
 function clearSelection(){
   currentRouteGuess = [];
   currentRouteNodes = [];
+  nodeObject = null;
 }
 
 function checkAnswer(){
@@ -146,6 +148,7 @@ function checkAnswer(){
   if(currentRouteGuess.length !== currentPlayerTested.breakPoints.length){
     isCorrect = false;
   }
+
   
   for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
     var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
@@ -210,8 +213,12 @@ function drawOpening(){
     }
   }
   drawCurrentRoute();
-
-  //draw the current route the tested player is drawing
+    for(var i = 0; i < currentRouteNodes.length; i++){
+      stroke(220, 220, 0);
+      currentRouteNodes[i].draw(field);
+      noStroke();
+    }
+  
 }
 
 
@@ -226,17 +233,24 @@ mouseClicked = function() {
     currentPlayerTested = null;
     test.restartQuiz();
     return true;
+  }else if(!test.over){
+    if(currentRouteNodes.length > 0 && currentRouteNodes[currentRouteNodes.length - 1].isMouseInside(field)){
+      checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
+      return;
+    }else{
+      var x = field.getYardX(mouseX);
+      var y = field.getYardY(mouseY);
+      currentRouteGuess.push([x, y]);
+      var nodeObject = new Node({
+        x: x,
+        y: y,
+        siz: 1,
+        fill: color(0, 0, 220)
+      });
+      currentRouteNodes.push(nodeObject);
+    }
   }
-  var x = field.getYardX(mouseX);
-  var y = field.getYardY(mouseY);
-  currentRouteGuess.push([x, y]);
-  var nodeObject = new Node({
-    x: x,
-    y: y,
-    siz: 1
-  });
-  currentRouteNodes.push(nodeObject);
-  
+
 };
 
 keyPressed = function(){
