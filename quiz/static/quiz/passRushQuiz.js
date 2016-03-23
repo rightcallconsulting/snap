@@ -7,12 +7,14 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var currentGuess = [];
+var currentNode = [];
 var currentGuessNode = null;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 30;
+  field.heightInYards = 40;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -56,54 +58,54 @@ function setup() {
           var newFormation = createFormationFromJSON(formationObject);
           formations.push(newFormation);
         })
-          $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-            data.forEach(function(position){
-              var newPlayer = createPlayerFromJSON(position);
-              var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-              var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
+        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+          data.forEach(function(position){
+            var newPlayer = createPlayerFromJSON(position);
+            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
 
-              if(formation){
-                formation.positions.push(newPlayer);
-              }
-              if(offensiveFormation){
-                offensiveFormation.positions.push(newPlayer);
-              }
-            })
-            offensiveFormations.forEach(function(formation){
-              formation.populatePositions();
-            })
-            formations.forEach(function(formation){
-              formation.populatePositions();
-              var defensivePlay = formation.createDefensivePlay();
-              defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-              defensivePlays.push(defensivePlay);
-              if(playNames.indexOf(defensivePlay.playName) < 0){
-                playNames.push(defensivePlay.playName);
-              }
-            })
+            if(formation){
+              formation.positions.push(newPlayer);
+            }
+            if(offensiveFormation){
+              offensiveFormation.positions.push(newPlayer);
+            }
+          })
+          offensiveFormations.forEach(function(formation){
+            formation.populatePositions();
+          })
+          formations.forEach(function(formation){
+            formation.populatePositions();
+            var defensivePlay = formation.createDefensivePlay();
+            defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
+            defensivePlays.push(defensivePlay);
+            if(playNames.indexOf(defensivePlay.playName) < 0){
+              playNames.push(defensivePlay.playName);
+            }
+          })
 
-            $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-              data3.forEach(function(play){
-                var testIDArray = play.fields.tests;
-                var play = createPlayFromJSON(play);
-                plays.push(play);
+          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+            data3.forEach(function(play){
+              var testIDArray = play.fields.tests;
+              var play = createPlayFromJSON(play);
+              plays.push(play);
+            })
+            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+              data4.forEach(function(position){
+                var player = createPlayerFromJSON(position);
+                positions.push(player);
               })
-              $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-                data4.forEach(function(position){
-                  var player = createPlayerFromJSON(position);
-                  positions.push(player);
-                })
-                plays.forEach(function(play){
-                  play.addPositionsFromID(positions);
-                  play.populatePositions();
-                })
+              plays.forEach(function(play){
+                play.addPositionsFromID(positions);
+                play.populatePositions();
+              })
 
-                for(var i = 0; i < defensivePlays.length; i++){
-                  var play = defensivePlays[i];
-                  var isRushing = false;
-                  for(var j = 0; j < play.defensivePlayers.length; j++){
-                    var p = play.defensivePlayers[j];
-                    if(p.pos === currentUserTested.position){
+              for(var i = 0; i < defensivePlays.length; i++){
+                var play = defensivePlays[i];
+                var isRushing = false;
+                for(var j = 0; j < play.defensivePlayers.length; j++){
+                  var p = play.defensivePlayers[j];
+                  if(p.pos === currentUserTested.position){
                       //check if he's in coverage
                       if(p.gapXPoint && p.gapYPoint){
                         isRushing = true;
@@ -123,13 +125,13 @@ function setup() {
                 test.updateProgress();
                 makeJSONCall = false;
               })
-            })
-          })
-        })
+})
+})
+})
 
-    });
+});
 
-  }
+}
 }
 
 /*var sortByCreationDecreasing = function(a, b){
@@ -153,6 +155,8 @@ var sortByPlayName = function(a, b){
 }
 
 function clearSelection(){
+  currentGuess = [];
+  currentNode = [];
   currentGuessNode = null;
 }
 
@@ -174,20 +178,49 @@ function checkAnswer(x, y){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedBackScreenStartTime = millis();
   }
 }
 
+function drawFeedbackScreen(){
+  var x2 = currentPlayerTested.gapXPoint;
+  var y2 = currentPlayerTested.gapYPoint;
+  var x1 = currentPlayerTested.x;
+  var y1 = currentPlayerTested.y;
+
+  var pixelX1 = field.getTranslatedX(x1);
+  var pixelX2 = field.getTranslatedX(x2);
+  var pixelY1 = field.getTranslatedY(y1);
+  var pixelY2 = field.getTranslatedY(y2);
+  
+
+  var node = new Node({
+    x: x2,
+    y: y2,
+    siz: 1,
+    fill: color(220,220,0)
+  });
+
+  field.drawBackground(test.getCurrentPlay(), height, width); 
+  test.getCurrentDefensivePlay().drawAllPlayersWithOffense(field);
+  stroke(220,220,0);
+  line(pixelX1, pixelY1, pixelX2, pixelY2);
+  noStroke();
+  node.draw(field);
+}
+
 function drawOpening(){
-  field.drawBackground(null, height, width);
+  field.drawBackground(test.getCurrentPlay(), height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-    if(currentGuessNode && currentPlayerTested){
+      for(var i = 0; i < currentNode.length; i++){
       stroke(220,220,0);
       line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
       currentGuessNode.draw(field);
       noStroke();
     }
+    
   }
 }
 
@@ -205,31 +238,28 @@ mouseClicked = function() {
   }else{
     return;
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
   else if(!test.over){
-    if(currentGuessNode){
-      if(currentGuessNode.isMouseInside(field)){
+    if(currentNode.length > 0 && currentNode[currentNode.length - 1].isMouseInside(field)){
         checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
         return;
       }else{
+        var x = field.getYardX(mouseX);
+        var y = field.getYardY(mouseY);
+        currentGuess.push([x, y]);
         currentGuessNode = new Node({
           x: field.getYardX(mouseX),
           y: field.getYardY(mouseY),
           siz: 1,
           fill: color(220,220,0)
-        })
+        });
+        
       }
-    }else{
-      currentGuessNode = new Node({
-        x: field.getYardX(mouseX),
-        y: field.getYardY(mouseY),
-        siz: 1,
-        fill: color(220,220,0)
-      })
+      currentNode.push(currentGuessNode);
     }
-  }
+  
 };
 
 keyTyped = function(){
@@ -278,7 +308,6 @@ function draw() {
     background(93, 148, 81);
   }
   else if(test.over){
-    //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -287,6 +316,18 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 1000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen();
+      }
+    }else{
+      drawOpening();
+    }
+    
   }
 }
