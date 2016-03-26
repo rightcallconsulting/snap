@@ -17,6 +17,7 @@ var FormationTest = function(config){
     this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
     this.displayName = config.displayName || false;
     this.coverageMap = config.coverageMap || null;
+    this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
 };
 
 FormationTest.prototype.getCurrentFormation = function(){
@@ -45,6 +46,13 @@ FormationTest.prototype.getScoreString = function(){
 };
 FormationTest.prototype.getCurrentCoverageMap = function(){
   return this.coverageMap;
+};
+
+FormationTest.prototype.getCurrentPlayerTested = function(currentUserTested){
+  var play = this.getCurrentFormation();
+  debugger;
+  var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
+  return player;
 };
 
 

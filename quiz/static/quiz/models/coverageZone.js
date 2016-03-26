@@ -22,7 +22,7 @@ CoverageZone.prototype.draw = function(field){
 	var pixels = this.getPixelZone(field);
 	fill(this.fill);
 	if(this.clicked){
-		fill(255, 204, 0);
+		fill(100, 	100, 100);
 	}
 	rect(pixels[0], pixels[1], pixels[2], pixels[3]);
 	fill(255, 255, 255);
@@ -61,6 +61,13 @@ CoverageMap.LEFT_FLAT = 12;
 CoverageMap.RIGHT_FLAT = 13;
 CoverageMap.LEFT_FADE = 14;
 CoverageMap.RIGHT_FADE = 15;
+
+CoverageMap.prototype.getZoneFromIndex = function(index){
+	if(index <= 0){
+		return null;
+	}
+	return this.zones[index-1];
+	}
 
 CoverageMap.prototype.draw = function(field){
 	for(var i = 0; i < this.zones.length; i++){

@@ -160,9 +160,6 @@ function clearSelection(){
 }
 
 function checkAnswer(x, y){
-  if(!currentGuessNode){
-    return;
-  }
   var dx = abs(currentPlayerTested.gapXPoint - x);
   var dy = abs(currentPlayerTested.gapYPoint - y);
   var dist = Math.sqrt(dx*dx + dy*dy);
@@ -170,12 +167,10 @@ function checkAnswer(x, y){
   if(isCorrect){
     clearSelection();
     currentPlayerTested = null;
-    test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
+    test.registerAnswer(isCorrect);
   }else{
     clearSelection();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
+    test.registerAnswer(isCorrect);
     test.updateScoreboard();
     test.feedBackScreenStartTime = millis();
   }
