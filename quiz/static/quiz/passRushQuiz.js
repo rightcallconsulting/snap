@@ -298,7 +298,7 @@ function draw() {
   };
   if(makeJSONCall){
     //WAIT - still executing JSON
-    background(93, 148, 81);
+  
   }
   else if(test.over){
     background(93, 148, 81);

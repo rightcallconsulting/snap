@@ -50,7 +50,7 @@ FormationTest.prototype.getCurrentCoverageMap = function(){
 
 FormationTest.prototype.getCurrentPlayerTested = function(currentUserTested){
   var play = this.getCurrentFormation();
-  debugger;
+  
   var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
   return player;
 };

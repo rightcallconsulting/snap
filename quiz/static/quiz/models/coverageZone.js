@@ -22,7 +22,7 @@ CoverageZone.prototype.draw = function(field){
 	var pixels = this.getPixelZone(field);
 	fill(this.fill);
 	if(this.clicked){
-		fill(100, 	100, 100);
+	fill(100, 100, 100);
 	}
 	rect(pixels[0], pixels[1], pixels[2], pixels[3]);
 	fill(255, 255, 255);
