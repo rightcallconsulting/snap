@@ -101,14 +101,11 @@ function setup() {
             i--;
           }
         }
-
         test.formations = formations.slice(0,maxFormations);
-
         test.restartQuiz();
         test.updateScoreboard();
         test.updateProgress();
         makeJSONCall = false
-
       })
 });
 }
@@ -163,6 +160,7 @@ function drawFeedbackScreen(){
     textSize(14);
     textAlign(CENTER, CENTER);
     text(currentPlayerTested.num, playerX, playerY);
+    debugger;
   }  
 };
 
@@ -260,7 +258,7 @@ if(makeJSONCall){
     }
     if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
-      if(elapsedTime > 1000){
+      if(elapsedTime > 2000){
         test.feedBackScreenStartTime = 0;
         test.advanceToNextFormation(test.incorrectAnswerMessage);
         currentPlayerTested = null;
