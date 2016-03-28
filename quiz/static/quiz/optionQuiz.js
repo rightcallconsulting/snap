@@ -280,7 +280,6 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
       currentPlayerTested.optionAssignment = [test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]];
-      debugger;
     }
     drawOpening();
   }

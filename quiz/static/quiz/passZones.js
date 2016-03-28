@@ -7,6 +7,8 @@ var maxFormations = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var correctZoneFill = null;
+var playerIDFromHTML = $('#player-id').data('player-id');
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -39,6 +41,11 @@ function setup() {
       scoreboard: scoreboard,
       coverageMap: twoDeepZone
     });
+
+    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
+      currentUserTested = createUserFromJSON(data2[0]);
+      currentUserTested.position = "M"; //remove when done testing
+    })
     
     var formations = [];
     formationNames = [];
@@ -90,6 +97,7 @@ function setup() {
         makeJSONCall = false
 
       })
+
 });
 }
 }
@@ -107,55 +115,36 @@ function shuffle(o) {
 return o;
 }
 
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
-  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-  multipleChoiceAnswers = [];
-  var availableNames = formationNames.slice();
-  shuffle(availableNames);
-  var i = 0;
-  while(multipleChoiceAnswers.length < numOptions){
-    var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
-    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-      y: height / 3,
-      width: width / (numOptions + 2),
-      height: 50,
-      label: label,
-      clicked: false
-    }));
-    i++;
-  }
-}
-
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
-//guess is a CoverageZone object
+//guess is a CoverageZone number
 function checkAnswer(guess){
   var assignment = currentPlayerTested.zoneAssignment;
   var isCorrect = guess.type === assignment;
   if(isCorrect){
-    test.registerAnswer(isCorrect);
     test.getCurrentCoverageMap().clearClicks();
-
-    //update current player tested
-  }else{
     test.registerAnswer(isCorrect);
+  }else{   
+    test.updateScoreboard();
+    test.registerAnswer(isCorrect);
+    test.feedBackScreenStartTime = millis();
+    var correctZone = test.getCurrentCoverageMap().getZoneFromIndex(currentPlayerTested.zoneAssignment)
+    correctZoneFill = correctZone.fill;
+    correctZone.fill = color(220, 220, 0);
   }
+}
 
+
+function drawFeedBackScreen(){
+  //var elapsedTime = millis() - test.feedBackScreenStartTime;
+  field.drawBackground(null, height, width);
+  test.getCurrentFormation().drawAllPlayers(field);
+  var map = test.getCurrentCoverageMap();
+  
+  //debugger;
+  if(map){
+    stroke(0);
+    map.draw(field);
+  }
+  
 }
 
 function drawOpening(){
@@ -164,6 +153,7 @@ function drawOpening(){
   var map = test.getCurrentCoverageMap();
   if(map){
     stroke(0);
+    strokeWeight(1);
     map.draw(field);
   }
 }
@@ -171,8 +161,10 @@ function drawOpening(){
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return;
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if (bigReset.isMouseInside(field) && test.over){
     test.restartQuiz();
   }
   else{
@@ -202,6 +194,7 @@ keyTyped = function(){
 
 
 function draw() {
+
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
     var y = field.getTranslatedY(this.y);
@@ -226,6 +219,7 @@ function draw() {
 
   if(makeJSONCall){
     //WAIT - still executing JSON
+    background(93, 148, 81);
   }
   else if(test.over){
     background(93, 148, 81);
@@ -233,6 +227,31 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    drawOpening();
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 1000){
+        var map = test.getCurrentCoverageMap();
+        map.clearClicks();
+        test.feedBackScreenStartTime = 0;
+        var correctZone = map.getZoneFromIndex(currentPlayerTested.zoneAssignment);
+        if(correctZoneFill){
+          correctZone.fill = correctZoneFill;
+          correctZoneFill = null;
+        }
+        test.advanceToNextFormation(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+
+      }else{
+        drawFeedBackScreen();
+      }
+    }else{
+      if(!currentPlayerTested){
+        currentPlayerTested = new Player({
+          zoneAssignment: CoverageMap.LEFT_OUT
+        });
+      }
+      drawOpening();  
+    }
+    
   }
 }

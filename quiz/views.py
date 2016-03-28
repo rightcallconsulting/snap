@@ -141,10 +141,15 @@ def formation_quiz(request):
     return render(request, 'quiz/formation_quiz.html', {
         'page_header': 'FORMATION QUIZ'
     })
+
 def pass_zones(request):
-    return render(request, 'quiz/pass_zones.html', {
-        'page_header': 'PASS ZONES'
-    }) 
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+        return render(request, 'quiz/pass_zones.html', {
+            'player': player,
+            'page_header': 'PASS ZONES QUIZ'
+        })
 
 def alignment_quiz(request):
     if(request.user.myuser.is_a_player):

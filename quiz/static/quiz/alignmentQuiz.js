@@ -12,7 +12,7 @@ var answers = [];
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 53;
+  field.heightInYards = 40;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -52,11 +52,8 @@ function setup() {
         formationNames.push(newFormation.name);
       })
 
-
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
       //formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-
-
 
       $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
         data.forEach(function(position){
@@ -146,19 +143,36 @@ function checkAnswer(){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedBackScreenStartTime = millis();
   }
 }
 
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentFormation(), height, width);
+  test.getCurrentFormation().drawAllPlayers(field);
+  var answer = answers[test.questionNum];
+  if(currentPlayerTested){
+    var playerX = field.getTranslatedX(answer[0]);
+    var playerY = field.getTranslatedY(answer[1]);
+    var size = field.yardsToPixels(currentPlayerTested.siz);
+
+    fill(220, 200, 0);
+    ellipse(playerX, playerY, size, size);
+    
+    fill(0,0,0);
+    textSize(14);
+    textAlign(CENTER, CENTER);
+    text(currentPlayerTested.num, playerX, playerY);
+  }  
+};
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-
   test.getCurrentFormation().drawAllPlayers(field);
   if(currentPlayerTested){
     currentPlayerTested.draw(field);
   }
 }
-
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
@@ -170,19 +184,16 @@ mouseClicked = function() {
     if(bigReset.isMouseInside(field)){
       test.restartQuiz();
     }
-  }
-  else{
+  } else{
     var y = field.getYardY(mouseY);
     if(y > field.ballYardLine){
       y = field.ballYardLine;
-    }
-    if(currentPlayerTested){
+    }if(currentPlayerTested){
       if(currentPlayerTested.isMouseInside(field)){
         checkAnswer();
       }else{
         currentPlayerTested.x = field.getYardX(mouseX);
         currentPlayerTested.y = y;
-
       }
 
     }else{
@@ -244,6 +255,24 @@ if(makeJSONCall){
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-  drawOpening();
+    if(!currentPlayerTested){
+      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+    }
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 1000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextFormation(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen(field);
+      }
+    }else{
+      drawOpening(field);
+    }
+  }
 }
-}
+
+
+
+

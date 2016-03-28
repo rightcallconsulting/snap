@@ -34,6 +34,7 @@ var Test = function(config){
     this.offensiveFormationIDs = config.offensiveFormationIDs || [];
     this.defensiveFormationIDs = config.defensiveFormationIDs || [];
     this.displayName = config.displayName || false;
+    this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
 
 };
 
@@ -116,6 +117,10 @@ Test.prototype.getPercentage = function(){
   return (100*((this.score - this.incorrectGuesses*this.badGuessPenalty) / (this.questionNum))).toFixed().toString() + "%";
 };
 
+Test.prototype.showFeedBackScreen = function(){
+
+};
+
 Test.prototype.restartQuiz = function(defensivePlay){
   this.plays[0].clearProgression();
   this.scoreboard.feedbackMessage = "";
@@ -183,9 +188,7 @@ Test.prototype.advanceToNextPlay = function(message){
   if(this.getCurrentPlayNumber() >= this.plays.length){
     this.endTime = millis();
     this.over = true;
-  } else if(this.typeTest === "Blitz"){
-
-  }else{
+  } else{
     this.updateProgress();
     this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();

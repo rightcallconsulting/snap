@@ -9,6 +9,7 @@ var currentPlayerTested = null;
 var currentRouteGuess = [];
 var currentRouteNodes = [];
 
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
@@ -139,6 +140,7 @@ return o;
 function clearSelection(){
   currentRouteGuess = [];
   currentRouteNodes = [];
+  nodeObject = null;
 }
 
 function checkAnswer(){
@@ -146,6 +148,7 @@ function checkAnswer(){
   if(currentRouteGuess.length !== currentPlayerTested.breakPoints.length){
     isCorrect = false;
   }
+
   
   for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
     var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
@@ -155,8 +158,6 @@ function checkAnswer(){
       isCorrect = false;
     }
   }
-
-  debugger;
 
   if(isCorrect){
     clearSelection();
@@ -168,6 +169,7 @@ function checkAnswer(){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedBackScreenStartTime = millis();
   }
 }
 
@@ -195,8 +197,14 @@ function drawCurrentRoute(){
 
 }
 
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  test.getCurrentPlay().drawAllPlayers(field);
+  test.getCurrentPlay().drawAllRoutes(field);
+}
+
 function drawOpening(){
-  field.drawBackground(null, height, width);
+  field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentPlay().drawAllPlayers(field);
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
@@ -205,8 +213,12 @@ function drawOpening(){
     }
   }
   drawCurrentRoute();
-
-  //draw the current route the tested player is drawing
+    for(var i = 0; i < currentRouteNodes.length; i++){
+      stroke(220, 220, 0);
+      currentRouteNodes[i].draw(field);
+      noStroke();
+    }
+  
 }
 
 
@@ -217,18 +229,28 @@ mouseClicked = function() {
     return true;
   }
   if (bigReset.isMouseInside(field) && test.over) {
+    clearSelection();
+    currentPlayerTested = null;
     test.restartQuiz();
+    return true;
+  }else if(!test.over){
+    if(currentRouteNodes.length > 0 && currentRouteNodes[currentRouteNodes.length - 1].isMouseInside(field)){
+      checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
+      return;
+    }else{
+      var x = field.getYardX(mouseX);
+      var y = field.getYardY(mouseY);
+      currentRouteGuess.push([x, y]);
+      var nodeObject = new Node({
+        x: x,
+        y: y,
+        siz: 1,
+        fill: color(0, 0, 220)
+      });
+      currentRouteNodes.push(nodeObject);
+    }
   }
-  var x = field.getYardX(mouseX);
-  var y = field.getYardY(mouseY);
-  currentRouteGuess.push([x, y]);
-  var nodeObject = new Node({
-    x: x,
-    y: y,
-    siz: 1
-  });
-  currentRouteNodes.push(nodeObject);
-  
+
 };
 
 keyPressed = function(){
@@ -285,11 +307,24 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackMessage){
+
+
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 1000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }
+      drawFeedbackScreen();
+    }else{
+      drawOpening();
+    }
 
   }
 }
