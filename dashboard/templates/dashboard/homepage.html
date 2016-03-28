@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% load staticfiles %}
+{% load app_filters %}
 
 {% block content %}
 <!-- Overlay Div -->
@@ -39,7 +40,7 @@
 									<td>
 										{{test}}
 									</td>
-									<td>{{test.deadline}}</td>
+									<td>{% due_date_default test.deadline %}</td>
 									<td>{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</td>
 									<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="start-quiz">Start Quiz</span></a></td>
 
@@ -97,14 +98,6 @@
 									</td>
 									<td>
 										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="play-link" href="#">PLAY</a>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
-									</td>
-									<td>
-										<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
 									</td>
 								</tr>
 								{% endfor %}

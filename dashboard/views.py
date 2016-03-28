@@ -185,11 +185,14 @@ def todo(request):
     else:
         coach = request.user.coach
         tests_assigned = Test.objects.filter(coach_who_created=request.user)
+        groups = PlayerGroup.objects.all()
+        #embed()
         return render(request, 'dashboard/to-do.html', {
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
             'page_header': 'TESTS',
+            'groups': groups
         })
 
 @login_required

@@ -5,6 +5,7 @@ var makeJSONCall = true
 var testIDFromHTML = $('#test-id').data('test-id')
 function setup() {
   var myCanvas = createCanvas(400, 400);
+  field.heightInYards = 53;
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
 }

@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% load staticfiles %}
+{% load app_filters %}
 
 {% block content %}
 <!-- Overlay Div -->
@@ -18,38 +19,43 @@
 		<div class="padding-md coach-home">
 			<div class="content-container">
 				<div class="coach-action-row">
+					<script>
+						var clickButton = function(index){
+							var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
+							if(index >= 0 && index < links.length){
+								window.location.href = links[index];
+							}
+
+						};
+
+					</script>
 					<table class="coach-action-table">
 						<tbody>
 							<tr>
+								<td class="blank"></td>
 								<td class="first">
-									<div class="link-wrapper">
-									<a href="/quiz/create_formation">
-									CREATE<br />FORMATION</a>
-									</div>
+									<button onclick="clickButton(0)">
+									CREATE<br />FORMATION</button>
 								</td>
+								<td class="blank"></td>
 								<td class="second">
-									<div class="link-wrapper">
-									<a href="/quiz/create_play">
-									<span>CREATE<br />PLAY</span></a>
-									</div>
+									<button onclick="clickButton(1)">
+									CREATE<br />PLAY</button>
 								</td>
+								<td class="blank"></td>
 								<td class="third">
-									<div class="link-wrapper">
-									<a href="/create_test">
-									<span>CREATE<br />QUIZ</span></a>
-									</div>
+									<button onclick="clickButton(2)">
+									CREATE<br />QUIZ</button>
 								</td>
+								<td class="blank"></td>
 								<td class="fourth">
-									<div class="link-wrapper">
-									<a href="/groups">
-									<span>GROUPS</span></a>
-									</div>
+									<button onclick="clickButton(3)">
+									GROUPS</button>
 								</td>
+								<td class="blank"></td>
 								<td class="fifth">
-									<div class="link-wrapper">
-									<a href="/analytics">
-									<span>ANALYTICS</span></a>
-									</div>
+									<button onclick="clickButton(4)">
+									ANALYTICS</button>
 								</td>
 							</tr>
 						</tbody>
@@ -103,7 +109,7 @@
 											{{test.name}}
 										</td>
 										<td>{{test.player.user.first_name}} {{test.player.user.last_name}}</td>
-										<td>{{test.deadline.date}}</td>
+										<td>{% due_date_default test.deadline %}</td>
 										<td>98%</td>
 
 									</tr>

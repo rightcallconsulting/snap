@@ -4,16 +4,16 @@ var makeJSONCall = true;
 var teamIDFromHTML = $('#team-id').data('team-id');
 
 function setup() {
-  var myCanvas = createCanvas(600, 600);
+  var myCanvas = createCanvas(500, 500);
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
   var m = document.getElementById('display-box');
-  m.style.width = '602px';
-  m.style.height = '700px';
+  m.style.width = '502px';
+  m.style.height = '600px';
   var sidebar = document.getElementById('choose-offensive-formation-box');
-  sidebar.style.height = '700px';
+  sidebar.style.height = '600px';
   //sidebar.style.width = '300px';
-  field.height = 600;
+  field.height = 500;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   debugger;

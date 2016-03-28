@@ -1,5 +1,6 @@
 {% extends 'dashboard/base.html' %}
 {% load staticfiles %}
+{% load app_filters %}
 
 {% block content %}
 <!-- Overlay Div -->
@@ -25,19 +26,20 @@
 					<span class="label label-info pull-right">{{uncompleted_tests|length}} Items</span>
 				</div>
 				<div class="panel-body">
+					{% if not request.user.myuser.is_a_player %}
 					<div class="row">
 						<div class="col-md-4 col-sm-4">
-							<select class="input-sm form-control inline" style="width:130px;">
-								<option value="0">All</option>
-								<option value="1">New</option>
-								<option value="2">Completed</option>
-								<option value="3">Uncompleted</option>
-								<option value="4">In-Progress</option>
-
+							<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+								<optgroup label="Groups"> <!-- Use this to create sub-groups -->
+									<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+									{% for group in groups %}
+										<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
+									{% endfor %}
+								</optgroup>
 							</select>
-							<a class="btn btn-default btn-sm">Apply</a>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
+					{% endif %}
 				</div>
 				<table class="table table-striped" id="responsiveTable">
 					<thead>
@@ -49,14 +51,13 @@
 								</label>
 							</th>
 							<th>Name</th>
-							{% if not request.user.myuser.is_a_player %}
-							<th>Player</th>
-							{% endif %}
 							<th>Type</th>
-							<th>Due Date</th>
-							<th>Date Assigned</th>
+							{% if not request.user.myuser.is_a_player %}
+							<th>Assigned To</th>
+							{% endif %}
+							<th>Due</th>
 							<th>In Progress</th>
-							<th>Added by:</th>
+							<th>Added By</th>
 							<th></th>
 							<th></th>
 						</tr>
@@ -73,20 +74,13 @@
 							<td>
 								{{test.name}}
 							</td>
+							<td>{{test}}</td>
 							{% if not request.user.myuser.is_a_player %}
 							<td>
 								{{test.player}}
 							</td>
 							{% endif %}
-							<td>{{test}}
-								{% if test.created_at < new_time_threshold %}
-								<span class="label label-success m-left-xs">
-									New
-								</span>
-								{% endif %}
-							</td>
-							<td>{{test.deadline}}</td>
-							<td>{{test.created_at}}</td>
+							<td>{% due_date_default test.deadline %}</td>
 							<td>
 								{% if test.in_progress%}
 									Yes
@@ -107,17 +101,6 @@
 
 					</tbody>
 				</table>
-				<div class="panel-footer clearfix">
-					<ul class="pagination pagination-xs m-top-none pull-right">
-						<li class="disabled"><a href="#">Previous</a></li>
-						<li class="active"><a href="#">1</a></li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">5</a></li>
-						<li><a href="#">Next</a></li>
-					</ul>
-				</div>
 			</div><!-- /panel -->
 			<div class="row dash-row">
 
