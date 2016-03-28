@@ -79,11 +79,55 @@
 
 			};
 
+			function getCookie(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = jQuery.trim(cookies[i]);
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+
 			var clickRemoveButton = function(button){
 				if(!button.classList.contains('clicked')){
 					button.classList.add('clicked');
 					button.innerHTML = "<span>REMOVE</span>"
 					return false;
+				}else{
+					/*
+					var groupID = document.getElementById('group-form').value;//
+					var playerID = button.value;
+
+					//POST REQUEST
+					var csrftoken = getCookie('csrftoken');
+					$.ajax({
+						url : window.location.href, // the endpoint,commonly same url
+						type : "POST", // http method
+						data : { csrfmiddlewaretoken : csrftoken,
+							email : email,
+							password : password
+						}, // data sent with the post request
+
+						// handle a successful response
+						success : function(json) {
+							console.log(json); // another sanity check
+							//On success show the data posted to server as a message
+							alert('Hi   '+json['email'] +'!.' + '  You have entered password:'+ json['password']);
+						},
+
+						// handle a non-successful response
+						error : function(xhr,errmsg,err) {
+							console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+						}
+					});
+					*/
 				}
 			};
 			</script>
@@ -133,7 +177,9 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td id="remove-player-{{player.id}}"><button value="{{player.id}}" onclick="clickRemoveButton(this)"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button></td>
+								<td id="remove-player-{{player.id}}"><form class="DeletePlayerFromGroupForm" method="POST"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="{{group.id}}">{% csrf_token %}
+									<button value="{{player.id}}" onclick="clickRemoveButton(this)" type="submit"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button>
+								</form></td>
 							</tr>
                 {% endfor %}
 							</tbody>

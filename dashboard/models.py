@@ -89,6 +89,10 @@ class PlayerGroup(models.Model):
         for player in players:
             player.duplicate_and_assign_test(test_id, coach)
 
+class DeletePlayerFromGroupForm(forms.Form):
+    groupID = forms.CharField(max_length=10)
+    playerID = forms.CharField(max_length=10)
+
 class PlayerGroupForm(ModelForm):
 
     class Meta:
