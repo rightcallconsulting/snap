@@ -55,53 +55,53 @@ function setup() {
           var newFormation = createFormationFromJSON(formationObject);
           formations.push(newFormation);
         })
-          $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-            data.forEach(function(position){
-              var newPlayer = createPlayerFromJSON(position);
-              var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-              var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
+        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+          data.forEach(function(position){
+            var newPlayer = createPlayerFromJSON(position);
+            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
 
-              if(formation){
-                formation.positions.push(newPlayer);
-              }
-              if(offensiveFormation){
-                offensiveFormation.positions.push(newPlayer);
-              }
-            })
-            offensiveFormations.forEach(function(formation){
-              formation.populatePositions();
-            })
-            formations.forEach(function(formation){
-              formation.populatePositions();
-              var defensivePlay = formation.createDefensivePlay();
-              defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-              defensivePlays.push(defensivePlay);
-              if(playNames.indexOf(defensivePlay.playName) < 0){
-                playNames.push(defensivePlay.playName);
-              }
-            })
+            if(formation){
+              formation.positions.push(newPlayer);
+            }
+            if(offensiveFormation){
+              offensiveFormation.positions.push(newPlayer);
+            }
+          })
+          offensiveFormations.forEach(function(formation){
+            formation.populatePositions();
+          })
+          formations.forEach(function(formation){
+            formation.populatePositions();
+            var defensivePlay = formation.createDefensivePlay();
+            defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
+            defensivePlays.push(defensivePlay);
+            if(playNames.indexOf(defensivePlay.playName) < 0){
+              playNames.push(defensivePlay.playName);
+            }
+          })
 
-            $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-              data3.forEach(function(play){
-                var testIDArray = play.fields.tests;
-                var play = createPlayFromJSON(play);
-                plays.push(play);
+          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+            data3.forEach(function(play){
+              var testIDArray = play.fields.tests;
+              var play = createPlayFromJSON(play);
+              plays.push(play);
+            })
+            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+              data4.forEach(function(position){
+                var player = createPlayerFromJSON(position);
+                positions.push(player);
               })
-              $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-                data4.forEach(function(position){
-                  var player = createPlayerFromJSON(position);
-                  positions.push(player);
-                })
-                plays.forEach(function(play){
-                  play.addPositionsFromID(positions);
-                  play.populatePositions();
-                })
-                for(var i = 0; i < defensivePlays.length; i++){
-                  var play = defensivePlays[i];
-                  var inCoverage = false;
-                  for(var j = 0; j < play.defensivePlayers.length; j++){
-                    var p = play.defensivePlayers[j];
-                    if(p.pos === currentUserTested.position){
+              plays.forEach(function(play){
+                play.addPositionsFromID(positions);
+                play.populatePositions();
+              })
+              for(var i = 0; i < defensivePlays.length; i++){
+                var play = defensivePlays[i];
+                var inCoverage = false;
+                for(var j = 0; j < play.defensivePlayers.length; j++){
+                  var p = play.defensivePlayers[j];
+                  if(p.pos === currentUserTested.position){
                       //check if he's in coverage
                       if(p.CBAssignment){
                         inCoverage = true;
@@ -122,21 +122,14 @@ function setup() {
                 test.updateProgress();
                 makeJSONCall = false;
               })
-            })
-          })
-        })
+})
+})
+})
 
-    });
+});
 
-
-  }
 }
-
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
+}
 
 var sortByPlayName = function(a, b){
   var name1 = a.playName;
@@ -163,8 +156,9 @@ function clearSelections(){
 }
 
 function checkAnswer(guess){
-  var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0]
-  var isCorrect = guess === p.CBAssignment;
+
+  var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
+  var isCorrect = guess === p.coverageAssignment[0];
   if(isCorrect){
     clearSelections();
     test.score++;
@@ -175,8 +169,20 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedBackScreenStartTime = millis();
   }
 }
+
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    play.drawAllPlayersWithOffense(field);
+  }  
+  var assignment = currentPlayerTested.coverageAssignment[0];
+  assignment.fill = color(220, 220, 0);
+  assignment.draw(field);
+};
 
 function drawOpening(){
   field.drawBackground(null, height, width);
@@ -187,19 +193,11 @@ function drawOpening(){
 
 }
 
-pressPlayButton = function() {
-  if (test.getCurrentDefensivePlay()){
-    test.getCurrentPlay().setAllRoutes();
-    scoreboard.feedbackMessage = "";
-    test.getCurrentPlay().inProgress = true;
-  }
-};
-
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
   else if(!test.over){
@@ -218,6 +216,7 @@ mouseClicked = function() {
         if(answer.isMouseInside(field)){
           clearSelections();
           answer.clicked = true;
+
           return;
         }
       }
@@ -271,7 +270,6 @@ function draw() {
     background(93, 148, 81);
   }
   else if(test.over){
-    //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -279,7 +277,19 @@ function draw() {
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+      currentPlayerTested.coverageAssignment = [test.getCurrentPlay().offensiveFormationObject.eligibleReceivers[1]];
     }
-    drawOpening();
+    if(test.feedBackScreenStartTime){
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 2000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen(field);
+      }
+    }else{
+      drawOpening(field);
+    }
   }
 }

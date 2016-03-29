@@ -174,7 +174,6 @@ function checkAnswer(guess){
 }
 
 function drawFeedbackScreen(){
-
   field.drawBackground(test.getCurrentPlay(), height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
