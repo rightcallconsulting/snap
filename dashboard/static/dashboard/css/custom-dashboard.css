@@ -482,7 +482,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.first{
-  background-color: #517B36;
+  background-color: #558B2F;
   background-image: url("/static/dashboard/images/create-formation-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -493,7 +493,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.second{
-  background-color: #15797E;
+  background-color: #009688;
   background-image: url("/static/dashboard/images/create-play-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -504,7 +504,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.third{
-  background-color: #D07322;
+  background-color: #FF9800;
   background-image: url("/static/dashboard/images/create-quiz-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -515,7 +515,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.fourth{
-  background-color: #BE1F47;
+  background-color: #607D86;
   background-image: url("/static/dashboard/images/groups-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -526,7 +526,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.fifth{
-  background-color: #5ECED3;
+  background-color: #EF5350;
   background-image: url("/static/dashboard/images/analytics-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
