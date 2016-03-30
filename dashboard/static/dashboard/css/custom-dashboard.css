@@ -247,6 +247,10 @@ input.create-quiz{
   text-align: left;
 }
 
+.form-group .small-text{
+  font-size: 12px;
+}
+
 .form-create-test input.create-quiz{
   margin-left: 20%;
   width: 20%;
