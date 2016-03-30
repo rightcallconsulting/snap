@@ -8,6 +8,10 @@
   height: 100%;
 }
 
+.login-logo{
+  max-width: 600px;
+}
+
 #display-play-box {
   width: 500px;
 }
