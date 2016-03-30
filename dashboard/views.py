@@ -380,13 +380,19 @@ def group_detail(request, group_id):
         test_id = request.POST.get('testID')
         group_id = request.POST.get('groupID')
         player_id = request.POST.get('playerID')
+        form_action = request.POST.get('form_action')
         if test_id:
             group.duplicate_and_assign_test_to_all_players(test_id, coach)
             return HttpResponse('')
-        elif group_id and player_id:
+        elif group_id and player_id and form_action == "delete_player_from_group":
             player = Player.objects.filter(pk=player_id)[0]
             group = PlayerGroup.objects.filter(pk=group_id)[0]
             group.players.remove(player)
+            return HttpResponse('')
+        elif group_id and player_id and form_action == "add_player_to_group":
+            player = Player.objects.filter(pk=player_id)[0]
+            group = PlayerGroup.objects.filter(pk=group_id)[0]
+            group.players.add(player)
             return HttpResponse('')
 
     else:

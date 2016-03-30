@@ -95,6 +95,11 @@
 				return cookieValue;
 			}
 
+			var clickMoveButton = function(e){
+				debugger;
+				e.preventDefault();
+			}
+
 			var clickRemoveButton = function(button){
 				if(!button.classList.contains('clicked')){
 					button.classList.add('clicked');
@@ -177,7 +182,7 @@
 								<td>{{player.position}}</td>
 								<td>SR</td>
 								<td>96%</td>
-								<td id="remove-player-{{player.id}}"><form class="DeletePlayerFromGroupForm" method="POST"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="{{group.id}}">{% csrf_token %}
+								<td id="remove-player-{{player.id}}"><form class="DeletePlayerFromGroupForm" method="POST"><input type="hidden" name="form_action" value="delete_player_from_group"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="{{group.id}}">{% csrf_token %}
 									<button value="{{player.id}}" onclick="clickRemoveButton(this)" type="submit"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button>
 								</form></td>
 							</tr>
@@ -229,7 +234,9 @@
 									<td>{{player.first_name}} {{player.last_name}}</td>
 									<td>{{player.position}}</td>
 									<td>SR</td>
-									<td><img class="remove-player-icon" src="{% static 'dashboard/images/move-icon.png' %}" alt=""></td>
+									<td><form class="AddPlayerToGroupForm" method="POST"><input type="hidden" name="form_action" value="add_player_to_group"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="0">{% csrf_token %}
+										<img class="remove-player-icon" src="{% static 'dashboard/images/move-icon.png' %}" alt="">
+									</form></td>
 								</tr>
 	                {% endfor %}
 								</tbody>
