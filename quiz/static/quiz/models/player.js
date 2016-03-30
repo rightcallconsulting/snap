@@ -47,6 +47,7 @@ var Player = function(config) {
     this.zoneAssignment = config.zoneAssignment || 0;
     this.optionAssignment = config.optionAssignment || [];
     this.coverageAssignment = config.coverageAssignment || [];
+    this.blockingAssignment = config.blockingAssignment || null;
   };
 
 Player.rank = 1;
