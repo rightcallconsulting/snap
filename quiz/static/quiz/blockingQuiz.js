@@ -186,7 +186,8 @@ function drawOpening(){
   var assignment = new BlockingAssignment({
   name: "Left",
   playerTested: test.getCurrentPlay().oline[1],
-  startCoords: [this.playerTested.x, this.playerTested.y]
+  startCoords: [this.playerTested.x, this.playerTested.y],
+  blockCoords: [this.blockCoords()[0], this.blockCoords()[1]]
 });
 
 
@@ -194,12 +195,9 @@ function drawOpening(){
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
   test.getCurrentPlay().oline[0].drawBlockLeft();
+  
   if(test.getCurrentPlay().checks[0].defensiveFormation){
     test.getCurrentPlay().checks[0].defensiveFormation.drawAllPlayers(field);
-  }
-  
-  for(var i = 0; i < 5; i++){
-  test.getCurrentPlay().oline[i].assignment.drawBlockLeft();
   }
 }
 

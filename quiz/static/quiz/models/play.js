@@ -57,6 +57,10 @@ Play.prototype.resetPlayers = function(defensivePlay){
   }
 };
 
+Play.getCurrentBlockingAssignment = function(){
+  
+};
+
 Play.prototype.setAllRoutes = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.oline[2]);
