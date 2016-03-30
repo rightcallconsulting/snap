@@ -4,6 +4,10 @@
   margin-top: 50px;
 }
 
+.login-wrapper{
+  height: 100%;
+}
+
 #display-play-box {
   width: 500px;
 }
