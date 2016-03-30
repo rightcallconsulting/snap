@@ -161,7 +161,7 @@
 .coach-action-row a{
   margin: auto;
   font-size: 18px;
-  color: #2A6205;
+  color: #33691E;
 }
 
 .coach-action{
@@ -221,7 +221,7 @@
 }
 
 input.create-quiz{
-  background-color: #517B36;
+  background-color: #7CB34A;
   color: #FFFFFF;
   height: 40px;
   width: 15%;
@@ -328,7 +328,7 @@ input.create-quiz{
 }
 
 .playbook-action{
-  background-color: #5AB71E;
+  background-color: #C5E1A5;
 }
 
 .playbook-action h3{
@@ -342,7 +342,7 @@ input.create-quiz{
   font-size: 17px;
   margin-top: 20px;
   background-color: #FFFFFF;
-  border: 3px solid #517B36;
+  border: 3px solid #7CB34A;
   color: #555555;
 }
 
@@ -363,7 +363,7 @@ input.create-quiz{
   color: #000000;
   padding-top: 25px;
   padding-bottom: 25px;
-  border-bottom: 2px solid #5AB71E;
+  border-bottom: 2px solid #C5E1A5;
 }
 
 .to-do-table th{
@@ -382,7 +382,7 @@ input.create-quiz{
   font-size: 16px;
   vertical-align: middle;
   text-align: left;
-  color: #2A6205;
+  color: #33691E;
   padding-top: 25px;
   padding-bottom: 25px;
   border: none;
@@ -638,8 +638,8 @@ input.create-quiz{
 }
 
 .player-list th{
-  border-bottom: 3px solid #2A6205;
-  border-right: 3px solid #2A6205;
+  border-bottom: 3px solid #33691E;
+  border-right: 3px solid #33691E;
 }
 
 .group-home .news-col{
@@ -656,7 +656,7 @@ input.create-quiz{
 }
 
 .player-home .news-col{
-  color: #2A6205;
+  color: #33691E;
 }
 
 .player-home .dash-row, .player-home .top-row{
@@ -671,9 +671,9 @@ input.create-quiz{
 }
 
 .player-home .dash-row .table-wrapper{
-  border-left: 2px solid #5AB71E;
-  border-right: 2px solid #5AB71E;
-  border-bottom: 2px solid #5AB71E;
+  border-left: 2px solid #C5E1A5;
+  border-right: 2px solid #C5E1A5;
+  border-bottom: 2px solid #C5E1A5;
   height: 220px;
 }
 
@@ -683,7 +683,7 @@ input.create-quiz{
 
 .play-link, .formation-link{
   margin-left: 4px;
-  color: #5AB71E;
+  color: #C5E1A5;
 }
 
 .coach-home .stacked-row{
@@ -745,7 +745,7 @@ input.create-quiz{
   width: 100%;
   margin: 0px;
   height: 10%;
-  border-top: 3px solid #2A6205;
+  border-top: 3px solid #33691E;
 }
 
 .group-footer-table{
