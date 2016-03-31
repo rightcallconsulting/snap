@@ -34,8 +34,9 @@
 						</div>
 
 					</div>
+					<div class = "playbook-col">
 					{% if unit == "offense" %}
-							<div class="col-lg-2 dash-col choose-offensive-formation-box">
+							<div class="col-lg-4 choose-offensive-formation-box">
 								<div class="dash-header text-center">
 									<span><h4>Offensive Formations</h4></span>
 								</div>
@@ -47,7 +48,7 @@
 										{% endif %}
 
 
-											<td><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+											<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
 
 											{% if forloop.counter|divisibleby:2 %}
 												</tr>
@@ -56,7 +57,7 @@
 									</table>
 								</div>
 							</div>
-							<div class="col-lg-2 dash-col change-plays-box">
+							<div class="col-lg-4 change-plays-box">
 								<div class="dash-header text-center">
 									<span><h4 id="change-plays-header">Change Plays</h4></span>
 								</div>
@@ -69,15 +70,15 @@
 					{% else %}
 							<div class="col-lg-2 dash-col choose-defensive-formation-box">
 								<div class="dash-header text-center">
-									<span><h4>Defensive Formations</h4></span>
+									<span><h4>Plays</h4></span>
 								</div>
 									{% for formation in unique_defensive_formations %}
-										<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
+										<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
 									{% endfor %}
 							</div>
 							<div class="col-lg-2 dash-col change-plays-box">
 								<div class="dash-header text-center">
-									<span><h4 id="change-plays-header">Offensive Formation:</h4></span>
+									<span><h4 id="change-plays-header">Offensive Looks:</h4></span>
 								</div>
 								<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
 									<div class="panel-body show-plays-defense">
@@ -87,8 +88,7 @@
 							</div>
 					{% endif %}
 
-
-
+				</div>
 
 					{% if unit == "offense" %}
 					<div class="col-lg-10 dash-col display-plays-in-test">
@@ -106,7 +106,7 @@
 
 									{% for play in plays_in_test %}
 										{% if play.formation.id == formation.id %}
-											<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+											<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
 										{% endif %}
 									{% endfor %}
 								</div><!-- /panel -->
@@ -131,7 +131,7 @@
 
 									{% for play in plays_in_test %}
 										{% if play.formation.id == formation.id %}
-											<input class='btn btn-sm bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+											<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
 										{% endif %}
 									{% endfor %}
 								</div><!-- /panel -->
@@ -199,7 +199,7 @@
 						modifyPlayWithTest($(this));
 						$(this).fadeOut();
 						$('.show-plays #'+this.id).removeClass('play-remove-button');
-						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
+						$('.show-plays #'+this.id).addClass('play-add-button');
 						playIDArray = _.without(playIDArray, Number(this.id))
 					});
 
@@ -254,13 +254,11 @@
 							if(playDomElement.hasClass('play-add-button')){
 								playDomElement.addClass('play-remove-button');
 								playDomElement.removeClass('play-add-button');
-								playDomElement.removeClass('btn-success');
 								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+								$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
 							}
 							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
 								playDomElement.addClass('play-add-button');
-								playDomElement.addClass('btn-success');
 								playDomElement.removeClass('play-remove-button');
 								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
 								$('#'+playDomElement[0].id+'.play-remove').remove();
@@ -271,10 +269,10 @@
 							$('.show-plays').empty();
 							playArray.forEach(function(play){
 								if(playIDArray.includes(play.ID)){
-									$('.show-plays').append("<input class='btn btn-sm bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									$('.show-plays').append("<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
 								}
 								else{
-									$('.show-plays').append("<input class='btn btn-success btn-sm bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									$('.show-plays').append("<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
 								}
 							})
 					};
@@ -303,10 +301,10 @@
 
 										})
 										if (in_test){
-											$('.show-plays-defense').append('<input class="btn  btn-sm bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+											$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
 										}
 										else {
-											$('.show-plays-defense').append('<input class="btn btn-success btn-sm bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+											$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
 										}
 
 
@@ -334,13 +332,11 @@
 							if(playDomElement.hasClass('play-add-button')){
 								playDomElement.addClass('play-remove-button');
 								playDomElement.removeClass('play-add-button');
-								playDomElement.removeClass('btn-success');
 								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+								$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
 							}
 							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
 								playDomElement.addClass('play-add-button');
-								playDomElement.addClass('btn-success');
 								playDomElement.removeClass('play-remove-button');
 								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
 								$('#'+playDomElement[0].id+'.play-remove').remove();

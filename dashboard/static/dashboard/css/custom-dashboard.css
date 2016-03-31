@@ -1,5 +1,5 @@
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
-  height: 590px;
+  height: 600px;
   margin-bottom: 50px;
   margin-top: 50px;
 }
@@ -14,6 +14,7 @@
 
 #display-play-box {
   width: 500px;
+  margin-top: 10px;
 }
 
 #display-play-box .dash-header {
