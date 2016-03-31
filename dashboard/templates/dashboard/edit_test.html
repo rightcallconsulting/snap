@@ -62,13 +62,13 @@
 									<span><h4 id="change-plays-header">Change Plays</h4></span>
 								</div>
 								<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-									<div class="panel-body show-plays">
+									<div class="panel-body show-plays" id="draw-plays">
 
 									</div><!-- /panel -->
 								</form>
 							</div>
 					{% else %}
-							<div class="col-lg-2 dash-col choose-defensive-formation-box">
+							<div class="col-lg-4 choose-defensive-formation-box">
 								<div class="dash-header text-center">
 									<span><h4>Plays</h4></span>
 								</div>
@@ -76,7 +76,7 @@
 										<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
 									{% endfor %}
 							</div>
-							<div class="col-lg-2 dash-col change-plays-box">
+							<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
 								<div class="dash-header text-center">
 									<span><h4 id="change-plays-header">Offensive Looks:</h4></span>
 								</div>
@@ -266,15 +266,32 @@
 					};
 
 					function displayPlays(playArray) {
-							$('.show-plays').empty();
-							playArray.forEach(function(play){
+						var drawPlays = document.getElementById('draw-plays');
+							//$('.show-plays').empty();
+							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list two-column-table\">";
+
+							for(var i = 0; i < playArray.length; i++){
+								if(i % 2 === 0){
+									newHTML += "<tr>";
+								}
+								newHTML += "<td>";
+								var play = playArray[i];
 								if(playIDArray.includes(play.ID)){
-									$('.show-plays').append("<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									newHTML += "<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
 								}
 								else{
-									$('.show-plays').append("<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>");
+									newHTML += "<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
 								}
-							})
+								newHTML += "</td>";
+								if(i % 2 === 1){
+									newHTML += "</tr>";
+								}
+							}
+							if(playArray.length % 2 === 1){
+								newHTML += "<td></td></tr>";
+							}
+							newHTML += "</table></div>";
+							drawPlays.innerHTML = newHTML;
 					};
 
 					// For Defense
