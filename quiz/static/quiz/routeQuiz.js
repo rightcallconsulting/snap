@@ -13,7 +13,7 @@ var currentRouteNodes = [];
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 40;
+  field.heightInYards = 53;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -49,9 +49,13 @@ function setup() {
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
         var newFormation = createFormationFromJSON(formationObject);
-        offensiveFormations.push(newFormation);
+        //var p = newFormation.getPlayerFromPosition(currentUserTested.position);
+        //debugger;
+        if(newFormation){
+          offensiveFormations.push(newFormation);
+        }
       })
-      
+
       $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
         data.forEach(function(position){
           var newPlayer = createPlayerFromJSON(position);
@@ -93,7 +97,8 @@ function setup() {
               play.addPositionsFromID(positions);
               play.populatePositions();
             })
-            
+            plays = plays.filter(function(play){return play.getPlayerFromPosition(currentUserTested.position)});
+
             test.plays = plays;
 
             test.restartQuiz();
@@ -149,7 +154,7 @@ function checkAnswer(){
     isCorrect = false;
   }
 
-  
+
   for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
     var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
     var dy = abs(currentRouteGuess[i][1] - currentPlayerTested.breakPoints[i][1]);
@@ -218,7 +223,7 @@ function drawOpening(){
       currentRouteNodes[i].draw(field);
       noStroke();
     }
-  
+
 }
 
 
@@ -320,8 +325,9 @@ function draw() {
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen();
       }
-      drawFeedbackScreen();
     }else{
       drawOpening();
     }
