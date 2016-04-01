@@ -54,7 +54,7 @@
 }
 
 .multiple-choice-answers button{
-  background-color: #5AB71E;
+  background-color: #C5E1A5;
   width: 90%;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .multiple-choice-answers button.clicked{
-  background-color: #2A6205;
+  background-color: #33691E;
 }
 
 #correct-answer-index{
@@ -72,7 +72,7 @@
 
 #skip-button{
   border-radius: 25px;
-  background: #5AB71E;
+  background: #C5E1A5;
   padding: 20px;
   width: 90%;
   margin-left: 5%;

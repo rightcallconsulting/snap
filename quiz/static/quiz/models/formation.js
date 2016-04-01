@@ -24,6 +24,24 @@ var Formation = function(config){
   this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
+Formation.prototype.getPlayersWithPosition = function(position){
+  var players = [];
+  for(var i = 0; i < offensivePlayers.length; i++){
+    var p = offensivePlayers[i];
+    if(p.pos === position){
+      players.push(p);
+    }
+  }
+
+  for(var i = 0; i < defensivePlayers.length; i++){
+    var p = defensivePlayers[i];
+    if(p.pos === position){
+      players.push(p);
+    }
+  }
+  return players;
+}
+
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
 Formation.prototype.getPassStrength = function(){
   var centerX = this.oline[2].x;
@@ -138,6 +156,7 @@ Formation.prototype.createSkillPlayers = function(){
 //pos is a str for now, but could be an int code later
 Formation.prototype.getPlayerFromPosition = function(pos){
   var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
+  players.concat(this.defensivePlayers.filter(function(player) {return player.pos === pos}))
   if(players.length === 0){
     return null;
   }

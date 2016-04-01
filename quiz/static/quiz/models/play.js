@@ -20,6 +20,14 @@ var Play = function(config) {
     this.created_at = config.created_at || null;
 };
 
+Play.prototype.getPlayerFromPosition = function(pos){
+  var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
+  if(players.length === 0){
+    return null;
+  }
+  return players[0];
+};
+
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
 Play.prototype.getPassStrength = function(){
   var centerX = this.oline[2].x;

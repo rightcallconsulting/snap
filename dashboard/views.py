@@ -341,7 +341,6 @@ def edit_group(request, group_id):
             'group': group
         })
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
 def delete_group(request):
     if request.method == 'POST':
         group_id = request.POST['group_id']
@@ -351,11 +350,14 @@ def delete_group(request):
 
 def delete_player_from_group(request):
     if request.method == 'POST':
-        group_id = request.POST['group_id']
-        player_id = request.POST['player_id']
+        group_id = request.POST['groupID']
+        player_id = request.POST['playerID']
+        player = group.players.all().filter(pk=player_id)[0]
         group = PlayerGroup.objects.filter(pk=group_id)[0]
-        group.players.remove(group.players.all().filter(pk=player_id)[0])
+        embed()
+        group.players.remove(player)
         return HttpResponse('')
+    #return HttpResponse('')
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups(request):
@@ -375,9 +377,24 @@ def group_detail(request, group_id):
     group = PlayerGroup.objects.filter(id=group_id)[0]
     players = group.players.all()
     if request.POST:
-        test_id = int(request.POST['testID'])
-        group.duplicate_and_assign_test_to_all_players(test_id, coach)
-        return HttpResponse('')
+        test_id = request.POST.get('testID')
+        group_id = request.POST.get('groupID')
+        player_id = request.POST.get('playerID')
+        form_action = request.POST.get('form_action')
+        if test_id:
+            group.duplicate_and_assign_test_to_all_players(test_id, coach)
+            return HttpResponse('')
+        elif group_id and player_id and form_action == "delete_player_from_group":
+            player = Player.objects.filter(pk=player_id)[0]
+            group = PlayerGroup.objects.filter(pk=group_id)[0]
+            group.players.remove(player)
+            return HttpResponse('')
+        elif group_id and player_id and form_action == "add_player_to_group":
+            player = Player.objects.filter(pk=player_id)[0]
+            group = PlayerGroup.objects.filter(pk=group_id)[0]
+            group.players.add(player)
+            return HttpResponse('')
+
     else:
         delete_group_form = PlayerGroupForm(instance = group)
         tests = Test.objects.filter(player__team=coach.team)

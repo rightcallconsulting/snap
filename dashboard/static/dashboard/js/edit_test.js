@@ -12,6 +12,7 @@ var defensePlayName = "";
 function setup() {
   var myCanvas = createCanvas(500, 500);
   field.height = 500;
+  field.heightInYards = 53;
   background(58, 135, 70);
   myCanvas.parent('display-play-box-2');
 }
