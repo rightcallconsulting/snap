@@ -1,41 +1,40 @@
 var Test = function(config){
-    this.pythonTest = config.pythonTest || null;
-    this.playerID = config.playerID || null;
-    this.id = config.id || null;
-    this.typeTest = config.typeTest || null;
-    this.plays = config.plays || [];
-    this.defensivePlays = config.defensivePlays || [];
-    this.offensivePlays = config.offensivePlays || [];
-    this.questionsPerPlay = config.questionsPerPlay || 1;
-    this.questionNum = 0;
-    this.badGuessPenalty = config.badGuessPenalty || 0.1;
-    this.speed = 1;
-    this.startTime = config.startTime || 0;
-    this.endTime = config.endTime || 0;
-    this.score = config.score || 0;
-    this.incorrectGuesses = config.incorrectGuesses || 0;
-    this.skips = config.skips || 0;
-    this.scoreboard = config.scoreboard || null;
-    this.over = false;
-    this.cutOff = config.cutOff || 4;
-    this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
-    this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
-    this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
-    this.timeStarted = config.timeStarted || 0;
-    this.timeEnded = config.timeEnded || 0;
-    this.deadline = config.deadline || null;
-    this.inProgress = config.inProgress || null;
-    this.completed = config.completed || null;
-    this.assigned = config.assigned || null;
-    this.name = config.name || null;
-    this.newTest = config.newTest || true;
-    this.defensiveFormations = config.defensiveFormations || [];
-    this.offensiveFormations = config.offensiveFormations || [];
-    this.offensiveFormationIDs = config.offensiveFormationIDs || [];
-    this.defensiveFormationIDs = config.defensiveFormationIDs || [];
-    this.displayName = config.displayName || false;
-    this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
-
+  this.pythonTest = config.pythonTest || null;
+  this.playerID = config.playerID || null;
+  this.id = config.id || null;
+  this.typeTest = config.typeTest || null;
+  this.plays = config.plays || [];
+  this.defensivePlays = config.defensivePlays || [];
+  this.offensivePlays = config.offensivePlays || [];
+  this.questionsPerPlay = config.questionsPerPlay || 1;
+  this.questionNum = 0;
+  this.badGuessPenalty = config.badGuessPenalty || 0.1;
+  this.speed = 1;
+  this.startTime = config.startTime || 0;
+  this.endTime = config.endTime || 0;
+  this.score = config.score || 0;
+  this.incorrectGuesses = config.incorrectGuesses || 0;
+  this.skips = config.skips || 0;
+  this.scoreboard = config.scoreboard || null;
+  this.over = false;
+  this.cutOff = config.cutOff || 4;
+  this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
+  this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
+  this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
+  this.timeStarted = config.timeStarted || 0;
+  this.timeEnded = config.timeEnded || 0;
+  this.deadline = config.deadline || null;
+  this.inProgress = config.inProgress || null;
+  this.completed = config.completed || null;
+  this.assigned = config.assigned || null;
+  this.name = config.name || null;
+  this.newTest = config.newTest || true;
+  this.defensiveFormations = config.defensiveFormations || [];
+  this.offensiveFormations = config.offensiveFormations || [];
+  this.offensiveFormationIDs = config.offensiveFormationIDs || [];
+  this.defensiveFormationIDs = config.defensiveFormationIDs || [];
+  this.displayName = config.displayName || false;
+  this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
 };
 
 Test.prototype.unit = function(){
@@ -48,10 +47,16 @@ Test.prototype.unit = function(){
 };
 
 Test.prototype.getCurrentPlayerTested = function(currentUserTested){
-  var play = this.getCurrentDefensivePlay();
-  var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
-  return player;
+  if(this.getCurrentPlay().unit === "offense"){
+    var play = this.getCurrentDefensivePlay();
+    var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
+    return player;
+  }else{
+    return null;
+  }
 };
+
+
 
 Test.prototype.getCurrentPlayNumber = function(){
   return floor(this.questionNum/this.questionsPerPlay);
@@ -115,10 +120,6 @@ Test.prototype.getPercentage = function(){
     return "N/A";
   }
   return (100*((this.score - this.incorrectGuesses*this.badGuessPenalty) / (this.questionNum))).toFixed().toString() + "%";
-};
-
-Test.prototype.showFeedBackScreen = function(){
-
 };
 
 Test.prototype.restartQuiz = function(defensivePlay){
@@ -222,60 +223,60 @@ Test.prototype.isLastQuestion = function(){
 }
 
 Test.prototype.clearSelection = function() {
-    var dPlay = this.getCurrentDefensivePlay();
-    var oPlay = this.getCurrentPlay();
-    if (this.showBigPlayers) {
-      if (this.getCurrentDefensivePlay().bigDefender && this.getCurrentDefensivePlay().bigDefender.clicked) {
-        this.getCurrentDefensivePlay().bigDefender.unselect();
-      } else if (this.getCurrentPlay().bigPlayer !== null && this.getCurrentPlay().bigPlayer.clicked) {
-        this.getCurrentPlay().bigPlayer.unselect();
-      }
-    } else {
-      if (dPlay){
-        for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
-          var p = dPlay.defensivePlayers[i];
-          if (p.clicked) {
-            p.unselect();
-          }
+  var dPlay = this.getCurrentDefensivePlay();
+  var oPlay = this.getCurrentPlay();
+  if (this.showBigPlayers) {
+    if (this.getCurrentDefensivePlay().bigDefender && this.getCurrentDefensivePlay().bigDefender.clicked) {
+      this.getCurrentDefensivePlay().bigDefender.unselect();
+    } else if (this.getCurrentPlay().bigPlayer !== null && this.getCurrentPlay().bigPlayer.clicked) {
+      this.getCurrentPlay().bigPlayer.unselect();
+    }
+  } else {
+    if (dPlay){
+      for (var i = 0; i < dPlay.defensivePlayers.length; i++) {
+        var p = dPlay.defensivePlayers[i];
+        if (p.clicked) {
+          p.unselect();
         }
       }
-      if (oPlay){
-        for (var i = 0; i < oPlay.offensivePlayers.length; i++) {
-          var p = oPlay.offensivePlayers[i];
-          if (p.clicked) {
-            p.unselect();
-          }
+    }
+    if (oPlay){
+      for (var i = 0; i < oPlay.offensivePlayers.length; i++) {
+        var p = oPlay.offensivePlayers[i];
+        if (p.clicked) {
+          p.unselect();
         }
       }
     }
   }
+}
 
 Test.prototype.checkBigSelection = function() {
-    if(this.typeTest === "OLAssignment"){
-      var answer = floor(this.questionNum / 2) + 1;
-      if(answer > 2){
-        answer = 2;
-      }
-      var isCorrect = (this.getCurrentPlay().bigDefender !== null && this.getCurrentPlay().bigDefender.clickedRegion === answer);
+  if(this.typeTest === "OLAssignment"){
+    var answer = floor(this.questionNum / 2) + 1;
+    if(answer > 2){
+      answer = 2;
     }
-    else if(this.typeTest ==="CBAssignment"){
-      var isCorrect = false;
-      isCorrect = ((this.getCurrentPlay().bigPlayer !== null) && this.getCurrentPlay().bigPlayer.clicked);
+    var isCorrect = (this.getCurrentPlay().bigDefender !== null && this.getCurrentPlay().bigDefender.clickedRegion === answer);
+  }
+  else if(this.typeTest ==="CBAssignment"){
+    var isCorrect = false;
+    isCorrect = ((this.getCurrentPlay().bigPlayer !== null) && this.getCurrentPlay().bigPlayer.clicked);
+  }
+  if (isCorrect) {
+    this.getCurrentPlay().bigPlayer = null;
+    this.getCurrentPlay().bigDefender = null;
+    this.getCurrentDefensivePlay().bigDefender = null;
+    this.getCurrentDefensivePlay().bigPlayer = null;
+    this.showBigPlayers = false;
+    this.clearSelection();
+    this.registerAnswer(isCorrect);
+    if(this.getCurrentPlayNumber() < this.plays.length){
+      this.getCurrentDefensivePlay().draw(this.getCurrentPlay().oline[2].x, this.getCurrentPlay().oline[2].y, this);
+      this.getCurrentDefensivePlay().defensivePlayers[10].CBAssignment = this.getCurrentPlay().eligibleReceivers[4];
     }
-    if (isCorrect) {
-      this.getCurrentPlay().bigPlayer = null;
-      this.getCurrentPlay().bigDefender = null;
-      this.getCurrentDefensivePlay().bigDefender = null;
-      this.getCurrentDefensivePlay().bigPlayer = null;
-      this.showBigPlayers = false;
-      this.clearSelection();
-      this.registerAnswer(isCorrect);
-      if(this.getCurrentPlayNumber() < this.plays.length){
-        this.getCurrentDefensivePlay().draw(this.getCurrentPlay().oline[2].x, this.getCurrentPlay().oline[2].y, this);
-        this.getCurrentDefensivePlay().defensivePlayers[10].CBAssignment = this.getCurrentPlay().eligibleReceivers[4];
-      }
-    } else {
-      this.registerAnswer(isCorrect);
+  } else {
+    this.registerAnswer(isCorrect);
       //TODO: Explain what was wrong (or print right answer?)
     }
   }

@@ -15,7 +15,6 @@ var DefensivePlay = function(config) {
   this.linebackers = config.linebackers || [];
   this.cornerbacks = config.cornerbacks || [];
   this.safeties = config.safeties || [];
-  this.defensivePlayers = config.defensivePlayers || [];
   this.offensiveFormationID = config.offensiveFormationID || 0;
   this.offensiveFormationObject = config.offensiveFormationObject || null;
   this.positions = config.positions || [];
@@ -132,10 +131,6 @@ DefensivePlay.prototype.establishOffensiveFormationFromArray = function(arrayOfO
   this.establishCBAssignments();
 };
 
-DefensivePlay.prototype.establishOffenseToDraw = function(){
-
-};
-
 DefensivePlay.prototype.drawAllPlayersWithOffense = function(field){
     this.defensivePlayers.forEach(function(player){
       player.draw(field)
@@ -172,6 +167,7 @@ DefensivePlay.prototype.mouseInDL = function(formation, field){
 };
 
 DefensivePlay.prototype.playerBeingTested = function(){
+  if(test)
   var playerBeingTested = this.defensivePlayers.filter(function(player){
     return player.isBeingTested === true;
   })[0];

@@ -6,56 +6,52 @@
 
 {% endblock %}
 {% block header %}
-BLOCKING QUIZ
+  BLOCKING QUIZ
 {% endblock %}
 
 {% block quiz_type %}
-<script language="javascript" type="text/javascript" src="{% static 'quiz/blockingQuiz.js' %}"></script>
-<script type="text/javascript">
-$('#play-button').click(function(){
+  <script language="javascript" type="text/javascript" src="{% static 'quiz/blockingQuiz.js' %}"></script>
+  <script type="text/javascript">
+      $('#play-button').click(function(){
         //pressPlayButton();
-    })
+      })
 
-$('#pause-button').click(function(){
+      $('#pause-button').click(function(){
         //pressPlayButton();
-    })
+      })
 
-$('#check-button').click(function(){
-	for(var i = 0; i < multipleChoiceAnswers.length; i++){
-		if(multipleChoiceAnswers[i].clicked){
-			var answer = multipleChoiceAnswers[i];
-			if(answer.clicked){
-				checkAnswer(i);
-			}
-		}
-	}
-})
+      $('#check-button').click(function(){
+        if(currentGuessNode){
+          checkAnswer(currentGuessNode.x, currentGuessNode.y);
+        }
+      })
 
-$('#clear-button').click(function(){
-	clearAnswers();
-})
+      $('#clear-button').click(function(){
+        clearSelection();
+      })
 
-$('#restart-button').click(function(){
+      $('#restart-button').click(function(){
         //pressStopButton();
-    })
+      })
 
-$('#next-play-button').click(function(){
-  if(test && !test.over){
-    test.skipQuestion();
-    currentPlayerTested = null;
-    multipleChoiceAnswers = [];
-  }
-})
-</script>
+      $('#next-play-button').click(function(){
+        if(test && !test.over){
+          test.skips++;
+          test.advanceToNextPlay("Boo! Weak!");
+          currentPlayerTested = null;
+        }
+      })
+  </script>
 {% endblock %}
-{% block buttons %}
-<div class="holds-play-buttons">
 
-	<button id="play-button" class="btn btn-success" name="button">{% include "quiz/play_button.html" %}</button>
-	<button id="pause-button" class="btn btn-success" name="button">{% include "quiz/pause_button.html" %}</button>
-	<button id="check-button" class="btn btn-success" name="button">{% include "quiz/check_button.html" %}</button>
-	<button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
-	<button id="clear-button" class="btn btn-success" name="button">{% include "quiz/clear_button.html" %}</button>
-	<button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
-</div>
+{% block buttons %}
+  <div class="holds-play-buttons">
+
+    <button id="play-button" class="btn btn-success" name="button">{% include "quiz/play_button.html" %}</button>
+    <button id="pause-button" class="btn btn-success" name="button">{% include "quiz/pause_button.html" %}</button>
+    <button id="check-button" class="btn btn-success" name="button">{% include "quiz/check_button.html" %}</button>
+    <button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
+    <button id="clear-button" class="btn btn-success" name="button">{% include "quiz/clear_button.html" %}</button>
+    <button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
+  </div>
 {% endblock %}

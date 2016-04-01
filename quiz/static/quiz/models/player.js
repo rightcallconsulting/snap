@@ -6,6 +6,8 @@ var Player = function(config) {
     this.startY = this.y;
     this.siz = config.siz || 3;
     this.fill = config.fill || color(0, 0, 0);
+    this.stroke = config.stroke || noStroke();
+
     this.red = config.red || 0;
     this.blue = config.blue || 0;
     this.green = config.green || 0;
@@ -28,7 +30,7 @@ var Player = function(config) {
     this.progressionRank = config.progressionRank || 0;
     this.routeNum = config.routeNum || null;
     this.blockingAssignment = config.blockingAssignment || null;
-    this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
+    this.blockingAssignmentPlayerIndex4 = config.blockingAssignmentPlayerIndex || null;
     this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
     this.blocker = config.blocker || false;
     this.runner = config.runner || false;
@@ -47,7 +49,6 @@ var Player = function(config) {
     this.zoneAssignment = config.zoneAssignment || 0;
     this.optionAssignment = config.optionAssignment || [];
     this.coverageAssignment = config.coverageAssignment || [];
-    this.blockingAssignment = config.blockingAssignment || null;
   };
 
 Player.rank = 1;

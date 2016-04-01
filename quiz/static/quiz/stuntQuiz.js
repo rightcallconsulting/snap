@@ -177,11 +177,6 @@ function checkAnswer(x, y){
   }
 }
 
-function drawStunts(){
-  line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
-        
-};
-
 function drawOpening(){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
