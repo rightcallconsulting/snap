@@ -1,25 +1,70 @@
 
 var BlockingAssignment = function(config){
 	this.name = config.name || "";
-	this.dLineman = config.dLineman || null;
-	this.playerTested = config.playerTested || null;
+	this.blockedPlayers = config.blockedPlayers || [];	
 };
 
-BlockingAssignment.prototype.getBlockedPlayer = function(){
-	var blockedPlayer = this.playerTested.blockingAssignment;
-
+BlockingAssignment.prototype.getBlockedPlayers = function(){
+	return this.blockedPlayers;
 };
 
-BlockingAssignment.prototype.getBlockDirection = function(direction){
-	
+BlockingAssignment.prototype.getBlockedPlayer = function(i){
+	if(this.blockedPlayers.length <= i){
+		return null;
+	}
+	return this.blockedPlayers[i];
 };
 
-BlockingAssignment.prototype.drawBlockLeft = function(){
-	fill(255, 0, 0);
-	line(this.startCoords[0], this.startCoords.[1], this.getBlockCoords[0], this.getBlockCoords[1]);
+BlockingAssignment.prototype.addBlockedPlayer = function(player){
+	this.blockedPlayers.push(player);
+};
+
+BlockingAssignment.prototype.clearBlockedPlayers = function(){
+	this.blockedPlayers = [];
+};
+
+BlockingAssignment.prototype.removeBlockedPlayer = function(i){
+	var secondPiece = this.blockedPlayers.slice(i+1);
+	this.blockedPlayers = this.blockedPlayers.slice(0, i).concat(secondPiece);
+}
+
+BlockingAssignment.prototype.removeLastBlockedPlayer = function(){
+	if(this.blockedPlayers.length > 0){
+		this.blockedPlayers.pop();
+	}
+}
+
+BlockingAssignment.prototype.draw = function(blocker, field){
+	var startX = blocker.x;
+	var startY = blocker.y;
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		if(i > 0){
+			startX = this.blockedPlayers[i-1].x;
+			startY = this.blockedPlayers[i-1].y;
+		}
+		var defender = this.blockedPlayers[i]
+		stroke(0, 255, 255);
+        line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(defender.x), field.getTranslatedY(defender.y));
+        noStroke();
+
+ 	}
 };
 
 
+BlockingAssignment.prototype.equals = function(assignment){
+	if(assignment === null){
+		return false;
+	}
+	if(this.blockedPlayers.length !== assignment.blockedPlayers.length){
+		return false;
+	}
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		if(this.blockedPlayers[i] !== assignment.blockedPlayers[i]){
+			return false;
+		}
+	}
+	return true;
+}
 
 
 

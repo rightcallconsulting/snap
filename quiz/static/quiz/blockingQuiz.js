@@ -7,6 +7,8 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var guessedAssignment = null;
+
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -16,11 +18,11 @@ function setup() {
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
-  multipleChoiceAnswers = [];
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
-    width: 5,
+    width: 6,
+    height: 4,
     label: "Restart"
   })
 
@@ -114,7 +116,12 @@ function setup() {
                     i--;
                   }
                 }*/
-                debugger;
+                while(defensivePlays.length > plays.length){
+                  defensivePlays.pop();
+                }
+                while(defensivePlays.length < plays.length){
+                  defensivePlays.push(defensivePlays[0]);
+                }
                 test.plays = plays;
                 test.defensivePlays = defensivePlays;
                 test.restartQuiz();
@@ -146,7 +153,7 @@ var sortByPlayName = function(a, b){
 }
 
 function clearSelections(){
-  var play = test.getCurrentPlay();
+  var play = test.getCurrentDefensivePlay();
   if(play){
     for(var i = 0; i < play.defensivePlayers.length; i++){
       var p = play.defensivePlayers[i];
@@ -155,15 +162,14 @@ function clearSelections(){
   }
 }
 
-function checkAnswer(guess){
-
-  var p = test.getCurrentPlay().defensivePlayers[0]; // get from json? 
-  var isCorrect = guess === p;
+function checkAnswer(){
+  var isCorrect = currentPlayerTested.blockingAssignment.equals(guessedAssignment);
   if(isCorrect){
     clearSelections();
     test.score++;
     test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
+    guessedAssignment = null;
   }else{
     clearSelections();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
@@ -175,53 +181,80 @@ function checkAnswer(guess){
 
 function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
-  var play = test.getCurrentDefensivePlay();
+  var play = test.getCurrentPlay();
+  var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
-    play.drawAllPlayersWithOffense(field);
-  }  
-
-  var assignment = test.getCurrentDefensivePlay().dline[0];
-  if(!assignment){
-  assignment.fill = color(255, 0, 0);
-  assignment.draw(field);
-}
- 
+    play.drawAllPlayers(field);//WithOffense(field);
+  }
+  if(defensivePlay){
+    defensivePlay.drawAllPlayers(field);//WithOffense(field);
+  }
+  if(currentPlayerTested){
+    currentPlayerTested.blockingAssignment.draw(currentPlayerTested, field);
+  }
 };
 
 function drawOpening(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   var play = test.getCurrentPlay();
+  var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
-    play.drawAllPlayersWithOffense(field);
+    play.drawAllPlayers(field);//WithOffense(field);
   }
+  if(defensivePlay){
+    defensivePlay.drawAllPlayers(field);//WithOffense(field);
+  }
+  if(currentPlayerTested && guessedAssignment){
+    guessedAssignment.draw(currentPlayerTested, field);
+  }
+}
+
+keyPressed = function(){
+  if (keyCode === BACKSPACE){
+    if(guessedAssignment){
+      guessedAssignment.removeLastBlockedPlayer();
+    }
+    return false;
+  }
+  return true;
 }
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return;
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }
   else if(!test.over){
-    var play = test.getCurrentPlay();
+    var play = test.getCurrentDefensivePlay();
+    var clickedPlayer = null;
     for(var i = 0; i < play.defensivePlayers.length; i++){
       var answer = play.defensivePlayers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside(field)){
-          checkAnswer(answer);
-          return;
+      if(answer.isMouseInside(field)){
+        clickedPlayer = answer;
+      }
+    }
+    if(clickedPlayer){
+      if(guessedAssignment){
+        var i = guessedAssignment.blockedPlayers.indexOf(clickedPlayer);
+        if(i < 0){
+          guessedAssignment.addBlockedPlayer(clickedPlayer);
+        }else if(i === guessedAssignment.blockedPlayers.length - 1){
+          checkAnswer();
         }else{
-          clearSelections();
-          answer.clicked = true;
+          guessedAssignment.removeBlockedPlayer(i);
         }
       }else{
-        if(answer.isMouseInside(field)){
-          clearSelections();
-          answer.clicked = true;
-
-          return;
-        }
+        guessedAssignment = new BlockingAssignment({
+          blockedPlayers: [clickedPlayer]
+        });
+      }
+    }else{
+      if(guessedAssignment){
+        guessedAssignment.clearBlockedPlayers();
       }
     }
   }
@@ -246,9 +279,9 @@ function draw() {
       if(this.clicked){ 
         stroke(0, 255, 255);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
-        stroke(100, 20, 134);
+        noStroke();
 
-        }
+      }
       
       noStroke();
       fill(0, 0, 0);
@@ -259,10 +292,10 @@ function draw() {
     else {
       ///non functional
       noStroke();
+      fill(this.fill);
       if(this === currentPlayerTested){
         fill(220,220, 0);
       }
-      fill(this.fill);
       ellipse(x, y, siz, siz);
       fill(0);
       textSize(14);
@@ -281,9 +314,12 @@ function draw() {
     bigReset.draw(field);
   }else{
     if(!currentPlayerTested){
-      currentPlayerTested = test.getCurrentPlay();
-      currentPlayerTested.fill = color(0, 0, 255);
-      currentPlayerTested.blockingAssignment = [test.getCurrentPlay().defensivePlayers[0]];
+      currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
+      var correctBlockingAssignment = new BlockingAssignment({
+        name: "",
+        blockedPlayers: [test.getCurrentDefensivePlay().defensivePlayers[0]]
+      })
+      currentPlayerTested.blockingAssignment = correctBlockingAssignment;
     }
     if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
@@ -291,6 +327,7 @@ function draw() {
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
+        guessedAssignment = null;
 
       }else{
         drawFeedbackScreen(field);

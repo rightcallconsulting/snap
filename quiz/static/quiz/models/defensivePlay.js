@@ -23,6 +23,13 @@ var DefensivePlay = function(config) {
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
+DefensivePlay.prototype.getPlayerFromPosition = function(pos){
+  var players = this.defensivePlayers.filter(function(player) {return player.pos === pos});
+  if(players.length === 0){
+    return null;
+  }
+  return players[0];
+};
 
 DefensivePlay.prototype.draw = function(field, test){
   var ballX = Field.WIDTH / 2;

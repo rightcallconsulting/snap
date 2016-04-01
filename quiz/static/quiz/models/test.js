@@ -47,13 +47,7 @@ Test.prototype.unit = function(){
 };
 
 Test.prototype.getCurrentPlayerTested = function(currentUserTested){
-  if(this.getCurrentPlay().unit === "offense"){
-    var play = this.getCurrentDefensivePlay();
-    var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
-    return player;
-  }else{
-    return null;
-  }
+  return this.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
 };
 
 
