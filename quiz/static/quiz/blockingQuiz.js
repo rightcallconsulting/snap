@@ -1,7 +1,6 @@
 var makeJSONCall = true;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
-var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
