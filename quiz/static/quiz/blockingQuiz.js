@@ -290,7 +290,7 @@ function draw() {
       text(this.pos, x, y);
     }
     else {
-      ///non functional
+      
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){

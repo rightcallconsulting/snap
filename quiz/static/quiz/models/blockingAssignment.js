@@ -43,7 +43,7 @@ BlockingAssignment.prototype.draw = function(blocker, field){
 			startY = this.blockedPlayers[i-1].y;
 		}
 		var defender = this.blockedPlayers[i]
-		stroke(0, 255, 255);
+		stroke(255, 255, 0);
         line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(defender.x), field.getTranslatedY(defender.y));
         noStroke();
 
