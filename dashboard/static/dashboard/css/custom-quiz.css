@@ -24,6 +24,16 @@
   margin-bottom: 20px;
 }
 
+.sidebar-footer{
+  width: 100%;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.dash-footer-logo{
+  height: 75px;
+}
+
 .formation-button {
   width: 100%;
   margin-top:1px;
