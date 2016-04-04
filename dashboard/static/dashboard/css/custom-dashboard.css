@@ -407,6 +407,7 @@ input.create-quiz{
   padding-top: 25px;
   padding-bottom: 25px;
   border: none;
+  min-width: 50px;
 }
 
 .home-analytics-table{
@@ -790,11 +791,15 @@ input.create-quiz{
 .sidebar-footer{
   height: 20%;
   width: 100%;
-  margin-top: 70%;
+  margin-top: 80%;
   position: absolute;
   text-align: center;
 }
 
 .main-header h4{
   line-height: 30px;
+}
+
+.top-nav-button{
+  height: 20px;
 }

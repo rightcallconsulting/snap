@@ -3,7 +3,7 @@
 
 <div id="top-nav" class="main-header clearfix">
   <h4>
-      {{PAGE_HEADER}}
+      {{page_header}}
   </h4>
     <ul class="nav-notification clearfix">
       <li class="profile dropdown">
@@ -30,6 +30,20 @@
           <li class="divider"></li>
           <li><a tabindex="-1" class="main-link logoutConfirm_open" href="/logout"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
         </ul>
+      </li>
+    </ul>
+    <ul class="nav-notification clearfix">
+      <li class="profile">
+        <span>
+          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/question-mark-icon.png' %}" alt="?"></a>
+        </span>
+      </li>
+    </ul>
+    <ul class="nav-notification clearfix">
+      <li class="profile">
+        <span>
+          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/settings-icon.png' %}" alt="Settings"></a>
+        </span>
       </li>
     </ul>
 </div><!-- /top-nav-->

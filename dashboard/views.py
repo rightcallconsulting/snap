@@ -127,6 +127,7 @@ def analytics(request):
     return render(request, 'dashboard/show_player_list.html', {
         'team': team,
         'players': players,
+        'page_header': 'ANALYTICS'
     })
 
 @login_required
@@ -135,7 +136,9 @@ def playbook(request, unit="offense"):
         team = request.user.player.team
         pos = request.user.player.position
         unit = request.user.player.unit
-        return render(request, 'dashboard/playerbook.html')
+        return render(request, 'dashboard/playerbook.html', {
+            'page_header': 'PLAYBOOK'
+        })
     else:
         team = request.user.coach.team
         formations = team.formation_set.all()
@@ -181,6 +184,7 @@ def todo(request):
             'in_progress_tests': in_progress_tests,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
+            'page_header': 'TO DO'
         })
     else:
         coach = request.user.coach
@@ -191,7 +195,7 @@ def todo(request):
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
-            'page_header': 'TESTS',
+            'page_header': 'ASSIGNED TESTS',
             'groups': groups
         })
 
@@ -226,6 +230,7 @@ def create_test(request):
             'form': form,
             'plays': plays,
             'types_of_tests': Test.types_of_tests,
+            'page_header': 'CREATE TEST'
         })
 
 def edit_profile(request):
@@ -250,6 +255,7 @@ def edit_profile(request):
         return render(request, 'dashboard/edit_profile.html', {
             'user_form': user_form,
             'edit_profile_form': edit_profile_form,
+            'page_header': 'EDIT PROFILE'
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -306,6 +312,7 @@ def edit_test(request, test_id):
             'unit': unit,
             'unique_defensive_formations': unique_defensive_formations,
             'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
+            'page_header': 'EDIT TEST'
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -322,6 +329,7 @@ def create_group(request):
         form = PlayerGroupForm()
         return render(request, 'dashboard/create_group.html', {
             'form': form,
+            'page_header': 'CREATE GROUP'
         })
 
 def edit_group(request, group_id):
@@ -338,7 +346,8 @@ def edit_group(request, group_id):
         edit_group_form = PlayerGroupForm(instance = group)
         return render(request, 'dashboard/edit_group.html', {
             'edit_group_form': edit_group_form,
-            'group': group
+            'group': group,
+            'page_header': 'EDIT GROUP'
         })
 
 def delete_group(request):
@@ -404,7 +413,8 @@ def group_detail(request, group_id):
             'groups': groups,
             'players': players,
             'tests': tests,
-            'form': delete_group_form
+            'form': delete_group_form,
+            'page_header': 'MANAGE GROUP'
         })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
