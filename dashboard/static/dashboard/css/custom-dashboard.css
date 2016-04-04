@@ -794,3 +794,7 @@ input.create-quiz{
   position: absolute;
   text-align: center;
 }
+
+.main-header h4{
+  line-height: 30px;
+}
