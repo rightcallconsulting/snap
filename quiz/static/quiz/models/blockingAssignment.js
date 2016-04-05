@@ -26,13 +26,13 @@ BlockingAssignment.prototype.clearBlockedPlayers = function(){
 BlockingAssignment.prototype.removeBlockedPlayer = function(i){
 	var secondPiece = this.blockedPlayers.slice(i+1);
 	this.blockedPlayers = this.blockedPlayers.slice(0, i).concat(secondPiece);
-}
+};
 
 BlockingAssignment.prototype.removeLastBlockedPlayer = function(){
 	if(this.blockedPlayers.length > 0){
 		this.blockedPlayers.pop();
 	}
-}
+};
 
 BlockingAssignment.prototype.draw = function(blocker, field){
 	var startX = blocker.x;
@@ -64,11 +64,4 @@ BlockingAssignment.prototype.equals = function(assignment){
 		}
 	}
 	return true;
-}
-
-
-
-
-
-
-
+};

@@ -99,6 +99,16 @@ def blocking_quiz(request):
         'page_header': 'BLOCKING QUIZ'
     })
 
+def run_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/run_quiz.html', {
+        'player': player,
+        'page_header': 'RUN QUIZ'
+    })
+
+
 def cb_assignment(request):
     return render(request, 'quiz/cb_assignment.html')
 
