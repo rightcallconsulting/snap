@@ -7,6 +7,7 @@ var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var guessedAssignment = null;
+var hasExchanged = false;
 
 
 function setup() {
@@ -162,7 +163,7 @@ function clearSelections(){
 }
 
 function checkAnswer(){
-  var isCorrect = currentPlayerTested.runAssignment === guessedAssignment;
+  var isCorrect = currentPlayerTested.runAssignment.equals(guessedAssignment);
   if(isCorrect){
     clearSelections();
     test.score++;
@@ -189,7 +190,7 @@ function drawFeedbackScreen(){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested){
-    currentPlayerTested.blockingAssignment.draw(currentPlayerTested, field);
+    currentPlayerTested.runAssignment.drawRouteToExchange(currentPlayerTested, field);
   }
 };
 
@@ -199,13 +200,18 @@ function drawOpening(){
   var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayers(field);//WithOffense(field);
+    stroke(220, 220, 0);
+    line(currentPlayerTested.startX, currentPlayerTested.startY, currentPlayerTested.runAssignment[0], currentPlayerTested.runAssignment[1]);
+    noStroke();
   }
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested && guessedAssignment){
     guessedAssignment.draw(currentPlayerTested, field);
+
   }
+  
 }
 
 mouseClicked = function() {
@@ -217,30 +223,30 @@ mouseClicked = function() {
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }else if(!test.over){
-    var play = test.getCurrentPlay();
-    var runClicked = null;
-    var answer = currentPlayerTested.runAssignment;
-    if(answer){
-      runClicked = answer;
-      stroke(220, 220, 0);
-      line(currentPlayerTested.startX, currentPlayerTested.startY, answer[0], answer[1]);
-      noStroke();
-
-    }else{
-
-    }
-  }
-  if(runClicked){
-    currentPlayerTested.runAssignment.drawRouteToExchange(currentPlayerTested, field);
-    debugger;
-    checkAnswer();
+    var mouseYardX = field.getYardX(mouseX);
+    var mouseYardY = field.getYardY(mouseY);
+   if(guessedAssignment){
+      var lastClick = guessedAssignment.getLastCoord();
+      if(lastClick){
+        var dist = Math.sqrt((lastClick[0] - mouseYardX) * (lastClick[0] - mouseYardX) + (lastClick[1] - mouseYardY) * (lastClick[1] - mouseYardY));
+        if(dist < 1){
+          checkAnswer();
+          return;
+        }
+      }
+      if(hasExchanged){
+        guessedAssignment.addRouteAfterExchangeCoords(mouseYardX, mouseYardY);
+      }else{
+        guessedAssignment.addRouteToExchangeCoords(mouseYardX, mouseYardY);
+      }
+      
   }else{
     guessedAssignment = new RunAssignment({
-      routeToExchange: [],
+      routeToExchange: [[mouseYardX, mouseYardY]],
       routeAfterExchange: []
     });
-
   }
+}
 };
 
 keyTyped = function(){
@@ -248,10 +254,24 @@ keyTyped = function(){
     if(key === 'r'){
       test.restartQuiz();
     }
-  }else{
-
+  }else if(key === 'e'){
+    hasExchanged = !hasExchanged;
   }
 };
+
+keyPressed = function(){
+  if (keyCode === BACKSPACE){
+    if(guessedAssignment){
+      if(hasExchanged){
+        guessedAssignment.removeAfterExchange();
+      }else{
+        guessedAssignment.removeBeforeExchange();
+      }
+    }
+    return false;
+  }
+  return true;
+}
 
 function draw() {
   Player.prototype.draw = function(field){
@@ -296,8 +316,8 @@ function draw() {
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
       var correctRunAssignment = new RunAssignment({
         type: "HANDOFF",
-        routeToExchange: [currentPlayerTested.startX, currentPlayerTested.startY - 20],
-        routeAfterExchange: [routeAfterExchange[0], routeToExchange[1] - 20]
+        routeToExchange: [[currentPlayerTested.startX + 5, currentPlayerTested.startY]],
+        routeAfterExchange: []//[[currentPlayerTested.startX + 5, currentPlayerTested.startY]]
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
 
