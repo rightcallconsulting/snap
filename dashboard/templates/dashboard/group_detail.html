@@ -12,6 +12,10 @@
 
   <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 
+	<form id="add-player-to-group-form" class="AddPlayerToGroupForm" method="POST"><input type="hidden" name="form_action" value="add_player_to_group"><input id="player-id-input" type="hidden" name="playerID" value="0"><input id="group-id-input" type="hidden" name="groupID" value="0">{% csrf_token %}
+
+	</form>
+
 
 	<div id="main-container">
 		{% include "dashboard/top_nav_bar.html" %}

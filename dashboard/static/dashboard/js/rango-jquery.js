@@ -28,10 +28,18 @@ $(document).ready(function(){
         drop: function(event, ui) {
           var currentGroupID = document.getElementById('current-group-id').innerHTML;
           var currentPlayerID = c.tr.id;
-          //post request to add_player_to_group with above two variables
-          //on success, add row to table? Refresh table? Might be tricky here with edge cases/load time
+          var form = document.getElementById('add-player-to-group-form');
+          var playerInput = document.getElementById('player-id-input');
+          var groupInput = document.getElementById('group-id-input');
+          if(form && currentPlayerID && currentGroupID){
+            playerInput.value = currentPlayerID;
+            groupInput.value = currentGroupID;
+            form.submit();
+          }else{
             debugger;
-            //TBI
+          }
+
+          
         }
     });
 
