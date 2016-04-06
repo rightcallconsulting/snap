@@ -1,4 +1,3 @@
-// Offensive Player object
 var Player = function(config) {
     this.x = config.x || width/2;
     this.y = config.y || height/2;
@@ -7,7 +6,6 @@ var Player = function(config) {
     this.siz = config.siz || 3;
     this.fill = config.fill || color(0, 0, 0);
     this.stroke = config.stroke || noStroke();
-
     this.red = config.red || 0;
     this.blue = config.blue || 0;
     this.green = config.green || 0;
@@ -34,6 +32,7 @@ var Player = function(config) {
     this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
     this.blocker = config.blocker || false;
     this.runner = config.runner || false;
+    this.runAssignment = config.runAssignment || null;
     this.speed = 0.1;
     this.initialRank = 1;
     this.CBAssignment = config.CBAssignment || null;
