@@ -2,9 +2,18 @@
 {% load avatar_tags %}
 
 <div id="top-nav" class="main-header clearfix">
-  <h4>
-      {{page_header}}
-  </h4>
+  <table class="top-nav-table"><tbody><tr>
+    <td class="left">
+      <h4>
+          {{page_header}}
+      </h4>
+    </td>
+    <td class="middle">
+      <a href="/">
+      <img src="{% static 'dashboard/images/team-helmet.png' %}" alt="">
+      <img src="{% static 'dashboard/images/team-banner.png' %}" alt="Stanford"></a>
+    </td>
+    <td class="right">
     <ul class="nav-notification clearfix">
       <li class="profile dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -46,4 +55,6 @@
         </span>
       </li>
     </ul>
+  </td>
+</tr></tbody></table>
 </div><!-- /top-nav-->

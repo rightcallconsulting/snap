@@ -32,6 +32,20 @@
   text-align: center;
 }
 
+.team-logo-wrapper{
+  width: 80%;
+  margin-left: 10%;
+  height: 150px;
+  text-align: center;
+  padding-top: 25px;
+}
+
+.dash-header-logo{
+  height: 100px;
+  display:block;
+  margin:auto;
+}
+
 .dash-footer-logo{
   height: 75px;
 }
@@ -120,4 +134,8 @@
   width: 12%;
   height: 100%;
   min-width: 150px;
+}
+
+.top-nav-button{
+  height: 20px;
 }
