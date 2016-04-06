@@ -46,6 +46,30 @@
   margin:auto;
 }
 
+.top-nav-table{
+  width: 100%;
+  height: 50px;
+  table-layout: fixed;
+}
+
+.top-nav-table .left{
+  text-align: left;
+}
+
+.top-nav-table .middle{
+  text-align: left;
+  padding-left: 50px;
+}
+
+.top-nav-table .middle img{
+  height: 50px;
+  margin-right: 10px;
+}
+
+.top-nav-table .right{
+  text-align: right;
+}
+
 .dash-footer-logo{
   height: 75px;
 }
