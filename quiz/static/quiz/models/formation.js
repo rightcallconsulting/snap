@@ -499,17 +499,7 @@ Formation.prototype.saveToDB = function(){
   var cache = [];
 
   try{
-  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex'])/*function( key, value) {
-      if(value instanceof Player) {
-        if(cache.indexOf(value) >= 0){
-          return;// value.id;
-        }
-        cache.push(value);
-        return JSON.stringify(value);
-      }
-      else {return value;}
-  });*/
-  debugger;
+  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
   $.post( "teams/broncos/formations/new", { formation: formationJSON});
   }catch(e){
     console.log(e);
