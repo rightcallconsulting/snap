@@ -66,7 +66,7 @@ Play.prototype.resetPlayers = function(defensivePlay){
 };
 
 Play.getCurrentBlockingAssignment = function(){
-  
+
 };
 
 Play.prototype.setAllRoutes = function(){
@@ -196,7 +196,8 @@ Play.prototype.clearSelection = function(test, play) {
 };
 
 Play.prototype.saveToDB = function(){
-  $.post( "teams/broncos/plays/new", { play: JSON.stringify(this)});
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'routeCoordinates'])
+  $.post( "teams/broncos/plays/new", { play: playJSON});
 };
 
 Play.prototype.populatePositions = function(){

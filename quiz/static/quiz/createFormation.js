@@ -16,7 +16,6 @@ function setup() {
   field.height = 500;
   field.heightInYards = 54;
   field.ballYardLine = 75;
-  debugger;
 }
 
 function draw() {
@@ -265,6 +264,7 @@ var runTest = function(){
           offensivePlayers: formationExample.offensivePlayers,
           unit: formationExample.unit
       });
+      //debugger;
       newFormation.saveToDB();
       formationExample.removeAllPlayers();
       formationExample.playName = "";
