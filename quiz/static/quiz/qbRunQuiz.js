@@ -44,7 +44,7 @@ function setup() {
 
     $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
       currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "RB"; //remove when done testing
+      currentUserTested.position = "QB"; //remove when done testing
     })
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -274,6 +274,7 @@ keyPressed = function(){
 }
 
 function draw() {
+
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
     var y = field.getTranslatedY(this.y);
@@ -315,12 +316,11 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
       var correctRunAssignment = new RunAssignment({
-        type: "Pitch",
-        routeToExchange: [[currentPlayerTested.startX + 10, currentPlayerTested.startY]],
+        type: "HANDOFF",
+        routeToExchange: [[currentPlayerTested.startX + 5, currentPlayerTested.startY]],
         routeAfterExchange: []//[[currentPlayerTested.startX + 5, currentPlayerTested.startY]]
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
-
     }
     if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
