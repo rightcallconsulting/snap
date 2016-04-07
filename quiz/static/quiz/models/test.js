@@ -35,6 +35,7 @@ var Test = function(config){
   this.defensiveFormationIDs = config.defensiveFormationIDs || [];
   this.displayName = config.displayName || false;
   this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
+  this.showDemo = config.showDemo || false;
 };
 
 Test.prototype.unit = function(){

@@ -178,7 +178,7 @@ function drawFeedbackScreen(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-  }  
+  }
   var assignment = currentPlayerTested.coverageAssignment[0];
   assignment.fill = color(220, 220, 0);
   assignment.draw(field);
@@ -191,6 +191,49 @@ function drawOpening(){
     play.drawAllPlayersWithOffense(field);
   }
 
+}
+
+function drawDemoScreen(){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    play.drawAllPlayersWithOffense(field);
+    fill(220,0,0);
+    textSize(22);
+    text("DEMO", 50, 20);
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      noFill();
+      stroke(220,0,0);
+      strokeWeight(2);
+      ellipse(x, y, siz, siz);
+
+      fill(220,0,0);
+      line(field.width / 2, 80, field.width/2, 20);
+      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+      strokeWeight(1);
+      textAlign(LEFT);
+      textSize(18);
+      text("Your play call is here", field.width / 2 + 10, 50);
+      text("You are in blue", x + siz/2 + 5, y);
+
+      stroke(220, 220, 0);
+      fill(220, 220, 0);
+      for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+        var receiver = play.offensiveFormationObject.eligibleReceivers[i];
+        var x = field.getTranslatedX(receiver.startX);
+        var y = field.getTranslatedY(receiver.startY);
+        var siz = field.yardsToPixels(receiver.siz);
+        y -= siz / 2;
+        line(x, y - 80, x, y - 15);
+        triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+      }
+
+
+    }
+  }
 }
 
 mouseClicked = function() {
@@ -279,7 +322,10 @@ function draw() {
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
       currentPlayerTested.coverageAssignment = [test.getCurrentPlay().offensiveFormationObject.eligibleReceivers[1]];
     }
-    if(test.feedBackScreenStartTime){
+    if(test.showDemo){
+      drawDemoScreen();
+    }
+    else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedBackScreenStartTime = 0;

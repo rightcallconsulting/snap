@@ -17,6 +17,7 @@ var PlayTest = function(config){
   this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
   this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
   this.displayName = config.displayName || false;
+  this.showDemo = config.showDemo || false;
 };
 
 PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){

@@ -18,6 +18,7 @@ var FormationTest = function(config){
     this.displayName = config.displayName || false;
     this.coverageMap = config.coverageMap || null;
     this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
+    this.showDemo = config.showDemo || false;
 };
 
 FormationTest.prototype.getCurrentFormation = function(){
@@ -50,7 +51,7 @@ FormationTest.prototype.getCurrentCoverageMap = function(){
 
 FormationTest.prototype.getCurrentPlayerTested = function(currentUserTested){
   var play = this.getCurrentFormation();
-  
+
   var player = play.defensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
   return player;
 };
