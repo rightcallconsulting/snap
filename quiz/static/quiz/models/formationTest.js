@@ -19,6 +19,7 @@ var FormationTest = function(config){
     this.coverageMap = config.coverageMap || null;
     this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
     this.showDemo = config.showDemo || false;
+    this.demoStartTime = config.demoStartTime || 0;
 };
 
 FormationTest.prototype.getCurrentFormation = function(){

@@ -47,7 +47,9 @@
 
       $('#question-button').click(function(){
         if(test){
+          clearSelections();
           test.showDemo = !test.showDemo;
+          test.demoStartTime = millis();
         }
       })
   </script>

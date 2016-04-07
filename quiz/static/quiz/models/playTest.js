@@ -18,6 +18,7 @@ var PlayTest = function(config){
   this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
   this.displayName = config.displayName || false;
   this.showDemo = config.showDemo || false;
+  this.demoStartTime = config.demoStartTime || 0;
 };
 
 PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){

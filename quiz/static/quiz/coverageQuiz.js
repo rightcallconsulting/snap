@@ -190,48 +190,100 @@ function drawOpening(){
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-
 }
 
 function drawDemoScreen(){
+  var exitDemo = new Button({
+    label: "",
+    x: 16,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
+  noStroke();
+  var timeElapsed = millis() - test.demoStartTime;
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
+    noStroke();
     fill(220,0,0);
+    exitDemo.draw(field); 
     textSize(22);
     text("DEMO", 50, 20);
+    exitDemo.draw(field);
+    stroke(0);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    line(x1, y1, x2, y2);
+    noStroke();
+
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
       var y = field.getTranslatedY(currentPlayerTested.startY);
       var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-      noFill();
-      stroke(220,0,0);
-      strokeWeight(2);
-      ellipse(x, y, siz, siz);
-
-      fill(220,0,0);
-      line(field.width / 2, 80, field.width/2, 20);
-      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-      strokeWeight(1);
       textAlign(LEFT);
       textSize(18);
-      text("Your play call is here", field.width / 2 + 10, 50);
-      text("You are in blue", x + siz/2 + 5, y);
-
-      stroke(220, 220, 0);
-      fill(220, 220, 0);
-      for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
-        var receiver = play.offensiveFormationObject.eligibleReceivers[i];
-        var x = field.getTranslatedX(receiver.startX);
-        var y = field.getTranslatedY(receiver.startY);
-        var siz = field.yardsToPixels(receiver.siz);
-        y -= siz / 2;
-        line(x, y - 80, x, y - 15);
-        triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        noStroke();
+        fill(220, 0, 0);
+        text("You are in blue", x + siz/2 + 5, y);
+        stroke(0);
+        fill(0);
+        noStroke();
+        textSize(16);
+        text("Click demo button to exit", 200, 350);
+        line(200, 375, 200, 400)
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        text("Your play call is here", field.width / 2 + 10, 50);
+      }else{
+        stroke(220, 220, 0);
+        fill(220, 220, 0);
+        var clickedReceiver = null;
+        for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+          var receiver = play.offensiveFormationObject.eligibleReceivers[i];
+          if(receiver.clicked){
+            clickedReceiver = receiver;
+          }
+          var x = field.getTranslatedX(receiver.startX);
+          var y = field.getTranslatedY(receiver.startY);
+          var siz = field.yardsToPixels(receiver.siz);
+          y -= siz / 2;
+          line(x, y - 80, x, y - 15);
+          triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+        }
+        textSize(18);
+        stroke(0);
+        if(clickedReceiver){
+          text("Click again to check answer", 20, 360);
+          fill(0);
+          textSize(16);
+          text("Click demo button to exit", 200, 350);
+          stroke(0);
+          triangle(350, 380, 360, 395, 370, 380);
+          line(360, 360, 360, 395);
+          noStroke();
+        }else{
+          text("Click on the player you are assigned to cover", 20, 360);
+        }
       }
-
-
+      noStroke();
     }
   }
 }
@@ -249,8 +301,12 @@ mouseClicked = function() {
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
         if(answer.isMouseInside(field)){
-          checkAnswer(answer);
-          return;
+          if(test.showDemo){
+
+          }else{
+            checkAnswer(answer);
+            return;
+          }
         }else{
           clearSelections();
           answer.clicked = true;
