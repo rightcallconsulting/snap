@@ -32,17 +32,6 @@ RunAssignment.prototype.removeAfterExchange = function(){
 	}
 };
 
-RunAssignment.prototype.getType = function(type){
-	if(this.type === "Handoff"){
-		this.routeToExchange = [[currentPlayerTested.startX + 5, currentPlayerTested.startY]];
-	}else if(this.type === "Pitch"){
-		this.routeToExchange = [[currentPlayerTested.startX, currentPlayerTested.startY + 5]];
-	}else{
-		this.routeToExchange = [currentPlayerTested.startX, currentPlayerTested.startY - 5];
-	}
-}
-
-
 RunAssignment.prototype.clearRunAssignments = function(){
 	this.routeToExchange = [];
 	this.routeAfterExchange = [];
@@ -71,13 +60,13 @@ RunAssignment.prototype.drawRouteToExchange = function(rb, field){
 		}
 		if(this.type === "Handoff"){
 			stroke(255, 255, 0);
-			line(x1, x2, y1, y2);
+			line(x1, y1, x2, y2);
 			noStroke();
 		}else if(this.type === "Pitch"){
 			stroke(255, 255, 0);
 			for(var i = 0; i <= 10; i++) {
-				var x = lerp(x1, x2, i / 10.0) + 5;
-				var y = lerp(y1, y2, i / 10.0);
+				var x = lerp(x1, x2, i / 10);
+				var y = lerp(y1, y2, i / 10);
 				point(x, y);
 			}
 		}

@@ -316,8 +316,8 @@ function draw() {
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
       var correctRunAssignment = new RunAssignment({
         type: "Pitch",
-        routeToExchange: [[currentPlayerTested.startX + 10, currentPlayerTested.startY]],
-        routeAfterExchange: []//[[currentPlayerTested.startX + 5, currentPlayerTested.startY]]
+        routeToExchange: [[currentPlayerTested.startX - 6, currentPlayerTested.startY + 3]],
+        routeAfterExchange: []
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
 
