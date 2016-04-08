@@ -7,6 +7,9 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var exitDemo = null;
+var demoDoubleClick = false;
+var oldFill = null;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -23,6 +26,15 @@ function setup() {
     width: 5,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 16,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -169,6 +181,9 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    var assignment = currentPlayerTested.coverageAssignment[0];
+    oldFill = assignment.fill;
+    assignment.fill = color(220, 220, 0);
     test.feedBackScreenStartTime = millis();
   }
 }
@@ -179,9 +194,6 @@ function drawFeedbackScreen(){
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-  var assignment = currentPlayerTested.coverageAssignment[0];
-  assignment.fill = color(220, 220, 0);
-  assignment.draw(field);
 };
 
 function drawOpening(){
@@ -193,15 +205,7 @@ function drawOpening(){
 }
 
 function drawDemoScreen(){
-  var exitDemo = new Button({
-    label: "",
-    x: 16,
-    y: 94,
-    height: 1.5,
-    width: 1.5,
-    clicked: false,
-    fill: color(255, 255, 255)
-  });
+
   noStroke();
   var timeElapsed = millis() - test.demoStartTime;
   field.drawBackground(null, height, width);
@@ -220,6 +224,7 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
     noStroke();
 
     if(currentPlayerTested){
@@ -235,15 +240,14 @@ function drawDemoScreen(){
         stroke(220,0,0);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
-        noStroke();
+        strokeWeight(1);
         fill(220, 0, 0);
         text("You are in blue", x + siz/2 + 5, y);
         stroke(0);
         fill(0);
         noStroke();
         textSize(16);
-        text("Click demo button to exit", 200, 350);
-        line(200, 375, 200, 400)
+        text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
         fill(220,0,0);
@@ -251,6 +255,10 @@ function drawDemoScreen(){
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
+        fill(0);
+        textSize(16);
+        text("Click demo button to exit", 20, 50);
+        fill(220,0,0);
         text("Your play call is here", field.width / 2 + 10, 50);
       }else{
         stroke(220, 220, 0);
@@ -271,16 +279,21 @@ function drawDemoScreen(){
         textSize(18);
         stroke(0);
         if(clickedReceiver){
-          text("Click again to check answer", 20, 360);
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!", 20, 360);
+          }else{
+            text("Click again to check answer", 20, 360);
+          }
+          
           fill(0);
           textSize(16);
-          text("Click demo button to exit", 200, 350);
-          stroke(0);
-          triangle(350, 380, 360, 395, 370, 380);
-          line(360, 360, 360, 395);
-          noStroke();
+          text("Click demo button to exit", 20, 50);
         }else{
           text("Click on the player you are assigned to cover", 20, 360);
+          fill(0);
+          textSize(16);
+          noStroke();
+          text("Click demo button to exit", 20, 50);
         }
       }
       noStroke();
@@ -294,6 +307,9 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    test.showDemo = false;
+    clearSelections();
   }
   else if(!test.over){
     var play = test.getCurrentDefensivePlay();
@@ -302,7 +318,7 @@ mouseClicked = function() {
       if(answer.clicked){
         if(answer.isMouseInside(field)){
           if(test.showDemo){
-
+            demoDoubleClick = true;
           }else{
             checkAnswer(answer);
             return;
@@ -384,6 +400,8 @@ function draw() {
     else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
+        var assignment = currentPlayerTested.coverageAssignment[0];
+        assignment.fill = oldFill;
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
