@@ -13,7 +13,7 @@ var currentRouteNodes = [];
 function setup() {
   var myCanvas = createCanvas(400, 400);
   field.height = 400;
-  field.heightInYards = 53;
+  field.heightInYards = 40;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -169,6 +169,7 @@ function checkAnswer(){
     currentPlayerTested = null;
     test.score++;
     test.advanceToNextPlay(test.correctAnswerMessage);
+    currentPlayerTested = null;
   }else{
     clearSelection();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
@@ -218,13 +219,48 @@ function drawOpening(){
     }
   }
   drawCurrentRoute();
-    for(var i = 0; i < currentRouteNodes.length; i++){
-      stroke(220, 220, 0);
-      currentRouteNodes[i].draw(field);
-      noStroke();
-    }
+  for(var i = 0; i < currentRouteNodes.length; i++){
+    stroke(220, 220, 0);
+    currentRouteNodes[i].draw(field);
+    noStroke();
+  }
 
 }
+
+function drawDemoScreen(){
+
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllPlayers(field);
+    fill(220,0,0);
+    textSize(22);
+    text("DEMO", 50, 20);
+
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      noFill();
+      stroke(220,0,0);
+      strokeWeight(2);
+      ellipse(x, y, siz, siz);
+
+      fill(220,0,0);
+      line(field.width / 2, 80, field.width/2, 20);
+      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+      strokeWeight(1);
+      textAlign(LEFT);
+      textSize(18);
+
+      text("Your play call is here", field.width / 2 + 10, 50);
+      text("You are in blue", x + siz/2 + 5, y);
+    }
+
+
+
+  }
+};
 
 
 mouseClicked = function() {
@@ -312,21 +348,20 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
-  }else if(test.feedbackMessage){
-
-
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    if(test.feedBackScreenStartTime){
+    if(test.showDemo){
+      drawDemoScreen();
+    }else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 1000){
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
-        drawFeedbackScreen();
+        drawFeedbackScreen(field);
       }
     }else{
       drawOpening();

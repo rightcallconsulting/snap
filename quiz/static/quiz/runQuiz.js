@@ -315,9 +315,9 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
       var correctRunAssignment = new RunAssignment({
-        type: "HANDOFF",
-        routeToExchange: [[currentPlayerTested.startX + 5, currentPlayerTested.startY]],
-        routeAfterExchange: []//[[currentPlayerTested.startX + 5, currentPlayerTested.startY]]
+        type: "Pitch",
+        routeToExchange: [[currentPlayerTested.startX - 6, currentPlayerTested.startY + 3]],
+        routeAfterExchange: []
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
 

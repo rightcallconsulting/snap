@@ -21,11 +21,6 @@
 
 		<div class="padding-md">
 			<div class="panel panel-default table-responsive">
-				<div class="panel-heading">
-					Assigned Tests
-					<span class="label label-info pull-right">{{uncompleted_tests|length}} Items</span>
-				</div>
-				<div class="panel-body">
 					{% if not request.user.myuser.is_a_player %}
 					<div class="row">
 						<div class="col-md-4 col-sm-4">
@@ -40,7 +35,7 @@
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					{% endif %}
-				</div>
+
 				<table class="table table-striped" id="responsiveTable">
 					<thead>
 						<tr>
@@ -59,7 +54,9 @@
 							<th>In Progress</th>
 							<th>Added By</th>
 							<th></th>
+							{% if not request.user.myuser.is_a_player %}
 							<th></th>
+							{% endif %}
 						</tr>
 					</thead>
 					<tbody>

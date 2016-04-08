@@ -2,19 +2,18 @@
 {% load avatar_tags %}
 
 <div id="top-nav" class="main-header clearfix">
-  <div class="welcome-header">
-    <h4>
-      <span class="bold">
-        WELCOME
-      </span>
-      {% if request.user.myuser.is_a_player %}
-          &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}
-      {% else %}
-          &nbsp;&nbsp;&nbsp;{{request.user.get_full_name}}
-      {% endif %}
-    </h4>
-
-
+  <table class="top-nav-table"><tbody><tr>
+    <td class="left">
+      <h4>
+          {{page_header}}
+      </h4>
+    </td>
+    <td class="middle">
+      <a href="/">
+      <img src="{% static 'dashboard/images/team-helmet.png' %}" alt="">
+      <img src="{% static 'dashboard/images/team-banner.png' %}" alt="Stanford"></a>
+    </td>
+    <td class="right">
     <ul class="nav-notification clearfix">
       <li class="profile dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -42,5 +41,20 @@
         </ul>
       </li>
     </ul>
-  </div>
+    <ul class="nav-notification clearfix">
+      <li class="profile">
+        <span>
+          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/question-mark-icon.png' %}" alt="?"></a>
+        </span>
+      </li>
+    </ul>
+    <ul class="nav-notification clearfix">
+      <li class="profile">
+        <span>
+          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/settings-icon.png' %}" alt="Settings"></a>
+        </span>
+      </li>
+    </ul>
+  </td>
+</tr></tbody></table>
 </div><!-- /top-nav-->

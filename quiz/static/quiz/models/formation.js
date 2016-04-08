@@ -494,7 +494,17 @@ Formation.prototype.populatePositions = function(){
 };
 
 Formation.prototype.saveToDB = function(){
-  $.post( "teams/broncos/formations/new", { formation: JSON.stringify(this)});
+
+  var formationJSON = "";
+  var cache = [];
+
+  try{
+  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
+  $.post( "teams/broncos/formations/new", { formation: formationJSON});
+  }catch(e){
+    console.log(e);
+  }
+
 };
 
 var createFormationButtons = function(formationArray){
