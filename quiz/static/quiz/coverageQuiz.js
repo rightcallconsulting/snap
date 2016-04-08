@@ -214,7 +214,7 @@ function drawDemoScreen(){
     play.drawAllPlayersWithOffense(field);
     noStroke();
     fill(220,0,0);
-    exitDemo.draw(field); 
+    exitDemo.draw(field);
     textSize(22);
     text("DEMO", 50, 20);
     exitDemo.draw(field);
@@ -247,7 +247,7 @@ function drawDemoScreen(){
         fill(0);
         noStroke();
         textSize(16);
-        text("Click demo button to exit", 20, 50);
+        //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
         fill(220,0,0);
@@ -257,7 +257,7 @@ function drawDemoScreen(){
         noStroke();
         fill(0);
         textSize(16);
-        text("Click demo button to exit", 20, 50);
+        //text("Click demo button to exit", 20, 50);
         fill(220,0,0);
         text("Your play call is here", field.width / 2 + 10, 50);
       }else{
@@ -284,16 +284,16 @@ function drawDemoScreen(){
           }else{
             text("Click again to check answer", 20, 360);
           }
-          
+
           fill(0);
           textSize(16);
-          text("Click demo button to exit", 20, 50);
+          //text("Click demo button to exit", 20, 50);
         }else{
           text("Click on the player you are assigned to cover", 20, 360);
           fill(0);
           textSize(16);
           noStroke();
-          text("Click demo button to exit", 20, 50);
+          //text("Click demo button to exit", 20, 50);
         }
       }
       noStroke();
@@ -309,6 +309,7 @@ mouseClicked = function() {
     test.restartQuiz();
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     test.showDemo = false;
+    demoDoubleClick = false;
     clearSelections();
   }
   else if(!test.over){
