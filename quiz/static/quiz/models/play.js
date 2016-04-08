@@ -122,6 +122,7 @@ Play.prototype.checkProgression = function(){
     play_id: this.id
   })
   this.test.newTest = false;
+  return isCorrect;
 };
 
 Play.prototype.clearRouteDrawings = function(){

@@ -205,24 +205,22 @@ function drawOpening(){
 }
 
 function drawDemoScreen(){
-
   noStroke();
   var timeElapsed = millis() - test.demoStartTime;
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-    noStroke();
-    fill(220,0,0);
-    exitDemo.draw(field);
-    textSize(22);
-    text("DEMO", 50, 20);
-    exitDemo.draw(field);
-    stroke(0);
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(22);
+    text("DEMO", x1, y2);
+    stroke(0);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     noStroke();
@@ -289,7 +287,7 @@ function drawDemoScreen(){
           textSize(16);
           //text("Click demo button to exit", 20, 50);
         }else{
-          text("Click on the player you are assigned to cover", 20, 360);
+          text("Click on the player you are assigned to cover", exitDemo.x + field.width / 2, exitDemo.y + field.height/2);
           fill(0);
           textSize(16);
           noStroke();
@@ -301,6 +299,19 @@ function drawDemoScreen(){
   }
 }
 
+function setupDemoScreen(){
+  clearSelections();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearSelections();
+};
+
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
@@ -308,9 +319,9 @@ mouseClicked = function() {
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
-    test.showDemo = false;
-    demoDoubleClick = false;
-    clearSelections();
+    exitDemoScreen();
+  }else if(test.feedBackScreenStartTime){
+    return;
   }
   else if(!test.over){
     var play = test.getCurrentDefensivePlay();
