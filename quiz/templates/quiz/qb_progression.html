@@ -40,6 +40,10 @@ $('#pause-button').click(function(){
 
 $('#check-button').click(function(){
   if (test.getCurrentPlay()){
+    if(test.showDemo){
+      demoComplete = true;
+      return false;
+    }
     var isCorrect = test.getCurrentPlay().checkProgression();
     test.updateScoreboard();
     if(!isCorrect){

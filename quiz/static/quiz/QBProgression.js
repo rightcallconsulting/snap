@@ -4,7 +4,7 @@ var positions = []
 var makeJSONCall = true
 var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
-var demoDoubleClick = false;
+var demoComplete = false;
 var exitDemo = null;
 
 
@@ -29,13 +29,14 @@ function setup() {
 
 function setupDemoScreen(){
   test.showDemo = true;
-  demoDoubleClick = false;
+  demoComplete = false;
   test.demoStartTime = millis();
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
-  demoDoubleClick = false;
+  demoComplete = false;
+  test.getCurrentPlay().clearProgression();
 };
 
 
@@ -272,7 +273,7 @@ var runTest = function(type, playerTested, test){
         var y1 = field.getTranslatedY(exitDemo.y);
         var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
         var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-        exitDemo.draw(field);
+        exitDemo.draw(field); 
         stroke(0);
         line(x1, y1, x2, y2);
         line(x1, y2, x2, y1);
@@ -288,19 +289,19 @@ var runTest = function(type, playerTested, test){
           noStroke();
           fill(0);
           textSize(18);
-            fill(220,0,0);
-            text("Your play call is here", field.width / 2 + 10, 50);
-          }else if(timeElapsed < 4000){
-            textSize(18);
-            fill(220, 220, 0);
-            text("Click players in correct progression order", exitDemo.x + field.width / 2, (5 * field.height) / 6);
-          }else{
-            var clickedReceiver = null;
-            for(var i = 0; i < play.eligibleReceivers.length; i++){
-              var receiver = play.eligibleReceivers[i];
-              if(receiver.clicked){
-                clickedReceiver = receiver;
-              }
+          fill(220,0,0);
+          text("Your play call is here", field.width / 2 + 10, 50);
+        }else if(timeElapsed < 4000){
+          textSize(18);
+          fill(220, 220, 0);
+          text("Click players in correct progression order", exitDemo.x + field.width / 2, (5 * field.height) / 6);
+        }else{
+          var clickedReceivers = [];
+          for(var i = 0; i < play.eligibleReceivers.length; i++){
+            var receiver = play.eligibleReceivers[i];
+            if(receiver.clicked){
+              clickedReceivers.push(receiver);
+            }else{
               var x = field.getTranslatedX(receiver.startX);
               var y = field.getTranslatedY(receiver.startY);
               var siz = field.yardsToPixels(receiver.siz);
@@ -310,56 +311,64 @@ var runTest = function(type, playerTested, test){
               line(x, y - 80, x, y - 15);
               triangle(x - 15, y - 15, x + 15, y - 15, x, y);
             }
-            textSize(18);
-            stroke(0);
-            if(clickedReceiver){
-              if(demoDoubleClick){
-                text("Great!  You're ready to start!", 60, 360);
-              }else{
-                text("Click again to check answer", 60, 360);
-              }
-
-              fill(0);
-              textSize(18);
+          }
+          textSize(18);
+          stroke(0);
+          if(demoComplete){
+            text("Demo Complete! Click anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
+          }
+          else if(clickedReceivers.length === 1){
+            if(demoComplete){
+              text("Great!  You're ready to start!", 60, 300);
             }else{
-              text("Click players in correct progression order", exitDemo.x + field.width / 2, (5 * field.height) / 6);
-              fill(0);
-              textSize(18);
-              noStroke();
+              text("Click next player in progression", field.width / 2, (5 * field.height) / 6);
             }
-          }
-          noStroke();
 
-        }
-
-      };
-      var drawFeedBackScreen = function(test){
-        drawBackground(test.getCurrentPlay(), field);
-        defensePlay.drawAllPlayers(field);
-        test.getCurrentPlay().drawAllPlayers(field);
-      };
-
-      keyPressed = function() {
-        if (keyCode === 32){
-          if (!test.getCurrentPlay().inProgress){
-            pressPlayButton();
-          }
-          else {
-            pause.changeClickStatus();
+            fill(0);
+            textSize(18);
+          }else{
+            if(clickedReceivers.length > 1){
+              text("Click button to check", field.width / 2, (5 * field.height) / 6);
+            }else{
+              text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
+            }
+            fill(0);
+            textSize(18);
+            noStroke();
           }
         }
-        else if (keyCode === 81){
-          pressStopButton();
-        }
-      };
+        noStroke();
 
-      keyTyped = function(){
-        if(key === 'r' && test.over){
-          test.restartQuiz(defensePlay);
-        }
       }
 
-      pressStopButton = function(){
+    };
+    var drawFeedBackScreen = function(test){
+      drawBackground(test.getCurrentPlay(), field);
+      defensePlay.drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
+    };
+
+    keyPressed = function() {
+      if (keyCode === 32){
+        if (!test.getCurrentPlay().inProgress){
+          pressPlayButton();
+        }
+        else {
+          pause.changeClickStatus();
+        }
+      }
+      else if (keyCode === 81){
+        pressStopButton();
+      }
+    };
+
+    keyTyped = function(){
+      if(key === 'r' && test.over){
+        test.restartQuiz(defensePlay);
+      }
+    }
+
+    pressStopButton = function(){
       // playButton.changeClickStatus();
       // if (pause.clicked) {
       //     pause.changeClickStatus();
@@ -389,7 +398,7 @@ var runTest = function(type, playerTested, test){
       currentPlay = test.getCurrentPlay();
       if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
         test.restartQuiz(defensePlay);  
-      }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+      }else if(test.showDemo && exitDemo.isMouseInside(field) || demoComplete){
         exitDemoScreen();
       }else if(test.feedBackScreenStartTime){
         return;
@@ -400,7 +409,7 @@ var runTest = function(type, playerTested, test){
           if (p.isMouseInside(field)){
             if(p.clicked){
               if(test.showDemo){
-                demoDoubleClick = true;
+                demoComplete = true;
               }else{
                 p.unselect();
                 p.showRoute = false;
