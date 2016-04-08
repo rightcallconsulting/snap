@@ -36,6 +36,7 @@ var Test = function(config){
   this.displayName = config.displayName || false;
   this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
   this.showDemo = config.showDemo || false;
+  this.demoStartTime = config.demoStartTime || 0;
 };
 
 Test.prototype.unit = function(){

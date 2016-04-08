@@ -88,6 +88,7 @@ Field.prototype.drawBackground = function(play, height, width) {
   angleMode(RADIANS);
   var pixelsToYards = this.heightInYards / height;
   var yardsToPixels = height / this.heightInYards;
+  noStroke();
   background(93, 148, 81);
   stroke(255, 255, 255);
   line(this.getTranslatedX(0), this.getTranslatedY(-10), this.getTranslatedX(0), this.getTranslatedY(110));
@@ -126,4 +127,5 @@ Field.prototype.drawBackground = function(play, height, width) {
             line(this.getTranslatedX(Field.WIDTH - 1), yc, this.getTranslatedX(Field.WIDTH), yc);
           }
         }
+        noStroke();
       };

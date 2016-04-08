@@ -40,6 +40,12 @@
 
       $('#next-play-button').click(function(){
         if(test && !test.over){
+          if(test.showDemo){
+            test.showDemo = false;
+            demoDoubleClick = false;
+            clearSelections();
+            return;
+          }
           test.skipQuestion();
           currentPlayerTested = null;
         }
@@ -47,7 +53,10 @@
 
       $('#question-button').click(function(){
         if(test){
+          clearSelections();
           test.showDemo = !test.showDemo;
+          demoDoubleClick = false;
+          test.demoStartTime = millis();
         }
       })
   </script>
