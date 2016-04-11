@@ -21,6 +21,7 @@ import simplejson
 from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
+from dashboard.utils import PlayerAnalytics
 
 
 # Create your views here
@@ -120,14 +121,27 @@ def messages(request):
 @login_required
 def analytics(request):
     if request.user.myuser.is_a_player:
-        team = request.user.player.team
+        analytics = PlayerAnalytics.for_single_player(request.user.player)
     else:
-        team = request.user.coach.team
-    players = team.player_set.all()
+        # If the user is a coach, the default analytics player set is a their
+        # entire team, but they can use request.GET params to specify the pk of
+        # one of their PlayerGroups or individual Players
+        if 'player' in request.GET:
+            player = Player.objects.get(pk=request.GET['player'])
+            players = [player]
+        elif 'playergroup' in request.GET:
+            group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
+            players = group.players.all()
+        else:
+            players = request.user.coach.team.player_set.all()
+
+        analytics = PlayerAnalytics.for_players(players)
+
     return render(request, 'dashboard/show_player_list.html', {
-        'team': team,
-        'players': players,
-        'page_header': 'ANALYTICS'
+        # 'team': team,
+        # 'players': players,
+        'page_header': 'ANALYTICS',
+        'analytics': analytics,
     })
 
 @login_required
