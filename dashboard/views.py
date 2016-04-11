@@ -123,9 +123,9 @@ def analytics(request):
     if request.user.myuser.is_a_player:
         analytics = PlayerAnalytics.for_single_player(request.user.player)
     else:
-        # If the user is a coach, the default analytics player set is a team,
-        # but they can use request.GET params to specify the pk of one of
-        # their PlayerGroups or individual Players
+        # If the user is a coach, the default analytics player set is a their
+        # entire team, but they can use request.GET params to specify the pk of
+        # one of their PlayerGroups or individual Players
         if 'player' in request.GET:
             player = Player.objects.get(pk=request.GET['player'])
             players = [player]

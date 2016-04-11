@@ -14,24 +14,24 @@ def create_test_result(test, correct=0, incorrect=0, skipped=0, **kwargs):
     Creates a TestResult object for the given Test, with the given number of
     correct, incorrect, and skipped answers. Creates new Play objects to
     populate the missed/correct/skipped_plays relations. Additional TestResult
-    arrtibute can be passed through kwargs.
+    attributes can be passed through kwargs.
     """
 
     result = TestResult.objects.create(test=test, player=test.player, **kwargs)
     team = test.player.team
-    form = Formation.objects.create(team=team)
+    formation = Formation.objects.create(team=team)
 
-    # Create new plays to populate the TestResult relations
+    # Create new plays to populate the TestResult relation fields
     for _ in range(correct):
-        play = Play.objects.create(formation=form, team=team)
+        play = Play.objects.create(formation=formation, team=team)
         result.correct_plays.add(play)
 
     for _ in range(incorrect):
-        play = Play.objects.create(formation=form, team=team)
+        play = Play.objects.create(formation=formation, team=team)
         result.missed_plays.add(play)
 
     for _ in range(skipped):
-        play = Play.objects.create(formation=form, team=team)
+        play = Play.objects.create(formation=formation, team=team)
         result.skipped_plays.add(play)
 
     result.score = correct
@@ -79,11 +79,10 @@ class PlayerAnalyticsTests(TestCase):
         test = player.test_set.create()
         create_test_result(test=test, correct=1, incorrect=2, skipped=3)
         create_test_result(test=test, correct=1, incorrect=2, skipped=3)
-        create_test_result(test=test, correct=1, incorrect=2, skipped=3)
         analytics = PlayerAnalytics.for_single_player(player)
-        self.assertEqual(analytics.total_correct(), 3)
-        self.assertEqual(analytics.total_incorrect(), 6)
-        self.assertEqual(analytics.total_skipped(), 9)
+        self.assertEqual(analytics.total_correct(), 2)
+        self.assertEqual(analytics.total_incorrect(), 4)
+        self.assertEqual(analytics.total_skipped(), 6)
 
     def test_total_responses_with_multiple_players(self):
         """total_correct(), total_skipped(), and total_incorrect() should
@@ -111,10 +110,10 @@ class PlayerAnalyticsTests(TestCase):
         result3 = create_test_result(test=test)
 
         # Create Play objects
-        form = Formation.objects.create(team=self.team)
-        play1 = Play.objects.create(team=self.team, formation=form)
-        play2 = Play.objects.create(team=self.team, formation=form)
-        play3 = Play.objects.create(team=self.team, formation=form)
+        formation = Formation.objects.create(team=self.team)
+        play1 = Play.objects.create(team=self.team, formation=formation)
+        play2 = Play.objects.create(team=self.team, formation=formation)
+        play3 = Play.objects.create(team=self.team, formation=formation)
 
         # play1: 3 correct, play2: 2 correct, play3: 1 correct, 
         result1.correct_plays.add(play1)
