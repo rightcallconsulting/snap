@@ -240,7 +240,7 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         fill(220, 0, 0);
-        text("You are in blue", x + siz/2 + 5, y);\
+        text("You are in blue", x + siz/2 + 5, y);
         fill(0);
         textSize(16);
         //text("Click demo button to exit", 20, 50);
@@ -320,8 +320,7 @@ mouseClicked = function() {
     exitDemoScreen();
   }else if(test.feedBackScreenStartTime){
     return;
-  }
-  else if(!test.over){
+  }else if(!test.over){
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
