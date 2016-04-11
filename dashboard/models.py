@@ -141,7 +141,7 @@ class TestForm(ModelForm):
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
         self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
-        self.fields['group']=forms.ModelChoiceField(queryset=Group.objects.all()) #Replace with 'group' once we have groups in database
+        self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all()) #Replace with 'group' once we have groups in database
         self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
         self.fields['deadline'].widget = widgets.AdminSplitDateTime()
 

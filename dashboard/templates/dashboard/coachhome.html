@@ -70,9 +70,9 @@
 												<table class="analytics-table">
 													<tbody>
 														<tr>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>SPEED</span></td>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>ACCURACY</span></td>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>OVERALL</span></td>
+															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>CORRECT</span></td>
+															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>MISSED</span></td>
+															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>SKIPPED</span></td>
 														</tr>
 													</tbody>
 												</table>
@@ -81,6 +81,7 @@
 												<table class="player-list">
 													<tbody>
 														{% for player in players %}
+														{% if forloop.counter0 < 3 %}
 														<tr id="{{player.id}}">
 															<td><img class="headshot-thumbnail" src="{{MEDIA_ROOT}}{{player.user.myuser.avatar_image}}" alt=""></td>
 															<td>{{player.first_name}} {{player.last_name}}</td>
@@ -88,6 +89,7 @@
 															<td>SR</td>
 															<td>98%</td>
 														</tr>
+														{% endif %}
 														{% endfor %}
 													</tbody>
 												</table>
@@ -104,6 +106,7 @@
 															<th>TEST</th><th>FOR</th><th>DUE</th><th>STATUS</th>
 														</tr>
 														{% for test in uncompleted_tests %}
+														{% if forloop.counter0 < 2 %}
 														<tr id="test-{{test.id}}">
 															<td>
 																{{test.name}}
@@ -113,6 +116,7 @@
 															<td>98%</td>
 
 														</tr>
+														{% endif %}
 														{% endfor %}
 
 													</tbody>
@@ -126,6 +130,7 @@
 													<table class="table news-feed-table">
 														<tbody>
 															{% for test in uncompleted_tests %}
+															{% if forloop.counter0 < 1 %}
 															<tr>
 																<td>
 																	<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
@@ -142,6 +147,7 @@
 																	<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
 																</td>
 															</tr>
+															{% endif %}
 															{% endfor %}
 
 														</tbody>
