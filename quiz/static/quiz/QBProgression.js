@@ -3,12 +3,42 @@ var currentPlayerTested
 var positions = []
 var makeJSONCall = true
 var testIDFromHTML = $('#test-id').data('test-id')
+var exitDemo = null;
+var demoComplete = false;
+var exitDemo = null;
+
+
+
 function setup() {
   var myCanvas = createCanvas(400, 400);
-  field.heightInYards = 53;
+  field.height = 400;
+  field.heightInYards = 40;
   background(58, 135, 70);
-  myCanvas.parent('quiz-box');
+  myCanvas.parent('quiz-box');  
+
+  exitDemo = new Button({
+    label: "",
+    x: 16,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 }
+
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoComplete = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoComplete = false;
+  test.getCurrentPlay().clearProgression();
+};
+
 
 function draw() {
   // Fetch player object from Django DB
@@ -43,10 +73,10 @@ function draw() {
           })
         })
       })
-    });
-  }
+});
+}
 
-  var runTest = function(type, playerTested, test){
+var runTest = function(type, playerTested, test){
     // Create Scoreboard
     var scoreboard = new Scoreboard({
 
@@ -74,32 +104,32 @@ function draw() {
       if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
         this.drawBreakPoints(field);
       }
-        if(this.unit === "offense"){
-            noStroke();
-            if(this.rank !== 0){
-                fill(255, 255, 0);
-            }else{
-                fill(this.fill);
-            }
-            ellipse(x, y, siz, siz);
-            fill(0,0,0);
-            textSize(14);
-            textAlign(CENTER, CENTER);
-            if(this.rank > 0){
-                text(this.rank, x, y);
-            } else if(this.rank < 0){
-              text(letters[-1 - this.rank], x, y);
-            }else{
-                text(this.num, x, y);
-            }
+      if(this.unit === "offense"){
+        noStroke();
+        if(this.rank !== 0){
+          fill(255, 255, 0);
+        }else{
+          fill(this.fill);
+        }
+        ellipse(x, y, siz, siz);
+        fill(0,0,0);
+        textSize(14);
+        textAlign(CENTER, CENTER);
+        if(this.rank > 0){
+          text(this.rank, x, y);
+        } else if(this.rank < 0){
+          text(letters[-1 - this.rank], x, y);
+        }else{
+          text(this.num, x, y);
+        }
 
-        }
-        else {
-            fill(this.red,this.green,this.blue);
-            textSize(17);
-            textAlign(CENTER, CENTER);
-            text(this.pos, x, y);
-        }
+      }
+      else {
+        fill(this.red,this.green,this.blue);
+        textSize(17);
+        textAlign(CENTER, CENTER);
+        text(this.pos, x, y);
+      }
     };
 
     Player.prototype.select = function() {
@@ -115,121 +145,207 @@ function draw() {
     };
 
     Player.prototype.unselect = function() {
-        this.clicked = false;
-        currentPlay = test.getCurrentPlay();
-        if(currentPlay && this.rank > 0 && this.rank < Player.rank - 1){
+      this.clicked = false;
+      currentPlay = test.getCurrentPlay();
+      if(currentPlay && this.rank > 0 && this.rank < Player.rank - 1){
             //decrement the later guys' ranks
             for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
-                var p = currentPlay.eligibleReceivers[i];
-                if(p.rank > this.rank){
-                    p.rank--;
-                }
+              var p = currentPlay.eligibleReceivers[i];
+              if(p.rank > this.rank){
+                p.rank--;
+              }
             }
-        }else if(currentPlay && this.rank < 0 && this.rank > Player.altRank + 1){
-          for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
+          }else if(currentPlay && this.rank < 0 && this.rank > Player.altRank + 1){
+            for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
               var p = currentPlay.eligibleReceivers[i];
               if(p.rank < this.rank){
-                  p.rank++;
+                p.rank++;
               }
+            }
           }
-        }
-        if(this.rank > 0){
-          Player.rank--;
-        }else if(this.rank < 0){
-          Player.altRank++;
-        }
-        this.rank = 0;
-    };
+          if(this.rank > 0){
+            Player.rank--;
+          }else if(this.rank < 0){
+            Player.altRank++;
+          }
+          this.rank = 0;
+        };
 
-    var playButton = new Button({
-        x: 10,
-        y: 360,
-        width: 32,
-        label: "Play",
-        clicked: false,
-        displayButton: false
-    });
+        var playButton = new Button({
+          x: 10,
+          y: 360,
+          width: 32,
+          label: "Play",
+          clicked: false,
+          displayButton: false
+        });
 
-    var check = new Button({
-        x: 53,
-        y: 360,
-        width: 43,
-        label: "Check",
-        clicked: false,
-        displayButton: false
-    });
+        var check = new Button({
+          x: 53,
+          y: 360,
+          width: 43,
+          label: "Check",
+          clicked: false,
+          displayButton: false
+        });
 
-    var nextPlay = new Button({
-        x: 330,
-        y: 360,
-        width: 60,
-        label: "Next Play",
-        clicked: false,
-        displayButton: false
-    });
+        var nextPlay = new Button({
+          x: 330,
+          y: 360,
+          width: 60,
+          label: "Next Play",
+          clicked: false,
+          displayButton: false
+        });
 
-    var clear = new Button({
-        x: 108,
-        y: 360,
-        width: 43,
-        label: "Clear",
-        clicked: false,
-        displayButton: false
-    });
+        var clear = new Button({
+          x: 108,
+          y: 360,
+          width: 43,
+          label: "Clear",
+          clicked: false,
+          displayButton: false
+        });
 
-    var pause = new Button({
-        x: 300,
-        y: 360,
-        width: 43,
-        label: "Pause",
-        clicked: false,
-        displayButton: false
-    });
+        var pause = new Button({
+          x: 300,
+          y: 360,
+          width: 43,
+          label: "Pause",
+          clicked: false,
+          displayButton: false
+        });
 
-    var stop = new Button({
-        x: 355,
-        y: 360,
-        width: 34,
-        label: "Stop",
-        clicked: false,
-        displayButton: false
-    });
+        var stop = new Button({
+          x: 355,
+          y: 360,
+          width: 34,
+          label: "Stop",
+          clicked: false,
+          displayButton: false
+        });
 
-    var bigReset = new Button({
-        x: field.getYardX(width/2)-4,
-        y: field.getYardY(height * 0.8),
-        width: 8,
-        label: "Restart Quiz",
-        clicked: false
-    });
+        var bigReset = new Button({
+          x: field.getYardX(width/2)-4,
+          y: field.getYardY(height * 0.8),
+          width: 8,
+          label: "Restart Quiz",
+          clicked: false
+        });
 
     // Draw Defense
     defensePlay.draw(field, test);
 
     var drawBackground = function(play, field) {
-        field.drawBackground(play, height, width);
+      field.drawBackground(play, height, width);
     };
 
     // intro scene
     var drawOpening = function(test) {
-        if(test.startTime === 0){
-            test.startTime = second() + minute() * 60;
-        }
-        drawBackground(test.getCurrentPlay(), field);
-        defensePlay.drawAllPlayers(field);
-        test.getCurrentPlay().drawAllPlayers(field);
+      if(test.startTime === 0){
+        test.startTime = second() + minute() * 60;
+      }
+      drawBackground(test.getCurrentPlay(), field);
+      defensePlay.drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
     };
     // game scene
     var drawScene = function(play) {
-        drawBackground(play, field);
-        defensePlay.drawAllPlayers(field);
-        test.getCurrentPlay().drawAllPlayers(field);
-        for(var i = 0; i < play.eligibleReceivers.length; i++){
-            play.eligibleReceivers[i].runRoute();
+      drawBackground(play, field);
+      defensePlay.drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
+      for(var i = 0; i < play.eligibleReceivers.length; i++){
+        play.eligibleReceivers[i].runRoute();
+      }
+      for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+        defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
+      }
+    };
+    
+    function drawDemoScreen(){
+      drawBackground(test.getCurrentPlay(), field);
+      defensePlay.drawAllPlayers(field);
+      var timeElapsed = millis() - test.demoStartTime;
+      var play = test.getCurrentPlay();
+      if(play){
+        play.drawAllPlayers(field);
+        var x1 = field.getTranslatedX(exitDemo.x);
+        var y1 = field.getTranslatedY(exitDemo.y);
+        var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+        var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+        exitDemo.draw(field); 
+        stroke(0);
+        line(x1, y1, x2, y2);
+        line(x1, y2, x2, y1);
+        noStroke();
+        fill(0, 0, 0);
+        textSize(22);
+        text("DEMO", x1 - 40, y1 + 20);
+        if(timeElapsed < 2000){
+          fill(220,0,0);
+          stroke(220, 0, 0);
+          line(field.width / 2, 80, field.width/2, 20);
+          triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+          noStroke();
+          fill(0);
+          textSize(18);
+          fill(220,0,0);
+          text("Your play call is here", field.width / 2 + 10, 50);
+        }else if(timeElapsed < 4000){
+          textSize(18);
+          fill(220, 220, 0);
+          text("Click players in correct progression order", exitDemo.x + field.width / 2, (5 * field.height) / 6);
+        }else{
+          var clickedReceivers = [];
+          for(var i = 0; i < play.eligibleReceivers.length; i++){
+            var receiver = play.eligibleReceivers[i];
+            if(receiver.clicked){
+              clickedReceivers.push(receiver);
+            }else{
+              var x = field.getTranslatedX(receiver.startX);
+              var y = field.getTranslatedY(receiver.startY);
+              var siz = field.yardsToPixels(receiver.siz);
+              y -= siz / 2;
+              stroke(220, 220, 0);
+              fill(220, 220, 0);
+              line(x, y - 80, x, y - 15);
+              triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+            }
+          }
+          textSize(18);
+          stroke(0);
+          if(demoComplete){
+            fill(220, 220, 0);
+            text("Demo Complete! Click anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
+          }
+          else if(clickedReceivers.length === 1){
+            fill(220, 220, 0);
+            if(demoComplete){
+              text("Great!  You're ready to start!", 60, 300);
+            }else{
+              text("Click next player in progression", field.width / 2, (5 * field.height) / 6);
+            }
+            textSize(18);
+          }else{
+            if(clickedReceivers.length > 1){
+              text("Click button to check", field.width / 2, (5 * field.height) / 6);
+            }else{
+              text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
+            }
+            fill(0);
+            textSize(18);
+            noStroke();
+          }
         }
-        for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
-        }
+        noStroke();
+
+      }
+
+    };
+    var drawFeedBackScreen = function(test){
+      drawBackground(test.getCurrentPlay(), field);
+      defensePlay.drawAllPlayers(field);
+      test.getCurrentPlay().drawAllPlayers(field);
     };
 
     keyPressed = function() {
@@ -280,30 +396,32 @@ function draw() {
 
     mouseClicked = function() {
       currentPlay = test.getCurrentPlay();
-      if(currentPlay){currentPlay.setAllRoutes();}
-        if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
-            test.restartQuiz(defensePlay);
-            // nextPlay.displayButton = true;
-            // playButton.displayButton = true;
-            // check.displayButton = true;
-            // clear.displayButton = true;
-        }
-        else if (currentPlay){
-            var playerSelected = false;
-            for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
-                var p = currentPlay.eligibleReceivers[i];
-                if (p.isMouseInside(field)){
-                    if(p.clicked){
-                        p.unselect();
-                        p.showRoute = false;
-                    }else{
-                        p.select();
-                        p.showRoute = true;
-                    }
-                    return false;
-                }
+      if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
+        test.restartQuiz(defensePlay);  
+      }else if(test.showDemo && exitDemo.isMouseInside(field) || demoComplete){
+        exitDemoScreen();
+      }else if(test.feedBackScreenStartTime){
+        return;
+      }else if (currentPlay){
+        var playerSelected = false;
+        for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
+          var p = currentPlay.eligibleReceivers[i];
+          if (p.isMouseInside(field)){
+            if(p.clicked){
+              if(test.showDemo){
+                demoComplete = true;
+              }else{
+                p.unselect();
+                p.showRoute = false;
+              }
+            }else{
+              p.select();
+              p.showRoute = true;
             }
+            return false;
+          }
         }
+      }
     };
 
     draw = function() {
@@ -312,13 +430,24 @@ function draw() {
         field.drawBackground(null, height, width);
         bigReset.draw(field);
         test.drawQuizSummary();
+
+      }else if(test.showDemo){
+        drawDemoScreen();
+      }else if(test.feedBackScreenStartTime){
+        var elapsedTime = millis() - test.feedBackScreenStartTime;
+        if(elapsedTime > 2000){
+          test.feedBackScreenStartTime = 0;
+          test.advanceToNextPlay(test.incorrectAnswerMessage);
+        }else{
+          drawFeedBackScreen(test);
+        }
       }else{
         if (playButton.clicked) {
-            if(!pause.clicked) {
-                drawScene(test.getCurrentPlay());
-            }
+          if(!pause.clicked) {
+            drawScene(test.getCurrentPlay());
+          }
         } else {
-            drawOpening(test);
+          drawOpening(test);
         }
       }
     };

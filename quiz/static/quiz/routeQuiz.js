@@ -8,7 +8,8 @@ var currentUserTested = null;
 var currentPlayerTested = null;
 var currentRouteGuess = [];
 var currentRouteNodes = [];
-
+var demoDoubleClick = false;
+var exitDemo = null;
 
 function setup() {
   var myCanvas = createCanvas(400, 400);
@@ -23,7 +24,17 @@ function setup() {
     y: field.getYardY(height*0.8),
     width: 5,
     label: "Restart"
-  })
+  });
+
+  exitDemo = new Button({
+    label: "",
+    x: 16,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -154,7 +165,6 @@ function checkAnswer(){
     isCorrect = false;
   }
 
-
   for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
     var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
     var dy = abs(currentRouteGuess[i][1] - currentPlayerTested.breakPoints[i][1]);
@@ -230,36 +240,69 @@ function drawOpening(){
 function drawDemoScreen(){
 
   field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
   if(play){
     play.drawAllPlayers(field);
-    fill(220,0,0);
-    textSize(22);
-    text("DEMO", 50, 20);
-
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
       var y = field.getTranslatedY(currentPlayerTested.startY);
       var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-      noFill();
-      stroke(220,0,0);
-      strokeWeight(2);
-      ellipse(x, y, siz, siz);
-
+      var x1 = field.getTranslatedX(exitDemo.x);
+      var y1 = field.getTranslatedY(exitDemo.y);
+      var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+      var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+      noStroke();
       fill(220,0,0);
-      line(field.width / 2, 80, field.width/2, 20);
-      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-      strokeWeight(1);
-      textAlign(LEFT);
-      textSize(18);
+      exitDemo.draw(field);
+      textSize(22);
+      text("DEMO", x1, y2);
+      stroke(0);
+      line(x1, y1, x2, y2);
+      line(x1, y2, x2, y1);
+      noStroke();
+      if(timeElapsed < 2000){
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        fill(220,0,0);
+        strokeWeight(1);
+        textAlign(LEFT);
+        textSize(18);
+        text("You are in blue", x - field.width / 4, y - 50);
 
-      text("Your play call is here", field.width / 2 + 10, 50);
-      text("You are in blue", x + siz/2 + 5, y);
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        strokeWeight(1);
+        textAlign(LEFT);
+        textSize(18);
+        text("Your play call is here", field.width / 2 + 10, 50);
+      }else {
+        fill(0, 0, 220);
+        textSize(16);
+        text("Draw Your Route by clicking your breakpoints", (3 * field.width) / 4, field.height / 3) ;
+        
+      }
     }
-
-
-
   }
+};
+
+
+function setupDemoScreen(){
+
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  
 };
 
 
@@ -274,10 +317,16 @@ mouseClicked = function() {
     currentPlayerTested = null;
     test.restartQuiz();
     return true;
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
   }else if(!test.over){
     if(currentRouteNodes.length > 0 && currentRouteNodes[currentRouteNodes.length - 1].isMouseInside(field)){
-      checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
-      return;
+      if(test.showDemo){
+        demoDoubleClick = true;
+      }else{
+        checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
+        return;
+      }
     }else{
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
@@ -290,6 +339,7 @@ mouseClicked = function() {
       });
       currentRouteNodes.push(nodeObject);
     }
+
   }
 
 };
@@ -309,6 +359,11 @@ keyTyped = function(){
   if(test.over){
     if(key === 'r'){
       test.restartQuiz();
+    }
+  }
+  if(test.showDemo){
+    if(key === 'e'){
+      exitDemoScreen();
     }
   }
 };

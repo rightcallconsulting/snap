@@ -41,9 +41,7 @@
       $('#next-play-button').click(function(){
         if(test && !test.over){
           if(test.showDemo){
-            test.showDemo = false;
-            demoDoubleClick = false;
-            clearSelections();
+            exitDemoScreen();
             return;
           }
           test.skipQuestion();
@@ -53,10 +51,11 @@
 
       $('#question-button').click(function(){
         if(test){
-          clearSelections();
-          test.showDemo = !test.showDemo;
-          demoDoubleClick = false;
-          test.demoStartTime = millis();
+          if(test.showDemo){
+            exitDemoScreen();
+          }else{
+            setupDemoScreen();
+          }
         }
       })
   </script>
