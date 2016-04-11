@@ -61,6 +61,12 @@ dylan_local:
 shell:
 	python manage.py shell --settings=quiz_master.settings.local
 
+# Run unit tests for all apps
+# If you want to run tests on only one app, use the APP variable
+# Example: 'make test APP=dashboard'
+test:
+	python manage.py test $(APP) --settings=quiz_master.settings.local
+
 ###############################################################################
 # Make clean commands
 ###############################################################################

@@ -312,7 +312,7 @@ class TestResult(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
 
     class Meta:
-         ordering = ['created_at']
+        ordering = ['created_at']
 
     def update_result(self, js_test_object, play_object):
         self.create_test_result_play(js_test_object, play_object)
