@@ -8,6 +8,7 @@ var currentUserTested = null;
 var currentPlayerTested = null;
 var currentRouteGuess = [];
 var currentRouteNodes = [];
+var demoDoubleClick = false;
 
 
 function setup() {
@@ -230,6 +231,7 @@ function drawOpening(){
 function drawDemoScreen(){
 
   field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
   if(play){
     play.drawAllPlayers(field);
@@ -241,25 +243,46 @@ function drawDemoScreen(){
       var x = field.getTranslatedX(currentPlayerTested.startX);
       var y = field.getTranslatedY(currentPlayerTested.startY);
       var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-      noFill();
-      stroke(220,0,0);
-      strokeWeight(2);
-      ellipse(x, y, siz, siz);
+      if(timeElapsed < 2000){
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
 
-      fill(220,0,0);
-      line(field.width / 2, 80, field.width/2, 20);
-      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-      strokeWeight(1);
-      textAlign(LEFT);
-      textSize(18);
+        fill(220,0,0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        strokeWeight(1);
+        textAlign(LEFT);
+        textSize(18);
+        text("You are in blue", x - field.width / 4, y - 50);
 
-      text("Your play call is here", field.width / 2 + 10, 50);
-      text("You are in blue", x + siz/2 + 5, y);
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        strokeWeight(1);
+        textAlign(LEFT);
+        textSize(18);
+        text("Your play call is here", field.width / 2 + 10, 50);
+      }
     }
-
-
-
   }
+};
+
+
+function setupDemoScreen(){
+  
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  
 };
 
 

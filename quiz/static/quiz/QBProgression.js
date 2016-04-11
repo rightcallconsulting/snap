@@ -315,16 +315,16 @@ var runTest = function(type, playerTested, test){
           textSize(18);
           stroke(0);
           if(demoComplete){
+            fill(220, 220, 0);
             text("Demo Complete! Click anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
           }
           else if(clickedReceivers.length === 1){
+            fill(220, 220, 0);
             if(demoComplete){
               text("Great!  You're ready to start!", 60, 300);
             }else{
               text("Click next player in progression", field.width / 2, (5 * field.height) / 6);
             }
-
-            fill(0);
             textSize(18);
           }else{
             if(clickedReceivers.length > 1){

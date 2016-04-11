@@ -206,8 +206,8 @@ function drawOpening(){
 
 function drawDemoScreen(){
   noStroke();
-  var timeElapsed = millis() - test.demoStartTime;
   field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
@@ -240,10 +240,8 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         fill(220, 0, 0);
-        text("You are in blue", x + siz/2 + 5, y);
-        stroke(0);
+        text("You are in blue", x + siz/2 + 5, y);\
         fill(0);
-        noStroke();
         textSize(16);
         //text("Click demo button to exit", 20, 50);
         noStroke();
@@ -287,7 +285,7 @@ function drawDemoScreen(){
           textSize(16);
           //text("Click demo button to exit", 20, 50);
         }else{
-          text("Click on the player you are assigned to cover", exitDemo.x + field.width / 2, exitDemo.y + field.height/2);
+          text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
           fill(0);
           textSize(16);
           noStroke();
