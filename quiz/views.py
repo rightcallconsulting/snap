@@ -64,21 +64,21 @@ def call_quiz(request):
         'player': player
     })
 
-def db_call_quiz(request):      
-    if(request.user.myuser.is_a_player):        
-        player = request.user.player        
-        #playerID = player.id       
-    return render(request, 'quiz/db_call_quiz.html', {      
-        'player': player        
-    })      
+def db_call_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/db_call_quiz.html', {
+        'player': player
+    })
 
-def motion_quiz(request):     
-    if(request.user.myuser.is_a_player):        
-        player = request.user.player        
-        #playerID = player.id       
-    return render(request, 'quiz/motion_quiz.html', {     
+def motion_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/motion_quiz.html', {
         'player': player,
-        'page_header': 'MOTION QUIZ'   
+        'page_header': 'MOTION QUIZ'
     })
 
 def qb_call_quiz(request):
@@ -200,7 +200,7 @@ def route_quiz(request):
         'player': player,
         'page_header': 'ROUTE QUIZ'
     })
-    
+
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
 
@@ -325,10 +325,11 @@ def update_test(request, player_id, test_id):
     current_play = Play.objects.filter(pk=current_play_id)[0]
     pythonTest = Test.objects.get(pk=jsTest['id'])
     test_length = len(pythonTest.play_set.all())
+    current_player = Player.objects.filter(pk=player_id)[0]
     if jsTest['newTest'] == True:
         # Create a new test result object assigned to the test
         new_test_result = TestResult(test=pythonTest, most_recent=True,
-        score=0, skips=0, incorrect_guesses=0)
+        score=0, skips=0, incorrect_guesses=0, player=current_player)
         new_test_result.save()
         new_test_result.string_id = str(new_test_result.id)
         new_test_result.save()
