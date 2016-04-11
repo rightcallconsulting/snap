@@ -296,11 +296,11 @@ class Play(models.Model):
         new_play.save()
 
 class TestResult(models.Model):
-    score = models.FloatField(null=True, blank=True)
+    score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt
     skips = models.FloatField(null=True, blank=True)
     incorrect_guesses = models.FloatField(null=True, blank=True)
     string_id = models.CharField(null=True, blank=True, default="Temp", max_length=100)
-    time_taken = models.IntegerField(null=True, blank=True)
+    time_taken = models.IntegerField(null=True, blank=True) # time taken to complete the test, in seconds
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     missed_plays = models.ManyToManyField(Play, related_name="missed_plays", blank=True)
@@ -312,7 +312,7 @@ class TestResult(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True) # set every time it's updated
 
     class Meta:
-         ordering = ['created_at']
+        ordering = ['created_at']
 
     def update_result(self, js_test_object, play_object):
         self.create_test_result_play(js_test_object, play_object)
