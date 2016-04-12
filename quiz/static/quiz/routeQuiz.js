@@ -261,6 +261,7 @@ function drawDemoScreen(){
       line(x1, y1, x2, y2);
       line(x1, y2, x2, y1);
       noStroke();
+      textAlign(LEFT);
       if(timeElapsed < 2000){
         noFill();
         stroke(220,0,0);
@@ -270,7 +271,7 @@ function drawDemoScreen(){
         strokeWeight(1);
         textAlign(LEFT);
         textSize(18);
-        text("You are in blue", x - field.width / 4, y - 50);
+        text("You are in blue", field.width / 2, y - 50);
 
       }else if(timeElapsed < 4000){
         fill(220,0,0);
@@ -280,12 +281,25 @@ function drawDemoScreen(){
         strokeWeight(1);
         textAlign(LEFT);
         textSize(18);
-        text("Your play call is here", field.width / 2 + 10, 50);
+        text("Your play call is here", field.width / 3, 50);
       }else {
         fill(0, 0, 220);
         textSize(16);
-        text("Draw Your Route by clicking your breakpoints", (3 * field.width) / 4, field.height / 3) ;
-        
+
+        if(demoDoubleClick){
+          text("Demo complete!\n Click anywhere to begin quiz", field.width / 3, field.height / 3) ; 
+        }else if(currentRouteNodes.length > 0){
+          text("Click on your next breakpoint.\nDouble click to complete demo.", field.width / 3, field.height / 3);
+        }else{
+          text("Draw your route by clicking on\n your first breakpoint", field.width / 3, field.height / 3) ;  
+        }
+          
+      }
+      drawCurrentRoute();
+      for(var i = 0; i < currentRouteNodes.length; i++){
+        stroke(220, 220, 0);
+        currentRouteNodes[i].draw(field);
+        noStroke();
       }
     }
   }
@@ -293,16 +307,18 @@ function drawDemoScreen(){
 
 
 function setupDemoScreen(){
-
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
+  currentRouteGuess = [];
+  currentRouteNodes = [];
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
-  
+  currentRouteGuess = [];
+  currentRouteNodes = [];
 };
 
 
@@ -312,7 +328,7 @@ mouseClicked = function() {
   }else{
     return true;
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     clearSelection();
     currentPlayerTested = null;
     test.restartQuiz();
@@ -327,7 +343,7 @@ mouseClicked = function() {
         checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
         return;
       }
-    }else{
+    }else if(!currentPlayerTested.isMouseInside(field)){
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
       currentRouteGuess.push([x, y]);
@@ -339,7 +355,6 @@ mouseClicked = function() {
       });
       currentRouteNodes.push(nodeObject);
     }
-
   }
 
 };
