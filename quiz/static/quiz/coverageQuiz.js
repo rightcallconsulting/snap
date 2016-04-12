@@ -316,8 +316,10 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
+    
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
+    
   }else if(test.feedBackScreenStartTime){
     return;
   }else if(!test.over){
@@ -325,19 +327,24 @@ mouseClicked = function() {
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
+
         if(answer.isMouseInside(field)){
           if(test.showDemo){
             demoDoubleClick = true;
+
           }else{
             checkAnswer(answer);
+
             return;
           }
         }else{
           clearSelections();
+
           answer.clicked = true;
         }
       }else{
         if(answer.isMouseInside(field)){
+
           clearSelections();
           answer.clicked = true;
 
