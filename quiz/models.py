@@ -302,7 +302,7 @@ class TestResult(models.Model):
     string_id = models.CharField(null=True, blank=True, default="Temp", max_length=100)
     time_taken = models.IntegerField(null=True, blank=True) # time taken to complete the test, in seconds
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=False)
     missed_plays = models.ManyToManyField(Play, related_name="missed_plays", blank=True)
     correct_plays = models.ManyToManyField(Play, blank=True)
     skipped_plays = models.ManyToManyField(Play, related_name="skipped_plays", blank=True)

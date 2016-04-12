@@ -137,6 +137,7 @@ def analytics(request):
 
         analytics = PlayerAnalytics.for_players(players)
 
+    #embed()
     return render(request, 'dashboard/show_player_list.html', {
         # 'team': team,
         # 'players': players,

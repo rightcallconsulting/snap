@@ -119,7 +119,9 @@ Test.prototype.getPercentage = function(){
 };
 
 Test.prototype.restartQuiz = function(defensivePlay){
-  this.plays[0].clearProgression();
+  if(this.getCurrentPlay()){
+    this.getCurrentPlay().clearProgression();
+  }
   this.scoreboard.feedbackMessage = "";
   this.questionNum = 0;
   this.score = 0;
@@ -173,6 +175,7 @@ Test.prototype.updateProgress = function(){
 }
 
 Test.prototype.advanceToNextPlay = function(message){
+  this.getCurrentPlay().clearProgression();
   var currentPlayID = this.getCurrentPlay().id
   $.post( "/quiz/players/"+this.playerID+"/tests/"+this.id+"/update", {
     test: JSON.stringify(_.omit(this,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
@@ -187,7 +190,6 @@ Test.prototype.advanceToNextPlay = function(message){
     this.over = true;
   } else{
     this.updateProgress();
-    this.getCurrentPlay().clearProgression();
     this.getCurrentPlay().setAllRoutes();
   }
   Player.rank = 1;

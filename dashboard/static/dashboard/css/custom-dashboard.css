@@ -842,3 +842,34 @@ input.create-quiz{
 .top-nav-button{
   height: 20px;
 }
+
+.form-create-test .scrollable-table{
+  height: 250px;
+}
+
+.form-create-test .players-to-test{
+  table-layout: fixed;
+  width: 60%;
+  margin-left: 8%;
+}
+
+.form-create-test .players-to-test th{
+  height: 30px;
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: center;
+  color: #000000;
+  border: 2px solid #C5E1A5;
+  table-layout: auto;
+}
+
+.form-create-test .players-to-test td{
+  height: 50px;
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: center;
+  color: #000000;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border: 2px solid #C5E1A5;
+}

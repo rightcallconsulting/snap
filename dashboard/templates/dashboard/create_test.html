@@ -41,15 +41,23 @@
 					<div class="form-group">
 						{% if field.label != "Deadline" %}
 						{{ field.label_tag }}
-						{% endif %}
 						{{ field }}
+						{% else %}
+						{{ field }}
+						{% endif %}
+
 
 					</div>
 					{% endif %}
 
 					{% endfor %}
 
-
+					<div class="scrollable-table">
+						<table class="players-to-test">
+							<tr><th></th><th>NAME</th><th>POS</th><th>YEAR</th></tr>
+							<tr><td></td><td>Hello</td><td>Hello</td><td>Hello</td></tr>
+						</table>
+					</div>
 
           <input class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
       </form>

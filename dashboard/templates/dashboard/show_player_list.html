@@ -16,6 +16,19 @@
 
 		{% include "dashboard/grey_container.html" %}
 
+		<!-- Sample analytics code -->
+		<h1>Analytics:</h1>
+		<p>{{ analytics.avg_time_per_question }} seconds per question</p>
+		<p>{{ analytics.total_correct }} correct in total</p>
+
+		<h3>Correct Plays:</h3>
+		<ul>
+		{% for play, count in analytics.correct_plays %}
+			<li>Play with PK={{play.id}} has been guessed correctly {{count}} times.</li>
+		{% endfor %}
+		</ul>
+		<!-- end -->
+
 		<div class="padding-md playerbook">
 			<div class="row dash-row">
 				<div class="col-lg-7 dash-col">

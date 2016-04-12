@@ -14,7 +14,7 @@ function setup() {
   field.height = 400;
   field.heightInYards = 40;
   background(58, 135, 70);
-  myCanvas.parent('quiz-box');  
+  myCanvas.parent('quiz-box');
 
   exitDemo = new Button({
     label: "",
@@ -101,7 +101,7 @@ var runTest = function(type, playerTested, test){
       var y = field.getTranslatedY(this.y);
       var siz = field.yardsToPixels(this.siz);
       var letters = ["A", "B", "C", "D", "E"];
-      if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
+      if (this.showRoute && this.breakPoints.length > 0){
         this.drawBreakPoints(field);
       }
       if(this.unit === "offense"){
@@ -171,60 +171,6 @@ var runTest = function(type, playerTested, test){
           this.rank = 0;
         };
 
-        var playButton = new Button({
-          x: 10,
-          y: 360,
-          width: 32,
-          label: "Play",
-          clicked: false,
-          displayButton: false
-        });
-
-        var check = new Button({
-          x: 53,
-          y: 360,
-          width: 43,
-          label: "Check",
-          clicked: false,
-          displayButton: false
-        });
-
-        var nextPlay = new Button({
-          x: 330,
-          y: 360,
-          width: 60,
-          label: "Next Play",
-          clicked: false,
-          displayButton: false
-        });
-
-        var clear = new Button({
-          x: 108,
-          y: 360,
-          width: 43,
-          label: "Clear",
-          clicked: false,
-          displayButton: false
-        });
-
-        var pause = new Button({
-          x: 300,
-          y: 360,
-          width: 43,
-          label: "Pause",
-          clicked: false,
-          displayButton: false
-        });
-
-        var stop = new Button({
-          x: 355,
-          y: 360,
-          width: 34,
-          label: "Stop",
-          clicked: false,
-          displayButton: false
-        });
-
         var bigReset = new Button({
           x: field.getYardX(width/2)-4,
           y: field.getYardY(height * 0.8),
@@ -261,7 +207,7 @@ var runTest = function(type, playerTested, test){
         defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
       }
     };
-    
+
     function drawDemoScreen(){
       drawBackground(test.getCurrentPlay(), field);
       defensePlay.drawAllPlayers(field);
@@ -273,7 +219,7 @@ var runTest = function(type, playerTested, test){
         var y1 = field.getTranslatedY(exitDemo.y);
         var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
         var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-        exitDemo.draw(field); 
+        exitDemo.draw(field);
         stroke(0);
         line(x1, y1, x2, y2);
         line(x1, y2, x2, y1);
@@ -354,7 +300,7 @@ var runTest = function(type, playerTested, test){
           pressPlayButton();
         }
         else {
-          pause.changeClickStatus();
+          //pause.changeClickStatus();
         }
       }
       else if (keyCode === 81){
@@ -374,7 +320,6 @@ var runTest = function(type, playerTested, test){
       //     pause.changeClickStatus();
       // }
       if (test.getCurrentPlay()){
-        playButton.clicked = false;
         test.getCurrentPlay().resetPlayers(defensePlay);
         test.getCurrentPlay().inProgress = false;
       }
@@ -387,7 +332,6 @@ var runTest = function(type, playerTested, test){
 
     pressPlayButton = function() {
       if (test.getCurrentPlay()){
-        playButton.changeClickStatus();
         test.getCurrentPlay().setAllRoutes();
         scoreboard.feedbackMessage = "";
         test.getCurrentPlay().inProgress = true;
@@ -395,9 +339,10 @@ var runTest = function(type, playerTested, test){
     };
 
     mouseClicked = function() {
+      
       currentPlay = test.getCurrentPlay();
       if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
-        test.restartQuiz(defensePlay);  
+        test.restartQuiz(defensePlay);
       }else if(test.showDemo && exitDemo.isMouseInside(field) || demoComplete){
         exitDemoScreen();
       }else if(test.feedBackScreenStartTime){
@@ -442,13 +387,7 @@ var runTest = function(type, playerTested, test){
           drawFeedBackScreen(test);
         }
       }else{
-        if (playButton.clicked) {
-          if(!pause.clicked) {
-            drawScene(test.getCurrentPlay());
-          }
-        } else {
-          drawOpening(test);
-        }
+        drawOpening(test);
       }
     };
   }
