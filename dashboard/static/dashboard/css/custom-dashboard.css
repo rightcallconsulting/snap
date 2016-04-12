@@ -873,3 +873,19 @@ input.create-quiz{
   padding-bottom: 25px;
   border: 2px solid #C5E1A5;
 }
+
+.analytics-main-table{
+  width: 100%;
+  table-layout: auto;
+  font-size: 22px;
+  text-align: center;
+}
+
+.analytics-play-list{
+    margin-top: 25px;
+    width: 40%;
+    margin-left: 25%;
+    table-layout: auto;
+    font-size: 18px;
+    text-align: center;
+}

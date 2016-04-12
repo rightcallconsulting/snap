@@ -2,9 +2,9 @@ from operator import itemgetter
 
 def add_plays_to_counts_dict(counts_dict, plays):
     """Helper function to add a list of Play objects to a dictionary of Play
-    frequency counts where the key is the play object and the value is the 
+    frequency counts where the key is the play object and the value is the
     number of occurances."""
-    
+
     for play in plays:
         if play in counts_dict:
             counts_dict[play] += 1
@@ -18,8 +18,8 @@ class PlayerAnalytics:
         players: The list of the players we are calculating analytics for.
         total_time: An integer count of the total time, in seconds, that the
             players have spent doing tests.
-        correct_plays: A sorted list of (<Play obj>, count) tuples, with count 
-            representing the number of times a question about that play was 
+        correct_plays: A sorted list of (<Play obj>, count) tuples, with count
+            representing the number of times a question about that play was
             answered correctly.
         incorrect_plays: A sorted list of (<Play obj>, count) tuples, for plays
             that were answered incorrectly.
@@ -30,6 +30,7 @@ class PlayerAnalytics:
     def __init__(self, players):
         """Inits with a list of Player objects."""
         self.players = players
+        self.plays = dict()
         self.total_time = 0.0
         correct_plays_dict = {}
         incorrect_plays_dict = {}
@@ -55,11 +56,11 @@ class PlayerAnalytics:
 
         # Convert play count dictionaries into list of sorted tuples:
         # {<Play 1>: 4, <Play 2>: 10} --> [(<Play 2>, 10), (<Play 1>, 4)]
-        self.correct_plays = sorted(correct_plays_dict.iteritems(), 
+        self.correct_plays = sorted(correct_plays_dict.iteritems(),
             key=itemgetter(1), reverse=True)
-        self.incorrect_plays = sorted(incorrect_plays_dict.iteritems(), 
+        self.incorrect_plays = sorted(incorrect_plays_dict.iteritems(),
             key=itemgetter(1), reverse=True)
-        self.skipped_plays = sorted(skipped_plays_dict.iteritems(), 
+        self.skipped_plays = sorted(skipped_plays_dict.iteritems(),
             key=itemgetter(1), reverse=True)
 
     @classmethod
@@ -80,19 +81,81 @@ class PlayerAnalytics:
         total_questions = self.total_questions()
         return self.total_time / total_questions if total_questions > 0 else 0
 
+
+
     def total_correct(self):
-        """Returns an integer count of questions answered correctly."""
-        return len(self.correct_plays)
+        total = 0
+        for play, count in self.correct_plays:
+            total += count
+        return total
 
     def total_incorrect(self):
-        """Returns an integer count of questions answered incorrectly."""
-        return len(self.incorrect_plays)
+        total = 0
+        for play, count in self.incorrect_plays:
+            total += count
+        return total
 
     def total_skipped(self):
-        """Returns an integer count of questions that were skipped."""
-        return len(self.skipped_plays)
+        total = 0
+        for play, count in self.skipped_plays:
+            total += count
+        return total
 
     def total_questions(self):
         """Returns the total # of questions the players have been asked."""
         return self.total_correct() + self.total_incorrect() + \
             self.total_skipped()
+
+    def total_correct_percentage(self):
+        return int(100.0 * self.total_correct() / self.total_questions())
+
+    def total_incorrect_percentage(self):
+        return int(100.0 * self.total_incorrect() / self.total_questions())
+
+    def total_skipped_percentage(self):
+        return int(100.0 * self.total_skipped() / self.total_questions())
+
+    def get_correct_percentage(self, play):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p == play:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p == play:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p == play:
+                skipped += count
+        return int(correct * 100.0 / (correct + incorrect + skipped))
+
+    def get_incorrect_percentage(self, play):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p == play:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p == play:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p == play:
+                skipped += count
+        return int(incorrect * 100.0 / (correct + incorrect + skipped))
+
+    def get_skipped_percentage(self, play):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p == play:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p == play:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p == play:
+                skipped += count
+        return int(skipped * 100.0 / (correct + incorrect + skipped))
