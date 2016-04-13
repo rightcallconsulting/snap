@@ -46,13 +46,13 @@
 {% endblock %}
 
 {% block buttons %}
-  <div class="holds-play-buttons">
-
-    <button id="play-button" class="btn btn-success" name="button">{% include "quiz/play_button.html" %}</button>
-    <button id="pause-button" class="btn btn-success" name="button">{% include "quiz/pause_button.html" %}</button>
-    <button id="check-button" class="btn btn-success" name="button">{% include "quiz/check_button.html" %}</button>
-    <button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
-    <button id="clear-button" class="btn btn-success" name="button">{% include "quiz/clear_button.html" %}</button>
-    <button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
-  </div>
+<div class="holds-play-buttons">
+  <table class="button-table"><tr>
+  <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+  <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+  <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+  <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+  </tr></table>
+</div>
 {% endblock %}

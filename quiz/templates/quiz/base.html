@@ -58,6 +58,17 @@
           </div>
           <div class="holds-play-buttons">
             {% block buttons %}
+            <div class="holds-play-buttons">
+              <table class="button-table"><tr>
+              <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
+              <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
+              <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+              <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+              <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+              <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+              <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+              </tr></table>
+            </div>
             {% endblock %}
           </div>
 
@@ -143,7 +154,7 @@
         {% endblock %}
 
         {% block scoreboard %}
-        <div class="col-lg-2 dash-col choose-offensive-formation-box">
+        <div class="col-lg-2 dash-col choose-offensive-formation-box" id="quiz-scoreboard">
           <div class="dash-header text-center">
             <span><h4>Results</h4></span>
           </div>

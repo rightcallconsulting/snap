@@ -10,11 +10,22 @@ var exitDemo = null;
 
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
+  /*var m = document.getElementById('display-box');
+  m.style.width = '552px';
+  m.style.height = '650px';
+  var sidebar = document.getElementById('quiz-sidebar');
+  var scoreboard = document.getElementById('quiz-scoreboard');
+  sidebar.style.height = '650px';
+  scoreboard.style.height = '650px';
+  sidebar.style.width = '330px';
+  scoreboard.style.width = '330px';*/
+
 
   exitDemo = new Button({
     label: "",
@@ -339,7 +350,7 @@ var runTest = function(type, playerTested, test){
     };
 
     mouseClicked = function() {
-      
+
       currentPlay = test.getCurrentPlay();
       if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
         test.restartQuiz(defensePlay);

@@ -10,9 +10,10 @@ var guessedAssignment = null;
 
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -275,13 +276,13 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "defense"){
-      if(this.clicked){ 
+      if(this.clicked){
         stroke(0, 255, 255);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
         noStroke();
 
       }
-      
+
       noStroke();
       fill(0, 0, 0);
       textSize(17);
@@ -289,7 +290,7 @@ function draw() {
       text(this.pos, x, y);
     }
     else {
-      
+
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){

@@ -11,9 +11,10 @@ var correctZoneFill = null;
 var playerIDFromHTML = $('#player-id').data('player-id');
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 53.333;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
 
   background(58, 135, 70);
   randomSeed(millis());
@@ -46,7 +47,7 @@ function setup() {
       currentUserTested = createUserFromJSON(data2[0]);
       currentUserTested.position = "M"; //remove when done testing
     })
-    
+
     var formations = [];
     formationNames = [];
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -122,7 +123,7 @@ function checkAnswer(guess){
   if(isCorrect){
     test.getCurrentCoverageMap().clearClicks();
     test.registerAnswer(isCorrect);
-  }else{   
+  }else{
     test.updateScoreboard();
     test.registerAnswer(isCorrect);
     test.feedBackScreenStartTime = millis();
@@ -138,13 +139,13 @@ function drawFeedBackScreen(){
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
   var map = test.getCurrentCoverageMap();
-  
+
   //debugger;
   if(map){
     stroke(0);
     map.draw(field);
   }
-  
+
 }
 
 function drawOpening(){
@@ -250,8 +251,8 @@ function draw() {
           zoneAssignment: CoverageMap.LEFT_OUT
         });
       }
-      drawOpening();  
+      drawOpening();
     }
-    
+
   }
 }

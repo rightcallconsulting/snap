@@ -1,9 +1,9 @@
 #display-box {
-  height: 700px;
-  width: 402px;
+  height: 650px;
+  width: 550px;
 }
 
-.choose-offensive-formation-box, .quiz-sidebar, #display-box {
+.choose-offensive-formation-box, .quiz-sidebar {
   height: 500px;
 }
 
@@ -162,4 +162,36 @@
 
 .top-nav-button{
   height: 20px;
+}
+
+#quiz-sidebar{
+  margin-left: 50px;
+  height: 650px;
+  width: 330px;
+}
+
+#quiz-scoreboard{
+  margin-left: 50px;
+  font-size: 20px;
+  height: 650px;
+  width: 330px;
+}
+
+.holds-play-buttons{
+  width: 100%;
+  height: 50px;
+}
+
+.holds-play-buttons table{
+  width: 90%;
+  height: 100%;
+  margin-left: 5%;
+  table-layout: auto;
+}
+
+.holds-play-buttons button{
+  background: none;
+  border: none;
+  width: 80%;
+  height: 80%;
 }

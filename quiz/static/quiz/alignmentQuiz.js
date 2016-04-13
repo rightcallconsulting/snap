@@ -10,9 +10,10 @@ var currentUserTested = null;
 var answers = [];
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -155,13 +156,13 @@ function drawFeedbackScreen(){
 
     fill(220, 200, 0);
     ellipse(playerX, playerY, size, size);
-    
+
     fill(0,0,0);
     textSize(14);
     textAlign(CENTER, CENTER);
     text(currentPlayerTested.num, playerX, playerY);
     debugger;
-  }  
+  }
 };
 
 function drawOpening(){
@@ -270,7 +271,3 @@ if(makeJSONCall){
     }
   }
 }
-
-
-
-

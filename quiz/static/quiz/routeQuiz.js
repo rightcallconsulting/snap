@@ -12,9 +12,10 @@ var demoDoubleClick = false;
 var exitDemo = null;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -287,13 +288,13 @@ function drawDemoScreen(){
         textSize(16);
 
         if(demoDoubleClick){
-          text("Demo complete!\n Click anywhere to begin quiz", field.width / 3, field.height / 3) ; 
+          text("Demo complete!\n Click anywhere to begin quiz", field.width / 3, field.height / 3) ;
         }else if(currentRouteNodes.length > 0){
           text("Click on your next breakpoint.\nDouble click to complete demo.", field.width / 3, field.height / 3);
         }else{
-          text("Draw your route by clicking on\n your first breakpoint", field.width / 3, field.height / 3) ;  
+          text("Draw your route by clicking on\n your first breakpoint", field.width / 3, field.height / 3) ;
         }
-          
+
       }
       drawCurrentRoute();
       for(var i = 0; i < currentRouteNodes.length; i++){

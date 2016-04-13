@@ -12,9 +12,10 @@ var currentNode = [];
 var currentGuessNode = null;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -186,7 +187,7 @@ function drawFeedbackScreen(){
   var pixelX2 = field.getTranslatedX(x2);
   var pixelY1 = field.getTranslatedY(y1);
   var pixelY2 = field.getTranslatedY(y2);
-  
+
   var node = new Node({
     x: x2,
     y: y2,
@@ -194,7 +195,7 @@ function drawFeedbackScreen(){
     fill: color(220,220,0)
   });
 
-  field.drawBackground(test.getCurrentPlay(), height, width); 
+  field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentDefensivePlay().drawAllPlayersWithOffense(field);
   stroke(220,220,0);
   line(pixelX1, pixelY1, pixelX2, pixelY2);
@@ -213,7 +214,7 @@ function drawOpening(){
       currentGuessNode.draw(field);
       noStroke();
     }
-    
+
   }
 }
 
@@ -248,11 +249,11 @@ mouseClicked = function() {
           siz: 1,
           fill: color(220,220,0)
         });
-        
+
       }
       currentNode.push(currentGuessNode);
     }
-  
+
 };
 
 keyTyped = function(){
@@ -298,7 +299,7 @@ function draw() {
   };
   if(makeJSONCall){
     //WAIT - still executing JSON
-  
+
   }
   else if(test.over){
     background(93, 148, 81);
@@ -321,6 +322,6 @@ function draw() {
     }else{
       drawOpening();
     }
-    
+
   }
 }
