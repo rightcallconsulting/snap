@@ -44,7 +44,7 @@ def homepage(request):
     else:
         uncompleted_tests = Test.objects.filter(coach_who_created=request.user)
         groups = PlayerGroup.objects.filter(team=request.user.coach.team)
-        first_group = groups[0]
+        first_group = groups[1]
         players = first_group.players.all()
         return render(request, 'dashboard/coachhome.html', {
             'uncompleted_tests': uncompleted_tests,
