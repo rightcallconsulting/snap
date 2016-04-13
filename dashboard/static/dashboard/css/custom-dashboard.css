@@ -530,6 +530,11 @@ input.create-quiz{
   height: 200px;
 }
 
+.coach-action-table {
+  margin-left: 40px;
+  width: 82.5%;
+}
+
 .coach-action-table td{
   vertical-align: middle;
 }
@@ -546,7 +551,7 @@ input.create-quiz{
   height: 100%;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .coach-action-table td.first{
