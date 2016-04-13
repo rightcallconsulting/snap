@@ -160,7 +160,7 @@ function drawFeedbackScreen(){
     fill(0,0,0);
     textSize(14);
     textAlign(CENTER, CENTER);
-    text(currentPlayerTested.num, playerX, playerY);
+    text(currentPlayerTested.pos, playerX, playerY);
     debugger;
   }
 };

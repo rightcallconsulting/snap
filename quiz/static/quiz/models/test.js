@@ -17,7 +17,7 @@ var Test = function(config){
   this.skips = config.skips || 0;
   this.scoreboard = config.scoreboard || null;
   this.over = false;
-  this.cutOff = config.cutOff || 4;
+  this.cutOff = config.cutOff || 30;
   this.correctAnswerMessage = config.correctAnswerMessage || "Correct!";
   this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
   this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
@@ -198,6 +198,9 @@ Test.prototype.advanceToNextPlay = function(message){
 
 Test.prototype.drawQuizSummary = function() {
   var elapsedSeconds = (this.endTime - this.startTime)/1000;
+  if(elapsedSeconds > this.cutOff * this.plays.length * this.questionsPerPlay){
+    elapsedSeconds = this.cutOff * this.plays.length * this.questionsPerPlay;
+  }
   var timeDeduction = (elapsedSeconds - 10 * this.plays.length * this.questionsPerPlay)*0.01;
   if(timeDeduction < 0.0){
     timeDeduction = 0.0;

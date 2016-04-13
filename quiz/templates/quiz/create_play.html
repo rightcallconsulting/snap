@@ -26,10 +26,12 @@
 {% endblock %}
 
 {% block buttons %}
-  <div class="holds-play-buttons">
-    <button id="save-button" class="btn btn-success" name="button">Save</button>
-    <button id="clear-button" class="btn btn-success" name="button">Clear</button>
-  </div>
+<div class="holds-play-buttons">
+  <table class="button-table"><tr>
+  <td><button id="save-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+  </tr></table>
+</div>
 {% endblock %}
 
 {% block sidebar %}

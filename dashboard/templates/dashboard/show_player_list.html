@@ -21,7 +21,7 @@
 			<table class="analytics-main-table">
 				<tr><td>{{analytics.total_correct_percentage}}%<br />CORRECT<br />
 					<table class="analytics-play-list" id="correct-plays-list">
-						<tr><td>PLAY</td><td>%</td></tr>
+						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 						{% for play, count in analytics.correct_plays %}
 							<tr>
 								<td>{{play.name}}</td><td>{% get_percent_correct analytics play %}%</td>
@@ -31,7 +31,7 @@
 				</td>
 				<td>{{analytics.total_incorrect_percentage}}%<br />INCORRECT<br />
 					<table class="analytics-play-list" id="incorrect-plays-list">
-						<tr><td>PLAY</td><td>%</td></tr>
+						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 						{% for play, count in analytics.incorrect_plays %}
 							<tr>
 								<td>{{play.name}}</td><td>{% get_percent_incorrect analytics play %}%</td>
@@ -41,7 +41,7 @@
 				</td>
 				<td>{{analytics.total_skipped_percentage}}%<br />SKIPPED<br />
 					<table class="analytics-play-list" id="skipped-plays-list">
-						<tr><td>PLAY</td><td>%</td></tr>
+						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 						{% for play, count in analytics.skipped_plays %}
 							<tr>
 								<td>{{play.name}}</td><td>{% get_percent_skipped analytics play %}%</td>

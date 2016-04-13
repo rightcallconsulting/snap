@@ -139,6 +139,10 @@
   text-align: center;
 }
 
+.playerbook .recently-taken{
+  display: none;
+}
+
 .dash-col .progress-wheel img{
   height: 150px;
   margin: auto;
@@ -386,16 +390,6 @@ input.create-quiz{
   margin-bottom: auto;
 }
 
-.playbook-action{
-  background-color: #C5E1A5;
-}
-
-.playbook-action h3{
-  margin-top: 25%;
-  margin-bottom: 25%;
-  height: 50%;
-}
-
 .unit-form{
   width: 70%;
   font-size: 17px;
@@ -617,13 +611,16 @@ input.create-quiz{
 
 .playerbook .table-wrapper{
   margin-top: 1%;
-  height: 95%;
+  height: 90%;
+  overflow-y: hidden;
 }
 
 .playerbook-action-table{
   table-layout: fixed;
   width: 100%;
   height: 100%;
+  border-collapse: separate;
+  border-spacing: 20px;
 }
 
 .playerbook-action-table td{
@@ -631,6 +628,12 @@ input.create-quiz{
   padding-right: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
+  background-color: #7CB34A;
+
+}
+
+.playbook-action{
+
 }
 
 .start-quiz{
@@ -897,7 +900,20 @@ input.create-quiz{
     vertical-align: top;
 }
 
-.analytics-play-list td{
+.analytics-play-list th{
+  text-align: center;
+  color: #FFF;
+}
+
+.analytics-play-list th.first{
+  background: #33691E;
+}
+
+.analytics-play-list th.second{
+  background: #558B2F;
+}
+
+.analytics-play-list td, .analytics-play-list th{
   border: 1px solid #000;
   padding: 8px;
 }
