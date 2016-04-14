@@ -120,3 +120,20 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+//USE THE ABOVE METHOD AS SUCH TO ACQUIRE CSRF TOKEN FOR JQUERY POSTS:
+//var csrftoken = getCookie('csrftoken');
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+//USE THE ABOVE METHOD AS SUCH, AFTER ACQUIRING CSRF TOKEN, BEFORE JQUERY POST:
+/*$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});*/

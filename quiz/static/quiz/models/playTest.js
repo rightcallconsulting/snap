@@ -96,7 +96,8 @@ PlayTest.prototype.restartQuiz = function(){
   }
 };
 
-PlayTest.prototype.updateMultipleChoiceLables = function(){
+PlayTest.prototype.updateMultipleChoiceLabels = function(){
+  document.getElementById("multiple-choice-answer-cell").classList.remove('hidden');
   document.getElementById("mc-answer-1").innerHTML = multipleChoiceAnswers[0].getHTMLButton(1);
   document.getElementById("mc-answer-2").innerHTML = multipleChoiceAnswers[1].getHTMLButton(2);
   document.getElementById("mc-answer-3").innerHTML = multipleChoiceAnswers[2].getHTMLButton(3);
@@ -108,6 +109,10 @@ PlayTest.prototype.updateMultipleChoiceLables = function(){
 PlayTest.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
   $('#skips').text(this.skips);
+  var skip_button_skips = $('#skip-button-skips');
+  if(skip_button_skips){
+    skip_button_skips.text(this.skips);
+  }
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   $('#feedback-message').text(this.scoreboard.feedbackMessage);
 }
@@ -137,7 +142,7 @@ PlayTest.prototype.advanceToNextPlay = function(message){
     this.over = true;
   } else{
     this.updateProgress();
-    //this.updateMultipleChoiceLables();
+    //this.updateMultipleChoiceLabels();
     //reset elements of play?
   }
 };

@@ -160,6 +160,10 @@ Test.prototype.registerAnswer = function(isCorrect){
 Test.prototype.updateScoreboard = function(){
   $('#score').text("Score: " + this.score);
   $('#skips').text(this.skips);
+  var skip_button_skips = $('#skip-button-skips');
+  if(skip_button_skips){
+    skip_button_skips.text(this.skips);
+  }
   $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
   if(this.scoreboard){
     $('#feedback-message').text(this.scoreboard.feedbackMessage);

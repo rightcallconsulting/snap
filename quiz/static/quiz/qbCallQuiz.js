@@ -272,7 +272,7 @@ function draw() {
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().checks[0].name;
       createMultipleChoiceAnswers(correctAnswer,3);
-      test.updateMultipleChoiceLables();
+      test.updateMultipleChoiceLabels();
     }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);

@@ -233,7 +233,7 @@ function draw() {
       var correctAnswer = test.getCurrentFormation().name;
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateProgress(false);
-      test.updateMultipleChoiceLables();
+      test.updateMultipleChoiceLabels();
     }
     drawOpening();
   }

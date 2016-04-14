@@ -24,6 +24,28 @@
   margin-bottom: 20px;
 }
 
+.quiz-sidebar-table{
+  width: 100%;
+  height: 90%;
+  table-layout: fixed;
+  vertical-align: middle;
+  text-align: center middle;
+}
+
+.quiz-sidebar-table tr.top{
+
+  height: 25%;
+}
+
+.quiz-sidebar-table tr.middle{
+  height: 50%;
+}
+
+.quiz-sidebar-table tr.bottom{
+
+  height: 25%;
+}
+
 .sidebar-footer{
   height: 20%;
   width: 100%;
@@ -135,7 +157,7 @@
   margin-top: -5px;
 }
 
-#skip-button #skips{
+#skip-button-skips{
   float: right;
   margin-top: -5px;
 }
