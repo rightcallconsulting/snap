@@ -19,40 +19,65 @@
 
 		<div class="padding-md analytics-home">
 			<table class="analytics-main-table">
-				<tr><td>{{analytics.total_correct_percentage}}%<br />CORRECT<br />
-					<table class="analytics-play-list" id="correct-plays-list">
-						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-						{% for play, percent in analytics.correct_plays_percent %}
-							<tr>
-								<td>{{play.name}}</td><td>{{percent}}%</td>
-							</tr>
-						{% endfor %}
-					</table>
-				</td>
-				<td>{{analytics.total_incorrect_percentage}}%<br />INCORRECT<br />
-					<table class="analytics-play-list" id="incorrect-plays-list">
-						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-						{% for play, percent in analytics.incorrect_plays_percent %}
-							<tr>
-								<td>{{play.name}}</td><td>{{percent}}%</td>
-							</tr>
-						{% endfor %}
-					</table>
-				</td>
-				<td>{{analytics.total_skipped_percentage}}%<br />SKIPPED<br />
-					<table class="analytics-play-list" id="skipped-plays-list">
-						<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-						{% for play, percent in analytics.skipped_plays_percent %}
-							<tr>
-								<td>{{play.name}}</td><td>{{percent}}%</td>
-							</tr>
-						{% endfor %}
-					</table>
-				</td></tr>
+				<tr>
+					<td>
+						CORRECT<br />
+						<canvas id="percentCorrectChart"></canvas>
+						<table class="analytics-play-list" id="correct-plays-list">
+							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
+							{% for play, percent in analytics.correct_plays_percent %}
+								<tr>
+									<td>{{play.name}}</td><td>{{percent}}%</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</td>
+					<td>
+						INCORRECT<br />
+						<canvas id="percentIncorrectChart"></canvas>
+						<table class="analytics-play-list" id="incorrect-plays-list">
+							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
+							{% for play, percent in analytics.incorrect_plays_percent %}
+								<tr>
+									<td>{{play.name}}</td><td>{{percent}}%</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</td>
+					<td>
+						SKIPPED<br />
+						<canvas id="percentSkippedChart"></canvas>
+						<table class="analytics-play-list" id="skipped-plays-list">
+							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
+							{% for play, percent in analytics.skipped_plays_percent %}
+								<tr>
+									<td>{{play.name}}</td><td>{{percent}}%</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</td>
+				</tr>
 			</table>
 		</div>
 
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
 
+	</div> <!-- #main-container -->
+</div> <!-- #wrapper -->
 
-			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-			{% endblock %}
+<!-- Pass Django variables to JS assets -->
+<script type="text/javascript">
+  var percentCorrect = {{analytics.total_correct_percentage}},
+		percentIncorrect = {{analytics.total_incorrect_percentage}},
+		percentSkipped = {{analytics.total_skipped_percentage}};
+</script>
+
+<!-- Loading Chart.js through CDN for now -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+<!-- Build Charts -->
+<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+
+{% endblock %}
