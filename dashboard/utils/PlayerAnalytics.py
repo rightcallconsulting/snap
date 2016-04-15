@@ -1,4 +1,5 @@
 from operator import itemgetter
+from IPython import embed
 
 def add_plays_to_counts_dict(counts_dict, plays):
     """Helper function to add a list of Play objects to a dictionary of Play
@@ -10,6 +11,8 @@ def add_plays_to_counts_dict(counts_dict, plays):
             counts_dict[play] += 1
         else:
             counts_dict[play] = 1
+
+    #return item[1] /
 
 class PlayerAnalytics:
     """Helper class to calculate analytics metrics for a group of players.
@@ -63,6 +66,10 @@ class PlayerAnalytics:
         self.skipped_plays = sorted(skipped_plays_dict.iteritems(),
             key=itemgetter(1), reverse=True)
 
+        self.correct_plays_percent = sorted(self.get_percentage_tuple_list(self.correct_plays), key=itemgetter(1), reverse=True)
+        self.incorrect_plays_percent = sorted(self.get_percentage_tuple_list(self.incorrect_plays), key=itemgetter(1), reverse=True)
+        self.skipped_plays_percent = sorted(self.get_percentage_tuple_list(self.skipped_plays), key=itemgetter(1), reverse=True)
+
     @classmethod
     def for_single_player(cls, player):
         return cls([player])
@@ -115,6 +122,19 @@ class PlayerAnalytics:
     def total_skipped_percentage(self):
         return int(100.0 * self.total_skipped() / self.total_questions())
 
+    def get_total_questions_for_play(self, play):
+        total = 0
+        for p, count in self.correct_plays:
+            if p == play:
+                total += count
+        for p, count in self.incorrect_plays:
+            if p == play:
+                total += count
+        for p, count in self.skipped_plays:
+            if p == play:
+                total += count
+        return total
+
     def get_correct_percentage(self, play):
         correct = 0
         incorrect = 0
@@ -159,3 +179,10 @@ class PlayerAnalytics:
             if p == play:
                 skipped += count
         return int(skipped * 100.0 / (correct + incorrect + skipped))
+
+    def get_percentage_tuple_list(self, totalList):
+        toReturn = []
+        for play, count in totalList:
+            t = (play, int(100.0 * count / self.get_total_questions_for_play(play)))
+            toReturn.append(t)
+        return toReturn
