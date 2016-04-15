@@ -70,9 +70,23 @@
   height: 75px;
 }
 
-.holds-play-buttons {
-  background-color: #044144;
-  height: 44px;
+.holds-play-buttons{
+  width: 100%;
+  height: 50px;
+}
+
+.holds-play-buttons table{
+  width: 90%;
+  height: 100%;
+  margin-left: 5%;
+  table-layout: auto;
+}
+
+.holds-play-buttons button{
+  background: none;
+  border: none;
+  width: 80%;
+  height: 80%;
 }
 
 #play-image-header {
@@ -888,6 +902,10 @@ input.create-quiz{
   font-size: 22px;
   text-align: center;
   vertical-align: top;
+}
+
+.analytics-main-table canvas{
+  margin-top: 30px;
 }
 
 .analytics-play-list{
