@@ -13,21 +13,31 @@
   <script language="javascript" type="text/javascript" src="{% static 'quiz/alignmentQuiz.js' %}"></script>
   <script type="text/javascript">
       $('#check-button').click(function(){
-        if(testPlayer){
+        if(currentPlayerTested){
           checkAnswer();
         }
       })
 
       $('#clear-button').click(function(){
-        testPlayer = null;
+        currentPlayerTested = null;
       })
 
       $('#restart-button').click(function(){
-        //pressStopButton();
-      })
+              if(test && test.feedBackScreenStartTime === 0){
+                test.restartQuiz();
+                currentPlayerTested = null;
+              }
+            })
 
       $('#next-play-button').click(function(){
-        test.skipQuestion();
+        if(test && !test.over && test.feedBackScreenStartTime === 0){
+            test.skipQuestion();
+            currentPlayerTested = null;
+        }
+      })
+
+      $('#question-button').click(function(){
+        //DEMO SCREEN
       })
   </script>
 {% endblock %}

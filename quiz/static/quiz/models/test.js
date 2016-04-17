@@ -122,6 +122,9 @@ Test.prototype.restartQuiz = function(defensivePlay){
   if(this.getCurrentPlay()){
     this.getCurrentPlay().clearProgression();
   }
+  this.feedBackScreenStartTime = 0;
+  this.showDemo = false;
+  this.demoStartTime = 0;
   this.scoreboard.feedbackMessage = "";
   this.questionNum = 0;
   this.score = 0;
