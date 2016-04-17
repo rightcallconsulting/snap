@@ -1,10 +1,10 @@
 (function() {
 
   var colors = {
-    correct: '#558B2F',
-    incorrect: '#F7464A',
-    skipped: '#FDB45C',
-    empty: '#EAEAEA',
+    correct: '#33691E',
+    incorrect: '#EF5350',
+    skipped: '#FFEE58',
+    empty: '#BDBDBD',
   }
 
   // Configure global Chart.js settings
@@ -15,7 +15,7 @@
   // Extend Chart.js core Doughnut chart
   Chart.types.Doughnut.extend({
     name: "SingleValueDoughnut",
-    
+
     initialize: function(data) {
       // Save value for drawing center label
       this.value = data[0].value;
@@ -35,7 +35,7 @@
       var width = this.chart.width,
         height = this.chart.height;
 
-      var fontSize = (height / 140).toFixed(2);
+      var fontSize = (height / 120).toFixed(2);
       this.chart.ctx.font = fontSize + "em Verdana";
       this.chart.ctx.textBaseline = "middle";
 
@@ -51,7 +51,7 @@
 
   /**
    * Creates and draws a SingleValueDonut chart.
-   * 
+   *
    * @param percent {Number} Integer between 0 and 100 representing a % value
    * @param color {String} The desired color of the chart (E.g.,'#FFFFFF')
    * @param elementID {String} The id tag of the element to draw the chart in

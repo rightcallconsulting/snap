@@ -70,9 +70,9 @@
 												<table class="analytics-table">
 													<tbody>
 														<tr>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>CORRECT</span></td>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>MISSED</span></td>
-															<td><img class="analytics-graph" src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><br /><span>SKIPPED</span></td>
+															<td><canvas id="percentCorrectChart"></canvas><br /><span>CORRECT</span></td>
+															<td><canvas id="percentIncorrectChart"></canvas><br /><span>MISSED</span></td>
+															<td><canvas id="percentSkippedChart"></canvas><br /><span>SKIPPED</span></td>
 														</tr>
 													</tbody>
 												</table>
@@ -86,8 +86,7 @@
 															<td><img class="headshot-thumbnail" src="{{MEDIA_ROOT}}{{player.user.myuser.avatar_image}}" alt=""></td>
 															<td>{{player.first_name}} {{player.last_name}}</td>
 															<td>{{player.position}}</td>
-															<td>SR</td>
-															<td>98%</td>
+															<td>{% get_percent_correct_player player %}%</td>
 														</tr>
 														{% endif %}
 														{% endfor %}
@@ -166,4 +165,17 @@
 
 
 								<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+
+								<!-- Pass Django variables to JS assets -->
+								<script type="text/javascript">
+								  var percentCorrect = {{analytics.total_correct_percentage}},
+										percentIncorrect = {{analytics.total_incorrect_percentage}},
+										percentSkipped = {{analytics.total_skipped_percentage}};
+								</script>
+
+								<!-- Loading Chart.js through CDN for now -->
+								<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+								<!-- Build Charts -->
+								<script src="{% static 'dashboard/js/analytics.js' %}"></script>
 								{% endblock %}

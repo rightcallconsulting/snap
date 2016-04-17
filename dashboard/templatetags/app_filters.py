@@ -1,6 +1,7 @@
 from django import template
 from datetime import date, timedelta
-#from utils.PlayerAnalytics import PlayerAnalytics
+from IPython import embed
+from dashboard.utils import PlayerAnalytics
 
 register = template.Library()
 
@@ -15,6 +16,12 @@ def due_date_default(date):
 @register.simple_tag
 def to_percent(n, d):
     return int(n / d * 100.0)
+
+@register.simple_tag
+def get_percent_correct_player(player):
+    l = [player]
+    analytics = PlayerAnalytics(l)
+    return analytics.total_correct_percentage()
 
 @register.simple_tag
 def get_percent_correct(analytics, play):

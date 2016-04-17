@@ -502,13 +502,24 @@ input.create-quiz{
 
 }
 
+.player-home .analytics-table{
+  margin-top: 40px;
+}
+
 .analytics-table{
   table-layout: fixed;
   width: 100%;
+  margin-top: 40px;
 }
 
 .analytics-table td{
   text-align: center;
+}
+
+.analytics-table td canvas{
+  width: 100%;
+  max-height: 100%;
+  margin-bottom: 10px;
 }
 
 .analytics-table td img{
@@ -910,8 +921,8 @@ input.create-quiz{
 
 .analytics-play-list{
     margin-top: 50px;
-    width: 40%;
-    margin-left: 29%;
+    width: 50%;
+    margin-left: 25%;
     table-layout: auto;
     font-size: 18px;
     text-align: center;
