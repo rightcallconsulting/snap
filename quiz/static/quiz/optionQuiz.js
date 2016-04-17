@@ -7,11 +7,16 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var exitDemo = null;
+var demoDoubleClick = false;
+var oldFill = null;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.width = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -23,6 +28,15 @@ function setup() {
     width: 5,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -169,6 +183,9 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    var assignment = currentPlayerTested.optionAssignment[0];
+    oldFill = assignment.fill;
+    assignment.fill = color(220, 220, 0);
     test.feedBackScreenStartTime = millis();
   }
 }
@@ -178,10 +195,8 @@ function drawFeedbackScreen(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-  }  
-  var assignment = currentPlayerTested.optionAssignment[0];
-  assignment.fill = color(220, 220, 0);
-  assignment.draw(field);
+  } 
+
 };
 
 function drawOpening(){
@@ -189,6 +204,96 @@ function drawOpening(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
+  }
+};
+
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    play.drawAllPlayersWithOffense(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(22);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        fill(220, 0, 0);
+        text("You are in blue", x + siz/2 + 5, y - 20);
+        fill(0);
+        //text("Click demo button to exit", 20, 50);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        fill(220,0,0);
+        text("Your play call is here", field.width / 2 + 20, 50);
+      }else{
+        stroke(220, 220, 0);
+        fill(220, 220, 0);
+        var clickedAssignment = null;
+        for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+          var receiver = play.offensiveFormationObject.eligibleReceivers[i];
+          if(receiver.clicked){
+            clickedAssignment = receiver;
+          }
+          var x = field.getTranslatedX(receiver.startX);
+          var y = field.getTranslatedY(receiver.startY);
+          var siz = field.yardsToPixels(receiver.siz);
+          y -= siz / 2;
+          line(x, y - 80, x, y - 15);
+          triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+        }
+        stroke(0);
+        if(clickedAssignment){
+          textAlign(CENTER);
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else{
+            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+          }
+
+          fill(0);
+          //text("Click demo button to exit", 20, 50);
+        }else{
+          textAlign(CENTER);
+          text("Click on the player that is your option assignment", field.width / 2, (5 * field.height) / 6);
+          fill(0);
+          noStroke();
+          //text("Click demo button to exit", 20, 50);
+        }
+      }
+      noStroke();
+    }
   }
 }
 
@@ -200,20 +305,42 @@ pressPlayButton = function() {
   }
 };
 
+function setupDemoScreen(){
+  clearSelections();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearSelections();
+};
+
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }else if(!test.over){
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }
+  else if(!test.over){
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
         if(answer.isMouseInside(field)){
-          checkAnswer(answer);
-          return;
+          if(test.showDemo){
+            demoDoubleClick = true;
+          }else{
+            checkAnswer(answer);
+            return;
+          }
         }else{
           clearSelections();
           answer.clicked = true;
@@ -283,10 +410,12 @@ function draw() {
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
       currentPlayerTested.optionAssignment = [test.getCurrentPlay().offensiveFormationObject.eligibleReceivers[1]];
     }
-    if(test.feedBackScreenStartTime){
+    if(test.showDemo){
+      drawDemoScreen();
+    }
+    else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
-      
-      if(elapsedTime > 2000){
+      if(elapsedTime > 1000){
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;

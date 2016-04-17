@@ -6,51 +6,67 @@
 
 {% endblock %}
 {% block header %}
-  PASS RUSH QUIZ
+PASS RUSH QUIZ
 {% endblock %}
 
 {% block quiz_type %}
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/passRushQuiz.js' %}"></script>
-  <script type="text/javascript">
-      $('#play-button').click(function(){
+<script language="javascript" type="text/javascript" src="{% static 'quiz/passRushQuiz.js' %}"></script>
+<script type="text/javascript">
+$('#play-button').click(function(){
         //pressPlayButton();
       })
 
-      $('#pause-button').click(function(){
+$('#pause-button').click(function(){
         //pressPlayButton();
       })
 
-      $('#check-button').click(function(){
-        if(currentGuessNode){
-          checkAnswer(currentGuessNode.x, currentGuessNode.y);
-        }
-      })
+$('#check-button').click(function(){
+  if(currentGuessNode){
+    checkAnswer(currentGuessNode.x, currentGuessNode.y);
+  }
+})
 
-      $('#clear-button').click(function(){
-        clearSelection();
-      })
+$('#clear-button').click(function(){
+  clearSelection();
+})
 
-      $('#restart-button').click(function(){
+$('#restart-button').click(function(){
         //pressStopButton();
       })
 
-      $('#next-play-button').click(function(){
-        if(test && !test.over){
-          test.skipQuestion();
-          currentPlayerTested = null;
-        }
-      })
-  </script>
+$('#next-play-button').click(function(){
+  if(test && !test.over){
+    if(test.showDemo){
+      exitDemoScreen();
+      return;
+    }
+    test.skipQuestion();
+    currentPlayerTested = null;
+  }
+})
+
+$('#question-button').click(function(){
+  if(test){
+    if(test.showDemo){
+      exitDemoScreen();
+    }else{
+      setupDemoScreen();
+    }
+  }
+})
+</script>
 {% endblock %}
 
 {% block buttons %}
 <div class="holds-play-buttons">
+
   <table class="button-table"><tr>
-  <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-  <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-  <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
-  <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+    <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+    <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+    <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+    <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+    <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
   </tr></table>
+  
 </div>
 {% endblock %}

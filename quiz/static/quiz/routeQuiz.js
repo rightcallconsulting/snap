@@ -14,6 +14,7 @@ var exitDemo = null;
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -243,6 +244,7 @@ function drawDemoScreen(){
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
+  textSize(18);
   if(play){
     play.drawAllPlayers(field);
     if(currentPlayerTested){
@@ -256,37 +258,35 @@ function drawDemoScreen(){
       noStroke();
       fill(220,0,0);
       exitDemo.draw(field);
-      textSize(22);
-      text("DEMO", x1, y2);
+      textSize(30);
+      text("DEMO", field.width / 6, field.height / 6);
       stroke(0);
+      strokeWeight(2);
       line(x1, y1, x2, y2);
       line(x1, y2, x2, y1);
+      strokeWeight(1);
+      textSize(18);
       noStroke();
-      textAlign(LEFT);
       if(timeElapsed < 2000){
+        noStroke();
         noFill();
         stroke(220,0,0);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
-        fill(220,0,0);
         strokeWeight(1);
-        textAlign(LEFT);
-        textSize(18);
-        text("You are in blue", field.width / 2, y - 50);
-
+        fill(220, 0, 0);
+        text("You are in blue", x + siz/2 + 5, y - 20);
+        fill(0);
       }else if(timeElapsed < 4000){
         fill(220,0,0);
         stroke(220, 0, 0);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-        strokeWeight(1);
-        textAlign(LEFT);
-        textSize(18);
-        text("Your play call is here", field.width / 3, 50);
+        noStroke();
+        fill(220,0,0);
+        text("Your play call is here", field.width / 2 + 20, 50);
       }else {
         fill(0, 0, 220);
-        textSize(16);
-
         if(demoDoubleClick){
           text("Demo complete!\n Click anywhere to begin quiz", field.width / 3, field.height / 3) ;
         }else if(currentRouteNodes.length > 0){
@@ -331,7 +331,6 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     clearSelection();
-    currentPlayerTested = null;
     test.restartQuiz();
     return true;
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){

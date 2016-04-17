@@ -12,6 +12,7 @@ var exitDemo = null;
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -42,6 +43,7 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoComplete = false;
   test.demoStartTime = millis();
+  test.getCurrentPlay().clearProgression();
 };
 
 function exitDemoScreen(){
@@ -241,17 +243,16 @@ var runTest = function(type, playerTested, test){
         if(timeElapsed < 2000){
           fill(220,0,0);
           stroke(220, 0, 0);
-          line(field.width / 2, 80, field.width/2, 20);
-          triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+          line(field.width / 2, 80, field.width / 2, 20);
           noStroke();
-          fill(0);
-          textSize(18);
+          triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
           fill(220,0,0);
-          text("Your play call is here", field.width / 2 + 10, 50);
+          textAlign(LEFT);
+          text("Your play call is here", field.width / 2 + 20, 50);
         }else if(timeElapsed < 4000){
-          textSize(18);
           fill(220, 220, 0);
-          text("Click players in correct progression order", exitDemo.x + field.width / 2, (5 * field.height) / 6);
+          textAlign(CENTER);
+          text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
         }else{
           var clickedReceivers = [];
           for(var i = 0; i < play.eligibleReceivers.length; i++){
@@ -267,37 +268,30 @@ var runTest = function(type, playerTested, test){
               fill(220, 220, 0);
               line(x, y - 80, x, y - 15);
               triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+              noStroke();
             }
           }
-          textSize(18);
-          stroke(0);
           if(demoComplete){
             fill(220, 220, 0);
-            text("Demo Complete! Click anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
+            text("Demo Complete!\nClick anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
           }
           else if(clickedReceivers.length === 1){
             fill(220, 220, 0);
+            textAlign(CENTER);
             if(demoComplete){
               text("Great!  You're ready to start!", 60, 300);
             }else{
               text("Click next player in progression", field.width / 2, (5 * field.height) / 6);
             }
-            textSize(18);
           }else{
             if(clickedReceivers.length > 1){
-              text("Click button to check", field.width / 2, (5 * field.height) / 6);
+              text("Click player again to check answer", field.width / 2, (5 * field.height) / 6);
             }else{
               text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
             }
-            fill(0);
-            textSize(18);
-            noStroke();
           }
         }
-        noStroke();
-
       }
-
     };
     var drawFeedBackScreen = function(test){
       drawBackground(test.getCurrentPlay(), field);

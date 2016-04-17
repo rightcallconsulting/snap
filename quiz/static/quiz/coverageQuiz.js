@@ -14,6 +14,7 @@ var oldFill = null;
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -29,7 +30,7 @@ function setup() {
   })
   exitDemo = new Button({
     label: "",
-    x: 16,
+    x: 14,
     y: 94,
     height: 1.5,
     width: 1.5,
@@ -169,19 +170,15 @@ function clearSelections(){
 }
 
 function checkAnswer(guess){
-
+  
   var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
   var isCorrect = guess === p.coverageAssignment[0];
   if(isCorrect){
     clearSelections();
-    test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
+    test.registerAnswer(isCorrect);
   }else{
     clearSelections();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
-    test.updateScoreboard();
     var assignment = currentPlayerTested.coverageAssignment[0];
     oldFill = assignment.fill;
     assignment.fill = color(220, 220, 0);
@@ -219,11 +216,13 @@ function drawDemoScreen(){
     noStroke();
     fill(220,0,0);
     exitDemo.draw(field);
-    textSize(22);
-    text("DEMO", x1, y2);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
+    strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
+    strokeWeight(1);
     noStroke();
 
     if(currentPlayerTested){
@@ -231,7 +230,7 @@ function drawDemoScreen(){
       var y = field.getTranslatedY(currentPlayerTested.startY);
       var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
       textAlign(LEFT);
-      textSize(18);
+      textSize(22);
       noStroke();
       if(timeElapsed < 2000){
         noStroke();
@@ -241,9 +240,8 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         fill(220, 0, 0);
-        text("You are in blue", x + siz/2 + 5, y);
+        text("You are in blue", x + siz/2 + 5, y - 20);
         fill(0);
-        textSize(16);
         //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
@@ -252,11 +250,8 @@ function drawDemoScreen(){
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
-        fill(0);
-        textSize(16);
-        //text("Click demo button to exit", 20, 50);
         fill(220,0,0);
-        text("Your play call is here", field.width / 2 + 10, 50);
+        text("Your play call is here", field.width / 2 + 20, 50);
       }else{
         stroke(220, 220, 0);
         fill(220, 220, 0);
@@ -273,22 +268,21 @@ function drawDemoScreen(){
           line(x, y - 80, x, y - 15);
           triangle(x - 15, y - 15, x + 15, y - 15, x, y);
         }
-        textSize(18);
         stroke(0);
         if(clickedReceiver){
+          textAlign(CENTER);
           if(demoDoubleClick){
-            text("Great!  You're ready to start!", 20, 360);
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else{
-            text("Click again to check answer", 20, 360);
+            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
 
           fill(0);
-          textSize(16);
           //text("Click demo button to exit", 20, 50);
         }else{
+          textAlign(CENTER);
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
           fill(0);
-          textSize(16);
           noStroke();
           //text("Click demo button to exit", 20, 50);
         }
@@ -314,41 +308,34 @@ function exitDemoScreen(){
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-
+    return true;
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
-
-  }else if(test.feedBackScreenStartTime){
-    return;
   }else if(!test.over){
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
       if(answer.clicked){
-
         if(answer.isMouseInside(field)){
           if(test.showDemo){
             demoDoubleClick = true;
-
           }else{
             checkAnswer(answer);
-
             return;
           }
         }else{
           clearSelections();
-
           answer.clicked = true;
         }
       }else{
         if(answer.isMouseInside(field)){
-
           clearSelections();
           answer.clicked = true;
-
           return;
         }
       }
