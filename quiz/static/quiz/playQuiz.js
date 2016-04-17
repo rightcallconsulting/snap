@@ -239,7 +239,7 @@ function draw() {
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
-      test.updateMultipleChoiceLables();
+      test.updateMultipleChoiceLabels();
     }
     drawOpening();
   }

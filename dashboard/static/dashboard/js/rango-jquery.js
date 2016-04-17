@@ -39,7 +39,7 @@ $(document).ready(function(){
             debugger;
           }
 
-          
+
         }
     });
 
@@ -104,3 +104,36 @@ $(document).ready(function(){
     });
 
 });
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+//USE THE ABOVE METHOD AS SUCH TO ACQUIRE CSRF TOKEN FOR JQUERY POSTS:
+//var csrftoken = getCookie('csrftoken');
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+//USE THE ABOVE METHOD AS SUCH, AFTER ACQUIRING CSRF TOKEN, BEFORE JQUERY POST:
+/*$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});*/

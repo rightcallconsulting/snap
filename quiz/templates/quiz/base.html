@@ -79,77 +79,77 @@
           <div class="dash-header text-center">
             <span><h4 id="play-image-header">{{page_header}}</h4></span>
           </div>
-          {% if False %}
-          {% for test in test_results %}
-          Score: {{test.score}}, Skips: {{test.skips}}, Wrong: {{test.incorrect_guesses}}
-          <br>
-          {% endfor %}
-          {% endif %}
-          <div class="text-area">
-            <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
-          </div>
-          {% block multipleChoiceAnswers %}
-          <div id="correct-answer-index">0</div>
-          <table class="multiple-choice-answers">
-            <tr><td id="mc-answer-1"><button id="mc-button-1" class="disabled">ANSWER 1</button></td></tr>
-            <tr><td id="mc-answer-2"><button id="mc-button-2" class="disabled">ANSWER 2</button></td></tr>
-            <tr><td id="mc-answer-3"><button id="mc-button-3" class="disabled">ANSWER 3</button></td></tr>
-          </table>
-          <button id="skip-button">
-            <span>Skip<h3 id="skips"></h3></span>
-          </button>
-          <script type="text/javascript">
+          <table class="quiz-sidebar-table">
+            <tr class="top"><td>
+                <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
+            </td></tr>
+            <tr class="middle"><td id="multiple-choice-answer-cell" class="hidden">
+              {% block multipleChoiceAnswers %}
+              <div id="correct-answer-index">0</div>
+              <table class="multiple-choice-answers">
+                <tr><td id="mc-answer-1"><button id="mc-button-1" class="disabled">ANSWER 1</button></td></tr>
+                <tr><td id="mc-answer-2"><button id="mc-button-2" class="disabled">ANSWER 2</button></td></tr>
+                <tr><td id="mc-answer-3"><button id="mc-button-3" class="disabled">ANSWER 3</button></td></tr>
+              </table>
+              <button id="skip-button">
+                <span>Skip <h3 id="skip-button-skips"></h3></span>
+              </button>
+              <script type="text/javascript">
 
-          var checkMultipleChoiceAnswer = function(index){
-            var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
-            test.registerAnswer(isCorrect);
-            if(isCorrect){
-              currentPlayerTested = null;
-              multipleChoiceAnswers = [];
-            }
-          };
-
-          var clearMultipleChoiceAnswers = function(){
-            for(var i = 1; i <= 3; i++){
-              var answer = document.getElementById("mc-button-"+i);
-              if(answer && answer.classList.contains('clicked')){
-                answer.classList.remove('clicked')
-              }
-            }
-          };
-            var clickButton = function(index){
-              var answer = document.getElementById("mc-button-"+index);
-              if(test && !test.over && answer && answer.classList.contains('clicked')){
-                checkMultipleChoiceAnswer(index);
-                clearMultipleChoiceAnswers();
-              }else if(test && !test.over && answer && !answer.classList.contains('disabled')){
-                clearMultipleChoiceAnswers();
-                answer.classList.add('clicked')
-              }
-            }
-
-              document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
-
-              document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
-
-              document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
-
-              document.getElementById("skip-button").onclick = function(){
-                currentPlayerTested = null;
-                if(test && !test.over){
-                  test.skipQuestion();
+              var checkMultipleChoiceAnswer = function(index){
+                var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
+                test.registerAnswer(isCorrect);
+                if(isCorrect){
+                  currentPlayerTested = null;
                   multipleChoiceAnswers = [];
                 }
               };
 
+              var clearMultipleChoiceAnswers = function(){
+                for(var i = 1; i <= 3; i++){
+                  var answer = document.getElementById("mc-button-"+i);
+                  if(answer && answer.classList.contains('clicked')){
+                    answer.classList.remove('clicked')
+                  }
+                }
+              };
+                var clickButton = function(index){
+                  var answer = document.getElementById("mc-button-"+index);
+                  if(test && !test.over && answer && answer.classList.contains('clicked')){
+                    checkMultipleChoiceAnswer(index);
+                    clearMultipleChoiceAnswers();
+                  }else if(test && !test.over && answer && !answer.classList.contains('disabled')){
+                    clearMultipleChoiceAnswers();
+                    answer.classList.add('clicked')
+                  }
+                }
 
-          </script>
+                  document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
+
+                  document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
+
+                  document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
+
+                  document.getElementById("skip-button").onclick = function(){
+                    currentPlayerTested = null;
+                    if(test && !test.over){
+                      test.skipQuestion();
+                      multipleChoiceAnswers = [];
+                    }
+                  };
 
 
-          {% endblock %}
-          <div class="feedback-message text-area">
-            <span><h3 id="feedback-message"></h3></span>
-          </div>
+              </script>
+
+
+              {% endblock %}
+            </td></tr>
+            <tr class="bottom"><td>
+
+              <span><h3 id="feedback-message"></h3></span>
+
+            </td></tr>
+          </table>
         </div>
         {% endblock %}
 
@@ -165,6 +165,10 @@
 
           <div id="incorrect-guesses">
             Wrong:
+          </div>
+
+          <div>
+            <span>Skips: <span id="skips"></span></span>
           </div>
 
         </div>

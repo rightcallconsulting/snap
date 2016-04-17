@@ -295,7 +295,7 @@ function draw() {
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       createMultipleChoiceAnswers(3);
-      test.updateMultipleChoiceLables();
+      test.updateMultipleChoiceLabels();
     }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
