@@ -4,7 +4,7 @@
     correct: '#33691E',
     incorrect: '#EF5350',
     skipped: '#FFEE58',
-    empty: '#BDBDBD',
+    empty: '#E0E0E0',
   }
 
   // Configure global Chart.js settings
