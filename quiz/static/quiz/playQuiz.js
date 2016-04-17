@@ -87,7 +87,7 @@ function shuffle(o) {
   for(var n = 0; n < 100; n++){
     for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
   }
-  return o;
+return o;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -145,6 +145,20 @@ function drawOpening(){
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
 }
+
+function setupDemoScreen(){
+  clearAnswers();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  debugger;
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearAnswers();
+};
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){

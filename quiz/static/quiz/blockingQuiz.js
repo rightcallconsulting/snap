@@ -7,7 +7,8 @@ var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var guessedAssignment = null;
-
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
@@ -25,6 +26,15 @@ function setup() {
     height: 4,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 16,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -199,14 +209,76 @@ function drawOpening(){
   var play = test.getCurrentPlay();
   var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
+    if(defensivePlay){
+      defensivePlay.drawAllPlayers(field);
+    }
     play.drawAllPlayers(field);//WithOffense(field);
-  }
-  if(defensivePlay){
-    defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested && guessedAssignment){
     guessedAssignment.draw(currentPlayerTested, field);
   }
+}
+
+
+function drawDemoScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  var play = test.getCurrentPlay();
+  var defensivePlay = test.getCurrentDefensivePlay();
+  var timeElapsed = millis() - test.demoStartTime;
+  if(play){
+    if(defensivePlay){
+      defensivePlay.drawAllPlayers(field);
+    }
+    play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 4, field.height / 6);
+    stroke(0);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    noStroke();
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(18);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        fill(220, 0, 0);
+        text("You are in yellow", x + siz/2 + 5, y + 10);
+        fill(0);
+        textSize(16);
+        //text("Click demo button to exit", 20, 50);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        fill(0);
+        textSize(16);
+        //text("Click demo button to exit", 20, 50);
+        fill(220,0,0);
+        text("Your play call is here", field.width / 2 + 10, 50);
+      }
+
+    }
+  }
+
 }
 
 keyPressed = function(){
@@ -218,6 +290,21 @@ keyPressed = function(){
   }
   return true;
 }
+
+
+function setupDemoScreen(){
+  clearSelections();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearSelections();
+};
+
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
@@ -321,7 +408,10 @@ function draw() {
       })
       currentPlayerTested.blockingAssignment = correctBlockingAssignment;
     }
-    if(test.feedBackScreenStartTime){
+    if(test.showDemo){
+      drawDemoScreen();
+    }
+    else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedBackScreenStartTime = 0;

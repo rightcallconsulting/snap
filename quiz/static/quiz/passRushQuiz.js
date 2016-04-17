@@ -26,6 +26,15 @@ function setup() {
     width: 5,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -172,7 +181,6 @@ function checkAnswer(x, y){
   }else{
     clearSelection();
     test.registerAnswer(isCorrect);
-    test.updateScoreboard();
     test.feedBackScreenStartTime = millis();
   }
 }
@@ -205,10 +213,11 @@ function drawFeedbackScreen(){
 
 function drawOpening(){
   field.drawBackground(test.getCurrentPlay(), height, width);
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-      for(var i = 0; i < currentNode.length; i++){
+    for(var i = 0; i < currentNode.length; i++){
       stroke(220,220,0);
       line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
       currentGuessNode.draw(field);
@@ -218,12 +227,58 @@ function drawOpening(){
   }
 }
 
+function drawDemoScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    for(var i = 0; i < currentNode.length; i++){
+      stroke(220,220,0);
+      line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
+      currentGuessNode.draw(field);
+      noStroke();
+    }
+    play.drawAllPlayersWithOffense(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+  }
+
+
+};
+
+
 pressPlayButton = function() {
   if (test.getCurrentDefensivePlay()){
     test.getCurrentPlay().setAllRoutes();
     scoreboard.feedbackMessage = "";
     test.getCurrentPlay().inProgress = true;
   }
+};
+
+function setupDemoScreen(){
+  clearSelection();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearSelection();
 };
 
 mouseClicked = function() {
@@ -236,23 +291,28 @@ mouseClicked = function() {
     test.restartQuiz();
   }
   else if(!test.over){
+
     if(currentNode.length > 0 && currentNode[currentNode.length - 1].isMouseInside(field)){
+      if(test.showDemo){
+        demoDoubleClick = true;
+      }else{
         checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
         return;
-      }else{
-        var x = field.getYardX(mouseX);
-        var y = field.getYardY(mouseY);
-        currentGuess.push([x, y]);
-        currentGuessNode = new Node({
-          x: field.getYardX(mouseX),
-          y: field.getYardY(mouseY),
-          siz: 1,
-          fill: color(220,220,0)
-        });
-
       }
-      currentNode.push(currentGuessNode);
+    }else{
+      var x = field.getYardX(mouseX);
+      var y = field.getYardY(mouseY);
+      currentGuess.push([x, y]);
+      currentGuessNode = new Node({
+        x: field.getYardX(mouseX),
+        y: field.getYardY(mouseY),
+        siz: 1,
+        fill: color(220,220,0)
+      });
+
     }
+    currentNode.push(currentGuessNode);
+  }
 
 };
 
@@ -310,9 +370,11 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    if(test.feedBackScreenStartTime){
+    if(test.showDemo){
+      drawDemoScreen();
+    }else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
-      if(elapsedTime > 1000){
+      if(elapsedTime > 2000){
         test.feedBackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
