@@ -61,13 +61,13 @@
             {% block buttons %}
             <div class="holds-play-buttons">
               <table class="button-table"><tr>
-              <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
-              <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
-              <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-              <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-              <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-              <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
-              <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+                <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
+                <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
+                <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+                <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+                <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+                <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+                <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
               </tr></table>
             </div>
             {% endblock %}
@@ -82,7 +82,7 @@
           </div>
           <table class="quiz-sidebar-table">
             <tr class="top"><td>
-                <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
+              <span><h3 id="progress">Q1/Q{{num_plays}}</h3></span>
             </td></tr>
             <tr class="middle"><td id="multiple-choice-answer-cell" class="hidden">
               {% block multipleChoiceAnswers %}
@@ -98,9 +98,6 @@
               <script type="text/javascript">
 
               var checkMultipleChoiceAnswer = function(index){
-                if(test.showDemo){
-                  return;
-                }
                 var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
                 test.registerAnswer(isCorrect);
                 if(isCorrect){
@@ -117,30 +114,63 @@
                   }
                 }
               };
-                var clickButton = function(index){
-                  var answer = document.getElementById("mc-button-"+index);
-                  if(test && !test.over && answer && answer.classList.contains('clicked')){
+              var clickButton = function(index){
+                if(test.showDemo && demoDoubleClick){
+                  exitDemoScreen();
+                  return false;
+                }
+                var answer = document.getElementById("mc-button-"+index);
+                if(test && !test.over && answer && answer.classList.contains('clicked')){
+                  if(test.showDemo){
+                    clearMultipleChoiceAnswers();
+                    demoDoubleClick = true;
+                    return false;
+                  }else{
                     checkMultipleChoiceAnswer(index);
                     clearMultipleChoiceAnswers();
-                  }else if(test && !test.over && answer && !answer.classList.contains('disabled')){
-                    clearMultipleChoiceAnswers();
-                    answer.classList.add('clicked')
                   }
+
+                }else if(test && !test.over && answer && !answer.classList.contains('disabled')){
+                  clearMultipleChoiceAnswers();
+                  answer.classList.add('clicked')
                 }
+                return true;
+              }
 
-                  document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
+              document.getElementById("mc-button-1").onclick = function(e){
+                if(!clickButton(1)){
+                  debugger;
+                  e.preventDefault();
+                }else{
+                  debugger;
+                }
+              };
 
-                  document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
+              document.getElementById("mc-button-2").onclick = function(e){
+                if(!clickButton(2)){
+                  debugger;
+                  e.preventDefault();
+                }else{
+                  debugger;
+                }
+              };
 
-                  document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
+              document.getElementById("mc-button-3").onclick = function(e){
+                if(!clickButton(3)){
+                  debugger;
+                  e.preventDefault();
+                }else{
+                  debugger;
+                }
+              };
 
-                  document.getElementById("skip-button").onclick = function(){
-                    currentPlayerTested = null;
-                    if(test && !test.over){
-                      test.skipQuestion();
-                      multipleChoiceAnswers = [];
-                    }
-                  };
+              document.getElementById("skip-button").onclick = function(){
+                currentPlayerTested = null;
+                if(test && !test.over){
+                  test.skipQuestion();
+                  multipleChoiceAnswers = [];
+                }
+              };
 
 
               </script>
