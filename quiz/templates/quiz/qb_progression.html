@@ -52,12 +52,18 @@ $('#clear-button').click(function(){
 
 $('#restart-button').click(function(){
   pressStopButton();
+  if(test && test.feedBackScreenStartTime === 0){
+    test.restartQuiz(defensePlay);
+  }
 })
 
 $('#next-play-button').click(function(){
   if (test.getCurrentPlay()){
     if(test.showDemo){
       exitDemoScreen();
+      return;
+    }
+    if(test.feedBackScreenStartTime > 0){
       return;
     }
     pressStopButton();

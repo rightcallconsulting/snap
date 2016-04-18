@@ -6,7 +6,7 @@ var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
 var demoComplete = false;
 var exitDemo = null;
-
+var defensePlay = null;
 
 
 function setup() {
@@ -96,7 +96,7 @@ var runTest = function(type, playerTested, test){
     });
     test.scoreboard = scoreboard
 
-    var defensePlay = new DefensivePlay({
+    defensePlay = new DefensivePlay({
       defensivePlayers: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
       lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
