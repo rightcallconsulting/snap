@@ -81,9 +81,26 @@ FormationTest.prototype.updateMultipleChoiceLabels = function(){
   document.getElementById("mc-answer-1").innerHTML = multipleChoiceAnswers[0].getHTMLButton(1);
   document.getElementById("mc-answer-2").innerHTML = multipleChoiceAnswers[1].getHTMLButton(2);
   document.getElementById("mc-answer-3").innerHTML = multipleChoiceAnswers[2].getHTMLButton(3);
-  document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
-  document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
-  document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
+  document.getElementById("mc-button-1").onclick = function(e){
+    if(!clickButton(1)){
+      e.preventDefault();
+      e.stopPropagation();
+    }else{
+      //debugger;
+    }
+  };
+  document.getElementById("mc-button-2").onclick = function(e){
+    if(!clickButton(2)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+  document.getElementById("mc-button-3").onclick = function(e){
+    if(!clickButton(3)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
 }
 
 FormationTest.prototype.updateScoreboard = function(){

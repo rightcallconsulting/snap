@@ -139,8 +139,8 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-    var isCorrect = test.getCurrentPlay().name === guess.label;
-    registerAnswer(isCorrect);
+  var isCorrect = test.getCurrentPlay().name === guess.label;
+  registerAnswer(isCorrect);
 }
 
 function drawOpening(){
@@ -174,9 +174,7 @@ function drawDemoScreen(){
     textAlign(LEFT);
     textSize(22);
     noStroke();
-    fill(220, 220, 0);
-    textAlign(CENTER);
-    text("Double click anywhere on screen\nat anytime to exit demo.",field.width / 2, (5 * field.height) / 6);
+    
     var x = field.getTranslatedX(43);
     var y = field.getTranslatedY(80);
     var x2 = field.getTranslatedX(53);
@@ -187,9 +185,24 @@ function drawDemoScreen(){
     line(x, y, x2, y2);
     strokeWeight(1);
     triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+
+    var clicked = false;
+    for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+      var answer = document.getElementById("mc-button-"+i);
+      if(answer && answer.classList.contains('clicked')){
+        clicked = true;
+      }
+    }
     textSize(20);
     textAlign(CENTER);
-    text("Select the correct formation by \ndouble clicking button.", x - 70, y - 50);  
+    if(demoDoubleClick){
+        text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
+
+    }else if(clicked){
+      text("Click again to check answer.", x - 70, y - 50);
+    }else{
+      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+    }
   }
 };
 
@@ -215,13 +228,7 @@ mouseClicked = function() {
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else{
-    if(test.showDemo){
-      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
-      }else{
-        return;
-      }
-    }
+    
   }
 };
 
