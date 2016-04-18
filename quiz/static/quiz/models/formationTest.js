@@ -61,6 +61,9 @@ FormationTest.prototype.getCurrentPlayerTested = function(currentUserTested){
 FormationTest.prototype.restartQuiz = function(){
   //this.formations[0] ==> reset of some variety ???
   this.scoreboard.feedbackMessage = "";
+  this.feedBackScreenStartTime = 0;
+  this.showDemo = false;
+  this.demoStartTime = 0;
   this.questionNum = 0;
   this.score = 0;
   this.incorrectGuesses = 0;

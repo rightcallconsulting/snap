@@ -94,11 +94,12 @@
 
 							</div>
 							<div class="holds-play-buttons">
-								<button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
-								<button id="play-button" class="btn btn-success" name="button">{% include "quiz/play_button.html" %}</button>
-								<button id="pause-button" class="btn btn-success" name="button">{% include "quiz/pause_button.html" %}</button>
-								<button id="edit-button" class="btn btn-success" name="button">Edit Play</button>
-
+								<table class="button-table"><tr>
+								<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+	              <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
+	              <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
+	              <td><button id="edit-button" name="button">Edit Play</button></td>
+	              </tr></table>
 							</div>
 
 						</div>

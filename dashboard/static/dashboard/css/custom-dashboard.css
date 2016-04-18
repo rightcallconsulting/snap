@@ -70,9 +70,27 @@
   height: 75px;
 }
 
-.holds-play-buttons {
-  background-color: #044144;
-  height: 44px;
+.holds-play-buttons{
+  width: 100%;
+  height: 50px;
+}
+
+.holds-play-buttons table{
+  width: 90%;
+  height: 50px;
+  margin-left: 5%;
+  table-layout: auto;
+}
+
+.holds-play-buttons button{
+  background: none;
+  border: none;
+  width: 80%;
+  height: 50px;
+}
+
+.holds-play-buttons button img{
+    height: 20px;
 }
 
 #play-image-header {
@@ -120,7 +138,7 @@
 }
 
 .display-plays-in-test {
-  height: 700px;
+  height: 600px;
 }
 
 .display-plays-in-test .dash-col{
@@ -178,18 +196,6 @@
   height: 455px;
   width: 90%;
   margin-left: 20px;
-}
-
-#pause-image-button, #play-image-button, #refresh-image-button {
-  height: 20px;
-}
-
-#restart-button {
-  margin-right: 150px;
-}
-
-#edit-button {
-  float: right;
 }
 
 .donut-chart {
@@ -488,13 +494,24 @@ input.create-quiz{
 
 }
 
+.player-home .analytics-table{
+  margin-top: 40px;
+}
+
 .analytics-table{
   table-layout: fixed;
   width: 100%;
+  margin-top: 40px;
 }
 
 .analytics-table td{
   text-align: center;
+}
+
+.analytics-table td canvas{
+  width: 100%;
+  max-height: 100%;
+  margin-bottom: 10px;
 }
 
 .analytics-table td img{
@@ -890,10 +907,14 @@ input.create-quiz{
   vertical-align: top;
 }
 
+.analytics-main-table canvas{
+  margin-top: 30px;
+}
+
 .analytics-play-list{
     margin-top: 50px;
-    width: 40%;
-    margin-left: 29%;
+    width: 50%;
+    margin-left: 25%;
     table-layout: auto;
     font-size: 18px;
     text-align: center;

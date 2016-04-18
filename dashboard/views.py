@@ -29,16 +29,19 @@ from dashboard.utils import PlayerAnalytics
 def homepage(request):
     if request.user.myuser.is_a_player:
         player = request.user.player
+        players = [player]
         all_tests = player.test_set.all()
         completed_tests = all_tests.filter(completed=True).order_by('-created_at')
         uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
         in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
+        analytics = PlayerAnalytics(players)
         return render(request, 'dashboard/homepage.html', {
             'completed_tests': completed_tests,
             'uncompleted_tests': uncompleted_tests,
             'in_progress_tests': in_progress_tests,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
+            'analytics': analytics,
             'page_header': 'DASHBOARD'
         })
     else:
@@ -46,10 +49,12 @@ def homepage(request):
         groups = PlayerGroup.objects.filter(team=request.user.coach.team)
         first_group = groups[1]
         players = first_group.players.all()
+        analytics = PlayerAnalytics(players)
         return render(request, 'dashboard/coachhome.html', {
             'uncompleted_tests': uncompleted_tests,
             'groups': groups,
             'players': players,
+            'analytics': analytics,
             'page_header': 'DASHBOARD',
             'MEDIA_ROOT': '/media/'
         })

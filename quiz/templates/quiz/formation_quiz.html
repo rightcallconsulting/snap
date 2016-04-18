@@ -10,6 +10,7 @@ FORMATION QUIZ
 {% endblock %}
 
 {% block quiz_type %}
+<<<<<<< HEAD
 <script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
 <script type="text/javascript">
 $('#play-button').click(function(){
@@ -56,6 +57,43 @@ $('#question-button').click(function(){
   }
 })
 </script>
+=======
+  <script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
+  <script type="text/javascript">
+
+      $('#check-button').click(function(){
+        for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+          var answer = document.getElementById("mc-button-"+i);
+          if(answer && answer.classList.contains('clicked')){
+            checkMultipleChoiceAnswer(i);
+            return false;
+          }
+        }
+      })
+
+      $('#clear-button').click(function(){
+        clearMultipleChoiceAnswers();
+      })
+
+      $('#restart-button').click(function(){
+        if(test && test.feedBackScreenStartTime === 0){
+          clearMultipleChoiceAnswers();
+          test.restartQuiz();
+        }
+      })
+
+      $('#next-play-button').click(function(){
+        if(test && !test.over && test.feedBackScreenStartTime === 0){
+          test.skipQuestion();
+          multipleChoiceAnswers = [];
+        }
+      })
+
+      $('#question-button').click(function(){
+        //DEMO SCREEN
+      })
+  </script>
+>>>>>>> df072f76d6180b643c9376af072bc0d82157a251
 {% endblock %}
 {% block buttons %}
 <div class="holds-play-buttons">

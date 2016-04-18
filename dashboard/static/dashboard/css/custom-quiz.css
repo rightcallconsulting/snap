@@ -106,8 +106,8 @@
   margin-bottom: 0px;
 }
 
-#pause-image-button, #play-image-button, #refresh-image-button {
-  height: 20px;
+.holds-play-buttons button img{
+    height: 20px;
 }
 
 .multiple-choice-answers{

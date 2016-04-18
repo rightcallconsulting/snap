@@ -26,9 +26,11 @@
 						<table class="analytics-play-list" id="correct-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.correct_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
 									<td>{{play.name}}</td><td>{{percent}}%</td>
 								</tr>
+							{% endif %}
 							{% endfor %}
 						</table>
 					</td>
@@ -38,9 +40,11 @@
 						<table class="analytics-play-list" id="incorrect-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.incorrect_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
 									<td>{{play.name}}</td><td>{{percent}}%</td>
 								</tr>
+							{% endif %}
 							{% endfor %}
 						</table>
 					</td>
@@ -50,9 +54,11 @@
 						<table class="analytics-play-list" id="skipped-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.skipped_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
 									<td>{{play.name}}</td><td>{{percent}}%</td>
 								</tr>
+							{% endif %}
 							{% endfor %}
 						</table>
 					</td>

@@ -12,13 +12,6 @@ PASS RUSH QUIZ
 {% block quiz_type %}
 <script language="javascript" type="text/javascript" src="{% static 'quiz/passRushQuiz.js' %}"></script>
 <script type="text/javascript">
-$('#play-button').click(function(){
-        //pressPlayButton();
-      })
-
-$('#pause-button').click(function(){
-        //pressPlayButton();
-      })
 
 $('#check-button').click(function(){
   if(currentGuessNode){
@@ -31,15 +24,20 @@ $('#clear-button').click(function(){
 })
 
 $('#restart-button').click(function(){
-        //pressStopButton();
+        if(test && test.feedBackScreenStartTime === 0){
+          clearSelection();
+          currentPlayerTested = null;
+          test.restartQuiz();
+        }
       })
 
 $('#next-play-button').click(function(){
-  if(test && !test.over){
+  if(test && !test.over && test.feedBackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
       return;
     }
+    clearSelection();
     test.skipQuestion();
     currentPlayerTested = null;
   }
@@ -67,6 +65,6 @@ $('#question-button').click(function(){
     <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
     <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
   </tr></table>
-  
+
 </div>
 {% endblock %}

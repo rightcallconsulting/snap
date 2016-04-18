@@ -114,13 +114,19 @@ class PlayerAnalytics:
             self.total_skipped()
 
     def total_correct_percentage(self):
-        return int(100.0 * self.total_correct() / self.total_questions())
+        if(self.total_questions() > 0):
+            return int(100.0 * self.total_correct() / self.total_questions())
+        return 0
 
     def total_incorrect_percentage(self):
-        return int(100.0 * self.total_incorrect() / self.total_questions())
+        if(self.total_questions() > 0):
+            return int(100.0 * self.total_incorrect() / self.total_questions())
+        return 0
 
     def total_skipped_percentage(self):
-        return int(100.0 * self.total_skipped() / self.total_questions())
+        if(self.total_questions() > 0):
+            return int(100.0 * self.total_skipped() / self.total_questions())
+        return 0
 
     def get_total_questions_for_play(self, play):
         total = 0
