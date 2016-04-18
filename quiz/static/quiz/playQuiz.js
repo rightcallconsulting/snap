@@ -5,10 +5,13 @@ var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -22,6 +25,15 @@ function setup() {
     width: field.heightInYards / 6,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -127,31 +139,65 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-  var isCorrect = test.getCurrentPlay().name === guess.label;
-  if(isCorrect){
-    test.advanceToNextPlay(test.correctAnswerMessage);
-    test.score++;
-    multipleChoiceAnswers = [];
-  }else{
-    clearAnswers();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
-  }
-  test.updateScoreboard();
+    var isCorrect = test.getCurrentPlay().name === guess.label;
+    registerAnswer(isCorrect);
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
-}
+};
+
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+    textAlign(LEFT);
+    textSize(22);
+    noStroke();
+    fill(220, 220, 0);
+    textAlign(CENTER);
+    text("Double click anywhere on screen\nat anytime to exit demo.",field.width / 2, (5 * field.height) / 6);
+    var x = field.getTranslatedX(43);
+    var y = field.getTranslatedY(80);
+    var x2 = field.getTranslatedX(53);
+    var y2 = field.getTranslatedY(80);
+    stroke(0, 0, 220);
+    fill(0, 0, 220);
+    strokeWeight(2);
+    line(x, y, x2, y2);
+    strokeWeight(1);
+    triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+    textSize(20);
+    textAlign(CENTER);
+    text("Select the correct formation by \ndouble clicking button.", x - 70, y - 50);  
+  }
+};
 
 function setupDemoScreen(){
-  clearAnswers();
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  debugger;
+  clearAnswers();
 };
 
 function exitDemoScreen(){
@@ -164,22 +210,16 @@ mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else{
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true; 
       }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
+        return;
       }
     }
   }
@@ -225,12 +265,13 @@ function draw() {
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
     }
-  };
+  }
   if(makeJSONCall){
     //WAIT - still executing JSON
   }
-  else if(test.over){
-    //debugger;
+  else if(test.showDemo){
+    drawDemoScreen();
+  }else if(test.over){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -241,6 +282,6 @@ function draw() {
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateMultipleChoiceLabels();
     }
-    drawOpening();
+    drawOpening(field);
   }
-}
+};

@@ -232,7 +232,7 @@ function drawOpening(){
 
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
-  timeElapsed = millis() - test.demoStartTime;
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentDefensivePlay();
   if(play){
     for(var i = 0; i < currentNode.length; i++){

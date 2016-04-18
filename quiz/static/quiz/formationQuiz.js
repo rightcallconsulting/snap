@@ -5,13 +5,15 @@ var multipleChoiceAnswers;
 var formationNames;
 var maxFormations = 5;
 var bigReset;
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
-
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -23,6 +25,15 @@ function setup() {
     width: field.heightInYards / 6,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -46,41 +57,41 @@ function setup() {
       })
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
       formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-          data.forEach(function(position){
-            position.fields.id = position.pk;
-            position.fields.x = position.fields.startX;
-            position.fields.y = position.fields.startY;
-            position.fields.pos = position.fields.name;
-            position.fields.num = position.fields.pos;
-            var newPlayer = new Player(position.fields)
-            if(newPlayer.pos==="QB"){
-              newPlayer.setFill(212,130,130);
-            }
-            else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-              newPlayer.setFill(143,29,29);
-            }
-            else{
-              newPlayer.setFill(255,0,0);
-            }
-            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            if(formation){
-              formation.positions.push(newPlayer);
-            }
-          })
-          formations.forEach(function(formation){
-            formation.populatePositions();
-          })
-
-          test.formations = formations;
-          multipleChoiceAnswers = [];
-          test.restartQuiz();
-          test.updateScoreboard();
-          makeJSONCall = false
-
+      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+        data.forEach(function(position){
+          position.fields.id = position.pk;
+          position.fields.x = position.fields.startX;
+          position.fields.y = position.fields.startY;
+          position.fields.pos = position.fields.name;
+          position.fields.num = position.fields.pos;
+          var newPlayer = new Player(position.fields)
+          if(newPlayer.pos==="QB"){
+            newPlayer.setFill(212,130,130);
+          }
+          else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
+            newPlayer.setFill(143,29,29);
+          }
+          else{
+            newPlayer.setFill(255,0,0);
+          }
+          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+          if(formation){
+            formation.positions.push(newPlayer);
+          }
         })
-    });
-  }
+        formations.forEach(function(formation){
+          formation.populatePositions();
+        })
+
+        test.formations = formations;
+        multipleChoiceAnswers = [];
+        test.restartQuiz();
+        test.updateScoreboard();
+        makeJSONCall = false
+
+      })
+});
+}
 }
 
 var sortByCreationDecreasing = function(a, b){
@@ -93,7 +104,7 @@ function shuffle(o) {
   for(var n = 0; n < 100; n++){
     for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
   }
-  return o;
+return o;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -133,17 +144,8 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-  var isCorrect = test.getCurrentFormation().name === guess.label;
-  if(isCorrect){
-    test.advanceToNextFormation(test.correctAnswerMessage);
-    test.score++;
-    multipleChoiceAnswers = [];
-  }else{
-    clearAnswers();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
-  }
-  test.updateScoreboard();
+    var isCorrect = test.getCurrentFormation().name === guess.label;
+    registerAnswer(isCorrect);
 }
 
 function drawOpening(){
@@ -151,26 +153,78 @@ function drawOpening(){
   test.getCurrentFormation().drawAllPlayers(field);
 }
 
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var formation = test.getCurrentFormation();
+  if(formation){
+    formation.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+    textAlign(LEFT);
+    textSize(22);
+    noStroke();
+    fill(220, 220, 0);
+    textAlign(CENTER);
+    text("Double click anywhere on screen\nat anytime to exit demo.",field.width / 2, (5 * field.height) / 6);
+    var x = field.getTranslatedX(43);
+    var y = field.getTranslatedY(80);
+    var x2 = field.getTranslatedX(53);
+    var y2 = field.getTranslatedY(80);
+    stroke(0, 0, 220);
+    fill(0, 0, 220);
+    strokeWeight(2);
+    line(x, y, x2, y2);
+    strokeWeight(1);
+    triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+    textSize(20);
+    textAlign(CENTER);
+    text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);  
+  }
+};
+
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  clearAnswers();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearAnswers();
+};
+
+
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
-  if (bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else{
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true; 
       }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
+        return;
       }
     }
   }
@@ -222,6 +276,8 @@ function draw() {
 
   if(makeJSONCall){
     //WAIT - still executing JSON
+  }else if(test.showDemo){
+    drawDemoScreen();
   }
   else if(test.over){
     background(93, 148, 81);

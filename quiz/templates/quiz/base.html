@@ -97,6 +97,9 @@
               <script type="text/javascript">
 
               var checkMultipleChoiceAnswer = function(index){
+                if(test.showDemo){
+                  return;
+                }
                 var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
                 test.registerAnswer(isCorrect);
                 if(isCorrect){

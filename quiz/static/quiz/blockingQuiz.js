@@ -13,6 +13,7 @@ var demoDoubleClick = false;
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -238,10 +239,12 @@ function drawDemoScreen(){
     fill(220,0,0);
     exitDemo.draw(field);
     textSize(30);
-    text("DEMO", field.width / 4, field.height / 6);
+    text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
+    strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
+    strokeWeight(1);
     noStroke();
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -256,11 +259,13 @@ function drawDemoScreen(){
         stroke(220,0,0);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
+        noStroke();
         strokeWeight(1);
-        fill(220, 0, 0);
-        text("You are in yellow", x + siz/2 + 5, y + 10);
+        fill(220, 220, 0);
+        textSize(22);
+        text("You are in yellow", x - 100, y - 90);
         fill(0);
-        textSize(16);
+        
         //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
@@ -270,10 +275,45 @@ function drawDemoScreen(){
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
         fill(0);
-        textSize(16);
+        textSize(22);
         //text("Click demo button to exit", 20, 50);
         fill(220,0,0);
         text("Your play call is here", field.width / 2 + 10, 50);
+      }else{
+        stroke(220, 220, 0);
+        fill(220, 220, 0);
+        var clickedDefender = null;
+        for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
+          var defender = defensivePlay.defensivePlayers[i];
+          if(defender.clicked){
+            clickedDefender = defender;
+          }
+          var x = field.getTranslatedX(defender.startX);
+          var y = field.getTranslatedY(defender.startY);
+          var siz = field.yardsToPixels(defender.siz);
+          y -= siz / 2;
+          line(x, y - 80, x, y - 15);
+          triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+        }
+        stroke(0);
+        textAlign(CENTER);
+        textSize(22);
+        if(clickedDefender){
+         
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else{
+            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+          }
+
+          fill(0);
+          //text("Click demo button to exit", 20, 50);
+        }else{
+          
+          text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
+          noStroke();
+          //text("Click demo button to exit", 20, 50);
+        }
       }
 
     }
@@ -310,18 +350,35 @@ mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }else{
-    return;
+    return true;
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else if(!test.over){
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else if(!test.over){
     var play = test.getCurrentDefensivePlay();
     var clickedPlayer = null;
     for(var i = 0; i < play.defensivePlayers.length; i++){
       var answer = play.defensivePlayers[i];
-      if(answer.isMouseInside(field)){
-        clickedPlayer = answer;
+      if(answer.clicked){
+        if(answer.isMouseInside(field)){
+          if(test.showDemo){
+            demoDoubleClick = true;
+          }else{
+            checkAnswer(answer);
+          }
+        }else{
+          clearSelections();
+          answer.clicked = true;
+          clickedPlayer = answer;
+        }
+      }else{
+        if(answer.isMouseInside(field)){
+          clearSelections();
+          answer.clicked = true;
+          return;
+        }
       }
     }
     if(clickedPlayer){
