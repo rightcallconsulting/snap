@@ -183,6 +183,8 @@ function checkAnswer(guess){
     oldFill = assignment.fill;
     assignment.fill = color(220, 220, 0);
     test.feedBackScreenStartTime = millis();
+    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
+    test.updateScoreboard();
   }
 }
 

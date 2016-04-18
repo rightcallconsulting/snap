@@ -10,10 +10,13 @@ var currentPlayerTested = null;
 var currentGuess = [];
 var currentNode = [];
 var currentGuessNode = null;
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -229,6 +232,7 @@ function drawOpening(){
 
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
+  var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentDefensivePlay();
   if(play){
     for(var i = 0; i < currentNode.length; i++){
@@ -253,9 +257,57 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
+
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(22);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        fill(220, 0, 0);
+        text("You are in blue", x + siz/2 + 5, y - 20);
+        //text("Click demo button to exit", 20, 50);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        text("Your play call is here", field.width / 2 + 20, 50);
+      }else{
+        stroke(220, 220, 0);
+        fill(220, 220, 0);
+        var clickedNode = null;
+        if(currentGuessNode){ 
+          clickedNode = currentGuessNode;
+        }
+        if(clickedNode){
+          fill(220, 220, 0);
+          textAlign(CENTER);
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else{
+            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+          }
+        }else{
+          textAlign(CENTER);
+          text("Click on the spot you are rushing", field.width / 2, (5 * field.height) / 6);
+          noStroke();
+          //text("Click demo button to exit", 20, 50);
+        }
+      }
+    }
+    noStroke();
   }
-
-
 };
 
 
@@ -272,7 +324,9 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  
+  test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
+  test.updateScoreboard();
+
 };
 
 function exitDemoScreen(){
@@ -289,9 +343,10 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else if(!test.over){
-
+    return true;
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else if(!test.over){
     if(currentNode.length > 0 && currentNode[currentNode.length - 1].isMouseInside(field)){
       if(test.showDemo){
         demoDoubleClick = true;
@@ -309,11 +364,9 @@ mouseClicked = function() {
         siz: 1,
         fill: color(220,220,0)
       });
-
     }
     currentNode.push(currentGuessNode);
   }
-
 };
 
 keyTyped = function(){

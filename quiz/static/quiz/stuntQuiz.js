@@ -8,11 +8,15 @@ var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var currentGuessNode = null;
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.width = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -24,6 +28,16 @@ function setup() {
     width: 5,
     label: "Restart"
   })
+
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -56,54 +70,54 @@ function setup() {
           var newFormation = createFormationFromJSON(formationObject);
           formations.push(newFormation);
         })
-          $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-            data.forEach(function(position){
-              var newPlayer = createPlayerFromJSON(position);
-              var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-              var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
+        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+          data.forEach(function(position){
+            var newPlayer = createPlayerFromJSON(position);
+            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+            var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
 
-              if(formation){
-                formation.positions.push(newPlayer);
-              }
-              if(offensiveFormation){
-                offensiveFormation.positions.push(newPlayer);
-              }
-            })
-            offensiveFormations.forEach(function(formation){
-              formation.populatePositions();
-            })
-            formations.forEach(function(formation){
-              formation.populatePositions();
-              var defensivePlay = formation.createDefensivePlay();
-              defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-              defensivePlays.push(defensivePlay);
-              if(playNames.indexOf(defensivePlay.playName) < 0){
-                playNames.push(defensivePlay.playName);
-              }
-            })
+            if(formation){
+              formation.positions.push(newPlayer);
+            }
+            if(offensiveFormation){
+              offensiveFormation.positions.push(newPlayer);
+            }
+          })
+          offensiveFormations.forEach(function(formation){
+            formation.populatePositions();
+          })
+          formations.forEach(function(formation){
+            formation.populatePositions();
+            var defensivePlay = formation.createDefensivePlay();
+            defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
+            defensivePlays.push(defensivePlay);
+            if(playNames.indexOf(defensivePlay.playName) < 0){
+              playNames.push(defensivePlay.playName);
+            }
+          })
 
-            $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-              data3.forEach(function(play){
-                var testIDArray = play.fields.tests;
-                var play = createPlayFromJSON(play);
-                plays.push(play);
+          $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
+            data3.forEach(function(play){
+              var testIDArray = play.fields.tests;
+              var play = createPlayFromJSON(play);
+              plays.push(play);
+            })
+            $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
+              data4.forEach(function(position){
+                var player = createPlayerFromJSON(position);
+                positions.push(player);
               })
-              $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-                data4.forEach(function(position){
-                  var player = createPlayerFromJSON(position);
-                  positions.push(player);
-                })
-                plays.forEach(function(play){
-                  play.addPositionsFromID(positions);
-                  play.populatePositions();
-                })
+              plays.forEach(function(play){
+                play.addPositionsFromID(positions);
+                play.populatePositions();
+              })
 
-                for(var i = 0; i < defensivePlays.length; i++){
-                  var play = defensivePlays[i];
-                  var isRushing = false;
-                  for(var j = 0; j < play.defensivePlayers.length; j++){
-                    var p = play.defensivePlayers[j];
-                    if(p.pos === currentUserTested.position){
+              for(var i = 0; i < defensivePlays.length; i++){
+                var play = defensivePlays[i];
+                var isRushing = false;
+                for(var j = 0; j < play.defensivePlayers.length; j++){
+                  var p = play.defensivePlayers[j];
+                  if(p.pos === currentUserTested.position){
                       //check if he's in coverage
                       if(p.gapXPoint && p.gapYPoint){
                         isRushing = true;
@@ -123,21 +137,14 @@ function setup() {
                 test.updateProgress();
                 makeJSONCall = false;
               })
-            })
-          })
-        })
+})
+})
+})
 
-    });
+});
 
-  }
 }
-
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
-
+}
 var sortByPlayName = function(a, b){
   var name1 = a.playName;
   var name2 = b.playName;
@@ -167,14 +174,38 @@ function checkAnswer(x, y){
   if(isCorrect){
     clearSelection();
     currentPlayerTested = null;
-    test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
+    test.registerAnswer(isCorrect);
   }else{
     clearSelection();
-    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-    test.incorrectGuesses++;
-    test.updateScoreboard();
+    test.registerAnswer(isCorrect);
+    test.feedBackScreenStartTime = millis();
   }
+}
+
+function drawFeedbackScreen(){
+  var x2 = currentPlayerTested.gapXPoint;
+  var y2 = currentPlayerTested.gapYPoint;
+  var x1 = currentPlayerTested.x;
+  var y1 = currentPlayerTested.y;
+
+  var pixelX1 = field.getTranslatedX(x1);
+  var pixelX2 = field.getTranslatedX(x2);
+  var pixelY1 = field.getTranslatedY(y1);
+  var pixelY2 = field.getTranslatedY(y2);
+
+  var node = new Node({
+    x: x2,
+    y: y2,
+    siz: 1,
+    fill: color(220,220,0)
+  });
+
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  test.getCurrentDefensivePlay().drawAllPlayersWithOffense(field);
+  stroke(220,220,0);
+  line(pixelX1, pixelY1, pixelX2, pixelY2);
+  noStroke();
+  node.draw(field);
 }
 
 function drawOpening(){
@@ -189,7 +220,86 @@ function drawOpening(){
       noStroke();
     }
   }
-}
+};
+
+function drawDemoScreen(){
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentDefensivePlay();
+  if(play){
+    if(currentGuessNode && currentPlayerTested){
+      stroke(220,220,0);
+      line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
+      currentGuessNode.draw(field);
+      noStroke();
+    }
+    play.drawAllPlayersWithOffense(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(22);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        fill(220, 0, 0);
+        text("You are in blue", x + siz/2 + 5, y - 20);
+        //text("Click demo button to exit", 20, 50);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        text("Your play call is here", field.width / 2 + 20, 50);
+      }else{
+        stroke(220, 220, 0);
+        fill(220, 220, 0);
+        var clickedNode = null;
+        if(currentGuessNode){ 
+          clickedNode = currentGuessNode;
+        }
+        if(clickedNode){
+          fill(220, 220, 0);
+          textAlign(CENTER);
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else{
+            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+          }
+        }else{
+          textAlign(CENTER);
+          text("Click the gap for your stunt", field.width / 2, (5 * field.height) / 6);
+          noStroke();
+        }
+      }
+    }
+    noStroke();
+  }
+};
 
 pressPlayButton = function() {
   if (test.getCurrentDefensivePlay()){
@@ -197,6 +307,20 @@ pressPlayButton = function() {
     scoreboard.feedbackMessage = "";
     test.getCurrentPlay().inProgress = true;
   }
+};
+
+function setupDemoScreen(){
+  clearSelection();
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearSelection();
 };
 
 mouseClicked = function() {
@@ -207,19 +331,16 @@ mouseClicked = function() {
   }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else if(!test.over){
+    return true;
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else if(!test.over){
     if(currentGuessNode){
       if(currentGuessNode.isMouseInside(field)){
+        demoDoubleClick = true;
+      }else{
         checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
         return;
-      }else{
-        currentGuessNode = new Node({
-          x: field.getYardX(mouseX),
-          y: field.getYardY(mouseY),
-          siz: 1,
-          fill: color(220,220,0)
-        })
       }
     }else{
       currentGuessNode = new Node({
@@ -229,6 +350,14 @@ mouseClicked = function() {
         fill: color(220,220,0)
       })
     }
+  }else{
+    currentGuessNode = new Node({
+      x: field.getYardX(mouseX),
+      y: field.getYardY(mouseY),
+      siz: 1,
+      fill: color(220,220,0)
+    })
+
   }
 };
 
@@ -278,7 +407,6 @@ function draw() {
     background(93, 148, 81);
   }
   else if(test.over){
-    //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -287,6 +415,20 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(test.showDemo){
+      drawDemoScreen();
+    }else if(test.feedBackScreenStartTime){
+      debugger;      
+      var elapsedTime = millis() - test.feedBackScreenStartTime;
+      if(elapsedTime > 2000){
+        test.feedBackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen();
+      }
+    }else{
+      drawOpening();
+    }
   }
 }
