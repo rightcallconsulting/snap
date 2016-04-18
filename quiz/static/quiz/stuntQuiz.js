@@ -407,7 +407,6 @@ function draw() {
     background(93, 148, 81);
   }
   else if(test.over){
-
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -419,6 +418,7 @@ function draw() {
     if(test.showDemo){
       drawDemoScreen();
     }else if(test.feedBackScreenStartTime){
+      debugger;      
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedBackScreenStartTime = 0;

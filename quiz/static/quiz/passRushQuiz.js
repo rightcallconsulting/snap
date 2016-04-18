@@ -324,6 +324,8 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
+  test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
+  test.updateScoreboard();
 
 };
 
@@ -362,12 +364,9 @@ mouseClicked = function() {
         siz: 1,
         fill: color(220,220,0)
       });
-
     }
     currentNode.push(currentGuessNode);
-
   }
-
 };
 
 keyTyped = function(){
