@@ -27,59 +27,118 @@
 							<tbody>
 								<tr>
 									<td>
-										<a href="/quiz/formation_quiz"><div class="playbook-action">
-											<span><h3>FORMATIONS</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>FORMATIONS</h3></span>
+											</div>
+										</a>
 									</td>
 									<td>
-										<a href="/quiz/play_quiz"><div class="playbook-action">
-											<span><h3>PLAYS</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>PLAYS</h3></span>
+											</div>
+										</a>
 									</td>
 									<td>
-										<a href="/quiz/alignment_quiz"><div class="playbook-action">
-											<span><h3>ALIGNMENT</h3></span>
-										</div></a>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<a href="/quiz/coverage_quiz"><div class="playbook-action">
-											<span><h3>MAN COVERAGE</h3></span>
-										</div></a>
-									</td>
-									<td>
-										<a href="/quiz/pass_zones"><div class="playbook-action">
-											<span><h3>ZONE COVERAGE</h3></span>
-										</div></a>
-									</td>
-									<td>
-										<a href="/quiz/linebacker_call_quiz"><div class="playbook-action">
-											<span><h3>PASS STRENGTH</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>ALIGNMENT</h3></span>
+											</div>
+										</a>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<a href="/quiz/qb_call_quiz"><div class="playbook-action">
-											<span><h3>QB AUDIBLE</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/coverage_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>MAN COVERAGE</h3></span>
+											</div>
+										</a>
 									</td>
 									<td>
-										<a href="/quiz/route_quiz"><div class="playbook-action">
-											<span><h3>DRAW ROUTE</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/pass_zones" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>ZONE COVERAGE</h3></span>
+											</div>
+										</a>
 									</td>
 									<td>
-										<a href="/quiz/pass_rush_quiz"><div class="playbook-action">
-											<span><h3>PASS RUSH</h3></span>
-										</div></a>
+										<a href="#" data-dest-url="/quiz/linebacker_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>PASS STRENGTH</h3></span>
+											</div>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>QB AUDIBLE</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>DRAW ROUTE</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>PASS RUSH</h3></span>
+											</div>
+										</a>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
+
+				<!-- START: Quiz Options Modal -->
+				<div class="modal fade" id="quizOptionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Quiz Options</h4>
+				      </div>
+				      
+				      <form id="quizOptionsForm">
+					      <div class="modal-body">
+					      	<div class="form-group">
+								    <label for="inputNumQuestions">Number of questions</label>
+								    <input id="inputNumQuestions" type="number" class="form-control" placeholder="Default: 5" />
+								  </div>
+								  <div class="form-group">
+								  	<label for="inputOrder">Order</label>
+								  	<select id="inputOrder" class="form-control">
+								  		{% for option in quiz_order_options %}
+								  			<option value="{{option.param_value}}">
+								  				{{option.text}}
+								  			</option>
+								  		{% endfor %}
+										</select>
+								  </div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					        <input type="submit" class="btn btn-primary" value="Quiz Me" />
+					      </div> 
+				      </form>
+
+				    </div>
+				  </div>
+				</div> <!-- #quizOptionsModal -->
+
+				<script src="{% static 'dashboard/js/customQuizForm.js' %}"></script>
+				<!-- END: Quiz Options Button + Modal -->
+
 				<div class="col-lg-4 dash-col recently-taken">
 					<div class="dash-header text-center">
 						<span><h4>RECENTLY TAKEN</h4></span>
