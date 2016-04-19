@@ -170,7 +170,7 @@ function clearSelections(){
 }
 
 function checkAnswer(guess){
-  
+
   var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
   var isCorrect = guess === p.coverageAssignment[0];
   if(isCorrect){
@@ -184,6 +184,7 @@ function checkAnswer(guess){
     assignment.fill = color(220, 220, 0);
     test.feedBackScreenStartTime = millis();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
+    test.incorrectGuesses++;
     test.updateScoreboard();
   }
 }
