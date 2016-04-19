@@ -12,7 +12,7 @@ function redirectToCustomQuiz() {
 
   var destinationUrl = destinationUrlBase + 
     '?num_qs=' + numQuestions +
-    ',order=' + order;
+    '&order=' + order;
   window.location.href = destinationUrl;
 }
 

@@ -58,6 +58,7 @@ function setup() {
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
       formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
       $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
+        console.log(JSON.stringify(data, null, 2))
         data.forEach(function(position){
           position.fields.id = position.pk;
           position.fields.x = position.fields.startX;
