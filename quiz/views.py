@@ -176,6 +176,8 @@ class CustomPlayerQuizView(generic.TemplateView):
     Attributes:
         template_name: Template file path (inherited from generic.TemplateView)
         page_header: String title of the paged passed into template context
+        num_questions: Integer # of questions to include in the quiz
+        order: Represents the order to present questions in
     """
     
     def get_json_seed(self):
@@ -184,19 +186,17 @@ class CustomPlayerQuizView(generic.TemplateView):
             'get_json_seed().')
 
     def store_quiz_options_from_request(self, request):
-        """Save GET params as attributes for use by subclasses."""
+        """Save data attributes for use by subclasses."""
         if request.user.myuser.is_a_player: self.player = request.user.player
         if 'num_qs' in request.GET: self.num_questions = request.GET['num_qs']
         if 'order' in request.GET: self.order = request.GET['order']
 
     def get(self, request):
-        """Save GET params before continuing normal get() behavior."""
         # TODO: redirect if user is a coach??
         self.store_quiz_options_from_request(request)
         return super(CustomPlayerQuizView, self).get(request)
 
     def get_context_data(self, **kwargs):
-        """Expose the JSON seed object for the JS assets to create test."""
         context = super(CustomPlayerQuizView, self).get_context_data(**kwargs)
         context['page_header'] = self.page_header
         context['json_seed'] = self.get_json_seed()
