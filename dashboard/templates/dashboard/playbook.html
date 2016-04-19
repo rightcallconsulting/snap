@@ -126,9 +126,9 @@
 													</tr>
 												{% endif %}
 											{% endfor %}
-											{% if offensive_formations|add:"-1"|length|divisibleby:3 %}
+											{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
 												<td></td><td></td></tr>
-											{% elif offensive_formations|add:"-2"|length|divisibleby:3 %}
+											{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
 												<td></td></tr>
 											{% endif %}
 										</table>

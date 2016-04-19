@@ -104,47 +104,64 @@ PlayTest.prototype.updateMultipleChoiceLabels = function(){
   document.getElementById("mc-answer-1").innerHTML = multipleChoiceAnswers[0].getHTMLButton(1);
   document.getElementById("mc-answer-2").innerHTML = multipleChoiceAnswers[1].getHTMLButton(2);
   document.getElementById("mc-answer-3").innerHTML = multipleChoiceAnswers[2].getHTMLButton(3);
-  document.getElementById("mc-button-1").onclick = function(){clickButton(1)};
-  document.getElementById("mc-button-2").onclick = function(){clickButton(2)};
-  document.getElementById("mc-button-3").onclick = function(){clickButton(3)};
-}
-
-PlayTest.prototype.updateScoreboard = function(){
-  $('#score').text("Score: " + this.score);
-  $('#skips').text(this.skips);
-  var skip_button_skips = $('#skip-button-skips');
-  if(skip_button_skips){
-    skip_button_skips.text(this.skips);
-  }
-  $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
-  $('#feedback-message').text(this.scoreboard.feedbackMessage);
-}
-
-PlayTest.prototype.updateProgress = function(){
-  $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.plays.length);
-  if(this.displayName && this.getCurrentPlay()){
-    var name = this.getCurrentPlay().name;
-    if(!name){
-      name = this.getCurrentPlay().playName;
+  document.getElementById("mc-button-1").onclick = function(e){
+    if(!clickButton(1)){
+      e.preventDefault();
+      e.stopPropagation();
+    }else{
+      //debugger;
     }
-    $('#play-name').text(name);
+  };
+  document.getElementById("mc-button-2").onclick = function(e){
+    if(!clickButton(2)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+  document.getElementById("mc-button-3").onclick = function(e){
+    if(!clickButton(3)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+}
+
+  PlayTest.prototype.updateScoreboard = function(){
+    $('#score').text("Score: " + this.score);
+    $('#skips').text(this.skips);
+    var skip_button_skips = $('#skip-button-skips');
+    if(skip_button_skips){
+      skip_button_skips.text(this.skips);
+    }
+    $('#incorrect-guesses').text("Wrong: " +this.incorrectGuesses);
+    $('#feedback-message').text(this.scoreboard.feedbackMessage);
   }
-}
 
-PlayTest.prototype.skipQuestion = function(){
-  this.skips++;
-  this.advanceToNextPlay(this.skippedAnswerMessage);
-}
+  PlayTest.prototype.updateProgress = function(){
+    $('#progress').text("Q" + (this.questionNum+1) + "/Q" + this.plays.length);
+    if(this.displayName && this.getCurrentPlay()){
+      var name = this.getCurrentPlay().name;
+      if(!name){
+        name = this.getCurrentPlay().playName;
+      }
+      $('#play-name').text(name);
+    }
+  }
 
-PlayTest.prototype.advanceToNextPlay = function(message){
-  this.scoreboard.feedbackMessage = message;
-  this.questionNum++;
-  this.updateScoreboard();
-  if(this.questionNum >= this.plays.length){
-    this.endTime = millis();
-    this.over = true;
-  } else{
-    this.updateProgress();
+  PlayTest.prototype.skipQuestion = function(){
+    this.skips++;
+    this.advanceToNextPlay(this.skippedAnswerMessage);
+  }
+
+  PlayTest.prototype.advanceToNextPlay = function(message){
+    this.scoreboard.feedbackMessage = message;
+    this.questionNum++;
+    this.updateScoreboard();
+    if(this.questionNum >= this.plays.length){
+      this.endTime = millis();
+      this.over = true;
+    } else{
+      this.updateProgress();
     //this.updateMultipleChoiceLabels();
     //reset elements of play?
   }

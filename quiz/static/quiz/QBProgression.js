@@ -6,7 +6,7 @@ var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
 var demoComplete = false;
 var exitDemo = null;
-
+var defensePlay = null;
 
 
 function setup() {
@@ -30,8 +30,8 @@ function setup() {
 
   exitDemo = new Button({
     label: "",
-    x: 16,
-    y: 94,
+    x: field.getYardX(50),
+    y: field.getYardY(50),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -96,7 +96,7 @@ var runTest = function(type, playerTested, test){
     });
     test.scoreboard = scoreboard
 
-    var defensePlay = new DefensivePlay({
+    defensePlay = new DefensivePlay({
       defensivePlayers: [],
       dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
       lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
@@ -239,7 +239,8 @@ var runTest = function(type, playerTested, test){
         noStroke();
         fill(0, 0, 0);
         textSize(22);
-        text("DEMO", x1 - 40, y1 + 20);
+        textAlign(LEFT);
+        text("DEMO", x2+5, (y1+y2)/2);
         if(timeElapsed < 2000){
           fill(220,0,0);
           stroke(220, 0, 0);
@@ -271,13 +272,14 @@ var runTest = function(type, playerTested, test){
               noStroke();
             }
           }
+          textAlign(CENTER);
           if(demoComplete){
             fill(220, 220, 0);
             text("Demo Complete!\nClick anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
           }
           else if(clickedReceivers.length === 1){
             fill(220, 220, 0);
-            textAlign(CENTER);
+
             if(demoComplete){
               text("Great!  You're ready to start!", 60, 300);
             }else{
@@ -285,10 +287,13 @@ var runTest = function(type, playerTested, test){
             }
           }else{
             if(clickedReceivers.length > 1){
-              text("Click player again to check answer", field.width / 2, (5 * field.height) / 6);
+              text("Click on a player again to unselect him", field.width / 2, (5 * field.height) / 6);
+              text("Click the checkbox to check answer", field.width / 2, (11 * field.height) / 12);
+              //draw line to check box
             }else{
               text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
             }
+
           }
         }
       }
@@ -358,12 +363,10 @@ var runTest = function(type, playerTested, test){
           var p = currentPlay.eligibleReceivers[i];
           if (p.isMouseInside(field)){
             if(p.clicked){
-              if(test.showDemo){
-                demoComplete = true;
-              }else{
-                p.unselect();
-                p.showRoute = false;
-              }
+
+              p.unselect();
+              p.showRoute = false;
+
             }else{
               p.select();
               p.showRoute = true;

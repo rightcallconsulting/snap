@@ -7,11 +7,14 @@ var maxFormations = 5;
 var bigReset;
 var currentPlayerTested = null;
 var currentUserTested = null;
-var answers = [];
+var answers = []; 
+var exitDemo = null;
+var demoDoubleClick = false;
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
@@ -24,6 +27,16 @@ function setup() {
     width: field.pixelsToYards(50),
     label: "Restart"
   })
+
+  exitDemo = new Button({
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -161,7 +174,6 @@ function drawFeedbackScreen(){
     textSize(14);
     textAlign(CENTER, CENTER);
     text(currentPlayerTested.pos, playerX, playerY);
-    debugger;
   }
 };
 
@@ -256,6 +268,9 @@ if(makeJSONCall){
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+    }
+    if(test.showDemo){
+      drawdemoScreen();
     }
     if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
