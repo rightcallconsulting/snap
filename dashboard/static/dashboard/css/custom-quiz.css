@@ -221,6 +221,21 @@
   width: 330px;
 }
 
+.scoreboard-table{
+  height: 90%;
+  width: 100%;
+  table-layout: auto;
+  text-align: center;
+}
+
+.scoreboard-table td{
+  height: 33%;
+}
+
+.scoreboard-table h3{
+  font-size: 45px;
+}
+
 .holds-play-buttons{
   width: 100%;
   height: 50px;
