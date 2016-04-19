@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from IPython import embed
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 import code
 import copy
 import json
@@ -115,6 +116,14 @@ class Formation(models.Model):
                     new_position.zoneYardY = player['zoneYPoint'];
                 new_position.save()
 
+    def dict_for_json(self):
+        """Returns a Python dict representing the object to be encoded as 
+        JSON."""
+        json_dict = model_to_dict(self)
+        json_dict['positions'] = [p.dict_for_json() for p in self.position_set.all()]
+        return json_dict
+
+
 class Position(models.Model):
     startX = models.FloatField()
     startY = models.FloatField()
@@ -154,6 +163,13 @@ class Position(models.Model):
 
     def get_run_coordinates(self):
         return json.loads(self.routeCoordinates)
+
+    def dict_for_json(self):
+        """Returns a Python dict representing the object to be encoded as 
+        JSON."""
+
+        return model_to_dict(self)
+
 
 class Test(models.Model):
 
