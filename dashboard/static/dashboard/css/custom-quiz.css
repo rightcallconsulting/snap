@@ -232,6 +232,10 @@
   height: 33%;
 }
 
+.scoreboard-table h3{
+  font-size: 45px;
+}
+
 .holds-play-buttons{
   width: 100%;
   height: 50px;
