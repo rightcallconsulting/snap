@@ -38,7 +38,7 @@ $('#check-button').click(function(){
         player.rank = player.progressionRank
         player.showRoute = true;
       })
-      test.feedBackScreenStartTime = millis();
+      test.feedbackScreenStartTime = millis();
     }
   }
 })
@@ -52,7 +52,7 @@ $('#clear-button').click(function(){
 
 $('#restart-button').click(function(){
   pressStopButton();
-  if(test && test.feedBackScreenStartTime === 0){
+  if(test && test.feedbackScreenStartTime === 0){
     test.restartQuiz(defensePlay);
   }
 })
@@ -63,7 +63,7 @@ $('#next-play-button').click(function(){
       exitDemoScreen();
       return;
     }
-    if(test.feedBackScreenStartTime > 0){
+    if(test.feedbackScreenStartTime > 0){
       return;
     }
     pressStopButton();

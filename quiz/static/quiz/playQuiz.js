@@ -25,6 +25,7 @@ function setup() {
     width: field.heightInYards / 6,
     label: "Restart"
   })
+  
   exitDemo = new Button({
     label: "",
     x: 14,

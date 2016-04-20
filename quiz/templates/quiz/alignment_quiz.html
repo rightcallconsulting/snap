@@ -23,14 +23,14 @@
       })
 
       $('#restart-button').click(function(){
-              if(test && test.feedBackScreenStartTime === 0){
+              if(test && test.feedbackScreenStartTime === 0){
                 test.restartQuiz();
                 currentPlayerTested = null;
               }
             })
 
       $('#next-play-button').click(function(){
-        if(test && !test.over && test.feedBackScreenStartTime === 0){
+        if(test && !test.over && test.feedbackScreenStartTime === 0){
             test.skipQuestion();
             currentPlayerTested = null;
         }

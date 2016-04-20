@@ -175,7 +175,7 @@ function checkAnswer(){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
   }
 }
 
@@ -322,10 +322,10 @@ function draw() {
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
     }
-    if(test.feedBackScreenStartTime){
-      var elapsedTime = millis() - test.feedBackScreenStartTime;
+    if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
         guessedAssignment = null;
