@@ -355,7 +355,7 @@ var runTest = function(type, playerTested, test){
         test.restartQuiz(defensePlay);
       }else if(test.showDemo && exitDemo.isMouseInside(field) || demoComplete){
         exitDemoScreen();
-      }else if(test.feedBackScreenStartTime){
+      }else if(test.feedbackScreenStartTime){
         return;
       }else if (currentPlay){
         var playerSelected = false;
@@ -386,10 +386,10 @@ var runTest = function(type, playerTested, test){
 
       }else if(test.showDemo){
         drawDemoScreen();
-      }else if(test.feedBackScreenStartTime){
-        var elapsedTime = millis() - test.feedBackScreenStartTime;
+      }else if(test.feedbackScreenStartTime){
+        var elapsedTime = millis() - test.feedbackScreenStartTime;
         if(elapsedTime > 2000){
-          test.feedBackScreenStartTime = 0;
+          test.feedbackScreenStartTime = 0;
           test.advanceToNextPlay(test.incorrectAnswerMessage);
         }else{
           drawFeedBackScreen(test);

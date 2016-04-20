@@ -43,6 +43,7 @@ function setup() {
       formations: [],
       scoreboard: scoreboard
     });
+
     var formations = [];
     formationNames = [];
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -145,8 +146,8 @@ function clearAnswers(){
 }
 
 function checkAnswer(guess){
-    var isCorrect = test.getCurrentFormation().name === guess.label;
-    registerAnswer(isCorrect);
+  var isCorrect = test.getCurrentFormation().name === guess.label;
+  registerAnswer(isCorrect);
 }
 
 function drawOpening(){
@@ -201,7 +202,7 @@ function drawDemoScreen(){
     textSize(20);
     textAlign(CENTER);
     if(demoDoubleClick){
-        text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
+      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
 
     }else if(clicked){
       text("Click again to check answer.", x - 70, y - 50);
@@ -287,7 +288,7 @@ function draw() {
       text(this.pos, x, y);
     }
   };
-
+  
   if(makeJSONCall){
     //WAIT - still executing JSON
   }else if(test.showDemo){

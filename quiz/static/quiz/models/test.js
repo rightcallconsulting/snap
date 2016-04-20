@@ -34,7 +34,7 @@ var Test = function(config){
   this.offensiveFormationIDs = config.offensiveFormationIDs || [];
   this.defensiveFormationIDs = config.defensiveFormationIDs || [];
   this.displayName = config.displayName || false;
-  this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
+  this.feedbackScreenStartTime = config.feedbackScreenStartTime || false;
   this.showDemo = config.showDemo || false;
   this.demoStartTime = config.demoStartTime || 0;
 };
@@ -122,7 +122,7 @@ Test.prototype.restartQuiz = function(defensivePlay){
   if(this.getCurrentPlay()){
     this.getCurrentPlay().clearProgression();
   }
-  this.feedBackScreenStartTime = 0;
+  this.feedbackScreenStartTime = 0;
   this.showDemo = false;
   this.demoStartTime = 0;
   this.scoreboard.feedbackMessage = "";

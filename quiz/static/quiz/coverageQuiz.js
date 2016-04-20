@@ -182,7 +182,7 @@ function checkAnswer(guess){
     var assignment = currentPlayerTested.coverageAssignment[0];
     oldFill = assignment.fill;
     assignment.fill = color(220, 220, 0);
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
@@ -405,12 +405,12 @@ function draw() {
     if(test.showDemo){
       drawDemoScreen();
     }
-    else if(test.feedBackScreenStartTime){
-      var elapsedTime = millis() - test.feedBackScreenStartTime;
+    else if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         var assignment = currentPlayerTested.coverageAssignment[0];
         assignment.fill = oldFill;
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{

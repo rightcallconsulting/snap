@@ -10,6 +10,7 @@ var currentUserTested = null;
 var answers = []; 
 var exitDemo = null;
 var demoDoubleClick = false;
+var currentGuess = [];
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
@@ -30,8 +31,8 @@ function setup() {
 
   exitDemo = new Button({
     label: "",
-    x: 14,
-    y: 94,
+    x: field.getYardX(25),
+    y: field.getYardY(25),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -147,14 +148,13 @@ function checkAnswer(){
   var isCorrect = (dist < 3);
   //debugger;
   if(isCorrect){
-    test.advanceToNextFormation(test.correctAnswerMessage);
     currentPlayerTested = null;
-    test.score++;
+    test.registerAnswer(isCorrect);
   }else{
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
   }
 }
 
@@ -183,41 +183,115 @@ function drawOpening(){
   if(currentPlayerTested){
     currentPlayerTested.draw(field);
   }
-}
-
-mouseClicked = function() {
-  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-    test.scoreboard.feedbackMessage = "";
-  }else{
-    return true;
-  }
-  if (test.over) {
-    if(bigReset.isMouseInside(field)){
-      test.restartQuiz();
-    }
-  } else{
-    var y = field.getYardY(mouseY);
-    if(y > field.ballYardLine){
-      y = field.ballYardLine;
-    }if(currentPlayerTested){
-      if(currentPlayerTested.isMouseInside(field)){
-        checkAnswer();
-      }else{
-        currentPlayerTested.x = field.getYardX(mouseX);
-        currentPlayerTested.y = y;
-      }
-
-    }else{
-      currentPlayerTested = new Player({
-        x: field.getYardX(mouseX),
-        y: y,
-        fill: color(0, 0, 220),
-        pos: currentUserTested.position,
-        num: currentUserTested.num
-      });
-    }
-  }
 };
+
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var formation = test.getCurrentFormation();
+  if(formation){
+    formation.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
+    textAlign(LEFT);
+    textSize(22);
+    noStroke();
+    if(timeElapsed < 2000){
+      fill(220,0,0);
+      stroke(220, 0, 0);
+      line(field.width / 2, 80, field.width/2, 20);
+      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+      noStroke();
+      text("Your formation call is here", field.width / 2 + 20, 50);
+    }else if(timeElapsed < 4000){
+      stroke(220, 220, 0);
+      fill(220, 220, 0);
+      var clickedPlayer = null;
+      if(currentPlayerTested){
+        clickedPlayer = currentPlayerTested;
+        fill(220, 220, 0);
+        textAlign(CENTER);
+        if(demoDoubleClick){
+          text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+        }else{
+          text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+        }
+      }else{
+        textAlign(CENTER);
+        text("Click on the spot you are rushing", field.width / 2, (5 * field.height) / 6);
+        noStroke();
+          //text("Click demo button to exit", 20, 50);
+        }
+      }
+    }
+  };
+
+  function setupDemoScreen(){
+    test.showDemo = true;
+    demoDoubleClick = false;
+    test.demoStartTime = millis();
+  };
+
+  function exitDemoScreen(){
+    test.showDemo = false;
+    demoDoubleClick = false;
+  };
+
+  mouseClicked = function() {
+    if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+      test.scoreboard.feedbackMessage = "";
+    }else{
+      return true;
+    }
+    if (bigReset.isMouseInside(field) && test.over){
+      test.restartQuiz();
+      return true;
+    }else if(test.showDemo && exitDemo.isMouseInside(field) && currentPlayerTested || demoDoubleClick){
+      exitDemoScreen();
+    }else{
+      var y = field.getYardY(mouseY);
+      if(y > field.ballYardLine){
+        y = field.ballYardLine;
+      }
+      if(currentPlayerTested){
+        if(currentPlayerTested.isMouseInside(field)){
+          if(test.showDemo){
+            demoDoubleClick = true;
+          }else{
+            checkAnswer();
+          }
+        }else{
+          currentPlayerTested.x = field.getYardX(mouseX);
+          currentPlayerTested.y = y;
+        }
+      }else{
+        currentPlayerTested = new Player({
+          x: field.getYardX(mouseX),
+          y: y,
+          fill: color(0, 0, 220),
+          pos: currentUserTested.position,
+          num: currentUserTested.num
+        });
+
+      }
+    }
+  };
 // in mouse clicked do stuff using test player
 // when click on test player ... checking the answer
 // when no test player, clicks to place 11th man
@@ -233,30 +307,29 @@ keyTyped = function(){
 };
 
 function draw() {
+  Player.prototype.draw = function(field){
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
+    if(this.unit === "offense"){
+      noStroke();
+      fill(this.fill);
+      ellipse(x, y, siz, siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
+    else {
+      noStroke();
+      fill(this.fill);
+      textSize(17);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
+  };
 
- Player.prototype.draw = function(field){
-  var x = field.getTranslatedX(this.x);
-  var y = field.getTranslatedY(this.y);
-  var siz = field.yardsToPixels(this.siz);
-  if(this.unit === "offense"){
-    noStroke();
-    fill(this.fill);
-    ellipse(x, y, siz, siz);
-    fill(0,0,0);
-    textSize(14);
-    textAlign(CENTER, CENTER);
-    text(this.pos, x, y);
-  }
-  else {
-    noStroke();
-    fill(this.fill);
-    textSize(17);
-    textAlign(CENTER, CENTER);
-    text(this.pos, x, y);
-  }
-};
-
-if(makeJSONCall){
+  if(makeJSONCall){
     //WAIT - still executing JSON
   }
   else if(test.over){
@@ -270,12 +343,11 @@ if(makeJSONCall){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
     if(test.showDemo){
-      drawdemoScreen();
-    }
-    if(test.feedBackScreenStartTime){
+      drawDemoScreen();
+    }else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         test.advanceToNextFormation(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{

@@ -184,7 +184,7 @@ function checkAnswer(x, y){
   }else{
     clearSelection();
     test.registerAnswer(isCorrect);
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
   }
 }
 
@@ -425,10 +425,10 @@ function draw() {
     }
     if(test.showDemo){
       drawDemoScreen();
-    }else if(test.feedBackScreenStartTime){
-      var elapsedTime = millis() - test.feedBackScreenStartTime;
+    }else if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{

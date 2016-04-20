@@ -126,7 +126,7 @@ function checkAnswer(guess){
   }else{
     test.updateScoreboard();
     test.registerAnswer(isCorrect);
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
     var correctZone = test.getCurrentCoverageMap().getZoneFromIndex(currentPlayerTested.zoneAssignment)
     correctZoneFill = correctZone.fill;
     correctZone.fill = color(220, 220, 0);
@@ -135,7 +135,7 @@ function checkAnswer(guess){
 
 
 function drawFeedBackScreen(){
-  //var elapsedTime = millis() - test.feedBackScreenStartTime;
+  //var elapsedTime = millis() - test.feedbackScreenStartTime;
   field.drawBackground(null, height, width);
   test.getCurrentFormation().drawAllPlayers(field);
   var map = test.getCurrentCoverageMap();
@@ -228,12 +228,12 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    if(test.feedBackScreenStartTime){
-      var elapsedTime = millis() - test.feedBackScreenStartTime;
+    if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 1000){
         var map = test.getCurrentCoverageMap();
         map.clearClicks();
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         var correctZone = map.getZoneFromIndex(currentPlayerTested.zoneAssignment);
         if(correctZoneFill){
           correctZone.fill = correctZoneFill;

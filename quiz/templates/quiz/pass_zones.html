@@ -37,7 +37,7 @@ TWO DEEP ZONE
       })
 
       $('#restart-button').click(function(){
-        if(test && test.feedBackScreenStartTime === 0){
+        if(test && test.feedbackScreenStartTime === 0){
           var coverageMap = test.getCurrentCoverageMap();
           if(coverageMap){
             coverageMap.clearClicks();
@@ -47,7 +47,7 @@ TWO DEEP ZONE
       })
 
       $('#next-play-button').click(function(){
-        if(test && !test.over && test.feedBackScreenStartTime === 0){
+        if(test && !test.over && test.feedbackScreenStartTime === 0){
           var coverageMap = test.getCurrentCoverageMap();
           if(coverageMap){
             coverageMap.clearClicks();
