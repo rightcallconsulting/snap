@@ -199,19 +199,26 @@
           <div class="dash-header text-center">
             <span><h4>Results</h4></span>
           </div>
-
-          <div id="score">
-            Score:
-          </div>
-
-          <div id="incorrect-guesses">
-            Wrong:
-          </div>
-
-          <div>
-            <span>Skips: <span id="skips"></span></span>
-          </div>
-
+          <table class="scoreboard-table">
+            <tr><td>
+              <div class="scoreboard-header">
+                CORRECT
+              </div>
+              <h3 id="correct"></h3>
+            </td></tr>
+            <tr><td>
+              <div class="scoreboard-header">
+                INCORRECT
+              </div>
+              <h3 id="incorrect-guesses"></h3>
+            </td></tr>
+          <tr><td>
+            <div class="scoreboard-header">
+              SKIPPED
+            </div>
+            <h3 id="skips"></h3>
+        </td></tr>
+        </table>
         </div>
         {% endblock %}
 

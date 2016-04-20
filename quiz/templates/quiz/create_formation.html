@@ -42,13 +42,23 @@
 {% endblock %}
 
 {% block sidebar %}
-  <div class="col-lg-2 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
+  <div class="col-lg-4 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
-      <span><h4>Starter Formations</h4></span>
+      <span><h4>Existing Formations</h4></span>
     </div>
+    <table class="formation-list two-column-table">
       {% for formation in offensive_formations %}
-        <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-        <br>
+      {% if forloop.counter0|divisibleby:2 %}
+        <tr>
+      {% endif %}
+        <td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+        {% if forloop.counter|divisibleby:2 %}
+        </tr>
+        {% endif %}
       {% endfor %}
+      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
+        <td></td></tr>
+      {% endif %}
+    </table>
   </div>
 {% endblock %}

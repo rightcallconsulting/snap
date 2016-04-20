@@ -96,10 +96,32 @@
   height: 75px;
 }
 
-.formation-button {
-  width: 100%;
-  margin-top:1px;
-  margin-bottom:1px;
+.formation-button, .offensive-formation-button, .group-button {
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top:5%;
+  margin-bottom:5%;
+  background-color: #157970;
+  color: #FFFFFF;
+}
+
+.two-column-table td{
+  width: 50%;
+  height: 100px;
+}
+
+.three-column-table td{
+  width: 33.33%;
+  height: 75px;
+}
+
+.formation-list, .play-list{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  table-layout: fixed;
 }
 
 #header-box {
@@ -201,6 +223,21 @@
   font-size: 20px;
   height: 650px;
   width: 330px;
+}
+
+.scoreboard-table{
+  height: 90%;
+  width: 100%;
+  table-layout: auto;
+  text-align: center;
+}
+
+.scoreboard-table td{
+  height: 33%;
+}
+
+.scoreboard-table h3{
+  font-size: 45px;
 }
 
 .holds-play-buttons{
