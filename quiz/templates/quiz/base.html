@@ -123,6 +123,9 @@
                 }
               };
               var clickButton = function(index){
+                if(test.feedbackScreenStartTime){
+                  return false;
+                }
                 if(test.showDemo && demoDoubleClick){
                   exitDemoScreen();
                   return false;

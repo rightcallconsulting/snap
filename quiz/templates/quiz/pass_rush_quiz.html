@@ -24,7 +24,7 @@ $('#clear-button').click(function(){
 })
 
 $('#restart-button').click(function(){
-        if(test && test.feedBackScreenStartTime === 0){
+        if(test && test.feedbackScreenStartTime === 0){
           clearSelection();
           currentPlayerTested = null;
           test.restartQuiz();
@@ -32,7 +32,7 @@ $('#restart-button').click(function(){
       })
 
 $('#next-play-button').click(function(){
-  if(test && !test.over && test.feedBackScreenStartTime === 0){
+  if(test && !test.over && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
       return;

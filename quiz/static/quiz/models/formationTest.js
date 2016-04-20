@@ -17,7 +17,7 @@ var FormationTest = function(config){
     this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
     this.displayName = config.displayName || false;
     this.coverageMap = config.coverageMap || null;
-    this.feedBackScreenStartTime = config.feedBackScreenStartTime || false;
+    this.feedbackScreenStartTime = config.feedbackScreenStartTime || false;
     this.showDemo = config.showDemo || false;
     this.demoStartTime = config.demoStartTime || 0;
 };
@@ -61,7 +61,7 @@ FormationTest.prototype.getCurrentPlayerTested = function(currentUserTested){
 FormationTest.prototype.restartQuiz = function(){
   //this.formations[0] ==> reset of some variety ???
   this.scoreboard.feedbackMessage = "";
-  this.feedBackScreenStartTime = 0;
+  this.feedbackScreenStartTime = 0;
   this.showDemo = false;
   this.demoStartTime = 0;
   this.questionNum = 0;

@@ -72,7 +72,7 @@ PlayTest.prototype.getScoreString = function(){
 PlayTest.prototype.restartQuiz = function(){
   //this.plays[0] ==> reset of some variety ???
   this.scoreboard.feedbackMessage = "";
-  this.feedBackScreenStartTime = 0;
+  this.feedbackScreenStartTime = 0;
   this.showDemo = false;
   this.demoStartTime = 0;
   this.questionNum = 0;

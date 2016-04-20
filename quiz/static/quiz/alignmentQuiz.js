@@ -154,7 +154,7 @@ function checkAnswer(){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
-    test.feedBackScreenStartTime = millis();
+    test.feedbackScreenStartTime = millis();
   }
 }
 
@@ -347,7 +347,7 @@ function draw() {
     }else if(test.feedBackScreenStartTime){
       var elapsedTime = millis() - test.feedBackScreenStartTime;
       if(elapsedTime > 2000){
-        test.feedBackScreenStartTime = 0;
+        test.feedbackScreenStartTime = 0;
         test.advanceToNextFormation(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
