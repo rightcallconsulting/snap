@@ -98,22 +98,19 @@
               <script type="text/javascript">
 
               var checkMultipleChoiceAnswer = function(index){
-                var isCorrect = (str(index) === document.getElementById('correct-answer-index').innerHTML);
+                var answerIndex = int(document.getElementById('correct-answer-index').innerHTML);
+                var isCorrect = (index === answerIndex);
                 test.registerAnswer(isCorrect);
                 if(isCorrect){
                   currentPlayerTested = null;
                   multipleChoiceAnswers = [];
+                }else{
+                  //start feedback screen start time
+                  var answer = document.getElementById("mc-button-"+answerIndex);
+                  answer.classList.add('highlighted');
                 }
               };
-
-              var clearMultipleChoiceAnswers = function(){
-                for(var i = 1; i <= 3; i++){
-                  var answer = document.getElementById("mc-button-"+i);
-                  if(answer && answer.classList.contains('clicked')){
-                    answer.classList.remove('clicked')
-                  }
-                }
-              };
+              
               var clickButton = function(index){
                 if(test.feedbackScreenStartTime){
                   return false;
