@@ -176,6 +176,10 @@
   display: none;
 }
 
+.multiple-choice-answers button.highlighted{
+  background-color: #FFEE58;
+}
+
 .main-sidebar{
   width: 12%;
   height: 100%;
