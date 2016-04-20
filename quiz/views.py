@@ -3,15 +3,14 @@ from django.http import HttpResponse, Http404
 from django.template import RequestContext, loader
 from django.http import JsonResponse
 from django.core import serializers
-import json
-import simplejson
 from django.db.models import Q
 from django.views import generic
-
-# Create your views here.
+import json
+import simplejson
+from IPython import embed
 
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
-from IPython import embed
+from .utils import QuizOrders
 
 def index(request):
     player_list = Player.objects.all()
@@ -169,37 +168,66 @@ def create_play(request):
 class CustomPlayerQuizView(generic.TemplateView):
     """Display different types of custom player quizzes.
 
-    This template view is MEANT TO BE SUBCLASSED. Children must implement 
-    the get_json_seed() method, which returns a JSON object that gets
-    passed to the specified template as part of the context.
+    This template view is MEANT TO BE SUBCLASSED. Children must implement
+    the get_ordered_questions() method to customize the JSON seed data
+    for that particular type of quiz.
 
     Attributes:
         template_name: Template file path (inherited from generic.TemplateView)
         page_header: String title of the paged passed into template context
         num_questions: Integer # of questions to include in the quiz
-        order: Represents the order to present questions in
+        order: QuizOrder url_key representing the order questions should be in
     """
     
-    def get_json_seed(self):
-        """Returns JSON object to seed JS test creation in browser."""
+    def get_ordered_questions(self):
+        """Gets the list of questions that makes up the quiz.
+        
+        Questions are ordered according to self.order. Must be implemented by
+        subclasses.
+
+        Returns:
+            An ordered list of dictionaries with data needed to seed each 
+            question in the quiz.
+        """
         raise Exception('Subclasses of CustomPlayerQuizView must implement ' +
-            'get_json_seed().')
+            'get_ordered_questions().')
+
+    def build_json_seed(self):
+        """Builds JSON seed object that the JS assets will use to initialize
+        the quiz. Quiz is sized & ordered as specified in data attributes."""
+        questions = self.get_ordered_questions()
+
+        if self.num_questions > len(questions):
+            # Repeat unique questions until we have desired quiz length
+            num_unique_questions = len(questions)
+            for i in range(len(questions), self.num_questions):
+                questions.append(questions[i % num_unique_questions])
+
+        elif self.num_questions < len(questions):
+            # Remove additional questions beyond desired quiz length
+            questions = questions[0:self.num_questions]
+
+        return json.dumps(questions)
 
     def store_quiz_options_from_request(self, request):
-        """Save data attributes for use by subclasses."""
-        if request.user.myuser.is_a_player: self.player = request.user.player
-        if 'num_qs' in request.GET: self.num_questions = request.GET['num_qs']
-        if 'order' in request.GET: self.order = request.GET['order']
+        """Save data attributes for use by instance methods."""
+        # TODO: Redirect if URL params we need are not present? 
+        #       Or user is not a player?
+        if request.user.myuser.is_a_player: 
+            self.player = request.user.player
+        if 'num_qs' in request.GET: 
+            self.num_questions = int(request.GET['num_qs'])
+        if 'order' in request.GET: 
+            self.order = request.GET['order']
 
     def get(self, request):
-        # TODO: redirect if user is a coach??
         self.store_quiz_options_from_request(request)
         return super(CustomPlayerQuizView, self).get(request)
 
     def get_context_data(self, **kwargs):
         context = super(CustomPlayerQuizView, self).get_context_data(**kwargs)
         context['page_header'] = self.page_header
-        context['json_seed'] = self.get_json_seed()
+        context['json_seed'] = self.build_json_seed()
         return context
 
 
@@ -207,10 +235,18 @@ class FormationQuizView(CustomPlayerQuizView):
     template_name = 'quiz/formation_quiz.html'
     page_header = 'FORMATION QUIZ'
 
-    def get_json_seed(self):
-        team = self.player.team
-        formations = team.formation_set.filter(unit="offense")
-        return json.dumps([f.dict_for_json() for f in formations])
+    def get_ordered_questions(self):
+        formations = self.player.team.formation_set.filter(unit="offense")
+
+        if self.order == QuizOrders.RECENT.url_key:
+            # Sort by most recent
+            formations = formations.order_by('-created_at')
+        
+        elif self.order == QuizOrders.WORST.url_key:
+            # TODO: Sort by lowest score ???
+            formations = formations.order_by('created_at')
+
+        return [f.dict_for_json() for f in formations]
 
 
 def pass_zones(request):

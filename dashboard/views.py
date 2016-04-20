@@ -22,7 +22,7 @@ from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dashboard.utils import PlayerAnalytics
-from quiz.utils import CUSTOM_QUIZ_ORDERS
+from quiz.utils import QuizOrders
 
 
 # Create your views here
@@ -156,7 +156,7 @@ def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
-            'quiz_order_options': CUSTOM_QUIZ_ORDERS,
+            'quiz_order_options': QuizOrders.options,
         })
     else:
         team = request.user.coach.team

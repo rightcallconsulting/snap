@@ -117,8 +117,7 @@ class Formation(models.Model):
                 new_position.save()
 
     def dict_for_json(self):
-        """Returns a Python dict representing the object to be encoded as 
-        JSON."""
+        """Dict representation of the instance (used in JSON APIs)."""
         json_dict = model_to_dict(self)
         json_dict['positions'] = [p.dict_for_json() for p in self.position_set.all()]
         return json_dict
@@ -165,9 +164,7 @@ class Position(models.Model):
         return json.loads(self.routeCoordinates)
 
     def dict_for_json(self):
-        """Returns a Python dict representing the object to be encoded as 
-        JSON."""
-
+        """Dict representation of the instance (used in JSON APIs)."""
         return model_to_dict(self)
 
 
