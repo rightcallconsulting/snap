@@ -36,38 +36,29 @@
 					</div><!-- /.row -->
 					{% endif %}
 
-				<table class="table table-striped" id="responsiveTable">
-					<thead>
-						<tr>
-							<th>
-								<label class="label-checkbox">
-									<input type="checkbox" id="chk-all">
-									<span class="custom-checkbox"></span>
-								</label>
-							</th>
-							<th>Test</th>
-							<th>Type</th>
-							{% if not request.user.myuser.is_a_player %}
-							<th>Assigned To</th>
-							{% endif %}
-							<th>Due</th>
-							<th>In Progress</th>
-							<th>Added By</th>
-							<th></th>
-							{% if not request.user.myuser.is_a_player %}
-							<th></th>
-							{% endif %}
-						</tr>
-					</thead>
+					<div class = "table-wrapper">
+						<table class="table to-do-table" id="responsiveTable">
+							<thead>
+								<tr>
+									<th>Test</th>
+									<th>Type</th>
+									{% if not request.user.myuser.is_a_player %}
+									<th>Assigned To</th>
+									{% endif %}
+									<th>Due</th>
+									<th>In Progress</th>
+									{% if request.user.myuser.is_a_player %}
+									<th>Added By</th>
+									{% endif %}
+									<th></th>
+									{% if not request.user.myuser.is_a_player %}
+									<th></th>
+									{% endif %}
+								</tr>
+							</thead>
 					<tbody>
 						{% for test in uncompleted_tests %}
 						<tr id="test-{{test.id}}">
-							<td>
-								<label class="label-checkbox">
-									<input type="checkbox" class="chk-row">
-									<span class="custom-checkbox"></span>
-								</label>
-							</td>
 							<td>
 								{{test.name}}
 							</td>
@@ -85,8 +76,9 @@
 									No
 								{% endif %}
 							</td>
-							<td>{{test.coach_who_created.get_full_name}}</td>
 							{% if request.user.myuser.is_a_player %}
+							<td>{{test.coach_who_created.get_full_name}}</td>
+
 								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
 							{% else %}
 							<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
