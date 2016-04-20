@@ -298,6 +298,15 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackScreenStartTime){
+    var timeElapsed = millis() - test.feedbackScreenStartTime;
+    if(timeElapsed < 2000){
+      drawOpening();
+    }else{
+      test.feedbackScreenStartTime = 0;
+      test.advanceToNextFormation("");
+      multipleChoiceAnswers = [];
+    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;

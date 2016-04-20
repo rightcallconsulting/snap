@@ -12,15 +12,15 @@ PLAY QUIZ
 {% block quiz_type %}
 <script language="javascript" type="text/javascript" src="{% static 'quiz/playQuiz.js' %}"></script>
 <script type="text/javascript">
-      $('#check-button').click(function(){
-        for(var i = 1; i <= multipleChoiceAnswers.length; i++){
-          var answer = document.getElementById("mc-button-"+i);
-          if(answer && answer.classList.contains('clicked')){
-            checkMultipleChoiceAnswer(i);
-            return false;
-          }
-        }
-      })
+$('#check-button').click(function(){
+  for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+    var answer = document.getElementById("mc-button-"+i);
+    if(answer && answer.classList.contains('clicked')){
+      checkMultipleChoiceAnswer(i);
+      return false;
+    }
+  }
+})
 
 $('#clear-button').click(function(){
   clearMultipleChoiceAnswers();
@@ -31,7 +31,7 @@ $('#restart-button').click(function(){
     clearMultipleChoiceAnswers();
     test.restartQuiz();
   }
-      })
+})
 
 $('#next-play-button').click(function(){
   if(test && !test.over && test.feedbackScreenStartTime === 0){
@@ -44,7 +44,7 @@ $('#next-play-button').click(function(){
   }
 })
 $('#question-button').click(function(){
-  if(test){
+  if(test && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
     }else{
@@ -57,11 +57,11 @@ $('#question-button').click(function(){
 {% block buttons %}
 <div class="holds-play-buttons">
   <table class="button-table"><tr>
-  <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-  <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-  <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
-  <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+    <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+    <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+    <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+    <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+    <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
   </tr></table>
 </div>
 {% endblock %}

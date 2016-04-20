@@ -211,7 +211,7 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  clearAnswers();
+  clearMultipleChoiceAnswers();
 };
 
 function exitDemoScreen(){
@@ -284,6 +284,15 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackScreenStartTime){
+    var timeElapsed = millis() - test.feedbackScreenStartTime;
+    if(timeElapsed < 2000){
+      drawOpening();
+    }else{
+      test.feedbackScreenStartTime = 0;
+      test.advanceToNextPlay("");
+      multipleChoiceAnswers = [];
+    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
