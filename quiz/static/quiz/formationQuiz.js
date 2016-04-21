@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33;
 var test;
 var multipleChoiceAnswers;
@@ -35,7 +35,7 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+  if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
@@ -46,67 +46,46 @@ function setup() {
 
     var formations = [];
     formationNames = [];
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
-        newFormation.name = newFormation.playName
-        formations.push(newFormation);
-        formationNames.push(newFormation.name);
-      })
-      formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
-      formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-        // console.log(JSON.stringify(data, null, 2))
-        data.forEach(function(position){
-          position.fields.id = position.pk;
-          position.fields.x = position.fields.startX;
-          position.fields.y = position.fields.startY;
-          position.fields.pos = position.fields.name;
-          position.fields.num = position.fields.pos;
-          var newPlayer = new Player(position.fields)
-          if(newPlayer.pos==="QB"){
-            newPlayer.setFill(212,130,130);
-          }
-          else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-            newPlayer.setFill(143,29,29);
-          }
-          else{
-            newPlayer.setFill(255,0,0);
-          }
-          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-          if(formation){
-            formation.positions.push(newPlayer);
-          }
-        })
-        formations.forEach(function(formation){
-          formation.populatePositions();
-        })
 
-        test.formations = formations;
-        multipleChoiceAnswers = [];
-        test.restartQuiz();
-        test.updateScoreboard();
-        makeJSONCall = false
+    for(var i = 0; i < json_seed.length; i++){
+      var formation = createFormationFromJSONSeed(json_seed[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < formation.positions.length; j++){
+        var position = formation.positions[j];
+        var player = new createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      formation.positions = positionsAsPlayers;
+      formation.populatePositions();
+      formationNames.push(formation.name);
+      formations.push(formation);
+    }
 
-      })
-});
-}
-}
-
-var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};
-
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    test.formations = shuffle(formations);
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
   }
-return o;
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -180,7 +159,7 @@ function drawDemoScreen(){
     textAlign(LEFT);
     textSize(22);
     noStroke();
-    
+
     var x = field.getTranslatedX(43);
     var y = field.getTranslatedY(80);
     var x2 = field.getTranslatedX(53);
@@ -237,7 +216,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
@@ -288,8 +267,8 @@ function draw() {
       text(this.pos, x, y);
     }
   };
-  
-  if(makeJSONCall){
+
+  if(!setupComplete){
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();

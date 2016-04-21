@@ -1047,6 +1047,20 @@ var isFormationClicked = function(formationButtonArray, field){
   return formationClicked;
 };
 
+//Formatting differences with Nick's code. Will eventually merge
+var createFormationFromJSONSeed = function(jsonFormation){
+  var formation = new Formation({
+    id: jsonFormation.pk,
+    name: jsonFormation.name,
+    playName: jsonFormation.name,
+    offensiveFormationID: jsonFormation.offensiveFormationID,
+    teamID: jsonFormation.team,
+    unit: jsonFormation.unit,
+  });
+  formation.positions = jsonFormation.positions;
+  return formation;
+};
+
 var createFormationFromJSON = function(jsonFormation){
   var formation = new Formation({
     id: jsonFormation.pk,
