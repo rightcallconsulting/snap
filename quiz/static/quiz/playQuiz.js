@@ -211,7 +211,7 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  clearMultipleChoiceAnswers();
+  clearAnswers();
 };
 
 function exitDemoScreen(){
@@ -229,7 +229,13 @@ mouseClicked = function() {
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else{
-    
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true; 
+      }else{
+        return;
+      }
+    }
   }
 };
 
