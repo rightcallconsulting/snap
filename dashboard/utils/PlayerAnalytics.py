@@ -141,6 +141,64 @@ class PlayerAnalytics:
                 total += count
         return total
 
+    def get_total_questions_for_formation(self, formation):
+        total = 0
+        for p, count in self.correct_plays:
+            if p.formation == formation:
+                total += count
+        for p, count in self.incorrect_plays:
+            if p.formation == formation:
+                total += count
+        for p, count in self.skipped_plays:
+            if p.formation == formation:
+                total += count
+        return total
+
+    def get_correct_percentage_formation(self, formation):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p.formation == formation:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p.formation == formation:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p.formation == formation:
+                skipped += count
+        return int(correct * 100.0 / (correct + incorrect + skipped))
+
+    def get_incorrect_percentage_formation(self, formation):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p.formation == formation:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p.formation == formation:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p.formation == formation:
+                skipped += count
+        return int(incorrect * 100.0 / (correct + incorrect + skipped))
+
+    def get_skipped_percentage_formation(self, formation):
+        correct = 0
+        incorrect = 0
+        skipped = 0
+        for p, count in self.correct_plays:
+            if p.formation == formation:
+                correct += count
+        for p, count in self.incorrect_plays:
+            if p.formation == formation:
+                incorrect += count
+        for p, count in self.skipped_plays:
+            if p.formation == formation:
+                skipped += count
+        return int(skipped * 100.0 / (correct + incorrect + skipped))
+
     def get_correct_percentage(self, play):
         correct = 0
         incorrect = 0
