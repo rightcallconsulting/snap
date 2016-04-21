@@ -52,7 +52,7 @@ function setup() {
       var positionsAsPlayers = [];
       for(var j = 0; j < formation.positions.length; j++){
         var position = formation.positions[j];
-        var player = new createPlayerFromJSONSeed(position);
+        var player = createPlayerFromJSONSeed(position);
         positionsAsPlayers.push(player);
       }
       formation.positions = positionsAsPlayers;
