@@ -2,7 +2,6 @@ var makeJSONCall = true;
 var testIDFromHTML = 33; //filler
 var playerIDFromHTML = $('#player-id').data('player-id')
 var test;
-var formationNames;
 var maxFormations = 5;
 var bigReset;
 var currentPlayerTested = null;
@@ -39,6 +38,58 @@ function setup() {
   });
 
   if(json_seed){
+
+    var scoreboard = new Scoreboard({
+
+    });
+    test = new FormationTest({
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: true
+    });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
+
+    var formations = [];
+    answers = [];
+
+    for(var i = 0; i < json_seed.length; i++){
+      var formation = createFormationFromJSONSeed(json_seed[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < formation.positions.length; j++){
+        var position = formation.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      formation.positions = positionsAsPlayers;
+      formation.populatePositions();
+      formations.push(formation);
+    }
+    debugger;
+
+    formations = shuffle(formations);
+
+    for(var i = 0; i < formations.length; i++){
+      for(var j = 0; j < formation.offensivePlayers.length; j++){
+        var p = formation.offensivePlayers[j];
+        if(p.pos === currentUserTested.position){
+          answers.push([p.x, p.y]);
+
+          var oldCopy = formation.offensivePlayers.slice();
+          formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
+          formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
+          break;
+        }
+      }
+    }
+    debugger;
+    test.formations = formations;
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
+
+  /*if(json_seed){
     debugger;
     var scoreboard = new Scoreboard({
 
@@ -49,7 +100,6 @@ function setup() {
       displayName: true
     });
     var formations = [];
-    formationNames = [];
 
     $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
       currentUserTested = createUserFromJSON(data2[0]);
@@ -64,7 +114,6 @@ function setup() {
         newFormation.playName = formationObject.fields.name;
         newFormation.name = newFormation.playName
         formations.push(newFormation);
-        formationNames.push(newFormation.name);
       })
 
       formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
@@ -123,7 +172,7 @@ function setup() {
         makeJSONCall = false
       })
 });
-}
+}*/
 }
 
 var sortByCreationDecreasing = function(a, b){
