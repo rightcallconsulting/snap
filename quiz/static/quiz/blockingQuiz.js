@@ -308,7 +308,7 @@ function drawDemoScreen(){
           //text("Click demo button to exit", 20, 50);
         }else{
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
-          noStroke();   
+          noStroke();
         }
       }
     }
@@ -433,10 +433,13 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
-        fill(220,220, 0);
+        fill(0,0, 220);
       }
       ellipse(x, y, siz, siz);
       fill(0);
+      if(this === currentPlayerTested){
+        fill(255);
+      }
       textSize(14);
       textAlign(CENTER, CENTER);
       text(this.num, x, y);

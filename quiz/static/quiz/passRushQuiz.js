@@ -287,7 +287,7 @@ function drawDemoScreen(){
         stroke(220, 220, 0);
         fill(220, 220, 0);
         var clickedNode = null;
-        if(currentGuessNode){ 
+        if(currentGuessNode){
           clickedNode = currentGuessNode;
         }
         if(clickedNode){
@@ -429,7 +429,7 @@ function draw() {
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedbackScreenStartTime = 0;
-        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        test.advanceToNextPlay("");
         currentPlayerTested = null;
       }else{
         drawFeedbackScreen();

@@ -1,7 +1,7 @@
 
 var BlockingAssignment = function(config){
 	this.name = config.name || "";
-	this.blockedPlayers = config.blockedPlayers || [];	
+	this.blockedPlayers = config.blockedPlayers || [];
 };
 
 BlockingAssignment.prototype.getBlockedPlayers = function(){
@@ -44,9 +44,10 @@ BlockingAssignment.prototype.draw = function(blocker, field){
 		}
 		var defender = this.blockedPlayers[i]
 		stroke(255, 255, 0);
+		strokeWeight(3);
         line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(defender.x), field.getTranslatedY(defender.y));
         noStroke();
-
+		strokeWeight(1);
  	}
 };
 
