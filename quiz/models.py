@@ -119,7 +119,9 @@ class Formation(models.Model):
     def dict_for_json(self):
         """Dict representation of the instance (used in JSON APIs)."""
         json_dict = model_to_dict(self)
-        json_dict['positions'] = [p.dict_for_json() for p in self.position_set.all()]
+        json_dict['positions'] = [
+            p.dict_for_json() for p in self.position_set.all()
+        ]
         return json_dict
 
 
@@ -307,6 +309,15 @@ class Play(models.Model):
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()
+
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        json_dict = model_to_dict(self)
+        json_dict['positions'] = [
+            p.dict_for_json() for p in self.positions.all()
+        ]
+        return json_dict
+
 
 class TestResult(models.Model):
     score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt

@@ -11,6 +11,7 @@ from IPython import embed
 
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
 from .utils import QuizOrders
+from dashboard.utils import PlayerAnalytics
 
 def index(request):
     player_list = Player.objects.all()
@@ -239,14 +240,32 @@ class FormationQuizView(CustomPlayerQuizView):
         formations = self.player.team.formation_set.filter(unit="offense")
 
         if self.order == QuizOrders.RECENT.url_key:
-            # Sort by most recent
             formations = formations.order_by('-created_at')
         
         elif self.order == QuizOrders.WORST.url_key:
-            # TODO: Sort by lowest score ???
-            formations = formations.order_by('created_at')
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            formations = sorted(formations, reverse=True, 
+                key=analytics.total_incorrect_for_formation)
 
         return [f.dict_for_json() for f in formations]
+
+
+class PlayQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/play_quiz.html'
+    page_header = 'PLAY QUIZ'
+
+    def get_ordered_questions(self):
+        plays = self.player.team.play_set.all()
+
+        if self.order == QuizOrders.RECENT.url_key:
+            plays = plays.order_by('-created_at')
+        
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            plays = sorted(plays, reverse=True, 
+                key=analytics.total_incorrect_for_play)
+
+        return [p.dict_for_json() for p in plays]
 
 
 def pass_zones(request):
@@ -265,11 +284,6 @@ def alignment_quiz(request):
     return render(request, 'quiz/alignment_quiz.html', {
         'player': player,
         'page_header': 'ALIGNMENT QUIZ'
-    })
-
-def play_quiz(request):
-    return render(request, 'quiz/play_quiz.html', {
-        'page_header': 'PLAY QUIZ'
     })
 
 def route_quiz(request):

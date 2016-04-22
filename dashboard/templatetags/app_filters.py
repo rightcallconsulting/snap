@@ -19,18 +19,17 @@ def to_percent(n, d):
 
 @register.simple_tag
 def get_percent_correct_player(player):
-    l = [player]
-    analytics = PlayerAnalytics(l)
-    return analytics.total_correct_percentage()
+    analytics = PlayerAnalytics.for_single_player(player)
+    return analytics.total_correct_plays_percentage()
 
 @register.simple_tag
 def get_percent_correct(analytics, play):
-    return analytics.get_correct_percentage(play)
+    return analytics.correct_percentage_for_play(play)
 
 @register.simple_tag
 def get_percent_incorrect(analytics, play):
-    return analytics.get_incorrect_percentage(play)
+    return analytics.incorrect_percentage_for_play(play)
 
 @register.simple_tag
 def get_percent_skipped(analytics, play):
-    return analytics.get_skipped_percentage(play)
+    return analytics.skipped_percentage_for_play(play)

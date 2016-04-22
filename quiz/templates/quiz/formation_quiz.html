@@ -12,7 +12,6 @@ FORMATION QUIZ
 {% block quiz_type %}
   <script type="text/javascript">
     var json_seed = {{ json_seed|safe }};
-    console.log(JSON.stringify(json_seed, null, 2));
   </script>
 
   <script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
