@@ -7,7 +7,7 @@ var maxFormations = 5;
 var bigReset;
 var currentPlayerTested = null;
 var currentUserTested = null;
-var answers = []; 
+var answers = [];
 var exitDemo = null;
 var demoDoubleClick = false;
 
@@ -38,7 +38,8 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+  if(json_seed){
+    debugger;
     var scoreboard = new Scoreboard({
 
     });
@@ -164,7 +165,7 @@ function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentFormation(), height, width);
   test.getCurrentFormation().drawAllPlayers(field);
   currentPlayerTested.draw(field);
-  
+
 };
 
 function drawOpening(){

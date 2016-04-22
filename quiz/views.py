@@ -183,12 +183,12 @@ class CustomPlayerQuizView(generic.TemplateView):
 
     def get_ordered_questions(self):
         """Gets the list of questions that makes up the quiz.
-        
+
         Questions are ordered according to self.order. Must be implemented by
         subclasses.
 
         Returns:
-            An ordered list of dictionaries with data needed to seed each 
+            An ordered list of dictionaries with data needed to seed each
             question in the quiz.
         """
         raise Exception('Subclasses of CustomPlayerQuizView must implement ' +
@@ -225,13 +225,13 @@ class CustomPlayerQuizView(generic.TemplateView):
 
     def store_quiz_options_from_request(self, request):
         """Save data attributes for use by instance methods."""
-        # TODO: Redirect if URL params we need are not present? 
+        # TODO: Redirect if URL params we need are not present?
         #       Or user is not a player?
-        if request.user.myuser.is_a_player: 
+        if request.user.myuser.is_a_player:
             self.player = request.user.player
-        if 'num_qs' in request.GET: 
+        if 'num_qs' in request.GET:
             self.num_questions = int(request.GET['num_qs'])
-        if 'order' in request.GET: 
+        if 'order' in request.GET:
             self.order = request.GET['order']
 
     def get(self, request):
@@ -254,10 +254,10 @@ class FormationQuizView(CustomPlayerQuizView):
 
         if self.order == QuizOrders.RECENT.url_key:
             formations = formations.order_by('-created_at')
-        
+
         elif self.order == QuizOrders.WORST.url_key:
             analytics = PlayerAnalytics.for_single_player(self.player)
-            formations = sorted(formations, reverse=True, 
+            formations = sorted(formations, reverse=True,
                 key=analytics.total_incorrect_for_formation)
 
         return [f.dict_for_json() for f in formations]
@@ -272,10 +272,10 @@ class PlayQuizView(CustomPlayerQuizView):
 
         if self.order == QuizOrders.RECENT.url_key:
             plays = plays.order_by('-created_at')
-        
+
         elif self.order == QuizOrders.WORST.url_key:
             analytics = PlayerAnalytics.for_single_player(self.player)
-            plays = sorted(plays, reverse=True, 
+            plays = sorted(plays, reverse=True,
                 key=analytics.total_incorrect_for_play)
 
         return [p.dict_for_json() for p in plays]
@@ -292,12 +292,12 @@ class AlignmentQuizView(CustomPlayerQuizView):
         ]
 
         if self.order == QuizOrders.RECENT.url_key:
-            formations = sorted(formations, reverse=True, 
+            formations = sorted(formations, reverse=True,
                 key=attrgetter('created_at'))
-        
+
         elif self.order == QuizOrders.WORST.url_key:
             analytics = PlayerAnalytics.for_single_player(self.player)
-            formations = sorted(formations, reverse=True, 
+            formations = sorted(formations, reverse=True,
                 key=analytics.total_incorrect_for_formation)
 
         return [f.dict_for_json() for f in formations]

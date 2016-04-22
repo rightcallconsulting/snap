@@ -98,7 +98,11 @@ class Formation(models.Model):
     def positions(self):
         """Returns a list of string positions in the formation.
         Ex: ['QB', 'WR', etc..]"""
-        return [player.position for player in self.offensivePlayers.all()]
+        positionObjects = Position.objects.filter(formation=self)
+        positionStrings = []
+        for pos in positionObjects:
+            positionStrings.append(pos.name)
+        return positionStrings
 
     @classmethod
     def from_json(cls, json):
