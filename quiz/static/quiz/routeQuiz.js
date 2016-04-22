@@ -30,8 +30,8 @@ function setup() {
 
   exitDemo = new Button({
     label: "",
-    x: 16,
-    y: 94,
+    x: field.getYardX(25),
+    y: field.getYardY(25),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -240,62 +240,76 @@ function drawOpening(){
 }
 
 function drawDemoScreen(){
-
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
-  textSize(18);
   if(play){
     play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    fill(220, 0, 0);
+    exitDemo.draw(field);
+    textSize(30);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
     if(currentPlayerTested){
-      var x = field.getTranslatedX(currentPlayerTested.startX);
-      var y = field.getTranslatedY(currentPlayerTested.startY);
-      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-      var x1 = field.getTranslatedX(exitDemo.x);
-      var y1 = field.getTranslatedY(exitDemo.y);
-      var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
-      var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
       noStroke();
-      fill(220,0,0);
-      exitDemo.draw(field);
-      textSize(30);
-      text("DEMO", field.width / 6, field.height / 6);
-      stroke(0);
-      strokeWeight(2);
-      line(x1, y1, x2, y2);
-      line(x1, y2, x2, y1);
-      strokeWeight(1);
-      textSize(18);
+      textAlign(LEFT);
+      textSize(22);
       noStroke();
       if(timeElapsed < 2000){
         noStroke();
         noFill();
-        stroke(220,0,0);
         strokeWeight(2);
+        stroke(220, 220, 0);
+        
+        var x = field.getTranslatedX(currentPlayerTested.startX);
+        var y = field.getTranslatedY(currentPlayerTested.startY);
+        var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        fill(220, 0, 0);
-        text("You are in blue", x + siz/2 + 5, y - 20);
-        fill(0);
+        textAlign(RIGHT);
+        textSize(22);
+        fill(220, 220, 0);
+        text("You are in blue", x + 5, y - 60);
+        noStroke();
       }else if(timeElapsed < 4000){
-        fill(220,0,0);
+        noStroke();
         stroke(220, 0, 0);
+        fill(220, 0, 0);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
-        fill(220,0,0);
+        textAlign(LEFT);
+        textSize(22);
+        fill(220, 0, 0);
         text("Your play call is here", field.width / 2 + 20, 50);
+        noStroke();
       }else {
-        fill(0, 0, 220);
+        noStroke();
+        fill(220, 220, 0);
+        textSize(22);
+        textAlign(CENTER);
         if(demoDoubleClick){
-          text("Demo complete!\n Click anywhere to begin quiz", field.width / 3, field.height / 3) ;
+          text("Demo complete!\n Click anywhere to begin quiz", field.width / 2, (5 * field.height) / 6);
         }else if(currentRouteNodes.length > 0){
-          text("Click on your next breakpoint.\nDouble click to complete demo.", field.width / 3, field.height / 3);
+          text("Click on your next breakpoint.\nDouble click to complete demo.", field.width / 2, (5 * field.height) / 6);
         }else{
-          text("Draw your route by clicking on\n your first breakpoint", field.width / 3, field.height / 3) ;
+          text("Draw your route by clicking on\n your first breakpoint", field.width / 2, (5 * field.height) / 6);
         }
 
       }
+      noStroke();
       drawCurrentRoute();
       for(var i = 0; i < currentRouteNodes.length; i++){
         stroke(220, 220, 0);
@@ -393,7 +407,6 @@ function draw() {
       fill(this.fill);
       if(this === currentPlayerTested){
         fill(0, 0, 255);
-
       }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
@@ -403,12 +416,12 @@ function draw() {
     }
     else {
       noStroke();
-      fill(this.fill);
+      fill(0, 0, 0);
       textSize(17);
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
     }
-  };
+  }
   if(makeJSONCall){
     //WAIT - still executing JSON
   }

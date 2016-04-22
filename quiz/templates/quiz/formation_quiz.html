@@ -11,31 +11,40 @@ FORMATION QUIZ
 
 {% block quiz_type %}
 
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
-  <script type="text/javascript">
+<script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
+<script type="text/javascript">
 
-      $('#check-button').click(function(){
-        for(var i = 1; i <= multipleChoiceAnswers.length; i++){
-          var answer = document.getElementById("mc-button-"+i);
-          if(answer && answer.classList.contains('clicked')){
-            checkMultipleChoiceAnswer(i);
-            return false;
-          }
-        }
+$('#play-button').click(function(){
+        //pressPlayButton();
       })
 
-      $('#clear-button').click(function(){
-        clearMultipleChoiceAnswers();
+$('#pause-button').click(function(){
+        //pressPlayButton();
       })
 
-      $('#restart-button').click(function(){
-        if(test && test.feedbackScreenStartTime === 0){
-          clearMultipleChoiceAnswers();
-          test.restartQuiz();
-        }
-      })
 
-      $('#next-play-button').click(function(){
+$('#check-button').click(function(){
+  for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+    var answer = document.getElementById("mc-button-"+i);
+    if(answer && answer.classList.contains('clicked')){
+      checkMultipleChoiceAnswer(i);
+      return false;
+    }
+  }
+})
+
+$('#clear-button').click(function(){
+  clearMultipleChoiceAnswers();
+})
+
+$('#restart-button').click(function(){
+  if(test && test.feedbackScreenStartTime === 0){
+    clearMultipleChoiceAnswers();
+    test.restartQuiz();
+  }
+})
+
+$('#next-play-button').click(function(){
   if(test && !test.over && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();

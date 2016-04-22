@@ -215,7 +215,7 @@ function drawDemoScreen(){
       textSize(22);
       textAlign(CENTER);
       fill(220, 220, 0);
-      text("Click on the spot you are suppose to line up.", field.width / 2, field.height / 3 + 10);
+      text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
       noStroke();
     }else{
       if(currentPlayerTested){
@@ -224,8 +224,11 @@ function drawDemoScreen(){
         textSize(22);
         textAlign(CENTER);
         fill(220, 220, 0);
-        text("Double click on yourself to check answer.", field.width / 2, field.height / 3 + 10);
-        noStroke();
+        if(demoDoubleClick){
+          text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+        }else{
+          text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
+        }
       }
     }
   }

@@ -409,7 +409,7 @@ function draw() {
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
     }
-  };
+  }
   if(makeJSONCall){
     //WAIT - still executing JSON
 

@@ -41,7 +41,8 @@ function setup() {
     });
     test = new FormationTest({
       formations: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: true
     });
 
     var formations = [];
@@ -292,8 +293,7 @@ function draw() {
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
-  }
-  else if(test.over){
+  }else if(test.over){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
