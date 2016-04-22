@@ -42,7 +42,7 @@ function setup() {
     test = new FormationTest({
       formations: [],
       scoreboard: scoreboard,
-      displayName: true
+      displayName: false
     });
 
     var formations = [];
@@ -180,7 +180,7 @@ function drawDemoScreen(){
     textAlign(LEFT);
     textSize(22);
     noStroke();
-    
+
     var x = field.getTranslatedX(43);
     var y = field.getTranslatedY(80);
     var x2 = field.getTranslatedX(53);
@@ -237,7 +237,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
@@ -288,7 +288,7 @@ function draw() {
       text(this.pos, x, y);
     }
   };
-  
+
   if(makeJSONCall){
     //WAIT - still executing JSON
   }else if(test.showDemo){
