@@ -223,6 +223,20 @@ Play.prototype.addPositionsFromID = function(positionArray){
   }.bind(this))
 }
 
+
+var createPlayFromJSONSeed = function(jsonPlay){
+  var play = new Play({});
+  play.id = jsonPlay.pk;
+  play.playName = jsonPlay.name;
+  play.name = jsonPlay.name;
+  play.positions = jsonPlay.positions;
+  play.teamID = jsonPlay.team;
+  play.formation = jsonPlay.formation;
+  play.created_at = jsonPlay.created_at;
+  play.updated_at = jsonPlay.updated_at;
+  return play;
+};
+
 var createPlayFromJSON = function(jsonPlay){
   var play = new Play({});
   play.id = jsonPlay.pk;
