@@ -41,7 +41,8 @@ function setup() {
     });
     test = new FormationTest({
       formations: [],
-      scoreboard: scoreboard
+      scoreboard: scoreboard,
+      displayName: false
     });
 
     var formations = [];
@@ -272,12 +273,20 @@ function draw() {
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
-  }
-  else if(test.over){
+  }else if(test.over){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackScreenStartTime){
+    var timeElapsed = millis() - test.feedbackScreenStartTime;
+    if(timeElapsed < 2000){
+      drawOpening();
+    }else{
+      test.feedbackScreenStartTime = 0;
+      test.advanceToNextFormation("");
+      multipleChoiceAnswers = [];
+    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
       var correctAnswer = test.getCurrentFormation().name;

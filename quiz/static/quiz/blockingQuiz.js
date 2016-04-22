@@ -29,8 +29,8 @@ function setup() {
   })
   exitDemo = new Button({
     label: "",
-    x: 16,
-    y: 94,
+    x: field.getYardX(25),
+    y: field.getYardY(25),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -239,7 +239,8 @@ function drawDemoScreen(){
     fill(220,0,0);
     exitDemo.draw(field);
     textSize(30);
-    text("DEMO", field.width / 6, field.height / 6);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);

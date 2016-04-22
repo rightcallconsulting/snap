@@ -414,6 +414,7 @@ function draw() {
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
+        debugger;
         drawFeedbackScreen(field);
       }
     }else{

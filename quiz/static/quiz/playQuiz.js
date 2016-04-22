@@ -228,7 +228,13 @@ mouseClicked = function() {
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else{
-
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true; 
+      }else{
+        return;
+      }
+    }
   }
 };
 
@@ -283,6 +289,15 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackScreenStartTime){
+    var timeElapsed = millis() - test.feedbackScreenStartTime;
+    if(timeElapsed < 2000){
+      drawOpening();
+    }else{
+      test.feedbackScreenStartTime = 0;
+      test.advanceToNextPlay("");
+      multipleChoiceAnswers = [];
+    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;

@@ -9,14 +9,16 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
-var COOLER_NAMES = ["OMAHA", "LION", "TIGER", "NEBRASKA", "HAWAII"];
+var exitDemo = null;
+var demoDoubleClick = false;
+var audibleNames = ["OMAHA", "LION", "TIGER", "NEBRASKA", "HAWAII"];
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
   field.height = 550;
+  field.width = 550;
   field.heightInYards = 54;
   field.ballYardLine = 75;
-  background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
 
@@ -27,6 +29,16 @@ function setup() {
     width: 5,
     label: "Restart"
   })
+
+  exitDemo = new Button({
+    label: "",
+    x: field.getYardX(25),
+    y: field.getYardY(25),
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -87,7 +99,7 @@ function setup() {
           for(var i = 0; i < plays.length; i++){
             var play = plays[i];
             var check = new OffenseCheck({
-              name: COOLER_NAMES[i],
+              name: audibleNames[i],
               defensiveFormation: formations[i % formations.length],
               newPlay: plays[(i+1)%plays.length]
             });
@@ -99,9 +111,9 @@ function setup() {
           test.restartQuiz();
           makeJSONCall = false;
         })
-      })
-    })
-  }
+})
+})
+}
 }
 
 /*var sortByCreationDecreasing = function(a, b){
@@ -128,7 +140,7 @@ function shuffle(o) {
   for(var n = 0; n < 100; n++){
     for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
   }
-  return o;
+return o;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -170,16 +182,25 @@ function clearAnswers(){
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().checks[0].name === guess.label;
   if(isCorrect){
-    test.score++;
-    multipleChoiceAnswers = [];
-    test.advanceToNextPlay(test.correctAnswerMessage);
+    currentPlayerTested = null;
+    test.registerAnswer(isCorrect);
   }else{
     clearAnswers();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    test.feedbackScreenStartTime = millis();
   }
 }
+
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllPlayers(field);
+  }
+};
+
 
 function drawOpening(){
   field.drawBackground(null, height, width);
@@ -188,7 +209,76 @@ function drawOpening(){
   if(test.getCurrentPlay().checks[0].defensiveFormation){
     test.getCurrentPlay().checks[0].defensiveFormation.drawAllPlayers(field);
   }
-}
+};
+
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    text("DEMO", field.width / 6, field.height / 6);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+    textAlign(LEFT);
+    textSize(22);
+    noStroke();
+
+    var x = field.getTranslatedX(43);
+    var y = field.getTranslatedY(80);
+    var x2 = field.getTranslatedX(53);
+    var y2 = field.getTranslatedY(80);
+    stroke(0, 0, 220);
+    fill(0, 0, 220);
+    strokeWeight(2);
+    line(x, y, x2, y2);
+    strokeWeight(1);
+    triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+
+    var clicked = false;
+    for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+      var answer = document.getElementById("mc-button-"+i);
+      if(answer && answer.classList.contains('clicked')){
+        clicked = true;
+      }
+    }
+    textSize(20);
+    textAlign(CENTER);
+    if(demoDoubleClick){
+      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
+    }else if(clicked){
+      text("Click again to check answer.", x - 70, y - 50);
+    }else{
+      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+    }
+  }
+};
+
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  clearAnswers();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearAnswers();
+};
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
@@ -196,20 +286,14 @@ mouseClicked = function() {
   }
   if (bigReset.isMouseInside(field) && test.over) {
     test.restartQuiz();
-  }
-  else{
-    for(var i = 0; i < multipleChoiceAnswers.length; i++){
-      var answer = multipleChoiceAnswers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside()){
-          checkAnswer(answer);
-        }else{
-          answer.changeClickStatus();
-        }
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else{
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true; 
       }else{
-        if(answer.isMouseInside()){
-          answer.changeClickStatus();
-        }
+        return;
       }
     }
   }
@@ -261,17 +345,28 @@ function draw() {
   };
   if(makeJSONCall){
     //WAIT - still executing JSON
+  }else if(test.showDemo){
+    drawDemoScreen();
   }
   else if(test.over){
-    //debugger;
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+  }else if(test.feedbackScreenStartTime){
+    var timeElapsed = millis() - test.feedbackScreenStartTime;
+    if(timeElapsed < 2000){
+      drawOpening();
+    }else{
+      test.feedbackScreenStartTime = 0;
+      test.advanceToNextPlay("");
+      multipleChoiceAnswers = [];
+    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().checks[0].name;
-      createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateProgress(false);
+      createMultipleChoiceAnswers(correctAnswer, 3);
       test.updateMultipleChoiceLabels();
     }
     if(!currentPlayerTested){

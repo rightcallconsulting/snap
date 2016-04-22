@@ -10,7 +10,6 @@ var currentUserTested = null;
 var answers = []; 
 var exitDemo = null;
 var demoDoubleClick = false;
-var currentGuess = [];
 
 function setup() {
   var myCanvas = createCanvas(550, 550);
@@ -155,26 +154,17 @@ function checkAnswer(){
     test.incorrectGuesses++;
     test.updateScoreboard();
     test.feedbackScreenStartTime = millis();
+    currentPlayerTested.x = answers[test.questionNum][0]
+    currentPlayerTested.y = answers[test.questionNum][1]
+    currentPlayerTested.fill = color(220, 220, 0);
   }
 }
 
 function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentFormation(), height, width);
   test.getCurrentFormation().drawAllPlayers(field);
-  var answer = answers[test.questionNum];
-  if(currentPlayerTested){
-    var playerX = field.getTranslatedX(answer[0]);
-    var playerY = field.getTranslatedY(answer[1]);
-    var size = field.yardsToPixels(currentPlayerTested.siz);
-
-    fill(220, 200, 0);
-    ellipse(playerX, playerY, size, size);
-
-    fill(0,0,0);
-    textSize(14);
-    textAlign(CENTER, CENTER);
-    text(currentPlayerTested.pos, playerX, playerY);
-  }
+  currentPlayerTested.draw(field);
+  
 };
 
 function drawOpening(){
@@ -188,6 +178,7 @@ function drawOpening(){
 function drawDemoScreen(){
   noStroke();
   field.drawBackground(null, height, width);
+  var answer = answers[test.questionNum];
   var timeElapsed = millis() - test.demoStartTime;
   var formation = test.getCurrentFormation();
   if(formation){
@@ -207,91 +198,93 @@ function drawDemoScreen(){
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     strokeWeight(1);
-    noStroke();
-
-    textAlign(LEFT);
-    textSize(22);
-    noStroke();
     if(timeElapsed < 2000){
+      noStroke();
+      textSize(22);
+      textAlign(LEFT);
       fill(220,0,0);
       stroke(220, 0, 0);
       line(field.width / 2, 80, field.width/2, 20);
       triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
       noStroke();
-      text("Your formation call is here", field.width / 2 + 20, 50);
+      fill(220,0,0);
+      text("Your play call is here", field.width / 2 + 20, 50);
+      noStroke();
     }else if(timeElapsed < 4000){
-      stroke(220, 220, 0);
+      noStroke();
+      textSize(22);
+      textAlign(CENTER);
       fill(220, 220, 0);
-      var clickedPlayer = null;
+      text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
+      noStroke();
+    }else{
       if(currentPlayerTested){
-        clickedPlayer = currentPlayerTested;
-        fill(220, 220, 0);
+        currentPlayerTested.draw(field);
+        noStroke();
+        textSize(22);
         textAlign(CENTER);
+        fill(220, 220, 0);
         if(demoDoubleClick){
           text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
         }else{
           text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
         }
-      }else{
-        textAlign(CENTER);
-        text("Click on the spot you are rushing", field.width / 2, (5 * field.height) / 6);
-        noStroke();
-          //text("Click demo button to exit", 20, 50);
-        }
       }
     }
-  };
+  }
+};
 
-  function setupDemoScreen(){
-    test.showDemo = true;
-    demoDoubleClick = false;
-    test.demoStartTime = millis();
-  };
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  currentPlayerTested = null;
+};
 
-  function exitDemoScreen(){
-    test.showDemo = false;
-    demoDoubleClick = false;
-  };
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  currentPlayerTested = null;
+};
 
-  mouseClicked = function() {
-    if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-      test.scoreboard.feedbackMessage = "";
-    }else{
-      return true;
+mouseClicked = function() {
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
+  }
+  if (bigReset.isMouseInside(field) && test.over){
+    test.restartQuiz();
+    return true;
+  }else if(test.showDemo && exitDemo.isMouseInside(field) && currentPlayerTested || demoDoubleClick){
+    exitDemoScreen();
+  }else{
+    var y = field.getYardY(mouseY);
+    if(y > field.ballYardLine - 1){
+      y = field.ballYardLine - 1;
     }
-    if (bigReset.isMouseInside(field) && test.over){
-      test.restartQuiz();
-      return true;
-    }else if(test.showDemo && exitDemo.isMouseInside(field) && currentPlayerTested || demoDoubleClick){
-      exitDemoScreen();
-    }else{
-      var y = field.getYardY(mouseY);
-      if(y > field.ballYardLine){
-        y = field.ballYardLine;
-      }
-      if(currentPlayerTested){
-        if(currentPlayerTested.isMouseInside(field)){
-          if(test.showDemo){
-            demoDoubleClick = true;
-          }else{
-            checkAnswer();
-          }
+    if(currentPlayerTested){
+      if(currentPlayerTested.isMouseInside(field)){
+        if(test.showDemo){
+          demoDoubleClick = true;
         }else{
-          currentPlayerTested.x = field.getYardX(mouseX);
-          currentPlayerTested.y = y;
+          checkAnswer();
         }
       }else{
-        currentPlayerTested = new Player({
-          x: field.getYardX(mouseX),
-          y: y,
-          fill: color(0, 0, 220),
-          pos: currentUserTested.position,
-          num: currentUserTested.num
-        });
-
+        currentPlayerTested.x = field.getYardX(mouseX);
+        currentPlayerTested.y = y;
       }
+    }else{
+      currentPlayerTested = new Player({
+        x: field.getYardX(mouseX),
+        y: y,
+        fill: color(220, 220, 0),
+        pos: currentUserTested.position,
+        num: currentUserTested.num,
+      });
     }
-  };
+  }
+};
 // in mouse clicked do stuff using test player
 // when click on test player ... checking the answer
 // when no test player, clicks to place 11th man
@@ -339,19 +332,16 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
   }else{
-    if(!currentPlayerTested){
-      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
-    }
     if(test.showDemo){
       drawDemoScreen();
-    }else if(test.feedBackScreenStartTime){
-      var elapsedTime = millis() - test.feedBackScreenStartTime;
+    }else if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedbackScreenStartTime = 0;
-        test.advanceToNextFormation(test.incorrectAnswerMessage);
+        test.advanceToNextFormation("");
         currentPlayerTested = null;
       }else{
-        drawFeedbackScreen(field);
+        drawFeedbackScreen();
       }
     }else{
       drawOpening(field);
