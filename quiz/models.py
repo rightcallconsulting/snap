@@ -64,6 +64,12 @@ class Player(models.Model):
         new_test.coach_who_created = coach.user
         new_test.save()
 
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        json_dict = model_to_dict(self)
+        json_dict.pop('image_url', None) # Don't try to encode image in JSON
+        return json_dict
+
 class Group(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
@@ -88,6 +94,11 @@ class Formation(models.Model):
 
     def __str__(self):
         return self.name
+
+    def positions(self):
+        """Returns a list of string positions in the formation.
+        Ex: ['QB', 'WR', etc..]"""
+        return [player.position for player in self.offensivePlayers.all()]
 
     @classmethod
     def from_json(cls, json):

@@ -8,6 +8,7 @@ from django.views import generic
 import json
 import simplejson
 from IPython import embed
+from operator import attrgetter
 
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
 from .utils import QuizOrders
@@ -179,7 +180,7 @@ class CustomPlayerQuizView(generic.TemplateView):
         num_questions: Integer # of questions to include in the quiz
         order: QuizOrder url_key representing the order questions should be in
     """
-    
+
     def get_ordered_questions(self):
         """Gets the list of questions that makes up the quiz.
         
@@ -193,10 +194,14 @@ class CustomPlayerQuizView(generic.TemplateView):
         raise Exception('Subclasses of CustomPlayerQuizView must implement ' +
             'get_ordered_questions().')
 
-    def build_json_seed(self):
-        """Builds JSON seed object that the JS assets will use to initialize
-        the quiz. Quiz is sized & ordered as specified in data attributes."""
-        questions = self.get_ordered_questions()
+    def resize_questions_data(self, questions):
+        """Sizes a list of dict objects as specified in the GET param.
+
+        If len(questions) is larger than self.num_questions, cuts off extra
+        questions at the end. If smaller, repeats the unique question data
+        until the list is the desired length.
+        """
+        if len(questions) == 0: return []
 
         if self.num_questions > len(questions):
             # Repeat unique questions until we have desired quiz length
@@ -208,7 +213,15 @@ class CustomPlayerQuizView(generic.TemplateView):
             # Remove additional questions beyond desired quiz length
             questions = questions[0:self.num_questions]
 
-        return json.dumps(questions)
+        return questions
+
+    def build_dict_for_json_seed(self):
+        """Builds dict() seed to be converted into JSON, which the JS assets
+        will use to initialize the quiz. Quiz is sized & ordered as specified
+        in data attributes."""
+        questions = self.get_ordered_questions()
+        questions = self.resize_questions_data(questions)
+        return questions
 
     def store_quiz_options_from_request(self, request):
         """Save data attributes for use by instance methods."""
@@ -228,7 +241,7 @@ class CustomPlayerQuizView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CustomPlayerQuizView, self).get_context_data(**kwargs)
         context['page_header'] = self.page_header
-        context['json_seed'] = self.build_json_seed()
+        context['json_seed'] = json.dumps(self.build_dict_for_json_seed())
         return context
 
 
@@ -267,6 +280,35 @@ class PlayQuizView(CustomPlayerQuizView):
 
         return [p.dict_for_json() for p in plays]
 
+class AlignmentQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/alignment_quiz.html'
+    page_header = 'ALIGNMENT QUIZ'
+
+    def get_ordered_questions(self):
+        formations = self.player.team.formation_set.filter(unit='offense')
+        # Filter out formations that don't contain this player's position
+        formations = [
+            f for f in formations if self.player.position in f.positions()
+        ]
+
+        if self.order == QuizOrders.RECENT.url_key:
+            formations = sorted(formations, reverse=True, 
+                key=attrgetter('created_at'))
+        
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            formations = sorted(formations, reverse=True, 
+                key=analytics.total_incorrect_for_formation)
+
+        return [f.dict_for_json() for f in formations]
+
+    def build_dict_for_json_seed(self):
+        formations = super(AlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'formations': formations,
+        }
+
 
 def pass_zones(request):
     if(request.user.myuser.is_a_player):
@@ -276,15 +318,6 @@ def pass_zones(request):
             'player': player,
             'page_header': 'PASS ZONES QUIZ'
         })
-
-def alignment_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/alignment_quiz.html', {
-        'player': player,
-        'page_header': 'ALIGNMENT QUIZ'
-    })
 
 def route_quiz(request):
     if(request.user.myuser.is_a_player):
