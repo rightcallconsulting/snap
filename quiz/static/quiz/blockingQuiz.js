@@ -266,7 +266,6 @@ function drawDemoScreen(){
         textSize(22);
         text("You are in yellow", x - 100, y - 90);
         fill(0);
-        
         //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
@@ -300,26 +299,20 @@ function drawDemoScreen(){
         textAlign(CENTER);
         textSize(22);
         if(clickedDefender){
-         
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
-
           fill(0);
           //text("Click demo button to exit", 20, 50);
         }else{
-          
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
-          noStroke();
-          //text("Click demo button to exit", 20, 50);
+          noStroke();   
         }
       }
-
     }
   }
-
 }
 
 keyPressed = function(){
@@ -416,6 +409,7 @@ keyTyped = function(){
 };
 
 function draw() {
+  debugger;
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
     var y = field.getTranslatedY(this.y);
