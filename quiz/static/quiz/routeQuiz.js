@@ -270,7 +270,7 @@ function drawDemoScreen(){
         noStroke();
         noFill();
         strokeWeight(2);
-        stroke(220, 220, 0);
+        stroke(220, 0, 0);
         
         var x = field.getTranslatedX(currentPlayerTested.startX);
         var y = field.getTranslatedY(currentPlayerTested.startY);
@@ -278,10 +278,10 @@ function drawDemoScreen(){
 
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        textAlign(RIGHT);
+        textAlign(CENTER);
         textSize(22);
-        fill(220, 220, 0);
-        text("You are in blue", x + 5, y - 60);
+        fill(220, 0, 0);
+        text("You are in blue", x - 40, y - 80);
         noStroke();
       }else if(timeElapsed < 4000){
         noStroke();
