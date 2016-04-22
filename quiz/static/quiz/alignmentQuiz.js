@@ -7,7 +7,7 @@ var maxFormations = 5;
 var bigReset;
 var currentPlayerTested = null;
 var currentUserTested = null;
-var answers = []; 
+var answers = [];
 var exitDemo = null;
 var demoDoubleClick = false;
 
@@ -164,7 +164,7 @@ function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentFormation(), height, width);
   test.getCurrentFormation().drawAllPlayers(field);
   currentPlayerTested.draw(field);
-  
+
 };
 
 function drawOpening(){
@@ -210,13 +210,6 @@ function drawDemoScreen(){
       fill(220,0,0);
       text("Your play call is here", field.width / 2 + 20, 50);
       noStroke();
-    }else if(timeElapsed < 4000){
-      noStroke();
-      textSize(22);
-      textAlign(CENTER);
-      fill(220, 220, 0);
-      text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
-      noStroke();
     }else{
       if(currentPlayerTested){
         currentPlayerTested.draw(field);
@@ -229,6 +222,13 @@ function drawDemoScreen(){
         }else{
           text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
         }
+      }else{
+        noStroke();
+        textSize(22);
+        textAlign(CENTER);
+        fill(220, 220, 0);
+        text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
+        noStroke();
       }
     }
   }
@@ -278,7 +278,7 @@ mouseClicked = function() {
       currentPlayerTested = new Player({
         x: field.getYardX(mouseX),
         y: y,
-        fill: color(220, 220, 0),
+        fill: color(0, 0, 220),
         pos: currentUserTested.position,
         num: currentUserTested.num,
       });
@@ -309,6 +309,9 @@ function draw() {
       fill(this.fill);
       ellipse(x, y, siz, siz);
       fill(0,0,0);
+      if(this === currentPlayerTested){
+        fill(255);
+      }
       textSize(14);
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);

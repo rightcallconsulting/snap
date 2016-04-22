@@ -271,7 +271,7 @@ function drawDemoScreen(){
         noFill();
         strokeWeight(2);
         stroke(220, 220, 0);
-        
+
         var x = field.getTranslatedX(currentPlayerTested.startX);
         var y = field.getTranslatedY(currentPlayerTested.startY);
         var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
@@ -441,7 +441,7 @@ function draw() {
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 1000){
         test.feedbackScreenStartTime = 0;
-        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        test.advanceToNextPlay("");
         currentPlayerTested = null;
       }else{
         drawFeedbackScreen(field);

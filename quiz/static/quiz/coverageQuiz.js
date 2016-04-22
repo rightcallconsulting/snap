@@ -265,12 +265,17 @@ function drawDemoScreen(){
           if(receiver.clicked){
             clickedReceiver = receiver;
           }
-          var x = field.getTranslatedX(receiver.startX);
-          var y = field.getTranslatedY(receiver.startY);
-          var siz = field.yardsToPixels(receiver.siz);
-          y -= siz / 2;
-          line(x, y - 80, x, y - 15);
-          triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+        }
+        if(clickedReceiver === null){
+          for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
+            var receiver = play.offensiveFormationObject.eligibleReceivers[i];
+            var x = field.getTranslatedX(receiver.startX);
+            var y = field.getTranslatedY(receiver.startY);
+            var siz = field.yardsToPixels(receiver.siz);
+            y -= siz / 2;
+            line(x, y - 80, x, y - 15);
+            triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+          }
         }
         stroke(0);
         if(clickedReceiver){

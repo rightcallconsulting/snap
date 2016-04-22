@@ -25,7 +25,7 @@ function setup() {
     width: field.heightInYards / 6,
     label: "Restart"
   })
-  
+
   exitDemo = new Button({
     label: "",
     x: 14,
@@ -156,6 +156,7 @@ function drawDemoScreen(){
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
   if(play){
+    play.drawAllRoutes(field);
     play.drawAllPlayers(field);
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
@@ -175,7 +176,7 @@ function drawDemoScreen(){
     textAlign(LEFT);
     textSize(22);
     noStroke();
-    
+
     var x = field.getTranslatedX(43);
     var y = field.getTranslatedY(80);
     var x2 = field.getTranslatedX(53);
@@ -231,7 +232,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
