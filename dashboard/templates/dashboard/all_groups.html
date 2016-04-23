@@ -144,13 +144,13 @@
 						<table class = "group-analytics">
 							<tbody>
 								<tr>
-									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>SPEED</h3></td>
+									<td><h3>CORRECT</h3><canvas id="percentCorrectChart"></canvas></td>
 								</tr>
 								<tr>
-									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>ACCURACY</h3></td>
+									<td><h3>INCORRECT</h3><canvas id="percentIncorrectChart"></canvas></td>
 								</tr>
 								<tr>
-									<td><img src="{% static 'dashboard/images/progress-wheel.png' %}" alt=""><h3>OVERALL</h3></td>
+									<td><h3>SKIPPED</h3><canvas id="percentSkippedChart"></canvas></td>
 								</tr>
 							</tbody>
 						</table>
@@ -162,7 +162,18 @@
 				</div>
 			</div><!-- /panel -->
 
-
-
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+
+			<!-- Pass Django variables to JS assets -->
+			<script type="text/javascript">
+			  var percentCorrect = {{analytics.total_correct_percentage}},
+					percentIncorrect = {{analytics.total_incorrect_percentage}},
+					percentSkipped = {{analytics.total_skipped_percentage}};
+			</script>
+
+			<!-- Loading Chart.js through CDN for now -->
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
+			<!-- Build Charts -->
+			<script src="{% static 'dashboard/js/analytics.js' %}"></script>
 			{% endblock %}

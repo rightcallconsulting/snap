@@ -824,16 +824,14 @@ input.create-quiz{
   overflow: hidden;
 }
 
-.group-analytics img{
-  height: 200px;
-  margin-top: -15px;
-  margin-bottom: 0px;
+.group-analytics td{
+  
 }
 
 .group-analytics h3{
-  font-size: 14px;
-  margin-top: -15px;
-  margin-bottom: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 
 .table-footer{

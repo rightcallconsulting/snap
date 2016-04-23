@@ -394,11 +394,13 @@ def delete_player_from_group(request):
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
-    first_group = groups[0]
+    first_group = groups[0].players.all()
+    analytics = PlayerAnalytics(first_group)
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
-        'first_players': first_group.players.all(),
+        'first_players': first_group,
+        'analytics': analytics,
         'page_header': 'GROUPS',
     })
 
