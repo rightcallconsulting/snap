@@ -141,6 +141,7 @@ def analytics(request):
         else:
             players = request.user.coach.team.player_set.all()
 
+        groups = PlayerGroup.objects.all()
         analytics = PlayerAnalytics.for_players(players)
 
     #embed()
@@ -149,6 +150,7 @@ def analytics(request):
         # 'players': players,
         'page_header': 'ANALYTICS',
         'analytics': analytics,
+        'groups': groups,
     })
 
 @login_required

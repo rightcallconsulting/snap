@@ -909,6 +909,7 @@ input.create-quiz{
   font-size: 22px;
   text-align: center;
   vertical-align: top;
+  margin-top: 25px;
 }
 
 .analytics-main-table canvas{
