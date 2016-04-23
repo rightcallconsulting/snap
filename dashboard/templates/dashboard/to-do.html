@@ -23,7 +23,6 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
-			<div class="panel panel-default table-responsive">
 					{% if not request.user.myuser.is_a_player %}
 					<div class="row">
 						<div class="col-md-4 col-sm-4">
@@ -111,17 +110,6 @@
 					</tbody>
 				</table>
 			</div><!-- /panel -->
-			<div class="row dash-row">
-
-
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
-
-
-
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
