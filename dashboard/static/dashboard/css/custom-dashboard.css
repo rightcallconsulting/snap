@@ -432,6 +432,11 @@ input.create-quiz{
   text-align: center;
 }
 
+.to-do-table .button{
+  background-color: #9CCC65;
+  padding: 8px;
+}
+
 .news-feed-table tbody tr{
   border: none;
 }
