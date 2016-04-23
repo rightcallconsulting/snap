@@ -12,6 +12,9 @@
 	{% include "dashboard/sidebar.html" %}
 
   <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script>
+		var groupsSeed = "{{groups_seed}}";
+	</script>
 
 
 	<div id="main-container" class="to-do">
@@ -37,6 +40,7 @@
 					<script type="text/javascript">
 						var changeGroup = function(group){
 							var groupID = parseInt(group.value)
+							debugger;
 							if(groupID){
 								//get group by filtering list of groups by groupID
 

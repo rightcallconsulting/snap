@@ -217,7 +217,8 @@ def todo(request):
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
             'page_header': 'ASSIGNED TESTS',
-            'groups': groups
+            'groups': groups,
+            'groups_seed': serializers.serialize("json", groups)
         })
 
 @login_required
