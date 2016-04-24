@@ -220,7 +220,6 @@ function drawOpening(){
   }
 }
 
-
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   var play = test.getCurrentPlay();
@@ -262,9 +261,9 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         noStroke();
         strokeWeight(1);
-        fill(220, 220, 0);
+        fill(220, 0, 0);
         textSize(22);
-        text("You are in yellow", x - 100, y - 90);
+        text("You are in blue", x - 100, y - 90);
         fill(0);
         //text("Click demo button to exit", 20, 50);
         noStroke();
@@ -288,19 +287,31 @@ function drawDemoScreen(){
           if(defender.clicked){
             clickedDefender = defender;
           }
-          var x = field.getTranslatedX(defender.startX);
-          var y = field.getTranslatedY(defender.startY);
-          var siz = field.yardsToPixels(defender.siz);
-          y -= siz / 2;
-          line(x, y - 80, x, y - 15);
-          triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+        }
+        if(clickedDefender === null){
+          for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
+            var defender = defensivePlay.defensivePlayers[i];
+            var x = field.getTranslatedX(defender.startX);
+            var y = field.getTranslatedY(defender.startY);
+            var siz = field.yardsToPixels(defender.siz);
+            y -= siz / 2;
+            stroke(220, 220, 0);
+            strokeWeight(2);
+            line(x, y - 80, x, y - 15);
+            triangle(x - 15, y - 15, x + 15, y - 15, x, y);
+            strokeWeight(1);
+          }
         }
         stroke(0);
         textAlign(CENTER);
         textSize(22);
+
         if(clickedDefender){
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else if(currentPlayerTested && guessedAssignment){
+            guessedAssignment.draw(currentPlayerTested, field);
+            text("Click on next blocking assignment if you have one.\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
@@ -311,6 +322,8 @@ function drawDemoScreen(){
           noStroke();
         }
       }
+      noStroke();
+
     }
   }
 }
@@ -365,13 +378,12 @@ mouseClicked = function() {
         }else{
           clearSelections();
           answer.clicked = true;
-          clickedPlayer = answer;
         }
       }else{
         if(answer.isMouseInside(field)){
           clearSelections();
           answer.clicked = true;
-          return;
+          clickedPlayer = answer;
         }
       }
     }
@@ -409,19 +421,11 @@ keyTyped = function(){
 };
 
 function draw() {
-  debugger;
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "defense"){
-      if(this.clicked){
-        stroke(0, 255, 255);
-        line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
-        noStroke();
-
-      }
-
       noStroke();
       fill(0, 0, 0);
       textSize(17);
@@ -429,7 +433,6 @@ function draw() {
       text(this.pos, x, y);
     }
     else {
-
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
