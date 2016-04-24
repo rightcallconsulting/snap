@@ -315,6 +315,14 @@ class Play(models.Model):
     def __str__(self):
         return self.name
 
+    def position_strings(self):
+        """Returns a list of unique string positions in the play.
+        Ex: ['QB', 'WR', etc..]"""
+        positionStrings = []
+        for pos in self.positions.all():
+            positionStrings.append(pos.name)
+        return set(positionStrings) # remove duplicates
+
     @classmethod
     def from_json(cls, json):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),

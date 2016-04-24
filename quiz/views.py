@@ -231,8 +231,14 @@ class PlayQuizView(CustomPlayerQuizView):
     template_name = 'quiz/play_quiz.html'
     page_header = 'PLAY QUIZ'
 
+    exclude_plays_that_dont_include_players_position = False
+
     def get_ordered_questions(self):
         plays = self.player.team.play_set.all()
+
+        if self.exclude_plays_that_dont_include_players_position:
+            plays = [p for p in plays if self.player.position 
+                in p.position_strings()]
 
         # Sorting
 
@@ -248,11 +254,25 @@ class PlayQuizView(CustomPlayerQuizView):
         return [p.dict_for_json() for p in plays]
 
 
-class QbCallQuiz(PlayQuizView):
+class QbCallQuizView(PlayQuizView):
     template_name = 'quiz/qb_call_quiz.html'
     page_header = 'QB CHECK QUIZ'
+    
     def build_dict_for_json_seed(self):
-        plays = super(QbCallQuiz, self).build_dict_for_json_seed()
+        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+
+class RouteQuizView(PlayQuizView):
+    template_name = 'quiz/route_quiz.html'
+    page_header = 'ROUTE QUIZ'
+    exclude_plays_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        plays = super(RouteQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
             'plays': plays,
@@ -340,15 +360,6 @@ def pass_zones(request):
             'player': player,
             'page_header': 'PASS ZONES QUIZ'
         })
-
-def route_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/route_quiz.html', {
-        'player': player,
-        'page_header': 'ROUTE QUIZ'
-    })
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
