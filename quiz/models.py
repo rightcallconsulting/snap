@@ -102,7 +102,7 @@ class Formation(models.Model):
         positionStrings = []
         for pos in positionObjects:
             positionStrings.append(pos.name)
-        return positionStrings
+        return set(positionStrings) # remove duplicates
 
     @classmethod
     def from_json(cls, json):

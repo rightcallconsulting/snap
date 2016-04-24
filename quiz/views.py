@@ -49,15 +49,6 @@ def option_quiz(request):
 def blitz_quiz(request):
     return render(request, 'quiz/blitz_quiz.html')
 
-def linebacker_call_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/linebacker_call_quiz.html', {
-        'player': player,
-        'page_header': 'PASS STRENGTH CALL QUIZ'
-    })
-
 def call_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
@@ -245,24 +236,6 @@ class CustomPlayerQuizView(generic.TemplateView):
         return context
 
 
-class FormationQuizView(CustomPlayerQuizView):
-    template_name = 'quiz/formation_quiz.html'
-    page_header = 'FORMATION QUIZ'
-
-    def get_ordered_questions(self):
-        formations = self.player.team.formation_set.filter(unit="offense")
-
-        if self.order == QuizOrders.RECENT.url_key:
-            formations = formations.order_by('-created_at')
-
-        elif self.order == QuizOrders.WORST.url_key:
-            analytics = PlayerAnalytics.for_single_player(self.player)
-            formations = sorted(formations, reverse=True,
-                key=analytics.total_incorrect_for_formation)
-
-        return [f.dict_for_json() for f in formations]
-
-
 class PlayQuizView(CustomPlayerQuizView):
     template_name = 'quiz/play_quiz.html'
     page_header = 'PLAY QUIZ'
@@ -270,8 +243,11 @@ class PlayQuizView(CustomPlayerQuizView):
     def get_ordered_questions(self):
         plays = self.player.team.play_set.all()
 
+        # Sorting
+
         if self.order == QuizOrders.RECENT.url_key:
-            plays = plays.order_by('-created_at')
+            plays = sorted(plays, reverse=True,
+                key=attrgetter('created_at'))
 
         elif self.order == QuizOrders.WORST.url_key:
             analytics = PlayerAnalytics.for_single_player(self.player)
@@ -281,16 +257,24 @@ class PlayQuizView(CustomPlayerQuizView):
         return [p.dict_for_json() for p in plays]
 
 
-class AlignmentQuizView(CustomPlayerQuizView):
-    template_name = 'quiz/alignment_quiz.html'
-    page_header = 'ALIGNMENT QUIZ'
+class FormationQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/formation_quiz.html'
+    page_header = 'FORMATION QUIZ'
+
+    formation_unit = 'offense'
+    exclude_formations_that_dont_include_players_position = False
 
     def get_ordered_questions(self):
-        formations = self.player.team.formation_set.filter(unit='offense')
-        # Filter out formations that don't contain this player's position
-        formations = [
-            f for f in formations if self.player.position in f.positions()
-        ]
+        formations = self.player.team.formation_set.filter(
+            unit=self.formation_unit
+        )
+
+        if self.exclude_formations_that_dont_include_players_position:
+            formations = [
+                f for f in formations if self.player.position in f.positions()
+            ]
+
+        # Sorting
 
         if self.order == QuizOrders.RECENT.url_key:
             formations = sorted(formations, reverse=True,
@@ -303,6 +287,13 @@ class AlignmentQuizView(CustomPlayerQuizView):
 
         return [f.dict_for_json() for f in formations]
 
+
+class AlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/alignment_quiz.html'
+    page_header = 'ALIGNMENT QUIZ'
+    formation_unit = 'offense'
+    exclude_formations_that_dont_include_players_position = True
+
     def build_dict_for_json_seed(self):
         formations = super(AlignmentQuizView, self).build_dict_for_json_seed()
         return {
@@ -311,33 +302,31 @@ class AlignmentQuizView(CustomPlayerQuizView):
         }
 
 
-class CoverageQuizView(CustomPlayerQuizView):
+class CoverageQuizView(FormationQuizView):
     template_name = 'quiz/coverage_quiz.html'
     page_header = 'COVERAGE QUIZ'
-
-    def get_ordered_questions(self):
-        d_formations = self.player.team.formation_set.filter(unit="defense")
-        # Filter out formations that don't contain this player's position
-        d_formations = [
-            f for f in d_formations if self.player.position in f.positions()
-        ]
-
-        if self.order == QuizOrders.RECENT.url_key:
-            d_formations = sorted(d_formations, reverse=True, 
-                key=attrgetter('created_at'))
-        
-        elif self.order == QuizOrders.WORST.url_key:
-            analytics = PlayerAnalytics.for_single_player(self.player)
-            d_formations = sorted(d_formations, reverse=True, 
-                key=analytics.total_incorrect_for_formation)
-
-        return [f.dict_for_json() for f in d_formations]
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
 
     def build_dict_for_json_seed(self):
-        d_formations = super(CoverageQuizView, self).build_dict_for_json_seed()
+        formations = super(CoverageQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
-            'defensive_formations': d_formations,
+            'defensive_formations': formations,
+        }
+
+
+class LinebackerQuizView(FormationQuizView):
+    template_name = 'quiz/linebacker_call_quiz.html'
+    page_header = 'PASS STRENGTH CALL QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(LinebackerQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
         }
 
 
