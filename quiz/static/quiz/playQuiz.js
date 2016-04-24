@@ -153,6 +153,7 @@ function drawDemoScreen(){
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
   if(play){
+    play.drawAllRoutes(field);
     play.drawAllPlayers(field);
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);

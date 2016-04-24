@@ -293,9 +293,9 @@ function drawDemoScreen(){
     textSize(22);
     noStroke();
     var x = field.getTranslatedX(43);
-    var y = field.getTranslatedY(80);
+    var y = field.getTranslatedY(83);
     var x2 = field.getTranslatedX(53);
-    var y2 = field.getTranslatedY(80);
+    var y2 = field.getTranslatedY(83);
     stroke(0, 0, 220);
     fill(0, 0, 220);
     strokeWeight(2);
@@ -312,11 +312,11 @@ function drawDemoScreen(){
     textSize(20);
     textAlign(CENTER);
     if(demoDoubleClick){
-      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
+      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 110);
     }else if(clicked){
-      text("Click again to check answer.", x - 70, y - 50);
+      text("Click again to check answer.", x - 70, y - 110);
     }else{
-      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+      text("Select the correct play by \ndouble clicking button.", x - 70, y - 110);
     }
   }
 };

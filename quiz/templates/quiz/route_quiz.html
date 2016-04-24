@@ -26,15 +26,15 @@ $('#clear-button').click(function(){
 })
 
 $('#restart-button').click(function(){
-        if(test && test.feedbackScreenStartTime === 0){
-          clearSelection();
-          currentPlayerTested = null;
-          test.restartQuiz();
-        }
-      })
+  if(test && test.feedbackScreenStartTime === 0){
+    clearSelection();
+    currentPlayerTested = null;
+    test.restartQuiz();
+  }
+})
 
 $('#next-play-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
+  if(test && !test.over && !test.showDemo && test.feedbackScreenStartTime === 0){
     clearSelection();
     test.skips++;
     currentPlayerTested = null;
@@ -43,7 +43,7 @@ $('#next-play-button').click(function(){
   }
 })
 $('#question-button').click(function(){
-  if(test){
+  if(test && !test.over && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
     }else{
@@ -57,11 +57,11 @@ $('#question-button').click(function(){
 {% block buttons %}
 <div class="holds-play-buttons">
   <table class="button-table"><tr>
-  <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-  <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-  <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
-  <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+    <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+    <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+    <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+    <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+    <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
   </tr></table>
 </div>
 {% endblock %}

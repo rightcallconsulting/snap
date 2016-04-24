@@ -176,8 +176,12 @@
               };
 
               document.getElementById("skip-button").onclick = function(){
-                currentPlayerTested = null;
-                if(test && !test.over){
+                if(test && test.showDemo){
+                  exitDemoScreen();
+                  return false;
+                }
+                if(test && !test.over && test.feedbackScreenStartTime === 0){
+                  currentPlayerTested = null;
                   test.skipQuestion();
                   multipleChoiceAnswers = [];
                 }

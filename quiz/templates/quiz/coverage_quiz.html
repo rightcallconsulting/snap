@@ -51,7 +51,7 @@ $('#next-play-button').click(function(){
 })
 
 $('#question-button').click(function(){
-  if(test){
+  if(test && !test.over && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
     }else{
