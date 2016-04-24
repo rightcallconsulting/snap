@@ -280,6 +280,7 @@ class PlayQuizView(CustomPlayerQuizView):
 
         return [p.dict_for_json() for p in plays]
 
+
 class AlignmentQuizView(CustomPlayerQuizView):
     template_name = 'quiz/alignment_quiz.html'
     page_header = 'ALIGNMENT QUIZ'
@@ -310,6 +311,36 @@ class AlignmentQuizView(CustomPlayerQuizView):
         }
 
 
+class CoverageQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/coverage_quiz.html'
+    page_header = 'COVERAGE QUIZ'
+
+    def get_ordered_questions(self):
+        d_formations = self.player.team.formation_set.filter(unit="defense")
+        # Filter out formations that don't contain this player's position
+        d_formations = [
+            f for f in d_formations if self.player.position in f.positions()
+        ]
+
+        if self.order == QuizOrders.RECENT.url_key:
+            d_formations = sorted(d_formations, reverse=True, 
+                key=attrgetter('created_at'))
+        
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            d_formations = sorted(d_formations, reverse=True, 
+                key=analytics.total_incorrect_for_formation)
+
+        return [f.dict_for_json() for f in d_formations]
+
+    def build_dict_for_json_seed(self):
+        d_formations = super(CoverageQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': d_formations,
+        }
+
+
 def pass_zones(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
@@ -330,15 +361,6 @@ def route_quiz(request):
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
-
-def coverage_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/coverage_quiz.html', {
-        'player': player,
-        'page_header': 'COVERAGE QUIZ'
-    })
 
 def pass_rush_quiz(request):
     if(request.user.myuser.is_a_player):
