@@ -37,7 +37,6 @@ function setup() {
   });
 
   if(json_seed){
-    debugger;
     var scoreboard = new Scoreboard({
 
     });

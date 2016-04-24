@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var playNames;
@@ -37,8 +37,39 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
+  if(json_seed){
+    var scoreboard = new Scoreboard({
 
-  if(makeJSONCall){
+    });
+    test = new PlayTest({
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: false
+    });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
+
+    var plays = [];
+
+    for(var i = 0; i < json_seed.plays.length; i++){
+      var play = createPlayFromJSONSeed(json_seed.plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      plays.push(play);
+    }
+
+    test.plays = shuffle(plays);
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
+}
+  /*if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
@@ -126,7 +157,7 @@ function setup() {
 
 
 }
-}
+}*/
 
 /*var sortByCreationDecreasing = function(a, b){
   var date1 = new Date(a.created_at);
@@ -148,11 +179,23 @@ var sortByPlayName = function(a, b){
   }
 }
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-return o;
+
+  return array;
 }
 
 function clearSelection(){
@@ -271,7 +314,7 @@ function drawDemoScreen(){
         noFill();
         strokeWeight(2);
         stroke(220, 220, 0);
-        
+
         var x = field.getTranslatedX(currentPlayerTested.startX);
         var y = field.getTranslatedY(currentPlayerTested.startY);
         var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
@@ -422,7 +465,7 @@ function draw() {
       text(this.pos, x, y);
     }
   }
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }
   else if(test.over){
