@@ -180,3 +180,14 @@ var createUserFromJSON = function(jsonUser){
   });
   return user
 };
+
+var createUserFromJSONSeed = function(jsonUser){
+  var user = new User({
+    id: jsonUser.user,
+    firstName: jsonUser.first_name,
+    lastName: jsonUser.last_name,
+    position: jsonUser.position,
+    ignoreInit: true
+  });
+  return user
+};
