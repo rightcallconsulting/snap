@@ -74,15 +74,6 @@ def motion_quiz(request):
         'page_header': 'MOTION QUIZ'
     })
 
-def qb_call_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/qb_call_quiz.html', {
-        'player': player,
-        'page_header': 'QB CHECK QUIZ'
-    })
-
 def blocking_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
@@ -255,6 +246,17 @@ class PlayQuizView(CustomPlayerQuizView):
                 key=analytics.total_incorrect_for_play)
 
         return [p.dict_for_json() for p in plays]
+
+
+class QbCallQuiz(PlayQuizView):
+    template_name = 'quiz/qb_call_quiz.html'
+    page_header = 'QB CHECK QUIZ'
+    def build_dict_for_json_seed(self):
+        plays = super(QbCallQuiz, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
 
 
 class FormationQuizView(CustomPlayerQuizView):
