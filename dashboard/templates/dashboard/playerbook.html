@@ -119,8 +119,8 @@
 								  	<label for="inputOrder">Order</label>
 								  	<select id="inputOrder" class="form-control">
 								  		{% for option in quiz_order_options %}
-								  			<option value="{{option.param_value}}">
-								  				{{option.text}}
+								  			<option value="{{option.url_key}}">
+								  				{{option.display_text}}
 								  			</option>
 								  		{% endfor %}
 										</select>

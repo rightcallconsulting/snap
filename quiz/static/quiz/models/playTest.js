@@ -32,9 +32,10 @@ PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){
     if(player){
       return player;
     }
+    return null;
   }
   play = this.getCurrentPlay();
-  if(play){
+  if(play && play.offensivePlayers){
     return play.offensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
   }
   return null;

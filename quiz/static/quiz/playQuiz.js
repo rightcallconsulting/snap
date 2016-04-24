@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33;
 var test;
 var multipleChoiceAnswers;
@@ -36,43 +36,40 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+  if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
     test = new PlayTest({
-      plays: [],
-      scoreboard: scoreboard
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: false
     });
+
     var plays = [];
     playNames = [];
-    $.getJSON('/quiz/teams/1/plays', function(data, jqXHR){
-      data.forEach(function(play){
-        var play = createPlayFromJSON(play);
-        plays.push(play);
-        playNames.push(play.playName)
-      })
-      var positions = [];
-      plays.sort(sortByPlayName); //can sort by any function, and can sort multiple times if needed
-      plays = plays.slice(0,maxPlays); //can slice by any limiting factor (global variable for now)
-      $.getJSON('/quiz/teams/1/plays/players', function(data2, jqXHR){
-        data2.forEach(function(position){
-          var player = createPlayerFromJSON(position);
-          positions.push(player);
-        })
-        plays.forEach(function(play){
-          play.addPositionsFromID(positions);
-          play.populatePositions();
-          play.test = test;
-        })
-        test.plays = plays;
-        multipleChoiceAnswers = [];
-        test.restartQuiz();
-        test.updateScoreboard();
-        test.updateProgress();
-        makeJSONCall = false;
-      })
-    })
+
+    for(var i = 0; i < json_seed.length; i++){
+      var play = createPlayFromJSONSeed(json_seed[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      if(play.name && play.name !== ""){
+          playNames.push(play.name);
+      }
+      plays.push(play);
+    }
+
+    test.plays = shuffle(plays);
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
   }
 }
 
@@ -222,6 +219,9 @@ function exitDemoScreen(){
 };
 
 mouseClicked = function() {
+  if(!setupComplete){
+    return false;
+  }
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
@@ -281,7 +281,7 @@ function draw() {
       text(this.pos, x, y);
     }
   }
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }
   else if(test.showDemo){

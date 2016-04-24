@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
@@ -30,16 +30,68 @@ function setup() {
 })
 
  exitDemo = new Button({
-  label: "",
-  x: 14,
-  y: 94,
-  height: 1.5,
-  width: 1.5,
-  clicked: false,
-  fill: color(255, 255, 255)
-});
+    label: "",
+    x: 14,
+    y: 94,
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
+  if(json_seed){
 
- if(makeJSONCall){
+    var scoreboard = new Scoreboard({
+
+    });
+    test = new PlayTest({
+      plays: [],
+      scoreboard: scoreboard,
+      displayName: true
+    });
+    var formations = [];
+    var offensiveFormations = [];
+    var defensive_plays = [];
+    var plays = [];
+    var positions = [];
+    playNames = ["LEFT", "RIGHT", "BALANCED"];
+
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
+
+    for(var i = 0; i < json_seed.defensive_formations.length; i++){
+      var defensive_play = createDefensivePlayFromJSONSeed(json_seed.defensive_formations[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < defensive_play.positions.length; j++){
+        var position = defensive_play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        player.unit = "defense";
+        positionsAsPlayers.push(player);
+      }
+      defensive_play.positions = positionsAsPlayers;
+      defensive_play.populatePositions();
+      positionsAsPlayers = [];
+      for(var j = 0; j < defensive_play.offensiveFormationObject.positions.length; j++){
+        var position = defensive_play.offensiveFormationObject.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      defensive_play.offensiveFormationObject.positions = positionsAsPlayers;
+      defensive_play.offensiveFormationObject.populatePositions();
+      defensive_plays.push(defensive_play);
+      playNames.push(defensive_play.name);
+    }
+
+    var shuffled_plays = shuffle(defensive_plays);
+    test.plays = shuffled_plays;
+    test.defensivePlays = shuffled_plays;
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
+}
+
+
+ /*if(json_seed){
   var scoreboard = new Scoreboard({
 
   });
@@ -118,14 +170,14 @@ function setup() {
             test.restartQuiz();
             test.updateProgress();
             test.updateScoreboard();
-            makeJSONCall = false;
+            setupComplete = true;
           })
         })
 })
 })
 });
 }
-}
+}*/
 
 /*var sortByCreationDecreasing = function(a, b){
   var date1 = new Date(a.created_at);
@@ -155,29 +207,21 @@ return o;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = Math.floor((Math.random() * numOptions));
+  var correctIndex = 2;
+  if(correctAnswer === "LEFT"){
+    correctIndex = 0;
+  }else if(correctAnswer === "RIGHT"){
+    correctIndex = 1;
+  }
   document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
   multipleChoiceAnswers = [];
   var availableNames = playNames.slice();
-  shuffle(availableNames);
-  var i = 0;
-  while(multipleChoiceAnswers.length < numOptions){
-    var label = availableNames[i];
-    if(multipleChoiceAnswers.length === correctIndex){
-      label = correctAnswer;
-    }else if(label === correctAnswer){
-      i++;
-      label = availableNames[i];
-    }
+  for(var i = 0; i < numOptions; i++){
+    label = availableNames[i];
     multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-      y: height / 3,
-      width: width / (numOptions + 2),
-      height: 50,
       label: label,
       clicked: false
     }));
-    i++;
   }
 }
 
@@ -301,7 +345,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
@@ -354,7 +398,7 @@ function draw() {
     }
   };
 
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
@@ -374,8 +418,14 @@ function draw() {
       multipleChoiceAnswers = [];
     }
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
-      var correctAnswer = test.getCurrentPlay().name;
+    if(multipleChoiceAnswers.length < 2 && test.getCurrentDefensivePlay()){
+      var strength = test.getCurrentDefensivePlay().offensiveFormationObject.getPassStrength();
+      var correctAnswer = "BALANCED";
+      if(strength < 0){
+        correctAnswer = "LEFT"
+      }else if(strength > 0){
+        correctAnswer = "RIGHT"
+      }
       test.updateProgress(false);
       createMultipleChoiceAnswers(correctAnswer, 3);
       test.updateMultipleChoiceLabels();

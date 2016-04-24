@@ -120,8 +120,8 @@ DefensivePlay.prototype.getPlayer = function(unitIndex, playerIndex){
   return null;
 }
 
-DefensivePlay.prototype.getDbCall = function(){     
-    return this.dbCall;   
+DefensivePlay.prototype.getDbCall = function(){
+    return this.dbCall;
 }
 
 DefensivePlay.prototype.drawAllPlayers = function(field){
@@ -204,6 +204,40 @@ DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){
     return formation.id === this.offensiveFormationID;
   }.bind(this))[0]
   return offensivePlayToDraw
+};
+
+DefensivePlay.prototype.populatePositions = function(){
+  var dline = this.positions.filter(function(player) {
+    return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT";
+  });
+  dline.forEach(function(player){this.dline.push(player)}.bind(this));
+  var linebackers = this.positions.filter(function(player) {
+    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  });
+  linebackers.forEach(function(player){this.linebackers.push(player)}.bind(this));
+  var cornerbacks = this.positions.filter(function(player) {
+    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  });
+  cornerbacks.forEach(function(player){this.cornerbacks.push(player)}.bind(this));
+  var safeties = this.positions.filter(function(player) {
+    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  });
+  safeties.forEach(function(player){this.safeties.push(player)}.bind(this));
+  this.defensivePlayers = this.positions;
+};
+
+var createDefensivePlayFromJSONSeed = function(jsonPlay){
+  var play = new DefensivePlay({
+    id: jsonPlay.pk,
+    name: jsonPlay.name,
+    playName: jsonPlay.name,
+    offensiveFormationID: jsonPlay.offensiveFormationID,
+    teamID: jsonPlay.team,
+    unit: jsonPlay.unit
+  });
+  play.positions = jsonPlay.positions;
+  play.offensiveFormationObject = createFormationFromJSONSeed(jsonPlay.offensive_formation);
+  return play;
 };
 
 var createDefensivePlayFromJSON = function(jsonPlay){

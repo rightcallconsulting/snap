@@ -89,9 +89,9 @@
 
 <!-- Pass Django variables to JS assets -->
 <script type="text/javascript">
-  var percentCorrect = {{analytics.total_correct_percentage}},
-		percentIncorrect = {{analytics.total_incorrect_percentage}},
-		percentSkipped = {{analytics.total_skipped_percentage}};
+  var percentCorrect = {{analytics.total_correct_plays_percentage}},
+		percentIncorrect = {{analytics.total_incorrect_plays_percentage}},
+		percentSkipped = {{analytics.total_skipped_plays_percentage}};
 </script>
 
 <!-- Loading Chart.js through CDN for now -->
