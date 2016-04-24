@@ -82,7 +82,7 @@ function setup() {
         }
       }
     }
-    
+
     test.formations = shuffled_formations;
     multipleChoiceAnswers = [];
     test.restartQuiz();

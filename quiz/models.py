@@ -141,7 +141,7 @@ class Formation(models.Model):
         if self.unit == 'defense':
             o_form = Formation.objects.get(pk=self.offensiveFormationID)
             json_dict['offensive_formation'] = o_form.dict_for_json()
-        
+
         return json_dict
 
 

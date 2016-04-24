@@ -237,7 +237,7 @@ class PlayQuizView(CustomPlayerQuizView):
         plays = self.player.team.play_set.all()
 
         if self.exclude_plays_that_dont_include_players_position:
-            plays = [p for p in plays if self.player.position 
+            plays = [p for p in plays if self.player.position
                 in p.position_strings()]
 
         # Sorting
@@ -257,7 +257,7 @@ class PlayQuizView(CustomPlayerQuizView):
 class QbCallQuizView(PlayQuizView):
     template_name = 'quiz/qb_call_quiz.html'
     page_header = 'QB CHECK QUIZ'
-    
+
     def build_dict_for_json_seed(self):
         plays = super(QbCallQuizView, self).build_dict_for_json_seed()
         return {
@@ -287,6 +287,7 @@ class FormationQuizView(CustomPlayerQuizView):
     exclude_formations_that_dont_include_players_position = False
 
     def get_ordered_questions(self):
+
         formations = self.player.team.formation_set.filter(
             unit=self.formation_unit
         )
@@ -334,7 +335,7 @@ class CoverageQuizView(FormationQuizView):
         formations = super(CoverageQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
+            'defensive_plays': formations,
         }
 
 
