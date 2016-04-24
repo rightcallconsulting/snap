@@ -60,7 +60,9 @@ function setup() {
       }
       play.positions = positionsAsPlayers;
       play.populatePositions();
-      playNames.push(play.name);
+      if(play.name && play.name !== ""){
+          playNames.push(play.name);
+      }
       plays.push(play);
     }
 
@@ -230,7 +232,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
