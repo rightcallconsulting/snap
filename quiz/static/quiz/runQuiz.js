@@ -206,13 +206,8 @@ function drawOpening(){
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
-  if(currentPlayerTested){
-    if(hasExchanged){
-      guessedAssignment.drawRouteAfterExchange(currentPlayerTested, field);
-    }
-    if(guessedAssignment){
-      guessedAssignment.drawRouteToExchange(currentPlayerTested, field);
-    }
+  if(currentPlayerTested && guessedAssignment){
+    guessedAssignment.draw(currentPlayerTested, field);
   }
   
 };
