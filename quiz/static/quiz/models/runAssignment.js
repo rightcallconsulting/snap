@@ -43,41 +43,33 @@ RunAssignment.prototype.draw = function(rb, field){
 };
 
 RunAssignment.prototype.drawRouteToExchange = function(rb, field){
-	var startX = rb.startX; 
-	var startY = rb.startY;
-	var x1 = field.getTranslatedX(startX);
-	var y1 = field.getTranslatedY(startY);
+	var x1 = field.getTranslatedX(rb.startX);
+	var y1 = field.getTranslatedY(rb.startY);
 	var i = 0;
 	for(i = 0; i < this.routeToExchange.length; i++){
 		var exchangeLocation = this.routeToExchange[i];
 		var x2 = field.getTranslatedX(exchangeLocation[0]);
 		var y2 = field.getTranslatedY(exchangeLocation[1]);
 		if(i > 0){
-			x1 = field.getTranslatedX(this.routeToExchange[i-1][0]);
-			y1 = field.getTranslatedY(this.routeToExchange[i-1][1]);
+			x2 = field.getTranslatedX(this.routeToExchange[i-1][0]);
+			y2 = field.getTranslatedY(this.routeToExchange[i-1][1]);
 		}
 		if(this.type === "Handoff"){
 			stroke(255, 255, 0);
 			line(x1, y1, x2, y2);
 			noStroke();
 		}else if(this.type === "Pitch"){
-			stroke(255, 255, 0);
-			for(var i = 0; i <= 10; i++) {
-				stroke(220, 220, 0);
-				strokeWeight(3);
-				var x = lerp(x1, x2, i / 10);
-				var y = lerp(y1, y2, i / 10);
-				point(x, y);
-				strokeWeight(1);
-			}
+			stroke(0, 0, 220);
+			line(x1, y1, x2, y2);
+			noStroke();
 		}
-
 	}
 };
 
+
 RunAssignment.prototype.drawRouteAfterExchange = function(rb, field){
-	var startX = rb.startX;
-	var startY = rb.startY;
+	var startX = field.getTranslatedX(rb.startX);
+	var startY = field.getTranslatedY(rb.startY);
 	if(this.routeToExchange.length > 0){
 		startX = this.routeToExchange[this.routeToExchange.length-1][0];
 		startY = this.routeToExchange[this.routeToExchange.length-1][1];
@@ -88,10 +80,17 @@ RunAssignment.prototype.drawRouteAfterExchange = function(rb, field){
 			startY = this.routeAfterExchange[i-1][1];
 		}
 		var exchangeDestination = this.routeAfterExchange[i];
-		stroke(0, 255, 255);
-		line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(exchangeDestination[0]), field.getTranslatedY(exchangeDestination[1]));
-		noStroke();
+		if(this.routeToExchange.length){
+			stroke(190, 190, 0);
+			strokeWeight(2);
+			line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(exchangeDestination[0]), field.getTranslatedY(exchangeDestination[1]));
+			strokeWeight(1);
+			noStroke();
+		}
 	}
+
+
+
 };
 
 RunAssignment.prototype.getLastCoord = function(){

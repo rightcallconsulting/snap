@@ -409,8 +409,7 @@ function draw() {
     }
     if(test.showDemo){
       drawDemoScreen();
-    }
-    else if(test.feedbackScreenStartTime){
+    }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         var assignment = currentPlayerTested.coverageAssignment[0];
@@ -419,7 +418,6 @@ function draw() {
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
-        debugger;
         drawFeedbackScreen(field);
       }
     }else{

@@ -192,7 +192,7 @@ function drawFeedbackScreen(){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested){
-    currentPlayerTested.runAssignment.drawRouteToExchange(currentPlayerTested, field);
+    currentPlayerTested.runAssignment.draw(currentPlayerTested, field);
   }
 };
 
@@ -202,33 +202,20 @@ function drawOpening(){
   var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayers(field);//WithOffense(field);
-    noStroke();
   }
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
-  if(currentPlayerTested && guessedAssignment){
-    debugger;
-    guessedAssignment.draw(currentPlayerTested, field);
+  if(currentPlayerTested){
+    if(hasExchanged){
+      guessedAssignment.drawRouteAfterExchange(currentPlayerTested, field);
+    }
+    if(guessedAssignment){
+      guessedAssignment.drawRouteToExchange(currentPlayerTested, field);
+    }
   }
-  /*
-  if(currentPlayerTested && guessedAssignment){
-    var startX = field.getTranslatedX(currentPlayerTested.startX);
-    var startY = field.getTranslatedY(currentPlayerTested.startY);
-    var guessX = field.getTranslatedX(guessedAssignment.getRouteToExchangeCoords()[0][0]);
-    var guessY = field.getTranslatedY(guessedAssignment.getRouteToExchangeCoords()[0][1]);
-
-    for(var i = 0; i <= 10; i++) {
-      stroke(220, 220, 0);
-      strokeWeight(3);
-      var x = lerp(startX, guessX, i / 10);
-      var y = lerp(startY, guessY, i / 10);
-      point(x, y);
-      strokeWeight(1);
-
-    } 
-  }*/
-}
+  
+};
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
@@ -248,8 +235,6 @@ mouseClicked = function() {
         if(dist < 1){
           checkAnswer();
           return;
-        }else{
-          clearSelections();
         }
       }
       if(hasExchanged){
@@ -257,7 +242,6 @@ mouseClicked = function() {
       }else{
         guessedAssignment.addRouteToExchangeCoords(mouseYardX, mouseYardY);
       }
-      
     }else{
       guessedAssignment = new RunAssignment({
         type: "Handoff",
@@ -332,9 +316,9 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
       var correctRunAssignment = new RunAssignment({
-        type: "Pitch",
+        type: "Handoff",
         routeToExchange: [[currentPlayerTested.startX - 6, currentPlayerTested.startY + 3]],
-        routeAfterExchange: []
+        routeAfterExchange: [[currentPlayerTested.startX + 15, currentPlayerTested.startY + 15]]
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
     }
