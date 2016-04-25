@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
@@ -40,7 +40,53 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+    if(json_seed){
+      var scoreboard = new Scoreboard({
+
+      });
+      test = new PlayTest({
+        formations: [],
+        scoreboard: scoreboard,
+        displayName: false
+      });
+      currentUserTested = createUserFromJSONSeed(json_seed.player)
+
+      var plays = [];
+
+      for(var i = 0; i < json_seed.plays.length; i++){
+        var play = createPlayFromJSONSeed(json_seed.plays[i]);
+        var positionsAsPlayers = [];
+        for(var j = 0; j < play.positions.length; j++){
+          var position = play.positions[j];
+          var player = createPlayerFromJSONSeed(position);
+          positionsAsPlayers.push(player);
+        }
+        play.positions = positionsAsPlayers;
+        play.populatePositions();
+        plays.push(play);
+      }
+
+
+    for(var i = 0; i < plays.length; i++){
+      var play = plays[i];
+      var check = new OffenseCheck({
+        name: audibleNames[i],
+        //defensiveFormation: formations[i % formations.length],
+        newPlay: plays[(i+1)%plays.length]
+      });
+      checkNames.push(check.name);
+      play.checks.push(check);
+    }
+    var shuffled_plays = shuffle(plays);
+    test.plays = shuffled_plays;
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
+}
+
+
+  /*if(makeJSONCall){
     var scoreboard = new Scoreboard({
 
     });
@@ -114,33 +160,25 @@ function setup() {
 })
 })
 }
-}
+}*/
 
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
 
-var sortByPlayName = function(a, b){
-  var name1 = a.playName;
-  var name2 = b.playName;
-  if(name1.length < 1){
-    return 1;
-  }else if(name2.length < 1){
-    return -1;
-  }else if(name1 < name2){
-    return -1;
-  }else{
-    return 1;
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-}
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-  }
-return o;
+  return array;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -291,7 +329,7 @@ mouseClicked = function() {
   }else{
     if(test.showDemo){
       if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true; 
+        demoDoubleClick = true;
       }else{
         return;
       }
@@ -343,7 +381,7 @@ function draw() {
       text(this.pos, x, y);
     }
   };
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
