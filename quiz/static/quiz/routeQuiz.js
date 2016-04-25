@@ -4,7 +4,7 @@ var test;
 var originalPlayList = [];
 var playNames;
 var maxPlays = 5;
-var bigReset; var resetMissed;
+var bigReset; var resetMissed; var nextQuiz;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var currentRouteGuess = [];
@@ -23,17 +23,27 @@ function setup() {
   myCanvas.parent('quiz-box');
 
   bigReset = new Button({
-    x: field.getYardX(width*0.5 - 25),
+    x: field.getYardX(width*0.25) - 5,
     y: field.getYardY(height*0.8),
-    width: 5,
+    width: 10,
+    height: 5,
     label: "Retake All"
   });
 
   resetMissed = new Button({
-    x: bigReset.x + bigReset.width * 1.5,
+    x: field.getYardX(width*0.5) - bigReset.width / 2,
     y: bigReset.y,
     width: bigReset.width,
+    height: bigReset.height,
     label: "Retake Missed"
+  });
+
+  nextQuiz = new Button({
+    x: field.getYardX(width*0.75) - bigReset.width / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    height: bigReset.height,
+    label: "Exit"
   });
 
   exitDemo = new Button({
@@ -296,15 +306,18 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     clearSelection();
-    test.plays = originalPlayList.slice();
+    test.plays = shuffle(originalPlayList.slice());
     test.restartQuiz();
     return true;
   }else if(resetMissed.isMouseInside(field) && test.over) {
     clearSelection();
     var newPlays = test.missedPlays.concat(test.skippedPlays);
-    test.plays = newPlays;
+    test.plays = shuffle(newPlays);
     test.restartQuiz();
     return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else if(!test.over){
@@ -345,6 +358,8 @@ keyPressed = function(){
 keyTyped = function(){
   if(test.over){
     if(key === 'r'){
+      clearSelection();
+      test.plays = shuffle(originalPlayList.slice());
       test.restartQuiz();
     }
   }
@@ -390,6 +405,7 @@ function draw() {
     test.drawQuizSummary();
     bigReset.draw(field);
     resetMissed.draw(field);
+    nextQuiz.draw(field);
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
