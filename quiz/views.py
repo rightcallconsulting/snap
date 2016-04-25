@@ -363,7 +363,7 @@ class PassRushQuizView(FormationQuizView):
         formations = super(PassRushQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
+            'defensive_plays': formations,
         }
 
 

@@ -81,7 +81,6 @@ function setup() {
     var shuffled_plays = shuffle(defensive_plays);
     test.plays = shuffled_plays;
     test.defensivePlays = shuffled_plays;
-    multipleChoiceAnswers = [];
     test.restartQuiz();
     test.updateScoreboard();
     setupComplete = true;
