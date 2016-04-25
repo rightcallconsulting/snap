@@ -12,6 +12,10 @@ AUDIBLE QUIZ
 {% block quiz_type %}
 <script language="javascript" type="text/javascript" src="{% static 'quiz/qbCallQuiz.js' %}"></script>
 <script type="text/javascript">
+  var json_seed = {{ json_seed|safe }};
+  console.log(JSON.stringify(json_seed, null, 2));
+</script>
+<script type="text/javascript">
 
 $('#play-button').click(function(){
         //pressPlayButton();

@@ -258,3 +258,11 @@
   width: 80%;
   height: 80%;
 }
+
+.panel{
+  border: none;
+}
+
+.dash-row{
+  border: none;
+}

@@ -22,7 +22,7 @@ from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dashboard.utils import PlayerAnalytics
-from quiz.utils import CUSTOM_QUIZ_ORDERS
+from quiz.utils import QuizOrders
 
 
 # Create your views here
@@ -128,6 +128,7 @@ def messages(request):
 def analytics(request):
     if request.user.myuser.is_a_player:
         analytics = PlayerAnalytics.for_single_player(request.user.player)
+        groups = []
     else:
         # If the user is a coach, the default analytics player set is a their
         # entire team, but they can use request.GET params to specify the pk of
@@ -141,6 +142,7 @@ def analytics(request):
         else:
             players = request.user.coach.team.player_set.all()
 
+        groups = PlayerGroup.objects.all()
         analytics = PlayerAnalytics.for_players(players)
 
     #embed()
@@ -149,6 +151,7 @@ def analytics(request):
         # 'players': players,
         'page_header': 'ANALYTICS',
         'analytics': analytics,
+        'groups': groups,
     })
 
 @login_required
@@ -156,7 +159,7 @@ def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
-            'quiz_order_options': CUSTOM_QUIZ_ORDERS,
+            'quiz_order_options': QuizOrders.options,
         })
     else:
         team = request.user.coach.team
@@ -215,7 +218,8 @@ def todo(request):
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
             'page_header': 'ASSIGNED TESTS',
-            'groups': groups
+            'groups': groups,
+            'groups_seed': serializers.serialize("json", groups)
         })
 
 @login_required
@@ -391,11 +395,13 @@ def delete_player_from_group(request):
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
-    first_group = groups[0]
+    first_group = groups[0].players.all()
+    analytics = PlayerAnalytics(first_group)
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
-        'first_players': first_group.players.all(),
+        'first_players': first_group,
+        'analytics': analytics,
         'page_header': 'GROUPS',
     })
 

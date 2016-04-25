@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var playNames;
@@ -37,122 +37,56 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
-
-  if(makeJSONCall){
+  if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
     test = new PlayTest({
-      plays: [],
+      formations: [],
       scoreboard: scoreboard,
-      displayName: true
+      displayName: false
     });
-    var formations = [];
-    var offensiveFormations = [];
-    var defensivePlays = [];
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
+
     var plays = [];
-    var positions = [];
-    playNames = [];
 
-    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "WR"; //remove when done testing
-    })
+    for(var i = 0; i < json_seed.plays.length; i++){
+      var play = createPlayFromJSONSeed(json_seed.plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      plays.push(play);
+    }
 
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        var newFormation = createFormationFromJSON(formationObject);
-        //var p = newFormation.getPlayerFromPosition(currentUserTested.position);
-        //debugger;
-        if(newFormation){
-          offensiveFormations.push(newFormation);
-        }
-      })
-
-      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-        data.forEach(function(position){
-          var newPlayer = createPlayerFromJSON(position);
-          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-          var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
-
-          if(formation){
-            formation.positions.push(newPlayer);
-          }
-          if(offensiveFormation){
-            offensiveFormation.positions.push(newPlayer);
-          }
-        })
-        offensiveFormations.forEach(function(formation){
-          formation.populatePositions();
-        })
-        formations.forEach(function(formation){
-          formation.populatePositions();
-          var defensivePlay = formation.createDefensivePlay();
-          defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-          defensivePlays.push(defensivePlay);
-          if(playNames.indexOf(defensivePlay.playName) < 0){
-            playNames.push(defensivePlay.playName);
-          }
-        })
-
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            var play = createPlayFromJSON(play);
-            plays.push(play);
-          })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
-            })
-            plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
-            })
-            plays = plays.filter(function(play){return play.getPlayerFromPosition(currentUserTested.position)});
-
-            test.plays = plays;
-
-            test.restartQuiz();
-            test.updateScoreboard();
-            test.updateProgress();
-            makeJSONCall = false;
-          })
-        })
-      })
-})
-
-
-
-}
-}
-
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
-
-var sortByPlayName = function(a, b){
-  var name1 = a.playName;
-  var name2 = b.playName;
-  if(name1.length < 1){
-    return 1;
-  }else if(name2.length < 1){
-    return -1;
-  }else if(name1 < name2){
-    return -1;
-  }else{
-    return 1;
+    test.plays = shuffle(plays);
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
   }
 }
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-return o;
+
+  return array;
 }
 
 function clearSelection(){
@@ -422,7 +356,7 @@ function draw() {
       text(this.pos, x, y);
     }
   }
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }
   else if(test.over){

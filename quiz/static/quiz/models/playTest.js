@@ -17,6 +17,7 @@ var PlayTest = function(config){
   this.incorrectAnswerMessage = config.incorrectAnswerMessage || "Wrong Answer";
   this.skippedAnswerMessage = config.skippedAnswerMessage || "Skipped";
   this.displayName = config.displayName || false;
+  this.coverageMap = config.coverageMap || null;
   this.showDemo = config.showDemo || false;
   this.demoStartTime = config.demoStartTime || 0;
 };
@@ -32,9 +33,10 @@ PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){
     if(player){
       return player;
     }
+    return null;
   }
   play = this.getCurrentPlay();
-  if(play){
+  if(play && play.offensivePlayers){
     return play.offensivePlayers.filter(function(player) {return player.pos === currentUserTested.position})[0];
   }
   return null;
@@ -46,6 +48,10 @@ PlayTest.prototype.getCurrentPlay = function(){
 
 PlayTest.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.questionNum];
+};
+
+PlayTest.prototype.getCurrentCoverageMap = function(){
+  return this.coverageMap;
 };
 
 PlayTest.prototype.getScoreString = function(){

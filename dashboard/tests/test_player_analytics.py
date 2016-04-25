@@ -8,7 +8,8 @@ from .test_views import create_player
 
 # Test Helpers:
 
-def create_test_result(test, correct=0, incorrect=0, skipped=0, **kwargs):
+def create_test_result(test, correct=0, incorrect=0, skipped=0, 
+    formation=None, **kwargs):
     """Helper function to create TestResult objects.
 
     Creates a TestResult object for the given Test, with the given number of
@@ -19,7 +20,7 @@ def create_test_result(test, correct=0, incorrect=0, skipped=0, **kwargs):
 
     result = TestResult.objects.create(test=test, player=test.player, **kwargs)
     team = test.player.team
-    formation = Formation.objects.create(team=team)
+    if formation is None: formation = Formation.objects.create(team=team)
 
     # Create new plays to populate the TestResult relation fields
     for _ in range(correct):
@@ -43,9 +44,11 @@ def create_test_result(test, correct=0, incorrect=0, skipped=0, **kwargs):
 # Test Cases:
 
 class PlayerAnalyticsTests(TestCase):
-
     def setUp(self):
         self.team = Team.objects.create(name='team')
+
+class PlayAnalyticsTests(PlayerAnalyticsTests):
+    """Test PlayerAnalytics methods & attributes related to PLAYS."""
 
     def test_avg_time_with_single_player(self):
         """avg_time_per_question() should return total time divided by
@@ -71,22 +74,28 @@ class PlayerAnalyticsTests(TestCase):
         analytics = PlayerAnalytics.for_players([player1, player2])
         self.assertEqual(analytics.avg_time_per_question(), 7.5) # 150 / 20
 
-    def test_total_responses_with_single_player(self):
-        """total_correct(), total_skipped(), and total_incorrect() should
-        return the correct counts for given test results of a single player."""
+    def test_aggregate_plays_metrics_with_single_player(self):
+        """total_correct_plays(), total_skipped_plays(), and 
+        total_incorrect_plays() should return the correct counts for given
+        test results of a single player."""
 
         player = create_player(team=self.team, username='single')
         test = player.test_set.create()
         create_test_result(test=test, correct=1, incorrect=2, skipped=3)
         create_test_result(test=test, correct=1, incorrect=2, skipped=3)
         analytics = PlayerAnalytics.for_single_player(player)
-        self.assertEqual(analytics.total_correct(), 2)
-        self.assertEqual(analytics.total_incorrect(), 4)
-        self.assertEqual(analytics.total_skipped(), 6)
+        self.assertEqual(analytics.total_correct_plays(), 2)
+        self.assertEqual(analytics.total_incorrect_plays(), 4)
+        self.assertEqual(analytics.total_skipped_plays(), 6)
+        self.assertEqual(analytics.total_plays(), 12)
+        self.assertEqual(analytics.total_correct_plays_percentage(), 17)
+        self.assertEqual(analytics.total_incorrect_plays_percentage(), 33)
+        self.assertEqual(analytics.total_skipped_plays_percentage(), 50)
 
-    def test_total_responses_with_multiple_players(self):
-        """total_correct(), total_skipped(), and total_incorrect() should
-        return the correct counts for given test results of many players."""
+    def test_aggregate_plays_metrics_with_multiple_players(self):
+        """total_correct_plays(), total_skipped_plays(), and 
+        total_incorrect_plays() should return the correct counts for given
+        test results of many players."""
 
         player1 = create_player(team=self.team, username='p1')
         player2 = create_player(team=self.team, username='p2')
@@ -95,9 +104,13 @@ class PlayerAnalyticsTests(TestCase):
         create_test_result(test=test1, correct=1, incorrect=2, skipped=3)
         create_test_result(test=test2, correct=1, incorrect=2, skipped=3)
         analytics = PlayerAnalytics.for_players([player1, player2])
-        self.assertEqual(analytics.total_correct(), 2)
-        self.assertEqual(analytics.total_incorrect(), 4)
-        self.assertEqual(analytics.total_skipped(), 6)
+        self.assertEqual(analytics.total_correct_plays(), 2)
+        self.assertEqual(analytics.total_incorrect_plays(), 4)
+        self.assertEqual(analytics.total_skipped_plays(), 6)
+        self.assertEqual(analytics.total_plays(), 12)
+        self.assertEqual(analytics.total_correct_plays_percentage(), 17)
+        self.assertEqual(analytics.total_incorrect_plays_percentage(), 33)
+        self.assertEqual(analytics.total_skipped_plays_percentage(), 50)
 
     def test_sorted_play_lists_with_single_player(self):
         """Should populate and sort the correct_plays, incorrect_plays, and
@@ -200,3 +213,62 @@ class PlayerAnalyticsTests(TestCase):
             (play1, 2),
             (play2, 1),
         ])
+
+    def test_single_play_metrics(self):
+        """Should be able to access total counts and percentaged for
+        individual a specified play."""
+        player = create_player(team=self.team, username='player')
+        test = player.test_set.create()
+        form = Formation.objects.create(team=self.team)
+        play = Play.objects.create(team=self.team, formation=form)
+
+        # Play: correct 3 times, incorrect 2 times, skipped 1 time
+        result1 = create_test_result(test=test)
+        result2 = create_test_result(test=test)
+        result3 = create_test_result(test=test)
+        result1.correct_plays.add(play)
+        result2.correct_plays.add(play)
+        result3.correct_plays.add(play)
+        result1.missed_plays.add(play)
+        result2.missed_plays.add(play)
+        result1.skipped_plays.add(play)
+
+        analytics = PlayerAnalytics.for_single_player(player)
+        self.assertEqual(analytics.total_correct_for_play(play), 3)
+        self.assertEqual(analytics.total_incorrect_for_play(play), 2)
+        self.assertEqual(analytics.total_skipped_for_play(play), 1)
+        self.assertEqual(analytics.total_questions_for_play(play), 6)
+        self.assertEqual(analytics.correct_percentage_for_play(play), 50)
+        self.assertEqual(analytics.incorrect_percentage_for_play(play), 33)
+        self.assertEqual(analytics.skipped_percentage_for_play(play), 17)
+
+
+class FormationAnalyticsTests(PlayerAnalyticsTests):
+    """Test PlayerAnalytics methods & attributes related to FORMATIONS."""
+
+    def test_single_formation_metrics(self):
+        player = create_player(team=self.team, username='player')
+        test = player.test_set.create()
+
+        # Formation to test
+        form = Formation.objects.create(team=self.team)
+        play = Play.objects.create(team=self.team, formation=form)
+        result1 = create_test_result(test=test, formation=form, 
+            correct=1, incorrect=2, skipped=3)
+        result2 = create_test_result(test=test, formation=form, 
+            correct=1, incorrect=2, skipped=3)
+
+        # Noise (should not affect tested form metrics)
+        other_form = Formation.objects.create(team=self.team)
+        other_play = Play.objects.create(team=self.team, formation=other_form)
+        other_result = create_test_result(test=test, formation=other_form, 
+            correct=5, incorrect=5, skipped=5)
+
+        a = PlayerAnalytics.for_single_player(player)
+        self.assertEqual(a.total_correct_for_formation(form), 2)
+        self.assertEqual(a.total_incorrect_for_formation(form), 4)
+        self.assertEqual(a.total_skipped_for_formation(form), 6)
+        self.assertEqual(a.total_questions_for_formation(form), 12)
+        self.assertEqual(a.correct_percentage_for_formation(form), 17)
+        self.assertEqual(a.incorrect_percentage_for_formation(form), 33)
+        self.assertEqual(a.skipped_percentage_for_formation(form), 50)

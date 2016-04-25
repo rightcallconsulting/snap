@@ -18,6 +18,20 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md analytics-home">
+			{% if not request.user.myuser.is_a_player %}
+			<div class="row">
+				<div class="col-lg-5">
+					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+						<optgroup label="Groups"> <!-- Use this to create sub-groups -->
+							<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+							{% for group in groups %}
+								<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
+							{% endfor %}
+						</optgroup>
+					</select>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+			{% endif %}
 			<table class="analytics-main-table">
 				<tr>
 					<td>
@@ -75,9 +89,9 @@
 
 <!-- Pass Django variables to JS assets -->
 <script type="text/javascript">
-  var percentCorrect = {{analytics.total_correct_percentage}},
-		percentIncorrect = {{analytics.total_incorrect_percentage}},
-		percentSkipped = {{analytics.total_skipped_percentage}};
+  var percentCorrect = {{analytics.total_correct_plays_percentage}},
+		percentIncorrect = {{analytics.total_incorrect_plays_percentage}},
+		percentSkipped = {{analytics.total_skipped_plays_percentage}};
 </script>
 
 <!-- Loading Chart.js through CDN for now -->

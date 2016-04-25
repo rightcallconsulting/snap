@@ -12,6 +12,9 @@
 	{% include "dashboard/sidebar.html" %}
 
   <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script>
+		var groupsSeed = "{{groups_seed}}";
+	</script>
 
 
 	<div id="main-container" class="to-do">
@@ -20,7 +23,6 @@
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
-			<div class="panel panel-default table-responsive">
 					{% if not request.user.myuser.is_a_player %}
 					<div class="row">
 						<div class="col-md-4 col-sm-4">
@@ -34,6 +36,23 @@
 							</select>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
+					<script type="text/javascript">
+						var changeGroup = function(group){
+							var groupID = parseInt(group.value)
+							debugger;
+							if(groupID){
+								//get group by filtering list of groups by groupID
+
+								//Access list of tests
+
+								//Create subset of tests with players from this group
+
+								//Update table with only this subset of tests
+							}else{
+								//ERROR - Group doesn't have a valid ID
+							}
+						}
+					</script>
 					{% endif %}
 
 					<div class = "table-wrapper">
@@ -79,10 +98,10 @@
 							{% if request.user.myuser.is_a_player %}
 							<td>{{test.coach_who_created.get_full_name}}</td>
 
-								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="label label-success">Start Quiz</span></a></td>
+								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="button">Start Quiz</span></a></td>
 							{% else %}
-							<td><a href="{% url 'edit_test' test.id %}"><span class="label label-success">Edit Quiz</span></a></td>
-							<td><a href="{% url 'test_analytics' test.id %}"><span class="label label-success">Analytics</span></a></td>
+							<td><a href="{% url 'edit_test' test.id %}"><span class="button">Edit Quiz</span></a></td>
+							<td><a href="{% url 'test_analytics' test.id %}"><span class="button">Analytics</span></a></td>
 
 							{% endif %}
 						</tr>
@@ -91,17 +110,6 @@
 					</tbody>
 				</table>
 			</div><!-- /panel -->
-			<div class="row dash-row">
-
-
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
-
-
-
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>

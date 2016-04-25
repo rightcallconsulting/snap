@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33;
 var test;
 var multipleChoiceAnswers;
@@ -32,88 +32,76 @@ function setup() {
 
   twoDeepZone.fillTwoDeepZone(field);
 
-  if(makeJSONCall){
+  if(json_seed){
+
     var scoreboard = new Scoreboard({
 
     });
 
-    test = new FormationTest({
-      formations: [],
+    test = new PlayTest({
+      plays: [],
       scoreboard: scoreboard,
-      coverageMap: twoDeepZone
+      coverageMap: twoDeepZone,
+      displayName: true,
     });
 
-    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "M"; //remove when done testing
-    })
-
     var formations = [];
-    formationNames = [];
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
-        newFormation.name = newFormation.playName
-        formations.push(newFormation);
-        formationNames.push(newFormation.name);
-      })
-      formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
-      formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
-      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-        data.forEach(function(position){
-          position.fields.id = position.pk;
-          position.fields.x = position.fields.startX;
-          position.fields.y = position.fields.startY;
-          position.fields.pos = position.fields.name;
-          position.fields.num = position.fields.pos;
-          var newPlayer = new Player(position.fields)
-          if(newPlayer.pos==="QB"){
-            newPlayer.setFill(212,130,130);
-          }
-          else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-            newPlayer.setFill(143,29,29);
-          }
-          else{
-            newPlayer.setFill(255,0,0);
-          }
-          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-          if(formation){
-            formation.positions.push(newPlayer);
-          }
-        })
-        formations.forEach(function(formation){
-          formation.populatePositions();
-        })
+    var offensiveFormations = [];
+    var defensive_plays = [];
+    var plays = [];
+    var positions = [];
 
-        test.formations = formations;
-        multipleChoiceAnswers = [];
-        test.restartQuiz();
-        test.updateScoreboard();
-        currentPlayerTested = new Player({
-          zoneAssignment: CoverageMap.LEFT_OUT
-        });
-        makeJSONCall = false
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
 
-      })
+    for(var i = 0; i < json_seed.defensive_plays.length; i++){
+      var defensive_play = createDefensivePlayFromJSONSeed(json_seed.defensive_plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < defensive_play.positions.length; j++){
+        var position = defensive_play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        player.unit = "defense";
+        positionsAsPlayers.push(player);
+      }
+      defensive_play.positions = positionsAsPlayers;
+      defensive_play.populatePositions();
+      positionsAsPlayers = [];
+      for(var j = 0; j < defensive_play.offensiveFormationObject.positions.length; j++){
+        var position = defensive_play.offensiveFormationObject.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      defensive_play.offensiveFormationObject.positions = positionsAsPlayers;
+      defensive_play.offensiveFormationObject.populatePositions();
+      defensive_plays.push(defensive_play);
+    }
 
-});
-}
-}
-
-var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};
-
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    var shuffled_plays = shuffle(defensive_plays);
+    test.plays = shuffled_plays;
+    test.defensivePlays = shuffled_plays;
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
   }
-return o;
+}
+
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
 
 //guess is a CoverageZone number
@@ -137,7 +125,8 @@ function checkAnswer(guess){
 function drawFeedBackScreen(){
   //var elapsedTime = millis() - test.feedbackScreenStartTime;
   field.drawBackground(null, height, width);
-  test.getCurrentFormation().drawAllPlayers(field);
+  var play = test.getCurrentPlay();
+  play.offensiveFormationObject.drawAllPlayers(field);
   var map = test.getCurrentCoverageMap();
 
   //debugger;
@@ -150,7 +139,8 @@ function drawFeedBackScreen(){
 
 function drawOpening(){
   field.drawBackground(null, height, width);
-  test.getCurrentFormation().drawAllPlayers(field);
+  var play = test.getCurrentPlay();
+  play.offensiveFormationObject.drawAllPlayers(field);
   var map = test.getCurrentCoverageMap();
   if(map){
     stroke(0);
@@ -218,7 +208,7 @@ function draw() {
     }
   };
 
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
     background(93, 148, 81);
   }
@@ -239,7 +229,7 @@ function draw() {
           correctZone.fill = correctZoneFill;
           correctZoneFill = null;
         }
-        test.advanceToNextFormation(test.incorrectAnswerMessage);
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
 
       }else{

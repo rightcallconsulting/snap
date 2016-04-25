@@ -12,7 +12,6 @@ def add_plays_to_counts_dict(counts_dict, plays):
         else:
             counts_dict[play] = 1
 
-    #return item[1] /
 
 class PlayerAnalytics:
     """Helper class to calculate analytics metrics for a group of players.
@@ -66,9 +65,12 @@ class PlayerAnalytics:
         self.skipped_plays = sorted(skipped_plays_dict.iteritems(),
             key=itemgetter(1), reverse=True)
 
-        self.correct_plays_percent = sorted(self.get_percentage_tuple_list(self.correct_plays), key=itemgetter(1), reverse=True)
-        self.incorrect_plays_percent = sorted(self.get_percentage_tuple_list(self.incorrect_plays), key=itemgetter(1), reverse=True)
-        self.skipped_plays_percent = sorted(self.get_percentage_tuple_list(self.skipped_plays), key=itemgetter(1), reverse=True)
+        self.correct_plays_percent = sorted(self.get_percentage_tuple_list(
+            self.correct_plays), key=itemgetter(1), reverse=True)
+        self.incorrect_plays_percent = sorted(self.get_percentage_tuple_list(
+            self.incorrect_plays), key=itemgetter(1), reverse=True)
+        self.skipped_plays_percent = sorted(self.get_percentage_tuple_list(
+            self.skipped_plays), key=itemgetter(1), reverse=True)
 
     @classmethod
     def for_single_player(cls, player):
@@ -78,117 +80,162 @@ class PlayerAnalytics:
     def for_players(cls, player_iterable):
         return cls(player_iterable)
 
-    #####
-    # Metric getters
-    #####
+    # Play Analytics:
+
+    # Aggregate:
 
     def avg_time_per_question(self):
         """Returns the average time spent per question over all of the test
         results of the player group."""
-        total_questions = self.total_questions()
-        return self.total_time / total_questions if total_questions > 0 else 0
+        total_plays = self.total_plays()
+        return self.total_time / total_plays if total_plays > 0 else 0
 
+    def total_correct_plays(self):
+        return len(self.correct_plays)
 
+    def total_incorrect_plays(self):
+        return len(self.incorrect_plays)
 
-    def total_correct(self):
-        total = 0
-        for play, count in self.correct_plays:
-            total += count
-        return total
+    def total_skipped_plays(self):
+        return len(self.skipped_plays)
 
-    def total_incorrect(self):
-        total = 0
-        for play, count in self.incorrect_plays:
-            total += count
-        return total
-
-    def total_skipped(self):
-        total = 0
-        for play, count in self.skipped_plays:
-            total += count
-        return total
-
-    def total_questions(self):
+    def total_plays(self):
         """Returns the total # of questions the players have been asked."""
-        return self.total_correct() + self.total_incorrect() + \
-            self.total_skipped()
+        return self.total_correct_plays() + self.total_incorrect_plays() + \
+            self.total_skipped_plays()
 
-    def total_correct_percentage(self):
-        if(self.total_questions() > 0):
-            return int(100.0 * self.total_correct() / self.total_questions())
+    def total_correct_plays_percentage(self):
+        total_plays = self.total_plays()
+        if total_plays == 0: return 0
+        return round(100.0 * self.total_correct_plays() / total_plays)
+
+    def total_incorrect_plays_percentage(self):
+        total_plays = self.total_plays()
+        if total_plays == 0: return 0
+        return round(100.0 * self.total_incorrect_plays() / total_plays)
+
+    def total_skipped_plays_percentage(self):
+        total_plays = self.total_plays()
+        if total_plays == 0: return 0
+        return round(100.0 * self.total_skipped_plays() / total_plays)
+
+    # Specific Play:
+
+    def total_correct_for_play(self, play):
+        """The number of times the player/group has answered questions about 
+        the play correctly."""
+        for p, count in self.correct_plays:
+            if p == play: return count
         return 0
 
-    def total_incorrect_percentage(self):
-        if(self.total_questions() > 0):
-            return int(100.0 * self.total_incorrect() / self.total_questions())
+    def total_incorrect_for_play(self, play):
+        """The number of times the player/group has answered questions about 
+        the play incorrectly."""
+        for p, count in self.incorrect_plays:
+            if p == play: return count
         return 0
 
-    def total_skipped_percentage(self):
-        if(self.total_questions() > 0):
-            return int(100.0 * self.total_skipped() / self.total_questions())
+    def total_skipped_for_play(self, play):
+        """The number of times the player/group has skipped questions about 
+        the play."""
+        for p, count in self.skipped_plays:
+            if p == play: return count
         return 0
 
-    def get_total_questions_for_play(self, play):
+    def total_questions_for_play(self, play):
+        """The number of times the player/group has been asked questions about
+        the play."""
+        return self.total_correct_for_play(play) + \
+            self.total_incorrect_for_play(play) + \
+            self.total_skipped_for_play(play)
+
+    def correct_percentage_for_play(self, play):
+        """Percentage answers the player/group gave about the play that were 
+        correct."""
+        total_qs = self.total_questions_for_play(play)
+        if total_qs == 0: return 0
+        return round(100.0 * self.total_correct_for_play(play) / total_qs)
+
+    def incorrect_percentage_for_play(self, play):
+        """Percentage answers the player/group gave about the play that were 
+        incorrect."""
+        total_qs = self.total_questions_for_play(play)
+        if total_qs == 0: return 0
+        return round(100.0 * self.total_incorrect_for_play(play) / total_qs)
+
+    def skipped_percentage_for_play(self, play):
+        """Percentage skips the player/group took when asked about the play."""
+        total_qs = self.total_questions_for_play(play)
+        if total_qs == 0: return 0
+        return round(100.0 * self.total_skipped_for_play(play) / total_qs)
+
+    # Formation Analytics:
+
+    # Specific Formation:
+
+    def total_correct_for_formation(self, formation):
+        """The number of times the player/group has answered questions about 
+        the formation CORRECTLY."""
         total = 0
         for p, count in self.correct_plays:
-            if p == play:
-                total += count
-        for p, count in self.incorrect_plays:
-            if p == play:
-                total += count
-        for p, count in self.skipped_plays:
-            if p == play:
-                total += count
+            if p.formation == formation: total += count
         return total
 
-    def get_correct_percentage(self, play):
-        correct = 0
-        incorrect = 0
-        skipped = 0
-        for p, count in self.correct_plays:
-            if p == play:
-                correct += count
+    def total_incorrect_for_formation(self, formation):
+        """The number of times the player/group has answered questions about 
+        the formation INCORRECTLY."""
+        total = 0
         for p, count in self.incorrect_plays:
-            if p == play:
-                incorrect += count
-        for p, count in self.skipped_plays:
-            if p == play:
-                skipped += count
-        return int(correct * 100.0 / (correct + incorrect + skipped))
+            if p.formation == formation: total += count
+        return total
 
-    def get_incorrect_percentage(self, play):
-        correct = 0
-        incorrect = 0
-        skipped = 0
-        for p, count in self.correct_plays:
-            if p == play:
-                correct += count
-        for p, count in self.incorrect_plays:
-            if p == play:
-                incorrect += count
+    def total_skipped_for_formation(self, formation):
+        """The number of times the player/group has SKIPPED questions about 
+        the formation."""
+        total = 0
         for p, count in self.skipped_plays:
-            if p == play:
-                skipped += count
-        return int(incorrect * 100.0 / (correct + incorrect + skipped))
+            if p.formation == formation: total += count
+        return total
 
-    def get_skipped_percentage(self, play):
-        correct = 0
-        incorrect = 0
-        skipped = 0
-        for p, count in self.correct_plays:
-            if p == play:
-                correct += count
-        for p, count in self.incorrect_plays:
-            if p == play:
-                incorrect += count
-        for p, count in self.skipped_plays:
-            if p == play:
-                skipped += count
-        return int(skipped * 100.0 / (correct + incorrect + skipped))
+    def total_questions_for_formation(self, formation):
+        """The number of times the player/group has been asked questions about
+        the formation."""
+        return self.total_correct_for_formation(formation) + \
+            self.total_incorrect_for_formation(formation) + \
+            self.total_skipped_for_formation(formation)
+
+    def correct_percentage_for_formation(self, formation):
+        """Percentage answers the player/group gave about the formation that
+        were correct."""
+        total_qs = self.total_questions_for_formation(formation)
+        if total_qs == 0: return 0
+        return round(
+            100.0 * self.total_correct_for_formation(formation) / total_qs
+        )
+
+    def incorrect_percentage_for_formation(self, formation):
+        """Percentage answers the player/group gave about the formation that
+        were incorrect."""
+        total_qs = self.total_questions_for_formation(formation)
+        if total_qs == 0: return 0
+        return round(
+            100.0 * self.total_incorrect_for_formation(formation) / total_qs
+        )
+
+    def skipped_percentage_for_formation(self, formation):
+        """Percentage skips the player/group took when asked about the
+        formation."""
+        total_qs = self.total_questions_for_formation(formation)
+        if total_qs == 0: return 0
+        return round(
+            100.0 * self.total_skipped_for_formation(formation) / total_qs
+        )
+
+    # Helpers:
 
     def get_percentage_tuple_list(self, totalList):
         toReturn = []
         for play, count in totalList:
-            t = (play, int(100.0 * count / self.get_total_questions_for_play(play)))
+            t = (play, int(100.0 * count / self.total_questions_for_play(play)))
             toReturn.append(t)
         return toReturn

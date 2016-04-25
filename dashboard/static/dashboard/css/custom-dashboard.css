@@ -432,6 +432,11 @@ input.create-quiz{
   text-align: center;
 }
 
+.to-do-table .button{
+  background-color: #9CCC65;
+  padding: 8px;
+}
+
 .news-feed-table tbody tr{
   border: none;
 }
@@ -819,16 +824,14 @@ input.create-quiz{
   overflow: hidden;
 }
 
-.group-analytics img{
-  height: 200px;
-  margin-top: -15px;
-  margin-bottom: 0px;
+.group-analytics td{
+  
 }
 
 .group-analytics h3{
-  font-size: 14px;
-  margin-top: -15px;
-  margin-bottom: 0px;
+  font-size: 20px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 
 .table-footer{
@@ -909,6 +912,7 @@ input.create-quiz{
   font-size: 22px;
   text-align: center;
   vertical-align: top;
+  margin-top: 25px;
 }
 
 .analytics-main-table canvas{
@@ -941,4 +945,12 @@ input.create-quiz{
 .analytics-play-list td, .analytics-play-list th{
   border: 1px solid #000;
   padding: 8px;
+}
+
+.panel{
+  border: none;
+}
+
+.dash-row{
+  border: none;
 }

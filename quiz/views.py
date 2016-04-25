@@ -3,14 +3,16 @@ from django.http import HttpResponse, Http404
 from django.template import RequestContext, loader
 from django.http import JsonResponse
 from django.core import serializers
+from django.db.models import Q
+from django.views import generic
 import json
 import simplejson
-from django.db.models import Q
-
-# Create your views here.
+from IPython import embed
+from operator import attrgetter
 
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
-from IPython import embed
+from .utils import QuizOrders
+from dashboard.utils import PlayerAnalytics
 
 def index(request):
     player_list = Player.objects.all()
@@ -47,15 +49,6 @@ def option_quiz(request):
 def blitz_quiz(request):
     return render(request, 'quiz/blitz_quiz.html')
 
-def linebacker_call_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/linebacker_call_quiz.html', {
-        'player': player,
-        'page_header': 'PASS STRENGTH CALL QUIZ'
-    })
-
 def call_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
@@ -79,15 +72,6 @@ def motion_quiz(request):
     return render(request, 'quiz/motion_quiz.html', {
         'player': player,
         'page_header': 'MOTION QUIZ'
-    })
-
-def qb_call_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/qb_call_quiz.html', {
-        'player': player,
-        'page_header': 'QB CHECK QUIZ'
     })
 
 def blocking_quiz(request):
@@ -164,63 +148,241 @@ def create_play(request):
         'page_header': 'CREATE PLAY',
     })
 
-def formation_quiz(request):
-    return render(request, 'quiz/formation_quiz.html', {
-        'page_header': 'FORMATION QUIZ'
-    })
 
-def pass_zones(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-        return render(request, 'quiz/pass_zones.html', {
-            'player': player,
-            'page_header': 'PASS ZONES QUIZ'
-        })
+class CustomPlayerQuizView(generic.TemplateView):
+    """Display different types of custom player quizzes.
 
-def alignment_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/alignment_quiz.html', {
-        'player': player,
-        'page_header': 'ALIGNMENT QUIZ'
-    })
+    This template view is MEANT TO BE SUBCLASSED. Children must implement
+    the get_ordered_questions() method to customize the JSON seed data
+    for that particular type of quiz.
 
-def play_quiz(request):
-    return render(request, 'quiz/play_quiz.html', {
-        'page_header': 'PLAY QUIZ'
-    })
+    Attributes:
+        template_name: Template file path (inherited from generic.TemplateView)
+        page_header: String title of the paged passed into template context
+        num_questions: Integer # of questions to include in the quiz
+        order: QuizOrder url_key representing the order questions should be in
+    """
 
-def route_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/route_quiz.html', {
-        'player': player,
-        'page_header': 'ROUTE QUIZ'
-    })
+    def get_ordered_questions(self):
+        """Gets the list of questions that makes up the quiz.
+
+        Questions are ordered according to self.order. Must be implemented by
+        subclasses.
+
+        Returns:
+            An ordered list of dictionaries with data needed to seed each
+            question in the quiz.
+        """
+        raise Exception('Subclasses of CustomPlayerQuizView must implement ' +
+            'get_ordered_questions().')
+
+    def resize_questions_data(self, questions):
+        """Sizes a list of dict objects as specified in the GET param.
+
+        If len(questions) is larger than self.num_questions, cuts off extra
+        questions at the end. If smaller, repeats the unique question data
+        until the list is the desired length.
+        """
+        if len(questions) == 0: return []
+
+        if self.num_questions > len(questions):
+            # Repeat unique questions until we have desired quiz length
+            num_unique_questions = len(questions)
+            for i in range(len(questions), self.num_questions):
+                questions.append(questions[i % num_unique_questions])
+
+        elif self.num_questions < len(questions):
+            # Remove additional questions beyond desired quiz length
+            questions = questions[0:self.num_questions]
+
+        return questions
+
+    def build_dict_for_json_seed(self):
+        """Builds dict() seed to be converted into JSON, which the JS assets
+        will use to initialize the quiz. Quiz is sized & ordered as specified
+        in data attributes."""
+        questions = self.get_ordered_questions()
+        questions = self.resize_questions_data(questions)
+        return questions
+
+    def store_quiz_options_from_request(self, request):
+        """Save data attributes for use by instance methods."""
+        # TODO: Redirect if URL params we need are not present?
+        #       Or user is not a player?
+        if request.user.myuser.is_a_player:
+            self.player = request.user.player
+        if 'num_qs' in request.GET:
+            self.num_questions = int(request.GET['num_qs'])
+        if 'order' in request.GET:
+            self.order = request.GET['order']
+
+    def get(self, request):
+        self.store_quiz_options_from_request(request)
+        return super(CustomPlayerQuizView, self).get(request)
+
+    def get_context_data(self, **kwargs):
+        context = super(CustomPlayerQuizView, self).get_context_data(**kwargs)
+        context['page_header'] = self.page_header
+        context['json_seed'] = json.dumps(self.build_dict_for_json_seed())
+        return context
+
+
+class PlayQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/play_quiz.html'
+    page_header = 'PLAY QUIZ'
+
+    exclude_plays_that_dont_include_players_position = False
+
+    def get_ordered_questions(self):
+        plays = self.player.team.play_set.all()
+
+        if self.exclude_plays_that_dont_include_players_position:
+            plays = [p for p in plays if self.player.position
+                in p.position_strings()]
+
+        # Sorting
+
+        if self.order == QuizOrders.RECENT.url_key:
+            plays = sorted(plays, reverse=True,
+                key=attrgetter('created_at'))
+
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            plays = sorted(plays, reverse=True,
+                key=analytics.total_incorrect_for_play)
+
+        return [p.dict_for_json() for p in plays]
+
+
+class QbCallQuizView(PlayQuizView):
+    template_name = 'quiz/qb_call_quiz.html'
+    page_header = 'QB CHECK QUIZ'
+
+    def build_dict_for_json_seed(self):
+        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+
+class RouteQuizView(PlayQuizView):
+    template_name = 'quiz/route_quiz.html'
+    page_header = 'ROUTE QUIZ'
+    exclude_plays_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        plays = super(RouteQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+
+class FormationQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/formation_quiz.html'
+    page_header = 'FORMATION QUIZ'
+
+    formation_unit = 'offense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def get_ordered_questions(self):
+
+        formations = self.player.team.formation_set.filter(
+            unit=self.formation_unit
+        )
+
+        if self.exclude_formations_that_dont_include_players_position:
+            formations = [
+                f for f in formations if self.player.position in f.positions()
+            ]
+
+        # Sorting
+
+        if self.order == QuizOrders.RECENT.url_key:
+            formations = sorted(formations, reverse=True,
+                key=attrgetter('created_at'))
+
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            formations = sorted(formations, reverse=True,
+                key=analytics.total_incorrect_for_formation)
+
+        return [f.dict_for_json() for f in formations]
+
+
+class AlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/alignment_quiz.html'
+    page_header = 'ALIGNMENT QUIZ'
+    formation_unit = 'offense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(AlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'formations': formations,
+        }
+
+
+class CoverageQuizView(FormationQuizView):
+    template_name = 'quiz/coverage_quiz.html'
+    page_header = 'COVERAGE QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(CoverageQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_plays': formations,
+        }
+
+
+class LinebackerQuizView(FormationQuizView):
+    template_name = 'quiz/linebacker_call_quiz.html'
+    page_header = 'PASS STRENGTH CALL QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(LinebackerQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
+
+class PassRushQuizView(FormationQuizView):
+    template_name = 'quiz/pass_rush_quiz.html'
+    page_header = 'PASS RUSH QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(PassRushQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_plays': formations,
+        }
+
+
+class PassZonesQuizView(FormationQuizView):
+    template_name = 'quiz/pass_zones.html'
+    page_header = 'PASS ZONES QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(PassZonesQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_plays': formations,
+        }
+
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
-
-def coverage_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/coverage_quiz.html', {
-        'player': player,
-        'page_header': 'COVERAGE QUIZ'
-    })
-
-def pass_rush_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/pass_rush_quiz.html', {
-        'player': player,
-        'page_header': 'PASS RUSH QUIZ'
-    })
 
 def stunt_quiz(request):
     if(request.user.myuser.is_a_player):

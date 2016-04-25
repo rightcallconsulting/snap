@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from IPython import embed
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 import code
 import copy
 import json
@@ -63,6 +64,12 @@ class Player(models.Model):
         new_test.coach_who_created = coach.user
         new_test.save()
 
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        json_dict = model_to_dict(self)
+        json_dict.pop('image_url', None) # Don't try to encode image in JSON
+        return json_dict
+
 class Group(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
@@ -87,6 +94,15 @@ class Formation(models.Model):
 
     def __str__(self):
         return self.name
+
+    def positions(self):
+        """Returns a list of string positions in the formation.
+        Ex: ['QB', 'WR', etc..]"""
+        positionObjects = Position.objects.filter(formation=self)
+        positionStrings = []
+        for pos in positionObjects:
+            positionStrings.append(pos.name)
+        return set(positionStrings) # remove duplicates
 
     @classmethod
     def from_json(cls, json):
@@ -114,6 +130,20 @@ class Formation(models.Model):
                     new_position.zoneYardX = player['zoneXPoint'];
                     new_position.zoneYardY = player['zoneYPoint'];
                 new_position.save()
+
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        json_dict = model_to_dict(self)
+        json_dict['positions'] = [
+            p.dict_for_json() for p in self.position_set.all()
+        ]
+
+        if self.unit == 'defense':
+            o_form = Formation.objects.get(pk=self.offensiveFormationID)
+            json_dict['offensive_formation'] = o_form.dict_for_json()
+
+        return json_dict
+
 
 class Position(models.Model):
     startX = models.FloatField()
@@ -154,6 +184,11 @@ class Position(models.Model):
 
     def get_run_coordinates(self):
         return json.loads(self.routeCoordinates)
+
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        return model_to_dict(self)
+
 
 class Test(models.Model):
 
@@ -280,6 +315,14 @@ class Play(models.Model):
     def __str__(self):
         return self.name
 
+    def position_strings(self):
+        """Returns a list of unique string positions in the play.
+        Ex: ['QB', 'WR', etc..]"""
+        positionStrings = []
+        for pos in self.positions.all():
+            positionStrings.append(pos.name)
+        return set(positionStrings) # remove duplicates
+
     @classmethod
     def from_json(cls, json):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
@@ -294,6 +337,15 @@ class Play(models.Model):
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()
+
+    def dict_for_json(self):
+        """Dict representation of the instance (used in JSON APIs)."""
+        json_dict = model_to_dict(self)
+        json_dict['positions'] = [
+            p.dict_for_json() for p in self.positions.all()
+        ]
+        return json_dict
+
 
 class TestResult(models.Model):
     score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt

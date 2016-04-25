@@ -1,8 +1,7 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var testIDFromHTML = 33; //filler
 var playerIDFromHTML = $('#player-id').data('player-id')
 var test;
-var formationNames;
 var maxFormations = 5;
 var bigReset;
 var currentPlayerTested = null;
@@ -38,7 +37,8 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+  if(json_seed){
+
     var scoreboard = new Scoreboard({
 
     });
@@ -47,82 +47,48 @@ function setup() {
       scoreboard: scoreboard,
       displayName: true
     });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
+
     var formations = [];
-    formationNames = [];
+    answers = [];
 
-    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentUserTested = createUserFromJSON(data2[0]);
-      //currentUserTested.pos = "WR";
-    })
+    for(var i = 0; i < json_seed.formations.length; i++){
+      var formation = createFormationFromJSONSeed(json_seed.formations[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < formation.positions.length; j++){
+        var position = formation.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      formation.positions = positionsAsPlayers;
+      formation.populatePositions();
+      formations.push(formation);
+    }
 
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        formationObject.fields.id = formationObject.pk;
-        formationObject.fields.positions = [];
-        var newFormation = new Formation(formationObject.fields);
-        newFormation.playName = formationObject.fields.name;
-        newFormation.name = newFormation.playName
-        formations.push(newFormation);
-        formationNames.push(newFormation.name);
-      })
 
-      formations.sort(sortByCreationDecreasing); //can sort by any function, and can sort multiple times if needed
-      //formations = formations.slice(0,maxFormations); //can slice by any limiting factor (global variable for now)
+    var shuffled_formations = shuffle(formations);
 
-      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-        data.forEach(function(position){
-          position.fields.id = position.pk;
-          position.fields.x = position.fields.startX;
-          position.fields.y = position.fields.startY;
-          position.fields.pos = position.fields.name;
-          position.fields.num = position.fields.pos;
-          var newPlayer = new Player(position.fields)
-          if(newPlayer.pos==="QB"){
-            newPlayer.fill = color(212, 130, 130);
-          }
-          else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT"){
-            newPlayer.fill = color(143, 29, 29);
-          }
-          else{
-            newPlayer.fill = color(255, 0, 0);
-          }
-          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-          if(formation){
-            formation.positions.push(newPlayer);
-          }
-        })
-        formations.forEach(function(formation){
-          formation.populatePositions();
-        })
+    for(var i = 0; i < shuffled_formations.length; i++){
+      var formation = shuffled_formations[i];
+      for(var j = 0; j < formation.offensivePlayers.length; j++){
+        var p = formation.offensivePlayers[j];
+        if(p.pos === currentUserTested.position){
+          answers.push([p.x, p.y]);
 
-        for(var i = 0; i < formations.length; i++){
-          var formation = formations[i];
-          var hasChanged = false;
-          for(var j = 0; j < formation.offensivePlayers.length; j++){
-            var p = formation.offensivePlayers[j];
-            if(p.pos === currentUserTested.position){
-              answers.push([p.x, p.y]);
-
-              var oldCopy = formation.offensivePlayers.slice();
-              formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
-              formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
-              hasChanged = true;
-              break;
-            }
-          }
-          if(!hasChanged){
-            formations = formations.slice(0, i).concat(formations.slice(i+1));
-            i--;
-          }
+          var oldCopy = formation.offensivePlayers.slice();
+          formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
+          formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
+          break;
         }
-        test.formations = formations.slice(0,maxFormations);
-        test.restartQuiz();
-        test.updateScoreboard();
-        test.updateProgress();
-        makeJSONCall = false
-      })
-});
-}
+      }
+    }
+
+    test.formations = shuffled_formations;
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
 }
 
 var sortByCreationDecreasing = function(a, b){
@@ -131,11 +97,23 @@ var sortByCreationDecreasing = function(a, b){
   return date2 - date1;
 };
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-return o;
+
+  return array;
 }
 
 function checkAnswer(){
@@ -325,7 +303,7 @@ function draw() {
     }
   };
 
-  if(makeJSONCall){
+  if(!setupComplete){
     //WAIT - still executing JSON
   }
   else if(test.over){

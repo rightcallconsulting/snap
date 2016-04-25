@@ -590,19 +590,28 @@ Player.prototype.saveToDB = function(){
 
 Player.prototype.establishFill = function(){
   if(this.unit ==="defense"){
-    this.fill = color(0, 0, 0);
+    this.red = 0;
+    this.green = 0;
+    this.blue = 0;
   }
   else{
     if(this.pos==="QB"){
-      this.fill = color(212, 130, 130);
+      this.red = 212;
+      this.green = 130;
+      this.blue = 130;
     }
     else if(this.pos==="OL" || this.pos ==="LT" || this.pos ==="LG" || this.pos ==="C" || this.pos ==="RG" || this.pos ==="RT"){
-      this.fill = color(143, 29, 29);
+      this.red = 143;
+      this.green = 29;
+      this.blue = 29;
     }
     else{
-      this.fill = color(255, 0, 0);
+      this.red = 255;
+      this.green = 0;
+      this.blue = 0;
     }
   }
+  this.fill = color(this.red, this.green, this.blue);
 
 };
 
@@ -689,6 +698,38 @@ var getDestination = function(distance, theta, x, y){
     var xDist = distance*Math.cos(theta);
     var yDist = -1*distance*Math.sin(theta);
     return [x + xDist, y + yDist];
+};
+
+
+var createPlayerFromJSONSeed = function(jsonPosition){
+  jsonPosition.x = jsonPosition.startX;
+  jsonPosition.y = jsonPosition.startY;
+  var routeCoordinates = JSON.parse(jsonPosition.routeCoordinates);
+  //var runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
+  var player = new Player(jsonPosition)
+  player.id = jsonPosition.pk;
+  player.blockingAssignmentUnitIndex = jsonPosition.blockingAssignmentUnitIndex
+  player.blockingAssignmentPlayerIndex = jsonPosition.blockingAssignmentPlayerIndex
+  player.runCoordinates = JSON.parse(jsonPosition.runCoordinates);
+  player.pos = jsonPosition.name;
+  player.num = jsonPosition.name;
+  player.routeCoordinates = [[player.startX, player.startY]]
+  if(routeCoordinates){
+    player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
+  }
+
+  if(jsonPosition.gapYardY){
+    player.gapYPoint = jsonPosition.gapYardY;
+    player.gapXPoint = jsonPosition.gapYardX;
+  }
+  if(jsonPosition.zoneYardY){
+    player.zoneYPoint = jsonPosition.zoneYardY;
+    player.zoneXPoint = jsonPosition.zoneYardX;
+  }
+
+  player.establishFill();
+
+  return player;
 };
 
 var createPlayerFromJSON = function(jsonPosition){
