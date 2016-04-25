@@ -52,7 +52,7 @@ function setup() {
     test = new PlayTest({
       formations: [],
       scoreboard: scoreboard,
-      displayName: false
+      displayName: true
     });
     currentUserTested = createUserFromJSONSeed(json_seed.player)
 
