@@ -370,14 +370,14 @@ class PassRushQuizView(FormationQuizView):
 class PassZonesQuizView(FormationQuizView):
     template_name = 'quiz/pass_zones.html'
     page_header = 'PASS ZONES QUIZ'
-    formation_unit = 'offense'
+    formation_unit = 'defense'
     exclude_formations_that_dont_include_players_position = False
 
     def build_dict_for_json_seed(self):
         formations = super(PassZonesQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
-            'formations': formations,
+            'defensive_plays': formations,
         }
 
 
