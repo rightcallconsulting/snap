@@ -218,7 +218,7 @@ mouseClicked = function() {
   }else{
     return;
   }
-  if(bigReset.isMouseInside(field) && test.over) {
+  if(bigReset.isMouseInside(field) && test.over){
     test.restartQuiz();
   }else if(!test.over){
     var mouseYardX = field.getYardX(mouseX);
@@ -316,6 +316,9 @@ function draw() {
         routeAfterExchange: [[currentPlayerTested.startX + 15, currentPlayerTested.startY + 15]]
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
+    }
+    if(test.showDemo){
+      drawDemoScreen();
     }
     if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
