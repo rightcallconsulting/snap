@@ -73,31 +73,23 @@ function setup() {
   }
 }
 
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
 
-var sortByPlayName = function(a, b){
-  var name1 = a.playName;
-  var name2 = b.playName;
-  if(name1.length < 1){
-    return 1;
-  }else if(name2.length < 1){
-    return -1;
-  }else if(name1 < name2){
-    return -1;
-  }else{
-    return 1;
-  }
-}
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-return o;
+
+  return array;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){

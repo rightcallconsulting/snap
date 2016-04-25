@@ -90,120 +90,23 @@ function setup() {
   }
 }
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
 
- /*if(json_seed){
-  var scoreboard = new Scoreboard({
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
 
-  });
-  test = new PlayTest({
-    plays: [],
-    scoreboard: scoreboard,
-    displayName: true
-  });
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
 
-  var formations = [];
-  var offensiveFormations = [];
-  var defensivePlays = [];
-  var plays = [];
-  var positions = [];
-  playNames = [];
-  $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-    currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "M"; //remove when done testing
-    })
-  $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-    data.forEach(function(formationObject){
-      var newFormation = createFormationFromJSON(formationObject);
-      offensiveFormations.push(newFormation);
-    })
-    $.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        var newFormation = createFormationFromJSON(formationObject);
-        formations.push(newFormation);
-      })
-      $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-        data.forEach(function(position){
-          var newPlayer = createPlayerFromJSON(position);
-          var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-          var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
-
-          if(formation){
-            formation.positions.push(newPlayer);
-          }
-          if(offensiveFormation){
-            offensiveFormation.positions.push(newPlayer);
-          }
-        })
-        offensiveFormations.forEach(function(formation){
-          formation.populatePositions();
-        })
-        formations.forEach(function(formation){
-          formation.populatePositions();
-          var defensivePlay = formation.createDefensivePlay();
-          defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-          defensivePlays.push(defensivePlay);
-          if(playNames.indexOf(defensivePlay.playName) < 0){
-            playNames.push(defensivePlay.playName);
-          }
-        })
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            var play = createPlayFromJSON(play);
-            plays.push(play);
-          })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
-            })
-            plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
-            })
-            playNames.push("Cover 3");
-            playNames.push("Cover 4");
-            playNames.push("Mike Laser");
-            test.plays = defensivePlays;
-            test.defensivePlays = defensivePlays;
-            multipleChoiceAnswers = [];
-            test.restartQuiz();
-            test.updateProgress();
-            test.updateScoreboard();
-            setupComplete = true;
-          })
-        })
-})
-})
-});
-}
-}*/
-
-/*var sortByCreationDecreasing = function(a, b){
-  var date1 = new Date(a.created_at);
-  var date2 = new Date(b.created_at);
-  return date2 - date1;
-};*/
-
-var sortByPlayName = function(a, b){
-  var name1 = a.playName;
-  var name2 = b.playName;
-  if(name1.length < 1){
-    return 1;
-  }else if(name2.length < 1){
-    return -1;
-  }else if(name1 < name2){
-    return -1;
-  }else{
-    return 1;
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-}
 
-function shuffle(o) {
-  for(var n = 0; n < 100; n++){
-    for(var j, x, i = o.length; i; j = floor(random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-  }
-return o;
+  return array;
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
