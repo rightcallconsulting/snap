@@ -392,6 +392,7 @@ mouseClicked = function() {
         var i = guessedAssignment.blockedPlayers.indexOf(clickedPlayer);
         if(i < 0){
           guessedAssignment.addBlockedPlayer(clickedPlayer);
+          debugger;
         }else if(i === guessedAssignment.blockedPlayers.length - 1){
           checkAnswer();
         }else{

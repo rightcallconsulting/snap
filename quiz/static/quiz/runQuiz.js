@@ -11,9 +11,11 @@ var hasExchanged = false;
 
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
-  field.height = 400;
-  field.heightInYards = 40;
+  var myCanvas = createCanvas(550, 550);
+  field.height = 550;
+  field.width = 550;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -200,18 +202,32 @@ function drawOpening(){
   var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayers(field);//WithOffense(field);
-    stroke(220, 220, 0);
-    line(currentPlayerTested.startX, currentPlayerTested.startY, currentPlayerTested.runAssignment[0], currentPlayerTested.runAssignment[1]);
     noStroke();
   }
   if(defensivePlay){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested && guessedAssignment){
+    debugger;
     guessedAssignment.draw(currentPlayerTested, field);
-
   }
-  
+  /*
+  if(currentPlayerTested && guessedAssignment){
+    var startX = field.getTranslatedX(currentPlayerTested.startX);
+    var startY = field.getTranslatedY(currentPlayerTested.startY);
+    var guessX = field.getTranslatedX(guessedAssignment.getRouteToExchangeCoords()[0][0]);
+    var guessY = field.getTranslatedY(guessedAssignment.getRouteToExchangeCoords()[0][1]);
+
+    for(var i = 0; i <= 10; i++) {
+      stroke(220, 220, 0);
+      strokeWeight(3);
+      var x = lerp(startX, guessX, i / 10);
+      var y = lerp(startY, guessY, i / 10);
+      point(x, y);
+      strokeWeight(1);
+
+    } 
+  }*/
 }
 
 mouseClicked = function() {
@@ -225,13 +241,15 @@ mouseClicked = function() {
   }else if(!test.over){
     var mouseYardX = field.getYardX(mouseX);
     var mouseYardY = field.getYardY(mouseY);
-   if(guessedAssignment){
+    if(guessedAssignment){
       var lastClick = guessedAssignment.getLastCoord();
       if(lastClick){
         var dist = Math.sqrt((lastClick[0] - mouseYardX) * (lastClick[0] - mouseYardX) + (lastClick[1] - mouseYardY) * (lastClick[1] - mouseYardY));
         if(dist < 1){
           checkAnswer();
           return;
+        }else{
+          clearSelections();
         }
       }
       if(hasExchanged){
@@ -240,13 +258,14 @@ mouseClicked = function() {
         guessedAssignment.addRouteToExchangeCoords(mouseYardX, mouseYardY);
       }
       
-  }else{
-    guessedAssignment = new RunAssignment({
-      routeToExchange: [[mouseYardX, mouseYardY]],
-      routeAfterExchange: []
-    });
+    }else{
+      guessedAssignment = new RunAssignment({
+        type: "Handoff",
+        routeToExchange: [[mouseYardX, mouseYardY]],
+        routeAfterExchange: []
+      });
+    }
   }
-}
 };
 
 keyTyped = function(){
@@ -281,7 +300,6 @@ function draw() {
     if(this.unit === "defense"){
       if(this.clicked){ 
       }
-
       noStroke();
       fill(0, 0, 0);
       textSize(17);
@@ -289,7 +307,6 @@ function draw() {
       text(this.pos, x, y);
     }
     else {
-
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
@@ -320,7 +337,6 @@ function draw() {
         routeAfterExchange: []
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
-
     }
     if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
