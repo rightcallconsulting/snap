@@ -1,9 +1,10 @@
 var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
+var originalPlayList = [];
 var playNames;
 var maxPlays = 5;
-var bigReset;
+var bigReset; var resetMissed;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var currentRouteGuess = [];
@@ -25,7 +26,14 @@ function setup() {
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
     width: 5,
-    label: "Restart"
+    label: "Retake All"
+  });
+
+  resetMissed = new Button({
+    x: bigReset.x + bigReset.width * 1.5,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Retake Missed"
   });
 
   exitDemo = new Button({
@@ -63,6 +71,7 @@ function setup() {
       plays.push(play);
     }
 
+    originalPlayList = plays.slice();
     test.plays = shuffle(plays);
     test.restartQuiz();
     test.updateScoreboard();
@@ -113,16 +122,16 @@ function checkAnswer(){
   if(isCorrect){
     clearSelection();
     currentPlayerTested = null;
-    test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
-    currentPlayerTested = null;
+    test.registerAnswer(isCorrect);
   }else{
     clearSelection();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
+    test.missedPlays.push(test.getCurrentPlay());
     test.updateScoreboard();
     test.feedbackScreenStartTime = millis();
   }
+
 }
 
 function drawCurrentRoute(){
@@ -270,6 +279,14 @@ function exitDemoScreen(){
   currentRouteNodes = [];
 };
 
+function skipPlay(){
+  clearSelection();
+  test.skips++;
+  currentPlayerTested = null;
+  test.skippedPlays.push(test.getCurrentPlay());
+  test.advanceToNextPlay(test.skippedAnswerMessage);
+}
+
 
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
@@ -279,6 +296,13 @@ mouseClicked = function() {
   }
   if(bigReset.isMouseInside(field) && test.over) {
     clearSelection();
+    test.plays = originalPlayList.slice();
+    test.restartQuiz();
+    return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    clearSelection();
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    test.plays = newPlays;
     test.restartQuiz();
     return true;
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
@@ -365,6 +389,7 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+    resetMissed.draw(field);
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);

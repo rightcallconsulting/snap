@@ -10,6 +10,9 @@ var PlayTest = function(config){
   this.score = 0;
   this.incorrectGuesses = 0;
   this.skips = 0;
+  this.correctPlays = config.correctPlays || [];
+  this.missedPlays = config.missedPlays || [];
+  this.skippedPlays = config.skippedPlays || [];
   this.scoreboard = config.scoreboard || null;
   this.over = false;
   this.cutOff = config.cutOff || 50;
@@ -85,6 +88,9 @@ PlayTest.prototype.restartQuiz = function(){
   this.score = 0;
   this.incorrectGuesses = 0;
   this.skips = 0;
+  this.correctPlays = [];
+  this.missedPlays = [];
+  this.skippedPlays = [];
   this.questionsAnswered = 0;
   this.startTime = millis();
   this.endTime = 0;
@@ -176,9 +182,11 @@ PlayTest.prototype.updateMultipleChoiceLabels = function(){
 PlayTest.prototype.registerAnswer = function(isCorrect){
   if(isCorrect){
     this.score++;
+    this.correctPlays.push(this.getCurrentPlay());
     this.advanceToNextPlay(test.correctAnswerMessage);
   }else{
     this.incorrectGuesses++;
+    this.missedPlays.push(this.getCurrentPlay());
     this.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     this.updateScoreboard();
   }

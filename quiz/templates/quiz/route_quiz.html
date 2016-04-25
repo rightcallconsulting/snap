@@ -35,11 +35,7 @@ $('#restart-button').click(function(){
 
 $('#next-play-button').click(function(){
   if(test && !test.over && !test.showDemo && test.feedbackScreenStartTime === 0){
-    clearSelection();
-    test.skips++;
-    currentPlayerTested = null;
-    test.advanceToNextPlay(test.skippedAnswerMessage);
-
+    skipPlay();
   }
 })
 $('#question-button').click(function(){
