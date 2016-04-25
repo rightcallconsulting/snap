@@ -352,6 +352,7 @@ class LinebackerQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
+
 class PassRushQuizView(FormationQuizView):
     template_name = 'quiz/pass_rush_quiz.html'
     page_header = 'PASS RUSH QUIZ'
@@ -366,14 +367,19 @@ class PassRushQuizView(FormationQuizView):
         }
 
 
-def pass_zones(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-        return render(request, 'quiz/pass_zones.html', {
-            'player': player,
-            'page_header': 'PASS ZONES QUIZ'
-        })
+class PassZonesQuizView(FormationQuizView):
+    template_name = 'quiz/pass_zones.html'
+    page_header = 'PASS ZONES QUIZ'
+    formation_unit = 'offense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(PassZonesQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'formations': formations,
+        }
+
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
