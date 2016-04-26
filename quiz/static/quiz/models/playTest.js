@@ -193,6 +193,7 @@ PlayTest.prototype.registerAnswer = function(isCorrect){
 };
 
 PlayTest.prototype.drawQuizSummary = function() {
+  background(93, 148, 81);
   var elapsedSeconds = (this.endTime - this.startTime)/1000;
   if(elapsedSeconds > this.cutOff * this.plays.length){
     elapsedSeconds = this.cutOff * this.plays.length;

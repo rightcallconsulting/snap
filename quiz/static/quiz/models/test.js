@@ -205,6 +205,7 @@ Test.prototype.advanceToNextPlay = function(message){
 };
 
 Test.prototype.drawQuizSummary = function() {
+  background(93, 148, 81);
   var elapsedSeconds = (this.endTime - this.startTime)/1000;
   if(elapsedSeconds > this.cutOff * this.plays.length * this.questionsPerPlay){
     elapsedSeconds = this.cutOff * this.plays.length * this.questionsPerPlay;
