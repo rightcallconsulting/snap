@@ -20,7 +20,7 @@ def to_percent(n, d):
 @register.simple_tag
 def get_percent_correct_player(player):
     analytics = PlayerAnalytics.for_single_player(player)
-    return analytics.total_correct_plays_percentage()
+    return int(analytics.total_correct_attempts_percentage())
 
 @register.simple_tag
 def get_percent_correct(analytics, play):
