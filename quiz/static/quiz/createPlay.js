@@ -109,12 +109,7 @@ function draw() {
             }
         }
         else {
-            if(this.clicked){
-              fill(0, 0, 255);
-            }
-            else{
-              fill(this.fill);
-            }
+            fill(0);
             textSize(17);
             textAlign(CENTER, CENTER);
             text(this.pos, x, y);

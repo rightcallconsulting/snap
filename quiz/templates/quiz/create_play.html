@@ -35,15 +35,26 @@
 {% endblock %}
 
 {% block sidebar %}
-  <div class="col-lg-2 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
+  <div class="col-lg-3 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
       <span><h4>Offensive Formations</h4></span>
     </div>
+    <table class="formation-list two-column-table">
       {% for formation in offensive_formations %}
-        <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-        <br>
+      {% if forloop.counter0|divisibleby:2 %}
+        <tr>
+      {% endif %}
+        <td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+        {% if forloop.counter|divisibleby:2 %}
+        </tr>
+        {% endif %}
       {% endfor %}
-      <a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
+      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
+        <td></td></tr>
+      {% endif %}
+    </table>
+
+      <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
   </div>
 {% endblock %}
 
