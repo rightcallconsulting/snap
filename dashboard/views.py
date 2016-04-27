@@ -399,8 +399,12 @@ def delete_player_from_group(request):
 def all_groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
-    first_group = groups[0].players.all()
-    analytics = PlayerAnalytics(first_group)
+    if len(groups) > 0:
+        first_group = groups[0].players.all()
+        analytics = PlayerAnalytics(first_group)
+    else:
+        first_group = []
+        analytics = None
     return render(request, 'dashboard/all_groups.html', {
         'team': team,
         'groups': groups,
