@@ -237,7 +237,6 @@ function drawDemoScreen(){
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-
     noStroke();
     fill(220,0,0);
     exitDemo.draw(field);
@@ -263,11 +262,11 @@ function drawDemoScreen(){
       if(timeElapsed < 2000){
         noStroke();
         noFill();
-        stroke(220,0,0);
+        stroke(255,238,88);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        fill(220, 0, 0);
+        fill(255,238,88);
         if(x < field.width / 3){
           textAlign(LEFT);
         }else if(x > 2 * (field.width) / 3){
@@ -276,16 +275,13 @@ function drawDemoScreen(){
           textAlign(CENTER);
         }
         text("You are in yellow", x, y + 60);
-        fill(0);
-        //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
-        fill(220,0,0);
-        stroke(220, 0, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
-        fill(220,0,0);
         text("Your play call is here", field.width / 2 + 20, 50);
       }else{
 
@@ -393,7 +389,7 @@ function drawDemoScreen(){
         noStroke();
         fill(this.fill);
         if(this === currentPlayerTested){
-          fill(220,220, 0);
+          fill(255,238,88);
         }
         ellipse(x, y, siz, siz);
         fill(0);

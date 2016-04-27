@@ -185,7 +185,7 @@ function drawOpening(){
   }
   drawCurrentRoute();
   for(var i = 0; i < currentRouteNodes.length; i++){
-    stroke(220, 220, 0);
+    stroke(255,238,88);
     currentRouteNodes[i].draw(field);
     noStroke();
   }
@@ -250,7 +250,7 @@ function drawDemoScreen(){
         noStroke();
       }else {
         noStroke();
-        fill(220, 220, 0);
+        fill(255,238,88);
         textSize(22);
         textAlign(CENTER);
         if(demoDoubleClick){
@@ -265,7 +265,7 @@ function drawDemoScreen(){
       noStroke();
       drawCurrentRoute();
       for(var i = 0; i < currentRouteNodes.length; i++){
-        stroke(220, 220, 0);
+        stroke(255,238,88);
         currentRouteNodes[i].draw(field);
         noStroke();
       }

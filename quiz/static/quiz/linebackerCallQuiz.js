@@ -182,7 +182,7 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
+    fill(255,238,88);
     exitDemo.draw(field);
     textSize(30);
     text("DEMO", field.width / 6, field.height / 6);
@@ -199,8 +199,8 @@ function drawDemoScreen(){
     var y = field.getTranslatedY(83);
     var x2 = field.getTranslatedX(53);
     var y2 = field.getTranslatedY(83);
-    stroke(0, 0, 220);
-    fill(0, 0, 220);
+    stroke(255,238,88);
+    fill(255,238,88);
     strokeWeight(2);
     line(x, y, x2, y2);
     strokeWeight(1);

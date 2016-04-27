@@ -200,7 +200,7 @@ function drawOpening(){
   var defensivePlay = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayers(field);//WithOffense(field);
-    stroke(220, 220, 0);
+    stroke(255,238,88);
     line(currentPlayerTested.startX, currentPlayerTested.startY, currentPlayerTested.runAssignment[0], currentPlayerTested.runAssignment[1]);
     noStroke();
   }
@@ -294,7 +294,7 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
-        fill(220,220, 0);
+        fill(255,238,88);
       }
       ellipse(x, y, siz, siz);
       fill(0);

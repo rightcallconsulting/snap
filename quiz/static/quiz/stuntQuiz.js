@@ -197,12 +197,12 @@ function drawFeedbackScreen(){
     x: x2,
     y: y2,
     siz: 1,
-    fill: color(220,220,0)
+    fill: color(255,238,88)
   });
 
   field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentDefensivePlay().drawAllPlayersWithOffense(field);
-  stroke(220,220,0);
+  stroke(255,238,88);
   line(pixelX1, pixelY1, pixelX2, pixelY2);
   noStroke();
   node.draw(field);
@@ -214,7 +214,7 @@ function drawOpening(){
   if(play){
     play.drawAllPlayersWithOffense(field);
     if(currentGuessNode && currentPlayerTested){
-      stroke(220,220,0);
+      stroke(255,238,88);
       line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
       currentGuessNode.draw(field);
       noStroke();
@@ -228,7 +228,7 @@ function drawDemoScreen(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     if(currentGuessNode && currentPlayerTested){
-      stroke(220,220,0);
+      stroke(255,238,88);
       line(field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y), field.getTranslatedX(currentGuessNode.x), field.getTranslatedY(currentGuessNode.y));
       currentGuessNode.draw(field);
       noStroke();
@@ -260,30 +260,31 @@ function drawDemoScreen(){
       if(timeElapsed < 2000){
         noStroke();
         noFill();
-        stroke(220,0,0);
+        stroke(255,238,88);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        fill(220, 0, 0);
+        noStroke();
+        fill(255,238,88);
         text("You are in blue", x + siz/2 + 5, y - 20);
         //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
-        fill(220,0,0);
-        stroke(220, 0, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
         text("Your play call is here", field.width / 2 + 20, 50);
       }else{
-        stroke(220, 220, 0);
-        fill(220, 220, 0);
+        stroke(255,238,88);
+        fill(255,238,88);
         var clickedNode = null;
         if(currentGuessNode){ 
           clickedNode = currentGuessNode;
         }
         if(clickedNode){
-          fill(220, 220, 0);
+          fill(255,238,88);
           textAlign(CENTER);
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
@@ -347,7 +348,7 @@ mouseClicked = function() {
         x: field.getYardX(mouseX),
         y: field.getYardY(mouseY),
         siz: 1,
-        fill: color(220,220,0)
+        fill: color(255,238,88)
       })
     }
   }else{
@@ -355,7 +356,7 @@ mouseClicked = function() {
       x: field.getYardX(mouseX),
       y: field.getYardY(mouseY),
       siz: 1,
-      fill: color(220,220,0)
+      fill: color(255,238,88)
     })
 
   }
@@ -380,8 +381,8 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this.clicked){
-        fill(220, 220, 0);
-        stroke(220, 220, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
         noStroke();
       }
@@ -395,7 +396,7 @@ function draw() {
       noStroke();
       fill(0,0,0);
       if(this === currentPlayerTested){
-        fill(0, 0, 220);
+        fill(255,238,88);
       }
       textSize(17);
       textAlign(CENTER, CENTER);

@@ -55,7 +55,7 @@ RunAssignment.prototype.drawRouteToExchange = function(rb, field){
 		var y2 = field.getTranslatedY(this.routeToExchange[i][1]);
 		if(this.type === "Handoff"){
 			strokeWeight(3);
-			stroke(255, 255, 0);
+			stroke(255,238,88);
 			line(x1, y1, x2, y2);
 			strokeWeight(1);
 			noStroke();
@@ -82,7 +82,7 @@ RunAssignment.prototype.drawRouteAfterExchange = function(rb, field){
 		}
 		var exchangeDestination = this.routeAfterExchange[i];
 		if(this.routeToExchange.length){
-			stroke(0, 220, 0);
+			stroke(66, 165, 245);
 			strokeWeight(3);
 			line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(exchangeDestination[0]), field.getTranslatedY(exchangeDestination[1]));
 			strokeWeight(1);

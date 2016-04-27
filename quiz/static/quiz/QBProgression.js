@@ -281,7 +281,7 @@ var runTest = function(type, playerTested, test){
           textAlign(LEFT);
           text("Your play call is here", field.width / 2 + 20, 50);
         }else if(timeElapsed < 4000){
-          fill(220, 220, 0);
+          fill(255,238,88);
           textAlign(CENTER);
           text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
         }else{
@@ -295,8 +295,8 @@ var runTest = function(type, playerTested, test){
               var y = field.getTranslatedY(receiver.startY);
               var siz = field.yardsToPixels(receiver.siz);
               y -= siz / 2;
-              stroke(220, 220, 0);
-              fill(220, 220, 0);
+              stroke(255,238,88);
+              fill(255,238,88);
               line(x, y - 80, x, y - 15);
               triangle(x - 15, y - 15, x + 15, y - 15, x, y);
               noStroke();
@@ -304,11 +304,11 @@ var runTest = function(type, playerTested, test){
           }
           textAlign(CENTER);
           if(demoComplete){
-            fill(220, 220, 0);
+            fill(255,238,88);
             text("Demo Complete!\nClick anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
           }
           else if(clickedReceivers.length === 1){
-            fill(220, 220, 0);
+            fill(255,238,88);
 
             if(demoComplete){
               text("Great!  You're ready to start!", 60, 300);

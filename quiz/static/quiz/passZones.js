@@ -117,7 +117,7 @@ function checkAnswer(guess){
     test.feedbackScreenStartTime = millis();
     var correctZone = test.getCurrentCoverageMap().getZoneFromIndex(currentPlayerTested.zoneAssignment)
     correctZoneFill = correctZone.fill;
-    correctZone.fill = color(220, 220, 0);
+    correctZone.fill = color(255,238,88);
   }
 }
 

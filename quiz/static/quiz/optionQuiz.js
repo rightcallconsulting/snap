@@ -185,7 +185,7 @@ function checkAnswer(guess){
     test.updateScoreboard();
     var assignment = currentPlayerTested.optionAssignment[0];
     oldFill = assignment.fill;
-    assignment.fill = color(220, 220, 0);
+    assignment.fill = color(255,238,88);
     test.feedbackScreenStartTime = millis();
   }
 }
@@ -258,8 +258,8 @@ function drawDemoScreen(){
         fill(220,0,0);
         text("Your play call is here", field.width / 2 + 20, 50);
       }else{
-        stroke(220, 220, 0);
-        fill(220, 220, 0);
+        stroke(255,238,88);
+        fill(255,238,88);
         var clickedAssignment = null;
         for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
           var receiver = play.offensiveFormationObject.eligibleReceivers[i];
@@ -375,8 +375,8 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this.clicked){
-        fill(220, 220, 0);
-        stroke(220, 220, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
         noStroke();
       }

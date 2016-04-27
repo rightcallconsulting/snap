@@ -128,7 +128,7 @@ function checkAnswer(guess){
     clearSelections();
     var assignment = currentPlayerTested.coverageAssignment[0];
     oldFill = assignment.fill;
-    assignment.fill = color(220, 220, 0);
+    assignment.fill = color(255,238,88);
     test.feedbackScreenStartTime = millis();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
@@ -164,7 +164,7 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
+    fill(255,238,88);
     exitDemo.draw(field);
     textSize(30);
     textAlign(LEFT);
@@ -186,11 +186,11 @@ function drawDemoScreen(){
       if(timeElapsed < 2000){
         noStroke();
         noFill();
-        stroke(220,0,0);
+        stroke(255,238,88);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        fill(220, 0, 0);
+        fill(255,238,88);
         if(x < field.width / 3){
           textAlign(LEFT);
         }else if(x > 2 * (field.width) / 3){
@@ -198,21 +198,22 @@ function drawDemoScreen(){
         }else{
           textAlign(CENTER);
         }
-        text("You are in yellow", x, y + 60);
+        fill(255,238,88);
+        text("You are in yellow", x, y - 60);
         fill(0);
         //text("Click demo button to exit", 20, 50);
         noStroke();
       }else if(timeElapsed < 4000){
-        fill(220,0,0);
-        stroke(220, 0, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
-        fill(220,0,0);
+        fill(255,238,88);
         text("Your play call is here", field.width / 2 + 20, 50);
       }else{
-        stroke(220, 220, 0);
-        fill(220, 220, 0);
+        stroke(255,238,88);
+        fill(255,238,88);
         var clickedReceiver = null;
         for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
           var receiver = play.offensiveFormationObject.eligibleReceivers[i];
@@ -226,6 +227,8 @@ function drawDemoScreen(){
             var x = field.getTranslatedX(receiver.startX);
             var y = field.getTranslatedY(receiver.startY);
             var siz = field.yardsToPixels(receiver.siz);
+            fill(255,238,88);
+            stroke(255,238,88);
             y -= siz / 2;
             line(x, y - 80, x, y - 15);
             triangle(x - 15, y - 15, x + 15, y - 15, x, y);
@@ -233,19 +236,17 @@ function drawDemoScreen(){
         }
         stroke(0);
         if(clickedReceiver){
+          fill(255,238,88);
           textAlign(CENTER);
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
-
-          fill(0);
-          //text("Click demo button to exit", 20, 50);
         }else{
+          fill(255,238,88);
           textAlign(CENTER);
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
-          fill(0);
           noStroke();
           //text("Click demo button to exit", 20, 50);
         }
@@ -325,8 +326,8 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this.clicked){
-        fill(220, 220, 0);
-        stroke(220, 220, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
         noStroke();
       }

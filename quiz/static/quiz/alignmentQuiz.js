@@ -134,7 +134,7 @@ function checkAnswer(){
     test.feedbackScreenStartTime = millis();
     currentPlayerTested.x = answers[test.questionNum][0]
     currentPlayerTested.y = answers[test.questionNum][1]
-    currentPlayerTested.fill = color(220, 220, 0);
+    currentPlayerTested.fill = color(255,238,88);
   }
 }
 
@@ -181,7 +181,7 @@ function drawDemoScreen(){
       textSize(22);
       textAlign(LEFT);
       fill(220,0,0);
-      stroke(220, 0, 0);
+      stroke(255,238,88);
       line(field.width / 2, 80, field.width/2, 20);
       triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
       noStroke();
@@ -194,7 +194,7 @@ function drawDemoScreen(){
         noStroke();
         textSize(22);
         textAlign(CENTER);
-        fill(220, 220, 0);
+        fill(255,238,88);
         if(demoDoubleClick){
           text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
         }else{
@@ -204,7 +204,7 @@ function drawDemoScreen(){
         noStroke();
         textSize(22);
         textAlign(CENTER);
-        fill(220, 220, 0);
+        fill(255,238,88);
         text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
         noStroke();
       }

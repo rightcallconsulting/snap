@@ -279,8 +279,8 @@ function drawDemoScreen(){
         fill(220,0,0);
         text("Your play call is here", field.width / 2 + 10, 50);
       }else{
-        stroke(220, 220, 0);
-        fill(220, 220, 0);
+        stroke(255,238,88);
+        fill(255,238,88);
         var clickedDefender = null;
         for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
           var defender = defensivePlay.defensivePlayers[i];
@@ -295,7 +295,7 @@ function drawDemoScreen(){
             var y = field.getTranslatedY(defender.startY);
             var siz = field.yardsToPixels(defender.siz);
             y -= siz / 2;
-            stroke(220, 220, 0);
+            stroke(255,238,88);
             strokeWeight(2);
             line(x, y - 80, x, y - 15);
             triangle(x - 15, y - 15, x + 15, y - 15, x, y);
