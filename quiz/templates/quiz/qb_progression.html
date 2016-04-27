@@ -31,10 +31,12 @@ $('#check-button').click(function(){
       demoComplete = true;
       return false;
     }
-    var isCorrect = test.getCurrentPlay().checkProgression();
+    var play = test.getCurrentPlay();
+    var isCorrect = play.checkProgression();
     test.updateScoreboard();
     if(!isCorrect){
-      test.getCurrentPlay().eligibleReceivers.forEach(function(player){
+      missedOrSkippedPlays.push(play);
+      play.eligibleReceivers.forEach(function(player){
         player.rank = player.progressionRank
         player.showRoute = true;
       })
@@ -67,6 +69,7 @@ $('#next-play-button').click(function(){
       return;
     }
     pressStopButton();
+    missedOrSkippedPlays.push(test.getCurrentPlay());
     test.skipQuestion();
     if (test.getCurrentPlay()){
       test.getCurrentPlay().inProgress = false;

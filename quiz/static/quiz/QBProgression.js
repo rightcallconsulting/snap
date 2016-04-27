@@ -2,11 +2,14 @@ var test
 var currentPlayerTested
 var positions = []
 var makeJSONCall = true
+var originalPlayList = [];
 var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
 var demoComplete = false;
 var exitDemo = null;
 var defensePlay = null;
+var bigReset; var resetMissed; var nextQuiz;
+var missedOrSkippedPlays = [];
 
 
 function setup() {
@@ -17,16 +20,6 @@ function setup() {
   field.ballYardLine = 75;
   background(58, 135, 70);
   myCanvas.parent('quiz-box');
-  /*var m = document.getElementById('display-box');
-  m.style.width = '552px';
-  m.style.height = '650px';
-  var sidebar = document.getElementById('quiz-sidebar');
-  var scoreboard = document.getElementById('quiz-scoreboard');
-  sidebar.style.height = '650px';
-  scoreboard.style.height = '650px';
-  sidebar.style.width = '330px';
-  scoreboard.style.width = '330px';*/
-
 
   exitDemo = new Button({
     label: "",
@@ -80,6 +73,8 @@ function draw() {
               play.addPositionsFromID(positions);
               play.populatePositions();
             })
+            originalPlayList = test.plays.slice();
+            test.plays = shuffle(test.plays);
             test.updateProgress();
             test.updateScoreboard();
             runTest("QBProgression", currentPlayerTested, test);
@@ -87,6 +82,25 @@ function draw() {
         })
       })
 });
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
 
 var runTest = function(type, playerTested, test){
@@ -184,12 +198,28 @@ var runTest = function(type, playerTested, test){
           this.rank = 0;
         };
 
-        var bigReset = new Button({
-          x: field.getYardX(width/2)-4,
-          y: field.getYardY(height * 0.8),
-          width: 8,
-          label: "Restart Quiz",
-          clicked: false
+        bigReset = new Button({
+          x: field.getYardX(width*0.25) - 5,
+          y: field.getYardY(height*0.8),
+          width: 10,
+          height: 5,
+          label: "Retake All"
+        });
+
+        resetMissed = new Button({
+          x: field.getYardX(width*0.5) - bigReset.width / 2,
+          y: bigReset.y,
+          width: bigReset.width,
+          height: bigReset.height,
+          label: "Retake Missed"
+        });
+
+        nextQuiz = new Button({
+          x: field.getYardX(width*0.75) - bigReset.width / 2,
+          y: bigReset.y,
+          width: bigReset.width,
+          height: bigReset.height,
+          label: "Exit"
         });
 
     // Draw Defense
@@ -320,6 +350,8 @@ var runTest = function(type, playerTested, test){
 
     keyTyped = function(){
       if(key === 'r' && test.over){
+        test.plays = shuffle(originalPlayList);
+        missedOrSkippedPlays = [];
         test.restartQuiz(defensePlay);
       }
     }
@@ -352,7 +384,15 @@ var runTest = function(type, playerTested, test){
 
       currentPlay = test.getCurrentPlay();
       if (bigReset.isMouseInside(field) && test.questionNum === test.plays.length) {
+        test.plays = shuffle(originalPlayList);
+        missedOrSkippedPlays = [];
         test.restartQuiz(defensePlay);
+      }else if (resetMissed.isMouseInside(field) && test.questionNum === test.plays.length) {
+        test.plays = shuffle(missedOrSkippedPlays);
+        missedOrSkippedPlays = [];
+        test.restartQuiz(defensePlay);
+      }else if (nextQuiz.isMouseInside(field) && test.questionNum === test.plays.length) {
+        window.location.href = "/";
       }else if(test.showDemo && exitDemo.isMouseInside(field) || demoComplete){
         exitDemoScreen();
       }else if(test.feedbackScreenStartTime){
@@ -380,9 +420,10 @@ var runTest = function(type, playerTested, test){
     draw = function() {
       if(test.endTime > 0){
         bigReset.displayButton = true;
-        field.drawBackground(null, height, width);
-        bigReset.draw(field);
         test.drawQuizSummary();
+        bigReset.draw(field);
+        resetMissed.draw(field);
+        nextQuiz.draw(field);
 
       }else if(test.showDemo){
         drawDemoScreen();

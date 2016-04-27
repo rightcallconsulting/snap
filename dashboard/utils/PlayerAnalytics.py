@@ -80,6 +80,46 @@ class PlayerAnalytics:
     def for_players(cls, player_iterable):
         return cls(player_iterable)
 
+    #Overall Analytics:
+
+    def total_correct_attempts(self):
+        count = 0
+        for p, c in self.correct_plays:
+            count += c
+        return count
+
+    def total_incorrect_attempts(self):
+        count = 0
+        for p, c in self.incorrect_plays:
+            count += c
+        return count
+
+    def total_skipped_attempts(self):
+        count = 0
+        for p, c in self.skipped_plays:
+            count += c
+        return count
+
+    def total_attempts(self):
+        """Returns the total # of questions the players have been asked."""
+        return self.total_correct_attempts() + self.total_incorrect_attempts() + \
+            self.total_skipped_attempts()
+
+    def total_correct_attempts_percentage(self):
+        total_attempts = self.total_attempts()
+        if total_attempts == 0: return 0
+        return round(100.0 * self.total_correct_attempts() / total_attempts)
+
+    def total_incorrect_attempts_percentage(self):
+        total_attempts = self.total_attempts()
+        if total_attempts == 0: return 0
+        return round(100.0 * self.total_incorrect_attempts() / total_attempts)
+
+    def total_skipped_attempts_percentage(self):
+        total_attempts = self.total_attempts()
+        if total_attempts == 0: return 0
+        return round(100.0 * self.total_skipped_attempts() / total_attempts)
+
     # Play Analytics:
 
     # Aggregate:
@@ -122,21 +162,21 @@ class PlayerAnalytics:
     # Specific Play:
 
     def total_correct_for_play(self, play):
-        """The number of times the player/group has answered questions about 
+        """The number of times the player/group has answered questions about
         the play correctly."""
         for p, count in self.correct_plays:
             if p == play: return count
         return 0
 
     def total_incorrect_for_play(self, play):
-        """The number of times the player/group has answered questions about 
+        """The number of times the player/group has answered questions about
         the play incorrectly."""
         for p, count in self.incorrect_plays:
             if p == play: return count
         return 0
 
     def total_skipped_for_play(self, play):
-        """The number of times the player/group has skipped questions about 
+        """The number of times the player/group has skipped questions about
         the play."""
         for p, count in self.skipped_plays:
             if p == play: return count
@@ -150,14 +190,14 @@ class PlayerAnalytics:
             self.total_skipped_for_play(play)
 
     def correct_percentage_for_play(self, play):
-        """Percentage answers the player/group gave about the play that were 
+        """Percentage answers the player/group gave about the play that were
         correct."""
         total_qs = self.total_questions_for_play(play)
         if total_qs == 0: return 0
         return round(100.0 * self.total_correct_for_play(play) / total_qs)
 
     def incorrect_percentage_for_play(self, play):
-        """Percentage answers the player/group gave about the play that were 
+        """Percentage answers the player/group gave about the play that were
         incorrect."""
         total_qs = self.total_questions_for_play(play)
         if total_qs == 0: return 0
@@ -174,7 +214,7 @@ class PlayerAnalytics:
     # Specific Formation:
 
     def total_correct_for_formation(self, formation):
-        """The number of times the player/group has answered questions about 
+        """The number of times the player/group has answered questions about
         the formation CORRECTLY."""
         total = 0
         for p, count in self.correct_plays:
@@ -182,7 +222,7 @@ class PlayerAnalytics:
         return total
 
     def total_incorrect_for_formation(self, formation):
-        """The number of times the player/group has answered questions about 
+        """The number of times the player/group has answered questions about
         the formation INCORRECTLY."""
         total = 0
         for p, count in self.incorrect_plays:
@@ -190,7 +230,7 @@ class PlayerAnalytics:
         return total
 
     def total_skipped_for_formation(self, formation):
-        """The number of times the player/group has SKIPPED questions about 
+        """The number of times the player/group has SKIPPED questions about
         the formation."""
         total = 0
         for p, count in self.skipped_plays:
