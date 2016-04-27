@@ -89,9 +89,6 @@ RunAssignment.prototype.drawRouteAfterExchange = function(rb, field){
 			noStroke();
 		}
 	}
-
-
-
 };
 
 RunAssignment.prototype.getLastCoord = function(){

@@ -191,7 +191,14 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         fill(220, 0, 0);
-        text("You are in blue", x + siz/2 + 5, y - 20);
+        if(x < field.width / 3){
+          textAlign(LEFT);
+        }else if(x > 2 * (field.width) / 3){
+          textAlign(RIGHT);
+        }else{
+          textAlign(CENTER);
+        }
+        text("You are in yellow", x, y + 60);
         fill(0);
         //text("Click demo button to exit", 20, 50);
         noStroke();

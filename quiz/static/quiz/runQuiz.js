@@ -6,6 +6,8 @@ var maxPlays = 5;
 var bigReset;
 var currentUserTested = null;
 var currentPlayerTested = null;
+var exitDemo = null;
+var demoDoubleClick = false;
 var guessedAssignment = null;
 var hasExchanged = false;
 
@@ -23,10 +25,18 @@ function setup() {
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),
-    width: 6,
-    height: 4,
+    width: 5,
     label: "Restart"
   })
+  exitDemo = new Button({
+    label: "",
+    x: field.getYardX(25),
+    y: field.getYardY(25),
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
 
   if(makeJSONCall){
     var scoreboard = new Scoreboard({
@@ -209,96 +219,190 @@ function drawOpening(){
   if(currentPlayerTested && guessedAssignment){
     guessedAssignment.draw(currentPlayerTested, field);
   }
-  
 };
 
-mouseClicked = function() {
-  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-    test.scoreboard.feedbackMessage = "";
-  }else{
-    return;
-  }
-  if(bigReset.isMouseInside(field) && test.over){
-    test.restartQuiz();
-  }else if(!test.over){
-    var mouseYardX = field.getYardX(mouseX);
-    var mouseYardY = field.getYardY(mouseY);
-    if(guessedAssignment){
-      var lastClick = guessedAssignment.getLastCoord();
-      if(lastClick){
-        var dist = Math.sqrt((lastClick[0] - mouseYardX) * (lastClick[0] - mouseYardX) + (lastClick[1] - mouseYardY) * (lastClick[1] - mouseYardY));
-        if(dist < 1){
-          checkAnswer();
-          return;
+function drawDemoScreen(){
+  noStroke();
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentPlay();
+  var defensivePlay = test.getCurrentDefensivePlay();
+  if(play){
+    if(defensivePlay){
+      defensivePlay.drawAllPlayers(field);//WithOffense(field);
+    }
+      play.drawAllPlayers(field);
+    }
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+
+    noStroke();
+    fill(220,0,0);
+    exitDemo.draw(field);
+    textSize(30);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+    if(currentPlayerTested){
+      if(guessedAssignment){
+         guessedAssignment.draw(currentPlayerTested, field);
+      }
+      var x = field.getTranslatedX(currentPlayerTested.startX);
+      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(22);
+      noStroke();
+      if(timeElapsed < 2000){
+        noStroke();
+        noFill();
+        stroke(220,0,0);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        fill(220, 0, 0);
+        if(x < field.width / 3){
+          textAlign(LEFT);
+        }else if(x > 2 * (field.width) / 3){
+          textAlign(RIGHT);
+        }else{
+          textAlign(CENTER);
         }
-      }
-      if(hasExchanged){
-        guessedAssignment.addRouteAfterExchangeCoords(mouseYardX, mouseYardY);
+        text("You are in yellow", x, y + 60);
+        fill(0);
+        //text("Click demo button to exit", 20, 50);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        fill(220,0,0);
+        stroke(220, 0, 0);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        fill(220,0,0);
+        text("Your play call is here", field.width / 2 + 20, 50);
       }else{
-        guessedAssignment.addRouteToExchangeCoords(mouseYardX, mouseYardY);
+
       }
+
+   
+  }
+
+  };
+
+  function setupDemoScreen(){
+    clearSelections();
+    test.showDemo = true;
+    demoDoubleClick = false;
+    test.demoStartTime = millis();
+  };
+
+  function exitDemoScreen(){
+    test.showDemo = false;
+    demoDoubleClick = false;
+    clearSelections();
+  };
+
+
+
+
+  mouseClicked = function() {
+    if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+      test.scoreboard.feedbackMessage = "";
     }else{
-      guessedAssignment = new RunAssignment({
-        type: "Handoff",
-        routeToExchange: [[mouseYardX, mouseYardY]],
-        routeAfterExchange: []
-      });
+      return;
     }
-  }
-};
-
-keyTyped = function(){
-  if(test.over){
-    if(key === 'r'){
+    if(bigReset.isMouseInside(field) && test.over){
       test.restartQuiz();
-    }
-  }else if(key === 'e'){
-    hasExchanged = !hasExchanged;
-  }
-};
-
-keyPressed = function(){
-  if (keyCode === BACKSPACE){
-    if(guessedAssignment){
-      if(hasExchanged){
-        guessedAssignment.removeAfterExchange();
+      return true;
+    }else if(!test.over){
+      if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+        exitDemoScreen();
+      }
+      var mouseYardX = field.getYardX(mouseX);
+      var mouseYardY = field.getYardY(mouseY);
+      if(guessedAssignment){
+        var lastClick = guessedAssignment.getLastCoord();
+        if(lastClick){
+          var dist = Math.sqrt((lastClick[0] - mouseYardX) * (lastClick[0] - mouseYardX) + (lastClick[1] - mouseYardY) * (lastClick[1] - mouseYardY));
+          if(dist < 1){
+            checkAnswer();
+            return;
+          }
+        }
+        if(hasExchanged){
+          guessedAssignment.addRouteAfterExchangeCoords(mouseYardX, mouseYardY);
+        }else{
+          guessedAssignment.addRouteToExchangeCoords(mouseYardX, mouseYardY);
+        }
       }else{
-        guessedAssignment.removeBeforeExchange();
+        guessedAssignment = new RunAssignment({
+          type: "Handoff",
+          routeToExchange: [[mouseYardX, mouseYardY]],
+          routeAfterExchange: []
+        });
       }
-    }
-    return false;
-  }
-  return true;
-}
-
-function draw() {
-  Player.prototype.draw = function(field){
-    var x = field.getTranslatedX(this.x);
-    var y = field.getTranslatedY(this.y);
-    var siz = field.yardsToPixels(this.siz);
-    if(this.unit === "defense"){
-      if(this.clicked){ 
-      }
-      noStroke();
-      fill(0, 0, 0);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
-    else {
-      noStroke();
-      fill(this.fill);
-      if(this === currentPlayerTested){
-        fill(220,220, 0);
-      }
-      ellipse(x, y, siz, siz);
-      fill(0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
     }
   };
-  if(makeJSONCall){
+
+  keyTyped = function(){
+    if(test.over){
+      if(key === 'r'){
+        test.restartQuiz();
+      }
+    }else if(key === 'e'){
+      hasExchanged = !hasExchanged;
+    }
+  };
+
+  keyPressed = function(){
+    if (keyCode === BACKSPACE){
+      if(guessedAssignment){
+        if(hasExchanged){
+          guessedAssignment.removeAfterExchange();
+        }else{
+          guessedAssignment.removeBeforeExchange();
+        }
+      }
+      return false;
+    }
+    return true;
+  }
+
+  function draw() {
+    Player.prototype.draw = function(field){
+      var x = field.getTranslatedX(this.x);
+      var y = field.getTranslatedY(this.y);
+      var siz = field.yardsToPixels(this.siz);
+      if(this.unit === "defense"){
+        if(this.clicked){ 
+        }
+        noStroke();
+        fill(0, 0, 0);
+        textSize(17);
+        textAlign(CENTER, CENTER);
+        text(this.pos, x, y);
+      }
+      else {
+        noStroke();
+        fill(this.fill);
+        if(this === currentPlayerTested){
+          fill(220,220, 0);
+        }
+        ellipse(x, y, siz, siz);
+        fill(0);
+        textSize(14);
+        textAlign(CENTER, CENTER);
+        text(this.num, x, y);
+      }
+    };
+    if(makeJSONCall){
     //WAIT - still executing JSON
     background(93, 148, 81);
   }
@@ -319,8 +423,7 @@ function draw() {
     }
     if(test.showDemo){
       drawDemoScreen();
-    }
-    if(test.feedbackScreenStartTime){
+    }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedbackScreenStartTime = 0;
