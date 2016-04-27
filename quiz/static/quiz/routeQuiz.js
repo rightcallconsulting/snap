@@ -233,19 +233,19 @@ function drawDemoScreen(){
         strokeWeight(1);
         textAlign(CENTER);
         textSize(22);
-        fill(220, 0, 0);
-        text("You are in blue", x - 40, y - 80);
+        fill(255,238,88);
+        text("You are in yellow", x - 40, y - 80);
         noStroke();
       }else if(timeElapsed < 4000){
         noStroke();
-        stroke(220, 0, 0);
-        fill(220, 0, 0);
+        stroke(255,238,88);
+        fill(255,238,88);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
         textAlign(LEFT);
         textSize(22);
-        fill(220, 0, 0);
+        fill(255,238,88);
         text("Your play call is here", field.width / 2 + 20, 50);
         noStroke();
       }else {
@@ -379,7 +379,7 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
-        fill(0, 0, 255);
+        fill(255,238,88);
       }
       ellipse(x, y, siz, siz);
       fill(0,0,0);

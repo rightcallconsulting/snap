@@ -166,7 +166,6 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
     exitDemo.draw(field);
     textSize(30);
     textAlign(LEFT);
@@ -180,12 +179,12 @@ function drawDemoScreen(){
       noStroke();
       textSize(22);
       textAlign(LEFT);
-      fill(220,0,0);
+      fill(255,238,88);
       stroke(255,238,88);
       line(field.width / 2, 80, field.width/2, 20);
       triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
       noStroke();
-      fill(220,0,0);
+      fill(255,238,88);
       text("Your play call is here", field.width / 2 + 20, 50);
       noStroke();
     }else{
@@ -256,7 +255,7 @@ mouseClicked = function() {
       currentPlayerTested = new Player({
         x: field.getYardX(mouseX),
         y: y,
-        fill: color(0, 0, 220),
+        fill: color(255,238,88),
         pos: currentUserTested.position,
         num: currentUserTested.num,
       });
@@ -288,7 +287,7 @@ function draw() {
       ellipse(x, y, siz, siz);
       fill(0,0,0);
       if(this === currentPlayerTested){
-        fill(255);
+        fill(0);
       }
       textSize(14);
       textAlign(CENTER, CENTER);
