@@ -150,7 +150,7 @@ function drawCurrentRoute(){
   if(currentRouteGuess.length > 0){
     var x2 = field.getTranslatedX(currentRouteGuess[0][0]);
     var y2 = field.getTranslatedY(currentRouteGuess[0][1]);
-    stroke(0, 0, 255);
+    stroke(255,238,88);
     line(x1,y1,x2,y2);
     noStroke();
     fill(0, 0, 255)
@@ -160,7 +160,7 @@ function drawCurrentRoute(){
     y1 = field.getTranslatedY(currentRouteGuess[i][1]);
     var x2 = field.getTranslatedX(currentRouteGuess[i+1][0]);
     var y2 = field.getTranslatedY(currentRouteGuess[i+1][1]);
-    stroke(0, 0, 255);
+    stroke(255,238,88);
     line(x1, y1, x2, y2);
     noStroke();
     fill(0, 0, 255)
@@ -336,7 +336,7 @@ mouseClicked = function() {
         x: x,
         y: y,
         siz: 1,
-        fill: color(0, 0, 220)
+        fill: color(255,238,88)
       });
       currentRouteNodes.push(nodeObject);
     }
