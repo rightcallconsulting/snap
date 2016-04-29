@@ -2,6 +2,7 @@
 var BlockingAssignment = function(config){
 	this.name = config.name || "";
 	this.blockedPlayers = config.blockedPlayers || [];
+	this.blockedZone = config.blockedZone || 0; //0 means no zone, - is left, + is right
 };
 
 BlockingAssignment.prototype.getBlockedPlayers = function(){

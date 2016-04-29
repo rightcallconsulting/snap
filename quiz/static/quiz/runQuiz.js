@@ -166,6 +166,7 @@ var sortByPlayName = function(a, b){
 
 function clearSelection(){
   guessedAssignment = null;
+  hasExchanged = false;
 };
 
 function checkAnswer(){
@@ -369,9 +370,10 @@ keyTyped = function(){
     }
   }
   if(key === 'e'){
-    hasExchanged = !hasExchanged;
     if(test.showDemo){
       hasExchanged = true;
+    }else{
+      hasExchanged = !hasExchanged;
     }
   }
 };
@@ -435,8 +437,7 @@ function draw() {
         routeAfterExchange: [[currentPlayerTested.startX + 15, currentPlayerTested.startY + 15]]
       })
       currentPlayerTested.runAssignment = correctRunAssignment;
-    }
-    if(test.showDemo){
+    }else if(test.showDemo){
       drawDemoScreen();
     }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
