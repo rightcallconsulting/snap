@@ -223,12 +223,11 @@ function drawDemoScreen(){
         noStroke();
         noFill();
         strokeWeight(2);
-        stroke(220, 0, 0);
+        stroke(255,238,88);
 
         var x = field.getTranslatedX(currentPlayerTested.startX);
         var y = field.getTranslatedY(currentPlayerTested.startY);
         var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         textAlign(CENTER);
