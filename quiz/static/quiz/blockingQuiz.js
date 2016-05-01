@@ -256,27 +256,25 @@ function drawDemoScreen(){
       if(timeElapsed < 2000){
         noStroke();
         noFill();
-        stroke(220,0,0);
+        stroke(255,238,88);
         strokeWeight(2);
         ellipse(x, y, siz, siz);
         noStroke();
         strokeWeight(1);
-        fill(220, 0, 0);
+        fill(255,238,88);
         textSize(22);
-        text("You are in blue", x - 100, y - 90);
-        fill(0);
-        //text("Click demo button to exit", 20, 50);
+        text("You are in yellow", x - 100, y - 90);
         noStroke();
       }else if(timeElapsed < 4000){
-        fill(220,0,0);
-        stroke(220, 0, 0);
+        fill(255,238,88);
+        stroke(255,238,88);
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
         fill(0);
         textSize(22);
         //text("Click demo button to exit", 20, 50);
-        fill(220,0,0);
+        fill(255,238,88);
         text("Your play call is here", field.width / 2 + 10, 50);
       }else{
         stroke(255,238,88);
@@ -302,10 +300,8 @@ function drawDemoScreen(){
             strokeWeight(1);
           }
         }
-        stroke(0);
         textAlign(CENTER);
         textSize(22);
-
         if(clickedDefender){
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
@@ -315,8 +311,6 @@ function drawDemoScreen(){
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
-          fill(0);
-          //text("Click demo button to exit", 20, 50);
         }else{
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
           noStroke();
@@ -392,7 +386,6 @@ mouseClicked = function() {
         var i = guessedAssignment.blockedPlayers.indexOf(clickedPlayer);
         if(i < 0){
           guessedAssignment.addBlockedPlayer(clickedPlayer);
-          debugger;
         }else if(i === guessedAssignment.blockedPlayers.length - 1){
           checkAnswer();
         }else{
@@ -432,18 +425,14 @@ function draw() {
       textSize(17);
       textAlign(CENTER, CENTER);
       text(this.pos, x, y);
-    }
-    else {
+    }else {
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
-        fill(0,0, 220);
+        fill(255,238,88);
       }
       ellipse(x, y, siz, siz);
       fill(0);
-      if(this === currentPlayerTested){
-        fill(255);
-      }
       textSize(14);
       textAlign(CENTER, CENTER);
       text(this.num, x, y);
