@@ -994,3 +994,8 @@ input.create-quiz{
   background-color: #558B2F;
   padding: 8px;
 }
+
+.login-wrapper{
+  background-repeat: no-repeat;
+  background-size: cover;
+}
