@@ -18,22 +18,22 @@
 
 		{% include "dashboard/grey_container.html" %}
 
-		<div class="padding-md">
-			<div class="playbook-top-panel">
-				<div class="col-lg-3">
-					<a href="/create_group">
-						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
-					</a>
-				</div>
-				<div class="col-lg-3"><a href="/quiz/create_formation" id="add-player-link">
-					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
-				</a></div>
-				<div class="col-lg-3"><a href="/groups/1" id="manage-groups-link">
-					<span><img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;MANAGE GROUPS</span>
-				</a></div>
-			</div>
+		<div class="all-groups">
+			<div class="action-boxes">
+			<table class="action-table"><tbody><tr>
+				<td><a href="/create_group">
+					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
+				</a></td>
 
-			<div class="group-select-panel">
+				<td>
+					<a href="/quiz/create_formation" id="add-player-link">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
+					</a></td>
+				<td>
+					<a href="/groups/1" id="manage-groups-link">
+						<span><img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;MANAGE GROUPS</span>
+					</a></td></tr></tbody></table>
+				</div>
 				<script type="text/javascript">
 					var createUserTable = function(users){
 						var innerHTML = "<table class=\"player-list\">";
@@ -77,22 +77,6 @@
 						var sel = document.getElementById('group-form');
 						changeGroup(sel);
 					};
-					/*
-					if(sel.selectedIndex === 0){
-						//OFFENSE
-						defenseBox.classList.add('hidden');
-						offenseBox.classList.remove('hidden');
-						//set href of image links to link to offensive play/formation
-						formationLink.href = "/quiz/create_formation"
-						playLink.href = "/quiz/create_play"
-					}else{
-						//DEFENSE
-						offenseBox.classList.add('hidden');
-						defenseBox.classList.remove('hidden');
-						formationLink.href = "/quiz/create_defense_formation"
-						playLink.href = "/quiz/create_defense_formation"
-						//set href of image links to link to defensive play/formation
-					}*/
 			</script>
 			<form>
 				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
@@ -104,8 +88,6 @@
 					</optgroup>
 				</select>
 			</form>
-			</div>
-
 			<div class="row dash-row group-home">
 				<div class="col-lg-8 news-col" id="display-group-box">
 					<div class = "table-wrapper" id="group-table-wrapper">

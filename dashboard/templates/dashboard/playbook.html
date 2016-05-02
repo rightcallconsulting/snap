@@ -20,6 +20,38 @@
 
 		<div class="playbook">
 				<div class="action-boxes">
+          <script type="text/javascript">
+            var changeUnit = function(sel){
+              var offenseBox = document.getElementById('choose-offensive-formation-box');
+              var defenseBox = document.getElementById('choose-defensive-formation-box');
+              var selectPlayBox = document.getElementById('select-play-box');
+              var selectOffenseBox = document.getElementById('select-offense-box');
+              var formationLink = document.getElementById('formation-link')
+              var playLink = document.getElementById('play-link')
+              document.getElementById('play-image-header').innerHTML = "Play";
+              if(sel.value === 'offense'){
+                //OFFENSE
+                defensePlayToDraw = null;
+                defenseBox.classList.add('hidden');
+                selectOffenseBox.classList.add('hidden');
+                offenseBox.classList.remove('hidden');
+                selectPlayBox.classList.remove('hidden')
+                //set href of image links to link to offensive play/formation
+                formationLink.href = "/quiz/create_formation"
+                playLink.href = "/quiz/create_play"
+              }else{
+                playToDraw = null;
+                //DEFENSE
+                selectPlayBox.classList.add('hidden');
+                offenseBox.classList.add('hidden');
+                defenseBox.classList.remove('hidden');
+                selectOffenseBox.classList.remove('hidden');
+                formationLink.href = "/quiz/create_defense_formation"
+                playLink.href = "/quiz/create_defense_formation"
+                //set href of image links to link to defensive play/formation
+              }
+            };
+          </script>
           <table class="action-table"><tbody><tr>
             <td><form>
 							<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
@@ -48,68 +80,7 @@
   						<a href="/quiz/create_defense_formation" id="play-link">
   						{% endif %}
   						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE PLAY</span></a></td></tr></tbody></table>
-					<!--<div class="col-lg-3">
-						<script type="text/javascript">
-							var changeUnit = function(sel){
-								var offenseBox = document.getElementById('choose-offensive-formation-box');
-								var defenseBox = document.getElementById('choose-defensive-formation-box');
-								var selectPlayBox = document.getElementById('select-play-box');
-								var selectOffenseBox = document.getElementById('select-offense-box');
-								var formationLink = document.getElementById('formation-link')
-								var playLink = document.getElementById('play-link')
-								document.getElementById('play-image-header').innerHTML = "Play";
-								if(sel.value === 'offense'){
-									//OFFENSE
-									defensePlayToDraw = null;
-									defenseBox.classList.add('hidden');
-									selectOffenseBox.classList.add('hidden');
-									offenseBox.classList.remove('hidden');
-									selectPlayBox.classList.remove('hidden')
-									//set href of image links to link to offensive play/formation
-									formationLink.href = "/quiz/create_formation"
-									playLink.href = "/quiz/create_play"
-								}else{
-									playToDraw = null;
-									//DEFENSE
-									selectPlayBox.classList.add('hidden');
-									offenseBox.classList.add('hidden');
-									defenseBox.classList.remove('hidden');
-									selectOffenseBox.classList.remove('hidden');
-									formationLink.href = "/quiz/create_defense_formation"
-									playLink.href = "/quiz/create_defense_formation"
-									//set href of image links to link to defensive play/formation
-								}
-							};
-						</script>
-						<form>
-							<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
-								{% if selected_unit == "offense" %}
-								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
-								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
-								{% else %}
-								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
-								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
-								{% endif %}
-							</select>
-						</form>
-					</div>
-					<div class="col-lg-3">
-						{% if selected_unit == "offense" %}
-						<a href="/quiz/create_formation" id="formation-link">
-						{% else %}
-						<a href="/quiz/create_defense_formation" id="formation-link">
-						{% endif %}
-						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE FORMATION</span>
-					</a></div>
-					<div class="col-lg-3">
-						{% if selected_unit == "offense" %}
-						<a href="/quiz/create_play" id="play-link">
-						{% else %}
-						<a href="/quiz/create_defense_formation" id="play-link">
-						{% endif %}
-						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE PLAY</span>
-					</a></div>-->
-				</div>
+				    </div>
 						<div class="main-content-area dash-col display-play-box" id="display-play-box">
 							<div class="dash-header text-center">
 								<span><h4 id="play-image-header">Play</h4></span>

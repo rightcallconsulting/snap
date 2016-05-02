@@ -10,7 +10,7 @@
   margin-right: 2.5%;
 }
 
-.coach-home .action-boxes, .playbook .action-boxes{
+.coach-home .action-boxes, .playbook .action-boxes, .all-groups .action-boxes{
   margin-left: 3.5%;
   width: 95%;
   height: 22%;
@@ -20,6 +20,10 @@
 
 .playbook .action-boxes{
   margin-bottom: 5%;
+}
+
+.all-groups .aciton-boxes{
+  margin-bottom: 0px;
 }
 .coach-home .main-content-area, .playbook .main-content-area{
   margin-left: 3.5%;
@@ -50,6 +54,11 @@
   margin-bottom: 4.5%
 }
 
+.all-groups select{
+  margin-left: 2%;
+  margin-bottom: 2%;
+  width: 65%;
+}
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
   height: 600px;
   margin-bottom: 50px;
