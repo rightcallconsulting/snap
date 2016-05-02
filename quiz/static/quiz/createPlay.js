@@ -5,12 +5,28 @@ var playBeingCreated;
 var teamIDFromHTML = $('#team-id').data('team-id')
 
 function setup() {
-  var myCanvas = createCanvas(550, 550);
-  createPlayField.height = 550;
+  var box = document.getElementById('display-box');
+  var sidebar = document.getElementById('choose-offensive-formation-box');
+  var height = sidebar.offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  createPlayField.height = height;
+  createPlayField.width = width;
   createPlayField.heightInYards = 54;
   createPlayField.ballYardLine = 75;
   background(58, 135, 70);
+  randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var sidebar = document.getElementById('choose-offensive-formation-box');
+    var height = sidebar.offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    createPlayField.height = height;
+    createPlayField.width = width;
+  }
 }
 
 function draw() {
