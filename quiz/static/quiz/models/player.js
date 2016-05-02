@@ -103,8 +103,8 @@ Player.prototype.clearRoute = function(){
 
 Player.prototype.isMouseInside = function(field) {
   var siz = field.yardsToPixels(this.siz);
-  var x = this.getX(field);
-  var y = this.getY(field);
+  var x = field.getTranslatedX(this.x)
+  var y = field.getTranslatedY(this.y)
   var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
   return dist <= siz/2;
   /*

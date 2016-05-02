@@ -15,9 +15,27 @@
 .col-11 {width: 91.66%;}
 .col-12 {width: 100%;}
 
-#display-box {
-  height: 650px;
-  width: 550px;
+.quiz .main-content-area{
+  margin-left: 3.5%;
+  width: 45%;
+  height: 95%;
+  margin-right: 5%;
+  display: inline-block;
+  float: left;
+}
+
+.quiz .secondary-content-area{
+  width: 20%;
+  height: 45%;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 0px;
+  float: left;
+}
+
+.quiz #quiz-sidebar{
+  margin-right: 5%;
 }
 
 .choose-offensive-formation-box, .quiz-sidebar {
@@ -230,16 +248,12 @@
 }
 
 #quiz-sidebar{
-  margin-left: 50px;
   height: 650px;
-  width: 330px;
 }
 
 #quiz-scoreboard{
-  margin-left: 50px;
   font-size: 20px;
   height: 650px;
-  width: 330px;
 }
 
 .scoreboard-table{

@@ -56,7 +56,7 @@ Field.prototype.getTranslatedY = function(y){
 }
 
 Field.prototype.getYardX = function(x){
-  return this.pixelsToYards(x)+this.getXOffset();
+  return this.pixelsToYards(x - (this.width - this.height)/2)+this.getXOffset();
 }
 
 Field.prototype.getYardY = function(y){

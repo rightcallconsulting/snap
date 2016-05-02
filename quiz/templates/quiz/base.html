@@ -41,8 +41,8 @@
     <div id="main-container">
       {% include "dashboard/top_nav_bar.html" %}
       {% include "dashboard/grey_container.html" %}
-      <div class="padding-md">
-        <div class="col-lg-5 dash-col display-box" id="display-box">
+      <div class="quiz">
+        <div class="main-content-area display-box" id="display-box">
           <div class="dash-header text-center" id="header-box">
             <span>
               <h4 id="play-name">
@@ -76,7 +76,7 @@
         </div>
 
         {% block sidebar %}
-        <div class="col-lg-2 dash-col quiz-sidebar" id="quiz-sidebar">
+        <div class="secondary-content-area quiz-sidebar" id="quiz-sidebar">
           <div class="dash-header text-center">
             <span><h4 id="play-image-header">{{page_header}}</h4></span>
           </div>
@@ -203,7 +203,7 @@
         {% endblock %}
 
         {% block scoreboard %}
-        <div class="col-lg-2 dash-col choose-offensive-formation-box" id="quiz-scoreboard">
+        <div class="secondary-content-area choose-offensive-formation-box" id="quiz-scoreboard">
           <div class="dash-header text-center">
             <span><h4>Results</h4></span>
           </div>
