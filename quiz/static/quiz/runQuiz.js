@@ -13,14 +13,26 @@ var hasExchanged = false;
 
 
 function setup() {
-  var myCanvas = createCanvas(550, 550);
-  field.height = 550;
-  field.width = 550;
+  var box = document.getElementById('display-box');
+  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+  }
 
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
@@ -400,7 +412,7 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "defense"){
-      if(this.clicked){ 
+      if(this.clicked){
       }
       noStroke();
       fill(0, 0, 0);
