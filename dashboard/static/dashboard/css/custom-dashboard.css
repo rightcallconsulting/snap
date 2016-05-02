@@ -4,6 +4,7 @@
 
 #wrapper{
   height: 100%;
+  overflow-x: hidden;
 }
 
 .coach-home{
@@ -982,4 +983,9 @@ input.create-quiz{
 
 .dash-row{
   border: none;
+}
+
+.status-complete{
+  background-color: #558B2F;
+  padding: 8px;
 }
