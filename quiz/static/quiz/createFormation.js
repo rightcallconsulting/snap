@@ -1,6 +1,7 @@
 var formations = [];
 var formationExample;
 var makeJSONCall = true;
+var trash;
 var teamIDFromHTML = $('#team-id').data('team-id');
 
 function setup() {
@@ -25,6 +26,13 @@ function setup() {
     resizeCanvas(width, height);
     field.height = height;
     field.width = width;
+    var trashWidth = field.pixelsToYards(field.width * 0.12);
+    var trashX = Field.WIDTH - trashWidth * 1.1;
+    if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width){
+      trashX = field.getYardX(field.width) - trashWidth*1.1;
+    }
+    trash.width = trashWidth;
+    trash.x = trashX;
   }
 }
 
@@ -113,11 +121,17 @@ var runTest = function(){
     }
   };
 
+  var trashWidth = field.pixelsToYards(field.width * 0.12);
+  var trashX = Field.WIDTH - trashWidth * 1.1;
+  if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width){
+    trashX = field.getYardX(field.width) - trashWidth*1.1;
+  }
+
   // Create Buttons
-  var trash = new Button({
-      x: field.getYardX(width * 0.8),
+  trash = new Button({
+      x: trashX,
       y: field.getYardY(height * 0.88),
-      width: field.pixelsToYards(width * 0.12),
+      width: trashWidth,
       height: field.pixelsToYards(width * 0.08),
       label: "Trash",
       clicked: false,
