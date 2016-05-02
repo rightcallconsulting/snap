@@ -328,6 +328,26 @@ keyPressed = function(){
       guessedAssignment.removeLastBlockedPlayer();
     }
     return false;
+  }else if(keyCode === LEFT_ARROW){
+    if(guessedAssignment){
+      guessedAssignment.blockedZone = -1;
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: -1
+      });
+    }
+  }else if(keyCode === RIGHT_ARROW){
+    if(guessedAssignment){
+      guessedAssignment.blockedZone = 1;
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: 1
+      });
+    }
+  }else if(keyCode === DOWN_ARROW || keyCode === UP_ARROW){
+    if(guessedAssignment){
+      guessedAssignment.blockedZone = 0;
+    }
   }
   return true;
 }

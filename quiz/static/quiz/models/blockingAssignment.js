@@ -4,17 +4,21 @@ var BlockingAssignment = function(config){
 	this.blockedZone = config.blockedZone || 0; //0 means no zone, - is left, + is right
 };
 
-BlockingAssignment.prototype.drawBlockedZone = function(currentPlayerTested){
-	var startX = currentPlayerTested.startX;
-	var startX = currentPlayerTested.startX;
-	fill(0, 0, 220);
-	if(this.blockedZone > 0){
-		line(startX, startY, startX + 2, startY + 2);
-	}else if(this.blockedZone < 0){
-		line(startX, startY, startX - 2, startY + 2);
-	}else{
-		line(startX, startY, startX, startY + 2);
+BlockingAssignment.prototype.drawBlockedZone = function(blocker, field){
+	if(this.blockedZone === 0){
+		return;
 	}
+	var startX = blocker.startX;
+	var startY = blocker.startY;
+	var x1 = field.getTranslatedX(startX);
+	var y1 = field.getTranslatedY(startY);
+	var x2 = field.getTranslatedX(startX + 2);
+	var y2 = field.getTranslatedY(startY + 2);
+	stroke(0, 0, 220);
+	if(this.blockedZone < 0){
+		x2 = field.getTranslatedX(startX - 2);
+	}
+	line(x1, y1, x2, y2);
 };
 
 BlockingAssignment.prototype.getBlockedPlayer = function(i){
@@ -58,6 +62,7 @@ BlockingAssignment.prototype.draw = function(blocker, field){
         noStroke();
 		strokeWeight(1);
  	}
+ 	this.drawBlockedZone(blocker, field);
 };
 
 
