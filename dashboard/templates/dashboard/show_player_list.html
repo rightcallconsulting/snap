@@ -34,9 +34,15 @@
 			{% endif %}
 			<table class="analytics-main-table">
 				<tr>
+					<th>CORRECT<br />
+					<canvas id="percentCorrectChart"></canvas></th>
+					<th>INCORRECT<br />
+					<canvas id="percentIncorrectChart"></canvas></th>
+					<th>SKIPPED<br />
+					<canvas id="percentSkippedChart"></canvas></th>
+				</tr>
+				<tr>
 					<td>
-						CORRECT<br />
-						<canvas id="percentCorrectChart"></canvas>
 						<table class="analytics-play-list" id="correct-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.correct_plays_percent %}
@@ -49,8 +55,6 @@
 						</table>
 					</td>
 					<td>
-						INCORRECT<br />
-						<canvas id="percentIncorrectChart"></canvas>
 						<table class="analytics-play-list" id="incorrect-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.incorrect_plays_percent %}
@@ -63,8 +67,6 @@
 						</table>
 					</td>
 					<td>
-						SKIPPED<br />
-						<canvas id="percentSkippedChart"></canvas>
 						<table class="analytics-play-list" id="skipped-plays-list">
 							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
 							{% for play, percent in analytics.skipped_plays_percent %}

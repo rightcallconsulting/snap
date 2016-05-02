@@ -540,9 +540,10 @@ input.create-quiz{
   table-layout: fixed;
   width: 100%;
   margin-top: 40px;
+  text-align: center;
 }
 
-.analytics-table td{
+.analytics-main-table th{
   text-align: center;
 }
 
