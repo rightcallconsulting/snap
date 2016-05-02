@@ -48,7 +48,7 @@ Field.prototype.getWidthInYards = function(){
 }
 
 Field.prototype.getTranslatedX = function(x){
-  return this.yardsToPixels(x - this.getXOffset());
+  return this.yardsToPixels(x - this.getXOffset()) + (this.width - this.height)/2;
 }
 
 Field.prototype.getTranslatedY = function(y){
@@ -112,18 +112,19 @@ Field.prototype.drawBackground = function(play, height, width) {
       fill(255,255,255);
             textSize(26); //the one thing that isn't adjusting for screen size...
 
-            text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels);
+            text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels - (this.width-this.height)/2);
+            //text(min(currentYardLine,100-currentYardLine), yc, this.getTranslatedX(9));
             rotate(PI);
             var xc = (53.33 - 9)*yardsToPixels;
-            text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-this.getXOffset())*yardsToPixels);
+            text(min(currentYardLine,100-currentYardLine), 0-yc, (44.33-this.getXOffset())*yardsToPixels + (this.width-this.height)/2);
             //rotate(HALF_PI);
             resetMatrix();
           }else if(currentYardLine % 5 === 0){
             line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
           }else{
             line(this.getTranslatedX(0), yc, this.getTranslatedX(1), yc);
-            line((19.67-this.getXOffset())*yardsToPixels, yc, (20.33 - this.getXOffset())*yardsToPixels, yc);
-            line((33 - this.getXOffset())*yardsToPixels, yc, (33.67 - this.getXOffset())*yardsToPixels, yc);
+            line((19.67-this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (20.33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
+            line((33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (33.67 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
             line(this.getTranslatedX(Field.WIDTH - 1), yc, this.getTranslatedX(Field.WIDTH), yc);
           }
         }

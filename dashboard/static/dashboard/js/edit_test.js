@@ -10,11 +10,25 @@ var defensePlayToDraw = null;
 var defensePlayName = "";
 
 function setup() {
-  var myCanvas = createCanvas(500, 500);
-  field.height = 500;
+  var box = document.getElementById('display-play-box-2');
+  var width = box.offsetWidth;
+  var height = document.getElementById('display-play-box').offsetHeight - 90;
+  var myCanvas = createCanvas(width, height);
+
+  field.height = height;
+  field.width = width;
   field.heightInYards = 53;
   background(58, 135, 70);
   myCanvas.parent('display-play-box-2');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-play-box-2');
+    var height = document.getElementById('display-play-box').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+  }
 }
 
 function draw() {

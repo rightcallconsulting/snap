@@ -1,3 +1,55 @@
+* {
+    box-sizing: border-box;
+}
+
+#wrapper{
+  height: 100%;
+}
+
+.coach-home{
+  margin-right: 2.5%;
+}
+
+.coach-home .action-boxes, .playbook .action-boxes{
+  margin-left: 3.5%;
+  width: 95%;
+  height: 22%;
+  margin-bottom: 2%;
+  display: inline-block;
+}
+
+.playbook .action-boxes{
+  margin-bottom: 5%;
+}
+.coach-home .main-content-area, .playbook .main-content-area{
+  margin-left: 3.5%;
+  width: 45%;
+  height: 95%;
+  margin-right: 5%;
+  display: inline-block;
+  float: left;
+}
+
+.coach-home .stacked-col, .playbook .stacked-col{
+  width: 45%;
+  height: 95%;
+  display: inline-block;
+  float: left;
+}
+
+.coach-home .secondary-content-area, .playbook .secondary-content-area{
+  width: 100%;
+  height: 45%;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 0px;
+}
+
+.coach-home .top, .playbook .top{
+  margin-bottom: 4.5%
+}
+
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
   height: 600px;
   margin-bottom: 50px;
@@ -48,11 +100,6 @@
 
 .top-nav-table .right{
   text-align: right;
-}
-
-#display-play-box {
-  width: 500px;
-  margin-top: 10px;
 }
 
 #display-play-box .dash-header {
@@ -146,9 +193,8 @@
 }
 
 .playbook .dash-col{
-  margin-top: 10px;
   height: 600px;
-  margin-bottom:10px;
+  margin-top: 0px;
 }
 
 .playerbook .dash-col{
@@ -213,12 +259,6 @@
 
 .coach-action-row{
   display:table;
-  height: 40%;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 7.5%;
-  margin-bottom: 7.5%;
   text-align: center;
 }
 
@@ -379,19 +419,13 @@ input.create-quiz{
   table-layout: fixed;
 }
 
-.playbook-top-panel{
-  height: 100px;
-  margin-bottom: 30px;
-  border: none;
-}
-
-.playbook-top-panel .col-lg-3{
+.action-boxes .col-lg-3{
   text-align: center;
+  height: 100%;
 }
 
-.playbook-top-panel span{
+.action-boxes span{
   font-size: 17px;
-  height: 50px;
   margin-top: auto;
   margin-bottom: auto;
 }
@@ -463,15 +497,14 @@ input.create-quiz{
   height: 200px;
 }
 
-.coach-action-row{
-  margin-top: 10px;
-  margin-left: 20px;
-  height: 200px;
+.action-table{
   width: 100%;
+  table-layout: fixed;
+  text-align: center;
+  vertical-align: middle;
 }
-
 .coach-action-table{
-  width: 90%;
+  width: 85%;
   table-layout: fixed;
 }
 
@@ -547,8 +580,7 @@ input.create-quiz{
 }
 
 .coach-action-table {
-  margin-left: 40px;
-  width: 82.5%;
+  width: 100%;
 }
 
 .coach-action-table td{
@@ -623,12 +655,6 @@ input.create-quiz{
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-}
-
-.coach-home .dash-col, .coach-home .stacked-col{
-  height: 500px;
-  margin-top: -125px;
-  margin-left: 75px;
 }
 
 .playerbook .table-wrapper{
@@ -781,13 +807,6 @@ input.create-quiz{
   color: #C5E1A5;
 }
 
-.coach-home .stacked-row{
-  height: 45%;
-  margin-bottom: 10%;
-  border-left: 1px solid #777;
-  border-right: 1px solid #777;
-}
-
 .stacked-row{
   height: 50%;
   margin: 0px;
@@ -825,7 +844,7 @@ input.create-quiz{
 }
 
 .group-analytics td{
-  
+
 }
 
 .group-analytics h3{

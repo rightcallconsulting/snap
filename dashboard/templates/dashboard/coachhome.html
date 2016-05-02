@@ -16,9 +16,9 @@
 
 		{% include "dashboard/grey_container.html" %}
 
-		<div class="padding-md coach-home">
+		<div class="coach-home">
 			<div class="content-container">
-				<div class="coach-action-row">
+				<div class="coach-action-row action-boxes">
 					<script>
 					var clickButton = function(index){
 						var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
@@ -61,8 +61,8 @@
 											</tbody>
 										</table>
 									</div>
-									<div class="row dash-row">
-										<div class="dash-col col-lg-5">
+									<div class="main-content-area">
+										<div class="dash-col">
 											<div class="dash-header">
 												<span><h4>ANALYTICS</h4></span>
 											</div>
@@ -96,8 +96,9 @@
 											</div>
 											{% endif %}
 										</div>
-										<div class="stacked-col col-lg-4">
-											<div class="row stacked-row">
+									</div>
+										<div class="stacked-col">
+											<div class="secondary-content-area top">
 												<div class="dash-header">
 													<span><h4>TESTS</h4></span>
 												</div>
@@ -123,7 +124,7 @@
 													</tbody>
 												</table>
 											</div>
-											<div class="row stacked-row">
+											<div class="secondary-content-area bottom">
 												<div class="dash-header">
 													<span><h4>NEWS FEED</h4></span>
 												</div>
