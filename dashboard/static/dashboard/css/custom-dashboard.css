@@ -208,7 +208,7 @@
 }
 
 .playerbook .dash-col{
-  height: 700px;
+  height: 500px;
   margin-bottom:10px;
   text-align: center;
 }
@@ -554,6 +554,11 @@ input.create-quiz{
 }
 
 .analytics-main-table th{
+  text-align: center;
+}
+
+.analytics-main-table td{
+  vertical-align: top;
   text-align: center;
 }
 
