@@ -242,7 +242,7 @@ function draw() {
     // game scene
     var drawScene = function(play) {
         field.drawBackground(play, height, width)
-        //defensePlay.drawAllPlayers(field);
+        defensePlay.drawAllPlayers(field);
         play.drawAllRoutes(field);
         play.drawAllPlayers(field);
         for(var i = 0; i < play.eligibleReceivers.length; i++){
