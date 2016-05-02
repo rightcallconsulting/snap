@@ -11,14 +11,27 @@ var correctZoneFill = null;
 var playerIDFromHTML = $('#player-id').data('player-id');
 
 function setup() {
-  var myCanvas = createCanvas(550, 550);
-  field.height = 550;
+  var box = document.getElementById('display-box');
+  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
   field.heightInYards = 54;
   field.ballYardLine = 75;
-
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+  }
+  
   bigReset = new Button({
     x: field.getYardX(width*0.5 - 25),
     y: field.getYardY(height*0.8),

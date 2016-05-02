@@ -13,13 +13,26 @@ var missedOrSkippedPlays = [];
 
 
 function setup() {
-  var myCanvas = createCanvas(550, 550);
-  field.height = 550;
-  field.width = 550;
+  var box = document.getElementById('display-box');
+  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
+  randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+  }
 
   exitDemo = new Button({
     label: "",
