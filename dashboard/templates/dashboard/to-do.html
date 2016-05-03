@@ -70,9 +70,6 @@
 									<th>Added By</th>
 									{% endif %}
 									<th></th>
-									{% if not request.user.myuser.is_a_player %}
-									<th></th>
-									{% endif %}
 								</tr>
 							</thead>
 					<tbody>
@@ -101,7 +98,6 @@
 								<td><a href="/quiz/{{test.type_of_test}}/{{test.id}}"><span class="button">Start Quiz</span></a></td>
 							{% else %}
 							<td><a href="{% url 'edit_test' test.id %}"><span class="button">Edit Quiz</span></a></td>
-							<td><a href="{% url 'test_analytics' test.id %}"><span class="button">Analytics</span></a></td>
 
 							{% endif %}
 						</tr>

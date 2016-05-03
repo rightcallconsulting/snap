@@ -23,11 +23,15 @@ class UserCreateForm(UserCreationForm):
             ("C", "C"),
             ("RG", "RG"),
             ("RT", "RT"),
-            ("LE", "LE"),
-            ("DT", "DT"),
+            ("DE", "DE"),
             ("DT", "DT"),
             ("NT", "NT"),
-            ("ROLB", "ROLB"),
+            ("M", "M"),
+            ("S", "S"),
+            ("W", "W"),
+            ("FS", "FS"),
+            ("SS", "SS"),
+            ("CB", "CB"),
         )
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))

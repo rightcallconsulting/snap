@@ -558,7 +558,12 @@ Player.prototype.checkRoutes = function(play){
 
 
 Player.prototype.movePlayer = function(field){
-  this.x = field.getYardX(mouseX);
+  var newX = field.getYardX(mouseX);
+  if(newX < this.siz / 2){
+    newX = this.siz / 2;
+  }else if(newX > Field.WIDTH - this.siz / 2){
+    newX = Field.WIDTH - this.siz / 2;
+  }
   var newY = field.getYardY(mouseY);
   if (this.unit != "defense"){
     if(newY > field.ballYardLine - this.siz/2){
@@ -570,6 +575,7 @@ Player.prototype.movePlayer = function(field){
   else{
     this.y = newY;
   }
+  this.x = newX;
 
   this.startX = this.x;
   this.startY = this.y;
