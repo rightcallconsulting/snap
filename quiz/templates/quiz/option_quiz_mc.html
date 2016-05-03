@@ -6,7 +6,7 @@
 
 {% endblock %}
 {% block header %}
-LB CALL QUIZ
+OPTION QUIZ
 {% endblock %}
 
 {% block quiz_type %}
@@ -14,8 +14,9 @@ LB CALL QUIZ
   var json_seed = {{ json_seed|safe }};
   console.log(JSON.stringify(json_seed, null, 2));
 </script>
-<script language="javascript" type="text/javascript" src="{% static 'quiz/linebackerCallQuiz.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/optionQuizMC.js' %}"></script>
 <script type="text/javascript">
+
 
 $('#play-button').click(function(){
         //pressPlayButton();
@@ -37,12 +38,12 @@ $('#check-button').click(function(){
 })
 
 $('#clear-button').click(function(){
-  clearMultipleChoiceAnswers();
+  clearAnswers();
 })
 
 $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
-    clearMultipleChoiceAnswers();
+    clearAnswers()
     test.restartQuiz();
   }
 })

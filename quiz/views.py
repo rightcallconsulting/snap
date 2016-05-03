@@ -333,6 +333,19 @@ class AlignmentQuizView(FormationQuizView):
             'formations': formations,
         }
 
+class OptionQuizMCView(FormationQuizView):
+    template_name = 'quiz/option_quiz_mc.html'
+    page_header = 'OPTION QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(OptionQuizMCView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 
 class CoverageQuizView(FormationQuizView):
     template_name = 'quiz/coverage_quiz.html'
