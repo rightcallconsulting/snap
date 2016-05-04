@@ -18,4 +18,28 @@ var selectActive = function(){
     }
   }
 }
+
+var setSidebarSize = function(){
+  var current = window.location.pathname.split('/')[1];
+  var nav = document.getElementById('nav');
+  var sidebar = document.getElementById('main-sidebar');
+  var container = document.getElementById('main-container');
+  if(current === ""){
+    sidebar.classList.add('full-sidebar')
+    sidebar.classList.remove('small-sidebar')
+    if(container){
+        container.classList.add('full-sidebar-container');
+        container.classList.remove('small-sidebar-container');
+    }
+  }else{
+    sidebar.classList.remove('full-sidebar')
+    sidebar.classList.add('small-sidebar')
+    if(container){
+        container.classList.add('small-sidebar-container');
+        container.classList.remove('full-sidebar-container');
+    }
+  }
+}
+
 selectActive();
+setSidebarSize();

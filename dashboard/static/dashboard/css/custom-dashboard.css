@@ -7,6 +7,16 @@
   overflow-x: hidden;
 }
 
+#main-container{position:relative;min-height:850px;padding-top:15px;}
+
+.full-sidebar-container{
+  margin-left: 12%;
+}
+
+.small-sidebar-container{
+  margin-left: 4%;
+}
+
 .coach-home{
   margin-right: 2.5%;
 }
@@ -60,6 +70,11 @@
   margin-bottom: 2%;
   width: 65%;
 }
+
+.small-sidebar .menu-text{
+  display: none;
+}
+
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
   height: 600px;
   margin-bottom: 50px;
@@ -888,10 +903,19 @@ input.create-quiz{
   height: 90%;
 }
 
-.main-sidebar{
+.full-sidebar{
   width: 12%;
   height: 100%;
-  min-width: 150px;
+}
+
+.small-sidebar{
+  max-width: 3%;
+  min-width: 50px;
+  height: 100%;
+}
+
+.small-sidebar .main-menu li{
+  text-align: center;
 }
 
 .sidebar-footer{

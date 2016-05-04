@@ -17,8 +17,8 @@
 
 .quiz .main-content-area{
   margin-left: 3.5%;
-  width: 45%;
-  height: 95%;
+  width: 58%;
+  height: 600px;
   margin-right: 5%;
   display: inline-block;
   float: left;
@@ -28,8 +28,8 @@
 }
 
 .quiz .secondary-content-area{
-  width: 20%;
-  height: 45%;
+  width: 15%;
+  height: 600px;
   border-left: 1px solid #777;
   border-right: 1px solid #777;
   border-bottom: 1px solid #777;
@@ -38,7 +38,27 @@
 }
 
 .quiz #quiz-sidebar{
-  margin-right: 5%;
+  margin-right: 3%;
+  height: 600px;
+}
+
+#quiz-sidebar{
+  height: 500px;
+}
+
+#quiz-scoreboard{
+  font-size: 20px;
+  height: 600px;
+}
+
+#main-container{position:relative;min-height:850px;padding-top:15px;}
+
+#main-container .full-sidebar-container{
+  margin-left: 12%;
+}
+
+#main-container .small-sidebar-container{
+  margin-left: 3%;
 }
 
 .choose-offensive-formation-box, .quiz-sidebar {
@@ -240,23 +260,27 @@
   background-color: #FFEE58;
 }
 
-.main-sidebar{
+.full-sidebar{
   width: 12%;
   height: 100%;
-  min-width: 150px;
+}
+
+.small-sidebar{
+  max-width: 3%;
+  min-width: 50px;
+  height: 100%;
+}
+
+.small-sidebar .main-menu li{
+  text-align: center;
+}
+
+.small-sidebar .menu-text{
+  display: none;
 }
 
 .top-nav-button{
   height: 20px;
-}
-
-#quiz-sidebar{
-  height: 500px;
-}
-
-#quiz-scoreboard{
-  font-size: 20px;
-  height: 500px;
 }
 
 .scoreboard-table{

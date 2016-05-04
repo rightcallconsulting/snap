@@ -10,8 +10,6 @@
 
 	{% include "dashboard/sidebar.html" %}
 
-  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-
 
 	<div id="main-container">
 		{% include "dashboard/top_nav_bar.html" %}
@@ -85,4 +83,5 @@
 
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 			{% endblock %}
