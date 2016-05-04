@@ -198,7 +198,7 @@ function drawDemoScreen(){
     noStroke();
     fill(220,0,0);
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     textAlign(LEFT);
     text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);

@@ -33,15 +33,15 @@ function setup() {
     field.width = width;
   }
 
- multipleChoiceAnswers = [];
- bigReset = new Button({
-  x: field.getYardX(width*0.5 - 25),
-  y: field.getYardY(height*0.8),
-  width: 5,
-  label: "Restart"
-})
+  multipleChoiceAnswers = [];
+  bigReset = new Button({
+    x: field.getYardX(width*0.5 - 25),
+    y: field.getYardY(height*0.8),
+    width: 5,
+    label: "Restart"
+  })
 
- exitDemo = new Button({
+  exitDemo = new Button({
     label: "",
     x: 14,
     y: 94,
@@ -50,7 +50,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
- 
+
   if(json_seed){
 
     var scoreboard = new Scoreboard({
@@ -197,7 +197,7 @@ function drawDemoScreen(){
     noStroke();
     fill(255,238,88);
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
     strokeWeight(2);
@@ -225,7 +225,7 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(20);
+    textSize(18);
     textAlign(CENTER);
     if(demoDoubleClick){
       text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 110);
@@ -306,7 +306,7 @@ function draw() {
       noStroke();
       fill(0,0,0);
       if(this === currentPlayerTested){
-        fill(0, 0, 220);
+        fill(255,238,88);
       }
       textSize(17);
       textAlign(CENTER, CENTER);

@@ -53,7 +53,6 @@ function setup() {
   if(json_seed){
 
     var scoreboard = new Scoreboard({
-
     });
     test = new PlayTest({
       plays: [],
@@ -101,14 +100,11 @@ function setup() {
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
@@ -176,17 +172,17 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(255,238,88);
-    exitDemo.draw(field);
-    textSize(30);
-    textAlign(LEFT);
-    text("DEMO", x2 + 5, (y1 + y2) / 2);
-    stroke(0);
-    strokeWeight(2);
-    line(x1, y1, x2, y2);
-    line(x1, y2, x2, y1);
-    strokeWeight(1);
-    noStroke();
+  fill(255,238,88);
+  exitDemo.draw(field);
+  textSize(22);
+  textAlign(LEFT);
+  text("DEMO", x2 + 5, (y1 + y2) / 2);
+  stroke(0);
+  strokeWeight(2);
+  line(x1, y1, x2, y2);
+  line(x1, y2, x2, y1);
+  strokeWeight(1);
+  noStroke();
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -353,7 +349,7 @@ function draw() {
       noStroke();
       fill(0,0,0);
       if(this === currentPlayerTested){
-        fill(0, 0, 220);
+        fill(255,238,88);
       }
       textSize(17);
       textAlign(CENTER, CENTER);

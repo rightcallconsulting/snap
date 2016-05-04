@@ -179,7 +179,7 @@ function drawDemoScreen(){
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     textAlign(LEFT);
     text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);

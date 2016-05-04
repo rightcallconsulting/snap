@@ -196,7 +196,7 @@ function drawDemoScreen(){
     noStroke();
     fill(255,238,88);
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
     strokeWeight(2);
