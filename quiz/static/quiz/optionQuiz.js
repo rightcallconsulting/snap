@@ -12,14 +12,26 @@ var demoDoubleClick = false;
 var oldFill = null;
 
 function setup() {
-  var myCanvas = createCanvas(550, 550);
-  field.height = 550;
-  field.width = 550;
+  var box = document.getElementById('display-box');
+  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
   field.heightInYards = 54;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+  }
 
   multipleChoiceAnswers = [];
   bigReset = new Button({
@@ -221,7 +233,7 @@ function drawDemoScreen(){
     noStroke();
     fill(220,0,0);
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
     strokeWeight(2);

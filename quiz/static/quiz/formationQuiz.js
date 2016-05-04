@@ -37,10 +37,11 @@ function setup() {
     width: field.heightInYards / 6,
     label: "Restart"
   })
+
   exitDemo = new Button({
     label: "",
-    x: 14,
-    y: 94,
+    x: field.getYardX(25),
+    y: field.getYardY(25),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -73,7 +74,6 @@ function setup() {
       formationNames.push(formation.name);
       formations.push(formation);
     }
-
     test.formations = shuffle(formations);
     multipleChoiceAnswers = [];
     test.restartQuiz();
@@ -159,8 +159,9 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
+    fill(220,0,0);
     exitDemo.draw(field);
-    textSize(30);
+    textSize(22);
     text("DEMO", field.width / 6, field.height / 6);
     stroke(0);
     strokeWeight(2);
@@ -190,7 +191,7 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(20);
+    textSize(14);
     textAlign(CENTER);
     if(demoDoubleClick){
       text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);

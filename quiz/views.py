@@ -83,15 +83,6 @@ def blocking_quiz(request):
         'page_header': 'BLOCKING QUIZ'
     })
 
-def zone_blocking_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/zone_blocking_quiz.html', {
-        'player': player,
-        'page_header': 'ZONE BLOCKING QUIZ'
-    })
-
 def run_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
