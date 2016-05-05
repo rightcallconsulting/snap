@@ -16,8 +16,8 @@
 .col-12 {width: 100%;}
 
 .quiz .main-content-area{
-  margin-left: 3.5%;
-  width: 58%;
+  margin-left: 5%;
+  width: 56%;
   height: 600px;
   margin-right: 5%;
   display: inline-block;
@@ -35,6 +35,22 @@
   border-bottom: 1px solid #777;
   padding: 0px;
   float: left;
+}
+
+.create-formation.choose-offensive-formation-box{
+  width: 20%;
+  height: 600px;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 0px;
+  float: left;
+}
+
+.create-formation.choose-offensive-formation-box .table-wrapper{
+  height: 90%;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .quiz #quiz-sidebar{
@@ -58,7 +74,17 @@
 }
 
 #main-container .small-sidebar-container{
-  margin-left: 3%;
+  margin-left: 4%;
+}
+
+.full-sidebar-container #top-nav{
+  margin-left: 12%;
+  padding-left: 10px;
+}
+
+.small-sidebar-container #top-nav{
+  margin-left: 4%;
+  padding-left: 10px;
 }
 
 .choose-offensive-formation-box, .quiz-sidebar {
@@ -266,7 +292,7 @@
 }
 
 .small-sidebar{
-  max-width: 3%;
+  max-width: 4%;
   min-width: 50px;
   height: 100%;
 }

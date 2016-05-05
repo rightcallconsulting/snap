@@ -42,10 +42,11 @@
 {% endblock %}
 
 {% block sidebar %}
-  <div class="col-lg-4 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
+  <div class="col-lg-4 create-formation dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
       <span><h4>Existing Formations</h4></span>
     </div>
+    <div class="table-wrapper">
     <table class="formation-list two-column-table">
       {% for formation in offensive_formations %}
       {% if forloop.counter0|divisibleby:2 %}
@@ -60,5 +61,6 @@
         <td></td></tr>
       {% endif %}
     </table>
+  </div>
   </div>
 {% endblock %}

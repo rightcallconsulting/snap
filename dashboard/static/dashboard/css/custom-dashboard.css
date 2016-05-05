@@ -17,6 +17,14 @@
   margin-left: 4%;
 }
 
+.full-sidebar-container .top-nav{
+  margin-left: 12%;
+}
+
+.small-sidebar-container .top-nav{
+  margin-left: 4%;
+}
+
 .coach-home{
   margin-right: 2.5%;
 }
