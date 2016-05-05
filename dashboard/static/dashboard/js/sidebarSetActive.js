@@ -4,6 +4,10 @@ var selectActive = function(){
   var li = nav.getElementsByTagName('li')
   var anchor = nav.getElementsByTagName('a');
   var current = window.location.pathname.split('/')[1];
+  if(current === ""){
+    li[0].className += " active";
+    return;
+  }
   for (var i = 0; i < anchor.length; i++) {
     var parts = anchor[i].href.split('/');
     var coreHREF = parts[parts.length-1];
