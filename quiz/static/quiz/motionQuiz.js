@@ -167,6 +167,7 @@ var sortByPlayName = function(a, b){
 }
 
 var DefensiveCall = function(config){
+  debugger;
   this.name = config.name || "";
 };
 
