@@ -16,7 +16,7 @@
 .col-12 {width: 100%;}
 
 .quiz .main-content-area{
-  margin-left: 5%;
+  margin-left: 3%;
   width: 56%;
   height: 600px;
   margin-right: 5%;
@@ -37,8 +37,8 @@
   float: left;
 }
 
-.create-formation.choose-offensive-formation-box{
-  width: 20%;
+.create-formation.choose-offensive-formation-box, .create-play.choose-offensive-formation-box{
+  width: 25%;
   height: 600px;
   border-left: 1px solid #777;
   border-right: 1px solid #777;
@@ -47,7 +47,7 @@
   float: left;
 }
 
-.create-formation.choose-offensive-formation-box .table-wrapper{
+.create-formation.choose-offensive-formation-box .table-wrapper, .create-play.choose-offensive-formation-box .table-wrapper{
   height: 90%;
   overflow-y: auto;
   width: 100%;
@@ -67,7 +67,7 @@
   height: 600px;
 }
 
-#main-container{position:relative;min-height:850px;padding-top:15px;}
+#main-container{position:relative;min-height:1000px;padding-top:15px;}
 
 #main-container .full-sidebar-container{
   margin-left: 12%;
@@ -77,14 +77,20 @@
   margin-left: 4%;
 }
 
-.full-sidebar-container #top-nav{
+.small-sidebar-container#main-container{
+  margin-left: 4%;
+}
+
+.full-sidebar-container#main-container{
   margin-left: 12%;
-  padding-left: 10px;
+}
+
+.full-sidebar-container #top-nav{
+  padding-left: 4%;
 }
 
 .small-sidebar-container #top-nav{
-  margin-left: 4%;
-  padding-left: 10px;
+  padding-left: 4%;
 }
 
 .choose-offensive-formation-box, .quiz-sidebar {
@@ -146,10 +152,20 @@
   padding-top: 25px;
 }
 
-.dash-header-logo{
-  height: 100px;
+.full-sidebar .dash-header-logo{
+  width: 75px;
+  height: 75px;
   display:block;
-  margin:auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.small-sidebar .dash-header-logo{
+  width: 35px;
+  height: 35px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .top-nav-table{
@@ -163,21 +179,24 @@
 }
 
 .top-nav-table .middle{
-  text-align: left;
-  padding-left: 50px;
+  text-align: center;
+  padding-right: 4%;
 }
 
 .top-nav-table .middle img{
   height: 50px;
-  margin-right: 20px;
 }
 
 .top-nav-table .right{
   text-align: right;
 }
 
-.dash-footer-logo{
+.full-sidebar .dash-footer-logo{
   height: 75px;
+}
+
+.small-sidebar .dash-footer-logo{
+  height: 25px;
 }
 
 .formation-button, .offensive-formation-button, .group-button {

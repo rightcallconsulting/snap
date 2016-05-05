@@ -7,7 +7,7 @@
   overflow-x: hidden;
 }
 
-#main-container{position:relative;min-height:850px;padding-top:15px;}
+#main-container{position:relative;min-height:1000px;padding-top:15px;}
 
 .full-sidebar-container{
   margin-left: 12%;
@@ -17,12 +17,20 @@
   margin-left: 4%;
 }
 
-.full-sidebar-container .top-nav{
+.small-sidebar-container#main-container{
+  margin-left: 4%;
+}
+
+.full-sidebar-container#main-container{
   margin-left: 12%;
 }
 
-.small-sidebar-container .top-nav{
-  margin-left: 4%;
+.full-sidebar-container #top-nav{
+  padding-left: 4%;
+}
+
+.small-sidebar-container #top-nav{
+  padding-left: 4%;
 }
 
 .coach-home{
@@ -105,10 +113,20 @@
   padding-top: 25px;
 }
 
-.dash-header-logo{
-  height: 100px;
+.full-sidebar .dash-header-logo{
+  width: 75px;
+  height: 75px;
   display:block;
-  margin:auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.small-sidebar .dash-header-logo{
+  width: 35px;
+  height: 35px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .top-nav-table{
@@ -122,13 +140,12 @@
 }
 
 .top-nav-table .middle{
-  text-align: left;
-  padding-left: 50px;
+  text-align: center;
+  padding-right: 4%;
 }
 
 .top-nav-table .middle img{
   height: 50px;
-  margin-right: 20px;
 }
 
 .top-nav-table .right{
@@ -146,8 +163,12 @@
   float: bottom;
 }
 
-.dash-footer-logo{
+.full-sidebar .dash-footer-logo{
   height: 75px;
+}
+
+.small-sidebar .dash-footer-logo{
+  height: 25px;
 }
 
 .holds-play-buttons{
