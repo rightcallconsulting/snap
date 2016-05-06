@@ -345,6 +345,7 @@ Player.prototype.runMotion = function(){
     return; //TODO - dono
   }
   if(this.moveTo(this.motionCoords[this.currentMotionBreak][0], this.motionCoords[this.currentMotionBreak][1])){
+    debugger;
     this.currentMotionBreak++;
   }
 };

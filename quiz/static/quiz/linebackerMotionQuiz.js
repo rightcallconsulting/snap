@@ -124,11 +124,11 @@ function shuffle(array) {
 function createMotion(player){
   var play = test.getCurrentDefensivePlay().offensiveFormationObject;
   var i = 1;
-  while(i < play.eligibleReceivers.length && (player.pos !== "WR" || player.startY > play.oline[2].startY - 2)){
+  while(i < play.eligibleReceivers.length && (player.position !== "WR" || player.startY > play.oline[2].startY - 2)){
     player = play.eligibleReceivers[i];
     i++;
   }
-  var dx = -30;
+  var dx = -20;
   if(player.startX < play.oline[2].startX){
     dx = -dx;
   }
@@ -194,8 +194,7 @@ function drawOpening(){
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-  createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]);
-  debugger;
+  createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
 }
 
 function drawDemoScreen(){
@@ -310,6 +309,7 @@ function draw() {
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
       noStroke();
+      this.runMotion();
       fill(this.fill);
       ellipse(x, y, siz, siz);
       fill(0,0,0);
