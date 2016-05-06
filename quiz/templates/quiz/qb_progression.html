@@ -87,6 +87,25 @@ $('#question-button').click(function(){
   }
 })
 
+$('#zoom-in-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 25){
+    field.heightInYards -= 5;
+  }else{
+    field.heightInYards = 20;
+  }
+})
+
+$('#zoom-out-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 50){
+    field.heightInYards = 55;
+  }else{
+    field.heightInYards += 5;
+  }
+})
 
 </script>
 {% endblock %}
