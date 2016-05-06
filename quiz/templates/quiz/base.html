@@ -36,9 +36,7 @@
   {% include "dashboard/theme_setting.html" %}
   <div id="wrapper" class="preload">
     {% include "dashboard/sidebar.html" %}
-
-
-    <div id="main-container">
+    <div class="small-sidebar-container" id="main-container">
       {% include "dashboard/top_nav_bar.html" %}
       {% include "dashboard/grey_container.html" %}
       <div class="quiz">
@@ -247,6 +245,8 @@
 <!--<script language="javascript" src="../addons/p5.sound.js"></script>-->
 <script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
 <!--<script language="javascript" type="text/javascript" src="{% static 'quiz/buttons.js' %}"></script>-->
+
+<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 
 {% comment %}{% if has_plays %}{% endcomment %}
 {% block quiz_type %}

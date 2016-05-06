@@ -15,7 +15,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 34;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());

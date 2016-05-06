@@ -10,8 +10,6 @@
 
 	{% include "dashboard/sidebar.html" %}
 
-  <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-
 
 	<div id="main-container" onload="initGroupTable()">
 		{% include "dashboard/top_nav_bar.html" %}
@@ -145,7 +143,7 @@
 			</div><!-- /panel -->
 
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-
+			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 			<!-- Pass Django variables to JS assets -->
 			<script type="text/javascript">
 			  var percentCorrect = {{analytics.total_correct_attempts_percentage}},

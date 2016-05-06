@@ -7,6 +7,32 @@
   overflow-x: hidden;
 }
 
+#main-container{position:relative;min-height:1000px;padding-top:15px;}
+
+.full-sidebar-container{
+  margin-left: 12%;
+}
+
+.small-sidebar-container{
+  margin-left: 4%;
+}
+
+.small-sidebar-container#main-container{
+  margin-left: 4%;
+}
+
+.full-sidebar-container#main-container{
+  margin-left: 12%;
+}
+
+.full-sidebar-container #top-nav{
+  padding-left: 4%;
+}
+
+.small-sidebar-container #top-nav{
+  padding-left: 4%;
+}
+
 .coach-home{
   margin-right: 2.5%;
 }
@@ -60,6 +86,11 @@
   margin-bottom: 2%;
   width: 65%;
 }
+
+.small-sidebar .menu-text{
+  display: none;
+}
+
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
   height: 600px;
   margin-bottom: 50px;
@@ -82,10 +113,20 @@
   padding-top: 25px;
 }
 
-.dash-header-logo{
-  height: 100px;
+.full-sidebar .dash-header-logo{
+  width: 75px;
+  height: 75px;
   display:block;
-  margin:auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.small-sidebar .dash-header-logo{
+  width: 35px;
+  height: 35px;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .top-nav-table{
@@ -99,13 +140,12 @@
 }
 
 .top-nav-table .middle{
-  text-align: left;
-  padding-left: 50px;
+  text-align: center;
+  padding-right: 4%;
 }
 
 .top-nav-table .middle img{
   height: 50px;
-  margin-right: 20px;
 }
 
 .top-nav-table .right{
@@ -123,8 +163,12 @@
   float: bottom;
 }
 
-.dash-footer-logo{
+.full-sidebar .dash-footer-logo{
   height: 75px;
+}
+
+.small-sidebar .dash-footer-logo{
+  height: 25px;
 }
 
 .holds-play-buttons{
@@ -888,10 +932,19 @@ input.create-quiz{
   height: 90%;
 }
 
-.main-sidebar{
+.full-sidebar{
   width: 12%;
   height: 100%;
-  min-width: 150px;
+}
+
+.small-sidebar{
+  max-width: 3%;
+  min-width: 50px;
+  height: 100%;
+}
+
+.small-sidebar .main-menu li{
+  text-align: center;
 }
 
 .sidebar-footer{
