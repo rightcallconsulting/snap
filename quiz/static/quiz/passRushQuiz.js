@@ -163,7 +163,7 @@ function drawFeedbackScreen(){
 
   field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentDefensivePlay().drawAllPlayersWithOffense(field);
-  stroke255,238,88;
+  stroke(255,238,88);
   line(pixelX1, pixelY1, pixelX2, pixelY2);
   noStroke();
   node.draw(field);
