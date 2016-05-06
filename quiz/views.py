@@ -365,6 +365,19 @@ class LinebackerQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
+class LinebackerMotionQuizView(FormationQuizView):
+    template_name = 'quiz/linebacker_motion_quiz.html'
+    page_header = 'LB MOTION QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(LinebackerMotionQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 
 class PassRushQuizView(FormationQuizView):
     template_name = 'quiz/pass_rush_quiz.html'
