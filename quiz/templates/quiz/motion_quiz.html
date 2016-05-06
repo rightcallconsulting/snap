@@ -46,6 +46,25 @@ $('#next-play-button').click(function(){
     multipleChoiceAnswers = [];
   }
 })
+$('#zoom-in-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 25){
+    field.heightInYards -= 5;
+  }else{
+    field.heightInYards = 20;
+  }
+})
+
+$('#zoom-out-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 50){
+    field.heightInYards = 55;
+  }else{
+    field.heightInYards += 5;
+  }
+})
 </script>
 {% endblock %}
 {% block buttons %}
@@ -57,5 +76,8 @@ $('#next-play-button').click(function(){
   <button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
   <button id="clear-button" class="btn btn-success" name="button">{% include "quiz/clear_button.html" %}</button>
   <button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
+  <td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
+  <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
+  <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
 </div>
 {% endblock %}
