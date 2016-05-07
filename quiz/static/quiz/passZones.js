@@ -218,7 +218,7 @@ mouseClicked = function() {
   }else if(resetMissed.isMouseInside(field) && test.over) {
     var newPlays = test.missedPlays.concat(test.skippedPlays);
     if(newPlays.length < 1){
-      newPlays = originalPlayList;
+      newPlays = originalPlayList.slice();
     }
     test.plays = shuffle(newPlays);
     test.restartQuiz();

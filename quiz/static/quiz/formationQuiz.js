@@ -266,7 +266,7 @@ mouseClicked = function() {
   }else if(resetMissed.isMouseInside(field) && test.over) {
     var newFormations = test.missedFormations.concat(test.skippedFormations);
     if(newFormations.length < 1){
-      newFormations = originalFormationList;
+      newFormations = originalFormationList.slice();
     }
     test.formations = shuffle(newFormations);
     test.restartQuiz();
