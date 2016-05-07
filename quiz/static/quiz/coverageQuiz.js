@@ -4,7 +4,8 @@ var test;
 var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
-var bigReset;
+var originalPlayList;
+var bigReset; var resetMissed; var nextQuiz;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var exitDemo = null;
@@ -31,19 +32,37 @@ function setup() {
     resizeCanvas(width, height);
     field.height = height;
     field.width = width;
+    resizeJSButtons();
   }
 
   multipleChoiceAnswers = [];
+
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
-    x: field.getYardX(width*0.5 - 25),
+    x: field.getYardX(width*0.25) - buttonWidth / 2,
     y: field.getYardY(height*0.8),
-    width: 5,
-    label: "Restart"
+    width: buttonWidth,
+    label: "Retake All"
   })
+
+  resetMissed = new Button({
+    x: field.getYardX(width*0.5) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Retake Missed"
+  })
+
+  nextQuiz = new Button({
+    x: field.getYardX(width*0.75) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Exit"
+  })
+
   exitDemo = new Button({
     label: "",
-    x: field.getYardX(25),
-    y: field.getYardY(25),
+    x: field.getYardX(width*0.1),
+    y: field.getYardY(height*0.1),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -89,6 +108,7 @@ function setup() {
       defensive_plays.push(defensive_play);
     }
 
+    originalPlayList = defensive_plays.slice();
     var shuffled_plays = shuffle(defensive_plays);
     test.plays = shuffled_plays;
     test.defensivePlays = shuffled_plays;
@@ -96,6 +116,25 @@ function setup() {
     test.updateScoreboard();
     setupComplete = true;
   }
+}
+
+function resizeJSButtons(){
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
+  bigReset.y = field.getYardY(height*0.8);
+  bigReset.width = buttonWidth;
+
+  resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+  resetMissed.y = bigReset.y;
+  resetMissed.width = bigReset.width;
+
+  nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
+  nextQuiz.y = bigReset.y;
+  nextQuiz.width = bigReset.width;
+
+  exitDemo.x =  field.getYardX(width*0.1);
+  exitDemo.y = field.getYardY(height*0.1);
+
 }
 
 function shuffle(array) {
@@ -133,6 +172,7 @@ function checkAnswer(guess){
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
   }else{
+    test.missedPlays.push(test.getCurrentPlay());
     clearSelections();
     var assignment = currentPlayerTested.coverageAssignment[0];
     oldFill = assignment.fill;
@@ -283,9 +323,22 @@ mouseClicked = function() {
   }else{
     return true;
   }
+
   if(bigReset.isMouseInside(field) && test.over) {
+    test.plays = shuffle(originalPlayList.slice());
     test.restartQuiz();
     return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList;
+    }
+    test.plays = shuffle(newPlays);
+    test.restartQuiz();
+    return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else if(!test.over){
@@ -365,6 +418,8 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+    resetMissed.draw(field);
+    nextQuiz.draw(field);
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);

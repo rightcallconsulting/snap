@@ -162,6 +162,7 @@ PlayTest.prototype.updateMultipleChoiceLabels = function(){
 
   PlayTest.prototype.skipQuestion = function(){
     this.skips++;
+    this.skippedPlays.push(this.getCurrentPlay())
     this.advanceToNextPlay(this.skippedAnswerMessage);
   }
 

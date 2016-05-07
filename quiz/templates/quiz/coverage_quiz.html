@@ -67,6 +67,7 @@ $('#zoom-in-button').click(function(){
   }else{
     field.heightInYards = 20;
   }
+  resizeJSButtons();
 })
 
 $('#zoom-out-button').click(function(){
@@ -77,6 +78,7 @@ $('#zoom-out-button').click(function(){
   }else{
     field.heightInYards += 5;
   }
+  resizeJSButtons();
 })
 </script>
 {% endblock %}
