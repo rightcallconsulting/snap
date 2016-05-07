@@ -32,41 +32,41 @@ function setup() {
     resizeCanvas(width, height);
     field.height = height;
     field.width = width;
+    resizeJSButtons();
   }
 
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
-    x: field.getYardX(width*0.25) - 5,
+    x: field.getYardX(width*0.25) - buttonWidth / 2,
     y: field.getYardY(height*0.8),
-    width: 10,
-    height: 5,
+    width: buttonWidth,
     label: "Retake All"
-  });
+  })
 
   resetMissed = new Button({
-    x: field.getYardX(width*0.5) - bigReset.width / 2,
+    x: field.getYardX(width*0.5) - buttonWidth / 2,
     y: bigReset.y,
     width: bigReset.width,
-    height: bigReset.height,
     label: "Retake Missed"
-  });
+  })
 
   nextQuiz = new Button({
-    x: field.getYardX(width*0.75) - bigReset.width / 2,
+    x: field.getYardX(width*0.75) - buttonWidth / 2,
     y: bigReset.y,
     width: bigReset.width,
-    height: bigReset.height,
     label: "Exit"
-  });
+  })
 
   exitDemo = new Button({
     label: "",
-    x: field.getYardX(25),
-    y: field.getYardY(25),
+    x: field.getYardX(width*0.1),
+    y: field.getYardY(height*0.1),
     height: 1.5,
     width: 1.5,
     clicked: false,
     fill: color(255, 255, 255)
   });
+  
   if(json_seed){
     var scoreboard = new Scoreboard({
 
@@ -99,6 +99,25 @@ function setup() {
     test.updateScoreboard();
     setupComplete = true;
   }
+}
+
+function resizeJSButtons(){
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
+  bigReset.y = field.getYardY(height*0.8);
+  bigReset.width = buttonWidth;
+
+  resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+  resetMissed.y = bigReset.y;
+  resetMissed.width = bigReset.width;
+
+  nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
+  nextQuiz.y = bigReset.y;
+  nextQuiz.width = bigReset.width;
+
+  exitDemo.x =  field.getYardX(width*0.1);
+  exitDemo.y = field.getYardY(height*0.1);
+
 }
 
 function shuffle(array) {

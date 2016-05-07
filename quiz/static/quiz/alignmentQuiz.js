@@ -31,6 +31,7 @@ function setup() {
     resizeCanvas(width, height);
     field.height = height;
     field.width = width;
+    resizeJSButtons();
   }
 
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
@@ -119,6 +120,26 @@ function setup() {
     setupComplete = true;
   }
 }
+
+function resizeJSButtons(){
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
+  bigReset.y = field.getYardY(height*0.8);
+  bigReset.width = buttonWidth;
+
+  resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+  resetMissed.y = bigReset.y;
+  resetMissed.width = bigReset.width;
+
+  nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
+  nextQuiz.y = bigReset.y;
+  nextQuiz.width = bigReset.width;
+
+  exitDemo.x =  field.getYardX(width*0.1);
+  exitDemo.y = field.getYardY(height*0.1);
+
+}
+
 
 var sortByCreationDecreasing = function(a, b){
   var date1 = new Date(a.created_at);
