@@ -2,7 +2,6 @@ var setupComplete = false;
 var testIDFromHTML = 33;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
-var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
 var bigReset;
@@ -10,6 +9,7 @@ var currentUserTested = null;
 var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
+var motionPlayer = null;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -33,14 +33,6 @@ function setup() {
     field.width = width;
   }
 
-  multipleChoiceAnswers = [];
-  bigReset = new Button({
-    x: field.getYardX(width*0.5 - 25),
-    y: field.getYardY(height*0.8),
-    width: 5,
-    label: "Restart"
-  })
-
   exitDemo = new Button({
     label: "",
     x: 14,
@@ -50,6 +42,14 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
+
+  bigReset = new Button({
+    x: field.getYardX(width*0.5 - 25),
+    y: field.getYardY(height*0.8),
+    width: 5,
+    label: "Restart"
+  })
+
   if(json_seed){
 
     var scoreboard = new Scoreboard({
@@ -95,7 +95,6 @@ function setup() {
     var shuffled_plays = shuffle(defensive_plays);
     test.plays = shuffled_plays;
     test.defensivePlays = shuffled_plays;
-    multipleChoiceAnswers = [];
     test.restartQuiz();
     test.updateScoreboard();
     setupComplete = true;
@@ -128,6 +127,7 @@ function createMotion(player){
     player = play.eligibleReceivers[i];
     i++;
   }
+  motionPlayer = player;
   var dx = -20;
   if(player.startX < play.oline[2].startX){
     dx = -dx;
@@ -135,40 +135,35 @@ function createMotion(player){
   player.motionCoords.push([player.startX + dx, player.startY]);
 }
 
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-  var correctIndex = 2;
-  if(correctAnswer === "LEFT"){
-    correctIndex = 0;
-  }else if(correctAnswer === "RIGHT"){
-    correctIndex = 1;
-  }
-  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-  multipleChoiceAnswers = [];
-  var availableNames = playNames.slice();
-  for(var i = 0; i < numOptions; i++){
-    label = availableNames[i];
-    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-      label: label,
-      clicked: false
-    }));
-  }
+function alignPlayer(player){
+  var newX = getMouseCoords()[0][0];
+  var newY = getMouseCoords()[0][1];
+  noStroke();
+  textSize(17);
+  textAlign(CENTER, CENTER);
+  text(player.pos, player.x, player.y);
 }
 
 function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
+
+
 }
 
-function checkAnswer(guess){
-  var passStrength = test.getCurrentPlay().offensiveFormationObject.getPassStrength();
-  var isCorrect = false;
-  if((passStrength < 0 && guess === 0) || (passStrength > 0 && guess === 1) || (passStrength === 0 && guess === 2)){
-    isCorrect = true;
-  }if(isCorrect){
+function getMouseCoords(){
+  currentPlayerTested.x = field.getYardX(mouseX);
+  currentPlayerTested.y = field.getYardY(mouseY);
+  return[currentPlayerTested.x, currentPlayerTested.y];
+};
+
+function checkAnswer(){
+    var xDist = abs(currentPlayerTested.x - motionPlayer.x);
+    if(xDist < 2){
+      isCorrect = true;
+    }else{
+      isCorrect = false;
+    }
+
+  if(isCorrect){
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
   }else{
@@ -233,12 +228,6 @@ function drawDemoScreen(){
     strokeWeight(1);
     triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
     var clicked = false;
-    for(var i = 1; i <= multipleChoiceAnswers.length; i++){
-      var answer = document.getElementById("mc-button-"+i);
-      if(answer && answer.classList.contains('clicked')){
-        clicked = true;
-      }
-    }
     textSize(20);
     textAlign(CENTER);
     if(demoDoubleClick){
@@ -273,13 +262,23 @@ mouseClicked = function() {
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else{
-    if(test.showDemo){
-      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-        demoDoubleClick = true;
+    var xDist = abs(currentPlayerTested.x - field.getYardX(mouseX));
+    var yDist = abs(currentPlayerTested.y - field.getYardY(mouseY));
+    fullDist = sqrt(xDist * xDist + yDist * yDist);
+    if(fullDist > 1){
+      alignPlayer(currentPlayerTested);
+    }else{
+      if(test.showDemo){
+        if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+          demoDoubleClick = true;
+        }else{
+          return;
+        }
       }else{
-        return;
+        checkAnswer();
       }
     }
+    
   }
 };
 
@@ -288,20 +287,9 @@ keyTyped = function(){
     if(key === 'r'){
       test.restartQuiz();
     }
-  }else{
-    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-    if(offset >= 0 && offset < multipleChoiceAnswers.length){
-      var answer = multipleChoiceAnswers[offset];
-      if(answer.clicked){
-        checkAnswer(offset);
-      }else{
-        clearAnswers();
-        answer.changeClickStatus();
-      }
-    }
   }
 };
- 
+
 function draw() {
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
@@ -321,7 +309,7 @@ function draw() {
       noStroke();
       fill(0,0,0);
       if(this === currentPlayerTested){
-        fill(0, 0, 220);
+        fill(255,238,88);
       }
       textSize(17);
       textAlign(CENTER, CENTER);
@@ -346,21 +334,9 @@ function draw() {
     }else{
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
+      currentPlayerTested = null;
     }
   }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentDefensivePlay()){
-      var strength = test.getCurrentDefensivePlay().offensiveFormationObject.getPassStrength();
-      var correctAnswer = "BALANCED";
-      if(strength < 0){
-        correctAnswer = "LEFT"
-      }else if(strength > 0){
-        correctAnswer = "RIGHT"
-      }
-      test.updateProgress(false);
-      createMultipleChoiceAnswers(correctAnswer, 3);
-      test.updateMultipleChoiceLabels();
-    }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
