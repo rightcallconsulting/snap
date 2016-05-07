@@ -9,6 +9,9 @@ var FormationTest = function(config){
     this.score = 0;
     this.incorrectGuesses = 0;
     this.skips = 0;
+    this.correctFormations = config.correctFormations || [];
+    this.missedFormations = config.missedFormations || [];
+    this.skippedFormations = config.skippedFormations || [];
     this.scoreboard = config.scoreboard || null;
     this.over = false;
     this.cutOff = config.cutOff || 50;
@@ -68,6 +71,9 @@ FormationTest.prototype.restartQuiz = function(){
   this.score = 0;
   this.incorrectGuesses = 0;
   this.skips = 0;
+  this.correctFormations = [];
+  this.missedFormations = [];
+  this.skippedFormations = [];
   this.questionsAnswered = 0;
   this.startTime = millis();
   this.endTime = 0;
@@ -137,14 +143,17 @@ FormationTest.prototype.advanceToNextFormation = function(message){
 
 FormationTest.prototype.skipQuestion = function(){
   this.skips++;
+  this.skippedFormations.push(this.getCurrentFormation())
   this.advanceToNextFormation(this.skippedAnswerMessage);
 }
 
 FormationTest.prototype.registerAnswer = function(isCorrect){
   if(isCorrect){
     this.score++;
+    this.correctFormations.push(this.getCurrentFormation());
     this.advanceToNextFormation(test.correctAnswerMessage);
   }else{
+    this.missedFormations.push(this.getCurrentFormation());
     this.incorrectGuesses++;
     this.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     this.updateScoreboard();
