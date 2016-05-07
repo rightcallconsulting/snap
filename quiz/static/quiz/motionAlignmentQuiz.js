@@ -181,8 +181,8 @@ function alignPlayer(player){
   text(player.pos, player.x, player.y);
 }
 
-function clearAnswers(){
 
+function clearAnswers(){
 
 }
 
@@ -190,15 +190,15 @@ function getMouseCoords(){
   currentPlayerTested.x = field.getYardX(mouseX);
   currentPlayerTested.y = field.getYardY(mouseY);
   return[currentPlayerTested.x, currentPlayerTested.y];
-};
+}
 
 function checkAnswer(){
-    var xDist = abs(currentPlayerTested.x - motionPlayer.x);
-    if(xDist < 2){
-      isCorrect = true;
-    }else{
-      isCorrect = false;
-    }
+  var xDist = abs(currentPlayerTested.x - motionPlayer.x);
+  if(xDist < 2){
+    isCorrect = true;
+  }else{
+    isCorrect = false;
+  }
 
   if(isCorrect){
     currentPlayerTested = null;
@@ -226,8 +226,9 @@ function drawOpening(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
+    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
   }
-  createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+  
 }
 
 function drawDemoScreen(){
@@ -237,6 +238,7 @@ function drawDemoScreen(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
+    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
@@ -245,7 +247,11 @@ function drawDemoScreen(){
     fill(255,238,88);
     exitDemo.draw(field);
     textSize(22);
-    text("DEMO", field.width / 6, field.height / 6);
+    var demoX = x2 * 1.4;
+    var demoY = y1 * 1.3;
+    textAlign(CENTER);
+    textSize(25);
+    text("DEMO", demoX, demoY);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
