@@ -7,7 +7,7 @@
   overflow-x: hidden;
 }
 
-#main-container{position:relative;min-height:800px;padding-top:15px;}
+#main-container{position:relative;min-height:900px;padding-top:15px;}
 
 .full-sidebar-container{
   margin-left: 12%;
@@ -251,6 +251,10 @@
 
 .display-plays-in-test .dash-col{
   margin-bottom:10px;
+}
+
+.coach-home .dash-col{
+  height: 600px;
 }
 
 .playbook .dash-col{
@@ -635,22 +639,36 @@ input.create-quiz{
 }
 
 .alerts-list{
-  width: 90%;
-  margin-left: 5%;
+  width: 60%;
+  margin-left: 20%;
   text-align: center;
   vertical-align: middle;
 }
 
 .alerts-list th{
   text-align: center;
-  width: 100%;
+  width: 50%;
+  height: 40px;
+  font-size: 22px;
+}
+
+.alerts-list td{
+  text-align: center;
+  width: 50%;
   height: 30px;
   font-size: 18px;
 }
 
 .analytics-table-row{
   width: 100%;
-  margin-top: 50px;
+  margin-top: 80px;
+}
+
+.analytics-table-row .table-header{
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .analytics-graph{

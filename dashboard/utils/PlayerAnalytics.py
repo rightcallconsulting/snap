@@ -159,6 +159,16 @@ class PlayerAnalytics:
         if total_plays == 0: return 0
         return round(100.0 * self.total_skipped_plays() / total_plays)
 
+    def get_play_alarms(self):
+        alarm_plays = []
+        reverse_order = sorted(self.correct_plays_percent, key=itemgetter(1), reverse=False)
+        for play, percentage in reverse_order:
+            if percentage < 50.0:
+                alarm_plays.append((play, percentage))
+            if len(alarm_plays) > 4:
+                return dict(alarm_plays)
+
+        return dict(alarm_plays)
     # Specific Play:
 
     def total_correct_for_play(self, play):

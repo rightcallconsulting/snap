@@ -54,14 +54,17 @@ def homepage(request):
             first_group = groups[0]
             players = first_group.players.all()
             analytics = PlayerAnalytics(players)
+            alarms = analytics.get_play_alarms()
         else:
             players = []
             analytics = None
+            alarms = {}
         return render(request, 'dashboard/coachhome.html', {
             'uncompleted_tests': uncompleted_tests,
             'groups': groups,
             'players': players,
             'analytics': analytics,
+            'alarms': alarms,
             'page_header': 'DASHBOARD',
             'MEDIA_ROOT': '/media/'
         })

@@ -79,9 +79,20 @@
 												</table>
 											</div>
 											<div class="analytics-table-row">
+												<div class="table-header"><span>PLAY ALERTS</span></div>
 												<table class="alerts-list">
 													<tbody>
-														<tr><th>PLAY ALERTS</th></tr>
+														<tr><th>PLAY</th><th>CORRECT %</th></tr>
+														{% for play, percentage in alarms.items %}
+														<tr>
+															<td>
+																{{play}}
+															</td>
+															<td>
+																{{percentage}}%
+															</td>
+														</tr>
+														{% endfor %}
 													</tbody>
 												</table>
 											</div>
