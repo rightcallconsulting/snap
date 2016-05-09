@@ -8,6 +8,8 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.conf import settings
+import json
+import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
@@ -253,11 +255,16 @@ def create_test(request):
     else:
         form = TestForm()
         plays = request.user.coach.team.play_set.all()
+        groups = PlayerGroup.objects.all()
+        safeGroups = []
+        for g in groups:
+            safeGroups.append(g.build_dict_for_json_seed())
         return render(request, 'dashboard/create_test.html', {
             'form': form,
             'plays': plays,
             'types_of_tests': Test.types_of_tests,
-            'page_header': 'CREATE TEST'
+            'page_header': 'CREATE TEST',
+            'groups': json.dumps(safeGroups)
         })
 
 def edit_profile(request):

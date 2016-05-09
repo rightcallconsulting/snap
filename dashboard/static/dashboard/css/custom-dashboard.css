@@ -383,6 +383,7 @@ input.create-quiz{
   color: #FFFFFF;
   height: 40px;
   width: 15%;
+  margin-top: 30px;
 }
 
 .datetime{
@@ -964,7 +965,7 @@ input.create-quiz{
 }
 
 .form-create-test .scrollable-table{
-  height: 250px;
+  max-height: 350px;
 }
 
 .form-create-test .players-to-test{
@@ -1051,4 +1052,15 @@ input.create-quiz{
 .login-wrapper{
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+input[type=checkbox]{
+  opacity: 0.7;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+select#id_player{
+  display:none;
 }
