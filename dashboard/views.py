@@ -223,7 +223,7 @@ def todo(request):
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
-            'page_header': 'ASSIGNED TESTS',
+            'page_header': 'ASSIGNED QUIZZES',
             'groups': groups,
             'groups_seed': serializers.serialize("json", groups)
         })

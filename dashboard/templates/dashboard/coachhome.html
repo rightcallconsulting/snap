@@ -79,18 +79,9 @@
 												</table>
 											</div>
 											<div class="analytics-table-row">
-												<table class="player-list">
+												<table class="alerts-list">
 													<tbody>
-														{% for player in players %}
-														{% if forloop.counter0 < 3 %}
-														<tr id="{{player.id}}">
-															<td><img class="headshot-thumbnail" src="{{MEDIA_ROOT}}{{player.user.myuser.avatar_image}}" alt=""></td>
-															<td>{{player.first_name}} {{player.last_name}}</td>
-															<td>{{player.position}}</td>
-															<td>{% get_percent_correct_player player %}%</td>
-														</tr>
-														{% endif %}
-														{% endfor %}
+														<tr><th>PLAY ALERTS</th></tr>
 													</tbody>
 												</table>
 											</div>
@@ -182,4 +173,11 @@
 
 								<!-- Build Charts -->
 								<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+								<script type="text/javascript">
+								window.onresize = function(){
+									makeChart(percentCorrect, colors.correct, 'percentCorrectChart');
+									makeChart(percentIncorrect, colors.incorrect, 'percentIncorrectChart');
+									makeChart(percentSkipped, colors.skipped, 'percentSkippedChart');
+								}
+								</script>
 								{% endblock %}

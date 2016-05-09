@@ -67,7 +67,7 @@
   height: 600px;
 }
 
-#main-container{position:relative;min-height:1000px;padding-top:15px;}
+#main-container{position:relative;min-height:800px;padding-top:15px;}
 
 #main-container .full-sidebar-container{
   margin-left: 12%;

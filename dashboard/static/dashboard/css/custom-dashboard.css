@@ -7,18 +7,18 @@
   overflow-x: hidden;
 }
 
-#main-container{position:relative;min-height:1000px;padding-top:15px;}
+#main-container{position:relative;min-height:800px;padding-top:15px;}
 
 .full-sidebar-container{
   margin-left: 12%;
 }
 
 .small-sidebar-container{
-  margin-left: 4%;
+  margin-left: 3%;
 }
 
 .small-sidebar-container#main-container{
-  margin-left: 4%;
+  margin-left: 3%;
 }
 
 .full-sidebar-container#main-container{
@@ -49,28 +49,35 @@
   margin-bottom: 5%;
 }
 
-.all-groups .aciton-boxes{
+.all-groups .action-boxes{
   margin-bottom: 0px;
 }
 .coach-home .main-content-area, .playbook .main-content-area{
   margin-left: 3.5%;
   width: 45%;
-  height: 95%;
+  height: 500px;
   margin-right: 5%;
   display: inline-block;
   float: left;
 }
 
-.coach-home .stacked-col, .playbook .stacked-col{
+.coach-home .stacked-col{
   width: 45%;
   height: 95%;
+  display: inline-block;
+  float: left;
+}
+
+.playbook .stacked-col{
+  width: 45%;
+  height: 100%;
   display: inline-block;
   float: left;
 }
 
 .coach-home .secondary-content-area, .playbook .secondary-content-area{
   width: 100%;
-  height: 45%;
+  height: 290px;
   border-left: 1px solid #777;
   border-right: 1px solid #777;
   border-bottom: 1px solid #777;
@@ -78,7 +85,7 @@
 }
 
 .coach-home .top, .playbook .top{
-  margin-bottom: 4.5%
+  margin-bottom: 20px;
 }
 
 .all-groups select{
@@ -623,12 +630,22 @@ input.create-quiz{
 
 }
 
-.coach-home .player-list td{
+.coach-home .alerts-list td{
   border: none;
 }
 
-.player-list .headshot-thumbnail{
-  max-height: 50px;
+.alerts-list{
+  width: 90%;
+  margin-left: 5%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.alerts-list th{
+  text-align: center;
+  width: 100%;
+  height: 30px;
+  font-size: 18px;
 }
 
 .analytics-table-row{
