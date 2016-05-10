@@ -166,9 +166,11 @@ def analytics(request):
 @login_required
 def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
+        player = request.user.player
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
             'quiz_order_options': QuizOrders.options,
+            'player': player
         })
     else:
         team = request.user.coach.team
