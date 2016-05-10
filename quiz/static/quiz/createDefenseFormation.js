@@ -173,13 +173,13 @@ function draw() {
               line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
             }
             else if (this.zoneXPoint && this.zoneYPoint){
-              this.drawZoneAssignments();
+              this.drawZoneAssignments(field);
             }
             else if (this.rusher && this.gapXPoint){
-              this.drawGapAssignments();
+              this.drawGapAssignments(field);
             }
         }
-        this.drawRoute();
+        this.drawRoute(field);
         noStroke();
     };
 
@@ -567,6 +567,7 @@ function draw() {
             unit: formationExample.unit,
             offensiveFormationID: currentOffensiveFormation.id
         });
+        debugger;
         newFormation.saveToDB();
         formationExample.removeAllPlayers();
         formationExample.playName = "";

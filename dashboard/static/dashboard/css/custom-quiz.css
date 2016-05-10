@@ -369,3 +369,7 @@
 .dash-row{
   border: none;
 }
+
+.defensive-formation-sidebar .table-wrapper{
+  height: 90%;
+}

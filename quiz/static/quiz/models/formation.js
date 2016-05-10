@@ -499,7 +499,7 @@ Formation.prototype.saveToDB = function(){
   var cache = [];
 
   try{
-  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
+  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
   $.post( "teams/broncos/formations/new", { formation: formationJSON});
   }catch(e){
     console.log(e);
