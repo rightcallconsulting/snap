@@ -272,6 +272,7 @@ function setupDemoScreen(){
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
+  currentPlayerTested = null;
 };
 
 mouseClicked = function() {

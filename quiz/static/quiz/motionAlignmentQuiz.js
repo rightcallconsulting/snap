@@ -247,39 +247,57 @@ function drawDemoScreen(){
     fill(255,238,88);
     exitDemo.draw(field);
     textSize(22);
-    var demoX = x2 * 1.4;
-    var demoY = y1 * 1.3;
-    textAlign(CENTER);
-    textSize(25);
-    text("DEMO", demoX, demoY);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
-    textAlign(LEFT);
-    textSize(22);
-    noStroke();
-    var x = field.getTranslatedX(43);
-    var y = field.getTranslatedY(83);
-    var x2 = field.getTranslatedX(53);
-    var y2 = field.getTranslatedY(83);
-    stroke(255,238,88);
-    fill(255,238,88);
-    strokeWeight(2);
-    line(x, y, x2, y2);
-    strokeWeight(1);
-    triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
-    var clicked = false;
-    textSize(20);
-    textAlign(CENTER);
-    if(demoDoubleClick){
-      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 110);
-    }else if(clicked){
-      text("Click again to check answer.", x - 70, y - 110);
+
+    var x = field.getTranslatedX(currentPlayerTested.startX);
+    var y = field.getTranslatedY(currentPlayerTested.startY);
+    var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+
+    if(timeElapsed < 2000){
+      noStroke();
+      noFill();
+      stroke(255,238,88);
+      strokeWeight(2);
+      ellipse(x, y, siz, siz);
+      strokeWeight(1);
+      fill(255,238,88);
+      textAlign(CENTER);
+      text("You are in yellow", x, y - 60);
+    }else if(timeElapsed < 4000){
+      fill(255,238,88);
+      stroke(255,238,88);
+      line(field.width / 2, 80, field.width/2, 20);
+      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+      noStroke();
+      fill(255,238,88);
+      text("Your play call is here", field.width / 2 + 20, 50);
     }else{
-      text("Select the correct play by \ndouble clicking button.", x - 70, y - 110);
+      if(currentPlayerTested){
+        currentPlayerTested.draw(field);
+        noStroke();
+        textSize(22);
+        textAlign(CENTER);
+        fill(255,238,88);
+        if(demoDoubleClick){
+          text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+        }else{
+          text("Double-click on your alignment spot after\n the offensive motion.", field.width / 2, (5 * field.height) / 6);
+        }
+      }else{
+        noStroke();
+        textSize(22);
+        textAlign(CENTER);
+        fill(255,238,88);
+        text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
+        noStroke();
+      }
     }
   }
 };
@@ -300,6 +318,8 @@ function exitDemoScreen(){
 mouseClicked = function() {
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
   }
   if(bigReset.isMouseInside(field) && test.over) {
     test.plays = shuffle(originalPlayList.slice());

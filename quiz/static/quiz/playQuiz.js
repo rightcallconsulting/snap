@@ -189,7 +189,6 @@ function drawOpening(){
 };
 
 function drawDemoScreen(){
-  noStroke();
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
@@ -200,26 +199,23 @@ function drawDemoScreen(){
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-    noStroke();
-    fill(255,238,88);
+     noStroke();
+    fill(220,0,0);
     exitDemo.draw(field);
     textSize(22);
     textAlign(LEFT);
-    text("DEMO", field.width / 6, field.height / 6);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
-    textAlign(LEFT);
-    textSize(22);
-    noStroke();
 
-    var x = field.getTranslatedX(43);
-    var y = field.getTranslatedY(80);
-    var x2 = field.getTranslatedX(53);
-    var y2 = field.getTranslatedY(80);
+    var x = field.getTranslatedX(49);
+    var y = field.getTranslatedY(85);
+    var x2 = field.getTranslatedX(66);
+    var y2 = field.getTranslatedY(85);
     stroke(255,238,88);
     fill(255,238,88);
     strokeWeight(2);
@@ -234,15 +230,14 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(20);
+    textSize(24);
     textAlign(CENTER);
     if(demoDoubleClick){
-        text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
-
+      text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
     }else if(clicked){
-      text("Click again to check answer.", x - 70, y - 50);
+      text("Click again to check answer.", x - 20, y - 115);
     }else{
-      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+      text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
     }
   }
 };

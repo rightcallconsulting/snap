@@ -26,7 +26,6 @@ $('#pause-button').click(function(){
         //pressPlayButton();
       })
 
-
 $('#check-button').click(function(){
   for(var i = 1; i <= multipleChoiceAnswers.length; i++){
     var answer = document.getElementById("mc-button-"+i);
@@ -36,18 +35,16 @@ $('#check-button').click(function(){
     }
   }
 })
-
 $('#clear-button').click(function(){
   clearAnswers();
 })
 
 $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
-    clearAnswers()
+    clearAnswers();
     test.restartQuiz();
   }
 })
-
 $('#next-play-button').click(function(){
   if(test && !test.over && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
@@ -59,13 +56,34 @@ $('#next-play-button').click(function(){
   }
 })
 $('#question-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
+  if(test && test.feedbackScreenStartTime === 0){
     if(test.showDemo){
       exitDemoScreen();
     }else{
       setupDemoScreen();
     }
   }
+})
+$('#zoom-in-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 25){
+    field.heightInYards -= 5;
+  }else{
+    field.heightInYards = 20;
+  }
+  resizeJSButtons();
+})
+
+$('#zoom-out-button').click(function(){
+  var heightInYards = field.heightInYards;
+  var widthInYards = field.heightInYards * field.width / field.height;
+  if(heightInYards > 50){
+    field.heightInYards = 55;
+  }else{
+    field.heightInYards += 5;
+  }
+  resizeJSButtons();
 })
 </script>
 {% endblock %}
@@ -77,6 +95,10 @@ $('#question-button').click(function(){
     <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
     <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
     <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+    <td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
+    <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
+    <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
   </tr></table>
 </div>
 {% endblock %}
+
