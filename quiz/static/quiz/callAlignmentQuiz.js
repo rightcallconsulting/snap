@@ -216,14 +216,14 @@ function drawOpening(){
 
 function createCall(){
   var elapsedTime = millis() - delayCall;
-  var rightCall = calls[test.questionNum]; 
+  var rightCall = calls[test.questionNum];
   if(test.questionNum < 1){
     if(elapsedTime > 2500 && elapsedTime < 4000){
       fill(255,238,88);
       textAlign(CENTER);
       textSize(26);
       text(rightCall, field.width/ 2, field.width / 8);
-    } 
+    }
   }else if(elapsedTime > 4000 && elapsedTime < 5500) {
     fill(255,238,88);
     textAlign(CENTER);
@@ -298,7 +298,7 @@ function drawDemoScreen(){
         fill(255,238,88);
         textAlign(CENTER);
         text("Your call will appear above for 1 second.", field.width / 2, (5 * field.height) / 6);
-        
+
       }else if(timeElapsed > 6000 && timeElapsed < 7500){
         fill(255,238,88);
         textAlign(CENTER);
@@ -331,6 +331,11 @@ function setupDemoScreen(){
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
+  delayCall = millis();
+  if(currentPlayerTested){
+    currentPlayerTested.x = currentPlayerTested.startX;
+    currentPlayerTested.y = currentPlayerTested.startY;
+  }
 };
 
 mouseClicked = function() {
@@ -373,7 +378,7 @@ mouseClicked = function() {
         checkAnswer();
       }
     }
-    
+
   }
 };
 
