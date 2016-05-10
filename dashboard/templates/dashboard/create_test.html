@@ -126,11 +126,22 @@
 				document.getElementById("create-quiz-button").onclick = function(e){
 					var playerIDForm = document.getElementById('id_player');
 					var selectedPlayers = getSelectedPlayers();
-					if(selectedPlayers.length > 0){
-							playerIDForm.selectedIndex = selectedPlayers[0];
-							return true;
+					if(selectedPlayers.length < 0){
+						return false;
 					}
-					return false;
+					playerIDForm.selectedIndex = 1;
+					return true;
+					/*var selectedPlayerID = "" + selectedPlayers[0];
+					var playerOptions = $("#id_player option");
+					for(var i = 0; i < playerOptions.length; i++){
+						if(playerOptions[i].value === selectedPlayerID){
+							playerIDForm.selectedIndex = i;
+							debugger;
+							return true;
+						}
+					}
+					debugger;
+					return false;*/
 				};
 
 				if(all_groups.length > 0){

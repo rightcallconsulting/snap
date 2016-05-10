@@ -25,36 +25,83 @@
     $('#clear-button').click(function(){
       pressClearButton();
     })
+
+    $('#zoom-in-button').click(function(){
+      var heightInYards = field.heightInYards;
+      var widthInYards = field.heightInYards * field.width / field.height;
+      if(heightInYards > 25){
+        field.heightInYards -= 5;
+      }else{
+        field.heightInYards = 20;
+      }
+      resizeBottomButtons()
+    })
+
+    $('#zoom-out-button').click(function(){
+      var heightInYards = field.heightInYards;
+      var widthInYards = field.heightInYards * field.width / field.height;
+      if(heightInYards > 50){
+        field.heightInYards = 55;
+      }else{
+        field.heightInYards += 5;
+      }
+      resizeBottomButtons()
+    })
   </script>
 {% endblock %}
 
 {% block buttons %}
-  <div class="holds-play-buttons">
-    <button id="save-button" class="btn btn-success" name="button">Save</button>
-    <button id="clear-button" class="btn btn-success" name="button">Clear</button>
-  </div>
+<div class="holds-play-buttons">
+  <table class="button-table"><tr>
+  <td><button id="save-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+  <td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
+  <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
+  <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
+  </tr></table>
+</div>
 {% endblock %}
 
 {% block sidebar %}
-  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+  <div class="col-lg-2 dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
       <span><h4>Offensive Formations</h4></span>
     </div>
+    <div class="table-wrapper">
+    <table class="formation-list two-column-table">
       {% for formation in offensive_formations %}
-        <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-        <br>
+      {% if forloop.counter0|divisibleby:2 %}
+        <tr>
+      {% endif %}
+        <td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+        {% if forloop.counter|divisibleby:2 %}
+        </tr>
+        {% endif %}
       {% endfor %}
+      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
+        <td></td></tr>
+      {% endif %}
+    </table>
+  </div>
       <a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>
   </div>
 
-  <div class="col-lg-2 dash-col choose-offensive-formation-box">
+  <div class="col-lg-2 dash-col choose-offensive-formation-box" id="choose-defensive-personnel-box">
     <div class="dash-header text-center">
       <span><h4>Defensive Personnel</h4></span>
     </div>
+    <div class="table-wrapper">
+    <table class="formation-list two-column-table">
     {% for personnel in personnel %}
-      <input class="btn btn-success btn-sm bounceIn animation-delay5 login-link personnel personnel-button" id="{{personnel}}" type="submit" value="{{personnel}}">
-      <br>
+    {% if forloop.counter0|divisibleby:2 %}
+      <tr>
+    {% endif %}
+      <td><input class="bounceIn animation-delay5 login-link personnel play-button" id="{{personnel}}" type="submit" value="{{personnel}}"></td>
+      {% if forloop.counter|divisibleby:2 %}
+      </tr>
+      {% endif %}
     {% endfor %}
+  </table></div>
 
   </div>
 {% endblock %}
