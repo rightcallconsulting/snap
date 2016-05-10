@@ -41,10 +41,32 @@ function setup() {
     label: "Restart"
   })
 
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset = new Button({
+    x: field.getYardX(width*0.25) - buttonWidth / 2,
+    y: field.getYardY(height*0.8),
+    width: buttonWidth,
+    label: "Retake All"
+  })
+
+  resetMissed = new Button({
+    x: field.getYardX(width*0.5) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Retake Missed"
+  })
+
+  nextQuiz = new Button({
+    x: field.getYardX(width*0.75) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Exit"
+  })
+
   exitDemo = new Button({
     label: "",
-    x: 14,
-    y: 94,
+    x: field.getYardX(width*0.1),
+    y: field.getYardY(height*0.1),
     height: 1.5,
     width: 1.5,
     clicked: false,
@@ -251,10 +273,11 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
+    fill(255,238,88);
     exitDemo.draw(field);
     textSize(22);
-    text("DEMO", field.width / 6, field.height / 6);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
@@ -269,49 +292,56 @@ function drawDemoScreen(){
       textAlign(LEFT);
       textSize(22);
       noStroke();
+
       if(timeElapsed < 2000){
-        noStroke();
-        noFill();
-        stroke(255,238,88);
-        strokeWeight(2);
-        ellipse(x, y, siz, siz);
-        strokeWeight(1);
-        noStroke();
+       noStroke();
+       noFill();
+       stroke(255,238,88);
+       strokeWeight(2);
+       ellipse(x, y, siz, siz);
+       strokeWeight(1);
+       fill(255,238,88);
+       textAlign(CENTER);
+       textSize(22);
+       text("You are in yellow", x, y - 60);
+       noStroke();
+     }else if(timeElapsed < 4000){
+      fill(255,238,88);
+      stroke(255,238,88);
+      line(field.width / 2, 80, field.width/2, 20);
+      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+      noStroke();
+      textSize(22);
+      textAlign(LEFT);
+      fill(255,238,88);
+      text("Your play call is here", field.width / 2 + 20, 50);
+    }else{
+      stroke(255,238,88);
+      fill(255,238,88);
+      var clickedNode = null;
+      if(currentGuessNode){
+        clickedNode = currentGuessNode;
+      }
+      if(clickedNode){
         fill(255,238,88);
-        text("You are in blue", x + siz/2 + 5, y - 20);
-        //text("Click demo button to exit", 20, 50);
-        noStroke();
-      }else if(timeElapsed < 4000){
-        fill(255,238,88);
-        stroke(255,238,88);
-        line(field.width / 2, 80, field.width/2, 20);
-        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-        noStroke();
-        text("Your play call is here", field.width / 2 + 20, 50);
-      }else{
-        stroke(255,238,88);
-        fill(255,238,88);
-        var clickedNode = null;
-        if(currentGuessNode){
-          clickedNode = currentGuessNode;
-        }
-        if(clickedNode){
-          fill(255,238,88);
-          textAlign(CENTER);
-          if(demoDoubleClick){
-            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
-          }else{
-            text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
-          }
+        textAlign(CENTER);
+        textSize(22);
+        if(demoDoubleClick){
+          text("Great! You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
         }else{
-          textAlign(CENTER);
-          text("Click the gap for your stunt", field.width / 2, (5 * field.height) / 6);
-          noStroke();
+          text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
         }
+      }else{
+        fill(255,238,88);
+        textSize(22);
+        textAlign(CENTER);
+        text("Click the gap for your stunt", field.width / 2, (5 * field.height) / 6);
+        noStroke();
       }
     }
-    noStroke();
   }
+  noStroke();
+}
 };
 
 pressPlayButton = function() {

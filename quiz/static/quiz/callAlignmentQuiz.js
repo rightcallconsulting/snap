@@ -6,11 +6,10 @@ var playNames;
 var maxPlays = 5;
 var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
-var currentUserTested = null;
-var currentPlayerTested = null;
-var exitDemo = null;
-var demoDoubleClick = false;
-var motionPlayer = null;
+var currentUserTested = null; var currentPlayerTested = null;
+var exitDemo = null; var demoDoubleClick = false;
+var calls = ["LASSO", "RODEO", "LIGHTNING", "RAINBOW", "LUCY", "ROGER"];
+var delayCall = 0;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -157,21 +156,6 @@ function shuffle(array) {
   return array;
 }
 
-function createMotion(player){
-  var play = test.getCurrentDefensivePlay().offensiveFormationObject;
-  var i = 1;
-  while(i < play.eligibleReceivers.length && (player.position !== "WR" || player.startY > play.oline[2].startY - 2)){
-    player = play.eligibleReceivers[i];
-    i++;
-  }
-  motionPlayer = player;
-  var dx = -20;
-  if(player.startX < play.oline[2].startX){
-    dx = -dx;
-  }
-  player.motionCoords.push([player.startX + dx, player.startY]);
-}
-
 function alignPlayer(player){
   var newX = getMouseCoords()[0][0];
   var newY = getMouseCoords()[0][1];
@@ -181,11 +165,6 @@ function alignPlayer(player){
   text(player.pos, player.x, player.y);
 }
 
-
-function clearAnswers(){
-
-}
-
 function getMouseCoords(){
   currentPlayerTested.x = field.getYardX(mouseX);
   currentPlayerTested.y = field.getYardY(mouseY);
@@ -193,52 +172,78 @@ function getMouseCoords(){
 }
 
 function checkAnswer(){
-  var xDist = abs(currentPlayerTested.x - motionPlayer.x);
+  var player = test.getCurrentPlay().offensiveFormationObject.eligibleReceivers[0];
+  var xDist = abs(currentPlayerTested.x - player.x);
   if(xDist < 2){
     isCorrect = true;
   }else{
     isCorrect = false;
   }
-
   if(isCorrect){
     currentPlayerTested = null;
-    test.registerAnswer(isCorrect);
+    test.score++;
+    test.advanceToNextPlay(this.correctAnswerMessage);
+    delayCall = millis();
+
   }else{
     test.missedPlays.push(test.getCurrentPlay());
-    clearAnswers();
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
     test.feedbackScreenStartTime = millis();
+    delayCall = millis();
+    currentPlayerTested.fill = color(255,238,88);
   }
 }
 
 function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   var play = test.getCurrentDefensivePlay();
-  if(play){
-    play.drawAllPlayersWithOffense(field);
-  }
+  play.drawAllPlayersWithOffense(field);
+  currentPlayerTested.draw(field);
 };
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
-  if(play){
-    play.drawAllPlayersWithOffense(field);
-    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+  play.drawAllPlayersWithOffense(field);
+  createCall();
+  if(currentPlayerTested){
+    currentPlayerTested.draw(field);
   }
-  
+
 }
+
+function createCall(){
+  var elapsedTime = millis() - delayCall;
+  var rightCall = calls[test.questionNum]; 
+  if(test.questionNum < 1){
+    if(elapsedTime > 2500 && elapsedTime < 4000){
+      fill(255,238,88);
+      textAlign(CENTER);
+      textSize(26);
+      text(rightCall, field.width/ 2, field.width / 8);
+    } 
+  }else if(elapsedTime > 4000 && elapsedTime < 5500) {
+    fill(255,238,88);
+    textAlign(CENTER);
+    textSize(26);
+    text(rightCall, field.width/ 2, field.width / 8);
+  }
+}
+
+
+
 
 function drawDemoScreen(){
   noStroke();
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentDefensivePlay();
+  currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
   if(play){
     play.drawAllPlayersWithOffense(field);
-    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+    currentPlayerTested.draw(field);
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
@@ -255,48 +260,62 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
-
-    var x = field.getTranslatedX(currentPlayerTested.startX);
-    var y = field.getTranslatedY(currentPlayerTested.startY);
-    var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-
-    if(timeElapsed < 2000){
+    if(currentPlayerTested){
+      var x = field.getTranslatedX(currentPlayerTested.x);
+      var y = field.getTranslatedY(currentPlayerTested.y);
+      var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+      textAlign(LEFT);
+      textSize(22);
       noStroke();
-      noFill();
-      stroke(255,238,88);
-      strokeWeight(2);
-      ellipse(x, y, siz, siz);
-      strokeWeight(1);
-      fill(255,238,88);
-      textAlign(CENTER);
-      text("You are in yellow", x, y - 60);
-    }else if(timeElapsed < 4000){
-      fill(255,238,88);
-      stroke(255,238,88);
-      line(field.width / 2, 80, field.width/2, 20);
-      triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-      noStroke();
-      fill(255,238,88);
-      text("Your play call is here", field.width / 2 + 20, 50);
-    }else{
-      if(currentPlayerTested){
-        currentPlayerTested.draw(field);
+      if(timeElapsed < 2000){
         noStroke();
-        textSize(22);
-        textAlign(CENTER);
+        noFill();
+        stroke(255,238,88);
+        strokeWeight(2);
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
         fill(255,238,88);
-        if(demoDoubleClick){
-          text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+        if(x < field.width / 3){
+          textAlign(LEFT);
+        }else if(x > 2 * (field.width) / 3){
+          textAlign(RIGHT);
         }else{
-          text("Double-click on your alignment spot after\n the offensive motion.", field.width / 2, (5 * field.height) / 6);
+          textAlign(CENTER);
         }
-      }else{
-        noStroke();
-        textSize(22);
-        textAlign(CENTER);
         fill(255,238,88);
-        text("Click on the spot you are suppose to line up.", field.width / 2, (5 * field.height) / 6);
+        text("You are in yellow", x, y - 60);
+        fill(0);
         noStroke();
+      }else if(timeElapsed < 4000){
+        fill(255,238,88);
+        stroke(255,238,88);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        fill(255,238,88);
+        text("Your play call is here", field.width / 2 + 20, 50);
+      }else if(timeElapsed > 4000 && timeElapsed < 6000){
+        fill(255,238,88);
+        textAlign(CENTER);
+        text("Your call will appear above for 1 second.", field.width / 2, (5 * field.height) / 6);
+        
+      }else if(timeElapsed > 6000 && timeElapsed < 7500){
+        fill(255,238,88);
+        textAlign(CENTER);
+        textSize(26);
+        text("LIGHTNING", field.width/ 2, field.width / 8);
+      }else{
+        if(currentPlayerTested){
+          noStroke();
+          textSize(22);
+          textAlign(CENTER);
+          fill(255,238,88);
+          if(demoDoubleClick){
+            text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
+          }else{
+            text("Re-position yourself, based on the call, by\ndouble-clicking on your new alignment spot.", field.width / 2, (5 * field.height) / 6);
+          }
+        }
       }
     }
   }
@@ -305,14 +324,13 @@ function drawDemoScreen(){
 function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
+  currentPlayerTested = null;
   test.demoStartTime = millis();
-  clearAnswers();
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
-  clearAnswers();
 };
 
 mouseClicked = function() {
@@ -374,7 +392,6 @@ function draw() {
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
       noStroke();
-      this.runMotion();
       fill(this.fill);
       ellipse(x, y, siz, siz);
       fill(0,0,0);
@@ -396,10 +413,7 @@ function draw() {
 
   if(!setupComplete){
     //WAIT - still executing JSON
-  }else if(test.showDemo){
-    drawDemoScreen();
-  }
-  else if(test.over){
+  }else if(test.over){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -415,10 +429,22 @@ function draw() {
       test.advanceToNextPlay("");
       currentPlayerTested = null;
     }
+  }else if(test.showDemo){
+    drawDemoScreen();
   }else{
-    if(!currentPlayerTested){
+    if(currentPlayerTested === null){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+    }else if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
+      if(elapsedTime > 2000){
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen();
+      }
+    }else{
+      drawOpening(field);
     }
-    drawOpening();
   }
 }

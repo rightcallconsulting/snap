@@ -264,7 +264,7 @@ function drawDemoScreen(){
         textAlign(CENTER);
         textSize(22);
         fill(255,238,88);
-        text("You are in yellow", x - 40, y - 80);
+        text("You are in yellow", x, y - 110);
         noStroke();
       }else if(timeElapsed < 4000){
         noStroke();

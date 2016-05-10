@@ -391,6 +391,19 @@ class MotionAlignmentQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
+class CallAlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/call_alignment_quiz.html'
+    page_header = 'CALL ALIGNMENT QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 
 class PassRushQuizView(FormationQuizView):
     template_name = 'quiz/pass_rush_quiz.html'

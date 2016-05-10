@@ -212,17 +212,17 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-  fill(255,238,88);
-  exitDemo.draw(field);
-  textSize(22);
-  textAlign(LEFT);
-  text("DEMO", x2 + 5, (y1 + y2) / 2);
-  stroke(0);
-  strokeWeight(2);
-  line(x1, y1, x2, y2);
-  line(x1, y2, x2, y1);
-  strokeWeight(1);
-  noStroke();
+    fill(255,238,88);
+    exitDemo.draw(field);
+    textSize(22);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -238,7 +238,6 @@ function drawDemoScreen(){
         strokeWeight(2);
         ellipse(x, y, siz, siz);
         strokeWeight(1);
-        fill(255,238,88);
         if(x < field.width / 3){
           textAlign(LEFT);
         }else if(x > 2 * (field.width) / 3){
