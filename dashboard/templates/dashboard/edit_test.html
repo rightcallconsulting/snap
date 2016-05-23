@@ -11,14 +11,14 @@
 	{% include "dashboard/sidebar.html" %}
 
 
-	<div id="main-container">
+	<div id="main-container" class="edit-test">
 		{% include "dashboard/top_nav_bar.html" %}
 
 		{% include "dashboard/grey_container.html" %}
 
 		<div class="padding-md">
       <div class="panel panel-default">
-					<div class="col-lg-5 dash-col display-play-box" id="display-play-box">
+					<div class="main-content-area dash-col display-play-box" id="display-play-box">
 						<div class="dash-header text-center">
 							<span><h4 id="play-image-header">Play</h4></span>
 						</div>
@@ -34,9 +34,9 @@
 						</div>
 
 					</div>
-					<div class = "playbook-col">
+					<div class = "stacked-col">
 					{% if unit == "offense" %}
-							<div class="col-lg-4 choose-offensive-formation-box">
+							<div class="secondary-content-area top choose-offensive-formation-box">
 								<div class="dash-header text-center">
 									<span><h4>Offensive Formations</h4></span>
 								</div>
@@ -57,7 +57,7 @@
 									</table>
 								</div>
 							</div>
-							<div class="col-lg-4 change-plays-box">
+							<div class="secondary-content-area change-plays-box">
 								<div class="dash-header text-center">
 									<span><h4 id="change-plays-header">Change Plays</h4></span>
 								</div>
@@ -91,7 +91,7 @@
 				</div>
 
 					{% if unit == "offense" %}
-					<div class="col-lg-2 dash-col display-plays-in-test">
+					<div class="tertiary-content-area dash-col display-plays-in-test">
 						<div class="dash-header text-center">
 							<span><h4>Plays in Test: {{test.name}}</h4></span>
 						</div>
