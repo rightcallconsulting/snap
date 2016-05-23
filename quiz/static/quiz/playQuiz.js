@@ -8,6 +8,7 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
+var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -89,7 +90,7 @@ function setup() {
       play.positions = positionsAsPlayers;
       play.populatePositions();
       if(play.name && play.name !== ""){
-          playNames.push(play.name);
+        playNames.push(play.name);
       }
       plays.push(play);
     }
@@ -179,13 +180,34 @@ function clearAnswers(){
 
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
-  registerAnswer(isCorrect);
+  if(isCorrect){
+    this.score++;
+    this.advanceToNextPlay(this.correctAnswerMessage);
+  }else{
+    this.advanceToNextPlay("");
+    this.incorrectGuesses++;
+    this.scoreboard.feedbackMessage = this.incorrectAnswerMessage;
+    feedbackScreenStartTime = millis();
+  }
+  
 }
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
+  scene = false;
+};
+
+function drawScene(){
+  scene = true; ////cannot be in loop, STUPID!!!
+  play = test.getCurrentPlay();
+  field.drawBackground(null, width, height);
+  play.drawAllRoutes(field);
+  play.drawAllPlayers(field);
+  for(var i = 0; i < play.eligibleReceivers.length; i++){
+    play.eligibleReceivers[i].runRoute();
+  }
 };
 
 function drawDemoScreen(){
@@ -199,7 +221,7 @@ function drawDemoScreen(){
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-     noStroke();
+    noStroke();
     fill(220,0,0);
     exitDemo.draw(field);
     textSize(22);
@@ -343,7 +365,10 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if(test.feedbackScreenStartTime){
+  }else if (scene){
+    drawScene();
+  }
+  else if(test.feedbackScreenStartTime){
     var timeElapsed = millis() - test.feedbackScreenStartTime;
     if(timeElapsed < 2000){
       drawOpening();
@@ -351,6 +376,7 @@ function draw() {
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
       multipleChoiceAnswers = [];
+
     }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
