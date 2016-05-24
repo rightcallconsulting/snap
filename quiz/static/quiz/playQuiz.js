@@ -178,36 +178,37 @@ function clearAnswers(){
   }
 }
 
+
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
-  if(isCorrect){
-    this.score++;
-    this.advanceToNextPlay(this.correctAnswerMessage);
-  }else{
-    this.advanceToNextPlay("");
-    this.incorrectGuesses++;
-    this.scoreboard.feedbackMessage = this.incorrectAnswerMessage;
-    feedbackScreenStartTime = millis();
-  }
-  
-}
+
+  registerAnswer(isCorrect);
+};
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
-  scene = false;
 };
 
-function drawScene(){
-  scene = true; ////cannot be in loop, STUPID!!!
-  play = test.getCurrentPlay();
+function drawScene(field){
+  var play = test.getCurrentPlay();
+  var playIsOver = false;
   field.drawBackground(null, width, height);
   play.drawAllRoutes(field);
   play.drawAllPlayers(field);
-  for(var i = 0; i < play.eligibleReceivers.length; i++){
-    play.eligibleReceivers[i].runRoute();
+  if(playIsOver){
+    scene = false;
+  }else{
+    scene = true;
   }
+  for(var i = 0; i < play.eligibleReceivers.length; i++){
+    if(play.eligibleReceivers[i].runRoute()){
+      
+    }
+  }
+  
+
 };
 
 function drawDemoScreen(){
@@ -233,6 +234,18 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
+
+    var playButtonX = 85;
+    var playButtonY = 400;
+
+    fill(255,238,88);
+    stroke(255,238,88);
+    strokeWeight(2);
+    line(playButtonX, playButtonY, playButtonX, playButtonY + 80);
+    triangle(85, 480, 105, 460, 65, 460);
+    textAlign(LEFT);
+    strokeWeight(1);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
 
     var x = field.getTranslatedX(49);
     var y = field.getTranslatedY(85);
@@ -278,9 +291,6 @@ function exitDemoScreen(){
 };
 
 mouseClicked = function() {
-  if(!setupComplete){
-    return false;
-  }
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
@@ -331,6 +341,7 @@ keyTyped = function(){
   }
 };
 
+
 function draw() {
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
@@ -365,23 +376,21 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if (scene){
-    drawScene();
-  }
-  else if(test.feedbackScreenStartTime){
+  }else if(test.feedbackScreenStartTime){
     var timeElapsed = millis() - test.feedbackScreenStartTime;
     if(timeElapsed < 2000){
-      drawOpening();
+      drawOpening(field);
     }else{
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
-
     }
+  }else if(scene){
+    drawScene(field);
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
     drawOpening(field);

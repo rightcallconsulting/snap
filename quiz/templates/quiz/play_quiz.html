@@ -6,7 +6,9 @@
 
 {% endblock %}
 {% block header %}
+
 PLAY QUIZ
+
 {% endblock %}
 
 {% block quiz_type %}
@@ -18,9 +20,14 @@ var json_seed = {{ json_seed|safe }};
   <script type="text/javascript">
 
   $("#play-button").click(function() {
-    drawScene();
+    if(test && test.feedbackScreenStartTime === 0){
+      if(scene){
+        scene = false;  
+      }else{
+        scene = true;
+      } 
+    }
   })
-
 
   $('#check-button').click(function(){
     for(var i = 1; i <= multipleChoiceAnswers.length; i++){
