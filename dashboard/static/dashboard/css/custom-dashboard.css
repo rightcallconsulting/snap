@@ -150,7 +150,7 @@
 }
 
 .full-sidebar .dash-header-logo{
-  height: 100px;
+  width: 100px;
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -158,7 +158,6 @@
 
 .small-sidebar .dash-header-logo{
   width: 35px;
-  height: 35px;
   display:block;
   margin-left: auto;
   margin-right: auto;
