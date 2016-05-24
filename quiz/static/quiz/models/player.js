@@ -244,7 +244,6 @@ Player.prototype.coverMan = function(opponent) {
     }else{
         this.y += yRate/2.0;
     }
-
 };
 
 Player.prototype.blockMan = function(opponent, shade, isPull) {
@@ -329,7 +328,7 @@ Player.prototype.setRoute = function(val, center){
         case 4: this.runFade(); break;//this.runDeepCorner(center, direction); break;
         case 5: this.runDeepCorner(direction); break;//this.runFade(); break;
     }
-};
+  };
 
 Player.prototype.runRoute = function(){
   if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length){
