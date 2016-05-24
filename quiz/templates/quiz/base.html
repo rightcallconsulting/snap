@@ -105,6 +105,8 @@
                 if(isCorrect){
                   currentPlayerTested = null;
                   multipleChoiceAnswers = [];
+                  clearMultipleChoiceAnswers(); 
+
                 }else{
                   //start feedback screen start time
                   var answer = document.getElementById("mc-button-"+answerIndex);

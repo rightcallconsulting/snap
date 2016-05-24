@@ -178,6 +178,15 @@ function clearAnswers(){
   }
 }
 
+function clearRoutes(){
+  var player = test.getCurrentPlay().eligibleReceivers;
+  for(var i = 0; i < player.length; i++){
+    if(player.currentBreak === 50){
+      player.x = player.startX;
+    }
+  }
+}
+
 
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
@@ -193,22 +202,16 @@ function drawOpening(){
 
 function drawScene(field){
   var play = test.getCurrentPlay();
-  var playIsOver = false;
-  field.drawBackground(null, width, height);
+  field.drawBackground(null, height, width);
   play.drawAllRoutes(field);
   play.drawAllPlayers(field);
-  if(playIsOver){
-    scene = false;
-  }else{
-    scene = true;
-  }
   for(var i = 0; i < play.eligibleReceivers.length; i++){
     if(play.eligibleReceivers[i].runRoute()){
       
+    }else{
+      clearRoutes();
     }
   }
-  
-
 };
 
 function drawDemoScreen(){
@@ -218,6 +221,7 @@ function drawDemoScreen(){
   if(play){
     play.drawAllRoutes(field);
     play.drawAllPlayers(field);
+
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
@@ -277,17 +281,22 @@ function drawDemoScreen(){
   }
 };
 
+function restartScene(){
+
+}
+
 function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  clearAnswers();
+  clearMultipleChoiceAnswers();
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
-  clearAnswers();
+  clearMultipleChoiceAnswers();
+  scene = false;
 };
 
 mouseClicked = function() {
@@ -381,11 +390,10 @@ function draw() {
     if(timeElapsed < 2000){
       drawOpening(field);
     }else{
+      clearMultipleChoiceAnswers();
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
     }
-  }else if(scene){
-    drawScene(field);
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
@@ -393,6 +401,11 @@ function draw() {
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    drawOpening(field);
+    if(scene){
+      drawScene(field);
+    }else{
+      drawOpening(field);  
+    }
+    
   }
 };
