@@ -11,6 +11,7 @@ var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var oldFill = null;
+var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -163,6 +164,15 @@ function clearSelections(){
   }
 }
 
+function clearRoutes(){
+  var player = test.getCurrentPlay().eligibleReceivers;
+  for(var i = 0; i < player.length; i++){
+    if(player.currentBreak === 50){
+      player.x = player.startX;
+    }
+  }
+}
+
 function checkAnswer(guess){
 
   var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
@@ -199,6 +209,24 @@ function drawOpening(){
     play.drawAllPlayersWithOffense(field);
   }
 }
+
+function drawScene(){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentDefensivePlay();
+  var players = play.defensivePlayers;
+  if(play){
+    play.drawAllPlayersWithOffense(field);
+  }
+  for(var i = 0; i < players.length; i++){
+    if(players[i].pos === "DE" || players[i].pos === "DL"){
+      players[i].blitzGap(play.offensiveFormationObject.oline[2], null);
+    }else if(players[i].pos === "CB" || players[i].pos === "FS"){
+      players[i].coverZone( players[i].getFlat(0), null);
+
+     
+    }
+  } 
+};
 
 function drawDemoScreen(){
   noStroke();
@@ -314,6 +342,7 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearSelections();
+  scene = false;
 };
 
 mouseClicked = function() {
@@ -438,7 +467,11 @@ function draw() {
         drawFeedbackScreen(field);
       }
     }else{
-      drawOpening(field);
+      if(scene){
+        drawScene();
+      }else{
+        drawOpening(field);
+      }
     }
   }
 }

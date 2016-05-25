@@ -187,10 +187,8 @@ function clearRoutes(){
   }
 }
 
-
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
-
   registerAnswer(isCorrect);
 };
 
@@ -208,8 +206,6 @@ function drawScene(field){
   for(var i = 0; i < play.eligibleReceivers.length; i++){
     if(play.eligibleReceivers[i].runRoute()){
       
-    }else{
-      clearRoutes();
     }
   }
 };
