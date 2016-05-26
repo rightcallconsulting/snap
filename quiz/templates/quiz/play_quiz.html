@@ -13,6 +13,7 @@ PLAY QUIZ
 
 {% block quiz_type %}
 <script type="text/javascript">
+
 var json_seed = {{ json_seed|safe }};
   // console.log(JSON.stringify(json_seed, null, 2));
   </script>
@@ -21,11 +22,7 @@ var json_seed = {{ json_seed|safe }};
 
   $("#play-button").click(function() {
     if(test && test.feedbackScreenStartTime === 0){
-      if(scene){
-        scene = false;  
-      }else{
-        scene = true;
-      } 
+      scene = !scene;
     }
   })
 
@@ -43,6 +40,7 @@ var json_seed = {{ json_seed|safe }};
     if(test && test.feedbackScreenStartTime === 0){
       clearMultipleChoiceAnswers();
       test.restartQuiz();
+      scene = false;
     }
   })
 
@@ -51,11 +49,10 @@ var json_seed = {{ json_seed|safe }};
       if(test.showDemo){
         exitDemoScreen();
         return;
-      }if(scene){
-        test.skipQuestion();
       }else{
         test.skipQuestion();
         multipleChoiceAnswers = [];
+        scene = false;
       }
     }
   })
