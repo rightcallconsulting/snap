@@ -169,24 +169,6 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
   }
 }
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
-function clearRoutes(){
-  var player = test.getCurrentPlay().eligibleReceivers;
-  for(var i = 0; i < player.length; i++){
-    if(player.currentBreak === 50){
-      player.x = player.startX;
-    }
-  }
-}
-
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
   registerAnswer(isCorrect);
@@ -339,7 +321,7 @@ keyTyped = function(){
       if(answer.clicked){
         checkAnswer(answer);
       }else{
-        clearAnswers();
+        clearMultipleChoiceAnswers();
         answer.changeClickStatus();
       }
     }

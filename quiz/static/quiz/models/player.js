@@ -43,15 +43,15 @@ var Player = function(config) {
   this.zoneYPoint = config.zoneYPoint || null;
   this.gapXPoint = config.gapXPoint || null;
   this.gapYPoint = config.gapYPoint || null;
-    this.motionCoords = config.motionCoords || []; // assume (x, y)
-    this.currentMotionBreak = config.currentMotionBreak || 0;
-    this.zoneAssignment = config.zoneAssignment || 0;
-    this.optionAssignment = config.optionAssignment || [];
-    this.coverageAssignment = config.coverageAssignment || [];
-  };
+  this.motionCoords = config.motionCoords || []; // assume (x, y)
+  this.currentMotionBreak = config.currentMotionBreak || 0;
+  this.zoneAssignment = config.zoneAssignment || 0;
+  this.optionAssignment = config.optionAssignment || [];
+  this.coverageAssignment = config.coverageAssignment || [];
+};
 
-  Player.rank = 1;
-  Player.altRank = -1;
+Player.rank = 1;
+Player.altRank = -1;
 
 // Instance Methods
 
@@ -148,8 +148,6 @@ Player.prototype.moveAtAngle = function(distance, theta){
   this.moveTo(this.startX + xDist, this.startY + yDist);
 };
 
-
-
 //zone is an array [x1,y1,x2,y2]
 Player.prototype.coverZone = function(zone, play){
 
@@ -214,6 +212,13 @@ Player.prototype.coverMan = function(opponent) {
       this.y += yRate/2.0;
     }
   };
+  Player.prototype.blitzGapScene = function(){
+    var gapX = this.gapXPoint;
+    var gapY = this.gapYPoint;
+    this.moveTo(gapX, gapY);
+
+}
+
 
   Player.prototype.blockMan = function(opponent, shade, isPull) {
     var oppX = opponent.x + shade * opponent.siz / 2;
@@ -294,13 +299,13 @@ Player.prototype.setRoute = function(val, center){
     case 1: this.runArrow(direction); break;
     case 2: this.runPost(direction); break;
     case 3: this.runDeepPost(direction); break;
-        case 4: this.runFade(); break;//this.runDeepCorner(center, direction); break;
-        case 5: this.runDeepCorner(direction); break;//this.runFade(); break;
-      }
-    };
+    case 4: this.runFade(); break;//this.runDeepCorner(center, direction); break;
+    case 5: this.runDeepCorner(direction); break;//this.runFade(); break;
+  }
+};
 
-    Player.prototype.runRoute = function(){
-      if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length){
+Player.prototype.runRoute = function(){
+  if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length){
     return; //TODO - dono
   }
   if(this.moveTo(this.breakPoints[this.currentBreak][0], this.breakPoints[this.currentBreak][1])){
@@ -485,6 +490,8 @@ Player.prototype.setCorrectCoordinates = function(){
   return correctCoordinates;
 };
 
+
+
 Player.prototype.checkCorrectAnswer = function(wrCoords, correctCoords){
   var xError = 0;
   var yError = 0;
@@ -542,7 +549,6 @@ Player.prototype.checkRoutes = function(play){
     }else {
       play.test.advanceToNextPlay(displayMessage);
     }
-
   }else{
     play.test.scoreboard.feedbackMessage = "Wrong Answer";
     play.test.incorrectGuesses++;
@@ -633,7 +639,6 @@ Player.prototype.isALineman = function(){
       return true
   }
 }
-
 };
 
 Player.prototype.checkSelection = function(test) {

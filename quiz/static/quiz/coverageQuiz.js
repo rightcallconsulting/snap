@@ -174,7 +174,6 @@ function clearRoutes(){
 }
 
 function checkAnswer(guess){
-
   var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
   var isCorrect = guess === p.coverageAssignment[0];
   if(isCorrect){
@@ -210,25 +209,45 @@ function drawOpening(){
   }
 }
 
+function drawDLineScene(){
+
+};
+
+function getDbZone(){
+  var players = test.getCurrentDefensivePlay().defensivePlayers;
+  var zone = 0;
+  for(var i = 0; i < players.length; i++){
+    if(players[i].pos === "CB"){
+      players[i].zoneAssignment = 1;
+    }else if(players[i].pos === "SS"){
+      players[i].zoneAssignment = 2;
+    }
+  }
+};
+
 function drawScene(){
+  
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
   if(play){
+    getDbZone();
     play.drawAllPlayersWithOffense(field);
-  }
-  for(var i = 0; i < players.length; i++){
-    if(players[i].pos === "DE" || players[i].pos === "DL"){
-      players[i].blitzGap(play.offensiveFormationObject.oline[2], null);
-    }else if(players[i].pos === "CB" || players[i].pos === "FS"){
-      players[i].coverZone( players[i].getFlat(0), null);
+    for(var i = 0; i < players.length; i++){
+      if(players[i].gapYPoint !== null){
+         // players[i].blitzGap(play.offensiveFormationObject.oline[2], null);
+         players[i].blitzGapScene();
+       }else if(players[i].zoneAssignment !== 0){
+        players[i].coverZone(players[i].getDeepThird(1), null);
+       }
+     }
+     currentPlayerTested.coverZone(currentPlayerTested.getDropZone(2), null);
+    
 
-     
-    }
-  } 
-};
+   }
+ };
 
-function drawDemoScreen(){
+ function drawDemoScreen(){
   noStroke();
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
