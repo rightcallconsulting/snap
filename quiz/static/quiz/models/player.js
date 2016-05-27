@@ -212,11 +212,18 @@ Player.prototype.coverMan = function(opponent) {
       this.y += yRate/2.0;
     }
   };
+
   Player.prototype.blitzGapScene = function(){
     var gapX = this.gapXPoint;
     var gapY = this.gapYPoint;
     this.moveTo(gapX, gapY);
 
+}
+
+Player.prototype.coverZoneScene = function(){
+    var zoneX = this.zoneXPoint;
+    var zoneY = this.zoneYPoint;
+    this.moveTo(zoneX, zoneY);
 }
 
 

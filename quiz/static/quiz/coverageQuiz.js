@@ -12,6 +12,8 @@ var exitDemo = null;
 var demoDoubleClick = false;
 var oldFill = null;
 var scene = false;
+var isSceneOver = true;
+
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -180,6 +182,7 @@ function checkAnswer(guess){
     clearSelections();
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
+    scene = false;
   }else{
     test.missedPlays.push(test.getCurrentPlay());
     clearSelections();
@@ -190,6 +193,7 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
+    scene = false;
   }
 }
 
@@ -221,33 +225,32 @@ function getDbZone(){
       players[i].zoneAssignment = 1;
     }else if(players[i].pos === "SS"){
       players[i].zoneAssignment = 2;
+    }else{
+      players[i].zoneAssignment = 0;
     }
   }
 };
 
+//zone 
+
 function drawScene(){
-  
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
   if(play){
-    getDbZone();
     play.drawAllPlayersWithOffense(field);
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){
-         // players[i].blitzGap(play.offensiveFormationObject.oline[2], null);
-         players[i].blitzGapScene();
-       }else if(players[i].zoneAssignment !== 0){
-        players[i].coverZone(players[i].getDeepThird(1), null);
-       }
-     }
-     currentPlayerTested.coverZone(currentPlayerTested.getDropZone(2), null);
-    
+       players[i].blitzGapScene();
+     }else if(players[i].zoneYPoint !== 0){
+      players[i].coverZoneScene();
+    }
+  }
+  currentPlayerTested.coverZone(currentPlayerTested.getDropZone(2), null);
+}
+};
 
-   }
- };
-
- function drawDemoScreen(){
+function drawDemoScreen(){
   noStroke();
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
@@ -480,6 +483,7 @@ function draw() {
         var assignment = currentPlayerTested.coverageAssignment[0];
         assignment.fill = oldFill;
         test.feedbackScreenStartTime = 0;
+        scene = false;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
@@ -488,8 +492,9 @@ function draw() {
     }else{
       if(scene){
         drawScene();
-      }else{
-        drawOpening(field);
+      }
+      else{
+        drawOpening();
       }
     }
   }

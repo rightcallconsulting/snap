@@ -44,6 +44,7 @@ $('#restart-button').click(function(){
           clearSelections();
           test.restartQuiz();
           currentPlayerTested = null;
+          scene = false;
         }
       })
 
@@ -55,6 +56,7 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     currentPlayerTested = null;
+    scene = false;
   }
 })
 

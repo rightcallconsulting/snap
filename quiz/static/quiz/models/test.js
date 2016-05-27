@@ -52,8 +52,6 @@ Test.prototype.getCurrentPlayerTested = function(currentUserTested){
   return this.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
 };
 
-
-
 Test.prototype.getCurrentPlayNumber = function(){
   return floor(this.questionNum/this.questionsPerPlay);
 };
@@ -66,7 +64,6 @@ Test.prototype.getCurrentPlay = function(){
   }
   else {
     return this.plays[this.getCurrentPlayNumber()];
-
   }
 };
 
@@ -172,7 +169,6 @@ Test.prototype.updateScoreboard = function(){
   if(this.scoreboard){
     $('#feedback-message').text(this.scoreboard.feedbackMessage);
   }
-
 }
 
 Test.prototype.updateProgress = function(){
