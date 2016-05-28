@@ -6,9 +6,7 @@
 
 {% endblock %}
 {% block header %}
-
 PLAY QUIZ
-
 {% endblock %}
 
 {% block quiz_type %}
@@ -23,6 +21,9 @@ var json_seed = {{ json_seed|safe }};
   $("#play-button").click(function() {
     if(test && test.feedbackScreenStartTime === 0){
       scene = !scene;
+      if(!test.startSceneTime){
+      test.sceneStartTime = millis();
+    }
     }
   })
 

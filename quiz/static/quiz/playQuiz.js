@@ -259,10 +259,6 @@ function drawDemoScreen(){
   }
 };
 
-function restartScene(){
-
-}
-
 function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
@@ -353,8 +349,7 @@ function draw() {
   }
   if(!setupComplete){
     //WAIT - still executing JSON
-  }
-  else if(test.showDemo){
+  }else if(test.showDemo){
     drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
@@ -369,10 +364,21 @@ function draw() {
       drawOpening(field);
     }else{
       clearMultipleChoiceAnswers();
+      scene = false;
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
     }
-  }else{
+  }else if(test.sceneStartTime){
+      test.sceneStartTime = 0;
+      var players = test.getCurrentPlay().eligibleReceivers;
+      for(var i = 0; i < players.length; i++){
+        if(!scene){
+          players[i].resetToStart();
+        }else{
+          drawScene(field);
+        }
+      }
+    }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
