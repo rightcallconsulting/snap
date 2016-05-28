@@ -244,6 +244,10 @@ function drawScene(){
        players[i].blitzGapScene();
      }else if(players[i].zoneYPoint !== 0){
       players[i].coverZoneScene();
+    }else{
+      getDbZone();
+      players[i].getDropZone(players[i].zoneAssignment)
+      debugger;
     }
   }
   currentPlayerTested.coverZone(currentPlayerTested.getDropZone(2), null);
