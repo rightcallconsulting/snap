@@ -217,7 +217,6 @@ Player.prototype.coverMan = function(opponent) {
     var gapX = this.gapXPoint;
     var gapY = this.gapYPoint;
     this.moveTo(gapX, gapY);
-
 }
 
 Player.prototype.coverZoneScene = function(){
@@ -225,6 +224,11 @@ Player.prototype.coverZoneScene = function(){
     var zoneY = this.zoneYPoint;
     this.moveTo(zoneX, zoneY);
 }
+
+Player.prototype.coverManScene = function(){
+
+
+};
 
 
   Player.prototype.blockMan = function(opponent, shade, isPull) {

@@ -37,7 +37,9 @@ var Test = function(config){
   this.feedbackScreenStartTime = config.feedbackScreenStartTime || false;
   this.showDemo = config.showDemo || false;
   this.demoStartTime = config.demoStartTime || 0;
+  this.sceneStartTime = config.sceneStartTime || 0;
 };
+
 
 Test.prototype.unit = function(){
   if(this.typeTest == "CBAssignment"){

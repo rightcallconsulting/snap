@@ -12,8 +12,6 @@ var exitDemo = null;
 var demoDoubleClick = false;
 var oldFill = null;
 var scene = false;
-var isSceneOver = true;
-
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -166,15 +164,6 @@ function clearSelections(){
   }
 }
 
-function clearRoutes(){
-  var player = test.getCurrentPlay().eligibleReceivers;
-  for(var i = 0; i < player.length; i++){
-    if(player.currentBreak === 50){
-      player.x = player.startX;
-    }
-  }
-}
-
 function checkAnswer(guess){
   var p = test.getCurrentDefensivePlay().defensivePlayers.filter(function(player){return player.pos === currentUserTested.position})[0];
   var isCorrect = guess === p.coverageAssignment[0];
@@ -205,35 +194,15 @@ function drawFeedbackScreen(){
   }
 };
 
-function drawOpening(){
+function drawOpening(field){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-}
-
-function drawDLineScene(){
-
 };
 
-function getDbZone(){
-  var players = test.getCurrentDefensivePlay().defensivePlayers;
-  var zone = 0;
-  for(var i = 0; i < players.length; i++){
-    if(players[i].pos === "CB"){
-      players[i].zoneAssignment = 1;
-    }else if(players[i].pos === "SS"){
-      players[i].zoneAssignment = 2;
-    }else{
-      players[i].zoneAssignment = 0;
-    }
-  }
-};
-
-//zone 
-
-function drawScene(){
+function drawScene(field){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
@@ -241,17 +210,14 @@ function drawScene(){
     play.drawAllPlayersWithOffense(field);
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){
-       players[i].blitzGapScene();
-     }else if(players[i].zoneYPoint !== 0){
-      players[i].coverZoneScene();
-    }else{
-      getDbZone();
-      players[i].getDropZone(players[i].zoneAssignment)
-      debugger;
-    }
-  }
-  currentPlayerTested.coverZone(currentPlayerTested.getDropZone(2), null);
-}
+        players[i].blitzGapScene();
+      }else if(players[i].zoneYPoint !== 0){
+        players[i].coverZoneScene();
+      }else{
+       players[i].resetToStart();
+     }
+   }
+ }
 };
 
 function drawDemoScreen(){
@@ -277,6 +243,11 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
+
+    fill(255,238,88);
+    textSize(14);
+    textAlign(LEFT);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 20, 480);
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -493,13 +464,23 @@ function draw() {
       }else{
         drawFeedbackScreen(field);
       }
+    }else if(test.sceneStartTime){
+      test.sceneStartTime = 0;
+      var players = test.getCurrentDefensivePlay().defensivePlayers;
+      for(var i = 0; i < players.length; i++){
+        if(!scene){
+          players[i].resetToStart();
+        }else{
+          drawScene(field);
+        }
+      }
     }else{
       if(scene){
-        drawScene();
-      }
-      else{
-        drawOpening();
+        drawScene(field);
+      }else{
+        drawOpening(field);
       }
     }
+    
   }
 }
