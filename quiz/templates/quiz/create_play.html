@@ -79,6 +79,28 @@
   </div>
       <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
   </div>
+  <div class="create-play dash-col choose-offensive-play-box" id="choose-offensive-play-box">
+    <div class="dash-header text-center">
+      <span><h4>Offensive Plays</h4></span>
+    </div>
+    <div class="table-wrapper">
+    <table class="formation-list two-column-table">
+      {% for formation in offensive_formations %}
+      {% if forloop.counter0|divisibleby:2 %}
+        <tr>
+      {% endif %}
+        <td><input class="bounceIn animation-delay5 login-link formation play-add-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+        {% if forloop.counter|divisibleby:2 %}
+        </tr>
+        {% endif %}
+      {% endfor %}
+      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
+        <td></td></tr>
+      {% endif %}
+    </table>
+  </div>
+      <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
+  </div>
 {% endblock %}
 
 {% block scoreboard %}

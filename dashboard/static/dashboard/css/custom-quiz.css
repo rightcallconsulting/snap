@@ -74,11 +74,11 @@
 }
 
 #main-container .small-sidebar-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .small-sidebar-container#main-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .full-sidebar-container#main-container{
@@ -208,6 +208,15 @@
   color: #FFFFFF;
 }
 
+.play-add-button {
+  width: 90%;
+  height: 90%;
+  margin-top:1px;
+  margin-bottom:1px;
+  background-color: #D07322;
+  color: #FFFFFF;
+}
+
 .two-column-table td{
   width: 50%;
   height: 100px;
@@ -309,8 +318,8 @@
 }
 
 .small-sidebar{
-  max-width: 4%;
-  min-width: 50px;
+  max-width: 5%;
+  min-width: 75px;
   height: 100%;
 }
 

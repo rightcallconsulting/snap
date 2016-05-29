@@ -313,20 +313,24 @@ Formation.prototype.mouseInReceiverOrNode = function(field){
   return [receiverClicked, selectedNode];
 };
 
-Formation.prototype.mouseInQB = function(){
+Formation.prototype.mouseInQB = function(field){
   for(var i = 0; i < this.qb.length; i++){
-    var p = this.eligibleReceivers[i];
-    if (p.isMouseInside()){
-      var receiverClicked = p;
-    }
-    for(var j = 0; j < p.routeNodes.length; j++){
-      var n = p.routeNodes[j];
-      if (n.isMouseInside()){
-        var selectedNode = n;
-      }
+    var p = this.qb[i];
+    if (p.isMouseInside(field)){
+      return [p];
     }
   }
-  return [receiverClicked, selectedNode];
+  return [];
+};
+
+Formation.prototype.mouseInCenter = function(field){
+  for(var i = 0; i < this.oline.length; i++){
+    var p = this.oline[i];
+    if (p.pos === "C" && p.isMouseInside(field)){
+      return p;
+    }
+  }
+  return null;
 };
 
 Formation.prototype.mouseInDefensivePlayer = function(field){
@@ -497,6 +501,18 @@ Formation.prototype.saveToDB = function(){
 
   var formationJSON = "";
   var cache = [];
+
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    p = this.offensivePlayers[i];
+    p.startX = p.x;
+    p.startY = p.y;
+  }
+
+  for(var i = 0; i < this.defensivePlayers.length; i++){
+    p = this.defensivePlayers[i];
+    p.startX = p.x;
+    p.startY = p.y;
+  }
 
   try{
   formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])

@@ -270,6 +270,7 @@ var runTest = function(){
   mouseDragged = function(){
     var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
     var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
+    var centerClicked = formationExample.mouseInCenter(field);
     if (formationExample.establishingNewPlayer){
       formationExample.establishingNewPlayer.movePlayer(field);
     }
@@ -280,6 +281,35 @@ var runTest = function(){
     else if (formationExample.qb[0].isMouseInside(field)){
       formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
       formationExample.establishingNewPlayer = formationExample.qb[0];
+    }else if(centerClicked){
+      var mouseYardX = field.getYardX(mouseX);
+      var xDiff = mouseYardX - centerClicked.x;
+      if(mouseYardX > Field.rightHashYardX && xDiff > 0){
+        xDiff = 0;
+      }
+      if(mouseYardX < Field.leftHashYardX && xDiff < 0){
+        xDiff = 0;
+      }
+      for(var i = 0; i < formationExample.offensivePlayers.length; i++){
+        var p = formationExample.offensivePlayers[i];
+        p.x += xDiff;
+      }
+      for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+        var p = defensePlay.defensivePlayers[i];
+        if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE"){
+          p.x += xDiff;
+        }else{
+          p.x += xDiff * 0.75;
+        }
+        if(p.x < 0){
+          p.x = 0;
+        }
+        if(p.x > Field.WIDTH){
+          p.x = Field.WIDTH;
+        }
+
+      }
+      return;
     }
     else if (positionOptionSelected){
       var newPlayer = new Player({

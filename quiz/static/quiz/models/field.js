@@ -32,6 +32,8 @@ var Field = function(config){
 
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
+Field.leftHashYardX = 20;
+Field.rightHashYardX = 33.33;
 
 var field = new Field({
   heightInYards: 40,
