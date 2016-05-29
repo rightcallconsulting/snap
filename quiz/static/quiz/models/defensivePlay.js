@@ -20,6 +20,7 @@ var DefensivePlay = function(config) {
   this.positions = config.positions || [];
   this.id = config.id || null;
   this.dbCall = config.dbCall || null;
+  this.inProgress = false;
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs

@@ -1,5 +1,5 @@
 var setupComplete = false;
-var testIDFromHTML = 33;
+var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
 var playNames;
@@ -185,6 +185,7 @@ function drawScene(field){
   field.drawBackground(null, height, width);
   play.drawAllRoutes(field);
   play.drawAllPlayers(field);
+  play.inProgress = true;
   for(var i = 0; i < play.eligibleReceivers.length; i++){
     if(play.eligibleReceivers[i].runRoute()){
       
