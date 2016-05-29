@@ -199,7 +199,6 @@ function drawDemoScreen(){
   if(play){
     play.drawAllRoutes(field);
     play.drawAllPlayers(field);
-
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
