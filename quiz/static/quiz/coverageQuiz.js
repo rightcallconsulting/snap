@@ -214,6 +214,7 @@ function drawScene(field){
       }else if(players[i].zoneYPoint !== null){
         players[i].coverZoneScene();
       }else{
+        //hard code to cover receiver[1] since no assignment
         players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
       }  
     }
@@ -244,15 +245,9 @@ function drawDemoScreen(){
     strokeWeight(1);
     noStroke();
 
-    fill(255,238,88);
-    textSize(14);
-    textAlign(LEFT);
-    text("Click play button anytime to animate play.\nPress again to pause animation", 10, 480);
-    text("Click restart button anytime to restart animation.\nPress again to pause animation", 10, 480);
-
     if(currentPlayerTested){
-      var x = field.getTranslatedX(currentPlayerTested.startX);
-      var y = field.getTranslatedY(currentPlayerTested.startY);
+      var x = field.getTranslatedX(currentPlayerTested.x);
+      var y = field.getTranslatedY(currentPlayerTested.y);
       var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
       textAlign(LEFT);
       textSize(22);
@@ -284,6 +279,16 @@ function drawDemoScreen(){
         noStroke();
         fill(255,238,88);
         text("Your play call is here", field.width / 2 + 20, 50);
+      }else if(timeElapsed < 5500){
+        fill(255,238,88);
+        textSize(16);
+        textAlign(RIGHT);
+        text("Click play button anytime\nto animate play. Press again\nto pause animation.", 220, 430);
+      }else if(timeElapsed < 8000){
+        fill(255,238,88);
+        textSize(16);
+        textAlign(LEFT);
+        text("Click restart button anytime\nto restart animation.", 220, 430);
       }else{
         stroke(255,238,88);
         fill(255,238,88);
@@ -320,9 +325,14 @@ function drawDemoScreen(){
           fill(255,238,88);
           textAlign(CENTER);
           text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
+          textSize(16);
+          textAlign(RIGHT);
+          text("Click play button anytime\nto animate play. Press again\nto pause animation.", 220, 430);
+          text("Click restart button anytime\nto restart animation.", 220, 370);
           noStroke();
           //text("Click demo button to exit", 20, 50);
         }
+
       }
       noStroke();
     }
