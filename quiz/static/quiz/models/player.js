@@ -113,7 +113,6 @@ Player.prototype.isMouseInside = function(field) {
          mouseY > this.y - this.siz/1 &&
          mouseY < (this.y + this.siz/1);*/
        };
-
        Player.prototype.resetToStart = function(){
         this.x = this.startX;
         this.y = this.startY;
@@ -217,18 +216,19 @@ Player.prototype.coverMan = function(opponent) {
     var gapX = this.gapXPoint;
     var gapY = this.gapYPoint;
     this.moveTo(gapX, gapY);
-}
+  }
 
-Player.prototype.coverZoneScene = function(){
+  Player.prototype.coverZoneScene = function(){
     var zoneX = this.zoneXPoint;
     var zoneY = this.zoneYPoint;
     this.moveTo(zoneX, zoneY);
-}
+  }
 
-Player.prototype.coverManScene = function(){
-
-
-};
+  Player.prototype.coverManScene = function(receiver){
+    var destX = receiver.x;
+    var destY = receiver.y + 2;
+    this.moveTo(destX, destY);
+  };
 
 
   Player.prototype.blockMan = function(opponent, shade, isPull) {

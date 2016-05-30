@@ -23,7 +23,6 @@ var PlayTest = function(config){
   this.coverageMap = config.coverageMap || null;
   this.showDemo = config.showDemo || false;
   this.demoStartTime = config.demoStartTime || 0;
-  this.sceneStartTime = config.sceneStartTime || 0;
 };
 
 PlayTest.prototype.getCurrentPlayerTested = function(currentUserTested){

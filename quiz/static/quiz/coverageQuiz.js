@@ -11,7 +11,6 @@ var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var oldFill = null;
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -171,7 +170,7 @@ function checkAnswer(guess){
     clearSelections();
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
-    scene = false;
+    test.getCurrentPlay().inProgress = false;
   }else{
     test.missedPlays.push(test.getCurrentPlay());
     clearSelections();
@@ -182,7 +181,7 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
-    scene = false;
+    test.getCurrentPlay().inProgress = false;
   }
 }
 
@@ -207,18 +206,18 @@ function drawScene(field){
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
   if(play){
+    currentPlayerTested = null;
     play.drawAllPlayersWithOffense(field);
-    play.inProgress = true;
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){
         players[i].blitzGapScene();
-      }else if(players[i].zoneYPoint !== 0){
+      }else if(players[i].zoneYPoint !== null){
         players[i].coverZoneScene();
       }else{
-       players[i].resetToStart();
-     }
-   }
- }
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
+      }  
+    }
+  }
 };
 
 function drawDemoScreen(){
@@ -248,7 +247,8 @@ function drawDemoScreen(){
     fill(255,238,88);
     textSize(14);
     textAlign(LEFT);
-    text("Click play button anytime to animate play.\nClick again to pause animation.", 20, 480);
+    text("Click play button anytime to animate play.\nPress again to pause animation", 10, 480);
+    text("Click restart button anytime to restart animation.\nPress again to pause animation", 10, 480);
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -340,7 +340,7 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearSelections();
-  scene = false;
+  test.getCurrentPlay().inProgress = false;
 };
 
 mouseClicked = function() {
@@ -367,7 +367,7 @@ mouseClicked = function() {
     window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
-  }else if(!test.over){
+  }else if(!test.over && !test.getCurrentPlay().inProgress){
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
@@ -413,6 +413,9 @@ function draw() {
       noStroke();
       fill(this.fill);
       if(this.clicked){
+        if(test.getCurrentDefensivePlay().inProgress){
+          currentPlayerTested = null;
+        }
         fill(255,238,88);
         stroke(255,238,88);
         line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
@@ -459,24 +462,14 @@ function draw() {
         var assignment = currentPlayerTested.coverageAssignment[0];
         assignment.fill = oldFill;
         test.feedbackScreenStartTime = 0;
-        scene = false;
+        test.getCurrentPlay().inProgress = false;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{
         drawFeedbackScreen(field);
       }
-    }else if(test.sceneStartTime){
-      test.sceneStartTime = 0;
-      var players = test.getCurrentDefensivePlay().defensivePlayers;
-      for(var i = 0; i < players.length; i++){
-        if(!scene){
-          players[i].resetToStart();
-        }else{
-          drawScene(field);
-        }
-      }
     }else{
-      if(scene){
+      if(test.getCurrentPlay().inProgress){
         drawScene(field);
       }else{
         drawOpening(field);
