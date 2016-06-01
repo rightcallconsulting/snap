@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
@@ -13,6 +13,7 @@ var currentNode = [];
 var currentGuessNode = null;
 var exitDemo = null;
 var demoDoubleClick = false;
+var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -72,7 +73,6 @@ function setup() {
   if(json_seed){
 
     var scoreboard = new Scoreboard({
-
     });
 
     test = new PlayTest({
@@ -174,10 +174,12 @@ function checkAnswer(x, y){
     clearSelection();
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
+    scene = false;
   }else{
     clearSelection();
     test.registerAnswer(isCorrect);
     test.feedbackScreenStartTime = millis();
+    scene = false;
   }
 }
 
@@ -223,6 +225,25 @@ function drawOpening(){
   }
 }
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentDefensivePlay();
+  var players = play.defensivePlayers;
+  if(play){
+    play.drawAllPlayersWithOffense(field);
+    play.inProgress = true;
+    for(var i = 0; i < players.length; i++){
+      if(players[i].gapYPoint !== null){
+        players[i].blitzGapScene();
+      }else if(players[i].zoneYPoint !== 0){
+        players[i].coverZoneScene();
+      }else{
+       players[i].resetToStart();
+     }
+   }
+ }
+};
+
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   var timeElapsed = millis() - test.demoStartTime;
@@ -251,6 +272,11 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
+
+    fill(255,238,88);
+    textSize(14);
+    textAlign(LEFT);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 20, 480);
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -312,13 +338,13 @@ function drawDemoScreen(){
 };
 
 
-pressPlayButton = function() {
-  if (test.getCurrentDefensivePlay()){
-    test.getCurrentPlay().setAllRoutes();
-    scoreboard.feedbackMessage = "";
-    test.getCurrentPlay().inProgress = true;
-  }
-};
+// pressPlayButton = function() {
+//   if (test.getCurrentDefensivePlay()){
+//     test.getCurrentPlay().setAllRoutes();
+//     scoreboard.feedbackMessage = "";
+//     test.getCurrentPlay().inProgress = true;
+//   }
+// };
 
 function setupDemoScreen(){
   clearSelection();
@@ -443,15 +469,31 @@ function draw() {
     }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
+        scene = false;
         test.feedbackScreenStartTime = 0;
-        test.advanceToNextPlay("");
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
+
       }else{
         drawFeedbackScreen();
       }
+    }else if(test.sceneStartTime){
+      test.sceneStartTime = 0;
+      var players = test.getCurrentDefensivePlay().defensivePlayers;
+      for(var i = 0; i < players.length; i++){
+        if(!scene){
+          players[i].resetToStart();
+        }else{
+          drawScene(field);
+        }
+      }
     }else{
-      drawOpening();
+      if(scene){
+        drawScene(field);
+      }else{
+        drawOpening(field);
+      }
     }
-
+    
   }
 }

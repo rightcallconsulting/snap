@@ -17,6 +17,15 @@ PASS RUSH QUIZ
 <script language="javascript" type="text/javascript" src="{% static 'quiz/passRushQuiz.js' %}"></script>
 <script type="text/javascript">
 
+$("#play-button").click(function() {
+  scene = !scene;
+  if(test && test.feedbackScreenStartTime === 0){
+    if(!test.startSceneTime){
+      test.sceneStartTime = millis();
+    }
+  }
+})
+
 $('#check-button').click(function(){
   if(currentGuessNode){
     checkAnswer(currentGuessNode.x, currentGuessNode.y);
@@ -84,6 +93,7 @@ $('#zoom-out-button').click(function(){
 <div class="holds-play-buttons">
 
   <table class="button-table"><tr>
+    <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
     <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
     <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
     <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>

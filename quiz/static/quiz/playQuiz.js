@@ -1,5 +1,5 @@
 var setupComplete = false;
-var testIDFromHTML = 33;
+var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
 var playNames;
@@ -169,19 +169,8 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
   }
 }
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
-
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
-
   registerAnswer(isCorrect);
 };
 
@@ -193,22 +182,15 @@ function drawOpening(){
 
 function drawScene(field){
   var play = test.getCurrentPlay();
-  var playIsOver = false;
-  field.drawBackground(null, width, height);
+  field.drawBackground(null, height, width);
   play.drawAllRoutes(field);
   play.drawAllPlayers(field);
-  if(playIsOver){
-    scene = false;
-  }else{
-    scene = true;
-  }
+  play.inProgress = true;
   for(var i = 0; i < play.eligibleReceivers.length; i++){
     if(play.eligibleReceivers[i].runRoute()){
       
     }
   }
-  
-
 };
 
 function drawDemoScreen(){
@@ -281,13 +263,14 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  clearAnswers();
+  clearMultipleChoiceAnswers();
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
-  clearAnswers();
+  clearMultipleChoiceAnswers();
+  scene = false;
 };
 
 mouseClicked = function() {
@@ -334,7 +317,7 @@ keyTyped = function(){
       if(answer.clicked){
         checkAnswer(answer);
       }else{
-        clearAnswers();
+        clearMultipleChoiceAnswers();
         answer.changeClickStatus();
       }
     }
@@ -366,8 +349,7 @@ function draw() {
   }
   if(!setupComplete){
     //WAIT - still executing JSON
-  }
-  else if(test.showDemo){
+  }else if(test.showDemo){
     drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
@@ -381,18 +363,33 @@ function draw() {
     if(timeElapsed < 2000){
       drawOpening(field);
     }else{
+      clearMultipleChoiceAnswers();
+      scene = false;
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
     }
-  }else if(scene){
-    drawScene(field);
-  }else{
+  }else if(test.sceneStartTime){
+      test.sceneStartTime = 0;
+      var players = test.getCurrentPlay().eligibleReceivers;
+      for(var i = 0; i < players.length; i++){
+        if(!scene){
+          players[i].resetToStart();
+        }else{
+          drawScene(field);
+        }
+      }
+    }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    drawOpening(field);
+    if(scene){
+      drawScene(field);
+    }else{
+      drawOpening(field);  
+    }
+    
   }
 };

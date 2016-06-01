@@ -13,6 +13,7 @@ var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var audibleNames = ["OMAHA", "LION", "TIGER", "NEBRASKA", "HAWAII"];
+var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -71,31 +72,31 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-    if(json_seed){
-      var scoreboard = new Scoreboard({
+  if(json_seed){
+    var scoreboard = new Scoreboard({
 
-      });
-      test = new PlayTest({
-        formations: [],
-        scoreboard: scoreboard,
-        displayName: false
-      });
-      currentUserTested = createUserFromJSONSeed(json_seed.player)
+    });
+    test = new PlayTest({
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: false
+    });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
 
-      var plays = [];
+    var plays = [];
 
-      for(var i = 0; i < json_seed.plays.length; i++){
-        var play = createPlayFromJSONSeed(json_seed.plays[i]);
-        var positionsAsPlayers = [];
-        for(var j = 0; j < play.positions.length; j++){
-          var position = play.positions[j];
-          var player = createPlayerFromJSONSeed(position);
-          positionsAsPlayers.push(player);
-        }
-        play.positions = positionsAsPlayers;
-        play.populatePositions();
-        plays.push(play);
+    for(var i = 0; i < json_seed.plays.length; i++){
+      var play = createPlayFromJSONSeed(json_seed.plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
       }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      plays.push(play);
+    }
 
 
     for(var i = 0; i < plays.length; i++){
@@ -213,6 +214,18 @@ function drawFeedbackScreen(){
   }
 };
 
+function drawScene(field){
+  var play = test.getCurrentPlay();
+  field.drawBackground(null, height, width);
+  play.drawAllRoutes(field);
+  play.drawAllPlayers(field);
+  for(var i = 0; i < play.eligibleReceivers.length; i++){
+    if(play.eligibleReceivers[i].runRoute()){
+
+    }
+  }
+};
+
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
@@ -255,6 +268,7 @@ function drawDemoScreen(){
     strokeWeight(2);
     line(x, y, x2, y2);
     strokeWeight(1);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
     triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
 
     var clicked = false;
@@ -377,11 +391,22 @@ function draw() {
   }else if(test.feedbackScreenStartTime){
     var timeElapsed = millis() - test.feedbackScreenStartTime;
     if(timeElapsed < 2000){
-      drawOpening();
+      drawOpening(field);
     }else{
+      scene = false;
+      clearMultipleChoiceAnswers();
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
+    }
+  }else if(test.sceneStartTime){
+    test.sceneStartTime = 0;
+    var players = test.getCurrentPlay().eligibleReceivers;
+    for(var i = 0; i < players.length; i++){
+      if(!scene){
+        players[i].resetToStart();
+      }else{
+        drawScene(field);
+      }
     }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
@@ -393,6 +418,10 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(scene){
+      drawScene(field);
+    }else{
+      drawOpening(field);  
+    }
   }
 }

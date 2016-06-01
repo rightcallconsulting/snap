@@ -18,6 +18,7 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
+    
 };
 
 Play.prototype.getPlayerFromPosition = function(pos){
