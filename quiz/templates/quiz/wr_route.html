@@ -5,17 +5,7 @@
 {% block header %}
   WR Route
 {% endblock %}
-{% block buttons %}
-  <div class="holds-play-buttons">
-    <button id="play-button" class="btn btn-success" name="button">{% include "quiz/play_button.html" %}</button>
-    <button id="check-button" class="btn btn-success" name="button">{% include "quiz/check_button.html" %}</button>
-    <button id="restart-button" class="btn btn-success" name="button">{% include "quiz/refresh_button.html" %}</button>
-    <button id="clear-button" class="btn btn-success" name="button">{% include "quiz/clear_button.html" %}</button>
-    <button id="back-button" class="btn btn-success" name="button">Back</button>
-    <button id="next-play-button" class="btn btn-success" name="button">{% include "quiz/next_play_button.html" %}</button>
 
-  </div>
-{% endblock %}
 
 {% block edit_test_button %}
   <a class="btn btn-success" href="/tests/{{test.id}}/edit">Edit Test</a>
@@ -24,6 +14,8 @@
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/WRRoute.js' %}"></script>
   <script type="text/javascript">
+  var json_seed = {{ json_seed|safe }};
+  debugger;
   $('#play-button').click(function(){
     pressPlayButton();
   })

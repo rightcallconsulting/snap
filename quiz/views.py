@@ -595,14 +595,24 @@ def run_qb_progression_test(request, test_id):
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test.change_in_progress_status(request.user)
-    if len(test.play_set.all()) > 0:
+    player = request.user.player
+    plays = test.play_set.all()
+    json_plays = []
+    for p in plays:
+        json_plays.append(p.dict_for_json())
+    if len(plays) > 0:
         has_plays = True
     else:
         has_plays = False
+    json_seed = {
+        'player': player.dict_for_json(),
+        'plays': json_plays
+    }
     return render(request, 'quiz/wr_route.html', {
         'test': test,
         'has_plays': has_plays,
-        'page_header': 'WR ROUTE',
+        'page_header': 'DRAW ROUTE QUIZ',
+        'json_seed': json.dumps(json_seed),
     })
 
 def run_ol_view_test(request, test_id):
