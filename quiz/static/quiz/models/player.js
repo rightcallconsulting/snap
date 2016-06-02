@@ -361,31 +361,32 @@ Player.prototype.displayRoute = function(coords){
 };
 
 Player.prototype.drawRoute = function(field){
-  if (this.routeCoordinates.length > 1){
-    for(var i = 0; i < this.routeCoordinates.length - 1; i++){
-      var x1 = field.getTranslatedX(this.routeCoordinates[i][0]);
-      var y1 = field.getTranslatedY(this.routeCoordinates[i][1]);
-      var x2 = field.getTranslatedX(this.routeCoordinates[i+1][0]);
-      var y2 = field.getTranslatedY(this.routeCoordinates[i+1][1]);
-      var yardsX = (abs(this.routeCoordinates[i+1][0] - this.routeCoordinates[i][0]))
-      var yardsY = (abs(this.routeCoordinates[i+1][1] - this.routeCoordinates[i][1]))
-      var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
-      stroke(255, 0, 0);
-      line(x1,y1,x2,y2);
-      noStroke();
-      fill(255, 0, 0)
-      textSize(18);
-      text(yards, x2 + 15, y2 + 15);
-      node = this.routeNodes[i]
-      if (node && node.change){
-        node.x = field.getYardX(mouseX);
-        node.y = field.getYardY(mouseY);
-        this.routeCoordinates[i + 1][0] = node.x;
-        this.routeCoordinates[i + 1][1] = node.y;
-      }
-      if(node){
-        node.draw(field);
-      }
+  var routeCoordinates = [];
+  routeCoordinates.push([this.startX, this.startY]);
+  routeCoordinates = routeCoordinates.concat(this.breakPoints.slice());
+  for(var i = 0; i < routeCoordinates.length - 1; i++){
+    var x1 = field.getTranslatedX(routeCoordinates[i][0]);
+    var y1 = field.getTranslatedY(routeCoordinates[i][1]);
+    var x2 = field.getTranslatedX(routeCoordinates[i+1][0]);
+    var y2 = field.getTranslatedY(routeCoordinates[i+1][1]);
+    var yardsX = (abs(routeCoordinates[i+1][0] - routeCoordinates[i][0]))
+    var yardsY = (abs(routeCoordinates[i+1][1] - routeCoordinates[i][1]))
+    var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
+    stroke(255, 0, 0);
+    line(x1,y1,x2,y2);
+    noStroke();
+    fill(255, 0, 0)
+    textSize(18);
+    text(yards, x2 + 15, y2 + 15);
+    node = this.routeNodes[i]
+    if (node && node.change){
+      node.x = field.getYardX(mouseX);
+      node.y = field.getYardY(mouseY);
+      this.routeCoordinates[i + 1][0] = node.x;
+      this.routeCoordinates[i + 1][1] = node.y;
+    }
+    if(node){
+      node.draw(field);
     }
   }
 };

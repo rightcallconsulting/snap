@@ -66,7 +66,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
-  
+
   if(json_seed){
     var scoreboard = new Scoreboard({
 
@@ -185,6 +185,10 @@ function drawCurrentRoute(){
     line(x1,y1,x2,y2);
     noStroke();
     fill(0, 0, 255)
+    var yardsX = (abs(currentRouteGuess[0][0] - currentPlayerTested.startX))
+    var yardsY = (abs(currentRouteGuess[0][1] - currentPlayerTested.startY))
+    var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
+    text(yards, x2 + 15, y2 + 15);
   }
   for(var i = 0; i < currentRouteGuess.length - 1; i++){
     x1 = field.getTranslatedX(currentRouteGuess[i][0]);
@@ -195,6 +199,10 @@ function drawCurrentRoute(){
     line(x1, y1, x2, y2);
     noStroke();
     fill(0, 0, 255)
+    var yardsX = (abs(currentRouteGuess[i+1][0] - currentRouteGuess[i][0]))
+    var yardsY = (abs(currentRouteGuess[i+1][1] - currentRouteGuess[i][1]))
+    var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
+    text(yards, x2 + 15, y2 + 15);
   }
 
 }
@@ -211,7 +219,7 @@ function drawOpening(){
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
     if(player !== currentPlayerTested){
-      player.drawBreakPoints(field);
+      player.drawRoute(field);
     }
   }
   drawCurrentRoute();

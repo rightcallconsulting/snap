@@ -18,7 +18,7 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
-    
+
 };
 
 Play.prototype.getPlayerFromPosition = function(pos){
@@ -84,7 +84,7 @@ Play.prototype.drawAllPlayers = function(field){
 
 Play.prototype.drawAllRoutes = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].drawBreakPoints(field);
+      this.offensivePlayers[i].drawRoute(field);
   }
 };
 
