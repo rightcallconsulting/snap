@@ -185,13 +185,13 @@ class CustomPlayerQuizView(generic.TemplateView):
         """
         if len(questions) == 0: return []
 
-        if self.num_questions > len(questions):
+        #if self.num_questions > len(questions):
             # Repeat unique questions until we have desired quiz length
-            num_unique_questions = len(questions)
-            for i in range(len(questions), self.num_questions):
-                questions.append(questions[i % num_unique_questions])
+            #num_unique_questions = len(questions)
+            #for i in range(len(questions), self.num_questions):
+                #questions.append(questions[i % num_unique_questions])
 
-        elif self.num_questions < len(questions):
+        if self.num_questions < len(questions):
             # Remove additional questions beyond desired quiz length
             questions = questions[0:self.num_questions]
 

@@ -12,6 +12,7 @@ BLOCKING QUIZ
 {% block quiz_type %}
 <script language="javascript" type="text/javascript" src="{% static 'quiz/blockingQuiz.js' %}"></script>
 <script type="text/javascript">
+var json_seed = {{ json_seed|safe }};
 $('#play-button').click(function(){
         //pressPlayButton();
       })
@@ -32,7 +33,7 @@ $('#clear-button').click(function(){
 
 $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
-    clearSelection();
+    clearSelections();
     currentPlayerTested = null;
     test.restartQuiz();
   }
@@ -45,7 +46,7 @@ $('#next-play-button').click(function(){
       exitDemoScreen();
       return;
     }
-    clearSelection();
+    clearSelections();
     test.skipQuestion();
     currentPlayerTested = null;
   }

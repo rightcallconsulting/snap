@@ -127,7 +127,7 @@ var runTest = function(){
       fill(0,0,0);
       textSize(14);
       textAlign(CENTER, CENTER);
-      text(this.num, x, y);
+      text(this.pos, x, y);
     }
     else {
       noStroke();
@@ -165,47 +165,86 @@ var runTest = function(){
 
   // Create Position groups
 
-  var rb = new Player ({
-      x: field.getXOffset() + 15,
+  var f = new Player ({
+      x: field.getXOffset() + 5,
       y: field.getYardY(height)+3,
       siz:3,
-      num: 'RB',
+      num: 'F',
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
       blue: 0,
-      pos: 'RB'
+      pos: 'F'
   });
 
-  var te = new Player ({
-    x: field.getXOffset() + 20,
+  var y = new Player ({
+    x: field.getXOffset() + 10,
     y: field.getYardY(height)+3,
     siz:3,
-      num: 'TE',
+      num: 'Y',
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
       blue: 0,
-      pos: 'TE'
+      pos: 'Y'
   });
 
-  var wr = new Player({
-    x: field.getXOffset() + 25,
+  var x = new Player({
+    x: field.getXOffset() + 15,
     y: field.getYardY(height)+3,
     siz:3,
-     num: 'WR',
+     num: 'X',
     //  fill: color(255, 0, 0)
     red: 255,
     green: 0,
     blue: 0,
-    pos: 'WR'
+    pos: 'X'
+  });
+
+  var z = new Player({
+    x: field.getXOffset() + 20,
+    y: field.getYardY(height)+3,
+    siz:3,
+     num: 'Z',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'Z'
+  });
+
+  var h = new Player({
+    x: field.getXOffset() + 25,
+    y: field.getYardY(height)+3,
+    siz:3,
+     num: 'H',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'H'
+  });
+
+  var a = new Player({
+    x: field.getXOffset() + 30,
+    y: field.getYardY(height)+3,
+    siz:3,
+     num: 'A',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'A'
   });
 
   //debugger;
 
-  formationExample.optionsToCreate.push(rb);
-  formationExample.optionsToCreate.push(wr);
-  formationExample.optionsToCreate.push(te);
+  formationExample.optionsToCreate.push(f);
+  formationExample.optionsToCreate.push(y);
+  formationExample.optionsToCreate.push(x);
+  formationExample.optionsToCreate.push(z);
+  formationExample.optionsToCreate.push(h);
+  formationExample.optionsToCreate.push(a);
 
   var defensePlay = new DefensivePlay({
     defensivePlayers: [],

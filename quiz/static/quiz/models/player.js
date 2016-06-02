@@ -30,6 +30,7 @@ var Player = function(config) {
   this.blockingAssignment = config.blockingAssignment || null;
   this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
   this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
+  this.blockingAssignmentObject = config.blockingAssignmentObject || null; //eventually replaces above three
   this.blocker = config.blocker || false;
   this.runner = config.runner || false;
   this.runAssignment = config.runAssignment || null;
@@ -360,7 +361,15 @@ Player.prototype.displayRoute = function(coords){
   strokeWeight(1);
 };
 
+Player.prototype.drawRouteCoordinates = function(field){
+  this.breakPoints = this.routeCoordinates.slice();
+  this.drawRoute(field);
+}
+
 Player.prototype.drawRoute = function(field){
+  if(this.breakPoints.length <= 1){
+    return;
+  }
   var routeCoordinates = [];
   routeCoordinates.push([this.startX, this.startY]);
   routeCoordinates = routeCoordinates.concat(this.breakPoints.slice());
@@ -377,7 +386,10 @@ Player.prototype.drawRoute = function(field){
     noStroke();
     fill(255, 0, 0)
     textSize(18);
-    text(yards, x2 + 15, y2 + 15);
+    if(yards >= 1){
+      text(yards, x2 + 15, y2 + 15);
+    }
+
     node = this.routeNodes[i]
     if (node && node.change){
       node.x = field.getYardX(mouseX);

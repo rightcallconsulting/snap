@@ -28,6 +28,28 @@ BlockingAssignment.prototype.getBlockedPlayer = function(i){
 	return this.blockedPlayers[i];
 };
 
+BlockingAssignment.prototype.toggleBlockingPlayer = function(player){
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		var p = this.blockedPlayers[i];
+		if(p === player){
+			this.removeBlockedPlayer(i);
+			return;
+		}
+	}
+	this.addBlockedPlayer(player);
+};
+
+BlockingAssignment.prototype.isBlockingPlayer = function(player){
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		var p = this.blockedPlayers[i];
+		if(p === player){
+			return true;
+		}
+	}
+	return false;
+};
+
+
 BlockingAssignment.prototype.addBlockedPlayer = function(player){
 	this.blockedPlayers.push(player);
 };

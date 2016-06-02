@@ -43,6 +43,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
+  
 }
 
 function setupDemoScreen(){

@@ -112,8 +112,9 @@ function draw() {
             }else{
                 text(this.num, x, y);
             }
-            if (this.showRoute && this.breakPoints.length > 0 && !play.clicked){
-              this.displayRoute(this.breakPoints);
+            if (this.routeCoordinates.length > 0){
+              //this.displayRoute(this.breakPoints);
+              this.drawRouteCoordinates(field);
             }
             if (this.showPreviousRoute){
               stroke(0, 255, 0);
@@ -214,9 +215,11 @@ function draw() {
         // formationButtons.forEach(function(button){
           // button.draw();
         // })
+        currentFormation.drawBlockingAssignmentObjects(createPlayField);
         currentFormation.drawAllPlayers(createPlayField);
         defensePlay.drawAllPlayers(createPlayField);
-        currentFormation.drawBlockingAssignments(createPlayField);
+        //currentFormation.drawBlockingAssignments(createPlayField);
+
         if(playBeingCreated && playBeingCreated.runPlay){
           playBeingCreated.runPlay.draw(createPlayField);
         }
@@ -254,6 +257,7 @@ function draw() {
         } else{
           selectedWR.blocker = false;
           selectedWR.blockingAssignment = null;
+          selectedWR.blockingAssignmentObject = null;
           selectedWR.runner = true;
           selectedWR.clearRoute();
         }
@@ -262,6 +266,7 @@ function draw() {
         if(selectedWR.blocker){
           selectedWR.blocker = false;
           selectedWR.blockingAssignment = null;
+          selectedWR.blockingAssignmentObject = null;
         } else if(selectedWR.runner){
           selectedWR.blocker = true;
           selectedWR.runner = false;
@@ -286,6 +291,7 @@ function draw() {
 
     keyPressed = function() {
       selectedWR = getCurrentFormation().findSelectedWR();
+      var selectedOL = getCurrentFormation().findSelectedOL();
       if (keyCode === SHIFT){
         capitalLetter = true;
       }
@@ -307,8 +313,16 @@ function draw() {
         if (selectedWR){
           if(selectedWR.runner){
             playBeingCreated.runPlay.stepRunBackward();
+          }else if(selectedWR.blocker){
+            if(selectedWR.blockingAssignmentObject){
+              selectedWR.blockingAssignmentObject.removeLastBlockedPlayer();
+            }
           }else{
             selectedWR.stepRouteBackward();
+          }
+        }else if(selectedOL){
+          if(selectedOL.blockingAssignmentObject){
+            selectedOL.blockingAssignmentObject.removeLastBlockedPlayer();
           }
         } else{
           playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
@@ -419,15 +433,34 @@ function draw() {
           selectedWR.routeNodes.push(nodeObject);
         }
         else if(selectedWR.blocker && dlClicked){
+          //OLD
           selectedWR.blockingAssignment = dlClicked;
           selectedWR.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
           selectedWR.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+
+          //NEW
+          if(selectedWR.blockingAssignmentObject){
+            selectedWR.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+          }else{
+            selectedWR.blockingAssignmentObject = new BlockingAssignment({
+              blockedPlayers: [dlClicked]
+            });
+            debugger;
+          }
         }
       }
       else if(dlClicked && selectedOL){
         selectedOL.blockingAssignment = dlClicked;
         selectedOL.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
         selectedOL.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+        if(selectedOL.blockingAssignmentObject){
+          selectedOL.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+        }else{
+          selectedOL.blockingAssignmentObject = new BlockingAssignment({
+            blockedPlayers: [dlClicked]
+          });
+          debugger;
+        }
       }
     };
 

@@ -65,10 +65,11 @@ function setup() {
     var positions = [];
     playNames = [];
 
-    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
+    /*$.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
       currentUserTested = createUserFromJSON(data2[0]);
       currentUserTested.position = "LG"; //remove when done testing
-    })
+    })*/
+    currentUserTested = createUserFromJSONSeed(json_seed.player);
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){

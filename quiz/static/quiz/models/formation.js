@@ -448,6 +448,16 @@ Formation.prototype.clearBlockingAssignments = function(){
   }
 };
 
+Formation.prototype.drawBlockingAssignmentObjects = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.blockingAssignmentObject){
+      player.blockingAssignmentObject.draw(player, field);
+      debugger;
+    }
+  }
+}
+
 Formation.prototype.drawBlockingAssignments = function(field, defensivePlay){
   this.offensivePlayers.forEach(function(player){
     if(!player.blockingAssignment && defensivePlay && player.blockingAssignmentUnitIndex && player.blockingAssignmentPlayerIndex){
@@ -1115,8 +1125,9 @@ Formation.prototype.populatePositions = function(){
     oline.forEach(function(player){this.oline.push(player)}.bind(this));
     var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
     this.qb = qb
+    var receiverPositionOptions = ["X", "Y", "Z", "F", "A", "H"];
     var eligibleReceivers = this.positions.filter(function(player) {
-      return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+      return receiverPositionOptions.indexOf(player.pos) >= 0;
     });
     this.eligibleReceivers = eligibleReceivers;
     this.offensivePlayers = this.positions;
