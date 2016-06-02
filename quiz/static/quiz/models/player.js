@@ -367,10 +367,15 @@ Player.prototype.drawRoute = function(field){
       var y1 = field.getTranslatedY(this.routeCoordinates[i][1]);
       var x2 = field.getTranslatedX(this.routeCoordinates[i+1][0]);
       var y2 = field.getTranslatedY(this.routeCoordinates[i+1][1]);
+      var yardsX = (abs(this.routeCoordinates[i+1][0] - this.routeCoordinates[i][0]))
+      var yardsY = (abs(this.routeCoordinates[i+1][1] - this.routeCoordinates[i][1]))
+      var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
       stroke(255, 0, 0);
       line(x1,y1,x2,y2);
       noStroke();
       fill(255, 0, 0)
+      textSize(18);
+      text(yards, x2 + 15, y2 + 15);
       node = this.routeNodes[i]
       if (node && node.change){
         node.x = field.getYardX(mouseX);
