@@ -481,6 +481,7 @@ function draw() {
       //debugger;
 
         eligibleReceivers.forEach(function(player){
+          debugger;
           player.convertRouteDrawingToBreakPoints();
         })
         var newPlay = new Play({

@@ -367,7 +367,7 @@ Player.prototype.drawRouteCoordinates = function(field){
 }
 
 Player.prototype.drawRoute = function(field){
-  if(this.breakPoints.length <= 1){
+  if(this.breakPoints.length < 1){
     return;
   }
   var routeCoordinates = [];
