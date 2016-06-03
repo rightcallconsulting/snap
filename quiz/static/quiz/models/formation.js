@@ -453,7 +453,6 @@ Formation.prototype.drawBlockingAssignmentObjects = function(field){
     var player = this.offensivePlayers[i];
     if(player.blockingAssignmentObject){
       player.blockingAssignmentObject.draw(player, field);
-      debugger;
     }
   }
 }

@@ -445,7 +445,6 @@ function draw() {
             selectedWR.blockingAssignmentObject = new BlockingAssignment({
               blockedPlayers: [dlClicked]
             });
-            debugger;
           }
         }
       }
@@ -459,7 +458,6 @@ function draw() {
           selectedOL.blockingAssignmentObject = new BlockingAssignment({
             blockedPlayers: [dlClicked]
           });
-          debugger;
         }
       }
     };
@@ -474,6 +472,13 @@ function draw() {
     pressSaveButton = function() {
       eligibleReceivers = getCurrentFormation().eligibleReceivers;
       //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+
+      var lt = getCurrentFormation().getPlayerFromPosition('LT');
+      var a = lt.blockingAssignmentObject;
+      a.convertBlockedPlayersToIDs();
+      a.blockedPlayers = [];
+      a.createBlockedPlayersFromIDs(defensePlay);
+      //debugger;
 
         eligibleReceivers.forEach(function(player){
           player.convertRouteDrawingToBreakPoints();
