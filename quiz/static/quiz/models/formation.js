@@ -448,12 +448,18 @@ Formation.prototype.clearBlockingAssignments = function(){
   }
 };
 
+Formation.prototype.clearRunAssignments = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    this.offensivePlayers[i].runAssignment = null;
+    this.offensivePlayers[i].runner = false;
+  }
+};
+
 Formation.prototype.drawBlockingAssignmentObjects = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
     var player = this.offensivePlayers[i];
     if(player.blockingAssignmentObject){
       player.blockingAssignmentObject.draw(player, field);
-      debugger;
     }
   }
 }

@@ -169,6 +169,7 @@ class Position(models.Model):
     gapYardY = models.FloatField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
+    #blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name

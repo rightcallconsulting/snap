@@ -277,6 +277,20 @@ function draw() {
           selectedWR.clearRoute();
         }
         return false;
+      }else if(selectedWR && key === ' '){
+        if(selectedWR.blocker){
+          /*selectedWR.blocker = false;
+          selectedWR.blockingAssignment = null;
+          selectedWR.blockingAssignmentObject = null;*/
+        } else if(selectedWR.runner){
+          /*selectedWR.blocker = true;
+          selectedWR.runner = false;
+          selectedWR.runNodes = [];
+          playBeingCreated.runPlay = null;*/
+        } else{
+          //Replace arrow with a stop?
+        }
+        return false;
       }
       var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
       var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
@@ -285,6 +299,7 @@ function draw() {
           playBeingCreated.playName += key;
           var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
           $('#play-name').text(compoundName);
+          return false;
       }
       //return false;
     }
@@ -445,7 +460,6 @@ function draw() {
             selectedWR.blockingAssignmentObject = new BlockingAssignment({
               blockedPlayers: [dlClicked]
             });
-            debugger;
           }
         }
       }
@@ -459,7 +473,6 @@ function draw() {
           selectedOL.blockingAssignmentObject = new BlockingAssignment({
             blockedPlayers: [dlClicked]
           });
-          debugger;
         }
       }
     };
@@ -474,6 +487,13 @@ function draw() {
     pressSaveButton = function() {
       eligibleReceivers = getCurrentFormation().eligibleReceivers;
       //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
+
+      /*var lt = getCurrentFormation().getPlayerFromPosition('LT');
+      var a = lt.blockingAssignmentObject;
+      a.convertBlockedPlayersToIDs();
+      a.blockedPlayers = [];
+      a.createBlockedPlayersFromIDs(defensePlay);*/
+      //debugger;
 
         eligibleReceivers.forEach(function(player){
           player.convertRouteDrawingToBreakPoints();
@@ -491,6 +511,7 @@ function draw() {
         getCurrentFormation().clearRouteDrawings();
         getCurrentFormation().clearProgression();
         getCurrentFormation().clearBlockingAssignments();
+        playBeingCreated.runPlay = null;
         defensePlay.clearSelections();
         playBeingCreated.playName = "";
         getCurrentFormation().feedbackMessage = "Saved!";
@@ -503,6 +524,7 @@ function draw() {
       defensePlay.clearSelections();
       getCurrentFormation().clearRouteDrawings();
       getCurrentFormation().clearBlockingAssignments();
+      playBeingCreated.runPlay = null;
       getCurrentFormation().feedbackMessage = "";
     }
 

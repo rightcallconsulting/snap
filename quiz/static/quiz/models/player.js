@@ -367,7 +367,7 @@ Player.prototype.drawRouteCoordinates = function(field){
 }
 
 Player.prototype.drawRoute = function(field){
-  if(this.breakPoints.length <= 1){
+  if(this.breakPoints.length < 1){
     return;
   }
   var routeCoordinates = [];
@@ -398,7 +398,18 @@ Player.prototype.drawRoute = function(field){
       this.routeCoordinates[i + 1][1] = node.y;
     }
     if(node){
-      node.draw(field);
+      if(i === this.routeNodes.length - 1){
+        var prevX = this.startX;
+        var prevY = this.startY;
+        if(i > 0){
+          prevX = this.routeNodes[i-1].x;
+          prevY = this.routeNodes[i-1].y;
+        }
+        node.drawArrow(field, prevX, prevY);
+      }else{
+        node.draw(field);
+      }
+
     }
   }
 };

@@ -102,3 +102,29 @@ BlockingAssignment.prototype.equals = function(assignment){
 	}
 	return true;
 };
+
+BlockingAssignment.prototype.convertBlockedPlayersToIDs = function(){
+	this.blockedPlayerIDs = [];
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		var p = this.blockedPlayers[i];
+		this.blockedPlayerIDs.push([p.playerIndex, p.unitIndex]);
+	}
+}
+
+BlockingAssignment.prototype.createBlockedPlayersFromIDs = function(defense){
+	var defensivePlayers = defense.defensivePlayers;
+	if(this.blockedPlayerIDs && defensivePlayers){
+		this.blockedPlayers = [];
+		for(var i = 0; i < this.blockedPlayerIDs.length; i++){
+			var playerIndex = this.blockedPlayerIDs[i][0]
+			var unitIndex = this.blockedPlayerIDs[i][1]
+			for(var j = 0; j < defensivePlayers.length; j++){
+				var p = defensivePlayers[j];
+				if(p.playerIndex === playerIndex && p.unitIndex === unitIndex){
+					this.blockedPlayers.push(p);
+					break;
+				}
+			}
+		}
+	}
+}
