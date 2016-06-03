@@ -13,17 +13,15 @@ PLAY QUIZ
 <script type="text/javascript">
 
 var json_seed = {{ json_seed|safe }};
-  // console.log(JSON.stringify(json_seed, null, 2));
+  console.log(JSON.stringify(json_seed, null, 2));
   </script>
   <script language="javascript" type="text/javascript" src="{% static 'quiz/playQuiz.js' %}"></script>
   <script type="text/javascript">
 
   $("#play-button").click(function() {
-    if(test && test.feedbackScreenStartTime === 0){
-      scene = !scene;
-      if(!test.startSceneTime){
-      test.sceneStartTime = millis();
-    }
+    var play = test.getCurrentPlay();
+    if(play){
+      play.inProgress = !play.inProgress;
     }
   })
 

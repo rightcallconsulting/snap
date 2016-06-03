@@ -17,7 +17,6 @@ console.log(JSON.stringify(json_seed, null, 2));
 </script>
 <script language="javascript" type="text/javascript" src="{% static 'quiz/coverageQuiz.js' %}"></script>
 <script type="text/javascript">
-
 $("#play-button").click(function() {
   ///defensivePlay.inProgress
   currentPlayerTested = null;
@@ -67,7 +66,7 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     currentPlayerTested = null;
-    scene = false;
+    test.getCurrentDefensivePlay().inProgress = false;
   }
 })
 

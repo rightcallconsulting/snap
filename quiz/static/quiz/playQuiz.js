@@ -8,7 +8,6 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -185,7 +184,6 @@ function drawScene(field){
   field.drawBackground(null, height, width);
   play.drawAllRoutes(field);
   play.drawAllPlayers(field);
-  play.inProgress = true;
   for(var i = 0; i < play.eligibleReceivers.length; i++){
     if(play.eligibleReceivers[i].runRoute()){
       
@@ -225,8 +223,10 @@ function drawDemoScreen(){
     strokeWeight(2);
     line(playButtonX, playButtonY, playButtonX, playButtonY + 80);
     triangle(85, 480, 105, 460, 65, 460);
+
     textAlign(LEFT);
-    strokeWeight(1);
+    textSize(18);
+    strokeWeight(0);
     text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
 
     var x = field.getTranslatedX(49);
@@ -247,8 +247,9 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(24);
-    textAlign(CENTER);
+    textSize(18);
+    textAlign(RIGHT);
+    strokeWeight(0);
     if(demoDoubleClick){
       text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
     }else if(clicked){
@@ -256,6 +257,7 @@ function drawDemoScreen(){
     }else{
       text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
     }
+    strokeWeight(1);
   }
 };
 
@@ -385,7 +387,7 @@ function draw() {
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    if(scene){
+    if(test.getCurrentPlay().inProgress){
       drawScene(field);
     }else{
       drawOpening(field);  
