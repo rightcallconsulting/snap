@@ -207,7 +207,8 @@ function drawScene(field){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
-  if(play){       
+  if(play){ 
+    currentPlayerTested = null;      
     play.drawAllPlayersWithOffense(field);
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){            
@@ -406,7 +407,7 @@ mouseClicked = function() {
         clearSelections();
         answer.clicked = true;
       }
-    }2
+    }
   }
 };
 
@@ -472,15 +473,15 @@ function draw() {
       drawDemoScreen();
     }else if(test.feedbackScreenStartTime){
       var timeElapsed = millis() - test.feedbackScreenStartTime;
-      if(timeElapsed < 2000){
-        drawFeedbackScreen(field);
-      }else{
+      if(timeElapsed > 2000){
         var assignment = currentPlayerTested.coverageAssignment[0];
         assignment.fill = oldFill;
         test.feedbackScreenStartTime = 0;
-        test.getCurrentDefensivePlay().inProgress = false;
+        test.getCurrentPlay().inProgress = false;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen(field);
       }
     }else{
       if(test.getCurrentDefensivePlay().inProgress){
@@ -489,6 +490,5 @@ function draw() {
         drawOpening(field);
       }
     }
-    
   }
 }

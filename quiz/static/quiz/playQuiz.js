@@ -172,19 +172,16 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
   registerAnswer(isCorrect);
+  test.getCurrentPlay().inProgress = false;
 };
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
   test.getCurrentPlay().drawAllPlayers(field);
-  for(var i = 0; i < test.getCurrentPlay().offensivePlayers.length; i++){
-    test.getCurrentPlay().offensivePlayers[i].resetToStart();
-  }
 };
 
 function drawScene(field){
-  var scene = test.getCurrentPlay().inProgress;
   var play = test.getCurrentPlay();
   field.drawBackground(null, height, width);
   play.drawAllRoutes(field);
@@ -207,7 +204,6 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
     exitDemo.draw(field);
     textSize(22);
     textAlign(LEFT);
@@ -337,26 +333,29 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      noStroke();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
+      var play = test.getCurrentPlay();
+      if(!test.getCurrentPlay().inProgress){
+       this.x = this.startX;
+       this.y = this.startY;
     }
-    else {
-      noStroke();
-      fill(this.fill);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
-  };
-  if(!setupComplete){
+     noStroke();
+     fill(this.fill);
+     ellipse(x, y, siz, siz);
+     fill(0,0,0);
+     textSize(14);
+     textAlign(CENTER, CENTER);
+     text(this.num, x, y);
+   }
+   else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
+  }
+};
+if(!setupComplete){
     //WAIT - still executing JSON
-  }else if(test.showDemo){
-    drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
     noStroke();
@@ -364,27 +363,26 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if(test.feedbackScreenStartTime){
-    var timeElapsed = millis() - test.feedbackScreenStartTime;
-    if(timeElapsed < 2000){
-      drawOpening(field);
-    }else{
-      clearMultipleChoiceAnswers();
-      test.getCurrentPlay().inProgress = false;
-      test.feedbackScreenStartTime = 0;
-      test.advanceToNextPlay("");
-    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
+    }
+    if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+        test.getCurrentPlay().inProgress = false;
+      }
     }else{
       if(test.getCurrentPlay().inProgress){
         drawScene(field);
       }else{
-        drawOpening(field); 
+        drawOpening(field);  
       }
 
     }
