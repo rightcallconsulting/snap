@@ -496,7 +496,8 @@ function draw() {
     }else{
       if(test.getCurrentDefensivePlay().inProgress){
         drawScene(field);
-      }else{play.defensiverPlayers
+      }else{
+        drawOpening(field);
       }
     }
   }
