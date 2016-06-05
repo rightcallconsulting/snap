@@ -35,8 +35,7 @@ function setup() {
     resizeJSButtons();
   }
 
-  multipleChoiceAnswers = [];
-
+  
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
     x: field.getYardX(width*0.25) - buttonWidth / 2,
