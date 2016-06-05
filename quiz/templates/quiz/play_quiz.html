@@ -27,9 +27,7 @@ $("#play-button").click(function() {
     }
     }else{
       drawScene(field);
-    }
 
-})
 
 $('#check-button').click(function(){
   for(var i = 1; i <= multipleChoiceAnswers.length; i++){
@@ -37,9 +35,6 @@ $('#check-button').click(function(){
     if(answer && answer.classList.contains('clicked')){
       checkMultipleChoiceAnswer(i);
       return false;
-    }
-  }
-})
 
 $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
@@ -49,11 +44,33 @@ $('#restart-button').click(function(){
   }
 })
 
-$('#next-play-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
-    if(test.showDemo){
-      exitDemoScreen();
-      return;
+
+  $('#next-play-button').click(function(){
+    if(test && !test.over && test.feedbackScreenStartTime === 0){
+      if(test.showDemo){
+        exitDemoScreen();
+        return;
+      }else{
+        test.skipQuestion();
+        multipleChoiceAnswers = [];
+        test.getCurrentDefensivePlay.inProgress = false;
+      }
+    }
+  })
+  $('#question-button').click(function(){
+    if(test && test.feedbackScreenStartTime === 0){
+      if(test.showDemo){
+        exitDemoScreen();
+      }else{
+        setupDemoScreen();
+      }
+    }
+  })
+  $('#zoom-in-button').click(function(){
+    var heightInYards = field.heightInYards;
+    var widthInYards = field.heightInYards * field.width / field.height;
+    if(heightInYards > 25){
+      field.heightInYards -= 5;
     }else{
       test.skipQuestion();
       multipleChoiceAnswers = [];

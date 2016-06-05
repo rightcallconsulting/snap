@@ -429,11 +429,16 @@ function draw() {
     if(this.unit === "offense"){
       noStroke();
       fill(this.fill);
-      if(this.clicked){
-        fill(255,238,88);
-        stroke(255,238,88);
-        line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
-        noStroke();
+
+    if(this.clicked){
+        if(!test.getCurrentDefensivePlay().inProgress){
+          currentPlayerTested = null;
+        }else{
+          fill(255,238,88);
+          stroke(255,238,88);
+          line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
+          noStroke();
+        }
       }
 
       ellipse(x, y, siz, siz);
@@ -469,7 +474,12 @@ function draw() {
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
       currentPlayerTested.coverageAssignment = [test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[1]];
     }
-    if(test.showDemo){
+     /*
+     /
+       change hard coded coverage assignment
+     /
+     */
+     if(test.showDemo){
       drawDemoScreen();
     }else if(test.feedbackScreenStartTime){
       var timeElapsed = millis() - test.feedbackScreenStartTime;
@@ -486,8 +496,7 @@ function draw() {
     }else{
       if(test.getCurrentDefensivePlay().inProgress){
         drawScene(field);
-      }else{
-        drawOpening(field);
+      }else{play.defensiverPlayers
       }
     }
   }

@@ -8,7 +8,6 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
-var isScene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -32,7 +31,6 @@ function setup() {
     field.width = width;
     resizeJSButtons();
   }
-
   multipleChoiceAnswers = [];
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
@@ -182,15 +180,22 @@ function drawOpening(){
 };
 
 function drawScene(field){
-  var play = test.getCurrentPlay();
+
   field.drawBackground(null, height, width);
-  play.drawAllRoutes(field);
-  play.drawAllPlayers(field);
-  for(var i = 0; i < play.offensivePlayers.length; i++){
-    play.offensivePlayers[i].runRoute();
-    console.log("In Progress = " + play.inProgress);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+      console.log("In Progress = " + play.inProgress);
+    }
   }
+
+  
 };
+
+
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -337,23 +342,26 @@ function draw() {
       if(!test.getCurrentPlay().inProgress){
        this.x = this.startX;
        this.y = this.startY;
-    }
-     noStroke();
-     fill(this.fill);
-     ellipse(x, y, siz, siz);
-     fill(0,0,0);
-     textSize(14);
-     textAlign(CENTER, CENTER);
-     text(this.num, x, y);
-   }
-   else {
-    noStroke();
-    fill(this.fill);
-    textSize(17);
-    textAlign(CENTER, CENTER);
-    text(this.pos, x, y);
-  }
+     }
+   noStroke();
+   fill(this.fill);
+   ellipse(x, y, siz, siz);
+   fill(0,0,0);
+   textSize(14);
+   textAlign(CENTER, CENTER);
+   text(this.num, x, y);
+ }
+ else {
+  noStroke();
+  fill(this.fill);
+  textSize(17);
+  textAlign(CENTER, CENTER);
+  text(this.pos, x, y);
+}
+
 };
+
+
 if(!setupComplete){
     //WAIT - still executing JSON
   }else if(test.over){
@@ -387,4 +395,5 @@ if(!setupComplete){
 
     }
   }
+
 };
