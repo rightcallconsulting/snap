@@ -37,8 +37,6 @@ DefensivePlayer.prototype.changeClickStatus = function(){
     }
 };
 
-
-
 DefensivePlayer.prototype.isMouseInside = function() {
     return mouseX > this.x-this.siz/1 &&
            mouseX < (this.x + this.siz/1) &&

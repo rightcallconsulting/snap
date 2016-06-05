@@ -227,11 +227,11 @@ function drawOpening(){
 
 function drawScene(field){
   field.drawBackground(null, height, width);
+  play.inProgress = true;
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
   if(play){
     play.drawAllPlayersWithOffense(field);
-    play.inProgress = true;
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){
         players[i].blitzGapScene();

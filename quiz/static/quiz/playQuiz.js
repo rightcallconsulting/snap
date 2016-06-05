@@ -8,7 +8,6 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -32,7 +31,6 @@ function setup() {
     field.width = width;
     resizeJSButtons();
   }
-
   multipleChoiceAnswers = [];
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
@@ -172,6 +170,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
   registerAnswer(isCorrect);
+  test.getCurrentPlay().inProgress = false;
 };
 
 function drawOpening(){
@@ -181,17 +180,23 @@ function drawOpening(){
 };
 
 function drawScene(field){
-  var play = test.getCurrentPlay();
+  
   field.drawBackground(null, height, width);
-  play.drawAllRoutes(field);
-  play.drawAllPlayers(field);
-  play.inProgress = true;
-  for(var i = 0; i < play.eligibleReceivers.length; i++){
-    if(play.eligibleReceivers[i].runRoute()){
-      
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.eligibleReceivers.length; i++){
+      if(play.inProgress){
+        play.eligibleReceivers[i].runRoute();   
+      }else{
+        debugger;
+      }
     }
   }
 };
+
+
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -270,7 +275,7 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearMultipleChoiceAnswers();
-  scene = false;
+  test.getCurrentPlay().inProgress = false;
 };
 
 mouseClicked = function() {
@@ -331,26 +336,31 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      noStroke();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
-    }
-    else {
-      noStroke();
-      fill(this.fill);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
+      var play = test.getCurrentPlay();
+      if(!test.getCurrentPlay().inProgress){
+       this.x = this.startX;
+       this.y = this.startY;
+     }
+     noStroke();
+     fill(this.fill);
+     ellipse(x, y, siz, siz);
+     fill(0,0,0);
+     textSize(14);
+     textAlign(CENTER, CENTER);
+     text(this.num, x, y);
+   }
+   else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
   }
-  if(!setupComplete){
+}
+
+
+if(!setupComplete){
     //WAIT - still executing JSON
-  }else if(test.showDemo){
-    drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
     noStroke();
@@ -358,38 +368,29 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if(test.feedbackScreenStartTime){
-    var timeElapsed = millis() - test.feedbackScreenStartTime;
-    if(timeElapsed < 2000){
-      drawOpening(field);
-    }else{
-      clearMultipleChoiceAnswers();
-      scene = false;
-      test.feedbackScreenStartTime = 0;
-      test.advanceToNextPlay("");
-    }
-  }else if(test.sceneStartTime){
-      test.sceneStartTime = 0;
-      var players = test.getCurrentPlay().eligibleReceivers;
-      for(var i = 0; i < players.length; i++){
-        if(!scene){
-          players[i].resetToStart();
-        }else{
-          drawScene(field);
-        }
-      }
-    }else{
+  }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    if(scene){
-      drawScene(field);
+    if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+        test.getCurrentPlay().inProgress = false;
+      }
     }else{
-      drawOpening(field);  
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
+
     }
-    
   }
+
 };

@@ -170,9 +170,9 @@ function checkAnswer(guess){
     clearSelections();
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
-    test.getCurrentPlay().inProgress = false;
+    test.getCurrentDefensivePlay().inProgress = false;
   }else{
-    test.missedPlays.push(test.getCurrentPlay());
+    test.missedPlays.push(test.getCurrentDefensivePlay());
     clearSelections();
     var assignment = currentPlayerTested.coverageAssignment[0];
     oldFill = assignment.fill;
@@ -181,7 +181,7 @@ function checkAnswer(guess){
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
-    test.getCurrentPlay().inProgress = false;
+    test.getCurrentDefensivePlay().inProgress = false;
   }
 }
 
@@ -350,7 +350,7 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearSelections();
-  test.getCurrentPlay().inProgress = false;
+  test.getCurrentDefensivePlay().inProgress = false;
 };
 
 mouseClicked = function() {
@@ -377,7 +377,7 @@ mouseClicked = function() {
     window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
-  }else if(!test.over && !test.getCurrentPlay().inProgress){
+  }else if(!test.over && !test.getCurrentDefensivePlay().inProgress){
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
@@ -422,14 +422,15 @@ function draw() {
     if(this.unit === "offense"){
       noStroke();
       fill(this.fill);
-      if(this.clicked){
-        if(test.getCurrentDefensivePlay().inProgress){
+    if(this.clicked){
+        if(!test.getCurrentDefensivePlay().inProgress){
           currentPlayerTested = null;
+        }else{
+          fill(255,238,88);
+          stroke(255,238,88);
+          line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
+          noStroke();
         }
-        fill(255,238,88);
-        stroke(255,238,88);
-        line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
-        noStroke();
       }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
@@ -464,7 +465,12 @@ function draw() {
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
       currentPlayerTested.coverageAssignment = [test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[1]];
     }
-    if(test.showDemo){
+     /*
+     /
+       change hard coded coverage assignment
+     /
+     */
+     if(test.showDemo){
       drawDemoScreen();
     }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
@@ -479,10 +485,9 @@ function draw() {
         drawFeedbackScreen(field);
       }
     }else{
-      if(test.getCurrentPlay().inProgress){
+      if(test.getCurrentDefensivePlay().inProgress){
         drawScene(field);
-      }else{
-        drawOpening(field);
+      }else{play.defensiverPlayers
       }
     }
     
