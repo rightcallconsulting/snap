@@ -180,7 +180,6 @@ function drawOpening(){
 };
 
 function drawScene(field){
-
   field.drawBackground(null, height, width);
   var play = test.getCurrentPlay();
   if(play){
@@ -188,11 +187,15 @@ function drawScene(field){
     play.drawAllPlayers(field);
     for(var i = 0; i < play.offensivePlayers.length; i++){
       play.offensivePlayers[i].runRoute();
-      console.log("In Progress = " + play.inProgress);
+      if(play.offensivePlayers[7]){
+        if(i*100 === true){
+          console.log("In Progress = " + play.inProgress);
+          console.log(play.offensivePlayers[i].breakPoints[[i][0]]);
+          console.log(play.offensivePlayers[i].breakPoints[[i][1]]);
+        }
+      }
     }
   }
-
-  
 };
 
 
@@ -343,21 +346,21 @@ function draw() {
        this.x = this.startX;
        this.y = this.startY;
      }
-   noStroke();
-   fill(this.fill);
-   ellipse(x, y, siz, siz);
-   fill(0,0,0);
-   textSize(14);
-   textAlign(CENTER, CENTER);
-   text(this.num, x, y);
- }
- else {
-  noStroke();
-  fill(this.fill);
-  textSize(17);
-  textAlign(CENTER, CENTER);
-  text(this.pos, x, y);
-}
+     noStroke();
+     fill(this.fill);
+     ellipse(x, y, siz, siz);
+     fill(0,0,0);
+     textSize(14);
+     textAlign(CENTER, CENTER);
+     text(this.num, x, y);
+   }
+   else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
+  }
 
 };
 
