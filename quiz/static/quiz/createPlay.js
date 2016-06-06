@@ -142,7 +142,7 @@ function draw() {
         // Unselect all other players to isolate one route
         if (this.unit == "offense"){
           this.rank = 1;
-          this.clicked = true;
+          this.clicked = !this.clicked;
           for(var i = 0; i < getCurrentFormation().offensivePlayers.length; i++){
             var p = getCurrentFormation().offensivePlayers[i];
             if(p !== this){
@@ -151,13 +151,7 @@ function draw() {
             }
           }
         } else{
-          /*for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            var p = defensePlay.defensivePlayers[i];
-            if(p !== this){
-              p.clicked = false;
-              p.rank = 0;
-            }
-          }*/
+
         }
     };
 
@@ -249,6 +243,7 @@ function draw() {
 
     keyTyped = function(){
       selectedWR = getCurrentFormation().findSelectedWR();
+      var selectedOL = getCurrentFormation().findSelectedOL();
       if(selectedWR && key === 'r'){
         if(selectedWR.runner){
           selectedWR.runner = false;
@@ -289,6 +284,17 @@ function draw() {
           playBeingCreated.runPlay = null;*/
         } else{
           //Replace arrow with a stop?
+        }
+        return false;
+      }else if(selectedOL && key === ' '){
+        debugger;
+        if(selectedOL.blockingAssignmentObject){
+          if(selectedOL.blockingAssignmentObject.type === ""){
+              selectedOL.blockingAssignmentObject.type = "PULL";
+          }else{
+            selectedOL.blockingAssignmentObject.type = "";
+          }
+
         }
         return false;
       }

@@ -2,6 +2,7 @@ var BlockingAssignment = function(config){
 	this.name = config.name || "";
 	this.blockedPlayers = config.blockedPlayers || [];
 	this.blockedZone = config.blockedZone || 0; //0 means no zone, - is left, + is right
+	this.type = config.type || ""; //PULL is an option
 };
 
 BlockingAssignment.prototype.drawBlockedZone = function(blocker, field){
@@ -59,6 +60,11 @@ BlockingAssignment.prototype.clearBlockedPlayers = function(){
 };
 
 BlockingAssignment.prototype.removeBlockedPlayer = function(i){
+  if(this.blockedPlayers.length < 2){
+    this.type = "";
+    this.blockedPlayers = [];
+    return;
+  }
 	var secondPiece = this.blockedPlayers.slice(i+1);
 	this.blockedPlayers = this.blockedPlayers.slice(0, i).concat(secondPiece);
 };
@@ -67,6 +73,9 @@ BlockingAssignment.prototype.removeLastBlockedPlayer = function(){
 	if(this.blockedPlayers.length > 0){
 		this.blockedPlayers.pop();
 	}
+  if(this.blockedPlayers.length === 0){
+    this.type = "";
+  }
 };
 
 BlockingAssignment.prototype.draw = function(blocker, field){
@@ -78,10 +87,22 @@ BlockingAssignment.prototype.draw = function(blocker, field){
 			startY = this.blockedPlayers[i-1].y;
 		}
 		var defender = this.blockedPlayers[i]
+		var x1 = field.getTranslatedX(startX);
+		var y1 = field.getTranslatedY(startY);
+		var x2 = field.getTranslatedX(defender.x);
+		var y2 = field.getTranslatedY(defender.y);
 		stroke(255,238,88);
 		strokeWeight(3);
-        line(field.getTranslatedX(startX), field.getTranslatedY(startY), field.getTranslatedX(defender.x), field.getTranslatedY(defender.y));
-        noStroke();
+		if(this.type === "PULL" && i === 0){
+			var turnX = field.getTranslatedX(startX + (defender.x - startX) * 0.2); //experiment with the constant
+			var turnY = field.getTranslatedY(startY - 3); //experiment with the constant
+			line(x1, y1, turnX, turnY);
+			line(turnX, turnY, x2, y2);
+
+		}else{
+			line(x1, y1, x2, y2);
+		}
+    noStroke();
 		strokeWeight(1);
  	}
  	this.drawBlockedZone(blocker, field);
