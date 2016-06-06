@@ -46,6 +46,10 @@
   padding: 0px;
 }
 
+#create-play-col .table-wrapper{
+  height: 240px;
+}
+
 .secondary-content-area.top{
     margin-bottom: 20px;
 }
