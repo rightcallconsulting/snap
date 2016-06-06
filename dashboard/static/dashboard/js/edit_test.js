@@ -132,6 +132,9 @@ function draw() {
         textSize(14);
         textAlign(CENTER, CENTER);
         text(this.num, x, y);
+        if(this.blockingAssignmentObject){
+          debugger;
+        }
       }
       else {
         noStroke();

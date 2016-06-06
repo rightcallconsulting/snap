@@ -37,7 +37,21 @@
   float: left;
 }
 
-.create-formation.choose-offensive-formation-box, .create-play.choose-offensive-formation-box{
+#create-play-col .secondary-content-area{
+  width: 100%;
+  height: 290px;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 0px;
+}
+
+.secondary-content-area.top{
+    margin-bottom: 20px;
+}
+
+
+.create-formation.choose-offensive-formation-box{
   width: 25%;
   height: 600px;
   border-left: 1px solid #777;
@@ -379,4 +393,11 @@
 
 .defensive-formation-sidebar .table-wrapper{
   height: 90%;
+}
+
+.stacked-col{
+  width: 35%;
+  height: 95%;
+  display: inline-block;
+  float: left;
 }
