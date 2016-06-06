@@ -387,7 +387,7 @@ Player.prototype.drawRoute = function(field){
     noStroke();
     fill(255, 0, 0)
     textSize(18);
-    if(yards >= 1){
+    if(yards >= 1 && i < routeCoordinates.length - 2){
       text(yards, x2 + 15, y2 + 15);
     }
 

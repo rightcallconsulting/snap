@@ -57,7 +57,8 @@
 {% endblock %}
 
 {% block sidebar %}
-  <div class="create-play dash-col choose-offensive-formation-box" id="choose-offensive-formation-box">
+<div class = "stacked-col" id="create-play-col">
+  <div class="create-play secondary-content-area top" id="choose-offensive-formation-box">
     <div class="dash-header text-center">
       <span><h4>Offensive Formations</h4></span>
     </div>
@@ -79,7 +80,7 @@
   </div>
       <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
   </div>
-  <div class="create-play dash-col choose-offensive-play-box" id="choose-offensive-play-box">
+  <div class="secondary-content-area" id="choose-offensive-play-box">
     <div class="dash-header text-center">
       <span><h4>Offensive Plays</h4></span>
     </div>
@@ -101,6 +102,7 @@
   </div>
       <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
   </div>
+</div>
 {% endblock %}
 
 {% block scoreboard %}

@@ -31,27 +31,35 @@ Node.prototype.draw = function(field) {
 Node.prototype.drawArrow = function(field, prevX, prevY) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
-  var s = field.yardsToPixels(this.siz)*1.5;
+  var s = field.yardsToPixels(this.siz)*1.2;
 
   var dx = this.x-prevX;
   var dy = this.y - prevY;
-  var theta = atan((dy)/(dx));
+  var theta = PI - atan((dy)/(-dx));
 
-  var xMid = x - s*cos(theta)*sqrt(3)/4;
-  var yMid = y + s*sin(theta)*sqrt(3)/4;
+  if(dx > 0){
+    theta = atan(dy/dx);
+    if(theta < 0){
+      theta += 2 * PI;
+    }
+  }
 
-  var x1= xMid - s*cos(theta+PI/2)*sqrt(3)/4;
-  var y1= yMid + s*sin(theta+PI/2)*sqrt(3)/4;
-  var x2= x + s*cos(theta)*sqrt(3)/4;
-  var y2= y - s*sin(theta)*sqrt(3)/4;
-  var x3= xMid + s*cos(theta-PI/2)*sqrt(3)/4;
-  var y3= yMid + s*sin(theta-PI/2)*sqrt(3)/4;
+  debugger;
+
+  var x1= int(x + s*cos(theta + 3 * PI / 2));
+  var y1= int(y - s*sin(theta + 3 * PI / 2));
+  var x2= int(x + s*cos(theta));
+  var y2= int(y - s*sin(theta));
+  var x3= int(x + s*cos(theta + PI / 2));
+  var y3= int(y - s*sin(theta + PI / 2));
+
+  //var stringified = "(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), (" + x3 + ", " + y3 + "),"
 
   noStroke();
   fill(this.fill);
   triangle(x1, y1, x2, y2, x3, y3);
 
-  var locationStr = "" + int(dx) + ", " + int(dy);
-  text(locationStr, x+50, y+30);
-  text(cos(theta), x+50, y+50);
+  //var locationStr = "" + int(dx) + ", " + int(dy);
+  //text(stringified, x+50, y+30);
+  //text(theta*180/PI, x+50, y+50);
 };

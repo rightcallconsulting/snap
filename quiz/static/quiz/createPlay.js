@@ -6,7 +6,7 @@ var teamIDFromHTML = $('#team-id').data('team-id')
 
 function setup() {
   var box = document.getElementById('display-box');
-  var sidebar = document.getElementById('choose-offensive-formation-box');
+  var sidebar = document.getElementById('create-play-col');
   var height = sidebar.offsetHeight - 90;
   var width = box.offsetWidth;
   var myCanvas = createCanvas(width, height);
@@ -20,7 +20,7 @@ function setup() {
 
   window.onresize=function(){
     var box = document.getElementById('display-box');
-    var sidebar = document.getElementById('choose-offensive-formation-box');
+    var sidebar = document.getElementById('create-play-col');
     var height = sidebar.offsetHeight - 90;
     var width = box.offsetWidth;
     resizeCanvas(width, height);
@@ -365,26 +365,6 @@ function draw() {
       }
       else if (save.isMouseInside(field)) {
         pressSaveButton();
-          // DELETE THE BELOW COMMENTS IF NO BUGS
-          // eligibleReceivers.forEach(function(player){
-          //   player.convertRouteDrawingToBreakPoints();
-          // })
-          // var newPlay = new Play({
-          //     eligibleReceivers: eligibleReceivers,
-          //     offensivePlayers: getCurrentFormation().offensivePlayers,
-          //     name: playBeingCreated.playName,
-          //     qb: getCurrentFormation().qb,
-          //     oline: getCurrentFormation().oline,
-          //     formation: getCurrentFormation()
-          // });
-          // // Logic to save the play to the database
-          // newPlay.saveToDB();
-          // getCurrentFormation().clearRouteDrawings();
-          // getCurrentFormation().clearProgression();
-          // getCurrentFormation().clearBlockingAssignments();
-          // defensePlay.clearSelections();
-          // playBeingCreated.playName = "";
-          // getCurrentFormation().feedbackMessage = "Saved!";
       }
       else if (formationClicked){
         currentFormation = formations.filter(function(formation) {
@@ -508,12 +488,7 @@ function draw() {
         });
         // Logic to save the play to the database
         newPlay.saveToDB();
-        getCurrentFormation().clearRouteDrawings();
-        getCurrentFormation().clearProgression();
-        getCurrentFormation().clearBlockingAssignments();
-        playBeingCreated.runPlay = null;
-        defensePlay.clearSelections();
-        playBeingCreated.playName = "";
+        pressClearButton();
         getCurrentFormation().feedbackMessage = "Saved!";
 
     };
@@ -525,6 +500,7 @@ function draw() {
       getCurrentFormation().clearRouteDrawings();
       getCurrentFormation().clearBlockingAssignments();
       playBeingCreated.runPlay = null;
+      playBeingCreated.playName = "";
       getCurrentFormation().feedbackMessage = "";
     }
 
