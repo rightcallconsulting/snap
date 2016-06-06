@@ -231,6 +231,18 @@ function drawOpening(){
 
 }
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.eligibleReceivers.length; i++){
+      play.eligibleReceivers[i].runRoute();
+    }
+  }
+};
+
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
@@ -325,6 +337,7 @@ function exitDemoScreen(){
   demoDoubleClick = false;
   currentRouteGuess = [];
   currentRouteNodes = [];
+  test.getCurrentPlay().inProgress = false;
 };
 
 function skipPlay(){
@@ -414,11 +427,16 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
+      var play = test.getCurrentPlay();
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
         fill(255,238,88);
       }
+      if(!test.getCurrentPlay().inProgress){
+       this.x = this.startX;
+       this.y = this.startY;
+     }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
       textSize(14);
@@ -460,7 +478,11 @@ function draw() {
         drawFeedbackScreen(field);
       }
     }else{
-      drawOpening();
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
     }
 
   }
