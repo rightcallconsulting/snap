@@ -44,8 +44,6 @@ Node.prototype.drawArrow = function(field, prevX, prevY) {
     }
   }
 
-  debugger;
-
   var x1= int(x + s*cos(theta + 3 * PI / 2));
   var y1= int(y - s*sin(theta + 3 * PI / 2));
   var x2= int(x + s*cos(theta));

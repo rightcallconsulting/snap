@@ -188,7 +188,9 @@ function drawCurrentRoute(){
     var yardsX = (abs(currentRouteGuess[0][0] - currentPlayerTested.startX))
     var yardsY = (abs(currentRouteGuess[0][1] - currentPlayerTested.startY))
     var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
-    text(yards, x2 + 15, y2 + 15);
+    if(currentRouteGuess.length > 1){
+      text(yards, x2 + 15, y2 + 15);
+    }
   }
   for(var i = 0; i < currentRouteGuess.length - 1; i++){
     x1 = field.getTranslatedX(currentRouteGuess[i][0]);
@@ -202,7 +204,27 @@ function drawCurrentRoute(){
     var yardsX = (abs(currentRouteGuess[i+1][0] - currentRouteGuess[i][0]))
     var yardsY = (abs(currentRouteGuess[i+1][1] - currentRouteGuess[i][1]))
     var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
-    text(yards, x2 + 15, y2 + 15);
+    if(yards > 0 && i < currentRouteGuess.length - 2){
+        text(yards, x2 + 15, y2 + 15);
+    }
+
+  }
+
+  for(var i = 0; i < currentRouteNodes.length; i++){
+    var node = currentRouteNodes[i];
+    stroke(255,238,88);
+    if(i === currentRouteNodes.length - 1){
+      var prevX = currentPlayerTested.startX;
+      var prevY = currentPlayerTested.startY;
+      if(i > 0){
+        prevX = currentRouteNodes[i-1].x;
+        prevY = currentRouteNodes[i-1].y;
+      }
+      node.drawArrow(field, prevX, prevY);
+    }else{
+      node.draw(field);
+    }
+    noStroke();
   }
 
 }
@@ -222,13 +244,8 @@ function drawOpening(){
       player.drawRoute(field);
     }
   }
+  noStroke();
   drawCurrentRoute();
-  for(var i = 0; i < currentRouteNodes.length; i++){
-    stroke(255,238,88);
-    currentRouteNodes[i].draw(field);
-    noStroke();
-  }
-
 }
 
 function drawDemoScreen(){
@@ -302,11 +319,6 @@ function drawDemoScreen(){
       }
       noStroke();
       drawCurrentRoute();
-      for(var i = 0; i < currentRouteNodes.length; i++){
-        stroke(255,238,88);
-        currentRouteNodes[i].draw(field);
-        noStroke();
-      }
     }
   }
 };
