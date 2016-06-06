@@ -216,7 +216,6 @@ function drawScene(field){
       }else if(players[i].zoneYPoint !== null){
         players[i].coverZoneScene();
       }else{
-        //hard code to cover receiver[1] since no assignment
         players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
       }  
     }

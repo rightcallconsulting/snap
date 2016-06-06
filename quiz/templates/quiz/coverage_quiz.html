@@ -20,8 +20,16 @@ console.log(JSON.stringify(json_seed, null, 2));
 $("#play-button").click(function() {
   if(test && test.feedbackScreenStartTime === 0){
     var play = test.getCurrentDefensivePlay();
-   play.inProgress = !play.inProgress;
- }
+    play.inProgress = !play.inProgress;
+    if(!play.inProgress){
+      for(var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++){
+        test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
+      }
+      currentPlayerTested = null;
+    }else{
+      drawScene(field);
+    }
+  }
 })
 
 
