@@ -351,6 +351,25 @@ function draw() {
           $('#play-name').text(compoundName);
         }
         return false;
+      }else if(keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW || keyCode === DOWN_ARROW || keyCode === UP_ARROW){
+        if(selectedOL){
+          if(!selectedOL.blockingAssignmentObject){
+            selectedOL.blockingAssignmentObject = new BlockingAssignment({
+
+            });
+          }
+          selectedOL.blockingAssignmentObject.blockedPlayers = [];
+          if(keyCode === UP_ARROW){
+            selectedOL.blockingAssignmentObject.blockedZone = 0;
+          }else if(keyCode === LEFT_ARROW){
+            selectedOL.blockingAssignmentObject.blockedZone = 1;
+          }else if(keyCode === RIGHT_ARROW){
+            selectedOL.blockingAssignmentObject.blockedZone = 2;
+          }else{
+            selectedOL.blockingAssignmentObject.blockedZone = 3;
+          }
+
+        }
       }
       //return false;
     };
@@ -441,6 +460,7 @@ function draw() {
 
           //NEW
           if(selectedWR.blockingAssignmentObject){
+            selectedWR.blockingAssignmentObject.blockedZone = 0;
             selectedWR.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
           }else{
             selectedWR.blockingAssignmentObject = new BlockingAssignment({
@@ -455,6 +475,7 @@ function draw() {
         selectedOL.blockingAssignmentUnitIndex = dlClicked.unitIndex;
         if(selectedOL.blockingAssignmentObject){
           selectedOL.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+          selectedOL.blockingAssignmentObject.blockedZone = 0;
         }else{
           selectedOL.blockingAssignmentObject = new BlockingAssignment({
             blockedPlayers: [dlClicked]
