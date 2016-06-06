@@ -287,7 +287,6 @@ function draw() {
         }
         return false;
       }else if(selectedOL && key === ' '){
-        debugger;
         if(selectedOL.blockingAssignmentObject){
           if(selectedOL.blockingAssignmentObject.type === ""){
               selectedOL.blockingAssignmentObject.type = "PULL";

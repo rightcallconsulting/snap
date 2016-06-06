@@ -169,7 +169,7 @@ class Position(models.Model):
     gapYardY = models.FloatField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
-    #blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
+    blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -334,7 +334,8 @@ class Play(models.Model):
             startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
             progressionRank=player['progressionRank'],
             blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
-            blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'])
+            blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
+            blockingAssignmentObject=player['blockingAssignmentObject'])
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()

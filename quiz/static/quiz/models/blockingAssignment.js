@@ -1,8 +1,37 @@
 var BlockingAssignment = function(config){
+	if(config.json_seed){
+		debugger;
+		return;
+	}
 	this.name = config.name || "";
 	this.blockedPlayers = config.blockedPlayers || [];
+	this.blockedPlayerIDs = config.blockedPlayerIDs || [];
 	this.blockedZone = config.blockedZone || 0; //0 means no zone, 1 is left, 2 is right, 3 is back
 	this.type = config.type || ""; //PULL is an option
+};
+
+var createBlockingAssignmentFromJSON = function(json){
+	if(!json){
+		return null;
+	}
+	while(json.indexOf("u'") >= 0){
+		json = json.replace("u'", "'");
+	}
+
+	while(json.indexOf("'") >= 0){
+		json = json.replace("'", "\"");
+	}
+
+	var dict = JSON.parse(json);
+
+  var assignment = new BlockingAssignment({
+		blockedZone: dict.blockedZone || 0,
+		type: dict.type || "",
+		name: dict.name || "",
+		blockedPlayerIDs: dict.blockedPlayerIDs || []
+  });
+
+	return assignment;
 };
 
 BlockingAssignment.prototype.drawBlockedZone = function(blocker, field){
@@ -138,6 +167,7 @@ BlockingAssignment.prototype.convertBlockedPlayersToIDs = function(){
 
 BlockingAssignment.prototype.createBlockedPlayersFromIDs = function(defense){
 	var defensivePlayers = defense.defensivePlayers;
+	debugger;
 	if(this.blockedPlayerIDs && defensivePlayers){
 		this.blockedPlayers = [];
 		for(var i = 0; i < this.blockedPlayerIDs.length; i++){

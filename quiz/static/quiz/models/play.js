@@ -198,7 +198,13 @@ Play.prototype.clearSelection = function(test, play) {
 };
 
 Play.prototype.saveToDB = function(){
-  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'routeCoordinates'])
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var assignment = this.offensivePlayers[i].blockingAssignmentObject;
+    if(assignment){
+      assignment.convertBlockedPlayersToIDs();
+    }
+  }
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates'])
   debugger;
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };
