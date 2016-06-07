@@ -567,7 +567,6 @@ function draw() {
             unit: formationExample.unit,
             offensiveFormationID: currentOffensiveFormation.id
         });
-        debugger;
         newFormation.saveToDB();
         formationExample.removeAllPlayers();
         formationExample.playName = "";

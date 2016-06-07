@@ -8,7 +8,6 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -32,7 +31,6 @@ function setup() {
     field.width = width;
     resizeJSButtons();
   }
-
   multipleChoiceAnswers = [];
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
@@ -125,14 +123,11 @@ function resizeJSButtons(){
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
@@ -181,15 +176,22 @@ function drawOpening(){
 };
 
 function drawScene(field){
-  var play = test.getCurrentPlay();
   field.drawBackground(null, height, width);
-  play.drawAllRoutes(field);
-  play.drawAllPlayers(field);
-  play.inProgress = true;
-  for(var i = 0; i < play.eligibleReceivers.length; i++){
-    if(play.eligibleReceivers[i].runRoute()){
-      
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
     }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
   }
 };
 
@@ -205,7 +207,6 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
     exitDemo.draw(field);
     textSize(22);
     textAlign(LEFT);
@@ -225,8 +226,10 @@ function drawDemoScreen(){
     strokeWeight(2);
     line(playButtonX, playButtonY, playButtonX, playButtonY + 80);
     triangle(85, 480, 105, 460, 65, 460);
+
     textAlign(LEFT);
-    strokeWeight(1);
+    textSize(18);
+    strokeWeight(0);
     text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
 
     var x = field.getTranslatedX(49);
@@ -247,8 +250,9 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(24);
-    textAlign(CENTER);
+    textSize(18);
+    textAlign(RIGHT);
+    strokeWeight(0);
     if(demoDoubleClick){
       text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
     }else if(clicked){
@@ -256,6 +260,7 @@ function drawDemoScreen(){
     }else{
       text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
     }
+    strokeWeight(1);
   }
 };
 
@@ -270,7 +275,6 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearMultipleChoiceAnswers();
-  scene = false;
 };
 
 mouseClicked = function() {
@@ -331,26 +335,27 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      noStroke();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
-    }
-    else {
-      noStroke();
-      fill(this.fill);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
+     noStroke();
+     fill(this.fill);
+     ellipse(x, y, siz, siz);
+     fill(0,0,0);
+     textSize(14);
+     textAlign(CENTER, CENTER);
+     text(this.num, x, y);
+   }
+   else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
   }
-  if(!setupComplete){
+
+};
+
+
+if(!setupComplete){
     //WAIT - still executing JSON
-  }else if(test.showDemo){
-    drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
     noStroke();
@@ -358,38 +363,28 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if(test.feedbackScreenStartTime){
-    var timeElapsed = millis() - test.feedbackScreenStartTime;
-    if(timeElapsed < 2000){
-      drawOpening(field);
-    }else{
-      clearMultipleChoiceAnswers();
-      scene = false;
-      test.feedbackScreenStartTime = 0;
-      test.advanceToNextPlay("");
-    }
-  }else if(test.sceneStartTime){
-      test.sceneStartTime = 0;
-      var players = test.getCurrentPlay().eligibleReceivers;
-      for(var i = 0; i < players.length; i++){
-        if(!scene){
-          players[i].resetToStart();
-        }else{
-          drawScene(field);
-        }
-      }
-    }else{
+  }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
       test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    if(scene){
-      drawScene(field);
+    if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+      }else{
+        drawOpening(field);
+      }
     }else{
-      drawOpening(field);  
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
     }
-    
   }
 };

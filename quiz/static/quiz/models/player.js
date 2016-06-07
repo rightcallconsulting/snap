@@ -114,10 +114,12 @@ Player.prototype.isMouseInside = function(field) {
          mouseY > this.y - this.siz/1 &&
          mouseY < (this.y + this.siz/1);*/
        };
-       Player.prototype.resetToStart = function(){
-        this.x = this.startX;
-        this.y = this.startY;
-      };
+
+  Player.prototype.resetToStart = function(){
+    this.x = this.startX;
+    this.y = this.startY;
+    this.currentBreak = 0;
+  };
 
 //Moves one step toward point x,y
 Player.prototype.moveTo = function(x, y){
@@ -530,8 +532,6 @@ Player.prototype.setCorrectCoordinates = function(){
   return correctCoordinates;
 };
 
-
-
 Player.prototype.checkCorrectAnswer = function(wrCoords, correctCoords){
   var xError = 0;
   var yError = 0;
@@ -600,6 +600,7 @@ Player.prototype.checkRoutes = function(play){
   play.test.newTest = false;
   return isCorrect
 };
+
 
 
 Player.prototype.movePlayer = function(field){

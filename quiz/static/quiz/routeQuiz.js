@@ -226,7 +226,6 @@ function drawCurrentRoute(){
     }
     noStroke();
   }
-
 }
 
 function drawFeedbackScreen(){
@@ -246,7 +245,36 @@ function drawOpening(){
   }
   noStroke();
   drawCurrentRoute();
+  if(currentRouteNodes){
+    for(var i = 0; i < currentRouteNodes.length; i++){
+      stroke(255,238,88);
+      currentRouteNodes[i].draw(field);
+      noStroke();
+    }
+  }
 }
+
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    currentPlayerTested.breakPoints = currentRouteGuess;
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  clearSelection();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -337,6 +365,7 @@ function exitDemoScreen(){
   demoDoubleClick = false;
   currentRouteGuess = [];
   currentRouteNodes = [];
+  test.getCurrentPlay().inProgress = false;
 };
 
 function skipPlay(){
@@ -382,6 +411,9 @@ mouseClicked = function() {
         return;
       }
     }else if(!currentPlayerTested.isMouseInside(field)){
+      if(test.getCurrentPlay().inProgress){
+        return;
+      }
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
       currentRouteGuess.push([x, y]);
@@ -429,6 +461,7 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
+      var play = test.getCurrentPlay();
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
@@ -475,7 +508,11 @@ function draw() {
         drawFeedbackScreen(field);
       }
     }else{
-      drawOpening();
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);
+      }
     }
 
   }

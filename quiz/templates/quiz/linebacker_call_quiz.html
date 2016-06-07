@@ -17,14 +17,16 @@ LB CALL QUIZ
 <script language="javascript" type="text/javascript" src="{% static 'quiz/linebackerCallQuiz.js' %}"></script>
 <script type="text/javascript">
 
-$('#play-button').click(function(){
-        //pressPlayButton();
-      })
-
-$('#pause-button').click(function(){
-        //pressPlayButton();
-      })
-
+$("#play-button").click(function() {
+    var play = test.getCurrentDefensivePlay();
+    play.inProgress = !play.inProgress;
+    if(!play.inProgress){
+    restartScene();
+  }
+  else{
+    drawScene(field);
+  }   
+})
 
 $('#check-button').click(function(){
   for(var i = 1; i <= multipleChoiceAnswers.length; i++){
@@ -92,6 +94,7 @@ $('#zoom-out-button').click(function(){
 {% block buttons %}
 <div class="holds-play-buttons">
   <table class="button-table"><tr>
+    <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
     <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
     <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
     <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>

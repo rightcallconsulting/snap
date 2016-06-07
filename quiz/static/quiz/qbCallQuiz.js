@@ -1,5 +1,4 @@
 var setupComplete = false;
-var testIDFromHTML = 33;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
@@ -13,7 +12,6 @@ var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var audibleNames = ["OMAHA", "LION", "TIGER", "NEBRASKA", "HAWAII"];
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -215,14 +213,22 @@ function drawFeedbackScreen(){
 };
 
 function drawScene(field){
-  var play = test.getCurrentPlay();
   field.drawBackground(null, height, width);
-  play.drawAllRoutes(field);
-  play.drawAllPlayers(field);
-  for(var i = 0; i < play.eligibleReceivers.length; i++){
-    if(play.eligibleReceivers[i].runRoute()){
-
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
     }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
   }
 };
 
@@ -398,30 +404,28 @@ function draw() {
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
     }
-  }else if(test.sceneStartTime){
-    test.sceneStartTime = 0;
-    var players = test.getCurrentPlay().eligibleReceivers;
-    for(var i = 0; i < players.length; i++){
-      if(!scene){
-        players[i].resetToStart();
-      }else{
-        drawScene(field);
-      }
-    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().checks[0].name;
       test.updateProgress(false);
       createMultipleChoiceAnswers(correctAnswer, 3);
       test.updateMultipleChoiceLabels();
-    }
-    if(!currentPlayerTested){
-      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
-    }
-    if(scene){
-      drawScene(field);
+    }if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+      }else{
+        drawOpening(field);
+      }
     }else{
-      drawOpening(field);  
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
+
     }
   }
 }

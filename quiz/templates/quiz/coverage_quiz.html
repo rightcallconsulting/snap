@@ -19,13 +19,14 @@ console.log(JSON.stringify(json_seed, null, 2));
 <script type="text/javascript">
 
 $("#play-button").click(function() {
-  ///defensivePlay.inProgress
-  currentPlayerTested = null;
-  var play = test.getCurrentDefensivePlay();
-  if(play){
-    currentPlayerTested = null;
+    var play = test.getCurrentDefensivePlay();
     play.inProgress = !play.inProgress;
+    if(!play.inProgress){
+    restartScene();
   }
+  else{
+    drawScene(field);
+  }   
 })
 
 
@@ -47,15 +48,9 @@ $('#clear-button').click(function(){
 
 $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
-    var play = test.getCurrentDefensivePlay();
-    if(play){
-      currentPlayerTested = null;
-      for(var i = 0; i < play.defensivePlayers.length; i++){
-        play.defensivePlayers[i].x = play.defensivePlayers[i].startX;
-        play.defensivePlayers[i].y = play.defensivePlayers[i].startY;
-        play.inProgress = true;
-      }
-    }
+    clearSelections();
+    currentPlayerTested = null;
+    test.restartQuiz();
   }
 })
 
@@ -67,7 +62,7 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     currentPlayerTested = null;
-    scene = false;
+    test.getCurrentDefensivePlay().inProgress = false;
   }
 })
 

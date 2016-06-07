@@ -18,12 +18,15 @@ PASS RUSH QUIZ
 <script type="text/javascript">
 
 $("#play-button").click(function() {
-  scene = !scene;
-  if(test && test.feedbackScreenStartTime === 0){
-    if(!test.startSceneTime){
-      test.sceneStartTime = millis();
-    }
+    var play = test.getCurrentDefensivePlay();
+    play.inProgress = !play.inProgress;
+    if(!play.inProgress){
+    restartScene();
   }
+  else{
+    drawScene(field);
+  }
+    
 })
 
 $('#check-button').click(function(){
