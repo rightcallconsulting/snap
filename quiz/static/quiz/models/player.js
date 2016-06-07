@@ -34,9 +34,8 @@ var Player = function(config) {
   this.blocker = config.blocker || false;
   this.runner = config.runner || false;
   if(config.runAssignment){
-    debugger;
+    this.runAssignment = createRunAssignmentFromJSON(config.runAssignment) || null;
   }
-  this.runAssignment = createRunAssignmentFromJSON(config.runAssignment) || null;
   this.speed = 0.1;
   this.initialRank = 1;
   this.CBAssignment = config.CBAssignment || null;

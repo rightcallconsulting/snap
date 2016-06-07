@@ -336,7 +336,8 @@ class Play(models.Model):
             progressionRank=player['progressionRank'],
             blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
             blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
-            blockingAssignmentObject=player['blockingAssignmentObject'])
+            blockingAssignmentObject=player['blockingAssignmentObject'],
+            runAssignment=player['runAssignment'],)
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()

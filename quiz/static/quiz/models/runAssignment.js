@@ -31,11 +31,9 @@ var createRunAssignmentFromJSON = function(json){
 
   var assignment = new RunAssignment({
 		type: dict.type || "",
-		routeToExchange: parseCoordinatesFromJSON(dict.routeToExchange) || [],
-		routeAfterExchange: parseCoordinatesFromJSON(dict.routeAfterExchange) || []
+		routeToExchange: dict.routeToExchange || [],
+		routeAfterExchange: dict.routeAfterExchange || []
   });
-
-	debugger;
 
 	return assignment;
 };

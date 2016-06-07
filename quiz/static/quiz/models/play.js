@@ -88,6 +88,15 @@ Play.prototype.drawAllRoutes = function(field){
   }
 };
 
+Play.prototype.drawRunAssignments = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.runAssignment){
+        player.runAssignment.draw(player, field);
+    }
+  }
+};
+
 Play.prototype.drawRunPlay = function(field){
   if(this.runPlay){
     this.runPlay.draw(field);
