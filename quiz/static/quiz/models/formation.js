@@ -456,6 +456,15 @@ Formation.prototype.clearRunAssignments = function(){
   }
 };
 
+Formation.prototype.drawRunAssignments = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.runAssignment){
+        player.runAssignment.draw(player, field);
+    }
+  }
+};
+
 Formation.prototype.drawBlockingAssignmentObjects = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
     var player = this.offensivePlayers[i];

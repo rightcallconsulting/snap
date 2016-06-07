@@ -33,7 +33,10 @@ var Player = function(config) {
   this.blockingAssignmentObject = createBlockingAssignmentFromJSON(config.blockingAssignmentObject) || null; //eventually replaces above three
   this.blocker = config.blocker || false;
   this.runner = config.runner || false;
-  this.runAssignment = config.runAssignment || null;
+  if(config.runAssignment){
+    debugger;
+  }
+  this.runAssignment = createRunAssignmentFromJSON(config.runAssignment) || null;
   this.speed = 0.1;
   this.initialRank = 1;
   this.CBAssignment = config.CBAssignment || null;

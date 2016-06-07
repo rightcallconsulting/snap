@@ -210,13 +210,10 @@ function draw() {
           // button.draw();
         // })
         currentFormation.drawBlockingAssignmentObjects(createPlayField);
+        currentFormation.drawRunAssignments(createPlayField);
         currentFormation.drawAllPlayers(createPlayField);
         defensePlay.drawAllPlayers(createPlayField);
-        //currentFormation.drawBlockingAssignments(createPlayField);
 
-        if(playBeingCreated && playBeingCreated.runPlay){
-          playBeingCreated.runPlay.draw(createPlayField);
-        }
     };
 
     // game scene
@@ -247,8 +244,8 @@ function draw() {
       if(selectedWR && key === 'r'){
         if(selectedWR.runner){
           selectedWR.runner = false;
-          selectedWR.runNodes = [];
-          playBeingCreated.runPlay = null;
+          selectedWR.runAssignment = null;
+          //playBeingCreated.runPlay = null;
         } else{
           selectedWR.blocker = false;
           selectedWR.blockingAssignment = null;
@@ -265,8 +262,7 @@ function draw() {
         } else if(selectedWR.runner){
           selectedWR.blocker = true;
           selectedWR.runner = false;
-          selectedWR.runNodes = [];
-          playBeingCreated.runPlay = null;
+          selectedWR.runAssignment = null;
         } else{
           selectedWR.blocker = true;
           selectedWR.clearRoute();
@@ -285,6 +281,9 @@ function draw() {
         } else{
           //Replace arrow with a stop?
         }
+        return false;
+      }else if(selectedWR && selectedWR.runAssignment && key === 'e'){
+        selectedWR.runAssignment.hasExchanged = !selectedWR.runAssignment.hasExchanged;
         return false;
       }else if(selectedOL && key === ' '){
         if(selectedOL.blockingAssignmentObject){
@@ -331,8 +330,8 @@ function draw() {
       }
       else if (keyCode === BACKSPACE){
         if (selectedWR){
-          if(selectedWR.runner){
-            playBeingCreated.runPlay.stepRunBackward();
+          if(selectedWR.runAssignment){
+            selectedWR.runAssignment.stepRunBackward();
           }else if(selectedWR.blocker){
             if(selectedWR.blockingAssignmentObject){
               selectedWR.blockingAssignmentObject.removeLastBlockedPlayer();
@@ -419,26 +418,12 @@ function draw() {
       }
       else if(selectedWR){
         if(selectedWR.runner){
-          if(!playBeingCreated.runPlay || playBeingCreated.runPlay.ballRecipient !== selectedWR){
-            playBeingCreated.runPlay = new RunPlay({
-              ballCarrier: getCurrentFormation().qb[0],
-              ballRecipient: selectedWR
+          if(!selectedWR.runAssignment){
+            selectedWR.runAssignment = new RunAssignment({
+
             });
-            playBeingCreated.runPlay.carrierBreakPoints.push([playBeingCreated.runPlay.ballCarrier.x, playBeingCreated.runPlay.ballCarrier.y]);
-            playBeingCreated.runPlay.recipientBreakPoints.push([playBeingCreated.runPlay.ballRecipient.x, playBeingCreated.runPlay.ballRecipient.y]);
           }
-          playBeingCreated.runPlay.recipientBreakPoints.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
-          selectedWR.runNodes.push(new Node({
-            fill: color(0,0,255),
-            x: field.getYardX(mouseX),
-            y: field.getYardY(mouseY),
-            siz: 1
-          }));
-          /*if(playBeingCreated.runPlay.exchangePoints.length < 1){
-            playBeingCreated.runPlay.exchangePoints.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
-          }else{
-            playBeingCreated.runPlay.recipientDestination.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
-          }*/
+          selectedWR.runAssignment.addCoordinates(createPlayField.getYardX(mouseX), createPlayField.getYardY(mouseY));
         }
         else if(!selectedWR.blocker){
           var x = field.getYardX(mouseX);
@@ -525,6 +510,7 @@ function draw() {
       defensePlay.clearSelections();
       getCurrentFormation().clearRouteDrawings();
       getCurrentFormation().clearBlockingAssignments();
+      getCurrentFormation().clearRunAssignments();
       playBeingCreated.runPlay = null;
       playBeingCreated.playName = "";
       getCurrentFormation().feedbackMessage = "";

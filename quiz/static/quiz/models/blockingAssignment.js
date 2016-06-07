@@ -1,6 +1,5 @@
 var BlockingAssignment = function(config){
 	if(config.json_seed){
-		debugger;
 		return;
 	}
 	this.name = config.name || "";
@@ -170,7 +169,6 @@ BlockingAssignment.prototype.convertBlockedPlayersToIDs = function(){
 
 BlockingAssignment.prototype.createBlockedPlayersFromIDs = function(defense){
 	var defensivePlayers = defense.defensivePlayers;
-	debugger;
 	if(this.blockedPlayerIDs && defensivePlayers){
 		this.blockedPlayers = [];
 		for(var i = 0; i < this.blockedPlayerIDs.length; i++){
