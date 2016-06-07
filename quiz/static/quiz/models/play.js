@@ -199,7 +199,6 @@ Play.prototype.clearSelection = function(test, play) {
 
 Play.prototype.saveToDB = function(){
   var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'routeCoordinates'])
-  debugger;
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };
 

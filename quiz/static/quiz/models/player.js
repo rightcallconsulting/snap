@@ -118,6 +118,7 @@ Player.prototype.isMouseInside = function(field) {
   Player.prototype.resetToStart = function(){
     this.x = this.startX;
     this.y = this.startY;
+    this.currentBreak = 0;
   };
 
 //Moves one step toward point x,y

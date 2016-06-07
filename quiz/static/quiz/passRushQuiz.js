@@ -13,7 +13,6 @@ var currentNode = [];
 var currentGuessNode = null;
 var exitDemo = null;
 var demoDoubleClick = false;
-var scene = false;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -174,12 +173,10 @@ function checkAnswer(x, y){
     clearSelection();
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
-    scene = false;
   }else{
     clearSelection();
     test.registerAnswer(isCorrect);
     test.feedbackScreenStartTime = millis();
-    scene = false;
   }
 }
 
@@ -227,10 +224,11 @@ function drawOpening(){
 
 function drawScene(field){
   field.drawBackground(null, height, width);
-  play.inProgress = true;
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
+  clearSelection();
   if(play){
+    currentPlayerTested = null;
     play.drawAllPlayersWithOffense(field);
     for(var i = 0; i < players.length; i++){
       if(players[i].gapYPoint !== null){
@@ -238,11 +236,26 @@ function drawScene(field){
       }else if(players[i].zoneYPoint !== 0){
         players[i].coverZoneScene();
       }else{
-       players[i].resetToStart();
-     }
-   }
- }
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
+      } 
+    }
+  }
 };
+
+function restartScene(){
+  var play = test.getCurrentDefensivePlay();
+  if(!play.inProgress){
+    for(var i = 0; i < play.defensivePlayers.length; i++){
+      test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
+      currentPlayerTested = null;
+    }
+
+  }else{
+    drawScene(field);
+  }
+};
+
+
 
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
@@ -469,26 +482,15 @@ function draw() {
     }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
-        scene = false;
         test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
 
       }else{
-        drawFeedbackScreen();
-      }
-    }else if(test.sceneStartTime){
-      test.sceneStartTime = 0;
-      var players = test.getCurrentDefensivePlay().defensivePlayers;
-      for(var i = 0; i < players.length; i++){
-        if(!scene){
-          players[i].resetToStart();
-        }else{
-          drawScene(field);
-        }
+        drawFeedbackScreen(field);
       }
     }else{
-      if(scene){
+      if(test.getCurrentDefensivePlay().inProgress){
         drawScene(field);
       }else{
         drawOpening(field);

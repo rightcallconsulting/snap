@@ -123,14 +123,11 @@ function resizeJSButtons(){
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
@@ -170,7 +167,6 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
   registerAnswer(isCorrect);
-  test.getCurrentPlay().inProgress = false;
 };
 
 function drawOpening(){
@@ -181,24 +177,23 @@ function drawOpening(){
 
 function drawScene(field){
   field.drawBackground(null, height, width);
+  clearMultipleChoiceAnswers();
   var play = test.getCurrentPlay();
   if(play){
     play.drawAllRoutes(field);
     play.drawAllPlayers(field);
     for(var i = 0; i < play.offensivePlayers.length; i++){
       play.offensivePlayers[i].runRoute();
-      if(play.offensivePlayers[7]){
-        if(i*100 === true){
-          console.log("In Progress = " + play.inProgress);
-          console.log(play.offensivePlayers[i].breakPoints[[i][0]]);
-          console.log(play.offensivePlayers[i].breakPoints[[i][1]]);
-        }
-      }
     }
   }
 };
 
-
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -280,7 +275,6 @@ function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearMultipleChoiceAnswers();
-  test.getCurrentPlay().inProgress = false;
 };
 
 mouseClicked = function() {
@@ -341,11 +335,6 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      var play = test.getCurrentPlay();
-      if(!test.getCurrentPlay().inProgress){
-       this.x = this.startX;
-       this.y = this.startY;
-     }
      noStroke();
      fill(this.fill);
      ellipse(x, y, siz, siz);
@@ -387,7 +376,8 @@ if(!setupComplete){
         clearMultipleChoiceAnswers();
         test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay("");
-        test.getCurrentPlay().inProgress = false;
+      }else{
+        drawOpening(field);
       }
     }else{
       if(test.getCurrentPlay().inProgress){
@@ -395,8 +385,6 @@ if(!setupComplete){
       }else{
         drawOpening(field);  
       }
-
     }
   }
-
 };

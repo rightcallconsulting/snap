@@ -12,23 +12,20 @@ AUDIBLE QUIZ
 {% block quiz_type %}
 <script language="javascript" type="text/javascript" src="{% static 'quiz/qbCallQuiz.js' %}"></script>
 <script type="text/javascript">
-  var json_seed = {{ json_seed|safe }};
-  console.log(JSON.stringify(json_seed, null, 2));
+var json_seed = {{ json_seed|safe }};
+console.log(JSON.stringify(json_seed, null, 2));
 </script>
 <script type="text/javascript">
 
-  $("#play-button").click(function() {
-    if(test && test.feedbackScreenStartTime === 0){
-      scene = !scene;
-      if(!test.startSceneTime){
-      test.sceneStartTime = millis();
-    }
-    }
-  })
-
-$('#pause-button').click(function(){
-        //pressPlayButton();
-      })
+$("#play-button").click(function() {
+  var play = test.getCurrentPlay()
+  play.inProgress = !play.inProgress;
+  if(!play.inProgress){
+    restartScene();
+  }else{
+    drawScene(field);
+  }
+})
 
 $('#check-button').click(function(){
   for(var i = 1; i <= multipleChoiceAnswers.length; i++){
@@ -44,12 +41,11 @@ $('#clear-button').click(function(){
 })
 
 $('#restart-button').click(function(){
-    if(test && test.feedbackScreenStartTime === 0){
-      clearMultipleChoiceAnswers();
-      test.restartQuiz();
-      scene = false;
-    }
-  })
+  if(test && test.feedbackScreenStartTime === 0){
+    clearMultipleChoiceAnswers();
+    test.restartQuiz();
+  }
+})
 
 $('#next-play-button').click(function(){
   if(test && !test.over && test.feedbackScreenStartTime === 0){
@@ -59,7 +55,6 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     multipleChoiceAnswers = [];
-    scene = false;
   }
 })
 $('#question-button').click(function(){

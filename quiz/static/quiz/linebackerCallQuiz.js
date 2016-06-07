@@ -35,31 +35,31 @@ function setup() {
     resizeJSButtons();
   }
 
- multipleChoiceAnswers = [];
+  multipleChoiceAnswers = [];
 
- var buttonWidth = field.heightInYards * field.width / field.height / 6;
- bigReset = new Button({
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset = new Button({
    x: field.getYardX(width*0.25) - buttonWidth / 2,
    y: field.getYardY(height*0.8),
    width: buttonWidth,
    label: "Retake All"
  })
 
- resetMissed = new Button({
+  resetMissed = new Button({
    x: field.getYardX(width*0.5) - buttonWidth / 2,
    y: bigReset.y,
    width: bigReset.width,
    label: "Retake Missed"
  })
 
- nextQuiz = new Button({
+  nextQuiz = new Button({
    x: field.getYardX(width*0.75) - buttonWidth / 2,
    y: bigReset.y,
    width: bigReset.width,
    label: "Exit"
  })
 
- exitDemo = new Button({
+  exitDemo = new Button({
    label: "",
    x: field.getYardX(width*0.1),
    y: field.getYardY(height*0.1),
@@ -221,6 +221,38 @@ function drawOpening(){
   }
 }
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentDefensivePlay();
+  var players = play.defensivePlayers;
+  if(play){ 
+    currentPlayerTested = null;      
+    play.drawAllPlayersWithOffense(field);
+    for(var i = 0; i < players.length; i++){
+      if(players[i].gapYPoint !== null){            
+        players[i].blitzGapScene();
+      }else if(players[i].zoneYPoint !== null){
+        players[i].coverZoneScene();
+      }else{
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
+      }  
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentDefensivePlay();
+  if(!play.inProgress){
+    for(var i = 0; i < play.defensivePlayers.length; i++){
+      test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
+      currentPlayerTested = null;
+    }
+  }else{
+    drawScene(field);
+  }
+};
+
 function drawDemoScreen(){
   noStroke();
   field.drawBackground(null, height, width);
@@ -368,8 +400,7 @@ function draw() {
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
-  }
-  else if(test.over){
+  }else if(test.over){
     background(93, 148, 81);
     noStroke();
     test.drawQuizSummary();
@@ -401,6 +432,22 @@ function draw() {
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
     }
-    drawOpening();
+    if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+      }else{
+        drawFeedbackScreen(field);
+      }
+    }else{
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
+
+    }
   }
 }

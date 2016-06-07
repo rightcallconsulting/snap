@@ -22,14 +22,10 @@ $("#play-button").click(function() {
   var play = test.getCurrentPlay()
   play.inProgress = !play.inProgress;
   if(!play.inProgress){
-    for (var i = 0; i < test.getCurrentPlay().offensivePlayers.length; i++){
-      test.getCurrentPlay().offensivePlayers[i].resetToStart();
-    }
-
+    restartScene();
   }else{
     drawScene(field);
   }
-
 })
 
 $('#check-button').click(function(){
@@ -46,7 +42,6 @@ $('#restart-button').click(function(){
   if(test && test.feedbackScreenStartTime === 0){
     clearMultipleChoiceAnswers();
     test.restartQuiz();
-    test.getCurrentPlay().inProgress = false;
   }
 })
 
@@ -59,7 +54,6 @@ $('#next-play-button').click(function(){
     }else{
       test.skipQuestion();
       multipleChoiceAnswers = [];
-      test.getCurrentDefensivePlay.inProgress = false;
     }
   }
 })

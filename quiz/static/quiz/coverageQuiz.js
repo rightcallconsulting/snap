@@ -200,9 +200,6 @@ function drawOpening(field){
   }
 };
 
-
-
-
 function drawScene(field){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
@@ -219,6 +216,18 @@ function drawScene(field){
         players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
       }  
     }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentDefensivePlay();
+  if(!play.inProgress){
+    for(var i = 0; i < play.defensivePlayers.length; i++){
+      test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
+      currentPlayerTested = null;
+    }
+  }else{
+    drawScene(field);
   }
 };
 
@@ -350,15 +359,12 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  test.getCurrentDefensivePlay().inProgress = false;
-
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
   clearSelections();
-  test.getCurrentDefensivePlay().inProgress = false;
 };
 
 mouseClicked = function() {
@@ -392,8 +398,10 @@ mouseClicked = function() {
       if(answer.clicked){
         if(answer.isMouseInside(field)){
           if(test.showDemo){
+            debugger;
             demoDoubleClick = true;
           }else{
+
             checkAnswer(answer);
             return;
           }
@@ -429,10 +437,8 @@ function draw() {
       noStroke();
       fill(this.fill);
 
-    if(this.clicked){
+      if(this.clicked){
         if(!test.getCurrentDefensivePlay().inProgress){
-          currentPlayerTested = null;
-        }else{
           fill(255,238,88);
           stroke(255,238,88);
           line(field.getTranslatedX(this.x), field.getTranslatedY(this.y), field.getTranslatedX(currentPlayerTested.x), field.getTranslatedY(currentPlayerTested.y));
@@ -486,7 +492,6 @@ function draw() {
         var assignment = currentPlayerTested.coverageAssignment[0];
         assignment.fill = oldFill;
         test.feedbackScreenStartTime = 0;
-        test.getCurrentPlay().inProgress = false;
         test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
       }else{

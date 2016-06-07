@@ -17,19 +17,16 @@ console.log(JSON.stringify(json_seed, null, 2));
 </script>
 <script language="javascript" type="text/javascript" src="{% static 'quiz/coverageQuiz.js' %}"></script>
 <script type="text/javascript">
+
 $("#play-button").click(function() {
-  if(test && test.feedbackScreenStartTime === 0){
     var play = test.getCurrentDefensivePlay();
     play.inProgress = !play.inProgress;
     if(!play.inProgress){
-      for(var i = 0; i < test.getCurrentDefensivePlay().defensivePlayers.length; i++){
-        test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
-      }
-      currentPlayerTested = null;
-    }else{
-      drawScene(field);
-    }
+    restartScene();
   }
+  else{
+    drawScene(field);
+  }   
 })
 
 

@@ -204,7 +204,6 @@ function drawCurrentRoute(){
     var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
     text(yards, x2 + 15, y2 + 15);
   }
-
 }
 
 function drawFeedbackScreen(){
@@ -223,10 +222,12 @@ function drawOpening(){
     }
   }
   drawCurrentRoute();
-  for(var i = 0; i < currentRouteNodes.length; i++){
-    stroke(255,238,88);
-    currentRouteNodes[i].draw(field);
-    noStroke();
+  if(currentRouteNodes){
+    for(var i = 0; i < currentRouteNodes.length; i++){
+      stroke(255,238,88);
+      currentRouteNodes[i].draw(field);
+      noStroke();
+    }
   }
 
 }
@@ -237,11 +238,21 @@ function drawScene(field){
   if(play){
     play.drawAllRoutes(field);
     play.drawAllPlayers(field);
-    for(var i = 0; i < play.eligibleReceivers.length; i++){
-      play.eligibleReceivers[i].runRoute();
+    currentPlayerTested.breakPoints = currentRouteGuess;
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
     }
   }
 };
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  clearSelection();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -380,6 +391,9 @@ mouseClicked = function() {
         return;
       }
     }else if(!currentPlayerTested.isMouseInside(field)){
+      if(test.getCurrentPlay().inProgress){
+        return;
+      }
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
       currentRouteGuess.push([x, y]);
@@ -433,10 +447,6 @@ function draw() {
       if(this === currentPlayerTested){
         fill(255,238,88);
       }
-      if(!test.getCurrentPlay().inProgress){
-       this.x = this.startX;
-       this.y = this.startY;
-     }
       ellipse(x, y, siz, siz);
       fill(0,0,0);
       textSize(14);
