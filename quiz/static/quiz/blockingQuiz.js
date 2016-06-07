@@ -320,12 +320,12 @@ function drawDemoScreen(){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else if(currentPlayerTested && guessedAssignment){
             guessedAssignment.draw(currentPlayerTested, field);
-            text("Click on next blocking assignment if you have one.\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
+            text("Click on next blocking assignment if you have one.\nClick spacebar to cycle between block types\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
         }else{
-          text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
+          text("Click on the player you are assigned to block", field.width / 2, (5 * field.height) / 6);
           noStroke();
         }
       }
@@ -343,21 +343,29 @@ keyPressed = function(){
     return false;
   }else if(keyCode === LEFT_ARROW){
     if(guessedAssignment){
-      guessedAssignment.blockedZone = -1;
-    }else{
-      guessedAssignment = new BlockingAssignment({
-        blockedZone: -1
-      });
-    }
-  }else if(keyCode === RIGHT_ARROW){
-    if(guessedAssignment){
       guessedAssignment.blockedZone = 1;
     }else{
       guessedAssignment = new BlockingAssignment({
         blockedZone: 1
       });
     }
-  }else if(keyCode === DOWN_ARROW || keyCode === UP_ARROW){
+  }else if(keyCode === RIGHT_ARROW){
+    if(guessedAssignment){
+      guessedAssignment.blockedZone = 2;
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: 2
+      });
+    }
+  }else if(keyCode === DOWN_ARROW){
+    if(guessedAssignment){
+      guessedAssignment.blockedZone = 3;
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: 3
+      });
+    }
+  }else if(keyCode === UP_ARROW){
     if(guessedAssignment){
       guessedAssignment.blockedZone = 0;
     }
@@ -443,7 +451,16 @@ keyTyped = function(){
       test.restartQuiz();
     }
   }else{
-
+    if(key === ' '){
+      if(guessedAssignment){
+        if(guessedAssignment.type === ""){
+            guessedAssignment.type = "PULL";
+        }else{
+          guessedAssignment.type = "";
+        }
+      }
+      return false;
+    }
   }
 };
 

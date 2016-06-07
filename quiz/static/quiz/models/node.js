@@ -35,7 +35,15 @@ Node.prototype.drawArrow = function(field, prevX, prevY) {
 
   var dx = this.x-prevX;
   var dy = this.y - prevY;
-  var theta = PI - atan((dy)/(-dx));
+  var theta;
+  if(dx === 0.0){
+    theta = PI / 2;
+    if(dy < 0){
+      theta += PI;
+    }
+  }else{
+      theta = PI - atan((dy)/(-dx));
+  }
 
   if(dx > 0){
     theta = atan(dy/dx);

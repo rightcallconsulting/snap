@@ -146,6 +146,9 @@ BlockingAssignment.prototype.equals = function(assignment){
 	if(assignment === null){
 		return false;
 	}
+	if(this.type !== assignment.type){
+		return false;
+	}
 	if(this.blockedPlayers.length !== assignment.blockedPlayers.length){
 		return false;
 	}
