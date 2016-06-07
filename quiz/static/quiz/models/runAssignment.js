@@ -2,7 +2,7 @@ var RunAssignment = function(config){
 	this.type = config.type || "";
 	this.routeToExchange = config.routeToExchange || [];
 	this.routeAfterExchange = config.routeAfterExchange || [];
-};	
+};
 
 RunAssignment.prototype.getRouteToExchangeCoords = function(){
 	return this.routeToExchange;

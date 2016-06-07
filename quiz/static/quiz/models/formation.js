@@ -442,10 +442,10 @@ Formation.prototype.clearRouteDrawings = function(){
 };
 
 Formation.prototype.clearBlockingAssignments = function(){
-  for(var i = 0; i < this.oline.length; i++){
-    this.oline[i].blockingAssignment = null;
-    this.oline[i].blockingAssignmentObject = null;
-    this.oline[i].unselect();
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    this.offensivePlayers[i].blockingAssignment = null;
+    this.offensivePlayers[i].blockingAssignmentObject = null;
+    this.offensivePlayers[i].unselect();
   }
 };
 
