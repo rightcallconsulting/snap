@@ -214,6 +214,7 @@ Play.prototype.saveToDB = function(){
     }
   }
   var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange'])
+  debugger;
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };
 

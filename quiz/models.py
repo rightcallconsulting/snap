@@ -331,13 +331,17 @@ class Play(models.Model):
         formation=Formation.objects.get(pk=json['formation']['id']))
         new_play.save()
         for player in json['offensivePlayers']:
+            runAssignment = ""
+            if 'runAssignment' in player:
+                #embed()
+                runAssignment = player['runAssignment']
             new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
             startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
             progressionRank=player['progressionRank'],
             blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
             blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
             blockingAssignmentObject=player['blockingAssignmentObject'],
-            runAssignment=player['runAssignment'],)
+            runAssignment=runAssignment)
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()

@@ -207,24 +207,45 @@ DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){
   return offensivePlayToDraw
 };
 
+DefensivePlay.prototype.get
+
+DefensivePlay.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
+  var unit = this.dline;
+  if(unitIndex === 1){
+      unit = this.linebackers;
+  }else if(unitIndex === 2){
+      unit = this.cornerbacks;
+  }else if(unitIndex === 3){
+      unit = this.safeties;
+  }
+  if(playerIndex >= 0 && playerIndex < unit.length){
+    return unit[playerIndex];
+  }
+  return null;
+};
+
 DefensivePlay.prototype.populatePositions = function(){
-  var dline = this.positions.filter(function(player) {
+  var dline = this.defensivePlayers.filter(function(player) {
     return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT";
   });
-  dline.forEach(function(player){this.dline.push(player)}.bind(this));
-  var linebackers = this.positions.filter(function(player) {
+  dline.forEach(function(player){if(this.dline.indexOf(player) < 0){
+    this.dline.push(player)}}.bind(this));
+  var linebackers = this.defensivePlayers.filter(function(player) {
     return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
   });
-  linebackers.forEach(function(player){this.linebackers.push(player)}.bind(this));
-  var cornerbacks = this.positions.filter(function(player) {
-    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  linebackers.forEach(function(player){if(this.linebackers.indexOf(player) < 0){
+    this.linebackers.push(player)}}.bind(this));
+  var cornerbacks = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="CB" || player.pos ==="NB";
   });
-  cornerbacks.forEach(function(player){this.cornerbacks.push(player)}.bind(this));
-  var safeties = this.positions.filter(function(player) {
-    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  cornerbacks.forEach(function(player){if(this.cornerbacks.indexOf(player) < 0){
+    this.cornerbacks.push(player)}}.bind(this));
+  var safeties = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="SS" || player.pos ==="FS";
   });
-  safeties.forEach(function(player){this.safeties.push(player)}.bind(this));
-  this.defensivePlayers = this.positions;
+  safeties.forEach(function(player){if(this.safeties.indexOf(player) < 0){
+    this.safeties.push(player)}}.bind(this));
+  //this.defensivePlayers = this.positions;
 };
 
 var createDefensivePlayFromJSONSeed = function(jsonPlay){

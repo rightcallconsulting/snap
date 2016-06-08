@@ -153,6 +153,37 @@ Formation.prototype.createSkillPlayers = function(){
   this.eligibleReceivers.push(wr2);
 };
 
+
+Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
+    if(this.unit === "offense"){
+      var unit = this.oline;
+      if(unitIndex === 1){
+          unit = this.wideReceivers;
+      }else if(unitIndex === 2){
+          unit = this.runningBacks;
+      }else if(unitIndex === 3){
+          unit = this.tightEnds;
+      }
+      if(playerIndex >= 0 && playerIndex < unit.length){
+        return unit[playerIndex];
+      }
+      return null;
+    }else{
+      var unit = this.dline;
+      if(unitIndex === 1){
+          unit = this.linebackers;
+      }else if(unitIndex === 2){
+          unit = this.cornerbacks;
+      }else if(unitIndex === 3){
+          unit = this.safeties;
+      }
+      if(playerIndex >= 0 && playerIndex < unit.length){
+        return unit[playerIndex];
+      }
+      return null;
+    }
+}
+
 //pos is a str for now, but could be an int code later
 Formation.prototype.getPlayerFromPosition = function(pos){
   var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});

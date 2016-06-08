@@ -33,6 +33,7 @@ function setup() {
   });
 
   defensePlay.draw(field);
+  defensePlay.populatePositions();
 
   window.onresize=function(){
     var box = document.getElementById('display-play-box-2');
@@ -238,9 +239,10 @@ function draw() {
         field.drawBackground(playBeingCreated, height, width)
 
         if(playToDraw){
-          playToDraw.drawAllPlayers(field);
+
           playToDraw.drawRunAssignments(field);
           playToDraw.drawAllRoutes(field);
+          playToDraw.drawAllPlayers(field);
           defensePlay.drawAllPlayers(field);
           // text("Formation: "+playToDraw.formation.playName, 115, 20);
         }else if(defensePlayToDraw){

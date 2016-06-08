@@ -122,6 +122,9 @@ function setup() {
                 play.addPositionsFromID(positions);
                 play.populatePositions();
               })
+              defensivePlays.forEach(function(play){
+                play.populatePositions();
+              })
               /*for(var i = 0; i < plays.length; i++){
                 var play = plays[i];
                 var blocking = false;
@@ -187,7 +190,7 @@ function clearSelections(){
 }
 
 function checkAnswer(){
-  var isCorrect = currentPlayerTested.blockingAssignment.equals(guessedAssignment);
+  var isCorrect = currentPlayerTested.blockingAssignmentObject.equals(guessedAssignment);
   if(isCorrect){
     clearSelections();
     test.score++;
@@ -214,7 +217,7 @@ function drawFeedbackScreen(){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested){
-    currentPlayerTested.blockingAssignment.draw(currentPlayerTested, field);
+    currentPlayerTested.blockingAssignmentObject.draw(currentPlayerTested, field);
   }
 };
 
@@ -500,11 +503,9 @@ function draw() {
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
-      var correctBlockingAssignment = new BlockingAssignment({
-        name: "",
-        blockedPlayers: [test.getCurrentDefensivePlay().defensivePlayers[0]]
-      })
-      currentPlayerTested.blockingAssignment = correctBlockingAssignment;
+      if(currentPlayerTested.blockingAssignmentObject){
+        currentPlayerTested.blockingAssignmentObject.createBlockedPlayersFromIDs(test.getCurrentDefensivePlay());
+      }
     }
     if(test.showDemo){
       drawDemoScreen();
