@@ -226,9 +226,9 @@ function drawOpening(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]);
   }
-  
+
 }
 
 function drawDemoScreen(){
@@ -238,7 +238,7 @@ function drawDemoScreen(){
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
-    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+    createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]);
     var x1 = field.getTranslatedX(exitDemo.x);
     var y1 = field.getTranslatedY(exitDemo.y);
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
@@ -355,7 +355,7 @@ mouseClicked = function() {
         checkAnswer();
       }
     }
-    
+
   }
 };
 

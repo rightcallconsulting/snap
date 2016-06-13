@@ -12,7 +12,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 30;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -168,7 +168,6 @@ var runTest = function(){
   var f = new Player ({
       x: field.getXOffset() + 5,
       y: field.getYardY(height)+3,
-      siz:3,
       num: 'F',
       // fill: color(255, 0, 0)
       red: 255,
@@ -178,9 +177,8 @@ var runTest = function(){
   });
 
   var y = new Player ({
-    x: field.getXOffset() + 10,
+    x: f.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
       num: 'Y',
       // fill: color(255, 0, 0)
       red: 255,
@@ -190,9 +188,8 @@ var runTest = function(){
   });
 
   var x = new Player({
-    x: field.getXOffset() + 15,
+    x: y.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
      num: 'X',
     //  fill: color(255, 0, 0)
     red: 255,
@@ -202,9 +199,8 @@ var runTest = function(){
   });
 
   var z = new Player({
-    x: field.getXOffset() + 20,
+    x: x.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
      num: 'Z',
     //  fill: color(255, 0, 0)
     red: 255,
@@ -214,9 +210,8 @@ var runTest = function(){
   });
 
   var h = new Player({
-    x: field.getXOffset() + 25,
+    x: z.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
      num: 'H',
     //  fill: color(255, 0, 0)
     red: 255,
@@ -226,9 +221,8 @@ var runTest = function(){
   });
 
   var a = new Player({
-    x: field.getXOffset() + 30,
+    x: h.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
      num: 'A',
     //  fill: color(255, 0, 0)
     red: 255,
@@ -355,7 +349,6 @@ var runTest = function(){
         x: positionOptionSelected.x,
         y: positionOptionSelected.y,
         num: positionOptionSelected.num,
-        siz:2.99,
         // fill: color(255, 0, 0),
         red: 255,
         green: 0,

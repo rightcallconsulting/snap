@@ -90,6 +90,7 @@ function setup() {
 
     for(var i = 0; i < json_seed.defensive_plays.length; i++){
       var defensive_play = createDefensivePlayFromJSONSeed(json_seed.defensive_plays[i]);
+      debugger;
       var positionsAsPlayers = [];
       for(var j = 0; j < defensive_play.positions.length; j++){
         var position = defensive_play.positions[j];
@@ -99,6 +100,7 @@ function setup() {
       }
       defensive_play.positions = positionsAsPlayers;
       defensive_play.populatePositions();
+      debugger;
       positionsAsPlayers = [];
       for(var j = 0; j < defensive_play.offensiveFormationObject.positions.length; j++){
         var position = defensive_play.offensiveFormationObject.positions[j];
@@ -236,8 +238,8 @@ function drawScene(field){
       }else if(players[i].zoneYPoint !== 0){
         players[i].coverZoneScene();
       }else{
-        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
-      } 
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);
+      }
     }
   }
 };
@@ -376,6 +378,7 @@ function exitDemoScreen(){
 };
 
 mouseClicked = function() {
+  debugger;
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }else{
@@ -496,6 +499,6 @@ function draw() {
         drawOpening(field);
       }
     }
-    
+
   }
 }

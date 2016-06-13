@@ -17,7 +17,7 @@ function setup() {
 
   field.height = height;
   field.width = width;
-  field.heightInYards = 53;
+  field.heightInYards = 40;
   background(58, 135, 70);
   myCanvas.parent('display-play-box-2');
 

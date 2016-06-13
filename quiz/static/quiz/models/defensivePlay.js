@@ -225,8 +225,14 @@ DefensivePlay.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
 };
 
 DefensivePlay.prototype.populatePositions = function(){
+  for(var i = 0; i < this.positions.length; i++){
+    if(this.defensivePlayers.length < 11){
+        this.defensivePlayers.push(new Player(this.positions[i]));
+    }
+
+  }
   var dline = this.defensivePlayers.filter(function(player) {
-    return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT";
+    return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT" || player.pos === "RE" || player.pos === "DL";
   });
   dline.forEach(function(player){if(this.dline.indexOf(player) < 0){
     this.dline.push(player)}}.bind(this));
@@ -245,7 +251,6 @@ DefensivePlay.prototype.populatePositions = function(){
   });
   safeties.forEach(function(player){if(this.safeties.indexOf(player) < 0){
     this.safeties.push(player)}}.bind(this));
-  //this.defensivePlayers = this.positions;
 };
 
 var createDefensivePlayFromJSONSeed = function(jsonPlay){

@@ -59,7 +59,7 @@ Formation.prototype.getPassStrength = function(){
 Formation.prototype.createOLineAndQB = function(ballY){
   var olPositions = ["LT", "LG", "C", "RG", "RT"];
   for (var i = -2; i < 3; i++) {
-      var xPos = Field.WIDTH / 2 + i*3.5;
+      var xPos = Field.WIDTH / 2 + i*2.5;
       var yPos = ballY-1.5;
       if (i !== 0) {
           yPos -= 0.5;
@@ -1150,7 +1150,7 @@ var createFormationFromJSON = function(jsonFormation){
 Formation.prototype.populatePositions = function(){
   if(this.unit === "defense"){
     this.positions.forEach(function(player){
-      if(player.pos === "DL" || player.pos === "DE"){
+      if(player.pos === "DL" || player.pos === "DE" || player.pos === "RE"){
         this.dline.push(player);
       }
       else if(player.pos === "W" || player.pos === "M" || player.pos === "S"){
@@ -1163,7 +1163,7 @@ Formation.prototype.populatePositions = function(){
         this.safeties.push(player);
       }
     }.bind(this))
-    this.defensivePlayers = this.positions;
+    this.defensivePlayers = this.positions.slice();
   }
   else{
     var oline = this.positions.filter(function(player) {

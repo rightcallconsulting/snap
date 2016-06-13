@@ -35,7 +35,7 @@ function setup() {
     resizeJSButtons();
   }
 
-  
+
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
     x: field.getYardX(width*0.25) - buttonWidth / 2,
@@ -204,17 +204,17 @@ function drawScene(field){
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   var players = play.defensivePlayers;
-  if(play){ 
-    currentPlayerTested = null;      
+  if(play){
+    currentPlayerTested = null;
     play.drawAllPlayersWithOffense(field);
     for(var i = 0; i < players.length; i++){
-      if(players[i].gapYPoint !== null){            
+      if(players[i].gapYPoint !== null){
         players[i].blitzGapScene();
       }else if(players[i].zoneYPoint !== null){
         players[i].coverZoneScene();
       }else{
-        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);  
-      }  
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);
+      }
     }
   }
 };
