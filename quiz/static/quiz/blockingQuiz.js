@@ -3,12 +3,13 @@ var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var playNames;
 var maxPlays = 5;
-var bigReset;
+var bigReset; var resetMissed; var nextQuiz;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var guessedAssignment = null;
 var exitDemo = null;
 var demoDoubleClick = false;
+var originalPlayList = [];
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -33,12 +34,27 @@ function setup() {
   }
 
   bigReset = new Button({
-    x: field.getYardX(width*0.5 - 25),
+    x: field.getYardX(width*0.5)-3,
     y: field.getYardY(height*0.8),
     width: 6,
     height: 4,
-    label: "Restart"
+    label: "Retake All"
   })
+  resetMissed = new Button({
+    x: bigReset.x - bigReset.width * 1.2,
+    y: bigReset.y,
+    width: bigReset.width,
+    height: bigReset.height,
+    label: "Retake Missed"
+  })
+  nextQuiz = new Button({
+    x: bigReset.x + bigReset.width * 1.2,
+    y: bigReset.y,
+    width: bigReset.width,
+    height: bigReset.height,
+    label: "Exit"
+  })
+
   exitDemo = new Button({
     label: "",
     x: field.getYardX(25),
@@ -128,6 +144,7 @@ function setup() {
                 while(defensivePlays.length < plays.length){
                   defensivePlays.push(defensivePlays[0]);
                 }
+                originalPlayList = plays.slice();
                 test.plays = shuffle(plays);
                 test.defensivePlays = defensivePlays;
                 test.restartQuiz();
@@ -178,6 +195,7 @@ function checkAnswer(){
     guessedAssignment = null;
   }else{
     clearSelections();
+    test.missedPlays.push(test.getCurrentPlay());
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
@@ -335,6 +353,7 @@ keyPressed = function(){
         blockedZone: 1
       });
     }
+    return false;
   }else if(keyCode === RIGHT_ARROW){
     if(guessedAssignment){
       if(guessedAssignment.blockedZone === 2){
@@ -347,6 +366,7 @@ keyPressed = function(){
         blockedZone: 2
       });
     }
+    return false;
   }else if(keyCode === DOWN_ARROW){
     if(guessedAssignment){
       if(guessedAssignment.blockedZone === 3){
@@ -359,10 +379,12 @@ keyPressed = function(){
         blockedZone: 3
       });
     }
+    return false;
   }else if(keyCode === UP_ARROW){
     if(guessedAssignment){
       guessedAssignment.blockedZone = 0;
     }
+    return false;
   }
   return true;
 }
@@ -389,7 +411,20 @@ mouseClicked = function() {
     return true;
   }
   if(bigReset.isMouseInside(field) && test.over) {
+    test.plays = shuffle(originalPlayList.slice());
     test.restartQuiz();
+    return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList.slice();
+    }
+    test.plays = shuffle(newPlays);
+    test.restartQuiz();
+    return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else if(!test.over){
@@ -491,6 +526,8 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+    nextQuiz.draw(field);
+    resetMissed.draw(field);
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);

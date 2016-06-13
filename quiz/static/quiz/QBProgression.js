@@ -6,7 +6,6 @@ var originalPlayList = [];
 var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
 var demoComplete = false;
-var exitDemo = null;
 var defensePlay = null;
 var bigReset; var resetMissed; var nextQuiz;
 var missedOrSkippedPlays = [];
@@ -43,7 +42,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
-  
+
 }
 
 function setupDemoScreen(){
