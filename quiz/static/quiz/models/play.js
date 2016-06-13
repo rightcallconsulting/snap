@@ -276,3 +276,11 @@ Play.prototype.drawBlockingAssignments = function(){
     }
   })
 };
+
+Play.prototype.drawBlockingAssignmentObjects = function(){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignmentObject){
+      player.blockingAssignmentObject.draw(player, field);
+    }
+  })
+};

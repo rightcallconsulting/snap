@@ -172,6 +172,8 @@ function checkAnswer(guess){
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
+  test.getCurrentPlay().drawBlockingAssignmentObjects(field);
+  test.getCurrentPlay().drawRunAssignments(field);
   test.getCurrentPlay().drawAllPlayers(field);
 };
 
@@ -383,7 +385,7 @@ if(!setupComplete){
       if(test.getCurrentPlay().inProgress){
         drawScene(field);
       }else{
-        drawOpening(field);  
+        drawOpening(field);
       }
     }
   }
