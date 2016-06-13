@@ -178,6 +178,8 @@ BlockingAssignment.prototype.createBlockedPlayersFromIDs = function(defense){
 			if(opponent){
 				this.blockedPlayers.push(opponent);
 			}
+			//debugger;
 		}
 	}
+
 }

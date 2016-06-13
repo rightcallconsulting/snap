@@ -225,8 +225,9 @@ Play.prototype.populatePositions = function(){
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb
+  var receiverPositions = ["A", "B", "F", "X", "Y", "Z"]
   var eligibleReceivers = this.positions.filter(function(player) {
-    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+    return receiverPositions.indexOf(player.pos) >= 0;
   });
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;

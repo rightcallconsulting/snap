@@ -207,8 +207,6 @@ DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){
   return offensivePlayToDraw
 };
 
-DefensivePlay.prototype.get
-
 DefensivePlay.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
   var unit = this.dline;
   if(unitIndex === 1){
@@ -251,7 +249,17 @@ DefensivePlay.prototype.populatePositions = function(){
   });
   safeties.forEach(function(player){if(this.safeties.indexOf(player) < 0){
     this.safeties.push(player)}}.bind(this));
+
+  dline.sort(sortLeftToRight);
+  linebackers.sort(sortLeftToRight);
+  cornerbacks.sort(sortLeftToRight);
+  safeties.sort(sortLeftToRight);
+
 };
+
+var sortLeftToRight = function(a, b){
+  return a.x - b.x;
+}
 
 var createDefensivePlayFromJSONSeed = function(jsonPlay){
   var play = new DefensivePlay({

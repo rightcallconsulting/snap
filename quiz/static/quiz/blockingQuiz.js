@@ -17,7 +17,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 30;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -65,10 +65,6 @@ function setup() {
     var positions = [];
     playNames = [];
 
-    /*$.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "LG"; //remove when done testing
-    })*/
     currentUserTested = createUserFromJSONSeed(json_seed.player);
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
@@ -125,31 +121,14 @@ function setup() {
               defensivePlays.forEach(function(play){
                 play.populatePositions();
               })
-              /*for(var i = 0; i < plays.length; i++){
-                var play = plays[i];
-                var blocking = false;
-                for(var j = 0; j < play.defensivePlayers.length; j++){
-                  var p = play.defensivePlayers[j];
-                  if(p.pos === currentUserTested.position){
-                      //check if he's in coverage
-                      if(p.CBAssignment){
-                        inCoverage = true;
-                      }
-                      break;
-                    }
-                  }
-                  if(!inCoverage){
-                    defensivePlays = defensivePlays.slice(0, i).concat(defensivePlays.slice(i+1));
-                    i--;
-                  }
-                }*/
+
                 while(defensivePlays.length > plays.length){
                   defensivePlays.pop();
                 }
                 while(defensivePlays.length < plays.length){
                   defensivePlays.push(defensivePlays[0]);
                 }
-                test.plays = plays;
+                test.plays = shuffle(plays);
                 test.defensivePlays = defensivePlays;
                 test.restartQuiz();
                 test.updateScoreboard();
@@ -346,7 +325,11 @@ keyPressed = function(){
     return false;
   }else if(keyCode === LEFT_ARROW){
     if(guessedAssignment){
-      guessedAssignment.blockedZone = 1;
+      if(guessedAssignment.blockedZone === 1){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 1;
+      }
     }else{
       guessedAssignment = new BlockingAssignment({
         blockedZone: 1
@@ -354,7 +337,11 @@ keyPressed = function(){
     }
   }else if(keyCode === RIGHT_ARROW){
     if(guessedAssignment){
-      guessedAssignment.blockedZone = 2;
+      if(guessedAssignment.blockedZone === 2){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 2;
+      }
     }else{
       guessedAssignment = new BlockingAssignment({
         blockedZone: 2
@@ -362,7 +349,11 @@ keyPressed = function(){
     }
   }else if(keyCode === DOWN_ARROW){
     if(guessedAssignment){
-      guessedAssignment.blockedZone = 3;
+      if(guessedAssignment.blockedZone === 3){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 3;
+      }
     }else{
       guessedAssignment = new BlockingAssignment({
         blockedZone: 3

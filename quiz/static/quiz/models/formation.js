@@ -537,7 +537,7 @@ Formation.prototype.mouseInOL = function(field){
   return selectedOL;
 };
 
-Formation.prototype.populatePositions = function(){
+/*Formation.prototype.populatePositions = function(){
   var oline = this.positions.filter(function(player) {
     return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
   });
@@ -552,7 +552,9 @@ Formation.prototype.populatePositions = function(){
   this.tightEnds = this.positions.filter(function(player) {return player.pos ==="TE"});
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
-};
+};*/
+
+
 
 Formation.prototype.saveToDB = function(){
 
@@ -1164,6 +1166,10 @@ Formation.prototype.populatePositions = function(){
       }
     }.bind(this))
     this.defensivePlayers = this.positions.slice();
+    this.dline.sort(sortLeftToRight);
+    this.linebackers.sort(sortLeftToRight);
+    this.cornerbacks.sort(sortLeftToRight);
+    this.safeties.sort(sortLeftToRight);
   }
   else{
     var oline = this.positions.filter(function(player) {
@@ -1181,6 +1187,10 @@ Formation.prototype.populatePositions = function(){
   }
 
 };
+
+var sortLeftToRight = function(a, b){
+  return a.x - b.x;
+}
 
 Formation.prototype.convertToPlayObject = function(){
   if(this.unit === "defense"){
