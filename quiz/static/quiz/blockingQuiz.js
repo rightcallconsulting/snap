@@ -10,6 +10,8 @@ var guessedAssignment = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var originalPlayList = [];
+var questionPart = 0;
+var multipleChoiceAnswers = [];
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -190,9 +192,10 @@ function checkAnswer(){
   if(isCorrect){
     clearSelections();
     test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
+    questionPart++;
+    /*test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
-    guessedAssignment = null;
+    guessedAssignment = null;*/
   }else{
     clearSelections();
     test.missedPlays.push(test.getCurrentPlay());
@@ -493,6 +496,33 @@ keyTyped = function(){
   }
 };
 
+function createMultipleChoiceAnswers(correctAnswer, numOptions){
+  var correctIndex = Math.floor((Math.random() * numOptions));
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
+  multipleChoiceAnswers = [];
+  var availableNames = ["CUT", "SEAL", "HINGE", "PULL"];
+  shuffle(availableNames);
+  var i = 0;
+  while(multipleChoiceAnswers.length < numOptions){
+    var label = availableNames[i];
+    if(multipleChoiceAnswers.length === correctIndex){
+      label = correctAnswer;
+    }else if(label === correctAnswer){
+      i++;
+      label = availableNames[i];
+    }
+    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
+      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
+      y: height - 60,
+      width: width / (numOptions + 2),
+      height: 50,
+      label: label,
+      clicked: false
+    }));
+    i++;
+  }
+}
+
 function draw() {
   Player.prototype.draw = function(field){
     var x = field.getTranslatedX(this.x);
@@ -548,6 +578,12 @@ function draw() {
 
       }else{
         drawFeedbackScreen(field);
+      }
+    }else if(questionPart > 0){
+      if(multipleChoiceAnswers.length < 1){
+        createMultipleChoiceAnswers("CUT", 3);
+        test.updateMultipleChoiceLabels();
+        debugger;
       }
     }else{
       drawOpening(field);
