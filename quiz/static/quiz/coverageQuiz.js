@@ -395,13 +395,11 @@ mouseClicked = function() {
     var play = test.getCurrentDefensivePlay();
     for(var i = 0; i < play.offensiveFormationObject.eligibleReceivers.length; i++){
       var answer = play.offensiveFormationObject.eligibleReceivers[i];
-      if(answer.clicked){
-        if(answer.isMouseInside(field)){
+      if(answer.isMouseInside(field)){
+        if(answer.clicked){
           if(test.showDemo){
-            debugger;
             demoDoubleClick = true;
           }else{
-
             checkAnswer(answer);
             return;
           }
@@ -409,10 +407,6 @@ mouseClicked = function() {
           clearSelections();
           answer.clicked = true;
         }
-      }else{
-        answer.isMouseInside(field)
-        clearSelections();
-        answer.clicked = true;
       }
     }
   }
