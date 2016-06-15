@@ -226,6 +226,17 @@
   color: #FFFFFF;
 }
 
+.defensive-formation-button{
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top:5%;
+  margin-bottom:5%;
+  background-color: #BDBDBD;
+  color: #000000;
+}
+
 .play-add-button {
   width: 90%;
   height: 90%;

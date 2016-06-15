@@ -3,7 +3,6 @@ var defensive_formations = [];
 var makeJSONCall = true;
 var currentFormation;
 var playBeingCreated;
-var defensePlay;
 var teamIDFromHTML = $('#team-id').data('team-id')
 var letters = ["A", "B", "C", "D", "E"];
 
@@ -46,7 +45,10 @@ function setup() {
     }
 
     currentFormation = formations[0];
-    defensePlay = defensive_formations[0].createDefensivePlay();
+    if(!currentFormation.defensiveFormationID && defensive_formations.length > 0){
+      currentFormation.defensiveFormationID = defensive_formations[0].id;
+      currentFormation.defensivePlayObject = defensive_formations[0].createDefensivePlay();
+    }
     $('#play-name').text(getCurrentFormation().playName);
     playBeingCreated = new Play({
       playName: "",
@@ -67,20 +69,15 @@ var drawOpening = function() {
     currentFormation.drawBlockingAssignmentObjects(createPlayField);
     currentFormation.drawRunAssignments(createPlayField);
     currentFormation.drawAllPlayers(createPlayField);
-    defensePlay.drawAllPlayers(createPlayField);
+    if(currentFormation.defensivePlayObject){
+        currentFormation.defensivePlayObject.drawAllPlayers(createPlayField);
+    }
 
 };
 
 // game scene
 var drawScene = function() {
     createPlayField.drawBackground(playBeingCreated, height, width)
-    pause.draw();
-    stop.draw();
-    pause.displayButton = true;
-    stop.displayButton = true;
-    save.displayButton = false;
-    clear.displayButton = false;
-    defensePlay.drawAllPlayers(createPlayField);
     for(var i = 0; i < getCurrentFormation().eligibleReceivers.length; i++){
         getCurrentFormation().eligibleReceivers[i].runRoute();
     }
@@ -228,12 +225,12 @@ mouseClicked = function() {
   var field = createPlayField;
   eligibleReceivers = getCurrentFormation().eligibleReceivers;
   var olClicked = getCurrentFormation().mouseInOL(field);
-  var dlClicked = defensePlay.mouseInDL(getCurrentFormation(), field);
+  var dlClicked = getCurrentFormation().defensivePlayObject.mouseInDL(getCurrentFormation(), field);
   var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
   var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
   var formationClicked = isFormationClicked(formationButtons, field);
   var selectedOL = getCurrentFormation().findSelectedOL();
-  var selectedDL = defensePlay.findSelectedDL();
+  var selectedDL = getCurrentFormation().defensivePlayObject.findSelectedDL();
   selectedWR = getCurrentFormation().findSelectedWR();
   if (formationClicked){
     currentFormation = formations.filter(function(formation) {
@@ -325,12 +322,7 @@ var pressSaveButton = function() {
   eligibleReceivers = getCurrentFormation().eligibleReceivers;
   //TO-DO: PLENTY OF VALIDATION/ERROR CHECKING THAT WE CAN DO HERE AND ALERT USER/ABORT SAVE
 
-  /*var lt = getCurrentFormation().getPlayerFromPosition('LT');
-  var a = lt.blockingAssignmentObject;
-  a.convertBlockedPlayersToIDs();
-  a.blockedPlayers = [];
-  a.createBlockedPlayersFromIDs(defensePlay);*/
-  //debugger;
+
 
     eligibleReceivers.forEach(function(player){
       player.convertRouteDrawingToBreakPoints();
@@ -353,7 +345,7 @@ var pressSaveButton = function() {
 
 var pressClearButton = function() {
   getCurrentFormation().clearProgression();
-  defensePlay.clearSelections();
+  getCurrentFormation().defensivePlayObject.clearSelections();
   getCurrentFormation().clearRouteDrawings();
   getCurrentFormation().clearBlockingAssignments();
   getCurrentFormation().clearRunAssignments();

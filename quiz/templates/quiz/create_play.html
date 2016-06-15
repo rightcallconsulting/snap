@@ -13,15 +13,22 @@
       currentFormation = formations.filter(function(formationObject){
         return formationObject.id === clickedID;
       })[0]
+      if(!currentFormation.defensiveFormationID && defensive_formations.length > 0){
+        currentFormation.defensiveFormationID = defensive_formations[0].id;
+        currentFormation.defensivePlayObject = defensive_formations[0].createDefensivePlay();
+      }
       playBeingCreated.playName = "";
       $('#play-image-header').text(currentFormation.playName);
     })
 
     $('.defensive-formation-button').click(function(){
       var clickedID = parseInt(this.id);
-      defensePlay = defensive_formations.filter(function(formationObject){
+      var defenseFormation = defensive_formations.filter(function(formationObject){
         return formationObject.id === clickedID;
-      })[0].createDefensivePlay();
+      })[0];
+      defensePlay = defenseFormation.createDefensivePlay();
+      currentFormation.defensivePlayObject = defensePlay;
+      currentFormation.defensiveFormationID = defenseFormation.id;
     })
 
     $('#save-button').click(function(){

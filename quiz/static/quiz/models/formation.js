@@ -22,6 +22,8 @@ var Formation = function(config){
   this.safeties = config.safeties || [];
   this.defensivePlayers = config.defensivePlayers || [];
   this.offensiveFormationID = config.offensiveFormationID || 0;
+  this.defensiveFormationID = config.defensiveFormationID || 0;
+  this.defensivePlayObject = config.defensivePlayObject || null;
 };
 
 Formation.prototype.getPlayersWithPosition = function(position){
