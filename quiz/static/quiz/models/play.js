@@ -18,7 +18,8 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
-
+    this.defensiveFormationID = config.defensiveFormationID || 0;
+    this.defensivePlayObject = config.defensivePlayObject || null;
 };
 
 Play.prototype.getPlayerFromPosition = function(pos){
@@ -213,7 +214,7 @@ Play.prototype.saveToDB = function(){
       assignment.convertBlockedPlayersToIDs();
     }
   }
-  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange'])
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
   debugger;
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };

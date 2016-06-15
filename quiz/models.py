@@ -308,6 +308,7 @@ class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    defenseID = models.CharField(max_length=10)
     players = models.ManyToManyField(Player, blank=True)
     positions = models.ManyToManyField(Position)
     tests = models.ManyToManyField(Test)
@@ -328,7 +329,7 @@ class Play(models.Model):
     @classmethod
     def from_json(cls, json):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
-        formation=Formation.objects.get(pk=json['formation']['id']))
+        formation=Formation.objects.get(pk=json['formation']['id']), defenseID=json['defensiveFormationID'])
         new_play.save()
         for player in json['offensivePlayers']:
             runAssignment = ""

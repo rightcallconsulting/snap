@@ -30,6 +30,11 @@ function setup() {
     createPlayField.width = width;
   }
 
+  playBeingCreated = new Play({
+    playName: "",
+    newPlay: true
+  });
+
   if(json_seed){
     for(var i = 0; i < json_seed.offensive_formations.length; i++){
       var formation = createFormationFromJSONSeed(json_seed.offensive_formations[i]);
@@ -46,14 +51,11 @@ function setup() {
 
     currentFormation = formations[0];
     if(!currentFormation.defensiveFormationID && defensive_formations.length > 0){
-      currentFormation.defensiveFormationID = defensive_formations[0].id;
-      currentFormation.defensivePlayObject = defensive_formations[0].createDefensivePlay();
+      getCurrentPlay().defensiveFormationID = defensive_formations[0].id;
+      getCurrentPlay().defensivePlayObject = defensive_formations[0].createDefensivePlay();
     }
     $('#play-name').text(getCurrentFormation().playName);
-    playBeingCreated = new Play({
-      playName: "",
-      newPlay: true
-    });
+
   }
 
 }
@@ -69,25 +71,10 @@ var drawOpening = function() {
     currentFormation.drawBlockingAssignmentObjects(createPlayField);
     currentFormation.drawRunAssignments(createPlayField);
     currentFormation.drawAllPlayers(createPlayField);
-    if(currentFormation.defensivePlayObject){
-        currentFormation.defensivePlayObject.drawAllPlayers(createPlayField);
+    if(getCurrentDefensivePlay()){
+        getCurrentDefensivePlay().drawAllPlayers(createPlayField);
     }
 
-};
-
-// game scene
-var drawScene = function() {
-    createPlayField.drawBackground(playBeingCreated, height, width)
-    for(var i = 0; i < getCurrentFormation().eligibleReceivers.length; i++){
-        getCurrentFormation().eligibleReceivers[i].runRoute();
-    }
-    for(var i = 0; i < defensivePlayers.length; i++){
-        defensivePlayers[i].blitzGap(oline[2]);
-    }
-    qb[0].runBootleg(oline[2], 1.0);
-    fill(0, 0, 0);
-    textSize(20);
-    text(getCurrentFormation().feedbackMessage, 120, 60);
 };
 
 keyTyped = function(){
@@ -225,12 +212,12 @@ mouseClicked = function() {
   var field = createPlayField;
   eligibleReceivers = getCurrentFormation().eligibleReceivers;
   var olClicked = getCurrentFormation().mouseInOL(field);
-  var dlClicked = getCurrentFormation().defensivePlayObject.mouseInDL(getCurrentFormation(), field);
+  var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
   var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
   var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
   var formationClicked = isFormationClicked(formationButtons, field);
   var selectedOL = getCurrentFormation().findSelectedOL();
-  var selectedDL = getCurrentFormation().defensivePlayObject.findSelectedDL();
+  var selectedDL = getCurrentDefensivePlay().findSelectedDL();
   selectedWR = getCurrentFormation().findSelectedWR();
   if (formationClicked){
     currentFormation = formations.filter(function(formation) {
@@ -333,7 +320,8 @@ var pressSaveButton = function() {
         name: playBeingCreated.playName,
         qb: getCurrentFormation().qb,
         oline: getCurrentFormation().oline,
-        formation: getCurrentFormation()
+        formation: getCurrentFormation(),
+        defensiveFormationID: playBeingCreated.defensiveFormationID
     });
     // Logic to save the play to the database
     newPlay.saveToDB();
@@ -345,7 +333,7 @@ var pressSaveButton = function() {
 
 var pressClearButton = function() {
   getCurrentFormation().clearProgression();
-  getCurrentFormation().defensivePlayObject.clearSelections();
+  getCurrentDefensivePlay().clearSelections();
   getCurrentFormation().clearRouteDrawings();
   getCurrentFormation().clearBlockingAssignments();
   getCurrentFormation().clearRunAssignments();
@@ -357,6 +345,17 @@ var pressClearButton = function() {
 var getCurrentFormation = function(){
   return currentFormation;
 };
+
+var getCurrentPlay = function(){
+  return playBeingCreated;
+}
+
+var getCurrentDefensivePlay = function(){
+  if(playBeingCreated && playBeingCreated.defensivePlayObject){
+    return playBeingCreated.defensivePlayObject;
+  }
+  return null;
+}
 
 function draw() {
 
