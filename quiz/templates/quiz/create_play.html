@@ -5,13 +5,23 @@
 {% block quiz_type %}
   <script language="javascript" type="text/javascript" src="{% static 'quiz/createPlay.js' %}"></script>
   <script type="text/javascript">
+    var json_seed = {{ json_seed|safe }};
+    console.log(JSON.stringify(json_seed, null, 2));
 
     $('.formation-button').click(function(){
+      var clickedID = parseInt(this.id);
       currentFormation = formations.filter(function(formationObject){
-        return formationObject.name === this.value;
-      }.bind(this))[0]
+        return formationObject.id === clickedID;
+      })[0]
       playBeingCreated.playName = "";
       $('#play-image-header').text(currentFormation.playName);
+    })
+
+    $('.defensive-formation-button').click(function(){
+      var clickedID = parseInt(this.id);
+      defensePlay = defensive_formations.filter(function(formationObject){
+        return formationObject.id === clickedID;
+      })[0].createDefensivePlay();
     })
 
     $('#save-button').click(function(){
@@ -82,15 +92,15 @@
   </div>
   <div class="secondary-content-area" id="choose-offensive-play-box">
     <div class="dash-header text-center">
-      <span><h4>Offensive Plays</h4></span>
+      <span><h4>Defensive Looks</h4></span>
     </div>
     <div class="table-wrapper">
     <table class="formation-list two-column-table">
-      {% for formation in offensive_formations %}
+      {% for formation in defensive_formations %}
       {% if forloop.counter0|divisibleby:2 %}
         <tr>
       {% endif %}
-        <td><input class="bounceIn animation-delay5 login-link formation play-add-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+        <td><input class="bounceIn animation-delay5 login-link formation defensive-formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
         {% if forloop.counter|divisibleby:2 %}
         </tr>
         {% endif %}

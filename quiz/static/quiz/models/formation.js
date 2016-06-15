@@ -1125,7 +1125,7 @@ var isFormationClicked = function(formationButtonArray, field){
 //Formatting differences with Nick's code. Will eventually merge
 var createFormationFromJSONSeed = function(jsonFormation){
   var formation = new Formation({
-    id: jsonFormation.pk,
+    id: jsonFormation.id,
     name: jsonFormation.name,
     playName: jsonFormation.name,
     offensiveFormationID: jsonFormation.offensiveFormationID,
@@ -1148,6 +1148,15 @@ var createFormationFromJSON = function(jsonFormation){
   return formation;
 };
 
+Formation.prototype.positionsToPlayers = function(){
+  var positionsAsPlayers = [];
+  for(var j = 0; j < this.positions.length; j++){
+    var position = this.positions[j];
+    var player = createPlayerFromJSONSeed(position);
+    positionsAsPlayers.push(player);
+  }
+  this.positions = positionsAsPlayers;
+}
 
 Formation.prototype.populatePositions = function(){
   if(this.unit === "defense"){

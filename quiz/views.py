@@ -140,12 +140,18 @@ def create_play(request):
     formations = team.formation_set.all()
     offensive_formations = formations.filter(unit="offense")
     defensive_formations = formations.filter(unit="defense")
+    json_seed = {
+        'offensive_formations': [f.dict_for_json() for f in offensive_formations],
+        'defensive_formations': [f.dict_for_json() for f in defensive_formations]
+    }
+
     return render(request, 'quiz/create_play.html', {
         'formations': formations,
         'offensive_formations': offensive_formations,
         'defensive_formations': defensive_formations,
         'team': team,
         'page_header': 'CREATE PLAY',
+        'json_seed': json.dumps(json_seed)
     })
 
 
