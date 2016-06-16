@@ -241,6 +241,7 @@ class PlayQuizView(CustomPlayerQuizView):
 
     def get_ordered_questions(self):
         plays = self.player.team.play_set.all()
+        formations = self.player.team.formation_set.all()
 
         if self.exclude_plays_that_dont_include_players_position:
             plays = [p for p in plays if self.player.position
@@ -257,7 +258,16 @@ class PlayQuizView(CustomPlayerQuizView):
             plays = sorted(plays, reverse=True,
                 key=analytics.total_incorrect_for_play)
 
-        return [p.dict_for_json() for p in plays]
+        defensive_plays = []
+        for p in plays:
+            if p.defenseID:
+                for f in formations:
+                    if f.pk == p.defenseID:
+                        defensive_plays.append(f)
+        offenseAndDefense = [p.dict_for_json() for p in plays]
+        offenseAndDefense.extend([f.dict_for_json() for f in defensive_plays])
+
+        return offenseAndDefense
 
 
 class QbCallQuizView(PlayQuizView):
