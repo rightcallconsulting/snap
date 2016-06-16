@@ -253,6 +253,32 @@ class PlayQuizView(CustomPlayerQuizView):
 
         return [p.dict_for_json() for p in plays]
 
+class WRQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/wr_quiz.html'
+    page_header = 'WR QUIZ'
+
+    exclude_plays_that_dont_include_players_position = False
+
+    def get_ordered_questions(self):
+        plays = self.player.team.play_set.all()
+
+        if self.exclude_plays_that_dont_include_players_position:
+            plays = [p for p in plays if self.player.position
+                in p.position_strings()]
+
+        # Sorting
+
+        if self.order == QuizOrders.RECENT.url_key:
+            plays = sorted(plays, reverse=True,
+                key=attrgetter('created_at'))
+
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            plays = sorted(plays, reverse=True,
+                key=analytics.total_incorrect_for_play)
+
+        return [p.dict_for_json() for p in plays]
+
 
 class QbCallQuizView(PlayQuizView):
     template_name = 'quiz/qb_call_quiz.html'

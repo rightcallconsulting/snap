@@ -26,7 +26,7 @@ Button.prototype.draw = function(field) {
     textSize(12);
     textAlign(CENTER, CENTER);
     text(this.label, x, y, width, height);
-    this.displayButton = true; // COULD CAUSE SOME BUGS SO COME BACK TO THIS IF BUTTONS ARE WEIRD
+    //this.displayButton = true; // COULD CAUSE SOME BUGS SO COME BACK TO THIS IF BUTTONS ARE WEIRD
 };
 
 Button.prototype.isMouseInside = function(field) {

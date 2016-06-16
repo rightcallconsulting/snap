@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^pass_rush_quiz$', views.PassRushQuizView.as_view(), name='pass_rush_quiz'),
     url(r'^stunt_quiz$', views.stunt_quiz, name='stunt_quiz'),
     url(r'^play_quiz$', views.PlayQuizView.as_view(), name='play_quiz'),
+    url(r'^wr_quiz$', views.WRQuizView.as_view(), name='wr_quiz'),
     url(r'^route_quiz$', views.RouteQuizView.as_view(), name='route_quiz'),
     url(r'^simple_route_quiz$', views.simple_route_quiz, name='simple_route_quiz'),
     url(r'^another_route_quiz$', views.another_route_quiz, name='another_route_quiz'),
