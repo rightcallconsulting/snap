@@ -178,11 +178,23 @@ function drawOpening(){
   test.getCurrentPlay().drawAllPlayers(field);
 };
 
+<<<<<<< Updated upstream
+=======
+function drawFeedbackScreen(){
+  field.drawBackground(null, height, width);
+  test.getCurrentPlay().drawAllRoutes(field);
+  test.getCurrentPlay().drawBlockingAssignmentObjects(field);
+  test.getCurrentPlay().drawRunAssignments(field);
+  test.getCurrentPlay().drawAllPlayers(field);
+};
+
+>>>>>>> Stashed changes
 function drawScene(field){
   scene = true;
   field.drawBackground(null, height, width);
   clearMultipleChoiceAnswers();
   var play = test.getCurrentPlay();
+<<<<<<< Updated upstream
   if(play){
     play.drawAllRoutes(field);
     play.drawAllPlayers(field);
@@ -198,6 +210,27 @@ function drawScene(field){
     }
     
   }
+=======
+  var receivers = play.eligibleReceivers;
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    
+    var dx = Math.abs(play.eligibleReceivers[2].breakPoints[0][0] - play.eligibleReceivers[2].x);
+    var dy = Math.abs(play.eligibleReceivers[2].breakPoints[0][1] - play.eligibleReceivers[2].y);
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    
+    for(var i = 0; i < receivers.length; i++){
+      if(Math.abs(dist) <= 0.5){
+        drawPauseScene(field);
+      }else{
+        receivers[i].runRoute();
+      }
+    }
+
+  }
+  
+>>>>>>> Stashed changes
 };
 
 
@@ -323,6 +356,7 @@ mouseClicked = function() {
   }
 };
 
+<<<<<<< Updated upstream
 drawPauseScene = function(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllPlayers(field);
@@ -337,6 +371,19 @@ drawPauseScene = function(){
     fill(220, 220, 0);
     text("Click on your next breakPoint", 100, 100 );
   }
+=======
+drawPauseScene = function(field){
+  field.drawBackground(null, height, width);
+  test.getCurrentPlay().inProgress = false;
+  test.scoreboard.fill = color(220, 100, 0);
+  textSize(24);
+  
+  var play = test.getCurrentPlay();
+  play.drawAllPlayers(field);
+  play.drawAllRoutes(field);
+  //test.getCurrentPlay().drawBlockingAssignmentObjects(field);
+  test.getCurrentPlay().drawRunAssignments(field);
+>>>>>>> Stashed changes
 };
 
 keyTyped = function(){
@@ -407,7 +454,11 @@ if(!setupComplete){
         test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay("");
       }else{
+<<<<<<< Updated upstream
         drawOpening(field);
+=======
+        drawFeedbackScreen(field);
+>>>>>>> Stashed changes
       }
     }else{
       if(test.getCurrentPlay().inProgress){
