@@ -49,6 +49,10 @@ PlayTest.prototype.getCurrentPlay = function(){
   return this.plays[this.questionNum];
 };
 
+PlayTest.prototype.getCurrentPlayNumber = function(){
+  return this.questionNum;
+}
+
 PlayTest.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.questionNum];
 };

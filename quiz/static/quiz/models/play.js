@@ -160,11 +160,17 @@ Play.prototype.findSelectedWR = function(){
   return selectedWR;
 };
 
+Play.prototype.clearSelectedReceivers = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    this.eligibleReceivers[i].clicked = false;
+  }
+};
+
 Play.prototype.mouseInReceiverOrNode = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     var p = this.eligibleReceivers[i];
     if (p.isMouseInside(field)){
-      var receiverClicked = true;
+      var receiverClicked = p;
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
@@ -225,7 +231,7 @@ Play.prototype.populatePositions = function(){
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb
-  var receiverPositions = ["A", "B", "F", "X", "Y", "Z"]
+  var receiverPositions = ["A", "B", "F", "X", "Y", "Z", "H"]
   var eligibleReceivers = this.positions.filter(function(player) {
     return receiverPositions.indexOf(player.pos) >= 0;
   });
