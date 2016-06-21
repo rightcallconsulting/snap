@@ -70,6 +70,53 @@
 										</a>
 									</td>
 								</tr>
+								{% elif player.position == 'RG' or player.position == 'LG' or player.position == 'C' %}
+								<tr>
+									<td>
+										<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>FORMATIONS</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>PLAYS</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>FRONTS</h3></span>
+											</div>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>AUDIBLES</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>DEFENSIVE SHIFTS</h3></span>
+											</div>
+										</a>
+									</td>
+									<td>
+										<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+											<div class="playbook-action">
+												<span><h3>SNAP COUNTS</h3></span>
+											</div>
+										</a>
+									</td>
+								</tr>
 								{% elif player.position == 'DE' or player.position == 'S' %}
 								<tr>
 									<td>
