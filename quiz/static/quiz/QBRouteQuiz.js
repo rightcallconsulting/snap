@@ -93,17 +93,8 @@ function setup() {
 
     originalPlayList = plays.slice();
     test.plays = shuffle(plays);
+    setCorrectAnswers();
 
-    for(var i = 0; i < test.plays.length; i++){
-      var play = test.plays[i];
-      var answer = [];
-      for(var j = 0; j < play.eligibleReceivers.length; j++){
-        var player = play.eligibleReceivers[j];
-        answer.push(player.routeCoordinates.slice());
-        player.routeCoordinates = [];
-      }
-      answers.push(answer);
-    }
     test.restartQuiz();
     test.updateScoreboard();
     setupComplete = true;
@@ -127,6 +118,20 @@ function resizeJSButtons(){
   exitDemo.x =  field.getYardX(width*0.1);
   exitDemo.y = field.getYardY(height*0.1);
 
+}
+
+function setCorrectAnswers(){
+  answers = [];
+  for(var i = 0; i < test.plays.length; i++){
+    var play = test.plays[i];
+    var answer = [];
+    for(var j = 0; j < play.eligibleReceivers.length; j++){
+      var player = play.eligibleReceivers[j];
+      answer.push(player.breakPoints.slice());
+      player.routeCoordinates = [];
+    }
+    answers.push(answer);
+  }
 }
 
 function shuffle(array) {
@@ -164,10 +169,12 @@ function checkAnswer(){
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
     var correctRoute = answer[i];
+    debugger;
     if(player.routeCoordinates.length !== correctRoute.length){
       isCorrect = false;
       break;
     }
+
     for(var j = 0; j < player.routeCoordinates.length; j++){
       var x1 = player.routeCoordinates[j][0];
       var y1 = player.routeCoordinates[j][1];
@@ -185,7 +192,6 @@ function checkAnswer(){
       break;
     }
   }
-  debugger;
 
   if(isCorrect){
     clearSelection();
@@ -201,14 +207,25 @@ function checkAnswer(){
 
 }
 
-function drawCurrentRoute(player, playerIndex){
+function drawCurrentRoute(player){
   player.drawRouteCoordinates(field);
+}
+
+function drawCorrectRoutes(){
+
+  for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
+    var player = test.getCurrentPlay().eligibleReceivers[i];
+    var correctRoute = answers[test.getCurrentPlayNumber()][i];
+    player.routeCoordinates = correctRoute;
+    drawCurrentRoute(player)
+  }
+  
 }
 
 function drawCurrentRoutes(){
 
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
-    drawCurrentRoute(test.getCurrentPlay().eligibleReceivers[i], i);  
+    drawCurrentRoute(test.getCurrentPlay().eligibleReceivers[i]);  
   }
   
 }
@@ -216,7 +233,8 @@ function drawCurrentRoutes(){
 function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentPlay().drawAllPlayers(field);
-  test.getCurrentPlay().drawAllRoutes(field);
+  drawCorrectRoutes();
+  //test.getCurrentPlay().drawAllRoutes(field);
 }
 
 function drawOpening(){
@@ -354,6 +372,7 @@ mouseClicked = function() {
   if(bigReset.isMouseInside(field) && test.over) {
     clearSelection();
     test.plays = shuffle(originalPlayList.slice());
+    setCorrectAnswers();
     test.restartQuiz();
     return true;
   }else if(resetMissed.isMouseInside(field) && test.over) {
@@ -363,6 +382,7 @@ mouseClicked = function() {
       newPlays = originalPlayList.slice();
     }
     test.plays = shuffle(newPlays);
+    setCorrectAnswers();
     test.restartQuiz();
     return true;
   }else if(nextQuiz.isMouseInside(field) && test.over) {
@@ -427,6 +447,7 @@ keyTyped = function(){
     if(key === 'r'){
       clearSelection();
       test.plays = shuffle(originalPlayList.slice());
+      setCorrectAnswers();
       test.restartQuiz();
     }
   }
