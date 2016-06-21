@@ -169,7 +169,6 @@ function checkAnswer(){
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
     var correctRoute = answer[i];
-    debugger;
     if(player.routeCoordinates.length !== correctRoute.length){
       isCorrect = false;
       break;
