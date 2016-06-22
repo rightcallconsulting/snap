@@ -5,11 +5,12 @@ var test;
 var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
-var bigReset;
+var bigReset; var nextQuiz; var resetMissed;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
+var originalPlayList = [];
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -105,12 +106,12 @@ function setup() {
       defensive_play.offensiveFormationObject.positions = positionsAsPlayers;
       defensive_play.offensiveFormationObject.populatePositions();
       defensive_plays.push(defensive_play);
-      playNames.push(defensive_play.name);
     }
 
     var shuffled_plays = shuffle(defensive_plays);
     test.plays = shuffled_plays;
     test.defensivePlays = shuffled_plays;
+    originalPlayList = test.plays.slice();
     multipleChoiceAnswers = [];
     test.restartQuiz();
     test.updateScoreboard();
@@ -283,7 +284,21 @@ mouseClicked = function() {
     test.scoreboard.feedbackMessage = "";
   }
   if(bigReset.isMouseInside(field) && test.over) {
+    var newPlays = shuffle(originalPlayList.slice());
+    test.plays = newPlays;
+    test.defensivePlays = newPlays;
     test.restartQuiz();
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    var newPlays = test.missedPlays.slice().concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList.slice();
+    }
+    newPlays = shuffle(newPlays);
+    test.plays = newPlays;
+    test.defensivePlays = newPlays;
+    test.restartQuiz();
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else{
@@ -353,6 +368,8 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+    resetMissed.draw(field);
+    nextQuiz.draw(field);
   }else if(test.feedbackScreenStartTime){
     var timeElapsed = millis() - test.feedbackScreenStartTime;
     if(timeElapsed < 2000){
