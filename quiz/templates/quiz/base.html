@@ -106,6 +106,10 @@
                   currentPlayerTested = null;
                   multipleChoiceAnswers = [];
                   clearMultipleChoiceAnswers();
+                  if(delayCall){
+                    delayCall = millis();
+                    createDefaultMotion();
+                  }
 
                 }else{
                   //start feedback screen start time
