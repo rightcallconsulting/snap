@@ -28,9 +28,6 @@ def cadence_quiz(request):
 def simple_audible_quiz(request):
     return render(request, 'quiz/simple_audible_quiz.html')
 
-def the_route_quiz(request):
-    return render(request, 'quiz/the_route_quiz.html')
-
 def simple_route_quiz(request):
     return render(request, 'quiz/simple_route_quiz.html')
 
@@ -269,6 +266,32 @@ class PlayQuizView(CustomPlayerQuizView):
 
         return offenseAndDefense
 
+class WRQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/wr_quiz.html'
+    page_header = 'WR QUIZ'
+
+    exclude_plays_that_dont_include_players_position = False
+
+    def get_ordered_questions(self):
+        plays = self.player.team.play_set.all()
+
+        if self.exclude_plays_that_dont_include_players_position:
+            plays = [p for p in plays if self.player.position
+                in p.position_strings()]
+
+        # Sorting
+
+        if self.order == QuizOrders.RECENT.url_key:
+            plays = sorted(plays, reverse=True,
+                key=attrgetter('created_at'))
+
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            plays = sorted(plays, reverse=True,
+                key=analytics.total_incorrect_for_play)
+
+        return [p.dict_for_json() for p in plays]
+
 
 class QbCallQuizView(PlayQuizView):
     template_name = 'quiz/qb_call_quiz.html'
@@ -289,6 +312,18 @@ class RouteQuizView(PlayQuizView):
 
     def build_dict_for_json_seed(self):
         plays = super(RouteQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+class QBRouteQuizView(PlayQuizView):
+    template_name = 'quiz/qb_route_quiz.html'
+    page_header = 'QB ROUTE QUIZ'
+    exclude_plays_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        plays = super(QBRouteQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
             'plays': plays,
@@ -625,6 +660,29 @@ def run_wr_route_test(request, test_id):
         'plays': json_plays
     }
     return render(request, 'quiz/route_quiz.html', {
+        'test': test,
+        'has_plays': has_plays,
+        'page_header': 'DRAW ROUTE QUIZ',
+        'json_seed': json.dumps(json_seed),
+    })
+
+def run_qb_route_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
+    player = request.user.player
+    plays = test.play_set.all()
+    json_plays = []
+    for p in plays:
+        json_plays.append(p.dict_for_json())
+    if len(plays) > 0:
+        has_plays = True
+    else:
+        has_plays = False
+    json_seed = {
+        'player': player.dict_for_json(),
+        'plays': json_plays
+    }
+    return render(request, 'quiz/qb_route_quiz.html', {
         'test': test,
         'has_plays': has_plays,
         'page_header': 'DRAW ROUTE QUIZ',
