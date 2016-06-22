@@ -239,11 +239,12 @@ function drawFeedbackScreen(){
 }
 
 function drawOpening(){
-  field.drawBackground(test.getCurrentPlay(), height, width);
-  test.getCurrentPlay().drawAllPlayers(field);
-  drawCurrentRoutes();
 
-  noStroke();
+ field.drawBackground(test.getCurrentPlay(), height, width);
+ test.getCurrentPlay().drawAllPlayers(field);
+ drawCurrentRoutes();
+ debugger;
+ noStroke();
 
 }
 

@@ -429,6 +429,19 @@ class LinebackerMotionQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
+class OLineBlitzQuizView(FormationQuizView):
+    template_name = 'quiz/oline_blitz_quiz.html'
+    page_header = 'OLine Blitz Quiz'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 class MotionAlignmentQuizView(FormationQuizView):
     template_name = 'quiz/motion_alignment_quiz.html'
     page_header = 'MOTION ALIGNMENT QUIZ'

@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^defense_play_quiz$', views.defense_play_quiz, name='defense_play_quiz'),
     url(r'^linebacker_call_quiz$', views.LinebackerQuizView.as_view(), name='linebacker_call_quiz'),
     url(r'^linebacker_motion_quiz$', views.LinebackerMotionQuizView.as_view(), name='linebacker_motion_quiz'),
+    url(r'^oline_blitz_quiz$', views.OLineBlitzQuizView.as_view(), name='oline_blitz_quiz'),
     url(r'^motion_alignment_quiz$', views.MotionAlignmentQuizView.as_view(), name='motion_alignment_quiz'),
     url(r'^call_alignment_quiz$', views.CallAlignmentQuizView.as_view(), name='call_alignment_quiz'),
     url(r'^call_quiz$', views.call_quiz, name='call_quiz'),
