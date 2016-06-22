@@ -82,7 +82,7 @@ function setup() {
     var defensive_plays = [];
     var plays = [];
     var positions = [];
-    playNames = ["LEFT", "RIGHT", "BALANCED"];
+    playNames = ["ROGER", "DANGER", "LASSO"];
 
     currentUserTested = createUserFromJSONSeed(json_seed.player)
 
@@ -138,18 +138,34 @@ function shuffle(array) {
   return array;
 }
 
+
+
 function createMotion(player){
   var play = test.getCurrentDefensivePlay();
   var i = 1;
-  while(i < play.defensivePlayers.length && (player.position !== "WR" || player.startY > play.oline[2].startY - 2)){
-    player = play.eligibleReceivers[i];
+  while(i < play.defensivePlayers.length && (player.startY < play.offensiveFormationObject.oline[2].startY - 2)){
+    player = play.defensivePlayers[i];
     i++;
   }
-  var dx = -20;
-  if(player.startX < play.oline[2].startX){
+  var dx = 4;
+  var dy = play.offensiveFormationObject.oline[2].startY - player.startY;
+  if(player.startX < field.width / 2){
     dx = -dx;
   }
-  player.motionCoords.push([player.startX + dx, player.startY]);
+  player.motionCoords.push([player.startX + dx, player.startY + dy]);
+}
+function getCorrectAnswer(){
+  var strength = test.getCurrentDefensivePlay().offensiveFormationObject.getPassStrength();
+  var correctAnswer = "BALANCED";
+  if(strength < 0){
+    correctAnswer = "LEFT"
+  }else if(strength > 0){
+    correctAnswer = "RIGHT"
+  }
+  test.updateProgress(false);
+  createMultipleChoiceAnswers(correctAnswer, 3);
+  test.updateMultipleChoiceLabels();
+
 }
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
@@ -211,7 +227,10 @@ function drawOpening(){
   if(play){
     play.drawAllPlayersWithOffense(field);
   }
-  createMotion(test.getCurrentDefensivePlay().offensiveFormationObject.eligibleReceivers[0]); 
+
+  createMotion(test.getCurrentDefensivePlay().defensivePlayers[8]);
+
+
 }
 
 function drawDemoScreen(){
@@ -336,29 +355,28 @@ function draw() {
     var x = field.getTranslatedX(this.x);
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
-    if(this.unit === "offense"){
-      noStroke();
-      this.runMotion();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
-    }
-    else {
-      noStroke();
-      fill(0,0,0);
-      if(this === currentPlayerTested){
-        fill(255,238,88);
-      }
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
-  };
+    if(this.unit === "defense"){
+     noStroke();
+     fill(0,0,0);
+     this.runMotion();
+     textSize(17);
+     textAlign(CENTER, CENTER);
+     text(this.pos, x, y);
+   }
+   else {
 
-  if(!setupComplete){
+    noStroke();
+    
+    fill(this.fill);
+    ellipse(x, y, siz, siz);
+    fill(0,0,0);
+    textSize(14);
+    textAlign(CENTER, CENTER);
+    text(this.num, x, y);
+  }
+};
+
+if(!setupComplete){
     //WAIT - still executing JSON
   }else if(test.showDemo){
     drawDemoScreen();
@@ -381,16 +399,7 @@ function draw() {
     }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentDefensivePlay()){
-      var strength = test.getCurrentDefensivePlay().offensiveFormationObject.getPassStrength();
-      var correctAnswer = "BALANCED";
-      if(strength < 0){
-        correctAnswer = "LEFT"
-      }else if(strength > 0){
-        correctAnswer = "RIGHT"
-      }
-      test.updateProgress(false);
-      createMultipleChoiceAnswers(correctAnswer, 3);
-      test.updateMultipleChoiceLabels();
+      getCorrectAnswer();
     }
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
