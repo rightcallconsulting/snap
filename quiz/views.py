@@ -319,7 +319,7 @@ class RouteQuizView(PlayQuizView):
 
 class QBRouteQuizView(PlayQuizView):
     template_name = 'quiz/qb_route_quiz.html'
-    page_header = 'QB ROUTE QUIZ'
+    page_header = 'DRAW ROUTE TREE'
     exclude_plays_that_dont_include_players_position = True
 
     def build_dict_for_json_seed(self):

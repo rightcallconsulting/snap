@@ -17,7 +17,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 34;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -184,7 +184,7 @@ function checkAnswer(){
       var xDiff = abs(x2 - x1);
       var yDiff = abs(y2 - y1);
       var diff = sqrt(xDiff*xDiff + yDiff*yDiff);
-      if(diff > 1.5){
+      if(diff > 3.5){
         isCorrect = false;
         break;
       }
@@ -505,7 +505,7 @@ function draw() {
       drawDemoScreen();
     }else if(test.feedbackScreenStartTime){
       var elapsedTime = millis() - test.feedbackScreenStartTime;
-      if(elapsedTime > 1000){
+      if(elapsedTime > 2500){
         test.feedbackScreenStartTime = 0;
         test.advanceToNextPlay("");
       }else{
