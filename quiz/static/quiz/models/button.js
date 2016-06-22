@@ -34,8 +34,7 @@ Button.prototype.isMouseInside = function(field) {
   var y = field.getTranslatedY(this.y);
   var width = field.yardsToPixels(this.width);
   var height = field.yardsToPixels(this.height);
-    return this.displayButton &&
-           mouseX > x &&
+    return mouseX > x &&
            mouseX < (x + width) &&
            mouseY > y &&
            mouseY < (y + height);
