@@ -97,6 +97,7 @@ function setup() {
 
     test.restartQuiz();
     test.updateScoreboard();
+    window.onresize();
     setupComplete = true;
   }
 }
@@ -218,15 +219,15 @@ function drawCorrectRoutes(){
     player.routeCoordinates = correctRoute;
     drawCurrentRoute(player)
   }
-  
+
 }
 
 function drawCurrentRoutes(){
 
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
-    drawCurrentRoute(test.getCurrentPlay().eligibleReceivers[i]);  
+    drawCurrentRoute(test.getCurrentPlay().eligibleReceivers[i]);
   }
-  
+
 }
 
 function drawFeedbackScreen(){
@@ -240,9 +241,9 @@ function drawOpening(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   test.getCurrentPlay().drawAllPlayers(field);
   drawCurrentRoutes();
-  
+
   noStroke();
-  
+
 }
 
 function drawScene(field){
@@ -405,9 +406,9 @@ mouseClicked = function() {
         receiverClicked = false;
       }else{
         test.getCurrentPlay().clearSelectedReceivers();
-        receiverClicked.clicked = true;  
+        receiverClicked.clicked = true;
       }
-      
+
 
     }else if(receiverSelected){
       if(test.getCurrentPlay().inProgress){
@@ -416,7 +417,7 @@ mouseClicked = function() {
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
       receiverSelected.routeCoordinates.push([x, y]);
-      
+
       var nodeObject = new Node({
         x: x,
         y: y,
