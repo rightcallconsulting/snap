@@ -130,6 +130,7 @@ function setCorrectAnswers(){
       var player = play.eligibleReceivers[j];
       answer.push(player.breakPoints.slice());
       player.routeCoordinates = [];
+      player.clicked = false;
     }
     answers.push(answer);
   }
@@ -393,23 +394,27 @@ mouseClicked = function() {
   }else if(!test.over){
     var receiverClicked = test.getCurrentPlay().mouseInReceiverOrNode(field)[0];
     var receiverSelected = test.getCurrentPlay().findSelectedWR();
-    var nodeClicked = null;
-    if(false){//currentRouteNodes.length > 0 && currentRouteNodes[currentRouteNodes.length - 1].isMouseInside(field)){
-      if(test.showDemo){
-        demoDoubleClick = true;
-      }else{
-        checkAnswer();
-        return;
-      }
-    }else if(receiverClicked){
+    var nodeClicked = test.getCurrentPlay().mouseInReceiverOrNode(field)[1];
+    if(receiverClicked){
       if(receiverClicked.clicked){
-        receiverClicked = false;
+        receiverClicked.clicked = false;
       }else{
         test.getCurrentPlay().clearSelectedReceivers();
         receiverClicked.clicked = true;
       }
-
-
+    }else if(nodeClicked){
+      for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
+        var receiver = test.getCurrentPlay().eligibleReceivers[i];
+        var index = receiver.routeNodes.indexOf(nodeClicked);
+        if(index >= 0 && index === receiver.routeNodes.length - 1){
+          if(test.showDemo){
+            demoDoubleClick = true;
+          }else{
+            checkAnswer();
+          }
+          return;
+        }
+      }
     }else if(receiverSelected){
       if(test.getCurrentPlay().inProgress){
         return;
