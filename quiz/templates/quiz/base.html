@@ -192,6 +192,10 @@
                   currentPlayerTested = null;
                   test.skipQuestion();
                   multipleChoiceAnswers = [];
+                  if(delayCall){
+                    delayCall = millis();
+                    createDefaultMotion();
+                  }
                 }
               };
 
