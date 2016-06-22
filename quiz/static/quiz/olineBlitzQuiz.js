@@ -11,6 +11,7 @@ var currentPlayerTested = null;
 var exitDemo = null;
 var demoDoubleClick = false;
 var originalPlayList = [];
+var delayCall = 0;
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -116,6 +117,8 @@ function setup() {
     test.restartQuiz();
     test.updateScoreboard();
     setupComplete = true;
+    delayCall = millis();
+    createDefaultMotion();
   }
 }
 
@@ -138,6 +141,12 @@ function shuffle(array) {
   return array;
 }
 
+function createDefaultMotion(){
+  if(test.getCurrentDefensivePlay()){
+    var player = test.getCurrentDefensivePlay().defensivePlayers[4];
+    createMotion(player);  
+  }
+}
 
 
 function createMotion(player){
@@ -148,12 +157,16 @@ function createMotion(player){
     i++;
   }
   var dx = 4;
-  var dy = play.offensiveFormationObject.oline[2].startY - player.startY;
-  if(player.startX < field.width / 2){
-    dx = -dx;
+  var dy = play.offensiveFormationObject.oline[2].startY - player.startY + 2;
+  if(!test.over){
+    if(player.startX < field.width / 2){
+      dx = -dx;
+    }
   }
   player.motionCoords.push([player.startX + dx, player.startY + dy]);
 }
+
+
 function getCorrectAnswer(){
   var strength = test.getCurrentDefensivePlay().offensiveFormationObject.getPassStrength();
   var correctAnswer = "BALANCED";
@@ -167,6 +180,10 @@ function getCorrectAnswer(){
   test.updateMultipleChoiceLabels();
 
 }
+
+function delayBlitz(){
+
+};
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
   var correctIndex = 2;
@@ -204,8 +221,11 @@ function checkAnswer(guess){
   }if(isCorrect){
     currentPlayerTested = null;
     test.registerAnswer(isCorrect);
+    delayCall = millis();
+    createDefaultMotion();
   }else{
     clearAnswers();
+    test.missedPlays.push(test.getCurrentPlay());
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
@@ -221,17 +241,26 @@ function drawFeedbackScreen(){
   }
 };
 
+function runDefenseShifts(){
+  var players = test.getCurrentDefensivePlay().defensivePlayers;
+  for(var i = 0; i < players.length; i++){
+    var player = players[i];
+    player.runMotion();
+  }
+}
+
 function drawOpening(){
+  var elapsedTime = millis() - delayCall;
   field.drawBackground(null, height, width);
   var play = test.getCurrentDefensivePlay();
   if(play){
     play.drawAllPlayersWithOffense(field);
+    if(elapsedTime > 1500){
+      runDefenseShifts();
+    }
   }
+};
 
-  createMotion(test.getCurrentDefensivePlay().defensivePlayers[8]);
-
-
-}
 
 function drawDemoScreen(){
   noStroke();
@@ -307,6 +336,8 @@ mouseClicked = function() {
     test.plays = newPlays;
     test.defensivePlays = newPlays;
     test.restartQuiz();
+    delayCall = millis();
+    createDefaultMotion();
   }else if(resetMissed.isMouseInside(field) && test.over) {
     var newPlays = test.missedPlays.slice().concat(test.skippedPlays);
     if(newPlays.length < 1){
@@ -316,6 +347,8 @@ mouseClicked = function() {
     test.plays = newPlays;
     test.defensivePlays = newPlays;
     test.restartQuiz();
+    delayCall = millis();
+    createDefaultMotion();
   }else if(nextQuiz.isMouseInside(field) && test.over) {
     window.location.href = "/playbook";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
@@ -335,6 +368,8 @@ keyTyped = function(){
   if(test.over){
     if(key === 'r'){
       test.restartQuiz();
+      delayCall = millis();
+      createDefaultMotion();
     }
   }else{
     var offset = key.charCodeAt(0) - "1".charCodeAt(0);
@@ -358,15 +393,16 @@ function draw() {
     if(this.unit === "defense"){
      noStroke();
      fill(0,0,0);
-     this.runMotion();
      textSize(17);
      textAlign(CENTER, CENTER);
      text(this.pos, x, y);
    }
    else {
-
     noStroke();
-    
+    if(this === currentPlayerTested){
+      fill(255,238,88);
+    }
+
     fill(this.fill);
     ellipse(x, y, siz, siz);
     fill(0,0,0);
@@ -395,7 +431,9 @@ if(!setupComplete){
     }else{
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
+      delayCall = millis();
+      createDefaultMotion();
+      clearMultipleChoiceAnswers();
     }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentDefensivePlay()){

@@ -55,6 +55,8 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     multipleChoiceAnswers = [];
+    delayCall = millis();
+    createDefaultMotion();
   }
 })
 $('#question-button').click(function(){
