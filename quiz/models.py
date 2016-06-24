@@ -9,8 +9,12 @@ import code
 import copy
 import json
 
-
-# Create your models here.
+# this function returns a datetime object for the deadline
+# of anything that is published. The deadline defaults to 
+# 1 day.
+def deadline_time():
+    deadline = datetime.now() + timedelta(days=1)
+    return deadline
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
@@ -203,7 +207,7 @@ class Test(models.Model):
     skips = models.IntegerField(null=True, blank=True)
     incorrect_guesses = models.IntegerField(null=True, blank=True)
     formations = models.ManyToManyField(Formation, blank=True)
-    deadline = models.DateTimeField(null=True, blank=True)
+    deadline = models.DateTimeField(default=deadline_time, null=True, blank=True)
     completed = models.BooleanField(default=False)
     in_progress = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
