@@ -21,7 +21,6 @@ migrations:
 # If issues with build, check to make sure postgres is running, flush the database, and reinstall the requirements
 # General workflow to begin - make flush, make install, make local
 local:
-	python manage.py migrate --settings=quiz_master.settings.local 
 	python manage.py loaddata seed.json --settings=quiz_master.settings.local 
 	python manage.py runserver --settings=quiz_master.settings.local
 
