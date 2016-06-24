@@ -1,8 +1,42 @@
 var RunAssignment = function(config){
-	this.type = config.type || "";
+	this.type = config.type || "Handoff";
 	this.routeToExchange = config.routeToExchange || [];
 	this.routeAfterExchange = config.routeAfterExchange || [];
-};	
+	this.hasExchanged = config.hasExchanged || false;
+};
+
+var parseCoordinatesFromJSON = function(json){
+	var coords = [];
+
+	return coords;
+}
+
+var createRunAssignmentFromJSON = function(json){
+	if(!json){
+		return null;
+	}
+	while(json.indexOf("u'") >= 0){
+		json = json.replace("u'", "'");
+	}
+
+	while(json.indexOf("'") >= 0){
+		json = json.replace("'", "\"");
+	}
+
+	var dict = JSON.parse(json);
+
+	if(!dict){
+		return null;
+	}
+
+  var assignment = new RunAssignment({
+		type: dict.type || "",
+		routeToExchange: dict.routeToExchange || [],
+		routeAfterExchange: dict.routeAfterExchange || []
+  });
+
+	return assignment;
+};
 
 RunAssignment.prototype.getRouteToExchangeCoords = function(){
 	return this.routeToExchange;
@@ -20,6 +54,14 @@ RunAssignment.prototype.addRouteAfterExchangeCoords = function(x, y){
 	this.routeAfterExchange.push([x, y]);
 };
 
+RunAssignment.prototype.addCoordinates = function(x, y){
+	if(this.hasExchanged){
+		this.addRouteAfterExchangeCoords(x, y);
+	}else{
+		this.addRouteToExchangeCoords(x, y);
+	}
+}
+
 RunAssignment.prototype.removeBeforeExchange = function(){
 	if(this.routeToExchange.length > 0){
 		this.routeToExchange.pop();
@@ -29,6 +71,9 @@ RunAssignment.prototype.removeBeforeExchange = function(){
 RunAssignment.prototype.removeAfterExchange = function(){
 	if(this.routeAfterExchange.length > 0){
 		this.routeAfterExchange.pop();
+	}
+	if(this.routeAfterExchange.length === 0){
+		this.hasExchanged = false;
 	}
 };
 
@@ -53,17 +98,27 @@ RunAssignment.prototype.drawRouteToExchange = function(rb, field){
 		}
 		var x2 = field.getTranslatedX(this.routeToExchange[i][0]);
 		var y2 = field.getTranslatedY(this.routeToExchange[i][1]);
+
+		strokeWeight(3);
+		stroke(66,165,245);
 		if(this.type === "Handoff"){
-			strokeWeight(3);
-			stroke(255,238,88);
 			line(x1, y1, x2, y2);
-			strokeWeight(1);
-			noStroke();
 		}else if(this.type === "Pitch"){
-			stroke(0, 0, 220);
-			line(x1, y1, x2, y2);
-			noStroke();
+			var dx = (x2-x1);
+			var dy = (y2-y1);
+			var dist = sqrt(dx*dx+dy*dy);
+			var numPieces = 10;
+			var pieceLength = dist / numPieces;
+			var xLength = dx / numPieces;
+			var yLength = dy / numPieces;
+			for(var j = 0; j < numPieces; j++){
+				line(x1+j*xLength, y1+j*yLength, x1 + (j+0.5)*xLength, y1 + (j+0.5)*yLength);
+			}
+
+
 		}
+		strokeWeight(1);
+		noStroke();
 	}
 };
 
@@ -100,6 +155,14 @@ RunAssignment.prototype.getLastCoord = function(){
 	}
 	return null;
 };
+
+RunAssignment.prototype.stepRunBackward = function(){
+	if(this.routeAfterExchange.length > 0){
+		this.removeAfterExchange();
+	}else if(this.routeToExchange.length > 0){
+		this.removeBeforeExchange();
+	}
+}
 
 RunAssignment.prototype.equals = function(assignment){
 	if(assignment === null){

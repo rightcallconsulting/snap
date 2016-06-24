@@ -49,6 +49,10 @@ PlayTest.prototype.getCurrentPlay = function(){
   return this.plays[this.questionNum];
 };
 
+PlayTest.prototype.getCurrentPlayNumber = function(){
+  return this.questionNum;
+}
+
 PlayTest.prototype.getCurrentDefensivePlay = function(){
   return this.defensivePlays[this.questionNum];
 };
@@ -99,15 +103,24 @@ PlayTest.prototype.restartQuiz = function(){
   this.updateProgress();
   for(var i = 0; i < this.plays.length; i++){
     var offense = this.plays[i].offensivePlayers;
+    var defense = null;
+    if(this.defensivePlays.length > i){
+      defense = this.defensivePlays[i].defensivePlayers;  
+    }
     if(!offense){
       offense = this.plays[i].offensiveFormationObject.offensivePlayers;
     }
-    if(!offense){
-      return;
+    if(offense){
+      for(var j = 0; j < offense.length; j++){
+        offense[j].resetToStart();
+      }
     }
-    for(var j = 0; j < offense.length; j++){
-      offense[j].resetToStart();
+    if(defense){
+      for(var j = 0; j < defense.length; j++){
+        defense[j].resetToStart();
+      }
     }
+    
   }
 };
 

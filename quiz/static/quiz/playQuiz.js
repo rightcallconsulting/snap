@@ -1,5 +1,5 @@
 var setupComplete = false;
-var testIDFromHTML = 33;
+var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
 var playNames;
@@ -31,7 +31,6 @@ function setup() {
     field.width = width;
     resizeJSButtons();
   }
-
   multipleChoiceAnswers = [];
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
@@ -78,6 +77,8 @@ function setup() {
     var plays = [];
     playNames = [];
 
+    debugger;
+
     for(var i = 0; i < json_seed.length; i++){
       var play = createPlayFromJSONSeed(json_seed[i]);
       var positionsAsPlayers = [];
@@ -89,7 +90,7 @@ function setup() {
       play.positions = positionsAsPlayers;
       play.populatePositions();
       if(play.name && play.name !== ""){
-          playNames.push(play.name);
+        playNames.push(play.name);
       }
       plays.push(play);
     }
@@ -124,14 +125,11 @@ function resizeJSButtons(){
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-
     // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
@@ -168,28 +166,40 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
   }
 }
 
-function clearAnswers(){
-  for(var i = 0; i < multipleChoiceAnswers.length; i++){
-    var a = multipleChoiceAnswers[i];
-    if(a.clicked){
-      a.changeClickStatus();
-    }
-  }
-}
-
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;
   registerAnswer(isCorrect);
-}
+};
 
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
+  test.getCurrentPlay().drawBlockingAssignmentObjects(field);
+  test.getCurrentPlay().drawRunAssignments(field);
   test.getCurrentPlay().drawAllPlayers(field);
 };
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
 function drawDemoScreen(){
-  noStroke();
   field.drawBackground(null, height, width);
   var timeElapsed = millis() - test.demoStartTime;
   var play = test.getCurrentPlay();
@@ -201,25 +211,35 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(255,238,88);
     exitDemo.draw(field);
     textSize(22);
     textAlign(LEFT);
-    text("DEMO", field.width / 6, field.height / 6);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
-    textAlign(LEFT);
-    textSize(22);
-    noStroke();
 
-    var x = field.getTranslatedX(43);
-    var y = field.getTranslatedY(80);
-    var x2 = field.getTranslatedX(53);
-    var y2 = field.getTranslatedY(80);
+    var playButtonX = 85;
+    var playButtonY = 400;
+
+    fill(255,238,88);
+    stroke(255,238,88);
+    strokeWeight(2);
+    line(playButtonX, playButtonY, playButtonX, playButtonY + 80);
+    triangle(85, 480, 105, 460, 65, 460);
+
+    textAlign(LEFT);
+    textSize(18);
+    strokeWeight(0);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
+
+    var x = field.getTranslatedX(49);
+    var y = field.getTranslatedY(85);
+    var x2 = field.getTranslatedX(66);
+    var y2 = field.getTranslatedY(85);
     stroke(255,238,88);
     fill(255,238,88);
     strokeWeight(2);
@@ -234,16 +254,17 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(20);
-    textAlign(CENTER);
+    textSize(18);
+    textAlign(RIGHT);
+    strokeWeight(0);
     if(demoDoubleClick){
-        text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
-
+      text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
     }else if(clicked){
-      text("Click again to check answer.", x - 70, y - 50);
+      text("Click again to check answer.", x - 20, y - 115);
     }else{
-      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+      text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
     }
+    strokeWeight(1);
   }
 };
 
@@ -251,19 +272,16 @@ function setupDemoScreen(){
   test.showDemo = true;
   demoDoubleClick = false;
   test.demoStartTime = millis();
-  clearAnswers();
+  clearMultipleChoiceAnswers();
 };
 
 function exitDemoScreen(){
   test.showDemo = false;
   demoDoubleClick = false;
-  clearAnswers();
+  clearMultipleChoiceAnswers();
 };
 
 mouseClicked = function() {
-  if(!setupComplete){
-    return false;
-  }
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }
@@ -307,12 +325,13 @@ keyTyped = function(){
       if(answer.clicked){
         checkAnswer(answer);
       }else{
-        clearAnswers();
+        clearMultipleChoiceAnswers();
         answer.changeClickStatus();
       }
     }
   }
 };
+
 
 function draw() {
   Player.prototype.draw = function(field){
@@ -320,27 +339,27 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
-      noStroke();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.num, x, y);
-    }
-    else {
-      noStroke();
-      fill(this.fill);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
+     noStroke();
+     fill(this.fill);
+     ellipse(x, y, siz, siz);
+     fill(0,0,0);
+     textSize(14);
+     textAlign(CENTER, CENTER);
+     text(this.num, x, y);
+   }
+   else {
+    noStroke();
+    fill(this.fill);
+    textSize(17);
+    textAlign(CENTER, CENTER);
+    text(this.pos, x, y);
   }
-  if(!setupComplete){
+
+};
+
+
+if(!setupComplete){
     //WAIT - still executing JSON
-  }
-  else if(test.showDemo){
-    drawDemoScreen();
   }else if(test.over){
     background(93, 148, 81);
     noStroke();
@@ -348,21 +367,28 @@ function draw() {
     bigReset.draw(field);
     nextQuiz.draw(field);
     resetMissed.draw(field);
-  }else if(test.feedbackScreenStartTime){
-    var timeElapsed = millis() - test.feedbackScreenStartTime;
-    if(timeElapsed < 2000){
-      drawOpening();
-    }else{
-      test.feedbackScreenStartTime = 0;
-      test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
-    }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
       var correctAnswer = test.getCurrentPlay().name;
       createMultipleChoiceAnswers(correctAnswer,3);
+      test.updateProgress(false);
       test.updateMultipleChoiceLabels();
     }
-    drawOpening(field);
+    if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+      }else{
+        drawOpening(field);
+      }
+    }else{
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);
+      }
+    }
   }
 };

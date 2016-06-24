@@ -37,7 +37,25 @@
   float: left;
 }
 
-.create-formation.choose-offensive-formation-box, .create-play.choose-offensive-formation-box{
+#create-play-col .secondary-content-area{
+  width: 100%;
+  height: 290px;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 0px;
+}
+
+#create-play-col .table-wrapper{
+  height: 240px;
+}
+
+.secondary-content-area.top{
+    margin-bottom: 20px;
+}
+
+
+.create-formation.choose-offensive-formation-box{
   width: 25%;
   height: 600px;
   border-left: 1px solid #777;
@@ -67,18 +85,18 @@
   height: 600px;
 }
 
-#main-container{position:relative;min-height:1000px;padding-top:15px;}
+#main-container{position:relative;min-height:900px;padding-top:15px;}
 
 #main-container .full-sidebar-container{
   margin-left: 12%;
 }
 
 #main-container .small-sidebar-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .small-sidebar-container#main-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .full-sidebar-container#main-container{
@@ -153,8 +171,7 @@
 }
 
 .full-sidebar .dash-header-logo{
-  width: 75px;
-  height: 75px;
+  width: 100px;
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -162,7 +179,6 @@
 
 .small-sidebar .dash-header-logo{
   width: 35px;
-  height: 35px;
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -207,6 +223,26 @@
   margin-top:5%;
   margin-bottom:5%;
   background-color: #157970;
+  color: #FFFFFF;
+}
+
+.defensive-formation-button{
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top:5%;
+  margin-bottom:5%;
+  background-color: #BDBDBD;
+  color: #000000;
+}
+
+.play-add-button {
+  width: 90%;
+  height: 90%;
+  margin-top:1px;
+  margin-bottom:1px;
+  background-color: #D07322;
   color: #FFFFFF;
 }
 
@@ -311,8 +347,8 @@
 }
 
 .small-sidebar{
-  max-width: 4%;
-  min-width: 50px;
+  max-width: 5%;
+  min-width: 75px;
   height: 100%;
 }
 
@@ -368,4 +404,15 @@
 
 .dash-row{
   border: none;
+}
+
+.defensive-formation-sidebar .table-wrapper{
+  height: 90%;
+}
+
+.stacked-col{
+  width: 35%;
+  height: 95%;
+  display: inline-block;
+  float: left;
 }

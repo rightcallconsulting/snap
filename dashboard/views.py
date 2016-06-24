@@ -8,6 +8,8 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.conf import settings
+import json
+import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
@@ -52,14 +54,17 @@ def homepage(request):
             first_group = groups[0]
             players = first_group.players.all()
             analytics = PlayerAnalytics(players)
+            alarms = analytics.get_play_alarms()
         else:
             players = []
             analytics = None
+            alarms = {}
         return render(request, 'dashboard/coachhome.html', {
             'uncompleted_tests': uncompleted_tests,
             'groups': groups,
             'players': players,
             'analytics': analytics,
+            'alarms': alarms,
             'page_header': 'DASHBOARD',
             'MEDIA_ROOT': '/media/'
         })
@@ -161,9 +166,11 @@ def analytics(request):
 @login_required
 def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
+        player = request.user.player
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
             'quiz_order_options': QuizOrders.options,
+            'player': player
         })
     else:
         team = request.user.coach.team
@@ -221,7 +228,7 @@ def todo(request):
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
-            'page_header': 'ASSIGNED TESTS',
+            'page_header': 'ASSIGNED QUIZZES',
             'groups': groups,
             'groups_seed': serializers.serialize("json", groups)
         })
@@ -253,11 +260,16 @@ def create_test(request):
     else:
         form = TestForm()
         plays = request.user.coach.team.play_set.all()
+        groups = PlayerGroup.objects.all()
+        safeGroups = []
+        for g in groups:
+            safeGroups.append(g.build_dict_for_json_seed())
         return render(request, 'dashboard/create_test.html', {
             'form': form,
             'plays': plays,
             'types_of_tests': Test.types_of_tests,
-            'page_header': 'CREATE TEST'
+            'page_header': 'CREATE TEST',
+            'groups': json.dumps(safeGroups)
         })
 
 def edit_profile(request):

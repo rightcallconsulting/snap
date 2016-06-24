@@ -3,12 +3,15 @@ var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var playNames;
 var maxPlays = 5;
-var bigReset;
+var bigReset; var resetMissed; var nextQuiz;
 var currentUserTested = null;
 var currentPlayerTested = null;
 var guessedAssignment = null;
 var exitDemo = null;
 var demoDoubleClick = false;
+var originalPlayList = [];
+var questionPart = 0;
+var multipleChoiceAnswers = [];
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -17,7 +20,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 30;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -33,12 +36,27 @@ function setup() {
   }
 
   bigReset = new Button({
-    x: field.getYardX(width*0.5 - 25),
+    x: field.getYardX(width*0.5)-3,
     y: field.getYardY(height*0.8),
     width: 6,
     height: 4,
-    label: "Restart"
+    label: "Retake All"
   })
+  resetMissed = new Button({
+    x: bigReset.x - bigReset.width * 1.2,
+    y: bigReset.y,
+    width: bigReset.width,
+    height: bigReset.height,
+    label: "Retake Missed"
+  })
+  nextQuiz = new Button({
+    x: bigReset.x + bigReset.width * 1.2,
+    y: bigReset.y,
+    width: bigReset.width,
+    height: bigReset.height,
+    label: "Exit"
+  })
+
   exitDemo = new Button({
     label: "",
     x: field.getYardX(25),
@@ -65,10 +83,7 @@ function setup() {
     var positions = [];
     playNames = [];
 
-    $.getJSON('/quiz/players/'+ playerIDFromHTML, function(data2, jqXHR){
-      currentUserTested = createUserFromJSON(data2[0]);
-      currentUserTested.position = "LG"; //remove when done testing
-    })
+    currentUserTested = createUserFromJSONSeed(json_seed.player);
 
     $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
       data.forEach(function(formationObject){
@@ -121,31 +136,18 @@ function setup() {
                 play.addPositionsFromID(positions);
                 play.populatePositions();
               })
-              /*for(var i = 0; i < plays.length; i++){
-                var play = plays[i];
-                var blocking = false;
-                for(var j = 0; j < play.defensivePlayers.length; j++){
-                  var p = play.defensivePlayers[j];
-                  if(p.pos === currentUserTested.position){
-                      //check if he's in coverage
-                      if(p.CBAssignment){
-                        inCoverage = true;
-                      }
-                      break;
-                    }
-                  }
-                  if(!inCoverage){
-                    defensivePlays = defensivePlays.slice(0, i).concat(defensivePlays.slice(i+1));
-                    i--;
-                  }
-                }*/
+              defensivePlays.forEach(function(play){
+                play.populatePositions();
+              })
+
                 while(defensivePlays.length > plays.length){
                   defensivePlays.pop();
                 }
                 while(defensivePlays.length < plays.length){
                   defensivePlays.push(defensivePlays[0]);
                 }
-                test.plays = plays;
+                originalPlayList = plays.slice();
+                test.plays = shuffle(plays);
                 test.defensivePlays = defensivePlays;
                 test.restartQuiz();
                 test.updateScoreboard();
@@ -186,15 +188,17 @@ function clearSelections(){
 }
 
 function checkAnswer(){
-  var isCorrect = currentPlayerTested.blockingAssignment.equals(guessedAssignment);
+  var isCorrect = currentPlayerTested.blockingAssignmentObject.equals(guessedAssignment);
   if(isCorrect){
     clearSelections();
     test.score++;
-    test.advanceToNextPlay(test.correctAnswerMessage);
+    questionPart++;
+    /*test.advanceToNextPlay(test.correctAnswerMessage);
     currentPlayerTested = null;
-    guessedAssignment = null;
+    guessedAssignment = null;*/
   }else{
     clearSelections();
+    test.missedPlays.push(test.getCurrentPlay());
     test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
     test.incorrectGuesses++;
     test.updateScoreboard();
@@ -213,7 +217,7 @@ function drawFeedbackScreen(){
     defensivePlay.drawAllPlayers(field);//WithOffense(field);
   }
   if(currentPlayerTested){
-    currentPlayerTested.blockingAssignment.draw(currentPlayerTested, field);
+    currentPlayerTested.blockingAssignmentObject.draw(currentPlayerTested, field);
   }
 };
 
@@ -319,12 +323,12 @@ function drawDemoScreen(){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else if(currentPlayerTested && guessedAssignment){
             guessedAssignment.draw(currentPlayerTested, field);
-            text("Click on next blocking assignment if you have one.\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
+            text("Click on next blocking assignment if you have one.\nClick spacebar to cycle between block types\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
         }else{
-          text("Click on the player you are assigned to cover", field.width / 2, (5 * field.height) / 6);
+          text("Click on the player you are assigned to block", field.width / 2, (5 * field.height) / 6);
           noStroke();
         }
       }
@@ -342,24 +346,48 @@ keyPressed = function(){
     return false;
   }else if(keyCode === LEFT_ARROW){
     if(guessedAssignment){
-      guessedAssignment.blockedZone = -1;
-    }else{
-      guessedAssignment = new BlockingAssignment({
-        blockedZone: -1
-      });
-    }
-  }else if(keyCode === RIGHT_ARROW){
-    if(guessedAssignment){
-      guessedAssignment.blockedZone = 1;
+      if(guessedAssignment.blockedZone === 1){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 1;
+      }
     }else{
       guessedAssignment = new BlockingAssignment({
         blockedZone: 1
       });
     }
-  }else if(keyCode === DOWN_ARROW || keyCode === UP_ARROW){
+    return false;
+  }else if(keyCode === RIGHT_ARROW){
+    if(guessedAssignment){
+      if(guessedAssignment.blockedZone === 2){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 2;
+      }
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: 2
+      });
+    }
+    return false;
+  }else if(keyCode === DOWN_ARROW){
+    if(guessedAssignment){
+      if(guessedAssignment.blockedZone === 3){
+        checkAnswer();
+      }else{
+          guessedAssignment.blockedZone = 3;
+      }
+    }else{
+      guessedAssignment = new BlockingAssignment({
+        blockedZone: 3
+      });
+    }
+    return false;
+  }else if(keyCode === UP_ARROW){
     if(guessedAssignment){
       guessedAssignment.blockedZone = 0;
     }
+    return false;
   }
   return true;
 }
@@ -386,7 +414,20 @@ mouseClicked = function() {
     return true;
   }
   if(bigReset.isMouseInside(field) && test.over) {
+    test.plays = shuffle(originalPlayList.slice());
     test.restartQuiz();
+    return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList.slice();
+    }
+    test.plays = shuffle(newPlays);
+    test.restartQuiz();
+    return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/";
   }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
     exitDemoScreen();
   }else if(!test.over){
@@ -442,9 +483,45 @@ keyTyped = function(){
       test.restartQuiz();
     }
   }else{
-
+    if(key === ' '){
+      if(guessedAssignment){
+        if(guessedAssignment.type === ""){
+            guessedAssignment.type = "PULL";
+        }else{
+          guessedAssignment.type = "";
+        }
+      }
+      return false;
+    }
   }
 };
+
+function createMultipleChoiceAnswers(correctAnswer, numOptions){
+  var correctIndex = Math.floor((Math.random() * numOptions));
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
+  multipleChoiceAnswers = [];
+  var availableNames = ["CUT", "SEAL", "HINGE", "PULL"];
+  shuffle(availableNames);
+  var i = 0;
+  while(multipleChoiceAnswers.length < numOptions){
+    var label = availableNames[i];
+    if(multipleChoiceAnswers.length === correctIndex){
+      label = correctAnswer;
+    }else if(label === correctAnswer){
+      i++;
+      label = availableNames[i];
+    }
+    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
+      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
+      y: height - 60,
+      width: width / (numOptions + 2),
+      height: 50,
+      label: label,
+      clicked: false
+    }));
+    i++;
+  }
+}
 
 function draw() {
   Player.prototype.draw = function(field){
@@ -479,14 +556,14 @@ function draw() {
     noStroke();
     test.drawQuizSummary();
     bigReset.draw(field);
+    nextQuiz.draw(field);
+    resetMissed.draw(field);
   }else{
     if(!currentPlayerTested){
       currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
-      var correctBlockingAssignment = new BlockingAssignment({
-        name: "",
-        blockedPlayers: [test.getCurrentDefensivePlay().defensivePlayers[0]]
-      })
-      currentPlayerTested.blockingAssignment = correctBlockingAssignment;
+      if(currentPlayerTested.blockingAssignmentObject){
+        currentPlayerTested.blockingAssignmentObject.createBlockedPlayersFromIDs(test.getCurrentDefensivePlay());
+      }
     }
     if(test.showDemo){
       drawDemoScreen();
@@ -501,6 +578,12 @@ function draw() {
 
       }else{
         drawFeedbackScreen(field);
+      }
+    }else if(questionPart > 0){
+      if(multipleChoiceAnswers.length < 1){
+        createMultipleChoiceAnswers("CUT", 3);
+        test.updateMultipleChoiceLabels();
+        debugger;
       }
     }else{
       drawOpening(field);

@@ -1,5 +1,4 @@
 var setupComplete = false;
-var testIDFromHTML = 33;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
@@ -71,31 +70,31 @@ function setup() {
     fill: color(255, 255, 255)
   });
 
-    if(json_seed){
-      var scoreboard = new Scoreboard({
+  if(json_seed){
+    var scoreboard = new Scoreboard({
 
-      });
-      test = new PlayTest({
-        formations: [],
-        scoreboard: scoreboard,
-        displayName: false
-      });
-      currentUserTested = createUserFromJSONSeed(json_seed.player)
+    });
+    test = new PlayTest({
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: false
+    });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
 
-      var plays = [];
+    var plays = [];
 
-      for(var i = 0; i < json_seed.plays.length; i++){
-        var play = createPlayFromJSONSeed(json_seed.plays[i]);
-        var positionsAsPlayers = [];
-        for(var j = 0; j < play.positions.length; j++){
-          var position = play.positions[j];
-          var player = createPlayerFromJSONSeed(position);
-          positionsAsPlayers.push(player);
-        }
-        play.positions = positionsAsPlayers;
-        play.populatePositions();
-        plays.push(play);
+    for(var i = 0; i < json_seed.plays.length; i++){
+      var play = createPlayFromJSONSeed(json_seed.plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
       }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      plays.push(play);
+    }
 
 
     for(var i = 0; i < plays.length; i++){
@@ -213,6 +212,26 @@ function drawFeedbackScreen(){
   }
 };
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
 function drawOpening(){
   field.drawBackground(null, height, width);
   test.getCurrentPlay().drawAllRoutes(field);
@@ -245,19 +264,17 @@ function drawDemoScreen(){
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
-    textAlign(LEFT);
-    textSize(22);
-    noStroke();
 
-    var x = field.getTranslatedX(43);
-    var y = field.getTranslatedY(80);
-    var x2 = field.getTranslatedX(53);
-    var y2 = field.getTranslatedY(80);
+    var x = field.getTranslatedX(49);
+    var y = field.getTranslatedY(85);
+    var x2 = field.getTranslatedX(66);
+    var y2 = field.getTranslatedY(85);
     stroke(255,238,88);
     fill(255,238,88);
     strokeWeight(2);
     line(x, y, x2, y2);
     strokeWeight(1);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
     triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
 
     var clicked = false;
@@ -267,14 +284,14 @@ function drawDemoScreen(){
         clicked = true;
       }
     }
-    textSize(20);
+    textSize(24);
     textAlign(CENTER);
     if(demoDoubleClick){
-      text("Demo Complete!\nClick anywhere to exit.", x - 70, y - 50);
+      text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
     }else if(clicked){
-      text("Click again to check answer.", x - 70, y - 50);
+      text("Click again to check answer.", x - 20, y - 115);
     }else{
-      text("Select the correct play by \ndouble clicking button.", x - 70, y - 50);
+      text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
     }
   }
 };
@@ -380,11 +397,12 @@ function draw() {
   }else if(test.feedbackScreenStartTime){
     var timeElapsed = millis() - test.feedbackScreenStartTime;
     if(timeElapsed < 2000){
-      drawOpening();
+      drawOpening(field);
     }else{
+      scene = false;
+      clearMultipleChoiceAnswers();
       test.feedbackScreenStartTime = 0;
       test.advanceToNextPlay("");
-      multipleChoiceAnswers = [];
     }
   }else{
     if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
@@ -392,10 +410,22 @@ function draw() {
       test.updateProgress(false);
       createMultipleChoiceAnswers(correctAnswer, 3);
       test.updateMultipleChoiceLabels();
+    }if(test.feedbackScreenStartTime){
+      var timeElapsed = millis() - test.feedbackScreenStartTime;
+      if(timeElapsed > 1000){
+        clearMultipleChoiceAnswers();
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+      }else{
+        drawOpening(field);
+      }
+    }else{
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);  
+      }
+
     }
-    if(!currentPlayerTested){
-      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
-    }
-    drawOpening();
   }
 }

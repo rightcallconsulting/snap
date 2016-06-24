@@ -4,11 +4,55 @@ var personnelButtons = [];
 var currentPersonnel = "Base";
 var currentOffensiveFormation;
 var formationExample;
+var trash;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
+  var box = document.getElementById('display-box');
+  var sidebar = document.getElementById('choose-offensive-formation-box');
+  var height = sidebar.offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
+  randomSeed(millis());
   myCanvas.parent('quiz-box');
+
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var sidebar = document.getElementById('choose-offensive-formation-box');
+    var height = sidebar.offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+    resizeBottomButtons();
+  }
+}
+
+function resizeBottomButtons(){
+  var trashWidth = field.pixelsToYards(field.width * 0.12);
+  if(trashWidth < 5){
+    trashWidth = 5;
+  }
+  var trashHeight = field.pixelsToYards(field.height * 0.1);
+  if(trashHeight < 5){
+    trashHeight = 5;
+  }
+  var trashX = Field.WIDTH - trashWidth * 1.1;
+  var trashY = field.getYardY(field.height) + trashHeight * 1.1;
+  if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width){
+    trashX = field.getYardX(field.width) - trashWidth*1.1;
+  }
+  trash.width = trashWidth;
+  trash.height = trashHeight;
+  trash.x = trashX;
+  trash.y = trashY;
+  for(var i = 0; i < formationExample.optionsToCreate.length; i++){
+    formationExample.optionsToCreate[i].y = trashY - trashHeight/2;
+  }
 }
 
 function draw() {
@@ -129,13 +173,13 @@ function draw() {
               line(x, y, field.getTranslatedX(this.CBAssignment.x), field.getTranslatedY(this.CBAssignment.y));
             }
             else if (this.zoneXPoint && this.zoneYPoint){
-              this.drawZoneAssignments();
+              this.drawZoneAssignments(field);
             }
             else if (this.rusher && this.gapXPoint){
-              this.drawGapAssignments();
+              this.drawGapAssignments(field);
             }
         }
-        this.drawRoute();
+        this.drawRoute(field);
         noStroke();
     };
 
@@ -167,7 +211,7 @@ function draw() {
         displayButton: true
     });
 
-    var trash = new Button({
+    trash = new Button({
         x: field.getYardX(width * 0.8),
         y: field.getYardY(height * 0.88),
         width: field.pixelsToYards(width * 0.12),
@@ -321,6 +365,8 @@ function draw() {
       dbPositions: ["CB", "SS", "F/S", "CB"],
       dlNames: ["Gronk", "Davis", "Smith", "Evans"]
     });
+
+    resizeBottomButtons();
 
     // intro scene
     var drawOpening = function() {

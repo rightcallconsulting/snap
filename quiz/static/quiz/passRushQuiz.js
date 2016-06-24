@@ -1,4 +1,4 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
 var multipleChoiceAnswers;
@@ -21,7 +21,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 30;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -72,7 +72,6 @@ function setup() {
   if(json_seed){
 
     var scoreboard = new Scoreboard({
-
     });
 
     test = new PlayTest({
@@ -91,6 +90,7 @@ function setup() {
 
     for(var i = 0; i < json_seed.defensive_plays.length; i++){
       var defensive_play = createDefensivePlayFromJSONSeed(json_seed.defensive_plays[i]);
+      debugger;
       var positionsAsPlayers = [];
       for(var j = 0; j < defensive_play.positions.length; j++){
         var position = defensive_play.positions[j];
@@ -100,6 +100,7 @@ function setup() {
       }
       defensive_play.positions = positionsAsPlayers;
       defensive_play.populatePositions();
+      debugger;
       positionsAsPlayers = [];
       for(var j = 0; j < defensive_play.offensiveFormationObject.positions.length; j++){
         var position = defensive_play.offensiveFormationObject.positions[j];
@@ -223,6 +224,41 @@ function drawOpening(){
   }
 }
 
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentDefensivePlay();
+  var players = play.defensivePlayers;
+  clearSelection();
+  if(play){
+    currentPlayerTested = null;
+    play.drawAllPlayersWithOffense(field);
+    for(var i = 0; i < players.length; i++){
+      if(players[i].gapYPoint !== null){
+        players[i].blitzGapScene();
+      }else if(players[i].zoneYPoint !== 0){
+        players[i].coverZoneScene();
+      }else{
+        players[i].coverManScene(play.offensiveFormationObject.eligibleReceivers[1]);
+      }
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentDefensivePlay();
+  if(!play.inProgress){
+    for(var i = 0; i < play.defensivePlayers.length; i++){
+      test.getCurrentDefensivePlay().defensivePlayers[i].resetToStart();
+      currentPlayerTested = null;
+    }
+
+  }else{
+    drawScene(field);
+  }
+};
+
+
+
 function drawDemoScreen(){
   field.drawBackground(test.getCurrentPlay(), height, width);
   var timeElapsed = millis() - test.demoStartTime;
@@ -240,16 +276,22 @@ function drawDemoScreen(){
     var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
     var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
     noStroke();
-    fill(220,0,0);
+    fill(255,238,88);
     exitDemo.draw(field);
     textSize(22);
-    text("DEMO", field.width / 6, field.height / 6);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
     stroke(0);
     strokeWeight(2);
     line(x1, y1, x2, y2);
     line(x1, y2, x2, y1);
     strokeWeight(1);
     noStroke();
+
+    fill(255,238,88);
+    textSize(14);
+    textAlign(LEFT);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 20, 480);
 
     if(currentPlayerTested){
       var x = field.getTranslatedX(currentPlayerTested.startX);
@@ -266,8 +308,9 @@ function drawDemoScreen(){
         ellipse(x, y, siz, siz);
         strokeWeight(1);
         fill(255,238,88);
-        text("You are in yellow", x + siz/2 + 5, y - 20);
-        //text("Click demo button to exit", 20, 50);
+        textSize(22);
+        textAlign(CENTER);
+        text("You are in yellow", x, y - 60);
         noStroke();
       }else if(timeElapsed < 4000){
         fill(255,238,88);
@@ -275,6 +318,9 @@ function drawDemoScreen(){
         line(field.width / 2, 80, field.width/2, 20);
         triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
         noStroke();
+        fill(255,238,88);
+        textSize(22);
+        textAlign(LEFT);
         text("Your play call is here", field.width / 2 + 20, 50);
       }else{
         stroke(255,238,88);
@@ -286,13 +332,16 @@ function drawDemoScreen(){
         if(clickedNode){
           fill(255,238,88);
           textAlign(CENTER);
+          textSize(22);
           if(demoDoubleClick){
             text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
           }else{
             text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
           }
         }else{
+          fill(255,238,88);
           textAlign(CENTER);
+          textSize(22);
           text("Click on the spot you are rushing", field.width / 2, (5 * field.height) / 6);
           noStroke();
           //text("Click demo button to exit", 20, 50);
@@ -304,13 +353,13 @@ function drawDemoScreen(){
 };
 
 
-pressPlayButton = function() {
-  if (test.getCurrentDefensivePlay()){
-    test.getCurrentPlay().setAllRoutes();
-    scoreboard.feedbackMessage = "";
-    test.getCurrentPlay().inProgress = true;
-  }
-};
+// pressPlayButton = function() {
+//   if (test.getCurrentDefensivePlay()){
+//     test.getCurrentPlay().setAllRoutes();
+//     scoreboard.feedbackMessage = "";
+//     test.getCurrentPlay().inProgress = true;
+//   }
+// };
 
 function setupDemoScreen(){
   clearSelection();
@@ -329,6 +378,7 @@ function exitDemoScreen(){
 };
 
 mouseClicked = function() {
+  debugger;
   if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
     test.scoreboard.feedbackMessage = "";
   }else{
@@ -436,13 +486,18 @@ function draw() {
       var elapsedTime = millis() - test.feedbackScreenStartTime;
       if(elapsedTime > 2000){
         test.feedbackScreenStartTime = 0;
-        test.advanceToNextPlay("");
+        test.advanceToNextPlay(test.incorrectAnswerMessage);
         currentPlayerTested = null;
+
       }else{
-        drawFeedbackScreen();
+        drawFeedbackScreen(field);
       }
     }else{
-      drawOpening();
+      if(test.getCurrentDefensivePlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);
+      }
     }
 
   }

@@ -7,18 +7,18 @@
   overflow-x: hidden;
 }
 
-#main-container{position:relative;min-height:1000px;padding-top:15px;}
+#main-container{position:relative;min-height:900px;padding-top:15px;}
 
 .full-sidebar-container{
   margin-left: 12%;
 }
 
 .small-sidebar-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .small-sidebar-container#main-container{
-  margin-left: 4%;
+  margin-left: 5%;
 }
 
 .full-sidebar-container#main-container{
@@ -30,7 +30,12 @@
 }
 
 .small-sidebar-container #top-nav{
-  padding-left: 4%;
+  padding-left: 5%;
+}
+
+img.menu-icon{
+  width: 50px;
+  height: 50px;
 }
 
 .coach-home{
@@ -49,28 +54,64 @@
   margin-bottom: 5%;
 }
 
-.all-groups .aciton-boxes{
+.all-groups .action-boxes{
   margin-bottom: 0px;
 }
 .coach-home .main-content-area, .playbook .main-content-area{
   margin-left: 3.5%;
   width: 45%;
-  height: 95%;
+  height: 500px;
   margin-right: 5%;
   display: inline-block;
   float: left;
 }
 
-.coach-home .stacked-col, .playbook .stacked-col{
+.coach-home .main-content-area .dash-col{
+  border: none;
+}
+
+.coach-home .stacked-col{
   width: 45%;
   height: 95%;
   display: inline-block;
   float: left;
 }
 
-.coach-home .secondary-content-area, .playbook .secondary-content-area{
+.playbook .stacked-col{
+  width: 45%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+}
+
+.edit-test .main-content-area{
+  margin-left: 2.5%;
+  width: 45%;
+  height: 630px;
+  margin-right: 2.5%;
+  display: inline-block;
+  float: left;
+}
+
+.edit-test .stacked-col{
+  width: 25%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  margin-right: 2.5%;
+}
+
+.edit-test .tertiary-content-area{
+  width: 20%;
+  height: 630px;
+  margin-top: 50px;
+  display: inline-block;
+  float: left;
+}
+
+.coach-home .secondary-content-area, .playbook .secondary-content-area, .edit-test .secondary-content-area{
   width: 100%;
-  height: 45%;
+  height: 290px;
   border-left: 1px solid #777;
   border-right: 1px solid #777;
   border-bottom: 1px solid #777;
@@ -78,7 +119,7 @@
 }
 
 .coach-home .top, .playbook .top{
-  margin-bottom: 4.5%
+  margin-bottom: 20px;
 }
 
 .all-groups select{
@@ -108,14 +149,13 @@
 .team-logo-wrapper{
   width: 80%;
   margin-left: 10%;
-  height: 150px;
+  height: 200px;
   text-align: center;
   padding-top: 25px;
 }
 
 .full-sidebar .dash-header-logo{
-  width: 75px;
-  height: 75px;
+  width: 100px;
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -123,7 +163,6 @@
 
 .small-sidebar .dash-header-logo{
   width: 35px;
-  height: 35px;
   display:block;
   margin-left: auto;
   margin-right: auto;
@@ -246,13 +285,17 @@
   margin-bottom:10px;
 }
 
+.coach-home .dash-col{
+  height: 600px;
+}
+
 .playbook .dash-col{
   height: 600px;
   margin-top: 0px;
 }
 
 .playerbook .dash-col{
-  height: 500px;
+  height: 600px;
   margin-bottom:10px;
   text-align: center;
 }
@@ -383,6 +426,7 @@ input.create-quiz{
   color: #FFFFFF;
   height: 40px;
   width: 15%;
+  margin-top: 30px;
 }
 
 .datetime{
@@ -622,17 +666,62 @@ input.create-quiz{
 
 }
 
-.coach-home .player-list td{
+.coach-home .alerts-list td{
   border: none;
 }
 
-.player-list .headshot-thumbnail{
-  max-height: 50px;
+.alerts-list{
+  width: 60%;
+  margin-left: 20%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.alerts-list th{
+  color: #33691E;
+  text-align: center;
+  width: 50%;
+  height: 45px;
+  font-size: 22px;
+}
+
+.alerts-list th span{
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #33691E;
+}
+
+.alerts-list td{
+  text-align: center;
+  width: 50%;
+  height: 35px;
+  font-size: 18px;
 }
 
 .analytics-table-row{
   width: 100%;
-  margin-top: 50px;
+  margin-top: 80px;
+}
+
+.analytics-table-row .table-header{
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+}
+
+.analytics-table-row .table-header span{
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-bottom: 2px solid #777;
 }
 
 .analytics-graph{
@@ -707,7 +796,7 @@ input.create-quiz{
 }
 
 .coach-action-table td.fifth{
-  background-color: #EF5350;
+  background-color: #42A5F5;
   background-image: url("/static/dashboard/images/analytics-action-box.png");
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -831,7 +920,7 @@ input.create-quiz{
 }
 
 .player-home .dash-col{
-  width: 60%;
+  width: 65%;
   border: none;
 }
 
@@ -938,8 +1027,8 @@ input.create-quiz{
 }
 
 .small-sidebar{
-  max-width: 3%;
-  min-width: 50px;
+  max-width: 5%;
+  min-width: 75px;
   height: 100%;
 }
 
@@ -964,7 +1053,7 @@ input.create-quiz{
 }
 
 .form-create-test .scrollable-table{
-  height: 250px;
+  max-height: 350px;
 }
 
 .form-create-test .players-to-test{
@@ -1051,4 +1140,15 @@ input.create-quiz{
 .login-wrapper{
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+input[type=checkbox]{
+  opacity: 0.7;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+select#id_player{
+  display:none;
 }

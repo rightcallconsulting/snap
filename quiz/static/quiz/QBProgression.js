@@ -6,7 +6,6 @@ var originalPlayList = [];
 var testIDFromHTML = $('#test-id').data('test-id')
 var exitDemo = null;
 var demoComplete = false;
-var exitDemo = null;
 var defensePlay = null;
 var bigReset; var resetMissed; var nextQuiz;
 var missedOrSkippedPlays = [];
@@ -43,6 +42,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
+
 }
 
 function setupDemoScreen(){
@@ -275,15 +275,21 @@ var runTest = function(type, playerTested, test){
         var y1 = field.getTranslatedY(exitDemo.y);
         var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
         var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+        noStroke();
+        fill(255,238,88);
         exitDemo.draw(field);
+        textSize(22);
+        var demoX = x2 * 1.6;
+        var demoY = y1 * 1.2;
+        textAlign(CENTER);
+        textSize(25);
+        text("DEMO", demoX, demoY);
         stroke(0);
+        strokeWeight(2);
         line(x1, y1, x2, y2);
         line(x1, y2, x2, y1);
+        strokeWeight(1);
         noStroke();
-        fill(0, 0, 0);
-        textSize(22);
-        textAlign(LEFT);
-        text("DEMO", x2+5, (y1+y2)/2);
         if(timeElapsed < 2000){
           fill(220,0,0);
           stroke(220, 0, 0);
@@ -292,10 +298,12 @@ var runTest = function(type, playerTested, test){
           triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
           fill(220,0,0);
           textAlign(LEFT);
+          textSize(22);
           text("Your play call is here", field.width / 2 + 20, 50);
         }else if(timeElapsed < 4000){
           fill(255,238,88);
           textAlign(CENTER);
+          textSize(22);
           text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
         }else{
           var clickedReceivers = [];
@@ -315,25 +323,31 @@ var runTest = function(type, playerTested, test){
               noStroke();
             }
           }
-          textAlign(CENTER);
           if(demoComplete){
             fill(255,238,88);
+            textSize(22);
+            textAlign(CENTER);
             text("Demo Complete!\nClick anywhere to return to quiz", field.width / 2, (5 * field.height) / 6);
           }
           else if(clickedReceivers.length === 1){
             fill(255,238,88);
-
+            textSize(22);
+            textAlign(CENTER);
             if(demoComplete){
               text("Great!  You're ready to start!", 60, 300);
             }else{
               text("Click next player in progression", field.width / 2, (5 * field.height) / 6);
             }
           }else{
+            fill(255,238,88);
+            textSize(22);
+            textAlign(CENTER);
             if(clickedReceivers.length > 1){
-              text("Click on a player again to unselect him", field.width / 2, (5 * field.height) / 6);
-              text("Click the checkbox to check answer", field.width / 2, (11 * field.height) / 12);
-              //draw line to check box
+              text("Click on a player again to unselect him.\nClick the checkbox to check answer.", field.width / 2, (5 * field.height) / 6);
             }else{
+              fill(255,238,88);
+              textSize(22);
+              textAlign(CENTER);
               text("Click players in correct progression order", field.width / 2, (5 * field.height) / 6);
             }
 

@@ -12,7 +12,7 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
+  field.heightInYards = 30;
   field.ballYardLine = 75;
   background(58, 135, 70);
   randomSeed(millis());
@@ -127,7 +127,7 @@ var runTest = function(){
       fill(0,0,0);
       textSize(14);
       textAlign(CENTER, CENTER);
-      text(this.num, x, y);
+      text(this.pos, x, y);
     }
     else {
       noStroke();
@@ -165,47 +165,80 @@ var runTest = function(){
 
   // Create Position groups
 
-  var rb = new Player ({
-      x: field.getXOffset() + 15,
+  var f = new Player ({
+      x: field.getXOffset() + 5,
       y: field.getYardY(height)+3,
-      siz:3,
-      num: 'RB',
+      num: 'F',
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
       blue: 0,
-      pos: 'RB'
+      pos: 'F'
   });
 
-  var te = new Player ({
-    x: field.getXOffset() + 20,
+  var y = new Player ({
+    x: f.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
-      num: 'TE',
+      num: 'Y',
       // fill: color(255, 0, 0)
       red: 255,
       green: 0,
       blue: 0,
-      pos: 'TE'
+      pos: 'Y'
   });
 
-  var wr = new Player({
-    x: field.getXOffset() + 25,
+  var x = new Player({
+    x: y.x + 3.5,
     y: field.getYardY(height)+3,
-    siz:3,
-     num: 'WR',
+     num: 'X',
     //  fill: color(255, 0, 0)
     red: 255,
     green: 0,
     blue: 0,
-    pos: 'WR'
+    pos: 'X'
+  });
+
+  var z = new Player({
+    x: x.x + 3.5,
+    y: field.getYardY(height)+3,
+     num: 'Z',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'Z'
+  });
+
+  var h = new Player({
+    x: z.x + 3.5,
+    y: field.getYardY(height)+3,
+     num: 'H',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'H'
+  });
+
+  var a = new Player({
+    x: h.x + 3.5,
+    y: field.getYardY(height)+3,
+     num: 'A',
+    //  fill: color(255, 0, 0)
+    red: 255,
+    green: 0,
+    blue: 0,
+    pos: 'A'
   });
 
   //debugger;
 
-  formationExample.optionsToCreate.push(rb);
-  formationExample.optionsToCreate.push(wr);
-  formationExample.optionsToCreate.push(te);
+  formationExample.optionsToCreate.push(f);
+  formationExample.optionsToCreate.push(y);
+  formationExample.optionsToCreate.push(x);
+  formationExample.optionsToCreate.push(z);
+  formationExample.optionsToCreate.push(h);
+  formationExample.optionsToCreate.push(a);
 
   var defensePlay = new DefensivePlay({
     defensivePlayers: [],
@@ -270,6 +303,7 @@ var runTest = function(){
   mouseDragged = function(){
     var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
     var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
+    var centerClicked = formationExample.mouseInCenter(field);
     if (formationExample.establishingNewPlayer){
       formationExample.establishingNewPlayer.movePlayer(field);
     }
@@ -280,13 +314,41 @@ var runTest = function(){
     else if (formationExample.qb[0].isMouseInside(field)){
       formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
       formationExample.establishingNewPlayer = formationExample.qb[0];
+    }else if(centerClicked){
+      var mouseYardX = field.getYardX(mouseX);
+      var xDiff = mouseYardX - centerClicked.x;
+      if(mouseYardX > Field.rightHashYardX && xDiff > 0){
+        xDiff = 0;
+      }
+      if(mouseYardX < Field.leftHashYardX && xDiff < 0){
+        xDiff = 0;
+      }
+      for(var i = 0; i < formationExample.offensivePlayers.length; i++){
+        var p = formationExample.offensivePlayers[i];
+        p.x += xDiff;
+      }
+      for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
+        var p = defensePlay.defensivePlayers[i];
+        if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE"){
+          p.x += xDiff;
+        }else{
+          p.x += xDiff * 0.75;
+        }
+        if(p.x < 0){
+          p.x = 0;
+        }
+        if(p.x > Field.WIDTH){
+          p.x = Field.WIDTH;
+        }
+
+      }
+      return;
     }
     else if (positionOptionSelected){
       var newPlayer = new Player({
         x: positionOptionSelected.x,
         y: positionOptionSelected.y,
         num: positionOptionSelected.num,
-        siz:2.99,
         // fill: color(255, 0, 0),
         red: 255,
         green: 0,

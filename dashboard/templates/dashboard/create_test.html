@@ -37,7 +37,9 @@
 					{% endfor %}
 					{% else %}
 					<div class="form-group">
-						{% if field.label != "Deadline" %}
+						{% if field.label == "Player" %}
+						{{ field }}
+						{% elif field.label != "Deadline" %}
 						{{ field.label_tag }}
 						{{ field }}
 						{% else %}
@@ -51,29 +53,102 @@
 					{% endfor %}
 
 					<div class="scrollable-table">
-						<table class="players-to-test">
-							<tr><th></th><th>NAME</th><th>POS</th><th>YEAR</th></tr>
-							<tr><td></td><td>Hello</td><td>Hello</td><td>Hello</td></tr>
+						<table class="players-to-test" id="assign-to-players-table">
+							<tr><th><input type="checkbox" value="all" onchange="toggleCheckbox(this)"></th><th>NAME</th><th>POS</th></tr>
 						</table>
 					</div>
 
-          <input class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
+          <input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
       </form>
 
+		</div><!-- /row -->
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
-
-
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
+	</div><!-- /panel -->
 
 
 			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+			<script type="text/javascript">
+				var groups_seed = {{ groups|safe }};
+				var all_groups = createPlayerGroupsFromJSONSeed(groups_seed);
+				//debugger;
+				//console.log(JSON.stringify(groups_seed, null, 2));
+				function toggleCheckbox(checkbox){
+					var result = checkbox.checked;
+					if(checkbox.value === "all"){
+						toggleAllInGroup(result);
+					}else{
+						checkbox.checked = result;
+					}
+				}
+				function toggleAllInGroup(answer){
+					var boxes = document.getElementsByClassName('player-checkbox');
+					for(var i = 0; i < boxes.length; i++){
+						var box = boxes[i];
+						box.checked = answer;
+					}
+				}
+
+				function selectCurrentGroup(){
+					var groupID = parseInt(document.getElementById('id_group').value);
+					var groups = all_groups.filter(function(g){return g.id === groupID});
+					if(groups.length > 0){
+						document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(groups[0]);
+					}
+				}
+
+				function createPlayerTable(group){
+					var innerHTML = "<tr><th><input type=\"checkbox\" value=\"all\" onchange=\"toggleCheckbox(this)\"></th><th>NAME</th><th>POS</th></tr>";
+					var players = group.players;
+					for(var i = 0; i < players.length; i++){
+						var player = players[i];
+						innerHTML += "<tr>";
+						innerHTML += "<td><input class=\"player-checkbox\" type=\"checkbox\" value=\"" + player.id + "\"></td>";
+						innerHTML += "<td>" + player.getFullName() + "</td>";
+						innerHTML += "<td>" + player.position + "</td>";
+						innerHTML += "</tr>";
+					}
+					return innerHTML;
+				}
+
+				//returns array of playerIDs who are selected currently
+				function getSelectedPlayers(){
+					var selectedPlayers = [];
+					var checkboxes = document.getElementsByClassName('player-checkbox');
+					for(var i = 0; i < checkboxes.length; i++){
+						var box = checkboxes[i];
+						if(box.checked){
+							selectedPlayers.push(parseInt(box.value));
+						}
+					}
+					return selectedPlayers;
+				}
+
+				document.getElementById("create-quiz-button").onclick = function(e){
+					var playerIDForm = document.getElementById('id_player');
+					var selectedPlayers = getSelectedPlayers();
+					if(selectedPlayers.length < 0){
+						return false;
+					}
+					playerIDForm.selectedIndex = 3;
+					return true;
+					/*var selectedPlayerID = "" + selectedPlayers[0];
+					var playerOptions = $("#id_player option");
+					for(var i = 0; i < playerOptions.length; i++){
+						if(playerOptions[i].value === selectedPlayerID){
+							playerIDForm.selectedIndex = i;
+							debugger;
+							return true;
+						}
+					}
+					debugger;
+					return false;*/
+				};
+
+				if(all_groups.length > 0){
+						document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(all_groups[0]);
+				}
+				document.getElementById('id_group').onchange = selectCurrentGroup;
+
+			</script>
 			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 			{% endblock %}

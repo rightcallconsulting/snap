@@ -169,6 +169,8 @@ class Position(models.Model):
     gapYardY = models.FloatField(max_length=200, null=True, blank=True)
     blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
     blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
+    blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
+    runAssignment = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -306,6 +308,7 @@ class Play(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+    defenseID = models.CharField(max_length=10)
     players = models.ManyToManyField(Player, blank=True)
     positions = models.ManyToManyField(Position)
     tests = models.ManyToManyField(Test)
@@ -326,14 +329,20 @@ class Play(models.Model):
     @classmethod
     def from_json(cls, json):
         new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
-        formation=Formation.objects.get(pk=json['formation']['id']))
+        formation=Formation.objects.get(pk=json['formation']['id']), defenseID=json['defensiveFormationID'])
         new_play.save()
         for player in json['offensivePlayers']:
+            runAssignment = ""
+            if 'runAssignment' in player:
+                #embed()
+                runAssignment = player['runAssignment']
             new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
             startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
             progressionRank=player['progressionRank'],
             blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
-            blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'])
+            blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
+            blockingAssignmentObject=player['blockingAssignmentObject'],
+            runAssignment=runAssignment)
             new_position.set_route_coordinates(player['routeCoordinates'])
             new_position.save()
         new_play.save()

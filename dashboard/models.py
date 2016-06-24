@@ -16,9 +16,12 @@ class UserCreateForm(UserCreationForm):
     POSITIONS = (
             ("", ""),
             ("QB", "QB"),
-            ("WR", "WR"),
-            ("RB", "RB"),
-            ("TE", "TE"),
+            ("X", "X"),
+            ("Y", "Y"),
+            ("Z", "Z"),
+            ("H", "H"),
+            ("F", "F"),
+            ("A", "A"),
             ("LT", "LT"),
             ("LG", "LG"),
             ("C", "C"),
@@ -91,6 +94,16 @@ class PlayerGroup(models.Model):
     def __str__(self):
         return self.name
 
+    def build_dict_for_json_seed(self):
+        jsonPlayers = []
+        for player in self.players.all():
+            jsonPlayers.append(player.dict_for_json())
+        return {
+            'name': self.name,
+            'players': jsonPlayers,
+            'id': self.pk
+        }
+
     def duplicate_and_assign_test_to_all_players(self, test_id, coach):
         players = self.players.all()
         for player in players:
@@ -148,7 +161,7 @@ class TestForm(ModelForm):
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
         self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
-        self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0) #Replace with 'group' once we have groups in database
+        self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0)
         self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
         self.fields['deadline'].widget = widgets.AdminSplitDateTime()
 

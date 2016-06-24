@@ -18,6 +18,8 @@ var Play = function(config) {
     this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
+    this.defensiveFormationID = config.defensiveFormationID || 0;
+    this.defensivePlayObject = config.defensivePlayObject || null;
 };
 
 Play.prototype.getPlayerFromPosition = function(pos){
@@ -83,7 +85,16 @@ Play.prototype.drawAllPlayers = function(field){
 
 Play.prototype.drawAllRoutes = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].drawBreakPoints(field);
+      this.offensivePlayers[i].drawRoute(field);
+  }
+};
+
+Play.prototype.drawRunAssignments = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.runAssignment){
+        player.runAssignment.draw(player, field);
+    }
   }
 };
 
@@ -150,11 +161,17 @@ Play.prototype.findSelectedWR = function(){
   return selectedWR;
 };
 
+Play.prototype.clearSelectedReceivers = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    this.eligibleReceivers[i].clicked = false;
+  }
+};
+
 Play.prototype.mouseInReceiverOrNode = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     var p = this.eligibleReceivers[i];
     if (p.isMouseInside(field)){
-      var receiverClicked = true;
+      var receiverClicked = p;
     }
     for(var j = 0; j < p.routeNodes.length; j++){
       var n = p.routeNodes[j];
@@ -197,7 +214,14 @@ Play.prototype.clearSelection = function(test, play) {
 };
 
 Play.prototype.saveToDB = function(){
-  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'routeCoordinates'])
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var assignment = this.offensivePlayers[i].blockingAssignmentObject;
+    if(assignment){
+      assignment.convertBlockedPlayersToIDs();
+    }
+  }
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
+  debugger;
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };
 
@@ -208,8 +232,9 @@ Play.prototype.populatePositions = function(){
   oline.forEach(function(player){this.oline.push(player)}.bind(this));
   var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
   this.qb = qb
+  var receiverPositions = ["A", "B", "F", "X", "Y", "Z", "H"]
   var eligibleReceivers = this.positions.filter(function(player) {
-    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+    return receiverPositions.indexOf(player.pos) >= 0;
   });
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
@@ -256,6 +281,14 @@ Play.prototype.drawBlockingAssignments = function(){
       strokeWeight(1);
       stroke(100);
       line(player.x,player.y, player.blockingAssignment.x, player.blockingAssignment.y);
+    }
+  })
+};
+
+Play.prototype.drawBlockingAssignmentObjects = function(){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignmentObject){
+      player.blockingAssignmentObject.draw(player, field);
     }
   })
 };

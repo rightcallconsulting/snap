@@ -32,6 +32,8 @@ var Field = function(config){
 
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
+Field.leftHashYardX = 20;
+Field.rightHashYardX = 33.33;
 
 var field = new Field({
   heightInYards: 40,
@@ -110,7 +112,7 @@ Field.prototype.drawBackground = function(play, height, width) {
       textAlign(CENTER);
       rotate(HALF_PI);
       fill(255,255,255);
-            textSize(26); //the one thing that isn't adjusting for screen size...
+            textSize(30 * Field.WIDTH / this.getWidthInYards()); //the one thing that isn't adjusting for screen size...
 
             text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels - (this.width-this.height)/2);
             //text(min(currentYardLine,100-currentYardLine), yc, this.getTranslatedX(9));

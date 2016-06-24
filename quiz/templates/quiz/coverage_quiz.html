@@ -11,16 +11,31 @@ COVERAGE QUIZ
 
 {% block quiz_type %}
 <script type="text/javascript">
-  var json_seed = {{ json_seed|safe }};
-  console.log(JSON.stringify(json_seed, null, 2));
+
+var json_seed = {{ json_seed|safe }};
+console.log(JSON.stringify(json_seed, null, 2));
 </script>
 <script language="javascript" type="text/javascript" src="{% static 'quiz/coverageQuiz.js' %}"></script>
 <script type="text/javascript">
 
+$("#play-button").click(function() {
+    var play = test.getCurrentDefensivePlay();
+    play.inProgress = !play.inProgress;
+    if(!play.inProgress){
+    restartScene();
+  }
+  else{
+    drawScene(field);
+  }   
+})
+
+
 $('#check-button').click(function(){
   var play = test.getCurrentDefensivePlay();
   if(play){
-    var player = play.offensiveFormationObject.eligibleReceivers.filter(function(player){return player.clicked})[0]
+    var player = play.offensiveFormationObject.eligibleReceivers.filter(function (player){
+      return player.clicked
+    })[0]
     if(player){
       checkAnswer(player);
     }
@@ -28,16 +43,16 @@ $('#check-button').click(function(){
 })
 
 $('#clear-button').click(function(){
-  clearSelections();
+
 })
 
 $('#restart-button').click(function(){
-        if(test && test.feedbackScreenStartTime === 0){
-          clearSelections();
-          test.restartQuiz();
-          currentPlayerTested = null;
-        }
-      })
+  if(test && test.feedbackScreenStartTime === 0){
+    clearSelections();
+    currentPlayerTested = null;
+    test.restartQuiz();
+  }
+})
 
 $('#next-play-button').click(function(){
   if(test && !test.over && test.feedbackScreenStartTime === 0){
@@ -47,6 +62,7 @@ $('#next-play-button').click(function(){
     }
     test.skipQuestion();
     currentPlayerTested = null;
+    test.getCurrentDefensivePlay().inProgress = false;
   }
 })
 
@@ -85,8 +101,8 @@ $('#zoom-out-button').click(function(){
 
 {% block buttons %}
 <div class="holds-play-buttons">
-
   <table class="button-table"><tr>
+    <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
     <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
     <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
     <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
@@ -96,6 +112,5 @@ $('#zoom-out-button').click(function(){
     <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
     <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
   </tr></table>
-
 </div>
 {% endblock %}

@@ -66,7 +66,7 @@ function setup() {
     clicked: false,
     fill: color(255, 255, 255)
   });
-  
+
   if(json_seed){
     var scoreboard = new Scoreboard({
 
@@ -185,6 +185,12 @@ function drawCurrentRoute(){
     line(x1,y1,x2,y2);
     noStroke();
     fill(0, 0, 255)
+    var yardsX = (abs(currentRouteGuess[0][0] - currentPlayerTested.startX))
+    var yardsY = (abs(currentRouteGuess[0][1] - currentPlayerTested.startY))
+    var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
+    if(currentRouteGuess.length > 1){
+      text(yards, x2 + 15, y2 + 15);
+    }
   }
   for(var i = 0; i < currentRouteGuess.length - 1; i++){
     x1 = field.getTranslatedX(currentRouteGuess[i][0]);
@@ -195,8 +201,31 @@ function drawCurrentRoute(){
     line(x1, y1, x2, y2);
     noStroke();
     fill(0, 0, 255)
+    var yardsX = (abs(currentRouteGuess[i+1][0] - currentRouteGuess[i][0]))
+    var yardsY = (abs(currentRouteGuess[i+1][1] - currentRouteGuess[i][1]))
+    var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
+    if(yards > 0 && i < currentRouteGuess.length - 2){
+        text(yards, x2 + 15, y2 + 15);
+    }
+
   }
 
+  for(var i = 0; i < currentRouteNodes.length; i++){
+    var node = currentRouteNodes[i];
+    stroke(255,238,88);
+    if(i === currentRouteNodes.length - 1){
+      var prevX = currentPlayerTested.startX;
+      var prevY = currentPlayerTested.startY;
+      if(i > 0){
+        prevX = currentRouteNodes[i-1].x;
+        prevY = currentRouteNodes[i-1].y;
+      }
+      node.drawArrow(field, prevX, prevY);
+    }else{
+      node.draw(field);
+    }
+    noStroke();
+  }
 }
 
 function drawFeedbackScreen(){
@@ -211,17 +240,41 @@ function drawOpening(){
   for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
     var player = test.getCurrentPlay().eligibleReceivers[i];
     if(player !== currentPlayerTested){
-      player.drawBreakPoints(field);
+      player.drawRoute(field);
     }
   }
+  noStroke();
   drawCurrentRoute();
-  for(var i = 0; i < currentRouteNodes.length; i++){
-    stroke(255,238,88);
-    currentRouteNodes[i].draw(field);
-    noStroke();
+  if(currentRouteNodes){
+    for(var i = 0; i < currentRouteNodes.length; i++){
+      stroke(255,238,88);
+      currentRouteNodes[i].draw(field);
+      noStroke();
+    }
   }
-
 }
+
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    currentPlayerTested.breakPoints = currentRouteGuess;
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  clearSelection();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
 
 function drawDemoScreen(){
   field.drawBackground(null, height, width);
@@ -264,7 +317,7 @@ function drawDemoScreen(){
         textAlign(CENTER);
         textSize(22);
         fill(255,238,88);
-        text("You are in yellow", x - 40, y - 80);
+        text("You are in yellow", x, y - 110);
         noStroke();
       }else if(timeElapsed < 4000){
         noStroke();
@@ -294,11 +347,6 @@ function drawDemoScreen(){
       }
       noStroke();
       drawCurrentRoute();
-      for(var i = 0; i < currentRouteNodes.length; i++){
-        stroke(255,238,88);
-        currentRouteNodes[i].draw(field);
-        noStroke();
-      }
     }
   }
 };
@@ -317,6 +365,7 @@ function exitDemoScreen(){
   demoDoubleClick = false;
   currentRouteGuess = [];
   currentRouteNodes = [];
+  test.getCurrentPlay().inProgress = false;
 };
 
 function skipPlay(){
@@ -342,6 +391,9 @@ mouseClicked = function() {
   }else if(resetMissed.isMouseInside(field) && test.over) {
     clearSelection();
     var newPlays = test.missedPlays.concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList.slice();
+    }
     test.plays = shuffle(newPlays);
     test.restartQuiz();
     return true;
@@ -359,6 +411,9 @@ mouseClicked = function() {
         return;
       }
     }else if(!currentPlayerTested.isMouseInside(field)){
+      if(test.getCurrentPlay().inProgress){
+        return;
+      }
       var x = field.getYardX(mouseX);
       var y = field.getYardY(mouseY);
       currentRouteGuess.push([x, y]);
@@ -406,6 +461,7 @@ function draw() {
     var y = field.getTranslatedY(this.y);
     var siz = field.yardsToPixels(this.siz);
     if(this.unit === "offense"){
+      var play = test.getCurrentPlay();
       noStroke();
       fill(this.fill);
       if(this === currentPlayerTested){
@@ -452,7 +508,11 @@ function draw() {
         drawFeedbackScreen(field);
       }
     }else{
-      drawOpening();
+      if(test.getCurrentPlay().inProgress){
+        drawScene(field);
+      }else{
+        drawOpening(field);
+      }
     }
 
   }

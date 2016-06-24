@@ -28,9 +28,6 @@ def cadence_quiz(request):
 def simple_audible_quiz(request):
     return render(request, 'quiz/simple_audible_quiz.html')
 
-def the_route_quiz(request):
-    return render(request, 'quiz/the_route_quiz.html')
-
 def simple_route_quiz(request):
     return render(request, 'quiz/simple_route_quiz.html')
 
@@ -140,12 +137,18 @@ def create_play(request):
     formations = team.formation_set.all()
     offensive_formations = formations.filter(unit="offense")
     defensive_formations = formations.filter(unit="defense")
+    json_seed = {
+        'offensive_formations': [f.dict_for_json() for f in offensive_formations],
+        'defensive_formations': [f.dict_for_json() for f in defensive_formations]
+    }
+
     return render(request, 'quiz/create_play.html', {
         'formations': formations,
         'offensive_formations': offensive_formations,
         'defensive_formations': defensive_formations,
         'team': team,
         'page_header': 'CREATE PLAY',
+        'json_seed': json.dumps(json_seed)
     })
 
 
@@ -185,13 +188,13 @@ class CustomPlayerQuizView(generic.TemplateView):
         """
         if len(questions) == 0: return []
 
-        if self.num_questions > len(questions):
+        #if self.num_questions > len(questions):
             # Repeat unique questions until we have desired quiz length
-            num_unique_questions = len(questions)
-            for i in range(len(questions), self.num_questions):
-                questions.append(questions[i % num_unique_questions])
+            #num_unique_questions = len(questions)
+            #for i in range(len(questions), self.num_questions):
+                #questions.append(questions[i % num_unique_questions])
 
-        elif self.num_questions < len(questions):
+        if self.num_questions < len(questions):
             # Remove additional questions beyond desired quiz length
             questions = questions[0:self.num_questions]
 
@@ -235,6 +238,42 @@ class PlayQuizView(CustomPlayerQuizView):
 
     def get_ordered_questions(self):
         plays = self.player.team.play_set.all()
+        formations = self.player.team.formation_set.all()
+
+        if self.exclude_plays_that_dont_include_players_position:
+            plays = [p for p in plays if self.player.position
+                in p.position_strings()]
+
+        # Sorting
+
+        if self.order == QuizOrders.RECENT.url_key:
+            plays = sorted(plays, reverse=True,
+                key=attrgetter('created_at'))
+
+        elif self.order == QuizOrders.WORST.url_key:
+            analytics = PlayerAnalytics.for_single_player(self.player)
+            plays = sorted(plays, reverse=True,
+                key=analytics.total_incorrect_for_play)
+
+        defensive_plays = []
+        for p in plays:
+            if p.defenseID:
+                for f in formations:
+                    if f.pk == p.defenseID:
+                        defensive_plays.append(f)
+        offenseAndDefense = [p.dict_for_json() for p in plays]
+        offenseAndDefense.extend([f.dict_for_json() for f in defensive_plays])
+
+        return offenseAndDefense
+
+class WRQuizView(CustomPlayerQuizView):
+    template_name = 'quiz/wr_quiz.html'
+    page_header = 'WR QUIZ'
+
+    exclude_plays_that_dont_include_players_position = False
+
+    def get_ordered_questions(self):
+        plays = self.player.team.play_set.all()
 
         if self.exclude_plays_that_dont_include_players_position:
             plays = [p for p in plays if self.player.position
@@ -273,6 +312,18 @@ class RouteQuizView(PlayQuizView):
 
     def build_dict_for_json_seed(self):
         plays = super(RouteQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+class QBRouteQuizView(PlayQuizView):
+    template_name = 'quiz/qb_route_quiz.html'
+    page_header = 'DRAW ROUTE TREE'
+    exclude_plays_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        plays = super(QBRouteQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
             'plays': plays,
@@ -378,6 +429,19 @@ class LinebackerMotionQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
+class OLineBlitzQuizView(FormationQuizView):
+    template_name = 'quiz/oline_blitz_quiz.html'
+    page_header = 'OLine Blitz Quiz'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 class MotionAlignmentQuizView(FormationQuizView):
     template_name = 'quiz/motion_alignment_quiz.html'
     page_header = 'MOTION ALIGNMENT QUIZ'
@@ -386,6 +450,19 @@ class MotionAlignmentQuizView(FormationQuizView):
 
     def build_dict_for_json_seed(self):
         formations = super(MotionAlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
+class CallAlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/call_alignment_quiz.html'
+    page_header = 'CALL ALIGNMENT QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
             'defensive_formations': formations,
@@ -582,27 +659,70 @@ def run_qb_progression_test(request, test_id):
 def run_wr_route_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test.change_in_progress_status(request.user)
-    if len(test.play_set.all()) > 0:
+    player = request.user.player
+    plays = test.play_set.all()
+    json_plays = []
+    for p in plays:
+        json_plays.append(p.dict_for_json())
+    if len(plays) > 0:
         has_plays = True
     else:
         has_plays = False
-    return render(request, 'quiz/wr_route.html', {
+    json_seed = {
+        'player': player.dict_for_json(),
+        'plays': json_plays
+    }
+    return render(request, 'quiz/route_quiz.html', {
         'test': test,
         'has_plays': has_plays,
-        'page_header': 'WR ROUTE',
+        'page_header': 'DRAW ROUTE QUIZ',
+        'json_seed': json.dumps(json_seed),
+    })
+
+def run_qb_route_test(request, test_id):
+    test = Test.objects.filter(pk=test_id)[0]
+    test.change_in_progress_status(request.user)
+    player = request.user.player
+    plays = test.play_set.all()
+    json_plays = []
+    for p in plays:
+        json_plays.append(p.dict_for_json())
+    if len(plays) > 0:
+        has_plays = True
+    else:
+        has_plays = False
+    json_seed = {
+        'player': player.dict_for_json(),
+        'plays': json_plays
+    }
+    return render(request, 'quiz/qb_route_quiz.html', {
+        'test': test,
+        'has_plays': has_plays,
+        'page_header': 'DRAW ROUTE QUIZ',
+        'json_seed': json.dumps(json_seed),
     })
 
 def run_ol_view_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     test.change_in_progress_status(request.user)
-    if len(test.play_set.all()) > 0:
+    player = request.user.player
+    plays = test.play_set.all()
+    json_plays = []
+    for p in plays:
+        json_plays.append(p.dict_for_json())
+    if len(plays) > 0:
         has_plays = True
     else:
         has_plays = False
-    return render(request, 'quiz/ol_view.html', {
+    json_seed = {
+        'player': player.dict_for_json(),
+        'plays': json_plays
+    }
+    return render(request, 'quiz/blocking_quiz.html', {
         'test': test,
         'has_plays': has_plays,
         'page_header': 'OL TEST',
+        'json_seed': json.dumps(json_seed),
     })
 
 def run_cb_view_test(request, test_id):

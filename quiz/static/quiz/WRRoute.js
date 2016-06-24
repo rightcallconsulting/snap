@@ -1,407 +1,459 @@
-var test
-var currentPlayerTested
-var positions = []
-var makeJSONCall = true
-var testIDFromHTML = $('#test-id').data('test-id')
+var setupComplete = false;
+var playerIDFromHTML = $('#player-id').data('player-id');
+var test;
+var originalPlayList = [];
+var playNames;
+var maxPlays = 5;
+var bigReset; var resetMissed; var nextQuiz;
+var currentUserTested = null;
+var currentPlayerTested = null;
+var currentRouteGuess = [];
+var currentRouteNodes = [];
+var demoDoubleClick = false;
+var exitDemo = null;
 
 function setup() {
-  var myCanvas = createCanvas(400, 400);
+  var box = document.getElementById('display-box');
+  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+  var width = box.offsetWidth;
+  var myCanvas = createCanvas(width, height);
+  field.height = height;
+  field.width = width;
+  field.heightInYards = 54;
+  field.ballYardLine = 75;
   background(58, 135, 70);
+  randomSeed(millis());
   myCanvas.parent('quiz-box');
-}
 
-function draw() {
-  if(makeJSONCall){
-    makeJSONCall = false
-    $.getJSON('/quiz/tests/'+testIDFromHTML, function(data, jqXHR){
-      test = createTestFromJSON(data[0]);
-      var playerID = test.playerID;
-      $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = createUserFromJSON(data2[0]);
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            if(testIDArray.includes(test.id)){
-              var play = createPlayFromJSON(play);
-              play.test = test
-              test.plays.push(play);
-            }
-          })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
-            })
-            test.plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
-            })
-            runTest("WRRoute", currentPlayerTested, test);
-          })
-        })
-      })
-    });
+  window.onresize=function(){
+    var box = document.getElementById('display-box');
+    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+    var width = box.offsetWidth;
+    resizeCanvas(width, height);
+    field.height = height;
+    field.width = width;
+    resizeJSButtons();
   }
-  var runTest = function(type, playerTested, test){
-    //Field Position Variables
+
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset = new Button({
+    x: field.getYardX(width*0.25) - buttonWidth / 2,
+    y: field.getYardY(height*0.8),
+    width: buttonWidth,
+    label: "Retake All"
+  })
+
+  resetMissed = new Button({
+    x: field.getYardX(width*0.5) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Retake Missed"
+  })
+
+  nextQuiz = new Button({
+    x: field.getYardX(width*0.75) - buttonWidth / 2,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Exit"
+  })
+
+  exitDemo = new Button({
+    label: "",
+    x: field.getYardX(width*0.1),
+    y: field.getYardY(height*0.1),
+    height: 1.5,
+    width: 1.5,
+    clicked: false,
+    fill: color(255, 255, 255)
+  });
+
+  if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
-
-    test.scoreboard = scoreboard;
-
-    var defensePlay = new DefensivePlay({
-      defensivePlayers: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+    test = new PlayTest({
+      formations: [],
+      scoreboard: scoreboard,
+      displayName: true
     });
+    currentUserTested = createUserFromJSONSeed(json_seed.player)
 
-    var user = new User({});
+    var plays = [];
 
+    for(var i = 0; i < json_seed.plays.length; i++){
+      var play = createPlayFromJSONSeed(json_seed.plays[i]);
+      var positionsAsPlayers = [];
+      for(var j = 0; j < play.positions.length; j++){
+        var position = play.positions[j];
+        var player = createPlayerFromJSONSeed(position);
+        positionsAsPlayers.push(player);
+      }
+      play.positions = positionsAsPlayers;
+      play.populatePositions();
+      plays.push(play);
+    }
 
-    // Global Variables
+    originalPlayList = plays.slice();
+    test.plays = shuffle(plays);
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
+}
 
-    Player.prototype.draw = function() {
-        var x = field.getTranslatedX(this.x);
-        var y = field.getTranslatedY(this.y);
-        var siz = field.yardsToPixels(this.siz);
-        if(this.unit === "offense"){
-            noStroke();
-            if(this.rank > 0){
-                fill(255, 255, 0);
-            }else{
-                fill(this.fill);
-            }
-            ellipse(x, y, siz, siz);
-            fill(0,0,0);
-            textSize(14);
-            textAlign(CENTER, CENTER);
-            if(this.rank > 0){
-                text(this.rank, x, y);
-            }else{
-                text(this.num, x, y);
-            }
-            if (this.showRoute && this.breakPoints.length > 0 && !playButton.clicked){
-              this.displayRoute(this.breakPoints);
-            }
-            if (this.showPreviousRoute){
-              stroke(0, 255, 0);
-              this.displayRoute(this.previousRouteBreakpoints);
-            }
-            if (this.showPreviousRouteGuess){
-              stroke(255, 0, 0);
-              this.displayRoute(this.previousRouteGuess);
-            }
-        }
-        else {
-            fill(this.fill);
-            textSize(17);
-            textAlign(CENTER, CENTER);
-            text(this.pos, x, y);
-        }
-        this.drawRoute(field);
+function resizeJSButtons(){
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
+  bigReset.y = field.getYardY(height*0.8);
+  bigReset.width = buttonWidth;
+
+  resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+  resetMissed.y = bigReset.y;
+  resetMissed.width = bigReset.width;
+
+  nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
+  nextQuiz.y = bigReset.y;
+  nextQuiz.width = bigReset.width;
+
+  exitDemo.x =  field.getYardX(width*0.1);
+  exitDemo.y = field.getYardY(height*0.1);
+
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+function clearSelection(){
+  currentRouteGuess = [];
+  currentRouteNodes = [];
+  nodeObject = null;
+}
+
+function checkAnswer(){
+  var isCorrect = true;
+  if(currentRouteGuess.length !== currentPlayerTested.breakPoints.length){
+    isCorrect = false;
+  }
+
+  for(var i = 0; isCorrect && i < currentRouteGuess.length; i++){
+    var dx = abs(currentRouteGuess[i][0] - currentPlayerTested.breakPoints[i][0]);
+    var dy = abs(currentRouteGuess[i][1] - currentPlayerTested.breakPoints[i][1]);
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist > 2){
+      isCorrect = false;
+    }
+  }
+
+  if(isCorrect){
+    clearSelection();
+    currentPlayerTested = null;
+    test.registerAnswer(isCorrect);
+  }else{
+    clearSelection();
+    test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
+    test.incorrectGuesses++;
+    test.missedPlays.push(test.getCurrentPlay());
+    test.updateScoreboard();
+    test.feedbackScreenStartTime = millis();
+  }
+
+}
+
+function drawCurrentRoute(){
+  var x1 = field.getTranslatedX(currentPlayerTested.startX);
+  var y1 = field.getTranslatedY(currentPlayerTested.startY);
+  if(currentRouteGuess.length > 0){
+    var x2 = field.getTranslatedX(currentRouteGuess[0][0]);
+    var y2 = field.getTranslatedY(currentRouteGuess[0][1]);
+    stroke(255,238,88);
+    line(x1,y1,x2,y2);
+    noStroke();
+    fill(0, 0, 255)
+  }
+  for(var i = 0; i < currentRouteGuess.length - 1; i++){
+    x1 = field.getTranslatedX(currentRouteGuess[i][0]);
+    y1 = field.getTranslatedY(currentRouteGuess[i][1]);
+    var x2 = field.getTranslatedX(currentRouteGuess[i+1][0]);
+    var y2 = field.getTranslatedY(currentRouteGuess[i+1][1]);
+    stroke(255,238,88);
+    line(x1, y1, x2, y2);
+    noStroke();
+    fill(0, 0, 255)
+  }
+
+}
+
+function drawFeedbackScreen(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  test.getCurrentPlay().drawAllPlayers(field);
+  test.getCurrentPlay().drawAllRoutes(field);
+}
+
+function drawOpening(){
+  field.drawBackground(test.getCurrentPlay(), height, width);
+  test.getCurrentPlay().drawAllPlayers(field);
+  for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
+    var player = test.getCurrentPlay().eligibleReceivers[i];
+    if(player !== currentPlayerTested){
+      player.drawBreakPoints(field);
+    }
+  }
+  drawCurrentRoute();
+  for(var i = 0; i < currentRouteNodes.length; i++){
+    stroke(255,238,88);
+    currentRouteNodes[i].draw(field);
+    noStroke();
+  }
+
+}
+
+function drawDemoScreen(){
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    fill(220, 0, 0);
+    exitDemo.draw(field);
+    textSize(22);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
+    if(currentPlayerTested){
+      noStroke();
+      textAlign(LEFT);
+      textSize(22);
+      noStroke();
+      if(timeElapsed < 2000){
         noStroke();
-    };
+        noFill();
+        strokeWeight(2);
+        stroke(255,238,88);
 
-    Player.prototype.select = function() {
-        //this.fill = color(255, 234, 0);
-        this.rank = 1;
-        this.clicked = true;
-        // Unselect all other players to isolate one route
-        for(var i = 0; i < test.getCurrentPlay().eligibleReceivers.length; i++){
-          var p = test.getCurrentPlay().eligibleReceivers[i];
-          if(p !== this){
-            p.clicked = false;
-            p.rank = 0;
-          }
+        var x = field.getTranslatedX(currentPlayerTested.startX);
+        var y = field.getTranslatedY(currentPlayerTested.startY);
+        var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
+        ellipse(x, y, siz, siz);
+        strokeWeight(1);
+        textAlign(CENTER);
+        textSize(22);
+        fill(255,238,88);
+        text("You are in yellow", x, y - 110);
+        noStroke();
+      }else if(timeElapsed < 4000){
+        noStroke();
+        stroke(255,238,88);
+        fill(255,238,88);
+        line(field.width / 2, 80, field.width/2, 20);
+        triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
+        noStroke();
+        textAlign(LEFT);
+        textSize(22);
+        fill(255,238,88);
+        text("Your play call is here", field.width / 2 + 20, 50);
+        noStroke();
+      }else {
+        noStroke();
+        fill(255,238,88);
+        textSize(22);
+        textAlign(CENTER);
+        if(demoDoubleClick){
+          text("Demo complete!\n Click anywhere to begin quiz", field.width / 2, (5 * field.height) / 6);
+        }else if(currentRouteNodes.length > 0){
+          text("Click on your next breakpoint.\nDouble click to complete demo.", field.width / 2, (5 * field.height) / 6);
+        }else{
+          text("Draw your route by clicking on\n your first breakpoint", field.width / 2, (5 * field.height) / 6);
         }
-    };
 
-    Player.prototype.unselect = function() {
-        this.clicked = false;
-        this.routeCoordinates = [[this.startX, this.startY]];
-        this.routeNodes = [];
-        this.rank = 0;
-    };
-
-    // Create Buttons
-    var playButton = new Button({
-        x: 10,
-        y: 360,
-        width: 32,
-        label: "Play",
-        clicked: false,
-        displayButton: false
-    });
-
-    // Create Buttons
-    var check = new Button({
-        x: 53,
-        y: 360,
-        width: 43,
-        label: "Check",
-        clicked: false,
-        displayButton: false
-    });
-
-    var nextPlay = new Button({
-        x: 330,
-        y: 360,
-        width: 60,
-        label: "Next Play",
-        clicked: false,
-        displayButton: false
-    });
-
-    var clear = new Button({
-        x: 108,
-        y: 360,
-        width: 43,
-        label: "Clear",
-        clicked: false,
-        displayButton: false
-    });
-
-    var back = new Button({
-        x: 10,
-        y: 320,
-        width: 35,
-        label: "Back",
-        clicked: false,
-        displayButton: false
-    });
-
-    var pause = new Button({
-        x: 300,
-        y: 360,
-        width: 43,
-        label: "Pause",
-        clicked: false,
-        displayButton: false
-    });
-
-    var stop = new Button({
-        x: 355,
-        y: 360,
-        width: 34,
-        label: "Stop",
-        clicked: false,
-        displayButton: false
-    });
-
-    var bigReset = new Button({
-        x: field.getYardX(width/2)-4,
-        y: field.getYardY(height * 0.8),
-        width: 8,
-        label: "Restart Quiz",
-        clicked: false
-    });
-
-    //Create defense
-    defensePlay.draw(field, test);
-
-    // intro scene
-    var drawOpening = function(test) {
-        if(test.startTime === 0){
-            test.startTime = second() + minute() * 60;
-        }
-        field.drawBackground(test.getCurrentPlay(), height, width);
-        // playButton.draw();
-        // check.draw();
-        // clear.draw();
-        // back.draw();
-        test.getCurrentPlay().drawAllPlayers();
-        defensePlay.drawAllPlayers();
-        // nextPlay.draw();
-        fill(0, 0, 0);
-        textSize(20);
-        text(scoreboard.feedbackMessage, 160, 360);
-        scoreboard.draw(test,user);
-        fill(176,176,176)
-    };
-
-    // game scene
-    var drawScene = function(play) {
-        field.drawBackground(play, height, width);
-        // pause.draw();
-        // stop.draw();
-        pause.displayButton = true;
-        stop.displayButton = true;
-        playButton.displayButton = false;
-        check.displayButton = false;
-        clear.displayButton = false;
-        back.displayButton = false;
-        play.drawAllPlayers();
-        defensePlay.drawAllPlayers();
-        for(var i = 0; i < play.eligibleReceivers.length; i++){
-            play.eligibleReceivers[i].runRoute();
-        }
-        for(var i = 0; i < defensePlay.defensivePlayers.length; i++){
-            defensePlay.defensivePlayers[i].blitzGap(play.oline[2],play);
-        }
-        play.qb[0].runBootleg(play.oline[2], 1.0);
-        fill(0, 0, 0);
-        textSize(20);
-        text(scoreboard.feedbackMessage, 120, 60);
-        scoreboard.draw(test,user);
-    };
-
-    keyPressed = function() {
-      selectedWR = test.getCurrentPlay().findSelectedWR();
-      if (keyCode === 32){
-        if (!test.getCurrentPlay().inProgress){
-          pressPlayButton();
-        }
-        else {
-          pause.changeClickStatus();
-        }
       }
-      else if (keyCode === 81){
-        pressStopButton();
-      }
-      else if (keyCode === BACKSPACE){
-        if (selectedWR){
-          selectedWR.stepRouteBackward();
-        } else{
-          playBeingCreated.playName = playBeingCreated.playName.substring(0, playBeingCreated.playName.length - 1);
-        }
-        return false;
-      }
-    };
-
-    pressStopButton = function(){
-      // playButton.changeClickStatus();
-      // if (pause.clicked) {
-      //     pause.changeClickStatus();
-      // }
-      if (test.getCurrentPlay()){
-      playButton.clicked = false;
-        test.getCurrentPlay().resetPlayers(defensePlay);
-        test.getCurrentPlay().inProgress = false;
-        // playButton.displayButton = true;
-        // check.displayButton = true;
-        // clear.displayButton = true;
-        // pause.displayButton = false;
-        // stop.displayButton = false;
+      noStroke();
+      drawCurrentRoute();
+      for(var i = 0; i < currentRouteNodes.length; i++){
+        stroke(255,238,88);
+        currentRouteNodes[i].draw(field);
+        noStroke();
       }
     }
-
-    pressPlayButton = function() {
-      if (test.getCurrentPlay()){
-        playButton.changeClickStatus();
-        test.getCurrentPlay().setAllRoutes();
-        scoreboard.feedbackMessage = "";
-        test.getCurrentPlay().inProgress = true;
-      }
-    }
+  }
+};
 
 
-    mouseDragged = function(){
-      var currentPlay = test.getCurrentPlay();
-      if (currentPlay){
-        var receiverClicked = currentPlay.mouseInReceiverOrNode(field)[0];
-        var selectedNode = currentPlay.mouseInReceiverOrNode(field)[1];
-        selectedWR = currentPlay.findSelectedWR();
-        if(selectedNode){
-          selectedNode.change = true;
-        }
-      }
-    };
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  currentRouteGuess = [];
+  currentRouteNodes = [];
+};
 
-    mouseClicked = function() {
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  currentRouteGuess = [];
+  currentRouteNodes = [];
+};
 
-      var currentPlay = test.getCurrentPlay();
-      if(currentPlay){
-        currentPlay.setAllRoutes();
-        var receiverClicked = currentPlay.mouseInReceiverOrNode(field)[0];
-        var selectedNode = currentPlay.mouseInReceiverOrNode(field)[1];
-        selectedWR = currentPlay.findSelectedWR();
-      }
+function skipPlay(){
+  clearSelection();
+  test.skips++;
+  currentPlayerTested = null;
+  test.skippedPlays.push(test.getCurrentPlay());
+  test.advanceToNextPlay(test.skippedAnswerMessage);
+}
 
-      // scoreboard.feedbackMessage = "";
-      if(mouseX <= 400 && mouseY <= 400){
-        if (playButton.isMouseInside(field) && !playButton.clicked) {
-          pressPlayButton();
-        }else if (check.isMouseInside(field)){
-          selectedWR.checkRoutes(currentPlay);
-        }else if (clear.isMouseInside(field)){
-          currentPlay.clearProgression();
-          currentPlay.clearRouteDrawings();
-          scoreboard.feedbackMessage = "";
-        }else if (back.isMouseInside(field)){
-          if(selectedWR)selectedWR.stepRouteBackward();
-        }else if (pause.isMouseInside(field)) {
-          pause.changeClickStatus();
-        } else if (stop.isMouseInside(field)&& playButton.clicked) {
-          pressStopButton();
-        }else if (bigReset.isMouseInside(field) && test.isLastQuestion) {
-          test.restartQuiz(defensePlay);
-          // nextPlay.displayButton = true;
-          // playButton.displayButton = true;
-          // check.displayButton = true;
-          // clear.displayButton = true;
-          // back.displayButton = true;
-        }
-        else if (nextPlay.isMouseInside(field)){
-          test.skipQuestion();
-        }
-        else if(selectedNode){
-          if (selectedNode.change){
-            selectedNode.change = false;
-          }
-          else{
-            selectedNode.change = true;
-          }
-        }
-        else if (receiverClicked){
-            var playerSelected = false;
-            currentPlay.clearPreviousRouteDisplays();
-            for(var i = 0; i < currentPlay.eligibleReceivers.length; i++){
-                var p = currentPlay.eligibleReceivers[i];
-                if (p.isMouseInside(field)){
-                    if(p.clicked){
-                        p.unselect();
-                        p.showRoute = false;
-                    }else{
-                        p.select();
-                    }
-                    break;
-                }
-            }
-        }
-        else if(selectedWR){
-          selectedWR.routeCoordinates.push([field.getYardX(mouseX), field.getYardY(mouseY)]);
-          var nodeObject = new Node({
-              x: field.getYardX(mouseX),
-              y: field.getYardY(mouseY),
-              siz: 1
-          });
-          selectedWR.routeNodes.push(nodeObject);
-        }
-      }
 
-    };
-
-    draw = function() {
-      if(test.endTime > 0){
-        bigReset.displayButton = true;
-        field.drawBackground("", height, width);
-        bigReset.draw(field);
-        test.drawQuizSummary();
+mouseClicked = function() {
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }else{
+    return true;
+  }
+  if(bigReset.isMouseInside(field) && test.over) {
+    clearSelection();
+    test.plays = shuffle(originalPlayList.slice());
+    test.restartQuiz();
+    return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    clearSelection();
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    test.plays = shuffle(newPlays);
+    test.restartQuiz();
+    return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/";
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else if(!test.over){
+    if(currentRouteNodes.length > 0 && currentRouteNodes[currentRouteNodes.length - 1].isMouseInside(field)){
+      if(test.showDemo){
+        demoDoubleClick = true;
       }else{
-        if (playButton.clicked) {
-            if(!pause.clicked) {
-                drawScene(test.getCurrentPlay());
-            }
-        } else {
-            drawOpening(test);
-        }
+        checkAnswer(field.getYardX(mouseX), field.getYardY(mouseY));
+        return;
       }
-    };
+    }else if(!currentPlayerTested.isMouseInside(field)){
+      var x = field.getYardX(mouseX);
+      var y = field.getYardY(mouseY);
+      currentRouteGuess.push([x, y]);
+      var nodeObject = new Node({
+        x: x,
+        y: y,
+        siz: 1,
+        fill: color(255,238,88)
+      });
+      currentRouteNodes.push(nodeObject);
+    }
+  }
+
+};
+
+keyPressed = function(){
+  if(keyCode === BACKSPACE){
+    if(currentRouteGuess.length > 0){
+      currentRouteGuess.pop();
+      currentRouteNodes.pop();
+    }
+    return false;
+  }
+
+};
+
+keyTyped = function(){
+  if(test.over){
+    if(key === 'r'){
+      clearSelection();
+      test.plays = shuffle(originalPlayList.slice());
+      test.restartQuiz();
+    }
+  }
+  if(test.showDemo){
+    if(key === 'e'){
+      exitDemoScreen();
+    }
+  }
+};
+
+function draw() {
+  Player.prototype.draw = function(field){
+    var x = field.getTranslatedX(this.x);
+    var y = field.getTranslatedY(this.y);
+    var siz = field.yardsToPixels(this.siz);
+    if(this.unit === "offense"){
+      noStroke();
+      fill(this.fill);
+      if(this === currentPlayerTested){
+        fill(255,238,88);
+      }
+      ellipse(x, y, siz, siz);
+      fill(0,0,0);
+      textSize(14);
+      textAlign(CENTER, CENTER);
+      text(this.num, x, y);
+    }
+    else {
+      noStroke();
+      fill(0, 0, 0);
+      textSize(17);
+      textAlign(CENTER, CENTER);
+      text(this.pos, x, y);
+    }
+  }
+  if(!setupComplete){
+    //WAIT - still executing JSON
+  }
+  else if(test.over){
+    //debugger;
+    background(93, 148, 81);
+    noStroke();
+    test.drawQuizSummary();
+    bigReset.draw(field);
+    resetMissed.draw(field);
+    nextQuiz.draw(field);
+  }else{
+    if(!currentPlayerTested){
+      currentPlayerTested = test.getCurrentPlayerTested(currentUserTested);
+    }
+    if(test.showDemo){
+      drawDemoScreen();
+    }else if(test.feedbackScreenStartTime){
+      var elapsedTime = millis() - test.feedbackScreenStartTime;
+      if(elapsedTime > 1000){
+        test.feedbackScreenStartTime = 0;
+        test.advanceToNextPlay("");
+        currentPlayerTested = null;
+      }else{
+        drawFeedbackScreen(field);
+      }
+    }else{
+      drawOpening();
+    }
+
   }
 }

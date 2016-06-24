@@ -17,9 +17,23 @@ function setup() {
 
   field.height = height;
   field.width = width;
-  field.heightInYards = 53;
+  field.heightInYards = 40;
   background(58, 135, 70);
   myCanvas.parent('display-play-box-2');
+
+  defensePlay = new DefensivePlay({
+    defensePlay: [],
+    dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+    lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+    dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+    dlPositions: ["DE", "NT", "DT", "RE"],
+    lbPositions: ["W", "M", "S"],
+    dbPositions: ["CB", "SS", "F/S", "CB"],
+    dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+  });
+
+  defensePlay.draw(field);
+  defensePlay.populatePositions();
 
   window.onresize=function(){
     var box = document.getElementById('display-play-box-2');
@@ -91,6 +105,9 @@ function draw() {
             $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
               data4.forEach(function(position){
                 var player = createPlayerFromJSON(position);
+                if(player.blockingAssignmentObject){
+                  player.blockingAssignmentObject.createBlockedPlayersFromIDs(defensePlay);
+                }
                 positions.push(player);
               })
               plays.forEach(function(play){
@@ -132,6 +149,9 @@ function draw() {
         textSize(14);
         textAlign(CENTER, CENTER);
         text(this.num, x, y);
+        if(this.blockingAssignmentObject){
+          this.blockingAssignmentObject.draw(this, field);
+        }
       }
       else {
         noStroke();
@@ -206,30 +226,23 @@ function draw() {
       return currentFormation;
     };
 
-    defensePlay = new DefensivePlay({
-      defensePlay: [],
-      dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
-      lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
-      dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
-      dlPositions: ["DE", "NT", "DT", "RE"],
-      lbPositions: ["W", "M", "S"],
-      dbPositions: ["CB", "SS", "F/S", "CB"],
-      dlNames: ["Gronk", "Davis", "Smith", "Evans"]
-    });
+
 
     var center = getCurrentFormation().getPlayerFromPosition("C");
     if(center === null){
       center = getCurrentFormation().oline[2];
     }
-    defensePlay.draw(field);
+
 
     // intro scene
     var drawOpening = function() {
         field.drawBackground(playBeingCreated, height, width)
 
         if(playToDraw){
-          playToDraw.drawAllPlayers(field);
+
+          playToDraw.drawRunAssignments(field);
           playToDraw.drawAllRoutes(field);
+          playToDraw.drawAllPlayers(field);
           defensePlay.drawAllPlayers(field);
           // text("Formation: "+playToDraw.formation.playName, 115, 20);
         }else if(defensePlayToDraw){

@@ -20,6 +20,7 @@ var DefensivePlay = function(config) {
   this.positions = config.positions || [];
   this.id = config.id || null;
   this.dbCall = config.dbCall || null;
+  this.inProgress = false;
 };
 
 // Unit index is 0 for DL, 1 for LBs, 2 for safeties, 3 for DBs
@@ -206,25 +207,59 @@ DefensivePlay.prototype.establishOffensiveFormation = function(formationArray){
   return offensivePlayToDraw
 };
 
-DefensivePlay.prototype.populatePositions = function(){
-  var dline = this.positions.filter(function(player) {
-    return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT";
-  });
-  dline.forEach(function(player){this.dline.push(player)}.bind(this));
-  var linebackers = this.positions.filter(function(player) {
-    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
-  });
-  linebackers.forEach(function(player){this.linebackers.push(player)}.bind(this));
-  var cornerbacks = this.positions.filter(function(player) {
-    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
-  });
-  cornerbacks.forEach(function(player){this.cornerbacks.push(player)}.bind(this));
-  var safeties = this.positions.filter(function(player) {
-    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
-  });
-  safeties.forEach(function(player){this.safeties.push(player)}.bind(this));
-  this.defensivePlayers = this.positions;
+DefensivePlay.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
+  var unit = this.dline;
+  if(unitIndex === 1){
+      unit = this.linebackers;
+  }else if(unitIndex === 2){
+      unit = this.cornerbacks;
+  }else if(unitIndex === 3){
+      unit = this.safeties;
+  }
+  if(playerIndex >= 0 && playerIndex < unit.length){
+    return unit[playerIndex];
+  }
+  return null;
 };
+
+DefensivePlay.prototype.populatePositions = function(){
+  for(var i = 0; i < this.positions.length; i++){
+    if(this.defensivePlayers.length < 11){
+        this.defensivePlayers.push(new Player(this.positions[i]));
+    }
+
+  }
+  var dline = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="DT" || player.pos ==="DE" || player.pos ==="NT" || player.pos === "RE" || player.pos === "DL";
+  });
+  dline.forEach(function(player){if(this.dline.indexOf(player) < 0){
+    this.dline.push(player)}}.bind(this));
+  var linebackers = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="M" || player.pos ==="W" || player.pos ==="S";
+  });
+  linebackers.forEach(function(player){if(this.linebackers.indexOf(player) < 0){
+    this.linebackers.push(player)}}.bind(this));
+  var cornerbacks = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="CB" || player.pos ==="NB";
+  });
+  cornerbacks.forEach(function(player){if(this.cornerbacks.indexOf(player) < 0){
+    this.cornerbacks.push(player)}}.bind(this));
+  var safeties = this.defensivePlayers.filter(function(player) {
+    return player.pos ==="SS" || player.pos ==="FS";
+  });
+  safeties.forEach(function(player){if(this.safeties.indexOf(player) < 0){
+    this.safeties.push(player)}}.bind(this));
+
+  dline.sort(sortLeftToRight);
+  linebackers.sort(sortLeftToRight);
+  cornerbacks.sort(sortLeftToRight);
+  safeties.sort(sortLeftToRight);
+
+};
+
+var sortLeftToRight = function(a, b){
+  return a.x - b.x;
+}
 
 var createDefensivePlayFromJSONSeed = function(jsonPlay){
   var play = new DefensivePlay({

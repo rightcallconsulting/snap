@@ -1,4 +1,4 @@
-(function() {
+function makeCharts() {
 
   var colors = {
     correct: '#33691E',
@@ -56,21 +56,21 @@
    * @param color {String} The desired color of the chart (E.g.,'#FFFFFF')
    * @param elementID {String} The id tag of the element to draw the chart in
    */
-  function makeChart(percent, color, elementID) {
-    var data = [
-      {
-        value: percent,
-        color: color,
-      },
-      {
-        value: 100 - percent,
-        color: colors.empty,
-      }
-    ];
+   function makeChart(percent, color, elementID) {
+     var data = [
+       {
+         value: percent,
+         color: color,
+       },
+       {
+         value: 100 - percent,
+         color: colors.empty,
+       }
+     ];
 
-    var ctx = document.getElementById(elementID).getContext("2d");
-    var correctChart = new Chart(ctx).SingleValueDoughnut(data,{});
-  }
+     var ctx = document.getElementById(elementID).getContext("2d");
+     var correctChart = new Chart(ctx).SingleValueDoughnut(data,{});
+   }
 
   // NOTE: percentCorrect, percentIncorrect, & percentSkipped are all passed
   // in through a script tag at the bottom of /templates/show_player_list.html
@@ -78,4 +78,6 @@
   makeChart(percentCorrect, colors.correct, 'percentCorrectChart');
   makeChart(percentIncorrect, colors.incorrect, 'percentIncorrectChart');
   makeChart(percentSkipped, colors.skipped, 'percentSkippedChart');
-})();
+};
+
+makeCharts();

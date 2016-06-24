@@ -59,7 +59,7 @@ Formation.prototype.getPassStrength = function(){
 Formation.prototype.createOLineAndQB = function(ballY){
   var olPositions = ["LT", "LG", "C", "RG", "RT"];
   for (var i = -2; i < 3; i++) {
-      var xPos = Field.WIDTH / 2 + i*3.5;
+      var xPos = Field.WIDTH / 2 + i*2.5;
       var yPos = ballY-1.5;
       if (i !== 0) {
           yPos -= 0.5;
@@ -152,6 +152,37 @@ Formation.prototype.createSkillPlayers = function(){
   this.eligibleReceivers.push(wr1);
   this.eligibleReceivers.push(wr2);
 };
+
+
+Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
+    if(this.unit === "offense"){
+      var unit = this.oline;
+      if(unitIndex === 1){
+          unit = this.wideReceivers;
+      }else if(unitIndex === 2){
+          unit = this.runningBacks;
+      }else if(unitIndex === 3){
+          unit = this.tightEnds;
+      }
+      if(playerIndex >= 0 && playerIndex < unit.length){
+        return unit[playerIndex];
+      }
+      return null;
+    }else{
+      var unit = this.dline;
+      if(unitIndex === 1){
+          unit = this.linebackers;
+      }else if(unitIndex === 2){
+          unit = this.cornerbacks;
+      }else if(unitIndex === 3){
+          unit = this.safeties;
+      }
+      if(playerIndex >= 0 && playerIndex < unit.length){
+        return unit[playerIndex];
+      }
+      return null;
+    }
+}
 
 //pos is a str for now, but could be an int code later
 Formation.prototype.getPlayerFromPosition = function(pos){
@@ -313,20 +344,24 @@ Formation.prototype.mouseInReceiverOrNode = function(field){
   return [receiverClicked, selectedNode];
 };
 
-Formation.prototype.mouseInQB = function(){
+Formation.prototype.mouseInQB = function(field){
   for(var i = 0; i < this.qb.length; i++){
-    var p = this.eligibleReceivers[i];
-    if (p.isMouseInside()){
-      var receiverClicked = p;
-    }
-    for(var j = 0; j < p.routeNodes.length; j++){
-      var n = p.routeNodes[j];
-      if (n.isMouseInside()){
-        var selectedNode = n;
-      }
+    var p = this.qb[i];
+    if (p.isMouseInside(field)){
+      return [p];
     }
   }
-  return [receiverClicked, selectedNode];
+  return [];
+};
+
+Formation.prototype.mouseInCenter = function(field){
+  for(var i = 0; i < this.oline.length; i++){
+    var p = this.oline[i];
+    if (p.pos === "C" && p.isMouseInside(field)){
+      return p;
+    }
+  }
+  return null;
 };
 
 Formation.prototype.mouseInDefensivePlayer = function(field){
@@ -438,11 +473,37 @@ Formation.prototype.clearRouteDrawings = function(){
 };
 
 Formation.prototype.clearBlockingAssignments = function(){
-  for(var i = 0; i < this.oline.length; i++){
-    this.oline[i].blockingAssignment = null;
-    this.oline[i].unselect();
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    this.offensivePlayers[i].blockingAssignment = null;
+    this.offensivePlayers[i].blockingAssignmentObject = null;
+    this.offensivePlayers[i].unselect();
   }
 };
+
+Formation.prototype.clearRunAssignments = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    this.offensivePlayers[i].runAssignment = null;
+    this.offensivePlayers[i].runner = false;
+  }
+};
+
+Formation.prototype.drawRunAssignments = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.runAssignment){
+        player.runAssignment.draw(player, field);
+    }
+  }
+};
+
+Formation.prototype.drawBlockingAssignmentObjects = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.blockingAssignmentObject){
+      player.blockingAssignmentObject.draw(player, field);
+    }
+  }
+}
 
 Formation.prototype.drawBlockingAssignments = function(field, defensivePlay){
   this.offensivePlayers.forEach(function(player){
@@ -476,7 +537,7 @@ Formation.prototype.mouseInOL = function(field){
   return selectedOL;
 };
 
-Formation.prototype.populatePositions = function(){
+/*Formation.prototype.populatePositions = function(){
   var oline = this.positions.filter(function(player) {
     return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
   });
@@ -491,15 +552,29 @@ Formation.prototype.populatePositions = function(){
   this.tightEnds = this.positions.filter(function(player) {return player.pos ==="TE"});
   this.eligibleReceivers = eligibleReceivers;
   this.offensivePlayers = this.positions;
-};
+};*/
+
+
 
 Formation.prototype.saveToDB = function(){
 
   var formationJSON = "";
   var cache = [];
 
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    p = this.offensivePlayers[i];
+    p.startX = p.x;
+    p.startY = p.y;
+  }
+
+  for(var i = 0; i < this.defensivePlayers.length; i++){
+    p = this.defensivePlayers[i];
+    p.startX = p.x;
+    p.startY = p.y;
+  }
+
   try{
-  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
+  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
   $.post( "teams/broncos/formations/new", { formation: formationJSON});
   }catch(e){
     console.log(e);
@@ -1050,7 +1125,7 @@ var isFormationClicked = function(formationButtonArray, field){
 //Formatting differences with Nick's code. Will eventually merge
 var createFormationFromJSONSeed = function(jsonFormation){
   var formation = new Formation({
-    id: jsonFormation.pk,
+    id: jsonFormation.id,
     name: jsonFormation.name,
     playName: jsonFormation.name,
     offensiveFormationID: jsonFormation.offensiveFormationID,
@@ -1073,11 +1148,20 @@ var createFormationFromJSON = function(jsonFormation){
   return formation;
 };
 
+Formation.prototype.positionsToPlayers = function(){
+  var positionsAsPlayers = [];
+  for(var j = 0; j < this.positions.length; j++){
+    var position = this.positions[j];
+    var player = createPlayerFromJSONSeed(position);
+    positionsAsPlayers.push(player);
+  }
+  this.positions = positionsAsPlayers;
+}
 
 Formation.prototype.populatePositions = function(){
   if(this.unit === "defense"){
     this.positions.forEach(function(player){
-      if(player.pos === "DL" || player.pos === "DE"){
+      if(player.pos === "DL" || player.pos === "DE" || player.pos === "RE"){
         this.dline.push(player);
       }
       else if(player.pos === "W" || player.pos === "M" || player.pos === "S"){
@@ -1090,7 +1174,11 @@ Formation.prototype.populatePositions = function(){
         this.safeties.push(player);
       }
     }.bind(this))
-    this.defensivePlayers = this.positions;
+    this.defensivePlayers = this.positions.slice();
+    this.dline.sort(sortLeftToRight);
+    this.linebackers.sort(sortLeftToRight);
+    this.cornerbacks.sort(sortLeftToRight);
+    this.safeties.sort(sortLeftToRight);
   }
   else{
     var oline = this.positions.filter(function(player) {
@@ -1099,14 +1187,19 @@ Formation.prototype.populatePositions = function(){
     oline.forEach(function(player){this.oline.push(player)}.bind(this));
     var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
     this.qb = qb
+    var receiverPositionOptions = ["X", "Y", "Z", "F", "A", "H"];
     var eligibleReceivers = this.positions.filter(function(player) {
-      return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
+      return receiverPositionOptions.indexOf(player.pos) >= 0;
     });
     this.eligibleReceivers = eligibleReceivers;
     this.offensivePlayers = this.positions;
   }
 
 };
+
+var sortLeftToRight = function(a, b){
+  return a.x - b.x;
+}
 
 Formation.prototype.convertToPlayObject = function(){
   if(this.unit === "defense"){
