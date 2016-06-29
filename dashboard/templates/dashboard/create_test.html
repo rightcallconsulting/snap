@@ -31,20 +31,20 @@
 									<span class="custom-checkbox info bounceIn animation-delay6"></span>
 									{{type}}
 								</label>
-							</div> <!-- /form-group -->
+							</div><!-- /form-group -->
 						{% endfor %}
 					{% else %}
 						<div class="form-group">
 							{% if field.label == "Player" %}
 								{{ field }}
-							{% elif field.label != "Deadline" %}
-								{{ field.label_tag }}
-								{{ field }}
+							{% elif field.label == "Deadline" %}
+								<!-- {{ field.label_tag }} -->
+								<!-- {{ field }} -->
 							{% else %}
 								{{ field.label_tag }}
 								{{ field }}
 							{% endif %}
-						</div>
+						</div><!-- /form-group -->					
 					{% endif %}
 				{% endfor %}
 
@@ -58,7 +58,7 @@
 			</form>
 		</div><!-- /row -->
 	</div><!-- /panel -->
-
+	
 <script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 <script type="text/javascript">
 	var groups_seed = {{ groups|safe }};
