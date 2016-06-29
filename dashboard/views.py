@@ -24,10 +24,7 @@ from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dashboard.utils import PlayerAnalytics
-from quiz.utils import QuizOrders
 
-
-# Create your views here
 @login_required
 def homepage(request):
     if request.user.myuser.is_a_player:
