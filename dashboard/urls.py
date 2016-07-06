@@ -10,9 +10,6 @@ from . import views
 urlpatterns = [
     url(r'^$', views.homepage, name='homepage'),
     url(r'^login$', views.auth_login, name='auth_login'),
-    #url(r'^$', views.homepage, name='homepage'),
-    # Why is homepage (^) listed twice? Shouldn't it just be first and thats all
-    # Seems to work just fine with second instance commented out
     url(r'^logout$', views.auth_logout, name='auth_logout'),
     url(r'^register$', views.register, name='register'),
     url(r'^timeline$', views.timeline, name='timeline'),
