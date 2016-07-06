@@ -150,11 +150,11 @@ class TestForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         OPTIONS = (
-                ("QBProgression", "QB Progression"),
-                ("WRRoute", "WR Route"),
-                ("OLView", "OL View"),
-                ("CBAssignment", "CB Assignment"),
-            )
+            ("QBProgression", "QB Progression"),
+            ("WRRoute", "WR Route"),
+            ("OLView", "OL View"),
+            ("CBAssignment", "CB Assignment"),
+        )
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
         self.fields['type_of_test']=forms.ChoiceField(OPTIONS)

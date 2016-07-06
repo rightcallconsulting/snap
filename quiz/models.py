@@ -9,9 +9,6 @@ import code
 import copy
 import json
 
-
-# Create your models here.
-
 class Team(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
