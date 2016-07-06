@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Right Call Consulting</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	{% include "dashboard/css.html" %}
+</head>
+
+<body class="overflow-hidden">
+	{% block base %}
+	{% endblock %}
+
+	<!-- TODO ~Dylan -->
+	<!-- Loading JS at the bottom is sub-optimal -->
+	<!-- update JS files to include defer and async tags and put back in head -->
+	{% include "dashboard/js.html" %}
+</body>
+</html>
