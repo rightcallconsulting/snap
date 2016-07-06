@@ -154,7 +154,7 @@ class TestForm(ModelForm):
             ("OLView", "OL View"),
             ("CBAssignment", "CB Assignment"),
         )
-        
+
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
         self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
