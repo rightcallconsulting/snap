@@ -1,29 +1,5 @@
-{% load staticfiles %}
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Right Call Consulting</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    {% include "dashboard/base_css.html" %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <!--<script src ="{% static 'dashboard/js/rango-jquery.js' %}"></script>-->
-
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <link rel="shortcut icon" href="{%  static 'dashboard/images/favicon.ico' %}">
-    <script language="javascript" type="text/javascript" src="{% static 'quiz/models/playerGroup.js' %}"></script>
-    <script language="javascript" type="text/javascript" src="{% static 'quiz/models/blockingAssignment.js' %}"></script>
-    <script language="javascript" type="text/javascript" src="{% static 'quiz/models/runAssignment.js' %}"></script>
-  </head>
-  {% include "dashboard/base_js.html" %}
-
-
-  <body class="overflow-hidden">
+{% extends 'dashboard/header.html' %}
+{% block base %}
     {% block content %}
     {% endblock %}
-  </body>
-
-</html>
+{% endblock %}    

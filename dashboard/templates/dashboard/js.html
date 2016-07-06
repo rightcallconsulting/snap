@@ -1,11 +1,8 @@
 {% load staticfiles %}
-
-<!-- Le javascript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+<!-- javascript ================================================== -->
 
 <!-- Jquery -->
-<script src='{% static 'dashboard/js/jquery.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.js' %}"></script>
 
 <script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 
@@ -21,32 +18,32 @@
 <script src="{% static 'dashboard/js/jquery.flot.min.js' %}"></script>
 
 <!-- Morris -->
-<script src='{% static 'dashboard/js/rapheal.min.js' %}'></script>
-<script src='{% static 'dashboard/js/morris.min.js' %}'></script>
+<script src="{% static 'dashboard/js/rapheal.min.js' %}"></script>
+<script src="{% static 'dashboard/js/morris.min.js' %}"></script>
 
 <!-- Colorbox -->
-<script src='{% static 'dashboard/js/jquery.colorbox.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.colorbox.min.js' %}"></script>
 
 <!-- Sparkline -->
-<script src='{% static 'dashboard/js/jquery.sparkline.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.sparkline.min.js' %}"></script>
 
 <!-- Pace -->
-<script src='{% static 'dashboard/js/uncompressed/pace.js' %}'></script>
+<script src="{% static 'dashboard/js/uncompressed/pace.js' %}"></script>
 
 <!-- Popup Overlay -->
-<script src='{% static 'dashboard/js/jquery.popupoverlay.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.popupoverlay.min.js' %}"></script>
 
 <!-- Slimscroll -->
-<script src='{% static 'dashboard/js/jquery.slimscroll.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.slimscroll.min.js' %}"></script>
 
 <!-- Modernizr -->
-<script src='{% static 'dashboard/js/modernizr.min.js' %}'></script>
+<script src="{% static 'dashboard/js/modernizr.min.js' %}"></script>
 
 <!-- Cookie -->
-<script src='{% static 'dashboard/js/jquery.cookie.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.cookie.min.js' %}"></script>
 <!-- DateTime Picker -->
 
-<script src='{% static 'dashboard/js/jquery.datetimepicker.full.min.js' %}'></script>
+<script src="{% static 'dashboard/js/jquery.datetimepicker.full.min.js' %}"></script>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -93,3 +90,11 @@
     });
   });
 </script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<link rel="shortcut icon" href="{%  static 'dashboard/images/favicon.ico' %}">
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/playerGroup.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/blockingAssignment.js' %}"></script>
+<script language="javascript" type="text/javascript" src="{% static 'quiz/models/runAssignment.js' %}"></script>
