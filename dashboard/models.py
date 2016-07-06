@@ -9,8 +9,7 @@ from quiz.models import Team, Player, Formation, Play, Position, Test, Group
 from django.contrib.admin import widgets
 from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
-
-# Create your models here.
+from datetime import datetime
 
 class UserCreateForm(UserCreationForm):
     POSITIONS = (
@@ -153,18 +152,18 @@ class TestForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         OPTIONS = (
-                ("QBProgression", "QB Progression"),
-                ("WRRoute", "WR Route"),
-                ("OLView", "OL View"),
-                ("CBAssignment", "CB Assignment"),
-            )
+            ("QBProgression", "QB Progression"),
+            ("WRRoute", "WR Route"),
+            ("OLView", "OL View"),
+            ("CBAssignment", "CB Assignment"),
+        )
+
         user = kwargs.pop('user','')
         super(TestForm, self).__init__(*args, **kwargs)
         self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
         self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0)
         self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
-        self.fields['deadline'].widget = widgets.AdminSplitDateTime()
-
+        self.fields['deadline'].widget=widgets.AdminSplitDateTime()
 
 class UserMethods(User):
   def custom_method(self):
