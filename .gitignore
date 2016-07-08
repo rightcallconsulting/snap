@@ -1,7 +1,6 @@
-venv
-*.pyc
 .DS_Store
-TODO.txt
+*.pyc
 staticfiles
+TODO.txt
+venv
 media/profile/*
-.idea/
