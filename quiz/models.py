@@ -9,7 +9,7 @@ import code
 import copy
 import json
 
-# this function returns a datetime object for the deadline
+# This function returns a datetime object for the deadline
 # of anything that is published. The deadline defaults to 
 # 1 day.
 def deadline_time():
