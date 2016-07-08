@@ -43,7 +43,7 @@ fir:
 ###############################################################################
 
 # Dump data into seed.json
-dump:
+seed:
 	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/seed.json --settings=quiz_master.settings.local
 
 # Dump data into dylan_seed.json

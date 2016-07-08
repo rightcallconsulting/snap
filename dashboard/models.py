@@ -70,7 +70,7 @@ class RFPAuthForm(AuthenticationForm):
 
 class Coach(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    title = models.CharField(max_length=30, blank=True, null=True)
+    title = models.CharField(max_length=120, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True) # set when it's created
     updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
