@@ -57,6 +57,9 @@ loaddylan:
 ###############################################################################
 # Django/python development commands 
 ###############################################################################
+superuser:
+	python manage.py createsuperuser --settings=quiz_master.settings.local
+
 shell:
 	python manage.py shell --settings=quiz_master.settings.local
 

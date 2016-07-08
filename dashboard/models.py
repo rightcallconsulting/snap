@@ -42,8 +42,6 @@ class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Email'}))
     password1 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Password'}), label=_("Password"))
     password2 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
-    #password1 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Password'}), label=_("Password"))
-    #password2 = forms.CharField(required=True, widget=forms.PasswordInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)

@@ -84,9 +84,7 @@ def auth_login(request):
             return HttpResponseRedirect("/login")
     else:
         form = RFPAuthForm()
-        return render(request, 'dashboard/login.html', {
-            'form': form,
-        })
+        return render(request, 'dashboard/login.html', { 'form': form, })
 
 def auth_logout(request):
     logout(request)
