@@ -6,6 +6,7 @@
 		<div class="text-center">
 			<img class="login-logo" src="{% static 'dashboard/images/login-logo.png' %}" alt="">
 		</div>
+		
 		<div class="login-widget animation-delay1">
 			<div class="panel panel-default">
 				<div class="panel-heading clearfix">
@@ -15,29 +16,38 @@
 
 					<div class="pull-right">
 						<span style="font-size:11px;">Don't have any account?</span>
-						<a class="btn btn-default btn-xs login-link" href="register" style="margin-top:-2px;"><i class="fa fa-plus-circle"></i> Sign up</a>
+
+						<a class="btn btn-default btn-xs login-link" href="register" style="margin-top:-2px;">
+							<i class="fa fa-plus-circle"></i> Sign up
+						</a>
 					</div>
-				</div>
+				</div> <!--/panel-heading -->
+
 				<div class="panel-body">
-					<form action="/login" method="post" class=form-login> {% csrf_token %}
+					<form action="/login" method="post" class="form-login"> 
+						{% csrf_token %}
+
 						{% for field in form %}
 							<div class="form-group">
 								{{ field.label_tag }}
 								{{ field }}
 							</div>
 						{% endfor %}
-						<div class="form-group">
-							<label class="label-checkbox inline">
-								<input type="checkbox" class="regular-checkbox chk-delete" />
-								<span class="custom-checkbox info bounceIn animation-delay4"></span>
-							</label><span class="small-text">
-							Remember me
-						</span></div>
+
+						<!-- Why wont this work??
+						<div class="checkbox">
+						    <label class="label-checkbox">
+								<input type="checkbox" />
+								<span class="custom-checkbox"></span>
+								Remember me<br/>
+							</label>
+						</div> --><!-- /checkbox -->
 
 						<hr/>
-						<i class="fa fa-sign-in"></i><input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
+						
+						<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
 					</form>
-				</div>
+				</div><!-- /panel-body -->
 			</div><!-- /panel -->
 		</div><!-- /login-widget -->
 	</div><!-- /login-wrapper -->
