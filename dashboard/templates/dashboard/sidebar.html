@@ -1,81 +1,84 @@
 {% load staticfiles %}
 
 <aside class="fixed skin-6 small-sidebar" id="main-sidebar">
-  <div class="team-logo-wrapper">
-    <a href="/"><img class="dash-header-logo" src="{% static 'dashboard/images/team-logo.png' %}" alt=""></a>
-  </div>
-  <div class="sidebar-inner scrollable-sidebar">
-    <div class="main-menu" id="nav">
-      <ul>
-        <li class="active">
-          <a href="/">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/dashboard-icon.png' %}" alt="">
+	<div class="team-logo-wrapper">
+		<a href="/"><img class="dash-header-logo" src="{% static 'dashboard/images/team-logo.png' %}" alt=""></a>
+	</div>
 
-            </span>
-            <span class="menu-text">
-              DASHBOARD
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
-        <li class="openable open">
-          <a href="/to-do">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
-            </span>
-            <span class="menu-text">
-              {% if request.user.myuser.is_a_player %}
-                <span class="notification-label bounceIn animation-delay6">3</span>
-                TO DO
-              {% else %}
-                QUIZZES
-              {% endif %}
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
-        <li class="openable">
-          <a href="/analytics">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
-            </span>
-            <span class="menu-text">
-              ANALYTICS
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
+	<div class="sidebar-inner scrollable-sidebar">
+		<div class="main-menu" id="nav">
+			<ul>
+				<li class="active">
+					<a href="/">
+						<span>
+							<img class="menu-icon" src="{% static 'dashboard/images/dashboard-icon.png' %}" alt="">
+						</span>
+						<span class="menu-text">
+							DASHBOARD
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
 
-        <li>
-          <a href="/playbook">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
-            </span>
-            <span class="menu-text">
-              PLAYBOOK
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
-        {% if not request.user.myuser.is_a_player %}
-        <li>
-          <a href="{% url 'all_groups' %}">
-            <span>
-              <img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
-            </span>
-            <span class="menu-text">
-              GROUPS
-            </span>
-            <span class="menu-hover"></span>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
+				<li class="openable open">
+					<a href="/to-do">
+						<span>
+							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
+						</span>
+						<span class="menu-text">
+							{% if request.user.myuser.is_a_player %}
+								<span class="notification-label bounceIn animation-delay6"></span>
+								TO DO
+							{% else %}
+								QUIZZES
+							{% endif %}
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
 
-    </div><!-- /main-menu -->
-  </div><!-- /sidebar-inner -->
-  <aside class="sidebar-footer skin-6">
-    <a href="/"><img class="dash-footer-logo" src="{% static 'dashboard/images/dashboard-logo.png' %}" alt=""></a>
-  </aside>
+				<li class="openable">
+					<a href="/analytics">
+						<span>
+							<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
+						</span>
+						<span class="menu-text">
+							ANALYTICS
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
+
+				<li>
+					<a href="/playbook">
+						<span>
+							<img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
+						</span>
+						<span class="menu-text">
+							PLAYBOOK
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
+
+				{% if not request.user.myuser.is_a_player %}
+					<li>
+						<a href="{% url 'all_groups' %}">
+							<span>
+								<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
+							</span>
+							<span class="menu-text">
+								GROUPS
+							</span>
+							<span class="menu-hover"></span>
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</div><!-- /main-menu -->
+	</div><!-- /sidebar-inner -->
+
+	<aside class="sidebar-footer skin-6">
+		<a href="/"><img class="dash-footer-logo" src="{% static 'dashboard/images/dashboard-logo.png' %}" alt=""></a>
+	</aside>
 </aside>

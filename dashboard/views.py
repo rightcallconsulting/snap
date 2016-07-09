@@ -164,21 +164,23 @@ def playbook(request, unit="offense"):
         player = request.user.player
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
-            'quiz_order_options': QuizOrders.options,
             'player': player
         })
     else:
         team = request.user.coach.team
+        
         formations = team.formation_set.all()
         offensive_formations = formations.filter(unit="offense")
-        #offensive_formations = list(offensive_formations)
-        #embed()
         defensive_formations = formations.filter(unit="defense")
+        
         play_id_array = []
+        
         unique_defensive_formations_dict = {}
+        
         for formation in defensive_formations:
             unique_defensive_formations_dict[formation.name] = formation
             unique_defensive_formations = unique_defensive_formations_dict.values()
+        
         return render(request, 'dashboard/playbook.html', {
             'formations': formations,
             'offensive_formations': offensive_formations,
@@ -187,7 +189,6 @@ def playbook(request, unit="offense"):
             'play_id_array': play_id_array,
             'page_header': 'PLAYBOOK',
             'selected_unit': unit,
-            'unique_defensive_formations': unique_defensive_formations,
         })
 
 @login_required
