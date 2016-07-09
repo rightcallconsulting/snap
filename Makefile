@@ -50,9 +50,17 @@ seed:
 dylanseed:
 	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/dylan_seed.json --settings=quiz_master.settings.local
 
-# Load seed file into database
+# Load dylan seed file into database
 loaddylan:
 	python manage.py loaddata dylan_seed.json --settings=quiz_master.settings.local 
+
+# Dump data into stanford_seed.json
+stanfordseed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/stanford_seed.json --settings=quiz_master.settings.local
+
+# Load stanford seed file into database
+loadstanford:
+	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local 
 
 ###############################################################################
 # Django/python development commands 
