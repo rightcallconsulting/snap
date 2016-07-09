@@ -1,55 +1,70 @@
-{% extends 'dashboard/base.html' %}
-{% load staticfiles%}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Right Call Consulting</title>
 
-{% block content %}
-	<div class="login-wrapper" style="background-image:url({% static 'dashboard/images/login-background.jpg' %}); background-repeat:no-repeat; background-size: cover;">
-		<div class="text-center">
-			<img class="login-logo" src="{% static 'dashboard/images/login-logo.png' %}" alt="">
-	    </div>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-		<div class="login-widget animation-delay1">
-			<div class="panel panel-default">
-				<div class="panel-heading clearfix">
-					<div class="pull-left">
-						<i class="fa fa-plus-circle fa-lg"></i> Register
-					</div>
+		{% load staticfiles %}
 
-					<div class="pull-right">
-						<span style="font-size:11px;">Already have an account?</span>
+		{% include "dashboard/includes/css.html" %}
+	</head>
 
-						<a class="btn btn-default btn-xs login-link" href="login" style="margin-top:-2px;">
-							<i class="fa fa-sign-in"></i> Sign In
-						</a>
-					</div>
-				</div><!--/panel-heading -->
+	<body class="overflow-hidden login-body" style="background-image:url({% static 'dashboard/images/login-background.png' %}); background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
+		<div class="login-wrapper">
+			<div class="text-center">
+				<img class="login-logo" src="{% static 'dashboard/images/login-logo.png' %}" alt="">
+		    </div>
 
-				<div class="panel-body">
-					<form action="/register" method="post" class="form-login" enctype="multipart/form-data"> 
-						{% csrf_token %}
+			<div class="login-widget animation-delay1">
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix">
+						<div class="pull-left">
+							<i class="fa fa-plus-circle fa-lg"></i> Register
+						</div>
 
-						{% for field in form %}
-							{% if field.label == 'Coach' or field.label == 'Player' %}
-								<div class="form-group">
-									<label class="label-checkbox">
-										 <input type="checkbox" name="{{field.label}}" />
-										 <span class="custom-checkbox info bounceIn animation-delay6"></span>
-										 {{field.label}}
-									</label>
-								</div><!-- /form-group -->
-							{% else %}
-								<div class="form-group">
-									{{ field.label_tag }}
-									{{ field }}
-								</div>
-							{% endif %}
-						{% endfor %}
+						<div class="pull-right">
+							<span style="font-size:11px;">Already have an account?</span>
 
-						<hr>
+							<a class="btn btn-default btn-xs login-link" href="login" style="margin-top:-2px;">
+								<i class="fa fa-sign-in"></i> Sign In
+							</a>
+						</div>
+					</div><!--/panel-heading -->
 
-						<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
-					</form>
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
-		</div><!-- /login-widget -->
-	</div><!-- /login-wrapper -->
-{% endblock %}
+					<div class="panel-body">
+						<form action="/register" method="post" class="form-login" enctype="multipart/form-data"> 
+							{% csrf_token %}
+
+							{% for field in form %}
+								{% if field.label == 'Coach' or field.label == 'Player' %}
+									<div class="form-group">
+										<label class="label-checkbox">
+											 <input type="checkbox" name="{{field.label}}" />
+											 <span class="custom-checkbox info bounceIn animation-delay6"></span>
+											 {{field.label}}
+										</label>
+									</div><!-- /form-group -->
+								{% else %}
+									<div class="form-group">
+										{{ field.label_tag }}
+										{{ field }}
+									</div>
+								{% endif %}
+							{% endfor %}
+
+							<hr>
+
+							<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
+						</form>
+					</div><!-- /panel-body -->
+				</div><!-- /panel -->
+			</div><!-- /login-widget -->
+		</div><!-- /login-wrapper -->
+
+		{% include "dashboard/includes/js.html" %}
+	</body>
+</html>

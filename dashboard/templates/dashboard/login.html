@@ -1,53 +1,68 @@
-{% extends 'dashboard/base.html' %}
-{% load staticfiles%}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Right Call Consulting</title>
 
-{% block content %}
-	<div class="login-wrapper" style="background-image:url({% static 'dashboard/images/login-background.jpg' %}); background-repeat:no-repeat; background-size: cover;">
-		<div class="text-center">
-			<img class="login-logo" src="{% static 'dashboard/images/login-logo.png' %}" alt="">
-		</div>
-		
-		<div class="login-widget animation-delay1">
-			<div class="panel panel-default">
-				<div class="panel-heading clearfix">
-					<div class="pull-left">
-						<i class="fa fa-lock fa-lg"></i> Login
-					</div>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-					<div class="pull-right">
-						<span style="font-size:11px;">Don't have any account?</span>
+		{% load staticfiles %}
 
-						<a class="btn btn-default btn-xs login-link" href="register" style="margin-top:-2px;">
-							<i class="fa fa-plus-circle"></i> Sign up
-						</a>
-					</div>
-				</div><!--/panel-heading -->
+		{% include "dashboard/includes/css.html" %}
+	</head>
 
-				<div class="panel-body">
-					<form action="/login" method="post" class="form-login"> 
-						{% csrf_token %}
-
-						{% for field in form %}
-							<div class="form-group">
-								{{ field.label_tag }}
-								{{ field }}
-							</div>
-						{% endfor %}
-
-						<div class="checkbox">
-						    <label class="label-checkbox">
-								<input type="checkbox" name="remember_me" />
-								<span class="custom-checkbox info bounceIn animation-delay6"></span>
-								Remember me<br/>
-							</label>
+	<body class="overflow-hidden login-body" style="background-image:url({% static 'dashboard/images/login-background.png' %}); background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
+		<div class="login-wrapper">
+			<div class="text-center">
+				<img class="login-logo" src="{% static 'dashboard/images/login-logo.png' %}" alt="">
+			</div>
+			
+			<div class="login-widget animation-delay1">
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix">
+						<div class="pull-left">
+							<i class="fa fa-lock fa-lg"></i> Login
 						</div>
 
-						<hr>
-						
-						<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
-					</form>
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
-		</div><!-- /login-widget -->
-	</div><!-- /login-wrapper -->
-{% endblock %}
+						<div class="pull-right">
+							<span style="font-size:11px;">Don't have any account?</span>
+
+							<a class="btn btn-default btn-xs login-link" href="register" style="margin-top:-2px;">
+								<i class="fa fa-plus-circle"></i> Sign up
+							</a>
+						</div>
+					</div><!--/panel-heading -->
+
+					<div class="panel-body">
+						<form action="/login" method="post" class="form-login"> 
+							{% csrf_token %}
+
+							{% for field in form %}
+								<div class="form-group">
+									{{ field.label_tag }}
+									{{ field }}
+								</div>
+							{% endfor %}
+
+							<div class="checkbox">
+							    <label class="label-checkbox">
+									<input type="checkbox" name="remember_me" />
+									<span class="custom-checkbox info bounceIn animation-delay6"></span>
+									Remember me<br/>
+								</label>
+							</div>
+
+							<hr>
+							
+							<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
+						</form>
+					</div><!-- /panel-body -->
+				</div><!-- /panel -->
+			</div><!-- /login-widget -->
+		</div><!-- /login-wrapper -->
+
+		{% include "dashboard/includes/js.html" %}
+	</body>
+</html>

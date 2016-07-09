@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 * {
     box-sizing: border-box;
 }
@@ -136,14 +138,6 @@ img.menu-icon{
   height: 600px;
   margin-bottom: 50px;
   margin-top: 50px;
-}
-
-.login-wrapper{
-  height: 100%;
-}
-
-.login-logo{
-  max-width: 600px;
 }
 
 .team-logo-wrapper{
@@ -1135,11 +1129,6 @@ input.create-quiz{
 .status-complete{
   background-color: #558B2F;
   padding: 8px;
-}
-
-.login-wrapper{
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 select#id_player{
