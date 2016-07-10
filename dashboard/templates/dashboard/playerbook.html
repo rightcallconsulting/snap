@@ -264,39 +264,46 @@
 				</div><!--/dash-col-->
 
 				<div class="modal fade" id="quizOptionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="myModalLabel">Quiz Options</h4>
-				      </div>
-
-				      <form id="quizOptionsForm">
-					      <div class="modal-body">
-					      	<div class="form-group">
-								    <label for="inputNumQuestions">Number of questions</label>
-								    <input id="inputNumQuestions" type="number" class="form-control" placeholder="Default: 5" />
-								  </div>
-								  <div class="form-group">
-								  	<label for="inputOrder">Order</label>
-								  	<select id="inputOrder" class="form-control">
-								  		{% for option in quiz_order_options %}
-								  			<option value="{{option.url_key}}">
-								  				{{option.display_text}}
-								  			</option>
-								  		{% endfor %}
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+									Quiz Options
+								</h4>
+							</div>
+							<form id="quizOptionsForm">
+								<div class="modal-body">
+									<div class="form-group">
+										<label for="inputNumQuestions">
+											Number of questions
+										</label>
+									<input id="inputNumQuestions" type="number" class="form-control" placeholder="Default: 5" />
+									</div>
+									<div class="form-group">
+										<label for="inputOrder">
+											Order
+										</label>
+										<select id="inputOrder" class="form-control">
+											{% for option in quiz_order_options %}
+												<option value="{{option.url_key}}">
+													{{option.display_text}}
+												</option>
+											{% endfor %}
 										</select>
-								  </div>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					        <input type="submit" class="btn btn-primary" value="Quiz Me" />
-					      </div>
-				      </form>
-
-				    </div>
-				  </div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">
+										Cancel
+									</button>
+									<input type="submit" class="btn btn-primary" value="Quiz Me" />
+								</div>
+							</form>
+						</div>
+					</div>
 				</div> <!-- #quizOptionsModal -->
 
 				<script src="{% static 'dashboard/js/customQuizForm.js' %}"></script>
@@ -308,9 +315,12 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
+							<h2 class="m-top-none" id="userCount">
+								362
+							</h2>
 							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
+							<i class="fa fa-arrow-circle-o-up fa-lg"></i>
+							<span class="m-left-xs">5% Higher</span>
 							<div class="stat-icon">
 								<i class="fa fa-user fa-3x"></i>
 							</div>
@@ -321,9 +331,12 @@
 					</div><!-- /.col -->
 					<div class="col-lg-6">
 						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+							<h2 class="m-top-none">
+								<span id="serverloadCount">15</span>%
+							</h2>
 							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
+							<i class="fa fa-arrow-circle-o-up fa-lg"></i>
+							<span class="m-left-xs">1% Higher</span>
 							<div class="stat-icon">
 								<i class="fa fa-hdd-o fa-3x"></i>
 							</div>

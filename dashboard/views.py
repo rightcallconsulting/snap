@@ -207,7 +207,7 @@ def todo(request):
         completed_tests = all_tests.filter(completed=True).order_by('-created_at')
         uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
         in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
-        return render(request, 'dashboard/to-do.html', {
+        return render(request, 'dashboard/todo.html', {
             'completed_tests': completed_tests,
             'uncompleted_tests': uncompleted_tests,
             'in_progress_tests': in_progress_tests,
@@ -220,7 +220,7 @@ def todo(request):
         tests_assigned = Test.objects.filter(coach_who_created=request.user)
         groups = PlayerGroup.objects.all()
         #embed()
-        return render(request, 'dashboard/to-do.html', {
+        return render(request, 'dashboard/todo.html', {
             'uncompleted_tests': tests_assigned,
             'current_time': timezone.now(),
             'new_time_threshold': timezone.now() + timedelta(days=3),
