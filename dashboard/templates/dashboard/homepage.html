@@ -132,14 +132,17 @@
 					</div>
 				</div><!--/news-col-->
 			</div><!--/padding-->
-
-			<div class="loading-overlay">
-				<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-			</div>
 		</div><!--/main-container-->
 	</div><!--/wrapper-->
 
-	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+	<div class="loading-overlay">
+		<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+	</div>
+
+	<a href="" id="scroll-to-top" class="hidden-print">
+		<i class="fa fa-chevron-up"></i>
+	</a>
+
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">

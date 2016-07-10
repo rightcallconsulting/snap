@@ -406,7 +406,7 @@ def delete_player_from_group(request):
     #return HttpResponse('')
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def all_groups(request):
+def groups(request):
     team = request.user.coach.team
     groups = PlayerGroup.objects.filter(team=team)
     if len(groups) > 0:
@@ -415,7 +415,7 @@ def all_groups(request):
     else:
         first_group = []
         analytics = None
-    return render(request, 'dashboard/all_groups.html', {
+    return render(request, 'dashboard/groups.html', {
         'team': team,
         'groups': groups,
         'first_players': first_group,
