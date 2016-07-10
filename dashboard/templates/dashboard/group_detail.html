@@ -2,266 +2,170 @@
 {% load staticfiles %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
-
+	<div id="wrapper" class="preload">
 	{% include "dashboard/sidebar.html" %}
-
-	<form id="add-player-to-group-form" class="AddPlayerToGroupForm" method="POST"><input type="hidden" name="form_action" value="add_player_to_group"><input id="player-id-input" type="hidden" name="playerID" value="0"><input id="group-id-input" type="hidden" name="groupID" value="0">{% csrf_token %}
-
-	</form>
-
-
-	<div id="main-container">
+	
+	<div id="main-container" onload="initGroupTable()">
 		{% include "dashboard/navbar.html" %}
-
 		{% include "dashboard/grey_container.html" %}
 
-		<script type="text/javascript">
-			var createUserTable = function(users){
-				var innerHTML = "<table class=\"player-list\">";
-				innerHTML += "<tr>"
-				innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>"
-				innerHTML += "</tr>"
-				for(var i = 0; i < users.length; i++){
-					var user = users[i];
+		<div class="all-groups padding-md">
+			<div class="action-boxes">
+				<table class="action-table">
+					<tbody>
+						<tr>
+							<td>
+								<a href="/create_group">
+									<span>
+										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+										&nbsp;&nbsp;&nbsp;CREATE GROUP
+									</span>
+								</a>
+							</td>
+							<td>
+								<a href="/groups/1" id="manage-groups-link">
+									<span>
+										<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
+										&nbsp;&nbsp;&nbsp;MANAGE GROUPS
+									</span>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<script type="text/javascript">
+				var createUserTable = function(users) {
+					var innerHTML = "<table class=\"player-list\">";
 					innerHTML += "<tr>"
-					innerHTML += "<td>" + user.getFullName() + "</td>"
-					innerHTML += "<td>" + user.position + "</td>"
-					innerHTML += "<td>SR</td>"
-					innerHTML += "<td>96%</td>"
-					innerHTML += "<td id=\"remove-player-" + user.id + "\"><button id=\"" + user.id + "\" onclick=\"clickRemoveButton(this)\"><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/remove-icon.png' %}\" alt=\"\"></button></td>"
+					innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
 					innerHTML += "</tr>"
-				}
-				innerHTML += "</table>"
-				return innerHTML;
-			}
-
-			var createMiniUserTable = function(users){
-				var innerHTML = "<table class=\"player-list\">";
-				for(var i = 0; i < users.length; i++){
-					var user = users[i];
-					innerHTML += "<tr id=\"" + user.id + "\">"
-					innerHTML += "<td>" + user.getFullName() + "</td>"
-					innerHTML += "<td>" + user.position + "</td>"
-					innerHTML += "<td>SR</td>"
-					innerHTML += "<td><img class=\"remove-player-icon\" src=\"{% static 'dashboard/images/move-icon.png' %}\" alt=\"\"></td>"
-					innerHTML += "</tr>"
-				}
-				innerHTML += "</table>"
-				return innerHTML;
-			}
-
-			var changeGroup = function(sel){
-				var groupTableWrapper = document.getElementById('group-table-wrapper');
-				var playerLink = document.getElementById('add-player-link');
-				var groupID = sel.value;
-				document.getElementById('current-group-id').innerHTML = groupID;
-				var queryString = "/groups/" + groupID + "/json";
-				var users = [];
-				$.getJSON(queryString, function(data, jqXHR){
-					data.forEach(function(userObject){
-						var u = createUserFromJSON(userObject);
-						users.push(u);
-					});
-					groupTableWrapper.innerHTML = createUserTable(users);
-				});
-			}
-
-			var initGroupTable = function(){
-				debugger;
-				var sel = document.getElementById('group-form');
-				changeGroup(sel);
-			};
-
-			var dragPlayerRow = function(row){
-
-			};
-
-			function getCookie(name) {
-				var cookieValue = null;
-				if (document.cookie && document.cookie != '') {
-					var cookies = document.cookie.split(';');
-					for (var i = 0; i < cookies.length; i++) {
-						var cookie = jQuery.trim(cookies[i]);
-						// Does this cookie string begin with the name we want?
-						if (cookie.substring(0, name.length + 1) == (name + '=')) {
-							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-							break;
-						}
+					
+					for(var i = 0; i < users.length; i++) {
+						var user = users[i];
+						innerHTML += "<tr>"
+						innerHTML += "<td>" + user.getFullName() + "</td>"
+						innerHTML += "<td>" + user.position + "</td>"
+						innerHTML += "<td>SR</td>"
+						innerHTML += "<td>96%</td>"
+						innerHTML += "</tr>"
 					}
+
+					innerHTML += "</table>"
+
+					return innerHTML;
 				}
-				return cookieValue;
-			}
 
-			var clickMoveButton = function(e){
-				debugger;
-				e.preventDefault();
-			}
+				var changeGroup = function(sel) {
+					var groupTableWrapper = document.getElementById('group-table-wrapper');
+					var playerLink = document.getElementById('add-player-link');
+					var manageLink = document.getElementById('manage-groups-link');
+					var subManageLink = document.getElementById('manage-group-link');
+					var groupID = sel.value;
 
-			var clickRemoveButton = function(button){
-				if(!button.classList.contains('clicked')){
-					button.classList.add('clicked');
-					button.innerHTML = "<span>REMOVE</span>"
-					return false;
-				}else{
-					/*
-					var groupID = document.getElementById('group-form').value;//
-					var playerID = button.value;
+					manageLink.href = '/groups/' + groupID;
+					subManageLink.href = manageLink.href;
+					var queryString = "/groups/" + groupID + "/json";
+					var users = [];
 
-					//POST REQUEST
-					var csrftoken = getCookie('csrftoken');
-					$.ajax({
-						url : window.location.href, // the endpoint,commonly same url
-						type : "POST", // http method
-						data : { csrfmiddlewaretoken : csrftoken,
-							email : email,
-							password : password
-						}, // data sent with the post request
-
-						// handle a successful response
-						success : function(json) {
-							console.log(json); // another sanity check
-							//On success show the data posted to server as a message
-							alert('Hi   '+json['email'] +'!.' + '  You have entered password:'+ json['password']);
-						},
-
-						// handle a non-successful response
-						error : function(xhr,errmsg,err) {
-							console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-						}
+					$.getJSON(queryString, function(data, jqXHR){
+						data.forEach(function(userObject){
+							var u = createUserFromJSON(userObject);
+							users.push(u);
+							groupTableWrapper.innerHTML = createUserTable(users);
+						});
 					});
-					*/
-				}
-			};
+				};
+
+				var initGroupTable = function(){
+					debugger;
+					var sel = document.getElementById('group-form');
+					changeGroup(sel);
+				};
 			</script>
 
-		<div class="padding-md">
-			<div class="panel playbook-top-panel">
-				<div class="col-lg-2">
-					<!-- EMPTY COLUMN FOR SPACING -->
-				</div>
-				<div class="col-lg-4"><a href="/create_group" id="create-group-link">
-					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE GROUP</span>
-				</a></div>
-				<div class="col-lg-4"><a href="#" id="add-player-link">
-					<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;ADD PLAYER</span>
-				</a></div>
-			</div>
-
-			<div class="panel group-select-panel">
-				<div id="current-group-id" class="hidden">{{group.id}}</div>
 			<form>
 				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-					<optgroup label="Groups"> <!-- Use this to create sub-groups -->
+					<optgroup label="Groups"><!-- Use this to create sub-groups -->
 						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
-						{% for g in groups %}
-						{% if g.id == group.id %}
-						<option value="{{g.id}}" selected>&nbsp;&nbsp;&nbsp;{{g}}</option>
-						{% else %}
-						<option value="{{g.id}}">&nbsp;&nbsp;&nbsp;{{g}}</option>
-						{% endif %}
+						{% for group in groups %}
+							<option value="{{group.id}}">
+								&nbsp;&nbsp;&nbsp;{{group}}
+							</option>
 						{% endfor %}
 					</optgroup>
 				</select>
 			</form>
-			</div>
 
-			<div class="row news-row group-home">
-				<div class="col-lg-7 news-col">
+			<div class="row dash-row group-home">
+				<div class="col-lg-7 news-col" id="display-group-box">
 					<div class = "table-wrapper" id="group-table-wrapper">
 						<table class="player-list">
 							<tbody>
 								<tr>
-									<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th><th></th>
+									<th>PLAYER</th>
+									<th>POS</th>
+									<th>YEAR</th>
+									<th>ACTION</th>
 								</tr>
-                {% for player in players %}
-								<tr>
-								<td>{{player.first_name}} {{player.last_name}}</td>
-								<td>{{player.position}}</td>
-								<td>SR</td>
-								<td>96%</td>
-								<td id="remove-player-{{player.id}}"><form class="DeletePlayerFromGroupForm" method="POST"><input type="hidden" name="form_action" value="delete_player_from_group"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="{{group.id}}">{% csrf_token %}
-									<button value="{{player.id}}" onclick="clickRemoveButton(this)" type="submit"><img class="remove-player-icon" src="{% static 'dashboard/images/remove-icon.png' %}" alt=""></button>
-								</form></td>
+								{% if first_players %}
+									{% for player in first_players %}
+										<tr>
+											<td>{{player.first_name}} {{player.last_name}}</td>
+											<td>{{player.position}}</td>
+											<td>SR</td>
+											<td>
+												<a href="" id="scroll-to-top" class="hidden-print">
+													<i class="fa fa-minus-circle"></i>
+												</a>
+											</td>
+										</tr>
+									{% endfor %}
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+					<div class = "table-footer">
+						<table class="group-footer-table">
+							<tbody>
+							<tr>
+								<td>edit name</td>
+								<td>color</td>
+								<td>
+									<a href="/groups/1" id="manage-group-link">manage group</a>
+								</td>
 							</tr>
-                {% endfor %}
 							</tbody>
 						</table>
 					</div>
 				</div>
-				<div class="col-lg-4 news-col">
-					<div class="row stacked-row">
-						<div class="text-center news-header">
-							<span><h4>GROUPS</h4></span>
-						</div>
-						<div class = "table-wrapper scrollable-table three-column-table" id="groups-table-wrapper">
-							<table class="group-table" id="select-group-box">
-								<tbody>
-									{% for group in groups %}
-									{% if forloop.counter|add:"-1"|divisibleby:3 %}
-										<tr>
-									{% endif %}
-
-
-										<td><input class="bounceIn animation-delay5 group-button" id="{{group.id}}" type="submit" value="{{group}}"></td>
-
-										{% if forloop.counter|divisibleby:3 %}
-											</tr>
-										{% endif %}
-									{% endfor %}
-									{% if groups|length|add:"1"|divisibleby:3 %}
-										<td></td><td></td></tr>
-									{% elif groups|length|add:"2"|divisibleby:3 %}
-										<td></td></tr>
-									{% endif %}
-
-
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div class="row stacked-row">
-						<div class="text-center news-header">
-							<span><h4>PLAYERS</h4></span>
-						</div>
-						<div class = "table-wrapper scrollable-table" id="players-table-wrapper">
-							<table class="player-list">
-								<tbody>
-	                {% for player in players %}
-									<tr id="{{player.id}}">
-									<td>{{player.first_name}} {{player.last_name}}</td>
-									<td>{{player.position}}</td>
-									<td>SR</td>
-									<td><form class="AddPlayerToGroupForm" method="POST"><input type="hidden" name="form_action" value="add_player_to_group"><input type="hidden" name="playerID" value="{{player.id}}"><input type="hidden" name="groupID" value="0">{% csrf_token %}
-										<img class="remove-player-icon" src="{% static 'dashboard/images/move-icon.png' %}" alt="">
-									</form></td>
-								</tr>
-	                {% endfor %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				<div class="col-lg-5 group-analytics-col no-border">
 				</div>
 			</div><!-- /panel -->
+		</div><!--all-groups-->
+	</div><!--main-container-->
 
+	<div class="loading-overlay">
+		<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+	</div>	
 
+	<a href="" id="scroll-to-top" class="hidden-print">
+		<i class="fa fa-chevron-up"></i>
+	</a>
+	
+	<script type="text/javascript">
+		$('.assign-test').click(function(){
+			testID = this.id.replace("test-", "");
+			$(this).removeClass('btn-success');
+			groupID = $('.group-header')[0].id.replace("group-","");
+			$.post( "/groups/"+ groupID, { testID: testID});
+		})
+	</script>
 
-			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-      <script type="text/javascript">
-        $('.assign-test').click(function(){
-          testID = this.id.replace("test-", "");
-          $(this).removeClass('btn-success')
-          groupID = $('.group-header')[0].id.replace("group-","");
-          $.post( "/groups/"+ groupID, { testID: testID});
-        })
-      </script>
-			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-      {% endblock %}
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% endblock %}

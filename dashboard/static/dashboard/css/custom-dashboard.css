@@ -1136,3 +1136,7 @@ input.create-quiz{
 select#id_player{
   display:none;
 }
+
+.fa-minus-circle {
+	color: red;
+}

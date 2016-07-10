@@ -90,9 +90,8 @@
 			</script>
 
 			<form>
-				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-					<optgroup label="Groups"><!-- Use this to create sub-groups -->
-						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups">
 						{% for group in groups %}
 							<option value="{{group.id}}">
 								&nbsp;&nbsp;&nbsp;{{group}}
@@ -181,9 +180,9 @@
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">
-	var percentCorrect = {{analytics.total_correct_attempts_percentage}},
-	percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
-	percentSkipped = {{analytics.total_skipped_attempts_percentage}};
+		var percentCorrect = {{analytics.total_correct_attempts_percentage}},
+			percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
+			percentSkipped = {{analytics.total_skipped_attempts_percentage}};
 	</script>
 	<!-- Loading Chart.js through CDN for now -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
