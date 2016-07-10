@@ -162,7 +162,7 @@ def analytics(request):
 def playbook(request, unit="offense"):
     if request.user.myuser.is_a_player:
         player = request.user.player
-        order = ['Random', '']
+        order = ['Random', 'Difficulty', ]
         return render(request, 'dashboard/playerbook.html', {
             'page_header': 'PLAYBOOK',
             'player': player,

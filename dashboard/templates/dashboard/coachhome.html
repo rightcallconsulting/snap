@@ -3,192 +3,233 @@
 {% load app_filters %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
-	{% include "dashboard/sidebar.html" %}
+	<div id="wrapper" class="preload">
+		{% include "dashboard/sidebar.html" %}
 
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-	<div id="main-container">
-		{% include "dashboard/navbar.html" %}
+			<div class="coach-home">
+				<div class="content-container">
+					<div class="coach-action-row action-boxes">
+						<script>
+							var clickButton = function(index){
+								var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
+								if(index >= 0 && index < links.length){
+									window.location.href = links[index];
+								}
+							};
+						</script>
 
-		{% include "dashboard/grey_container.html" %}
-
-		<div class="coach-home">
-			<div class="content-container">
-				<div class="coach-action-row action-boxes">
-					<script>
-					var clickButton = function(index){
-						var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
-						if(index >= 0 && index < links.length){
-							window.location.href = links[index];
-						}
-
-					};
-
-					</script>
-					<table class="coach-action-table">
-						<tbody>
-							<tr>
-								<!--<td class="blank"></td>-->
-								<td class="first">
-									<button onclick="clickButton(0)">
-										CREATE<br />FORMATION</button>
+						<table class="coach-action-table">
+							<tbody>
+								<tr>
+									<td class="first">
+										<button onclick="clickButton(0)">
+											CREATE<br />FORMATION
+										</button>
 									</td>
-									<td class="blank"></td>
+									<td class="blank">
+									</td>
 									<td class="second">
 										<button onclick="clickButton(1)">
-											CREATE<br />PLAY</button>
-										</td>
-										<td class="blank"></td>
-										<td class="third">
-											<button onclick="clickButton(2)">
-												CREATE<br />QUIZ</button>
-											</td>
-											<td class="blank"></td>
-											<td class="fourth">
-												<button onclick="clickButton(3)">
-													GROUPS</button>
+											CREATE<br />PLAY
+										</button>
+									</td>
+									<td class="blank">
+									</td>
+									<td class="third">
+										<button onclick="clickButton(2)">
+											CREATE<br />QUIZ
+										</button>
+									</td>
+									<td class="blank">
+									</td>
+									<td class="fourth">
+										<button onclick="clickButton(3)">
+											GROUPS
+										</button>
+									</td>
+									<td class="blank"></td>
+									<td class="fifth">
+										<button onclick="clickButton(4)">
+											ANALYTICS
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div><!--coach-action-row-->
+					<div class="main-content-area">
+						<div class="dash-col">
+							<div class="dash-header">
+								<span><h4>ANALYTICS</h4></span>
+							</div>
+							{% if analytics %}
+								<div class="analytics-graph-row">
+									<table class="analytics-table">
+										<tbody>
+											<tr>
+												<td>
+													<canvas id="percentCorrectChart"></canvas>
+													<br />
+													<span>CORRECT</span>
 												</td>
-												<td class="blank"></td>
-												<td class="fifth">
-													<button onclick="clickButton(4)">
-														ANALYTICS</button>
+											<td>
+												<canvas id="percentIncorrectChart"></canvas>
+												<br />
+												<span>MISSED</span>
+											</td>
+											<td>
+												<canvas id="percentSkippedChart"></canvas>
+												<br />
+												<span>SKIPPED</span>
+											</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="analytics-table-row">
+									<div class="table-header">
+										<span>PLAY ALERTS</span>
+									</div>
+									<table class="alerts-list">
+										<tbody>
+											<tr>
+												<th>PLAY</th>
+												<th>CORRECT %</th>
+											</tr>
+											{% for play, percentage in alarms.items %}
+												<tr>
+													<td>
+														{{play}}
+													</td>
+													<td>
+														{{percentage}}%
 													</td>
 												</tr>
-											</tbody>
-										</table>
-									</div>
-									<div class="main-content-area">
-										<div class="dash-col">
-											<div class="dash-header">
-												<span><h4>ANALYTICS</h4></span>
-											</div>
-											{% if analytics %}
-											<div class="analytics-graph-row">
-												<table class="analytics-table">
-													<tbody>
-														<tr>
-															<td><canvas id="percentCorrectChart"></canvas><br /><span>CORRECT</span></td>
-															<td><canvas id="percentIncorrectChart"></canvas><br /><span>MISSED</span></td>
-															<td><canvas id="percentSkippedChart"></canvas><br /><span>SKIPPED</span></td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-											<div class="analytics-table-row">
-												<div class="table-header"><span>PLAY ALERTS</span></div>
-												<table class="alerts-list">
-													<tbody>
-														<tr><th>PLAY</th><th>CORRECT %</th></tr>
-														{% for play, percentage in alarms.items %}
-														<tr>
-															<td>
-																{{play}}
-															</td>
-															<td>
-																{{percentage}}%
-															</td>
-														</tr>
-														{% endfor %}
-													</tbody>
-												</table>
-											</div>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							{% endif %}
+						</div><!--/dash-col-->
+					</div><!--/main-content-area-->
+					<div class="stacked-col">
+						<div class="secondary-content-area top">
+							<div class="dash-header">
+								<span>
+									<h4>
+										TESTS
+									</h4>
+								</span>
+							</div>
+							<table class="table to-do-table" id="responsiveTable">
+								<tbody>
+								<tr>
+									<th>TEST</th>
+									<th>FOR</th>
+									<th>DUE</th>
+									<th>STATUS</th>
+								</tr>
+								{% for test in uncompleted_tests %}
+									{% if forloop.counter0 < 2 %}
+										<tr id="test-{{test.id}}">
+											<td>
+												{{test.name}}
+											</td>
+											<td>
+												{{test.player.user.first_name}} {{test.player.user.last_name}}
+											</td>
+											<td>
+												{% due_date_default test.deadline %}
+											</td>
+											<td>
+												<span class="status-complete">COMPLETE</span>
+											</td>
+										</tr>
+									{% endif %}
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="secondary-content-area bottom">
+							<div class="dash-header">
+								<span><h4>NEWS FEED</h4></span>
+							</div>
+							<div class="non-scrollable-table-wrapper">
+								<table class="table news-feed-table">
+									<tbody>
+										{% for test in uncompleted_tests %}
+											{% if forloop.counter0 < 1 %}
+												<tr>
+													<td>
+														<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
+													</td>
+													<td>
+														<a class="coach-link" href="#">
+															{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
+														</a>: Added a new 
+														<a class="play-link" href="#">
+															PLAY
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
+													</td>
+													<td>
+														<a class="coach-link" href="#">
+															{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
+														</a>: Added a new 
+														<a class="formation-link" href="#">
+															FORMATION
+														</a>
+													</td>
+												</tr>
 											{% endif %}
-										</div>
-									</div>
-										<div class="stacked-col">
-											<div class="secondary-content-area top">
-												<div class="dash-header">
-													<span><h4>TESTS</h4></span>
-												</div>
-												<table class="table to-do-table" id="responsiveTable">
-													<tbody>
-														<tr>
-															<th>TEST</th><th>FOR</th><th>DUE</th><th>STATUS</th>
-														</tr>
-														{% for test in uncompleted_tests %}
-														{% if forloop.counter0 < 2 %}
-														<tr id="test-{{test.id}}">
-															<td>
-																{{test.name}}
-															</td>
-															<td>{{test.player.user.first_name}} {{test.player.user.last_name}}</td>
-															<td>{% due_date_default test.deadline %}</td>
-															<td><span class="status-complete">COMPLETE</span></td>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div><!--/stacked-col-->
+				</div><!--/content-container-->
+			</div><!--/coach-home-->
+		</div><!--/main-container-->
+	</div><!--/wrapper-->
 
-														</tr>
-														{% endif %}
-														{% endfor %}
+	<div class="loading-overlay">
+		<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+	</div>
 
-													</tbody>
-												</table>
-											</div>
-											<div class="secondary-content-area bottom">
-												<div class="dash-header">
-													<span><h4>NEWS FEED</h4></span>
-												</div>
-												<div class="non-scrollable-table-wrapper">
-													<table class="table news-feed-table">
-														<tbody>
-															{% for test in uncompleted_tests %}
-															{% if forloop.counter0 < 1 %}
-															<tr>
-																<td>
-																	<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
-																</td>
-																<td>
-																	<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="play-link" href="#">PLAY</a>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
-																</td>
-																<td>
-																	<a class="coach-link" href="#">{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}</a>: Added a new <a class="formation-link" href="#">FORMATION</a>
-																</td>
-															</tr>
-															{% endif %}
-															{% endfor %}
+	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	
+	<!-- Pass Django variables to JS assets -->
+	<script type="text/javascript">
+		var percentCorrect = {{analytics.total_correct_attempts_percentage}},
+		percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
+		percentSkipped = {{analytics.total_skipped_attempts_percentage}};
+	</script>
 
+	<!-- Loading Chart.js through CDN for now -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
-								</div>
-
-								<div class="loading-overlay">
-									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-								</div>
-
-
-								<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-
-								<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-								<!-- Pass Django variables to JS assets -->
-								<script type="text/javascript">
-								  var percentCorrect = {{analytics.total_correct_attempts_percentage}},
-										percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
-										percentSkipped = {{analytics.total_skipped_attempts_percentage}};
-								</script>
-
-								<!-- Loading Chart.js through CDN for now -->
-								<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-
-								<!-- Build Charts -->
-								<script src="{% static 'dashboard/js/analytics.js' %}"></script>
-								<script type="text/javascript">
-								window.onresize = function(){
-									makeChart(percentCorrect, colors.correct, 'percentCorrectChart');
-									makeChart(percentIncorrect, colors.incorrect, 'percentIncorrectChart');
-									makeChart(percentSkipped, colors.skipped, 'percentSkippedChart');
-								}
-								</script>
-								{% endblock %}
+	<!-- Build Charts -->
+	<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+	<script type="text/javascript">
+		window.onresize = function(){
+			makeChart(percentCorrect, colors.correct, 'percentCorrectChart');
+			makeChart(percentIncorrect, colors.incorrect, 'percentIncorrectChart');
+			makeChart(percentSkipped, colors.skipped, 'percentSkippedChart');
+		}
+	</script>
+{% endblock %}

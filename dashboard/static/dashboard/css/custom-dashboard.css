@@ -607,7 +607,6 @@ input.create-quiz{
 .coach-action-table td{
   color: #FFF;
   height: 100px;
-  /*background-color: #255254;*/
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: middle;
@@ -742,7 +741,10 @@ input.create-quiz{
   height: 100%;
   background: none;
   border: none;
-  font-size: 20px;
+  padding: 0px;
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .coach-action-table td.first{
