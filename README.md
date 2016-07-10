@@ -1,2 +1,2 @@
-# quiz_django_local
-Contains local version of django quiz app
+# snap
+Our Snap product's webapp code
