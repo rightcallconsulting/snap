@@ -1,2 +1,14 @@
-# snap
+# Snap
 Our Snap product's webapp code
+
+<h3>Right Call Consulting Style Guide</h3>
+<h4>General</h4>
+<h5>Indenting</h5>
+<ul>
+	<li>Indent using tabs</li>
+	<li>Tab size: 4</li>
+</ul>
+<h4>Python</h4>
+<h4>HTML5</h4>
+<h4>CSS</h4>
+<h4>JavaScript</h4>
