@@ -2,59 +2,85 @@
 {% load avatar_tags %}
 
 <div id="top-nav" class="main-header clearfix">
-  <table class="top-nav-table"><tbody><tr>
-    <td class="left">
-      <h4>
-          {{page_header}}
-      </h4>
-    </td>
-    <td class="middle">
-      <a href="/">
-      <!--<img src="{% static 'dashboard/images/team-helmet.png' %}" alt="">-->
-      <img src="{% static 'dashboard/images/team-banner.png' %}" alt="Stanford"></a>
-    </td>
-    <td class="right">
-    <ul class="nav-notification clearfix">
-      <li class="profile dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <strong>{{request.user.get_full_name}}</strong>
-          <span><i class="fa fa-chevron-down"></i></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li>
-            <a class="clearfix" href="profile">
-              {% if request.user.myuser.avatar_image %}
-                <img src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
-              {% else %}
-                <img src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
-              {% endif %}
-              <div class="detail">
-                <strong>{{request.user.get_full_name}}</strong>
-                <p class="grey">{{request.user.email}}</p>
-              </div>
-            </a>
-          </li>
-          <li><a tabindex="-1" href="edit_profile" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
-          <li><a tabindex="-1" href="/settings" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
-          <li class="divider"></li>
-          <li><a tabindex="-1" class="main-link logoutConfirm_open" href="/logout"><i class="fa fa-lock fa-lg"></i> Log out</a></li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="nav-notification clearfix">
-      <li class="profile">
-        <span>
-          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/question-mark-icon.png' %}" alt="?"></a>
-        </span>
-      </li>
-    </ul>
-    <ul class="nav-notification clearfix">
-      <li class="profile">
-        <span>
-          <a href="#"><img class="top-nav-button" src="{% static 'dashboard/images/settings-icon.png' %}" alt="Settings"></a>
-        </span>
-      </li>
-    </ul>
-  </td>
-</tr></tbody></table>
+	<table class="top-nav-table">
+		<tbody>
+			<tr>
+				<td class="left">
+					<h4>
+						{{page_header}}
+					</h4>
+				</td><!--/left-->
+				
+				<td class="middle">
+					<a href="/">
+						<img src="{% static 'dashboard/images/team-banner.png' %}" alt="Stanford">
+					</a>
+				</td><!--/middle-->
+
+				<td class="right">
+					<ul class="nav-notification clearfix">
+						<li class="profile dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								<strong>{{request.user.get_full_name}}</strong>
+								<span>
+									<i class="fa fa-chevron-down"></i>
+								</span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a class="clearfix" href="profile">
+										{% if request.user.myuser.avatar_image %}
+											<img src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
+										{% else %}
+											<img src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
+										{% endif %}
+										
+										<div class="detail">
+											<strong>{{request.user.get_full_name}}</strong>
+											<p class="grey">{{request.user.email}}</p>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a tabindex="-1" href="edit_profile" class="main-link">
+										<i class="fa fa-edit fa-lg"></i> Edit profile
+									</a>
+								</li>
+								<li>
+									<a tabindex="-1" href="/settings" class="theme-setting">
+										<i class="fa fa-cog fa-lg"></i> Settings
+									</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									<a tabindex="-1" class="main-link logoutConfirm_open" href="/logout">
+										<i class="fa fa-lock fa-lg"></i> Log out
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav-notification clearfix">
+						<li class="profile">
+							<span>
+								<a href="#">
+									<img class="top-nav-button" src="{% static 'dashboard/images/question-mark-icon.png' %}" alt="?">
+								</a>
+							</span>
+						</li>
+					</ul>
+					<ul class="nav-notification clearfix">
+						<li class="profile">
+							<span>
+								<a href="#">
+									<img class="top-nav-button" src="{% static 'dashboard/images/settings-icon.png' %}" alt="Settings">
+								</a>
+							</span>
+						</li>
+					</ul>
+				</td><!--/right-->
+			</tr>
+		</tbody>
+	</table>
 </div><!-- /top-nav-->
