@@ -28,7 +28,11 @@
 							<table class="table to-do-table" id="responsiveTable">
 								<tbody>
 									<tr>
-										<th>NAME</th><th>TYPE</th><th>DUE</th><th>ASSIGNED BY</th><th>STATUS</th>
+										<th>NAME</th>
+										<th>TYPE</th>
+										<th>DUE</th>
+										<th>ASSIGNED BY</th>
+										<th>STATUS</th>
 									</tr>
 									{% for test in uncompleted_tests %}
 										<tr id="test-{{test.id}}">
@@ -64,9 +68,21 @@
 							<table class="analytics-table">
 								<tbody>
 									<tr>
-										<td><canvas id="percentCorrectChart"></canvas><br /><span>CORRECT</span></td>
-										<td><canvas id="percentIncorrectChart"></canvas><br /><span>MISSED</span></td>
-										<td><canvas id="percentSkippedChart"></canvas><br /><span>SKIPPED</span></td>
+										<td>
+											<canvas id="percentCorrectChart"></canvas>
+											<br />
+											<span>CORRECT</span>
+										</td>
+										<td>
+											<canvas id="percentIncorrectChart"></canvas>
+											<br />
+											<span>MISSED</span>
+										</td>
+										<td>
+											<canvas id="percentSkippedChart"></canvas>
+											<br />
+											<span>SKIPPED</span>
+										</td>
 									</tr>
 								</tbody>
 							</table>
