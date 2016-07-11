@@ -37,19 +37,19 @@
 									<th>YEAR</th>
 								</tr>
 								{% for player in players %}
-										<tr>
-											<td>
-												<div class="checkbox">
-												    <label class="label-checkbox">
-														<input type="checkbox" name="player_{{ player.pk }}" class="select_box" />
-														<span class="custom-checkbox info"></span>
-													</label>
-												</div>
-											</td>
-											<td>{{ player.first_name }} {{ player.last_name }}</td>
-											<td>{{ player.position }}</td>
-											<td>{{ player.year }}</td>
-										</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+											    <label class="label-checkbox">
+													<input type="checkbox" name="player_{{ player.pk }}" class="select_box" />
+													<span class="custom-checkbox info"></span>
+												</label>
+											</div>
+										</td>
+										<td>{{ player.first_name }} {{ player.last_name }}</td>
+										<td>{{ player.position }}</td>
+										<td>{{ player.year }}</td>
+									</tr>
 								{% endfor %}
 							</tbody>
 						</table>
