@@ -124,10 +124,23 @@ img.menu-icon{
   margin-bottom: 20px;
 }
 
-.all-groups select{
-  margin-left: 2%;
-  margin-bottom: 2%;
-  width: 65%;
+.all-groups select {
+  	margin-left: 2%;
+ 	margin-bottom: 2%;
+  	width: 65%;
+}
+
+.all-groups input[type="text"] {
+  	margin-left: 2%;
+  	margin-bottom: 2%;
+  	width: 65%;
+  	line-height: 2em;
+}
+
+.all-groups form {
+	margin-left: 4%;
+	margin-bottom: 1%;
+	width: 65%;
 }
 
 .small-sidebar .menu-text{

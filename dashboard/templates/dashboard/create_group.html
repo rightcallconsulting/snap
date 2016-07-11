@@ -12,24 +12,38 @@
 		<div id="main-container">
 			{% include "dashboard/navbar.html" %}
 			{% include "dashboard/grey_container.html" %}
-			<div class="padding-md">
-				<div class="row dash-row">
-					<form action="/create_group" method="post" class=form-create-group> {% csrf_token %}
-						{% for field in form %}
-							<div class="form-group">
-								{{ field.label_tag }}
-								{{ field }}
-							</div>
-						{% endfor %}
+			
+			<div class="all-groups padding-md">
+				<form>
+					<label for="group_name">Name:</label> 
+					<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Group Name">
+				</form>
 
-						<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Group">
-					</form>
-
-					<div class="loading-overlay">
-						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+				<div class="row dash-row group-home">
+					<div class="col-lg-8 news-col" id="display-group-box">
+						<div class = "table-wrapper" id="group-table-wrapper">
+							<table class="player-list">
+								<tbody>
+									<tr>
+										<th>PLAYER</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
+									</tr>
+									{% for player in players %}
+											<tr>
+												<td>{{ player.first_name }} {{ player.last_name }}</td>
+												<td>{{ player.position }}</td>
+												<td>SR</td>
+											</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div><!--/row-->
-			</div><!--/padding-md-->
+			</div><!--/all-groups-->
+
+			<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link" type="submit" value="Create Group">
 		</div><!--/main-container-->
 
 		<div class="loading-overlay">
