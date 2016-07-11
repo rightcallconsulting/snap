@@ -88,6 +88,10 @@ class PlayerGroup(models.Model):
     players = models.ManyToManyField(Player)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        verbose_name="Player Group"
+        verbose_name_plural="Player Groups"
+
     def __str__(self):
         return self.name
 
