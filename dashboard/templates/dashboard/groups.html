@@ -93,7 +93,7 @@
 					<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
 						<optgroup label="Groups">
 							{% for group in groups %}
-								<option value="{{group.id}}">
+								<option value="{{ group.id }}">
 									&nbsp;&nbsp;&nbsp;{{group}}
 								</option>
 							{% endfor %}
@@ -115,7 +115,7 @@
 									{% if first_players %}
 										{% for player in first_players %}
 											<tr>
-												<td>{{ player.first_name }} {{ player.last_nam }}</td>
+												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
 												<td>{{ player.year }}</td>
 												<td>96%</td>

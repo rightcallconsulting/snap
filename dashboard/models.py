@@ -85,8 +85,8 @@ class myUser(models.Model):
 
 class PlayerGroup(models.Model):
     name = models.CharField(max_length=30, blank=True, null=True)
-    players = models.ManyToManyField(Player)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+    players = models.ManyToManyField(Player)
 
     class Meta:
         verbose_name="Player Group"

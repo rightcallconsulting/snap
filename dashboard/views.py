@@ -267,7 +267,7 @@ def create_test(request):
             'plays': plays,
             'types_of_tests': Test.types_of_tests,
             'page_header': 'CREATE TEST',
-            'groups': json.dumps(safeGroups)
+            'groups': json.dumps(safeGroups),
         })
 
 def edit_profile(request):
@@ -354,14 +354,19 @@ def edit_test(request, test_id):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_group(request):
-    if request.method == 'POST':
-        new_group = PlayerGroup(name=request.POST['name'], team=request.user.coach.team)
-        new_group.save()
-        for player_id in request.POST.getlist('players'):
+    if request.method == "POST":
+        new_player_group = PlayerGroup()
+        new_player_group.name = request.POST['name']
+        new_player_group.team = request.user.coach.team
+        new_player_group.save()
+
+        for player_id in request.POST.getlist('player'):
             player = Player.objects.filter(pk=int(player_id))[0]
-            new_group.players.add(player)
-        new_group.save()
-        return HttpResponseRedirect(reverse('group_detail', args=[new_group.id]))
+            new_player_group.players.add(player)
+
+        new_player_group.save()
+
+        return HttpResponseRedirect(reverse('group_detail', args=[new_player_group.id]))
     else:
         form = PlayerGroupForm()
         players = Player.objects.filter(team=request.user.coach.team)

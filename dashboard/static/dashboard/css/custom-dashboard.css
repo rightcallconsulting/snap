@@ -134,10 +134,14 @@ img.menu-icon{
   	width: 65%;
 }
 
+.create-groups label {
+  	margin-left: 2%;
+}
+
 .create-groups input[type="text"] {
   	margin-left: 2%;
   	margin-bottom: 2%;
-  	width: 65%;
+  	width: 60%;
   	line-height: 2em;
 }
 
@@ -150,7 +154,7 @@ img.menu-icon{
 .create-groups form, .create-groups table {
 	margin-left: 2%;
 	margin-bottom: 1%;
-	width: 65%;
+	width: 90%;
 }
 
 .create-groups .group-home {

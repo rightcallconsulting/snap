@@ -14,53 +14,55 @@
 			{% include "dashboard/grey_container.html" %}
 			
 			<div class="create-groups padding-md">
-				<form>
-					<label for="group_name">Name:</label> 
-					<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Group Name">
-				</form>
+				<form action="/create_group" method="post" class="create-groups">
+					{% csrf_token %}
 
-				<div class="row group-home">
-					<div id="display-group-box" class="col-lg-12">
-						<table class="player-list">
-							<tbody>
-								<tr>
-									<th>
-										<div class="checkbox">
-										    <label class="label-checkbox">
-												<input type="checkbox" name="select_all" onclick="selectAll()" />
-												<span class="custom-checkbox info"></span>
-											</label>
-										</div>
-									</th>
-									<th>PLAYER</th>
-									<th>POSITION</th>
-									<th>YEAR</th>
-								</tr>
-								{% for player in players %}
+					<label for="group_name">Name:</label> 
+					<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Group Name" required>
+
+					<div class="row group-home">
+						<div id="display-group-box" class="col-lg-12">
+							<table class="player-list">
+								<tbody>
 									<tr>
-										<td>
+										<th>
 											<div class="checkbox">
 											    <label class="label-checkbox">
-													<input type="checkbox" name="player_{{ player.pk }}" class="select_box" />
+													<input type="checkbox" name="select_all" onclick="selectAll()" unchecked/>
 													<span class="custom-checkbox info"></span>
 												</label>
 											</div>
-										</td>
-										<td>{{ player.first_name }} {{ player.last_name }}</td>
-										<td>{{ player.position }}</td>
-										<td>{{ player.year }}</td>
+										</th>
+										<th>PLAYER</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
 									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-					</div><!--/col-->
-				</div><!--/row-->
+									{% for player in players %}
+										<tr>
+											<td>
+												<div class="checkbox">
+												    <label class="label-checkbox">
+														<input type="checkbox" name="player" value="{{ player.pk }}" class="select_box" unchecked/>
+														<span class="custom-checkbox info"></span>
+													</label>
+												</div>
+											</td>
+											<td>{{ player.first_name }} {{ player.last_name }}</td>
+											<td>{{ player.position }}</td>
+											<td>{{ player.year }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div><!--/col-->
+					</div><!--/row-->
 
-				<div class=class="row dash-row group-home">
-					<div class="col-lg-12">
-						<input class="btn btn-success btn-lg" type="submit" value="Create Group">
+					<div class=class="row dash-row group-home">
+						<div class="col-lg-12">
+							<input class="btn btn-success btn-lg" type="submit" value="Create Group">
+						</div>
 					</div>
-				</div>
+				</form>
 			</div><!--/create-groups-->
 		</div><!--/main-container-->
 
