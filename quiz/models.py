@@ -40,10 +40,22 @@ class Team(models.Model):
 
 
 class Player(models.Model):
+    YEAR_CHOICES = (
+        ('FR', 'Freshman'),
+        ('SO', 'Sophomore'),
+        ('JR', 'Junior'),
+        ('SR', 'Senior'),
+        ('RS FR', 'Redshirt Freshman'),
+        ('RS SO', 'Redshirt Sophomore'),
+        ('RS JR', 'Redshirt Junior'),        
+        ('RS SR', 'Redshirt Senior'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     position = models.CharField(max_length=10, blank=True, null=True) # QB, WR, RB, LT, LG, C, RG, RT, DE, DT, OLB, MLB, SS, FS, CB
+    year = models.CharField(max_length=25, blank=True, null=True, choices=YEAR_CHOICES)
     unit = models.CharField(max_length=20, blank=True, null=True) # offense or defense
     number = models.IntegerField(blank=True, null=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)

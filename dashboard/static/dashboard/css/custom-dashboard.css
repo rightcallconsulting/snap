@@ -44,7 +44,7 @@ img.menu-icon{
   margin-right: 2.5%;
 }
 
-.coach-home .action-boxes, .playbook .action-boxes, .all-groups .action-boxes{
+.coach-home .action-boxes, .playbook .action-boxes, .all-groups .action-boxes .create-groups{
   margin-left: 3.5%;
   width: 95%;
   height: 22%;
@@ -57,6 +57,10 @@ img.menu-icon{
 }
 
 .all-groups .action-boxes{
+  margin-bottom: 0px;
+}
+
+.create-groups .action-boxes{
   margin-bottom: 0px;
 }
 .coach-home .main-content-area, .playbook .main-content-area{
@@ -130,17 +134,27 @@ img.menu-icon{
   	width: 65%;
 }
 
-.all-groups input[type="text"] {
+.create-groups input[type="text"] {
   	margin-left: 2%;
   	margin-bottom: 2%;
   	width: 65%;
   	line-height: 2em;
 }
 
-.all-groups form {
-	margin-left: 4%;
+.create-groups input[type="submit"] {
+  	margin-left: 2%;
+  	width: 20%;
+  	height: 100%;
+}
+
+.create-groups form, .create-groups table {
+	margin-left: 2%;
 	margin-bottom: 1%;
 	width: 65%;
+}
+
+.create-groups .group-home {
+	margin-bottom: 1%;
 }
 
 .small-sidebar .menu-text{
@@ -868,28 +882,16 @@ input.create-quiz{
   margin-bottom: 20px;
 }
 
-.player-list{
-  width: 100%;
-  max-height: 90%;
-  table-layout: fixed;
-}
-
 .group-home .table-wrapper{
   width: 100.4%;
   overflow-x: hidden;
   margin-left: -1px;
 }
 
-.player-list th, .player-list td{
-  height: 40px;
-  text-align: center;
-}
-
-.player-list td{
-  border-top: 1px solid #777;
-  border-bottom: 1px solid #777;
-  border-right: 1px dashed #777;
-  border-left: 1px dashed #777;
+.player-list{
+  width: 100%;
+  max-height: 90%;
+  table-layout: fixed;
 }
 
 .player-list .clicked span{
@@ -915,9 +917,21 @@ input.create-quiz{
   border: none;
 }
 
-.player-list th{
-  border-bottom: 3px solid #33691E;
-  border-right: 3px solid #33691E;
+.player-list th, .player-list td {
+	height: 50px;
+	text-align: center;
+}
+
+.player-list th {
+	border-color: #33691E;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.player-list td {
+	border-color: #777;
+    border-style: solid dashed;
+    border-width: 1px;
 }
 
 .group-home .news-col{

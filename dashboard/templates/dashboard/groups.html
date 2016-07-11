@@ -108,16 +108,16 @@
 								<tbody>
 									<tr>
 										<th>PLAYER</th>
-										<th>POS</th>
-										<th>YR</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
 										<th>RESULTS</th>
 									</tr>
 									{% if first_players %}
 										{% for player in first_players %}
 											<tr>
-												<td>{{player.first_name}} {{player.last_name}}</td>
-												<td>{{player.position}}</td>
-												<td>SR</td>
+												<td>{{ player.first_name }} {{ player.last_nam }}</td>
+												<td>{{ player.position }}</td>
+												<td>{{ player.year }}</td>
 												<td>96%</td>
 											</tr>
 										{% endfor %}
