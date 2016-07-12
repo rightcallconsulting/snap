@@ -1,27 +1,59 @@
 var User = function(config){
-    this.firstName = config.firstName || null;
-    this.lastName = config.lastName || null;
-    this.name = config.name || null;
-    this.id = config.id || -1;
-    this.position = config.position || null;
-    this.score = 0;
-    this.incorrectGuesses = 0;
-    this.skips = 0;
-    this.questionsAnswered = 0;
-    this.tests = config.tests || [];
-    this.OLtests = config.OLtests || [];
-    this.CBtests = config.CBtests || [];
-    this.QBtests = config.QBtests || [];
-    this.WRtests = config.WRtests || [];
-    this.totalCorrect = null;
-    this.totalWrong = null;
-    this.init = function(){
-      this.createPlayerButton();
-    };
-    if(!config.ignoreInit){
-      this.init();
-    }
+	this.id = config.id || -1;
+	this.firstName = config.firstName || null;
+	this.lastName = config.lastName || null;
+	this.position = config.position || null;
+	this.year = config.year|| null;
+
+	this.name = config.name || null;
+	this.score = 0;
+	this.incorrectGuesses = 0;
+	this.skips = 0;
+	this.questionsAnswered = 0;
+	this.tests = config.tests || [];
+	this.OLtests = config.OLtests || [];
+	this.CBtests = config.CBtests || [];
+	this.QBtests = config.QBtests || [];
+	this.WRtests = config.WRtests || [];
+	this.totalCorrect = null;
+	this.totalWrong = null;
+
+	this.init = function(){
+		this.createPlayerButton();
+	};
+
+	if(!config.ignoreInit){
+		this.init();
+	}
 };
+
+var createUserFromJSON = function(jsonUser){
+	var user = new User({
+		id: jsonUser.pk,
+		firstName: jsonUser.fields.first_name,
+		lastName: jsonUser.fields.last_name,
+		position: jsonUser.fields.position,
+		year: jsonUser.fields.year,
+		ignoreInit: true
+	});
+
+	return user
+};
+
+var createUserFromJSONSeed = function(jsonUser){
+	var user = new User({
+		id: jsonUser.user,
+		firstName: jsonUser.first_name,
+		lastName: jsonUser.last_name,
+		position: jsonUser.position,
+		year: jsonUser.fields.year,
+		ignoreInit: true
+	});
+
+	return user
+};
+
+// Not sure if we need the stuff under this line
 
 User.prototype.getFullName = function(){
   return this.firstName + " " + this.lastName;
@@ -29,11 +61,11 @@ User.prototype.getFullName = function(){
 
 User.prototype.createPlayerButton = function(){
   var button = new Button({
-      width: 110,
-      label: this.name,
-      clicked: false,
-      displayButton: true,
-      player: this
+	  width: 110,
+	  label: this.name,
+	  clicked: false,
+	  displayButton: true,
+	  player: this
   });
   this.button = button;
 };
@@ -43,9 +75,9 @@ User.prototype.getOverallScore = function(){
   var numWrong = 0;
   var numSkips = 0;
   this.tests.forEach(function(test){
-    numCorrect += test.score;
-    numWrong += test.incorrectGuesses;
-    numSkips += test.skips;
+	numCorrect += test.score;
+	numWrong += test.incorrectGuesses;
+	numSkips += test.skips;
   })
   this.setTotalCorrect(numCorrect)
   this.setTotalWrong(numWrong)
@@ -55,19 +87,19 @@ User.prototype.getOverallScore = function(){
 
 User.prototype.setTotalCorrect = function(num){
   if(this.totalCorrect !== num){
-    this.totalCorrect = num;
+	this.totalCorrect = num;
   }
 };
 
 User.prototype.setTotalWrong = function(num){
   if(this.totalWrong !== num){
-    this.totalWrong = num;
+	this.totalWrong = num;
   }
 };
 
 User.prototype.setTotalSkips = function(num){
   if(this.totalSkips !== num){
-    this.totalSkips = num;
+	this.totalSkips = num;
   }
 };
 
@@ -96,60 +128,60 @@ User.prototype.drawQuizAssignment = function(xDist, yDist){
 };
 
 User.prototype.drawSummaryHeader = function() {
-    fill(0, 0, 0);
-    textSize(18);
-    textAlign(CENTER, CENTER);
-    text(this.name, 200, 20);
-    fill(255,255,255)
-    textAlign(LEFT, LEFT);
+	fill(0, 0, 0);
+	textSize(18);
+	textAlign(CENTER, CENTER);
+	text(this.name, 200, 20);
+	fill(255,255,255)
+	textAlign(LEFT, LEFT);
 };
 
 User.prototype.drawCompletedQuizzes = function(xDist, yDist) {
   var completedTests = this.tests.filter(function(test){
-    return test.completed === true;
+	return test.completed === true;
   })
   completedTests.forEach(function(test, index){
-    if (test === completedTests[0]){
-      textSize(12);
-      text("Completed Tests", xDist, yDist - 15);
-    }
-    var button = new Button({
-        x: xDist,
-        y: yDist + 50*index,
-        width: 80,
-        label: test.name,
-        clicked: false,
-        displayButton: true,
-        player: this,
-        test: test
-    });
-    button.draw();
-    text(Math.round(test.getPercentage())+ "%", button.x + 90,button.y + 5)
+	if (test === completedTests[0]){
+	  textSize(12);
+	  text("Completed Tests", xDist, yDist - 15);
+	}
+	var button = new Button({
+		x: xDist,
+		y: yDist + 50*index,
+		width: 80,
+		label: test.name,
+		clicked: false,
+		displayButton: true,
+		player: this,
+		test: test
+	});
+	button.draw();
+	text(Math.round(test.getPercentage())+ "%", button.x + 90,button.y + 5)
   })
 };
 
 User.prototype.drawAssignedQuizzes = function(xDist, yDist) {
   var xDist = xDist + 140;
   var assignedTests = this.tests.filter(function(test){
-    return test.assigned === true;
+	return test.assigned === true;
   })
   assignedTests.forEach(function(test, index){
-    if (test === assignedTests[0]){
-      fill(255, 255, 255);
-      textSize(12);
-      text("Assigned Tests", xDist, yDist - 22);
-    }
-    var button = new Button({
-        x: xDist,
-        y: yDist + 50*index,
-        width: 80,
-        label: test.name,
-        clicked: false,
-        displayButton: true,
-        player: this,
-        test: test
-    });
-    button.draw();
+	if (test === assignedTests[0]){
+	  fill(255, 255, 255);
+	  textSize(12);
+	  text("Assigned Tests", xDist, yDist - 22);
+	}
+	var button = new Button({
+		x: xDist,
+		y: yDist + 50*index,
+		width: 80,
+		label: test.name,
+		clicked: false,
+		displayButton: true,
+		player: this,
+		test: test
+	});
+	button.draw();
   })
 };
 
@@ -168,26 +200,4 @@ User.prototype.drawQuizResults = function() {
   if(this.position === "QB"){
 
   }
-};
-
-var createUserFromJSON = function(jsonUser){
-  var user = new User({
-    id: jsonUser.pk,
-    firstName: jsonUser.fields.first_name,
-    lastName: jsonUser.fields.last_name,
-    position: jsonUser.fields.position,
-    ignoreInit: true
-  });
-  return user
-};
-
-var createUserFromJSONSeed = function(jsonUser){
-  var user = new User({
-    id: jsonUser.user,
-    firstName: jsonUser.first_name,
-    lastName: jsonUser.last_name,
-    position: jsonUser.position,
-    ignoreInit: true
-  });
-  return user
 };

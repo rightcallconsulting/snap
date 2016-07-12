@@ -53,7 +53,7 @@
 
 				<div class="row dash-row group-home">
 					<div class="col-lg-6" id="display-group-box">
-						<div class = "table-wrapper" id="group-table-wrapper">
+						<div class = "table-wrapper" id="players-in-group-table-wrapper">
 							<table class="player-list">
 								<tbody>
 									<tr>
@@ -79,7 +79,7 @@
 						</div>
 					</div>
 					<div class="col-lg-5">
-						<div class = "table-wrapper" id="group-table-wrapper">
+						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
 							<table class="player-list">
 								<tbody>
 									<tr>
@@ -120,7 +120,7 @@
 
 {% block javascript %}
 	<script type="text/javascript">
-		var createUserTable = function(users) {
+		var createPlayersInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
 			innerHTML += "<tr>"
 			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
@@ -130,9 +130,30 @@
 				var user = users[i];
 				innerHTML += "<tr>"
 				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\"></i></td>"
-				innerHTML += "<td>" + user.getFullName() + "</td>"
+				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
-				innerHTML += "<td>SR</td>"
+				innerHTML += "<td>" + user.year + "</td>"
+				innerHTML += "</tr>"
+			}
+
+			innerHTML += "</table>"
+
+			return innerHTML;
+		}
+
+		var createPlayersNotInGroupTable = function(users) {
+			var innerHTML = "<table class=\"player-list\">";
+			innerHTML += "<tr>"
+			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
+			innerHTML += "</tr>"
+			
+			for(var i = 0; i < users.length; i++) {
+				var user = users[i];
+				innerHTML += "<tr>"
+				innerHTML += "<td><i class=\"fa fa-plus-circle fa-lg green\"></i></td>"
+				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>"
+				innerHTML += "<td>" + user.position + "</td>"
+				innerHTML += "<td>" + user.year + "</td>"
 				innerHTML += "</tr>"
 			}
 
@@ -142,7 +163,8 @@
 		}
 
 		var changeGroup = function(sel) {
-			var groupTableWrapper = document.getElementById('group-table-wrapper');
+			var playersInGroupTableWrapper = document.getElementById('players-in-group-table-wrapper');
+			var playersNotInGroupTableWrapper = document.getElementById('players-not-in-group-table-wrapper');
 			var manageLink = document.getElementById('manage-groups-link');
 			var groupID = sel.value;
 
@@ -155,7 +177,7 @@
 				data.forEach(function(userObject){
 					var u = createUserFromJSON(userObject);
 					users.push(u);
-					groupTableWrapper.innerHTML = createUserTable(users);
+					playersInGroupTableWrapper.innerHTML = createPlayersInGroupTable(users);
 				});
 			});
 		};
