@@ -109,22 +109,22 @@ class PlayerGroupForm(ModelForm):
         model = PlayerGroup
         fields = ['name', 'players']
 
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email']
+
 class PlayerForm(ModelForm):
 
     class Meta:
         model = Player
-        fields = ['position', 'number']
+        fields = ['year', 'position', 'number']
 
 class CoachForm(ModelForm):
 
     class Meta:
         model = Coach
         fields = ['title']
-
-class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password']
 
 class TestForm(ModelForm):
     OPTIONS = (
