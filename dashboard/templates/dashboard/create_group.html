@@ -14,7 +14,7 @@
 			{% include "dashboard/grey_container.html" %}
 			
 			<div class="create-groups padding-md">
-				<form action="/create_group" method="post" class="create-groups">
+				<form action="create" method="post" class="create-groups">
 					{% csrf_token %}
 
 					<label for="group_name">Name:</label> 
