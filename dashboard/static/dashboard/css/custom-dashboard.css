@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 #wrapper{
@@ -129,26 +129,26 @@ img.menu-icon{
 }
 
 .all-groups select {
-  	margin-left: 2%;
- 	margin-bottom: 2%;
-  	width: 65%;
+	margin-left: 2%;
+	margin-bottom: 2%;
+	width: 65%;
 }
 
 .create-groups label {
-  	margin-left: 2%;
+	margin-left: 2%;
 }
 
 .create-groups input[type="text"] {
-  	margin-left: 2%;
-  	margin-bottom: 2%;
-  	width: 60%;
-  	line-height: 2em;
+	margin-left: 2%;
+	margin-bottom: 2%;
+	width: 60%;
+	line-height: 2em;
 }
 
 .create-groups input[type="submit"] {
-  	margin-left: 2%;
-  	width: 20%;
-  	height: 100%;
+	margin-left: 2%;
+	width: 20%;
+	height: 100%;
 }
 
 .create-groups form, .create-groups table {
@@ -255,7 +255,7 @@ img.menu-icon{
 }
 
 .holds-play-buttons button img{
-    height: 20px;
+	height: 20px;
 }
 
 #play-image-header {
@@ -433,8 +433,8 @@ img.menu-icon{
 }
 
 .playbook-col{
-    height: 600px;
-    margin-bottom: 10px;
+	height: 600px;
+	margin-bottom: 10px;
 }
 
 .playbook-col .col-lg-4{
@@ -928,14 +928,14 @@ input.create-quiz{
 
 .player-list th {
 	border-color: #33691E;
-    border-style: solid;
-    border-width: 2px;
+	border-style: solid;
+	border-width: 2px;
 }
 
 .player-list td {
 	border-color: #777;
-    border-style: solid dashed;
-    border-width: 1px;
+	border-style: solid dashed;
+	border-width: 1px;
 }
 
 .group-home .news-col{
@@ -1124,13 +1124,13 @@ input.create-quiz{
 }
 
 .analytics-play-list{
-    margin-top: 50px;
-    width: 50%;
-    margin-left: 25%;
-    table-layout: auto;
-    font-size: 18px;
-    text-align: center;
-    vertical-align: top;
+	margin-top: 50px;
+	width: 50%;
+	margin-left: 25%;
+	table-layout: auto;
+	font-size: 18px;
+	text-align: center;
+	vertical-align: top;
 }
 
 .analytics-play-list th{
@@ -1170,4 +1170,8 @@ select#id_player{
 
 .fa-minus-circle {
 	color: red;
+}
+
+.fa-plus-circle {
+  	color: green;
 }
