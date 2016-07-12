@@ -194,14 +194,6 @@ def playbook(request, unit="offense"):
         })
 
 @login_required
-def profile(request):
-    return render(request, 'dashboard/profile.html')
-
-@login_required
-def settings(request):
-    return render(request, 'dashboard/settings.html')
-
-@login_required
 def todo(request):
     if request.user.myuser.is_a_player:
         player = request.user.player
