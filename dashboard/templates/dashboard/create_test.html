@@ -4,57 +4,74 @@
 {% block content %}
 	<div id="overlay" class="transparent"></div>
 	{% include "dashboard/theme_setting.html" %}
+	
 	<div id="wrapper" class="preload">
-	{% include "dashboard/sidebar.html" %}
-	<div id="main-container">
-	{% include "dashboard/navbar.html" %}
-	{% include "dashboard/grey_container.html" %}
+		{% include "dashboard/sidebar.html" %}
+		
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-	<div class="padding-md">
-		<div class="row dash-row">
-			<form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
-
-				{% for field in form %}
-					{% if field.label == "Group" %}
-						<br>
-						<hr>
-					{% endif %}
-
-					{% if field.label == False %}
-						{% for type in types_of_tests %}
-							<div class="form-group">
-								<label class="label-checkbox">
-									<input type="checkbox" name="type_of_test" value="{{type}}"/>
-									<span class="custom-checkbox info bounceIn animation-delay6"></span>
-									{{type}}
-								</label>
-							</div><!-- /form-group -->
-						{% endfor %}
-					{% else %}
-						<div class="form-group">
-							{% if field.label == "Player" %}
-								{{ field }}
-							{% elif field.label == "Deadline" %}
-								<!-- {{ field.label_tag }} -->
-								<!-- {{ field }} -->
-							{% else %}
-								{{ field.label_tag }}
-								{{ field }}
+			<div class="padding-md">
+				<div class="row dash-row">
+					<form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
+						{% for field in form %}
+							{% if field.label == "Group" %}
+								<br>
+								<hr>
 							{% endif %}
-						</div><!-- /form-group -->					
-					{% endif %}
-				{% endfor %}
 
-				<div class="scrollable-table">
-					<table class="players-to-test" id="assign-to-players-table">
-						<tr><th><input type="checkbox" value="all" onchange="toggleCheckbox(this)"></th><th>NAME</th><th>POS</th></tr>
-					</table>
-				</div>
+							{% if field.label == False %}
+								{% for type in types_of_tests %}
+									<div class="form-group">
+										<label class="label-checkbox">
+											<input type="checkbox" name="type_of_test" value="{{type}}"/>
+											<span class="custom-checkbox info bounceIn animation-delay6"></span>
+											{{type}}
+										</label>
+									</div><!-- /form-group -->
+								{% endfor %}
+							{% else %}
+								<div class="form-group">
+									{% if field.label == "Player" %}
+										{{ field }}
+									{% elif field.label == "Deadline" %}
+										<!-- {{ field.label_tag }} -->
+										<!-- {{ field }} -->
+									{% else %}
+										{{ field.label_tag }}
+										{{ field }}
+									{% endif %}
+								</div><!-- /form-group -->					
+							{% endif %}
+						{% endfor %}
 
-				<input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
-			</form>
-		</div><!-- /row -->
-	</div><!-- /padding -->
+						<div class="scrollable-table">
+							<table class="players-to-test" id="assign-to-players-table">
+								<tr>
+									<th>
+										<input type="checkbox" value="all" onchange="toggleCheckbox(this)">
+									</th>
+									<th>NAME</th>
+									<th>POS</th>
+								</tr>
+							</table>
+						</div>
+
+						<input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
+					</form>
+				</div><!--/row-->
+			</div><!--/padding-md-->
+		</div><!--/main-container-->
+
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>
+
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
+	</div><!--/wrapper-->
 
 
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
@@ -62,30 +79,30 @@
 		var groups_seed = {{ groups|safe }};
 		var all_groups = createPlayerGroupsFromJSONSeed(groups_seed);
 
-		function toggleCheckbox(checkbox){
+		function toggleCheckbox(checkbox) {
 			var result = checkbox.checked;
 			
-			if(checkbox.value === "all"){
+			if(checkbox.value === "all") {
 				toggleAllInGroup(result);
-			}else{
+			} else {
 				checkbox.checked = result;
 			}
 		}
 
-		function toggleAllInGroup(answer){
+		function toggleAllInGroup(answer) {
 			var boxes = document.getElementsByClassName('player-checkbox');
 			
-			for(var i = 0; i < boxes.length; i++){
+			for(var i = 0; i < boxes.length; i++) {
 				var box = boxes[i];
 				box.checked = answer;
 			}
 		}
 
-		function selectCurrentGroup(){
+		function selectCurrentGroup() {
 			var groupID = parseInt(document.getElementById('id_group').value);
 			var groups = all_groups.filter(function(g){return g.id === groupID});
 			
-			if(groups.length > 0){
+			if(groups.length > 0) {
 				document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(groups[0]);
 			}
 		}
@@ -94,7 +111,7 @@
 			var innerHTML = "<tr><th><input type=\"checkbox\" value=\"all\" onchange=\"toggleCheckbox(this)\"></th><th>NAME</th><th>POS</th></tr>";
 			var players = group.players;
 
-			for(var i = 0; i < players.length; i++){
+			for(var i = 0; i < players.length; i++) {
 				var player = players[i];
 				innerHTML += "<tr>";
 				innerHTML += "<td><input class=\"player-checkbox\" type=\"checkbox\" value=\"" + player.id + "\"></td>";
@@ -111,9 +128,9 @@
 			var selectedPlayers = [];
 			var checkboxes = document.getElementsByClassName('player-checkbox');
 			
-			for(var i = 0; i < checkboxes.length; i++){
+			for(var i = 0; i < checkboxes.length; i++) {
 				var box = checkboxes[i];
-				if(box.checked){
+				if(box.checked) {
 					selectedPlayers.push(parseInt(box.value));
 				}
 			}
@@ -125,20 +142,19 @@
 			var playerIDForm = document.getElementById('id_player');
 			var selectedPlayers = getSelectedPlayers();
 
-			if(selectedPlayers.length < 0){
+			if(selectedPlayers.length < 0) {
 				return false;
 			}
 
 			playerIDForm.selectedIndex = 3;
+
 			return true;
 		};
 
-		if(all_groups.length > 0){
+		if(all_groups.length > 0) {
 			document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(all_groups[0]);
 		}
 		
 		document.getElementById('id_group').onchange = selectCurrentGroup;
 	</script>
-
-	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 {% endblock %}
