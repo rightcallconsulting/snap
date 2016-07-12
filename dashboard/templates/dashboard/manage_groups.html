@@ -123,12 +123,13 @@
 		var createUserTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
 			innerHTML += "<tr>"
-			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
+			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
 			innerHTML += "</tr>"
 			
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
+				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\"></i></td>"
 				innerHTML += "<td>" + user.getFullName() + "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
 				innerHTML += "<td>SR</td>"
