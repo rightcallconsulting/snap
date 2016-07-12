@@ -2,392 +2,451 @@
 {% load staticfiles %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
+	<div id="wrapper" class="preload">
+		{% include "dashboard/sidebar.html" %}
 
-	{% include "dashboard/sidebar.html" %}
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-
-	<div id="main-container">
-		{% include "dashboard/navbar.html" %}
-
-    {% include "dashboard/grey_container.html" %}
-
-		<div class="playbook">
+			<div class="playbook">
 				<div class="action-boxes">
-          <script type="text/javascript">
-            var changeUnit = function(sel){
-              var offenseBox = document.getElementById('choose-offensive-formation-box');
-              var defenseBox = document.getElementById('choose-defensive-formation-box');
-              var selectPlayBox = document.getElementById('select-play-box');
-              var selectOffenseBox = document.getElementById('select-offense-box');
-              var formationLink = document.getElementById('formation-link')
-              var playLink = document.getElementById('play-link')
-              document.getElementById('play-image-header').innerHTML = "Play";
-              if(sel.value === 'offense'){
-                //OFFENSE
-                defensePlayToDraw = null;
-                defenseBox.classList.add('hidden');
-                selectOffenseBox.classList.add('hidden');
-                offenseBox.classList.remove('hidden');
-                selectPlayBox.classList.remove('hidden')
-                //set href of image links to link to offensive play/formation
-                formationLink.href = "/quiz/create_formation"
-                playLink.href = "/quiz/create_play"
-              }else{
-                playToDraw = null;
-                //DEFENSE
-                selectPlayBox.classList.add('hidden');
-                offenseBox.classList.add('hidden');
-                defenseBox.classList.remove('hidden');
-                selectOffenseBox.classList.remove('hidden');
-                formationLink.href = "/quiz/create_defense_formation"
-                playLink.href = "/quiz/create_defense_formation"
-                //set href of image links to link to defensive play/formation
-              }
-            };
-          </script>
-          <table class="action-table"><tbody><tr>
-            <td><form>
-							<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
-								{% if selected_unit == "offense" %}
-								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
-								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
-								{% else %}
-								<option value="defense">&nbsp;&nbsp;&nbsp;DEFENSE</option>
-								<option value="offense">&nbsp;&nbsp;&nbsp;OFFENSE</option>
-								{% endif %}
-							</select>
-						</form></td>
+					<script type="text/javascript">
+						var changeUnit = function(sel){
+							var offenseBox = document.getElementById('choose-offensive-formation-box');
+							var defenseBox = document.getElementById('choose-defensive-formation-box');
+							var selectPlayBox = document.getElementById('select-play-box');
+							var selectOffenseBox = document.getElementById('select-offense-box');
+							var formationLink = document.getElementById('formation-link')
+							var playLink = document.getElementById('play-link')
+							document.getElementById('play-image-header').innerHTML = "Play";
+							
+							if(sel.value === 'offense') {
+								defensePlayToDraw = null;
+								defenseBox.classList.add('hidden');
+								selectOffenseBox.classList.add('hidden');
+								offenseBox.classList.remove('hidden');
+								selectPlayBox.classList.remove('hidden')
+								formationLink.href = "/quiz/create_formation"
+								playLink.href = "/quiz/create_play"
+							} else {
+								playToDraw = null;
+								selectPlayBox.classList.add('hidden');
+								offenseBox.classList.add('hidden');
+								defenseBox.classList.remove('hidden');
+								selectOffenseBox.classList.remove('hidden');
+								formationLink.href = "/quiz/create_defense_formation"
+								playLink.href = "/quiz/create_defense_formation"
+							}
+						};
+					</script>
+			
+					<table class="action-table">
+						<tbody>
+							<tr>
+								<td>
+									<form>
+										<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
+											{% if selected_unit == "offense" %}
+												<option value="offense">
+													&nbsp;&nbsp;&nbsp;OFFENSE
+												</option>
 
-            <td>
-              {% if selected_unit == "offense" %}
-  						<a href="/quiz/create_formation" id="formation-link">
-  						{% else %}
-  						<a href="/quiz/create_defense_formation" id="formation-link">
-  						{% endif %}
-  						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE FORMATION</span></a></td>
+												<option value="defense">
+													&nbsp;&nbsp;&nbsp;DEFENSE
+												</option>
+											{% else %}
+												<option value="defense">
+													&nbsp;&nbsp;&nbsp;DEFENSE
+												</option>
 
-            <td>
-              {% if selected_unit == "offense" %}
-  						<a href="/quiz/create_play" id="play-link">
-  						{% else %}
-  						<a href="/quiz/create_defense_formation" id="play-link">
-  						{% endif %}
-  						<span><img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">&nbsp;&nbsp;&nbsp;CREATE PLAY</span></a></td></tr></tbody></table>
-				    </div>
-						<div class="main-content-area dash-col display-play-box" id="display-play-box">
+												<option value="offense">
+													&nbsp;&nbsp;&nbsp;OFFENSE
+												</option>
+											{% endif %}
+										</select>
+									</form>
+								</td>
+								<td>
+									{% if selected_unit == "offense" %}
+										<a href="/quiz/create_formation" id="formation-link">
+									{% else %}
+										<a href="/quiz/create_defense_formation" id="formation-link">
+									{% endif %}
+											<span>
+												<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+												&nbsp;&nbsp;&nbsp;CREATE FORMATION
+											</span>
+										</a>
+								</td>
+								<td>
+									{% if selected_unit == "offense" %}
+										<a href="/quiz/create_play" id="play-link">
+									{% else %}
+										<a href="/quiz/create_defense_formation" id="play-link">
+									{% endif %}
+											<span>
+												<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+												&nbsp;&nbsp;&nbsp;CREATE PLAY
+											</span>
+										</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!--/action-boxes-->
+				
+				<div class="main-content-area dash-col display-play-box" id="display-play-box">
+					<div class="dash-header text-center">
+						<span>
+							<h4 id="play-image-header">
+								Play
+							</h4>
+						</span>
+					</div>
+					
+					<div id="display-play-box-2">
+					</div>
+					
+					<div class="holds-play-buttons">
+						<table class="button-table">
+							<tr>
+								<td>
+									<button id="restart-button" name="button">
+										{% include "quiz/refresh_button.html" %}
+									</button>
+								</td>
+								<td>
+									<button id="play-button" name="button">
+										{% include "quiz/play_button.html" %}
+									</button>
+								</td>
+								<td>
+									<button id="pause-button" name="button">
+										{% include "quiz/pause_button.html" %}
+									</button>
+								</td>
+								<td>
+									<button id="edit-button" name="button">
+										Edit Play
+									</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+				<div class = "stacked-col" id="offensive-playbook-col">
+					{% if selected_unit == "offense" %}
+						<div class="col-lg-4 secondary-content-area top" id="choose-offensive-formation-box">
+					{% else %}
+						<div class="col-lg-4 secondary-content-area top hidden" id="choose-offensive-formation-box">
+					{% endif %}
 							<div class="dash-header text-center">
-								<span><h4 id="play-image-header">Play</h4></span>
+								<span>
+									<h4>Formations</h4>
+								</span>
 							</div>
-							<div id="display-play-box-2">
-
-							</div>
-							<div class="holds-play-buttons">
-								<table class="button-table"><tr>
-								<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-	              <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
-	              <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
-	              <td><button id="edit-button" name="button">Edit Play</button></td>
-	              </tr></table>
-							</div>
-
-						</div>
-							<div class = "stacked-col" id="offensive-playbook-col">
-								{% if selected_unit == "offense" %}
-								<div class="col-lg-4 secondary-content-area top" id="choose-offensive-formation-box">
-								{% else %}
-								<div class="col-lg-4 secondary-content-area top hidden" id="choose-offensive-formation-box">
-								{% endif %}
-									<div class="dash-header text-center">
-										<span><h4>Formations</h4></span>
-									</div>
-									<div class="scrollable-table">
-										<table class="formation-list three-column-table">
-											{% for formation in offensive_formations %}
-											{% if forloop.counter|add:"-1"|divisibleby:3 %}
-												<tr>
-											{% endif %}
-
-
-												<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
-
-												{% if forloop.counter|divisibleby:3 %}
-													</tr>
-												{% endif %}
-											{% endfor %}
-											{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
-												<td></td><td></td></tr>
-											{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
-												<td></td></tr>
-											{% endif %}
-										</table>
-									</div>
-								</div>
-								{% if selected_unit == "offense" %}
-								<div class="col-lg-4 secondary-content-area top hidden" id="choose-defensive-formation-box">
-								{% else %}
-								<div class="col-lg-4 secondary-content-area top" id="choose-defensive-formation-box">
-								{% endif %}
-
-									<div class="dash-header text-center">
-										<span><h4>Defensive Plays</h4></span>
-									</div>
-									<div class="scrollable-table">
-										<table class="formation-list three-column-table">
-										{% for formation in unique_defensive_formations %}
+							
+							<div class="scrollable-table">
+								<table class="formation-list three-column-table">
+									{% for formation in offensive_formations %}
 										{% if forloop.counter|add:"-1"|divisibleby:3 %}
 											<tr>
 										{% endif %}
-											<td><input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
+												<td>
+													<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+												</td>
+										{% if forloop.counter|divisibleby:3 %}
+											</tr>
+										{% endif %}
+									{% endfor %}
+									
+									{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
+												<td></td>
+												<td></td>
+											</tr>
+									{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
+												<td></td>
+											</tr>
+									{% endif %}
+								</table>
+							</div>
+						</div>
+					
+					{% if selected_unit == "offense" %}
+						<div class="col-lg-4 secondary-content-area top hidden" id="choose-defensive-formation-box">
+					{% else %}
+						<div class="col-lg-4 secondary-content-area top" id="choose-defensive-formation-box">
+					{% endif %}
+							<div class="dash-header text-center">
+								<span>
+									<h4>Defensive Plays</h4>
+								</span>
+							</div>
+							
+							<div class="scrollable-table">
+								<table class="formation-list three-column-table">
+										{% for formation in unique_defensive_formations %}
+											{% if forloop.counter|add:"-1"|divisibleby:3 %}
+												<tr>
+											{% endif %}
+													<td>
+														<input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+													</td>
 											{% if forloop.counter|divisibleby:3 %}
 												</tr>
 											{% endif %}
 										{% endfor %}
+
 										{% if unique_defensive_formations|add:"-1"|length|divisibleby:3 %}
-											<td></td><td></td></tr>
+													<td></td>
+													<td></td>
+												</tr>
 										{% elif unique_defensive_formations|add:"-2"|length|divisibleby:3 %}
-											<td></td></tr>
+													<td></td>
+												</tr>
 										{% endif %}
-									</table>
-								</div>
-								</div>
-								{% if selected_unit == "offense" %}
-								<div class="col-lg-4 secondary-content-area" id="select-play-box">
-								{% else %}
-								<div class="col-lg-4 hidden secondary-content-area" id="select-play-box">
-								{% endif %}
-									<div class="dash-header text-center">
-										<span><h4 id="change-plays-header">Plays</h4></span>
-									</div>
-									<div class="scrollable-table" id="draw-plays">
-									{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
-
-									{# </form>#}
-								</div>
-								</div>
-								{% if selected_unit == "offense" %}
-								<div class="col-lg-4 secondary-content-area hidden" id="select-offense-box">
-								{% else %}
-								<div class="col-lg-4 secondary-content-area" id="select-offense-box">
-								{% endif %}
-									<div class="dash-header text-center">
-										<span><h4 id="change-plays-header">Offensive Looks</h4></span>
-									</div>
-									<div class="scrollable-table" id="draw-offensive-formations">
-									{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}#}
-
-									{# </form>#}
-								</div>
-								</div>
+								</table>
 							</div>
-
-
-						<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-						<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
-						<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-
-					<div class="loading-overlay">
-						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-					</div>
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+						</div>
+								
+					{% if selected_unit == "offense" %}
+						<div class="col-lg-4 secondary-content-area" id="select-play-box">
+					{% else %}
+						<div class="col-lg-4 hidden secondary-content-area" id="select-play-box">
+					{% endif %}
+							<div class="dash-header text-center">
+								<span>
+									<h4 id="change-plays-header">
+										Plays
+									</h4>
+								</span>
+							</div>
+										
+							<div class="scrollable-table" id="draw-plays">
+								{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
+								{# </form> #}
+							</div>
+						</div>
+								
+					{% if selected_unit == "offense" %}
+						<div class="col-lg-4 secondary-content-area hidden" id="select-offense-box">
+					{% else %}
+						<div class="col-lg-4 secondary-content-area" id="select-offense-box">
+					{% endif %}
+							<div class="dash-header text-center">
+								<span>
+									<h4 id="change-plays-header">
+										Offensive Looks
+									</h4>
+								</span>
+							</div>		
+							<div class="scrollable-table" id="draw-offensive-formations">
+								{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
+								{# </form>#}
+							</div>
+						</div>
 				</div>
-			</div><!-- /panel -->
 
+				<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+				<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+				<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
+			</div><!-- /playbook -->
+		</div><!--/main-container-->
 
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>
 
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
+	</div><!--/wrapper-->
 
-			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-			<script type="text/javascript">
-				var playClicked;
-				var formationID;
-				var formationToDraw;
-				var playToDraw;
-				var offensivePlayToDraw; //defense
-				var duplicateDefensiveFormations; //defense
-				var removedPlaysFromFormation = [];
-				var testID = $('#test-id').data('test-id');
-				var playIDArray = $('#play-id-array').data('play-id-array');
-				$('#draw-plays').on('mouseover', '.play', function(){
-					if(playToDraw){
-						playToDraw.resetPlayers(defensePlay)
-						playToDraw.setAllRoutes();
+	<script type="text/javascript">
+		var playClicked;
+		var formationID;
+		var formationToDraw;
+		var playToDraw;
+		var offensivePlayToDraw; //defense
+		var duplicateDefensiveFormations; //defense
+		var removedPlaysFromFormation = [];
+		var testID = $('#test-id').data('test-id');
+		var playIDArray = $('#play-id-array').data('play-id-array');
+		$('#draw-plays').on('mouseover', '.play', function(){
+			if(playToDraw){
+				playToDraw.resetPlayers(defensePlay)
+				playToDraw.setAllRoutes();
+			}
+			playToDraw = plays.filter(function(play) {
+				return play.id === Number(this.id);
+			}.bind(this))[0];
+			playToDraw.formation = formationToDraw;
+			$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
+			playScene = false;
+		})
+		$('#draw-plays').on('click', '.play', function(){
+		$('#choose-play').data('button', this.name);
+				playClicked = $(this);
+		});
+		$('.existing-plays').on('click', '.play-remove', function(){
+			modifyPlayWithTest($(this));
+			$(this).fadeOut();
+			$('.show-plays #'+this.id).removeClass('play-remove-button');
+			$('.show-plays #'+this.id).addClass('btn-success play-add-button');
+			playIDArray = _.without(playIDArray, Number(this.id))
+		});
+		$("#play-button").click(function() {
+			playScene = true;
+		})
+		$("#pause-button").click(function() {
+			playScene = false;
+		})
+		$("#restart-button").click(function() {
+			playScene = false;
+			playToDraw.resetPlayers(defensePlay);
+			playToDraw.setAllRoutes();
+		})
+		$(".formation").click(function() {
+			var formationName = this.value;
+			formationID = Number(this.id);
+			formationToDraw = formations.filter(function(formation) {
+			return formation.id === formationID;
+		  })[0];
+			var playArray = []
+			$('#change-plays-header').text('Plays: ' + this.value)
+			$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+				data4.forEach(function(play){
+					if(play.fields.formation === formationID){
+						var playObject = {
+						  playName : play.fields.name,
+						  ID : play.pk
+						}
+						playArray.push(playObject);
 					}
-					playToDraw = plays.filter(function(play) {
-						return play.id === Number(this.id);
-					}.bind(this))[0];
-					playToDraw.formation = formationToDraw;
-					$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
-					playScene = false;
 				})
-				$('#draw-plays').on('click', '.play', function(){
-			    $('#choose-play').data('button', this.name);
-						playClicked = $(this);
+				displayPlays(playArray);
+			})
+			$('#play-image-header').text(formationToDraw.name+ ": ");
+		});
+		$(".defensive-play-button").click(function() {
+			var playID = Number(this.id);
+			var playName = this.value;
+			defensePlayName = playName;
+			var defensivePlay = null;
+			var duplicateDefensiveFormations = [];
+			var offensiveFormationIDs = [];
+			var offensiveFormationObjects = [];
+			$('.show-plays').text('');
+			document.getElementById('play-image-header').innerHTML = playName;
+			$.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
+				data.forEach(function(defensiveFormation){
+					if(defensiveFormation.fields.name === playName){
+						defensivePlay = createFormationFromJSON(defensiveFormation);
+						if(defensiveFormation.fields.offensiveFormationID){
+							offensiveFormationIDs.push(defensiveFormation.fields.offensiveFormationID);
+							duplicateDefensiveFormations.push(defensivePlay);
+						}
+					}
 				});
-					$('.existing-plays').on('click', '.play-remove', function(){
-						modifyPlayWithTest($(this));
-						$(this).fadeOut();
-						$('.show-plays #'+this.id).removeClass('play-remove-button');
-						$('.show-plays #'+this.id).addClass('btn-success play-add-button');
-						playIDArray = _.without(playIDArray, Number(this.id))
+				$.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
+					data.forEach(function(formation){
+						if(offensiveFormationIDs.indexOf(formation.pk) >= 0){
+							var newFormation = createFormationFromJSON(formation);
+							offensiveFormationObjects.push(newFormation);
+						}
 					});
-					$("#play-button").click(function() {
-						playScene = true;
-					})
-					$("#pause-button").click(function() {
-						playScene = false;
-					})
-					$("#restart-button").click(function() {
-						playScene = false;
-						playToDraw.resetPlayers(defensePlay);
-						playToDraw.setAllRoutes();
-					})
-					$(".formation").click(function() {
-						var formationName = this.value;
-						formationID = Number(this.id);
-						formationToDraw = formations.filter(function(formation) {
-					    return formation.id === formationID;
-					  })[0];
-						var playArray = []
-						$('#change-plays-header').text('Plays: ' + this.value)
-						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-							data4.forEach(function(play){
-								if(play.fields.formation === formationID){
-									var playObject = {
-									  playName : play.fields.name,
-									  ID : play.pk
-									}
-									playArray.push(playObject);
-								}
-							})
-							displayPlays(playArray);
-						})
-						$('#play-image-header').text(formationToDraw.name+ ": ");
-					});
-					$(".defensive-play-button").click(function() {
-						var playID = Number(this.id);
-						var playName = this.value;
-						defensePlayName = playName;
-						var defensivePlay = null;
-						var duplicateDefensiveFormations = [];
-						var offensiveFormationIDs = [];
-						var offensiveFormationObjects = [];
-						$('.show-plays').text('');
-						document.getElementById('play-image-header').innerHTML = playName;
-						$.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
-							data.forEach(function(defensiveFormation){
-								if(defensiveFormation.fields.name === playName){
-									defensivePlay = createFormationFromJSON(defensiveFormation);
-									if(defensiveFormation.fields.offensiveFormationID){
-										offensiveFormationIDs.push(defensiveFormation.fields.offensiveFormationID);
-										duplicateDefensiveFormations.push(defensivePlay);
-									}
-								}
-							});
-							$.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-								data.forEach(function(formation){
-									if(offensiveFormationIDs.indexOf(formation.pk) >= 0){
-										var newFormation = createFormationFromJSON(formation);
-										offensiveFormationObjects.push(newFormation);
-									}
-								});
 
+					//Create the player objects from json for the offensive and defensive formations
+					//Create buttons from offensiveFormationObjects array
+					displayOffensiveFormations(offensiveFormationObjects);
 
+					//Change the main play view to display the first version of the play
+					$('#play-image-header').text(this.value);
+				});
+			});
+		});
 
-								//Create the player objects from json for the offensive and defensive formations
+		// AJAX for posting
+		function modifyPlayWithTest(playDomElement) {
+			playID = playDomElement[0].id;
+			if(playDomElement.hasClass('play-add-button')){
+				addOrRemovePlay = "add"
+			}
+			else if (playDomElement.hasClass('play-remove-button')){
+				addOrRemovePlay = "remove"
+			}
+				$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
+				if(playDomElement.hasClass('play-add-button')){
+					playDomElement.addClass('play-remove-button');
+					playDomElement.removeClass('play-add-button');
+					playDomElement.removeClass('btn-success');
+					playIDArray.push(Number(playDomElement[0].id));
+					$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+				}
+				else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
+					playDomElement.addClass('play-add-button');
+					playDomElement.addClass('btn-success');
+					playDomElement.removeClass('play-remove-button');
+					playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
+					$('#'+playDomElement[0].id+'.play-remove').remove();
+				}
+		};
 
-								//Create buttons from offensiveFormationObjects array
-								displayOffensiveFormations(offensiveFormationObjects);
+		function displayOffensiveFormations(formationArray){
+			var drawPlays = document.getElementById('draw-offensive-formations');
+			var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
+			for(var i = 0; i < formationArray.length; i++){
+				if(i % 3 === 0){
+					newHTML += "<tr>";
+				}
+				var formation = formationArray[i];
+				newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.id+"' type='submit' value='"+ formation.name+"'></td>";
+				if(i % 3 === 2){
+					newHTML += "</tr>";
+				}
+			}
+			if(formationArray.length % 3 === 1){
+				newHTML += "<td></td><td></td></tr>";
+			}else if(formationArray.length % 3 === 2){
+				newHTML += "<td></td></tr>";
+			}
+			newHTML += "</table></div>";
+			drawPlays.innerHTML = newHTML;
+		};
 
-								//Change the main play view to display the first version of the play
-								$('#play-image-header').text(this.value);
-
-							});
-						});
-
-
-					});
-					// AJAX for posting
-					function modifyPlayWithTest(playDomElement) {
-						playID = playDomElement[0].id;
-						if(playDomElement.hasClass('play-add-button')){
-							addOrRemovePlay = "add"
-						}
-						else if (playDomElement.hasClass('play-remove-button')){
-							addOrRemovePlay = "remove"
-						}
-							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
-							if(playDomElement.hasClass('play-add-button')){
-								playDomElement.addClass('play-remove-button');
-								playDomElement.removeClass('play-add-button');
-								playDomElement.removeClass('btn-success');
-								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-							}
-							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
-								playDomElement.addClass('play-add-button');
-								playDomElement.addClass('btn-success');
-								playDomElement.removeClass('play-remove-button');
-								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-								$('#'+playDomElement[0].id+'.play-remove').remove();
-							}
-					};
-
-					function displayOffensiveFormations(formationArray){
-						var drawPlays = document.getElementById('draw-offensive-formations');
-						var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
-						for(var i = 0; i < formationArray.length; i++){
-							if(i % 3 === 0){
-								newHTML += "<tr>";
-							}
-							var formation = formationArray[i];
-							newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.id+"' type='submit' value='"+ formation.name+"'></td>";
-							if(i % 3 === 2){
-								newHTML += "</tr>";
-							}
-						}
-						if(formationArray.length % 3 === 1){
-							newHTML += "<td></td><td></td></tr>";
-						}else if(formationArray.length % 3 === 2){
-							newHTML += "<td></td></tr>";
-						}
-						newHTML += "</table></div>";
-						drawPlays.innerHTML = newHTML;
-					};
-
-
-					function displayPlays(playArray) {
-						var drawPlays = document.getElementById('draw-plays');
-							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
-							for(var i = 0; i < playArray.length; i++){
-								if(i % 3 === 0){
-									newHTML += "<tr>";
-								}
-								var play = playArray[i];
-								if(playIDArray.includes(play.ID)){
-									newHTML += "<td><input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
-								}
-								else{
-									newHTML += "<td><input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
-								}
-								if(i % 3 === 2){
-									newHTML += "</tr>";
-								}
-							}
-							if(playArray.length % 3 === 1){
-								newHTML += "<td></td><td></td></tr>";
-							}else if(playArray.length % 3 === 2){
-								newHTML += "<td></td></tr>";
-							}
-							newHTML += "</table></div>";
-							drawPlays.innerHTML = newHTML;
-					};
-			</script>
-			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
-			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-			{% endblock %}
+		function displayPlays(playArray) {
+			var drawPlays = document.getElementById('draw-plays');
+				var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
+				for(var i = 0; i < playArray.length; i++){
+					if(i % 3 === 0){
+						newHTML += "<tr>";
+					}
+					var play = playArray[i];
+					if(playIDArray.includes(play.ID)){
+						newHTML += "<td><input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
+					}
+					else{
+						newHTML += "<td><input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
+					}
+					if(i % 3 === 2){
+						newHTML += "</tr>";
+					}
+				}
+				if(playArray.length % 3 === 1){
+					newHTML += "<td></td><td></td></tr>";
+				}else if(playArray.length % 3 === 2){
+					newHTML += "<td></td></tr>";
+				}
+				newHTML += "</table></div>";
+				drawPlays.innerHTML = newHTML;
+		};
+	</script>
+	<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% endblock %}
