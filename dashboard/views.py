@@ -220,15 +220,16 @@ def groups(request):
 	team = request.user.coach.team
 	groups = PlayerGroup.objects.filter(team=team)
 	if len(groups) > 0:
-		first_group = groups[0].players.all()
-		analytics = PlayerAnalytics(first_group)
+		players_in_group = groups[0].players.all()
+		analytics = PlayerAnalytics(players_in_group)
 	else:
-		first_group = []
+		players_in_group = []
 		analytics = None
+	
 	return render(request, 'dashboard/groups.html', {
 		'team': team,
 		'groups': groups,
-		'first_players': first_group,
+		'players_in_group': players_in_group,
 		'analytics': analytics,
 		'page_header': 'GROUPS',
 	})
@@ -264,16 +265,32 @@ def manage_groups(request):
 	else:
 		team = request.user.coach.team
 		groups = PlayerGroup.objects.filter(team=team)
+		all_players_on_team = Player.objects.filter(team=team)
+		players_not_in_group = []
+		
+		# If there is at least one group then add all the players
+		# in the first group to the players_in_group list, and add
+		# everyone else to the players_not_in_group list. Otherwise,
+		# add no one to the players_in_group list and the whole team
+		# to the players_not_in_group list.
+		#
+		# TODO: If there is no group then redirect to the create
+		# group page because a coach can't manage groups if there
+		# are none.
 		if len(groups) > 0:
-			first_group = groups[0].players.all()
-			analytics = PlayerAnalytics(first_group)
+			players_in_group = groups[0].players.all()
+			for player in all_players_on_team:
+				if player not in players_in_group:
+					players_not_in_group.append(player)
 		else:
-			first_group = []
-			analytics = None
+			players_in_group = []
+			players_not_in_group = all_players_on_team
+		
 		return render(request, 'dashboard/manage_groups.html', {
 			'team': team,
 			'groups': groups,
-			'first_players': first_group,
+			'players_in_group': players_in_group,
+			'players_not_in_group': players_not_in_group,
 			'page_header': 'MANAGE GROUPS',
 		})
 	
