@@ -44,15 +44,15 @@
 						<optgroup label="Groups">
 							{% for group in groups %}
 								<option value="{{ group.id }}">
-									&nbsp;&nbsp;&nbsp;{{group}}
+									&nbsp;&nbsp;&nbsp;{{ group }}
 								</option>
 							{% endfor %}
 						</optgroup>
 					</select>
 				</form>
 
-				<div class="row dash-row group-home">
-					<div class="col-lg-8 news-col" id="display-group-box">
+				<div class="row group-home">
+					<div class="col-lg-8" id="display-group-box">
 						<div class = "table-wrapper" id="group-table-wrapper">
 							<table class="player-list">
 								<tbody>
@@ -72,19 +72,6 @@
 											</tr>
 										{% endfor %}
 									{% endif %}
-								</tbody>
-							</table>
-						</div>
-						<div class = "table-footer">
-							<table class="group-footer-table">
-								<tbody>
-								<tr>
-									<td>edit name</td>
-									<td>color</td>
-									<td>
-										<a href="manage" id="manage-group-link">manage group</a>
-									</td>
-								</tr>
 								</tbody>
 							</table>
 						</div>
@@ -130,6 +117,8 @@
 {% endblock %}
 
 {% block javascript %}
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+
 	<script type="text/javascript">
 		var createUserTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
@@ -181,7 +170,6 @@
 		};
 	</script>
 
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">
 		var percentCorrect = {{analytics.total_correct_attempts_percentage}},

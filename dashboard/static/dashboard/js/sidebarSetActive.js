@@ -18,7 +18,7 @@ var selectActive = function(){
       }
     }
     else if(coreHREF === current) {
-      li[i].className = li[i].className + " " + "active";
+      li[i].className = li[i].className + " active";
     }
   }
 }

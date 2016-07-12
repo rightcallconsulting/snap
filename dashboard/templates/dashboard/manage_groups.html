@@ -41,10 +41,9 @@
 
 				<form>
 					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-						<optgroup label="Groups"><!-- Use this to create sub-groups -->
-							<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+						<optgroup label="Groups">
 							{% for group in groups %}
-								<option value="{{group.id}}">
+								<option value="{{ group.id }}">
 									&nbsp;&nbsp;&nbsp;{{group}}
 								</option>
 							{% endfor %}
@@ -53,7 +52,7 @@
 				</form>
 
 				<div class="row dash-row group-home">
-					<div class="col-lg-7 news-col" id="display-group-box">
+					<div class="col-lg-6" id="display-group-box">
 						<div class = "table-wrapper" id="group-table-wrapper">
 							<table class="player-list">
 								<tbody>
@@ -67,7 +66,7 @@
 										{% for player in first_players %}
 											<tr>
 												<td>
-													<i class="fa fa-minus-circle"></i>
+													<i class="fa fa-minus-circle fa-lg"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -78,21 +77,32 @@
 								</tbody>
 							</table>
 						</div>
-						<div class = "table-footer">
-							<table class="group-footer-table">
+					</div>
+					<div class="col-lg-5">
+						<div class = "table-wrapper" id="group-table-wrapper">
+							<table class="player-list">
 								<tbody>
-								<tr>
-									<td>edit name</td>
-									<td>color</td>
-									<td>
-										<a href="manage" id="manage-group-link">manage group</a>
-									</td>
-								</tr>
+									<tr>
+										<th>ADD</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
+										<th>RESULTS</th>
+									</tr>
+									{% if first_players %}
+										{% for player in first_players %}
+											<tr>
+												<td>
+													<i class="fa fa-plus-circle fa-lg"></i>
+												</td>
+												<td>{{ player.first_name }} {{ player.last_name }}</td>
+												<td>{{ player.position }}</td>
+												<td>{{ player.year }}</td>
+											</tr>
+										{% endfor %}
+									{% endif %}
 								</tbody>
 							</table>
 						</div>
-					</div>
-					<div class="col-lg-5 group-analytics-col no-border">
 					</div>
 				</div><!-- /panel -->
 			</div><!--all-groups-->
