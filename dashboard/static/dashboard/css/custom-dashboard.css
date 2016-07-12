@@ -1168,10 +1168,10 @@ select#id_player{
   display:none;
 }
 
-.fa-minus-circle {
+.fa-minus-circle td {
 	color: red;
 }
 
-.fa-plus-circle {
+.fa-plus-circle td {
   	color: green;
 }

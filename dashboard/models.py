@@ -14,27 +14,16 @@ from datetime import datetime
 class UserCreateForm(UserCreationForm):
     POSITIONS = (
             ("", ""),
-            ("QB", "QB"),
-            ("X", "X"),
-            ("Y", "Y"),
-            ("Z", "Z"),
-            ("H", "H"),
-            ("F", "F"),
-            ("A", "A"),
-            ("LT", "LT"),
-            ("LG", "LG"),
-            ("C", "C"),
-            ("RG", "RG"),
-            ("RT", "RT"),
-            ("DE", "DE"),
-            ("DT", "DT"),
-            ("NT", "NT"),
-            ("M", "M"),
-            ("S", "S"),
-            ("W", "W"),
-            ("FS", "FS"),
-            ("SS", "SS"),
-            ("CB", "CB"),
+            ("QB", "Quarterback"),
+            ("WR", "Wide Receiver"),
+            ("RB", "Running Back"),
+            ("OL", "Offensive Lineman"),
+            ("DL", "Defensive Lineman"),
+            ("LB", "Linebacker"),
+            ("DB", "Defensive Back"),
+            ("LS", "Long Snapper"),
+            ("K", "Kicker"),
+            ("P", "Punter"),
         )
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
@@ -45,7 +34,7 @@ class UserCreateForm(UserCreationForm):
     player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Player"))
     coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class' : ''}), label=_("Coach"))
     team = forms.ModelChoiceField(queryset=None)
-    position = forms.ChoiceField(choices=POSITIONS, required=False)
+    position = forms.ChoiceField(required=False, choices=POSITIONS)
     avatar_image = forms.ImageField(required=False)
 
     class Meta:
