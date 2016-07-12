@@ -8,349 +8,348 @@
 
 <div id="wrapper" class="preload">
 
-	{% include "dashboard/sidebar.html" %}
+{% include "dashboard/sidebar.html" %}
 
 
-	<div id="main-container" class="edit-test">
-		{% include "dashboard/navbar.html" %}
+<div id="main-container" class="edit-test">
+{% include "dashboard/navbar.html" %}
 
-		{% include "dashboard/grey_container.html" %}
+{% include "dashboard/grey_container.html" %}
 
-		<div class="padding-md">
-      <div class="panel panel-default">
-					<div class="main-content-area dash-col display-play-box" id="display-play-box">
-						<div class="dash-header text-center">
-							<span><h4 id="play-image-header">Play</h4></span>
-						</div>
-						<div id="display-play-box-2">
+<div class="padding-md">
+<div class="panel panel-default">
+<div class="main-content-area dash-col display-play-box" id="display-play-box">
+<div class="dash-header text-center">
+<span><h4 id="play-image-header">Play</h4></span>
+</div>
+<div id="display-play-box-2">
 
-						</div>
-						<div class="holds-play-buttons">
-							<table class="button-table"><tr>
-              <td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
-              <td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
-							<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-              </tr></table>
-						</div>
+</div>
+<div class="holds-play-buttons">
+<table class="button-table"><tr>
+<td><button id="play-button" name="button">{% include "quiz/play_button.html" %}</button></td>
+<td><button id="pause-button" name="button">{% include "quiz/pause_button.html" %}</button></td>
+<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+</tr></table>
+</div>
 
-					</div>
-					<div class = "stacked-col">
-					{% if unit == "offense" %}
-							<div class="secondary-content-area top choose-offensive-formation-box">
-								<div class="dash-header text-center">
-									<span><h4>Offensive Formations</h4></span>
-								</div>
-								<div class="scrollable-table">
-									<table class="formation-list two-column-table">
-										{% for formation in offensive_formations %}
-										{% if forloop.counter|add:"-1"|divisibleby:2 %}
-											<tr>
-										{% endif %}
-
-
-											<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
-
-											{% if forloop.counter|divisibleby:2 %}
-												</tr>
-											{% endif %}
-										{% endfor %}
-									</table>
-								</div>
-							</div>
-							<div class="secondary-content-area change-plays-box">
-								<div class="dash-header text-center">
-									<span><h4 id="change-plays-header">Change Plays</h4></span>
-								</div>
-								<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-									<div class="panel-body show-plays" id="draw-plays">
-
-									</div><!-- /panel -->
-								</form>
-							</div>
-					{% else %}
-							<div class="col-lg-4 choose-defensive-formation-box">
-								<div class="dash-header text-center">
-									<span><h4>Plays</h4></span>
-								</div>
-									{% for formation in unique_defensive_formations %}
-										<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
-									{% endfor %}
-							</div>
-							<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
-								<div class="dash-header text-center">
-									<span><h4 id="change-plays-header">Offensive Looks:</h4></span>
-								</div>
-								<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-									<div class="panel-body show-plays-defense">
-
-									</div><!-- /panel -->
-								</form>
-							</div>
-					{% endif %}
-
-				</div>
-
-					{% if unit == "offense" %}
-					<div class="tertiary-content-area dash-col display-plays-in-test">
-						<div class="dash-header text-center">
-							<span><h4>Plays in Test: {{test.name}}</h4></span>
-						</div>
-								<div class="panel-body existing-plays">
-
-									{% for play in plays_in_test %}
-											<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
-									{% endfor %}
-								</div><!-- /panel -->
-					</div>
-					{% else %}
-					<div class="col-lg-10 dash-col display-plays-in-test">
-						<div class="dash-header text-center">
-							<span><h4>Plays in Test: {{test.name}}</h4></span>
-						</div>
-						{% for formation in unique_defensive_formations %}
-						<div class="col-lg-2 dash-col">
-							<div class="dash-header text-center">
-								<span><h4>{{ formation }}</h4></span>
-
-							</div>
-
-								<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
-
-									{% for play in plays_in_test %}
-										{% if play.formation.id == formation.id %}
-											<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
-										{% endif %}
-									{% endfor %}
-								</div><!-- /panel -->
-
-						</div>
-
-						{% endfor %}
-					</div>
-
-					{% endif %}
+</div>
+<div class = "stacked-col">
+{% if unit == "offense" %}
+<div class="secondary-content-area top choose-offensive-formation-box">
+<div class="dash-header text-center">
+<span><h4>Offensive Formations</h4></span>
+</div>
+<div class="scrollable-table">
+<table class="formation-list two-column-table">
+{% for formation in offensive_formations %}
+{% if forloop.counter|add:"-1"|divisibleby:2 %}
+<tr>
+{% endif %}
 
 
-					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
-					<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
+<td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
+{% if forloop.counter|divisibleby:2 %}
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+</div>
+</div>
+<div class="secondary-content-area change-plays-box">
+<div class="dash-header text-center">
+<span><h4 id="change-plays-header">Change Plays</h4></span>
+</div>
+<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+<div class="panel-body show-plays" id="draw-plays">
 
+</div><!-- /panel -->
+</form>
+</div>
+{% else %}
+<div class="col-lg-4 choose-defensive-formation-box">
+<div class="dash-header text-center">
+<span><h4>Plays</h4></span>
+</div>
+{% for formation in unique_defensive_formations %}
+<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
+{% endfor %}
+</div>
+<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
+<div class="dash-header text-center">
+<span><h4 id="change-plays-header">Offensive Looks:</h4></span>
+</div>
+<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+<div class="panel-body show-plays-defense">
 
+</div><!-- /panel -->
+</form>
+</div>
+{% endif %}
 
-			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-			<script type="text/javascript">
-				var playClicked;
-				var formationID;
-				var formationToDraw;
-				var offensivePlayToDraw;
-				var duplicateDefensiveFormations;
-				var playToDraw;
-				var removedPlaysFromFormation = [];
-				var testID = $('#test-id').data('test-id');
-				var playIDArray = $('#play-id-array').data('play-id-array');
-				var defensive_formation_id_array = {{defensive_formation_id_array|safe}}
+</div>
 
-				// For Offense:
+{% if unit == "offense" %}
+<div class="tertiary-content-area dash-col display-plays-in-test">
+<div class="dash-header text-center">
+<span><h4>Plays in Test: {{test.name}}</h4></span>
+</div>
+<div class="panel-body existing-plays">
 
-				$('.show-plays').on('mouseover', '.play', function(){
-					if(playToDraw){
-						playToDraw.resetPlayers(defensePlay)
-						playToDraw.setAllRoutes();
-					}
-					playToDraw = plays.filter(function(play) {
-						return play.id === Number(this.id);
-					}.bind(this))[0];
-					playToDraw.formation = formationToDraw;
-					$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
-					playScene = false;
-				})
+{% for play in plays_in_test %}
+<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+{% endfor %}
+</div><!-- /panel -->
+</div>
+{% else %}
+<div class="col-lg-10 dash-col display-plays-in-test">
+<div class="dash-header text-center">
+<span><h4>Plays in Test: {{test.name}}</h4></span>
+</div>
+{% for formation in unique_defensive_formations %}
+<div class="col-lg-2 dash-col">
+<div class="dash-header text-center">
+<span><h4>{{ formation }}</h4></span>
 
-				$('.show-plays').on('click', '.play', function(){
-			    $('#choose-play').data('button', this.name);
-						playClicked = $(this);
-				});
+</div>
 
-					$('#choose-play').on('submit', function(event){
-						event.preventDefault();
-						modifyPlayWithTest(playClicked);
-					});
+<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
 
-					$('.existing-plays').on('click', '.play-remove', function(){
-						modifyPlayWithTest($(this));
-						$(this).fadeOut();
-						$('.show-plays #'+this.id).removeClass('play-remove-button');
-						$('.show-plays #'+this.id).addClass('play-add-button');
-						playIDArray = _.without(playIDArray, Number(this.id))
-					});
+{% for play in plays_in_test %}
+{% if play.formation.id == formation.id %}
+<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+{% endif %}
+{% endfor %}
+</div><!-- /panel -->
 
-					$("#play-button").click(function() {
-						playScene = true;
-					})
-					$("#pause-button").click(function() {
-						playScene = false;
-					})
-					$("#restart-button").click(function() {
-						playScene = false;
-						playToDraw.resetPlayers(defensePlay);
-						playToDraw.setAllRoutes();
-					})
+</div>
 
+{% endfor %}
+</div>
 
-					$(".formation").click(function() {
-						var formationName = this.value;
-						formationID = Number(this.id);
-						formationToDraw = formations.filter(function(formation) {
-					    return formation.id === formationID;
-					  })[0];
-						var playArray = []
-
-						$('#change-plays-header').text('Change Plays (' + this.value+')')
-
-						$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-							data4.forEach(function(play){
-								if(play.fields.formation === formationID){
-									var playObject = {
-									  playName : play.fields.name,
-									  ID : play.pk
-									}
-									playArray.push(playObject);
-								}
-							})
-							displayPlays(playArray);
-						})
-						$('#play-image-header').text(formationToDraw.name+ ": ");
-					});
-
-					// AJAX for posting
-					function modifyPlayWithTest(playDomElement) {
-						playID = playDomElement[0].id;
-						if(playDomElement.hasClass('play-add-button')){
-							addOrRemovePlay = "add"
-						}
-						else if (playDomElement.hasClass('play-remove-button')){
-							addOrRemovePlay = "remove"
-						}
-							$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay, defense: false });
-							if(playDomElement.hasClass('play-add-button')){
-								playDomElement.addClass('play-remove-button');
-								playDomElement.removeClass('play-add-button');
-								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-							}
-							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
-								playDomElement.addClass('play-add-button');
-								playDomElement.removeClass('play-remove-button');
-								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-								$('#'+playDomElement[0].id+'.play-remove').remove();
-							}
-					};
-
-					function displayPlays(playArray) {
-						var drawPlays = document.getElementById('draw-plays');
-							//$('.show-plays').empty();
-							var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list two-column-table\">";
-
-							for(var i = 0; i < playArray.length; i++){
-								if(i % 2 === 0){
-									newHTML += "<tr>";
-								}
-								newHTML += "<td>";
-								var play = playArray[i];
-								if(playIDArray.includes(play.ID)){
-									newHTML += "<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
-								}
-								else{
-									newHTML += "<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
-								}
-								newHTML += "</td>";
-								if(i % 2 === 1){
-									newHTML += "</tr>";
-								}
-							}
-							if(playArray.length % 2 === 1){
-								newHTML += "<td></td></tr>";
-							}
-							newHTML += "</table></div>";
-							drawPlays.innerHTML = newHTML;
-					};
-
-					// For Defense
-
-					$('.formation-button-defense').click(function(){
-						 var offensiveFormationOptions = [];
-						 $('.show-plays-defense').text('');
-							playToDraw = defensivePlays.filter(function(play) {
-								return play.id === Number(this.id);
-							}.bind(this))[0]
-
-							duplicateDefensiveFormations = defensivePlays.filter(function(play) {
-								return play.playName === this.value;
-							}.bind(this))
-							var in_test = false;
-							duplicateDefensiveFormations.forEach(function(defensiveFormation){
-								offensiveFormations.forEach(function(offensiveFormation){
-									if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
-										offensiveFormationOptions.push(offensiveFormation);
-										defensive_formation_id_array.forEach(function(IDsArray){
-											if(IDsArray[0] == playToDraw.playName && IDsArray[1] == offensiveFormation.id){
-												in_test = true;
-											}
-
-										})
-										if (in_test){
-											$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
-										}
-										else {
-											$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
-										}
+{% endif %}
 
 
-									}
-								})
-							})
-							$('#play-image-header').text("Defense: " + this.value);
-					})
+<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
 
-					$('#choose-play-defense').on('submit', function(event){
-						event.preventDefault();
-						modifyPlayWithTestDefense(playClicked);
-					});
+<div class="loading-overlay">
+<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+</div>
+</div><!-- /panel -->
 
-					function modifyPlayWithTestDefense(playDomElement) {
-						offensiveFormationID = playDomElement[0].id;
-						defensiveFormationID = playToDraw.id
-						if(playDomElement.hasClass('play-add-button')){
-							addOrRemovePlay = "add"
-						}
-						else if (playDomElement.hasClass('play-remove-button')){
-							addOrRemovePlay = "remove"
-						}
-							$.post( "/tests/"+ testID + "/edit", { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
-							if(playDomElement.hasClass('play-add-button')){
-								playDomElement.addClass('play-remove-button');
-								playDomElement.removeClass('play-add-button');
-								playIDArray.push(Number(playDomElement[0].id));
-								$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-							}
-							else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
-								playDomElement.addClass('play-add-button');
-								playDomElement.removeClass('play-remove-button');
-								playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-								$('#'+playDomElement[0].id+'.play-remove').remove();
-							}
-					};
 
-			</script>
-			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-			{% if unit == "offense" %}
-				<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
-			{% else %}
-			<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
 
-			{% endif %}
-			{% endblock %}
+<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
+<script type="text/javascript">
+var playClicked;
+var formationID;
+var formationToDraw;
+var offensivePlayToDraw;
+var duplicateDefensiveFormations;
+var playToDraw;
+var removedPlaysFromFormation = [];
+var testID = $('#test-id').data('test-id');
+var playIDArray = $('#play-id-array').data('play-id-array');
+var defensive_formation_id_array = {{defensive_formation_id_array|safe}}
+
+// For Offense:
+
+$('.show-plays').on('mouseover', '.play', function(){
+if(playToDraw){
+playToDraw.resetPlayers(defensePlay)
+playToDraw.setAllRoutes();
+}
+playToDraw = plays.filter(function(play) {
+return play.id === Number(this.id);
+}.bind(this))[0];
+playToDraw.formation = formationToDraw;
+$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
+playScene = false;
+})
+
+$('.show-plays').on('click', '.play', function(){
+$('#choose-play').data('button', this.name);
+playClicked = $(this);
+});
+
+$('#choose-play').on('submit', function(event){
+event.preventDefault();
+modifyPlayWithTest(playClicked);
+});
+
+$('.existing-plays').on('click', '.play-remove', function(){
+modifyPlayWithTest($(this));
+$(this).fadeOut();
+$('.show-plays #'+this.id).removeClass('play-remove-button');
+$('.show-plays #'+this.id).addClass('play-add-button');
+playIDArray = _.without(playIDArray, Number(this.id))
+});
+
+$("#play-button").click(function() {
+playScene = true;
+})
+$("#pause-button").click(function() {
+playScene = false;
+})
+$("#restart-button").click(function() {
+playScene = false;
+playToDraw.resetPlayers(defensePlay);
+playToDraw.setAllRoutes();
+})
+
+
+$(".formation").click(function() {
+var formationName = this.value;
+formationID = Number(this.id);
+formationToDraw = formations.filter(function(formation) {
+return formation.id === formationID;
+})[0];
+var playArray = []
+
+$('#change-plays-header').text('Change Plays (' + this.value+')')
+
+$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
+data4.forEach(function(play){
+if(play.fields.formation === formationID){
+var playObject = {
+playName : play.fields.name,
+ID : play.pk
+}
+playArray.push(playObject);
+}
+})
+displayPlays(playArray);
+})
+$('#play-image-header').text(formationToDraw.name+ ": ");
+});
+
+// AJAX for posting
+function modifyPlayWithTest(playDomElement) {
+playID = playDomElement[0].id;
+if(playDomElement.hasClass('play-add-button')){
+addOrRemovePlay = "add"
+}
+else if (playDomElement.hasClass('play-remove-button')){
+addOrRemovePlay = "remove"
+}
+$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay, defense: false });
+if(playDomElement.hasClass('play-add-button')){
+playDomElement.addClass('play-remove-button');
+playDomElement.removeClass('play-add-button');
+playIDArray.push(Number(playDomElement[0].id));
+$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+}
+else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
+playDomElement.addClass('play-add-button');
+playDomElement.removeClass('play-remove-button');
+playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
+$('#'+playDomElement[0].id+'.play-remove').remove();
+}
+};
+
+function displayPlays(playArray) {
+var drawPlays = document.getElementById('draw-plays');
+//$('.show-plays').empty();
+var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list two-column-table\">";
+
+for(var i = 0; i < playArray.length; i++){
+if(i % 2 === 0){
+newHTML += "<tr>";
+}
+newHTML += "<td>";
+var play = playArray[i];
+if(playIDArray.includes(play.ID)){
+newHTML += "<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
+}
+else{
+newHTML += "<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
+}
+newHTML += "</td>";
+if(i % 2 === 1){
+newHTML += "</tr>";
+}
+}
+if(playArray.length % 2 === 1){
+newHTML += "<td></td></tr>";
+}
+newHTML += "</table></div>";
+drawPlays.innerHTML = newHTML;
+};
+
+// For Defense
+
+$('.formation-button-defense').click(function(){
+var offensiveFormationOptions = [];
+$('.show-plays-defense').text('');
+playToDraw = defensivePlays.filter(function(play) {
+return play.id === Number(this.id);
+}.bind(this))[0]
+
+duplicateDefensiveFormations = defensivePlays.filter(function(play) {
+return play.playName === this.value;
+}.bind(this))
+var in_test = false;
+duplicateDefensiveFormations.forEach(function(defensiveFormation){
+offensiveFormations.forEach(function(offensiveFormation){
+if(offensiveFormation.id == defensiveFormation.offensiveFormationID){
+offensiveFormationOptions.push(offensiveFormation);
+defensive_formation_id_array.forEach(function(IDsArray){
+if(IDsArray[0] == playToDraw.playName && IDsArray[1] == offensiveFormation.id){
+in_test = true;
+}
+
+})
+if (in_test){
+$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+}
+else {
+$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
+}
+
+
+}
+})
+})
+$('#play-image-header').text("Defense: " + this.value);
+})
+
+$('#choose-play-defense').on('submit', function(event){
+event.preventDefault();
+modifyPlayWithTestDefense(playClicked);
+});
+
+function modifyPlayWithTestDefense(playDomElement) {
+offensiveFormationID = playDomElement[0].id;
+defensiveFormationID = playToDraw.id
+if(playDomElement.hasClass('play-add-button')){
+addOrRemovePlay = "add"
+}
+else if (playDomElement.hasClass('play-remove-button')){
+addOrRemovePlay = "remove"
+}
+$.post( "/tests/"+ testID + "/edit", { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
+if(playDomElement.hasClass('play-add-button')){
+playDomElement.addClass('play-remove-button');
+playDomElement.removeClass('play-add-button');
+playIDArray.push(Number(playDomElement[0].id));
+$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
+}
+else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
+playDomElement.addClass('play-add-button');
+playDomElement.removeClass('play-remove-button');
+playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
+$('#'+playDomElement[0].id+'.play-remove').remove();
+}
+};
+
+</script>
+<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% if unit == "offense" %}
+<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
+{% else %}
+<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
+{% endif %}
+{% endblock %}
