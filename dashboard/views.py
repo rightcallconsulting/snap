@@ -120,14 +120,6 @@ def register(request):
         'form': form,
     })
 
-
-def timeline(request):
-    return render(request, 'dashboard/timeline.html')
-
-@login_required
-def messages(request):
-    return render(request, 'dashboard/messages.html')
-
 @login_required
 def analytics(request):
     if request.user.myuser.is_a_player:
@@ -222,12 +214,6 @@ def todo(request):
             'groups': groups,
             'groups_seed': serializers.serialize("json", groups)
         })
-
-@login_required
-def calendar(request):
-    return render(request, 'dashboard/calendar.html',{
-        'page_header': 'CALENDAR',
-    })
 
 @login_required
 def my_tests(request):
