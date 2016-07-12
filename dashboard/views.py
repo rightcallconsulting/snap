@@ -354,45 +354,45 @@ def edit_test(request, test_id):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_group(request):
-    if request.method == "POST":
-        new_player_group = PlayerGroup()
-        new_player_group.name = request.POST['name']
-        new_player_group.team = request.user.coach.team
-        new_player_group.save()
+	if request.method == "POST":
+		new_player_group = PlayerGroup()
+		new_player_group.name = request.POST['name']
+		new_player_group.team = request.user.coach.team
+		new_player_group.save()
 
-        for player_id in request.POST.getlist('player'):
-            player = Player.objects.filter(pk=int(player_id))[0]
-            new_player_group.players.add(player)
+		for player_id in request.POST.getlist('player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			new_player_group.players.add(player)
 
-        new_player_group.save()
+		new_player_group.save()
 
-        return HttpResponseRedirect(reverse('group_detail', args=[new_player_group.id]))
-    else:
-        form = PlayerGroupForm()
-        players = Player.objects.filter(team=request.user.coach.team)
-        return render(request, 'dashboard/create_group.html', {
-            'form': form,
-            'players': players,
-            'page_header': 'CREATE GROUP',
-        })
+		return HttpResponseRedirect(reverse('groups'))
+	else:
+		form = PlayerGroupForm()
+		players = Player.objects.filter(team=request.user.coach.team)
+		return render(request, 'dashboard/create_group.html', {
+			'form': form,
+			'players': players,
+			'page_header': 'CREATE GROUP',
+		})
 
 def edit_group(request, group_id):
-    group = PlayerGroup.objects.filter(id=group_id)[0]
-    if request.method == 'POST':
-        group.name = request.POST['name']
-        group.players.clear()
-        for player_id in request.POST.getlist('players'):
-            player = Player.objects.filter(pk=int(player_id))[0]
-            group.players.add(player)
-        group.save()
-        return HttpResponseRedirect(reverse('group_detail', kwargs={'group_id': group.id}))
-    else:
-        edit_group_form = PlayerGroupForm(instance = group)
-        return render(request, 'dashboard/edit_group.html', {
-            'edit_group_form': edit_group_form,
-            'group': group,
-            'page_header': 'EDIT GROUP'
-        })
+	group = PlayerGroup.objects.filter(id=group_id)[0]
+	if request.method == 'POST':
+		group.name = request.POST['name']
+		group.players.clear()
+		for player_id in request.POST.getlist('players'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			group.players.add(player)
+		group.save()
+		return HttpResponseRedirect(reverse('group_detail', kwargs={'group_id': group.id}))
+	else:
+		edit_group_form = PlayerGroupForm(instance = group)
+		return render(request, 'dashboard/edit_group.html', {
+			'edit_group_form': edit_group_form,
+			'group': group,
+			'page_header': 'EDIT GROUP'
+		})
 
 def delete_group(request):
     if request.method == 'POST':
@@ -431,41 +431,43 @@ def groups(request):
     })
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def group_detail(request, group_id):
-    coach = request.user.coach
-    group = PlayerGroup.objects.filter(id=group_id)[0]
-    players = group.players.all()
-    if request.POST:
-        test_id = request.POST.get('testID')
-        group_id = request.POST.get('groupID')
-        player_id = request.POST.get('playerID')
-        form_action = request.POST.get('form_action')
-        if test_id:
-            group.duplicate_and_assign_test_to_all_players(test_id, coach)
-            return HttpResponse('')
-        elif group_id and player_id and form_action == "delete_player_from_group":
-            player = Player.objects.filter(pk=player_id)[0]
-            group = PlayerGroup.objects.filter(pk=group_id)[0]
-            group.players.remove(player)
-            return HttpResponse('')
-        elif group_id and player_id and form_action == "add_player_to_group":
-            player = Player.objects.filter(pk=player_id)[0]
-            group = PlayerGroup.objects.filter(pk=group_id)[0]
-            group.players.add(player)
-            return HttpResponse('')
-
-    else:
-        delete_group_form = PlayerGroupForm(instance = group)
-        tests = Test.objects.filter(player__team=coach.team)
-        groups = PlayerGroup.objects.filter(team=coach.team)
-        return render(request, 'dashboard/group_detail.html', {
-            'group': group,
-            'groups': groups,
-            'players': players,
-            'tests': tests,
-            'form': delete_group_form,
-            'page_header': 'MANAGE GROUP'
-        })
+def manage_groups(request):
+	return render(request, 'dashboard/manage_groups.html', {})
+	
+	'''coach = request.user.coach
+	group = PlayerGroup.objects.filter(id=group_id)[0]
+	players = group.players.all()
+	
+	if request.POST:
+		test_id = request.POST.get('testID')
+		group_id = request.POST.get('groupID')
+		player_id = request.POST.get('playerID')
+		form_action = request.POST.get('form_action')
+		if test_id:
+			group.duplicate_and_assign_test_to_all_players(test_id, coach)
+			return HttpResponse('')
+		elif group_id and player_id and form_action == "delete_player_from_group":
+			player = Player.objects.filter(pk=player_id)[0]
+			group = PlayerGroup.objects.filter(pk=group_id)[0]
+			group.players.remove(player)
+			return HttpResponse('')
+		elif group_id and player_id and form_action == "add_player_to_group":
+			player = Player.objects.filter(pk=player_id)[0]
+			group = PlayerGroup.objects.filter(pk=group_id)[0]
+			group.players.add(player)
+			return HttpResponse('')
+	else:
+		delete_group_form = PlayerGroupForm(instance = group)
+		tests = Test.objects.filter(player__team=coach.team)
+		groups = PlayerGroup.objects.filter(team=coach.team)
+		return render(request, 'dashboard/groups/manage.html', {
+			'group': group,
+			'groups': groups,
+			'players': players,
+			'tests': tests,
+			'form': delete_group_form,
+			'page_header': 'MANAGE GROUP'
+		}) '''
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups_json(request):
