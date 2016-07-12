@@ -38,57 +38,6 @@
 						</tbody>
 					</table>
 				</div>
-				
-				<script type="text/javascript">
-					var createUserTable = function(users) {
-						var innerHTML = "<table class=\"player-list\">";
-						innerHTML += "<tr>"
-						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
-						innerHTML += "</tr>"
-						
-						for(var i = 0; i < users.length; i++) {
-							var user = users[i];
-							innerHTML += "<tr>"
-							innerHTML += "<td>" + user.getFullName() + "</td>"
-							innerHTML += "<td>" + user.position + "</td>"
-							innerHTML += "<td>SR</td>"
-							innerHTML += "<td>96%</td>"
-							innerHTML += "</tr>"
-						}
-
-						innerHTML += "</table>"
-
-						return innerHTML;
-					}
-
-					var changeGroup = function(sel) {
-						var groupTableWrapper = document.getElementById('group-table-wrapper');
-						var playerLink = document.getElementById('add-player-link');
-						var manageLink = document.getElementById('manage-groups-link');
-						var subManageLink = document.getElementById('manage-group-link');
-						var groupID = sel.value;
-
-						manageLink.href = 'manage'
-						subManageLink.href = manageLink.href;
-						
-						var queryString = "/groups/" + groupID + "/json";
-						var users = [];
-
-						$.getJSON(queryString, function(data, jqXHR){
-							data.forEach(function(userObject){
-								var u = createUserFromJSON(userObject);
-								users.push(u);
-								groupTableWrapper.innerHTML = createUserTable(users);
-							});
-						});
-					};
-
-					var initGroupTable = function(){
-						debugger;
-						var sel = document.getElementById('group-form');
-						changeGroup(sel);
-					};
-				</script>
 
 				<form>
 					<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
@@ -178,6 +127,59 @@
 			<i class="fa fa-chevron-up"></i>
 		</a>
 	</div><!--/wrapper-->
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		var createUserTable = function(users) {
+			var innerHTML = "<table class=\"player-list\">";
+			innerHTML += "<tr>"
+			innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
+			innerHTML += "</tr>"
+			
+			for(var i = 0; i < users.length; i++) {
+				var user = users[i];
+				innerHTML += "<tr>"
+				innerHTML += "<td>" + user.getFullName() + "</td>"
+				innerHTML += "<td>" + user.position + "</td>"
+				innerHTML += "<td>SR</td>"
+				innerHTML += "<td>96%</td>"
+				innerHTML += "</tr>"
+			}
+
+			innerHTML += "</table>"
+
+			return innerHTML;
+		}
+
+		var changeGroup = function(sel) {
+			var groupTableWrapper = document.getElementById('group-table-wrapper');
+			var playerLink = document.getElementById('add-player-link');
+			var manageLink = document.getElementById('manage-groups-link');
+			var subManageLink = document.getElementById('manage-group-link');
+			var groupID = sel.value;
+
+			manageLink.href = 'manage'
+			subManageLink.href = manageLink.href;
+			
+			var queryString = "/groups/" + groupID + "/json";
+			var users = [];
+
+			$.getJSON(queryString, function(data, jqXHR){
+				data.forEach(function(userObject){
+					var u = createUserFromJSON(userObject);
+					users.push(u);
+					groupTableWrapper.innerHTML = createUserTable(users);
+				});
+			});
+		};
+
+		var initGroupTable = function(){
+			debugger;
+			var sel = document.getElementById('group-form');
+			changeGroup(sel);
+		};
+	</script>
 
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 	<!-- Pass Django variables to JS assets -->
