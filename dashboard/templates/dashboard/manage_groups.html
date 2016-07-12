@@ -7,156 +7,153 @@
 	{% include "dashboard/theme_setting.html" %}
 
 	<div id="wrapper" class="preload">
-	{% include "dashboard/sidebar.html" %}
-	
-	<div id="main-container" onload="initGroupTable()">
-		{% include "dashboard/navbar.html" %}
-		{% include "dashboard/grey_container.html" %}
+		{% include "dashboard/sidebar.html" %}
+		
+		<div id="main-container" onload="initGroupTable()">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-		<div class="all-groups padding-md">
-			<div class="action-boxes">
-				<table class="action-table">
-					<tbody>
-						<tr>
-							<td>
-								<a href="create">
-									<span>
-										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-										&nbsp;&nbsp;&nbsp;CREATE GROUP
-									</span>
-								</a>
-							</td>
-							<td>
-								<a href="manage" id="manage-groups-link">
-									<span>
-										<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
-										&nbsp;&nbsp;&nbsp;MANAGE GROUPS
-									</span>
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			
-			<script type="text/javascript">
-				var createUserTable = function(users) {
-					var innerHTML = "<table class=\"player-list\">";
-					innerHTML += "<tr>"
-					innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
-					innerHTML += "</tr>"
-					
-					for(var i = 0; i < users.length; i++) {
-						var user = users[i];
-						innerHTML += "<tr>"
-						innerHTML += "<td>" + user.getFullName() + "</td>"
-						innerHTML += "<td>" + user.position + "</td>"
-						innerHTML += "<td>SR</td>"
-						innerHTML += "<td>96%</td>"
-						innerHTML += "</tr>"
-					}
-
-					innerHTML += "</table>"
-
-					return innerHTML;
-				}
-
-				var changeGroup = function(sel) {
-					var groupTableWrapper = document.getElementById('group-table-wrapper');
-					var playerLink = document.getElementById('add-player-link');
-					var manageLink = document.getElementById('manage-groups-link');
-					var subManageLink = document.getElementById('manage-group-link');
-					var groupID = sel.value;
-
-					manageLink.href = '/groups/' + groupID;
-					subManageLink.href = manageLink.href;
-					var queryString = "/groups/" + groupID + "/json";
-					var users = [];
-
-					$.getJSON(queryString, function(data, jqXHR){
-						data.forEach(function(userObject){
-							var u = createUserFromJSON(userObject);
-							users.push(u);
-							groupTableWrapper.innerHTML = createUserTable(users);
-						});
-					});
-				};
-
-				var initGroupTable = function(){
-					debugger;
-					var sel = document.getElementById('group-form');
-					changeGroup(sel);
-				};
-			</script>
-
-			<form>
-				<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-					<optgroup label="Groups"><!-- Use this to create sub-groups -->
-						<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
-						{% for group in groups %}
-							<option value="{{group.id}}">
-								&nbsp;&nbsp;&nbsp;{{group}}
-							</option>
-						{% endfor %}
-					</optgroup>
-				</select>
-			</form>
-
-			<div class="row dash-row group-home">
-				<div class="col-lg-7 news-col" id="display-group-box">
-					<div class = "table-wrapper" id="group-table-wrapper">
-						<table class="player-list">
-							<tbody>
-								<tr>
-									<th>PLAYER</th>
-									<th>POS</th>
-									<th>YEAR</th>
-									<th>ACTION</th>
-								</tr>
-								{% if first_players %}
-									{% for player in first_players %}
-										<tr>
-											<td>{{player.first_name}} {{player.last_name}}</td>
-											<td>{{player.position}}</td>
-											<td>SR</td>
-											<td>
-												<a href="" id="scroll-to-top" class="hidden-print">
-													<i class="fa fa-minus-circle"></i>
-												</a>
-											</td>
-										</tr>
-									{% endfor %}
-								{% endif %}
-							</tbody>
-						</table>
-					</div>
-					<div class = "table-footer">
-						<table class="group-footer-table">
-							<tbody>
+			<div class="all-groups padding-md">
+				<div class="action-boxes">
+					<table class="action-table">
+						<tbody>
 							<tr>
-								<td>edit name</td>
-								<td>color</td>
 								<td>
-									<a href="manage" id="manage-group-link">manage group</a>
+									<a href="create">
+										<span>
+											<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+											&nbsp;&nbsp;&nbsp;CREATE GROUP
+										</span>
+									</a>
+								</td>
+								<td>
+									<a href="manage" id="manage-groups-link">
+										<span>
+											<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
+											&nbsp;&nbsp;&nbsp;MANAGE GROUPS
+										</span>
+									</a>
 								</td>
 							</tr>
-							</tbody>
-						</table>
+						</tbody>
+					</table>
+				</div>
+				
+				<script type="text/javascript">
+					var createUserTable = function(users) {
+						var innerHTML = "<table class=\"player-list\">";
+						innerHTML += "<tr>"
+						innerHTML += "<th>PLAYER</th><th>POS</th><th>YR</th><th>RESULTS</th>"
+						innerHTML += "</tr>"
+						
+						for(var i = 0; i < users.length; i++) {
+							var user = users[i];
+							innerHTML += "<tr>"
+							innerHTML += "<td>" + user.getFullName() + "</td>"
+							innerHTML += "<td>" + user.position + "</td>"
+							innerHTML += "<td>SR</td>"
+							innerHTML += "<td>96%</td>"
+							innerHTML += "</tr>"
+						}
+
+						innerHTML += "</table>"
+
+						return innerHTML;
+					}
+
+					var changeGroup = function(sel) {
+						var groupTableWrapper = document.getElementById('group-table-wrapper');
+						var playerLink = document.getElementById('add-player-link');
+						var manageLink = document.getElementById('manage-groups-link');
+						var subManageLink = document.getElementById('manage-group-link');
+						var groupID = sel.value;
+
+						manageLink.href = '/groups/' + groupID;
+						subManageLink.href = manageLink.href;
+						var queryString = "/groups/" + groupID + "/json";
+						var users = [];
+
+						$.getJSON(queryString, function(data, jqXHR){
+							data.forEach(function(userObject){
+								var u = createUserFromJSON(userObject);
+								users.push(u);
+								groupTableWrapper.innerHTML = createUserTable(users);
+							});
+						});
+					};
+
+					var initGroupTable = function(){
+						debugger;
+						var sel = document.getElementById('group-form');
+						changeGroup(sel);
+					};
+				</script>
+
+				<form>
+					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+						<optgroup label="Groups"><!-- Use this to create sub-groups -->
+							<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
+							{% for group in groups %}
+								<option value="{{group.id}}">
+									&nbsp;&nbsp;&nbsp;{{group}}
+								</option>
+							{% endfor %}
+						</optgroup>
+					</select>
+				</form>
+
+				<div class="row dash-row group-home">
+					<div class="col-lg-7 news-col" id="display-group-box">
+						<div class = "table-wrapper" id="group-table-wrapper">
+							<table class="player-list">
+								<tbody>
+									<tr>
+										<th>PLAYER</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
+										<th>RESULTS</th>
+									</tr>
+									{% if first_players %}
+										{% for player in first_players %}
+											<tr>
+												<td>{{ player.first_name }} {{ player.last_name }}</td>
+												<td>{{ player.position }}</td>
+												<td>{{ player.year }}</td>
+												<td>96%</td>
+											</tr>
+										{% endfor %}
+									{% endif %}
+								</tbody>
+							</table>
+						</div>
+						<div class = "table-footer">
+							<table class="group-footer-table">
+								<tbody>
+								<tr>
+									<td>edit name</td>
+									<td>color</td>
+									<td>
+										<a href="manage" id="manage-group-link">manage group</a>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-				<div class="col-lg-5 group-analytics-col no-border">
-				</div>
-			</div><!-- /panel -->
-		</div><!--all-groups-->
-	</div><!--main-container-->
+					<div class="col-lg-5 group-analytics-col no-border">
+					</div>
+				</div><!-- /panel -->
+			</div><!--all-groups-->
+		</div><!--main-container-->
 
-	<div class="loading-overlay">
-		<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-	</div>	
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>	
 
-	<a href="" id="scroll-to-top" class="hidden-print">
-		<i class="fa fa-chevron-up"></i>
-	</a>
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
+	</div><!--/wrapper-->
 	
 	<script type="text/javascript">
 		$('.assign-test').click(function(){
