@@ -19,18 +19,20 @@ urlpatterns = [
     url(r'^groups/$', views.groups, name='groups'),
     url(r'^groups/create$', views.create_group, name='create_group'),
     url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
-    url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
     #url(r'^groups/(?P<group_id>[0-9]+)$', views.group_detail, name='group_detail'),
     url(r'^groups/(?P<group_id>[0-9]+)/edit$', views.edit_group, name='edit_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/delete$', views.delete_group, name='delete_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/delete/(?P<player_id>[0-9]+)$', views.delete_player_from_group, name='delete_player_from_group'),
-    url(r'^groups/(?P<group_id>[0-9]+)/json$', views.group_json, name='group_json'),
     url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
     url(r'^create_test$', views.create_test, name='create_test'),
     url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
     url(r'^tests/(?P<test_id>[0-9]+)/analytics$', views.test_analytics, name='test_analytics'),
     url(r'^tests$', views.all_tests, name='all_tests'),
     url(r'^my_tests$', views.my_tests, name='my_tests'),
+    # JSON urls
+    url(r'^teams/players/(?P<team_id>[0-9]+)/json$', views.players_on_team_json, name='players_on_team_json'),
+    url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
+    url(r'^groups/(?P<group_id>[0-9]+)/json$', views.group_json, name='group_json'),
 ]
 
 if settings.DEBUG:

@@ -481,18 +481,6 @@ def delete_player_from_group(request):
 	#return HttpResponse('')
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def all_groups_json(request):
-	groups = PlayerGroup.objects.all()
-	players = Player.objects.filter(playergroup__in=groups)
-	return HttpResponse(serializers.serialize("json", players))
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def group_json(request, group_id):
-	group = PlayerGroup.objects.filter(id=group_id)[0]
-	players = group.players.all()
-	return HttpResponse(serializers.serialize("json", players))
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
 def test_analytics(request, test_id):
 	coach = request.user.coach
 	test = Test.objects.filter(pk=test_id)[0]
@@ -559,3 +547,23 @@ def test_analytics(request, test_id):
 		'page_header': 'ANALYTICS',
 		'test_results_length': test_results_length,
 	})
+
+# JSON requests
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def players_on_team_json(request, team_id):
+	team = Team.objects.filter(id=team_id)
+	players = team.players.all()
+	return HttpResponse(serializers.serialize("json", players))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def all_groups_json(request):
+	groups = PlayerGroup.objects.all()
+	players = Player.objects.filter(playergroup__in=groups)
+	return HttpResponse(serializers.serialize("json", players))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def group_json(request, group_id):
+	group = PlayerGroup.objects.filter(id=group_id)[0]
+	players = group.players.all()
+	return HttpResponse(serializers.serialize("json", players))

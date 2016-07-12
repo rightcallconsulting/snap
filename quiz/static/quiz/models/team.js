@@ -1,10 +1,33 @@
 var Team = function(config){
-  this.teamName = config.teamName || null;
-  this.players = config.players || [];
-  this.sortByTotalCorrect = config.sortByTotalCorrect || false;
-  this.sortByTotalWrong = config.sortByTotalWrong || false;
-  this.sortByTotalPercentage = config.sortByTotalPercentage || false;
+	this.name = config.name || null;
+	this.players = config.players || [];
+	
+	this.sortByTotalCorrect = config.sortByTotalCorrect || false;
+	this.sortByTotalWrong = config.sortByTotalWrong || false;
+	this.sortByTotalPercentage = config.sortByTotalPercentage || false;
 };
+
+var createTeamFromJSON = function(jsonTeam){
+	var team = new Team({
+		id: jsonTeam.pk,
+		name: jsonTeam.fields.name,
+		players: jsonTeam.fields.players,
+	});
+
+	return team
+};
+
+var createTeamFromJSONSeed = function(jsonTeam){
+	var team = new Team({
+		id: jsonTeam.team,
+		name: jsonTeam.fields.name,
+		players: jsonTeam.players,
+	});
+
+	return tean
+};
+
+// Not sure if we need the stuff under this line - Dylan
 
 Team.prototype.drawOverallSummary = function(xDist, yDist, sortButtons){
   this.drawSummaryHeader();

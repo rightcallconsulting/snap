@@ -53,7 +53,7 @@ var createUserFromJSONSeed = function(jsonUser){
 	return user
 };
 
-// Not sure if we need the stuff under this line
+// Not sure if we need the stuff under this line - Dylan
 
 User.prototype.getFullName = function(){
   return this.firstName + " " + this.lastName;
