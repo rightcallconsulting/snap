@@ -133,17 +133,18 @@
 				</div><!--/news-col-->
 			</div><!--/padding-->
 		</div><!--/main-container-->
+
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>
+
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
 	</div><!--/wrapper-->
 
-	<div class="loading-overlay">
-		<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-	</div>
-
-	<a href="" id="scroll-to-top" class="hidden-print">
-		<i class="fa fa-chevron-up"></i>
-	</a>
-
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">
 		var percentCorrect = {{analytics.total_correct_attempts_percentage}},

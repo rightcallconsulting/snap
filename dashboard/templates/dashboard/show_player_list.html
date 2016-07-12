@@ -3,101 +3,126 @@
 {% load app_filters %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
-	{% include "dashboard/sidebar.html" %}
+	<div id="wrapper" class="preload">
+		{% include "dashboard/sidebar.html" %}
 
-	<div id="main-container">
-		{% include "dashboard/navbar.html" %}
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-		{% include "dashboard/grey_container.html" %}
-
-		<div class="padding-md analytics-home">
-			{% if not request.user.myuser.is_a_player %}
-			<div class="row">
-				<div class="col-lg-5">
-					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-						<optgroup label="Groups"> <!-- Use this to create sub-groups -->
-							<!-- REPLACE THE FOLLOWING WITH A DJANGO FOR LOOP THROUGH GROUPS -->
-							{% for group in groups %}
-								<option value="{{group.id}}">&nbsp;&nbsp;&nbsp;{{group}}</option>
-							{% endfor %}
-						</optgroup>
-					</select>
-				</div><!-- /.col -->
-			</div><!-- /.row -->
-			{% endif %}
-			<table class="analytics-main-table">
-				<tr>
-					<th>CORRECT<br />
-					<canvas id="percentCorrectChart"></canvas></th>
-					<th>INCORRECT<br />
-					<canvas id="percentIncorrectChart"></canvas></th>
-					<th>SKIPPED<br />
-					<canvas id="percentSkippedChart"></canvas></th>
-				</tr>
-				<tr>
-					<td>
-						<table class="analytics-play-list" id="correct-plays-list">
-							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-							{% for play, percent in analytics.correct_plays_percent %}
-							{% if forloop.counter0 < 5 %}
+			<div class="padding-md analytics-home">
+				{% if not request.user.myuser.is_a_player %}
+					<div class="row">
+						<div class="col-lg-5">
+							<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+								<optgroup label="Groups">
+									{% for group in groups %}
+										<option value="{{group.id}}">
+											&nbsp;&nbsp;&nbsp;{{group}}
+										</option>
+									{% endfor %}
+								</optgroup>
+							</select>
+						</div>
+					</div>
+				{% endif %}
+				<table class="analytics-main-table">
+					<tr>
+						<th>
+							CORRECT
+							<br>
+							<canvas id="percentCorrectChart"></canvas>
+						</th>
+						<th>
+							INCORRECT
+							<br>
+							<canvas id="percentIncorrectChart"></canvas>
+						</th>
+						<th>
+							SKIPPED
+							<br>
+							<canvas id="percentSkippedChart"></canvas>
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<table class="analytics-play-list" id="correct-plays-list">
 								<tr>
-									<td>{{play.name}}</td><td>{{percent}}%</td>
+									<th class="first">PLAY</th>
+									<th class="second">%</th>
 								</tr>
-							{% endif %}
-							{% endfor %}
-						</table>
-					</td>
-					<td>
-						<table class="analytics-play-list" id="incorrect-plays-list">
-							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-							{% for play, percent in analytics.incorrect_plays_percent %}
-							{% if forloop.counter0 < 5 %}
+								{% for play, percent in analytics.correct_plays_percent %}
+									{% if forloop.counter0 < 5 %}
+										<tr>
+											<td>{{play.name}}</td>
+											<td>{{percent}}%</td>
+										</tr>
+									{% endif %}
+								{% endfor %}
+							</table>
+						</td>
+						<td>
+							<table class="analytics-play-list" id="incorrect-plays-list">
 								<tr>
-									<td>{{play.name}}</td><td>{{percent}}%</td>
+									<th class="first">PLAY</th>
+									<th class="second">%</th>
 								</tr>
-							{% endif %}
-							{% endfor %}
-						</table>
-					</td>
-					<td>
-						<table class="analytics-play-list" id="skipped-plays-list">
-							<tr><th class="first">PLAY</th><th class="second">%</th></tr>
-							{% for play, percent in analytics.skipped_plays_percent %}
-							{% if forloop.counter0 < 5 %}
+								{% for play, percent in analytics.incorrect_plays_percent %}
+									{% if forloop.counter0 < 5 %}
+										<tr>
+											<td>{{play.name}}</td>
+											<td>{{percent}}%</td>
+										</tr>
+									{% endif %}
+								{% endfor %}
+							</table>
+						</td>
+						<td>
+							<table class="analytics-play-list" id="skipped-plays-list">
 								<tr>
-									<td>{{play.name}}</td><td>{{percent}}%</td>
+									<th class="first">PLAY</th>
+									<th class="second">%</th>
 								</tr>
-							{% endif %}
-							{% endfor %}
-						</table>
-					</td>
-				</tr>
-			</table>
+								{% for play, percent in analytics.skipped_plays_percent %}
+									{% if forloop.counter0 < 5 %}
+										<tr>
+											<td>{{play.name}}</td>
+											<td>{{percent}}%</td>
+										</tr>
+									{% endif %}
+								{% endfor %}
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div><!--padding-md-->
+		</div><!--/main-container-->
+
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
 		</div>
 
 		<a href="" id="scroll-to-top" class="hidden-print">
 			<i class="fa fa-chevron-up"></i>
 		</a>
+	</div><!--/wrapper-->
 
-	</div> <!-- #main-container -->
-</div> <!-- #wrapper -->
-<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-<!-- Pass Django variables to JS assets -->
-<script type="text/javascript">
-  var percentCorrect = {{analytics.total_correct_attempts_percentage}},
-		percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
-		percentSkipped = {{analytics.total_skipped_attempts_percentage}};
-</script>
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 
-<!-- Loading Chart.js through CDN for now -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+	<!-- Pass Django variables to JS assets -->
+	<script type="text/javascript">
+		var percentCorrect = {{analytics.total_correct_attempts_percentage}},
+			percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
+			percentSkipped = {{analytics.total_skipped_attempts_percentage}};
+	</script>
 
-<!-- Build Charts -->
-<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+	<!-- Loading Chart.js through CDN for now -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
+	<!-- Build Charts -->
+	<script src="{% static 'dashboard/js/analytics.js' %}"></script>
 {% endblock %}
