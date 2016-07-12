@@ -2,204 +2,210 @@
 {% load staticfiles %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
+	<div id="wrapper" class="preload">
+		{% include "dashboard/sidebar.html" %}
 
-	{% include "dashboard/sidebar.html" %}
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-
-	<div id="main-container">
-		{% include "dashboard/navbar.html" %}
-
-		{% include "dashboard/grey_container.html" %}
-
-		<div class="padding-md">
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>PLAYER ANALYTICS</h4></span>
-					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+			<div class="padding-md">
+				<div class="row dash-row">
+					<div class="col-lg-7 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>PLAYER ANALYTICS</h4></span>
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
+						</div><!-- /.col -->
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-info">
+								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+								<h5>Server Load</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher than last week</span>
+								<div class="stat-icon">
+									<i class="fa fa-hdd-o fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
 							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+						</div><!-- /.col -->
+					</div>
+					<div class="col-lg-4 dash-col">
+						<div class="dash-header text-center">
+							<span><h4>ASSIGNMENTS COMPLETED</h4></span>
 						</div>
-					</div><!-- /.col -->
-				</div>
-				<div class="col-lg-4 dash-col">
-					<div class="dash-header text-center">
-						<span><h4>ASSIGNMENTS COMPLETED</h4></span>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">362</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-info">
+								<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
+								<h5>Server Load</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-hdd-o fa-3x"></i>
+								</div>
+								<div class="refresh-button">
+									<i class="fa fa-refresh"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div><!-- /.col -->
 					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">362</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">5% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+
+					<div class="loading-overlay">
+						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+					</div>
+				</div><!-- /panel -->
+
+				<div class="row dash-row">
+					<div class="col-lg-7 dash-col">
+						<div class="text-center dash-header">
+							<span><h4>TO DO</h4></span>
 						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none"><span id="serverloadCount">15</span>%</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i><span class="m-left-xs">1% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
-							</div>
-							<div class="refresh-button">
-								<i class="fa fa-refresh"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
+						<div class = "table-wrapper">
+							<table>
+								<tbody>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available5</td>
+									</tr>
+									<tr>
+										<td>Data Not Available6</td>
+									</tr>
+									<tr>
+										<td>Data Not Available7</td>
+									</tr>
+									<tr>
+										<td>Data Not Available8</td>
+									</tr>
+									<tr>
+										<td>Data Not Available9</td>
+									</tr>
+									<tr>
+										<td>Data Not Available10</td>
+									</tr>
+									<tr>
+										<td>Data Not Available11</td>
+									</tr>
+									<tr>
+										<td>Data Not Available12</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-					</div><!-- /.col -->
-				</div>
-
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
-
-			<div class="row dash-row">
-				<div class="col-lg-7 dash-col">
-					<div class="text-center dash-header">
-						<span><h4>TO DO</h4></span>
 					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="col-lg-4 news-col">
+						<div class="text-center news-header">
+							<span><h4>NEWS FEED</h4></span>
+						</div>
+						<div class = "table-wrapper">
+							<table>
+								<tbody>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available</td>
+									</tr>
+									<tr>
+										<td>Data Not Available5</td>
+									</tr>
+									<tr>
+										<td>Data Not Available6</td>
+									</tr>
+									<tr>
+										<td>Data Not Available7</td>
+									</tr>
+									<tr>
+										<td>Data Not Available8</td>
+									</tr>
+									<tr>
+										<td>Data Not Available9</td>
+									</tr>
+									<tr>
+										<td>Data Not Available10</td>
+									</tr>
+									<tr>
+										<td>Data Not Available11</td>
+									</tr>
+									<tr>
+										<td>Data Not Available12</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
-				</div>
-				<div class="col-lg-4 news-col">
-					<div class="text-center news-header">
-						<span><h4>NEWS FEED</h4></span>
+
+					<div class="loading-overlay">
+						<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
 					</div>
-					<div class = "table-wrapper">
-						<table>
-							<tbody>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available</td>
-								</tr>
-								<tr>
-									<td>Data Not Available5</td>
-								</tr>
-								<tr>
-									<td>Data Not Available6</td>
-								</tr>
-								<tr>
-									<td>Data Not Available7</td>
-								</tr>
-								<tr>
-									<td>Data Not Available8</td>
-								</tr>
-								<tr>
-									<td>Data Not Available9</td>
-								</tr>
-								<tr>
-									<td>Data Not Available10</td>
-								</tr>
-								<tr>
-									<td>Data Not Available11</td>
-								</tr>
-								<tr>
-									<td>Data Not Available12</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				</div><!--/panel-->
+			</div><!--/padding-md-->
+		</div><!--main-container-->
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!-- /panel -->
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>
 
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
+	</div><!--/wrapper-->
 
-			<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
-			<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-			{% endblock %}
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% endblock %}
