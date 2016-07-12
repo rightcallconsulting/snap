@@ -215,6 +215,87 @@ def todo(request):
             'groups_seed': serializers.serialize("json", groups)
         })
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def groups(request):
+    team = request.user.coach.team
+    groups = PlayerGroup.objects.filter(team=team)
+    if len(groups) > 0:
+        first_group = groups[0].players.all()
+        analytics = PlayerAnalytics(first_group)
+    else:
+        first_group = []
+        analytics = None
+    return render(request, 'dashboard/groups.html', {
+        'team': team,
+        'groups': groups,
+        'first_players': first_group,
+        'analytics': analytics,
+        'page_header': 'GROUPS',
+    })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_group(request):
+    if request.method == "POST":
+        new_player_group = PlayerGroup()
+        new_player_group.name = request.POST['name']
+        new_player_group.team = request.user.coach.team
+        new_player_group.save()
+
+        for player_id in request.POST.getlist('player'):
+            player = Player.objects.filter(pk=int(player_id))[0]
+            new_player_group.players.add(player)
+
+        new_player_group.save()
+
+        return HttpResponseRedirect(reverse('groups'))
+    else:
+        form = PlayerGroupForm()
+        players = Player.objects.filter(team=request.user.coach.team)
+        return render(request, 'dashboard/create_group.html', {
+            'form': form,
+            'players': players,
+            'page_header': 'CREATE GROUP',
+        })
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def manage_groups(request):
+    return render(request, 'dashboard/manage_groups.html', {})
+    
+    '''coach = request.user.coach
+    group = PlayerGroup.objects.filter(id=group_id)[0]
+    players = group.players.all()
+    
+    if request.POST:
+        test_id = request.POST.get('testID')
+        group_id = request.POST.get('groupID')
+        player_id = request.POST.get('playerID')
+        form_action = request.POST.get('form_action')
+        if test_id:
+            group.duplicate_and_assign_test_to_all_players(test_id, coach)
+            return HttpResponse('')
+        elif group_id and player_id and form_action == "delete_player_from_group":
+            player = Player.objects.filter(pk=player_id)[0]
+            group = PlayerGroup.objects.filter(pk=group_id)[0]
+            group.players.remove(player)
+            return HttpResponse('')
+        elif group_id and player_id and form_action == "add_player_to_group":
+            player = Player.objects.filter(pk=player_id)[0]
+            group = PlayerGroup.objects.filter(pk=group_id)[0]
+            group.players.add(player)
+            return HttpResponse('')
+    else:
+        delete_group_form = PlayerGroupForm(instance = group)
+        tests = Test.objects.filter(player__team=coach.team)
+        groups = PlayerGroup.objects.filter(team=coach.team)
+        return render(request, 'dashboard/groups/manage.html', {
+            'group': group,
+            'groups': groups,
+            'players': players,
+            'tests': tests,
+            'form': delete_group_form,
+            'page_header': 'MANAGE GROUP'
+        }) '''
+
 @login_required
 def my_tests(request):
     player = request.user.player
@@ -330,30 +411,6 @@ def edit_test(request, test_id):
             'page_header': 'EDIT TEST'
         })
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def create_group(request):
-	if request.method == "POST":
-		new_player_group = PlayerGroup()
-		new_player_group.name = request.POST['name']
-		new_player_group.team = request.user.coach.team
-		new_player_group.save()
-
-		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			new_player_group.players.add(player)
-
-		new_player_group.save()
-
-		return HttpResponseRedirect(reverse('groups'))
-	else:
-		form = PlayerGroupForm()
-		players = Player.objects.filter(team=request.user.coach.team)
-		return render(request, 'dashboard/create_group.html', {
-			'form': form,
-			'players': players,
-			'page_header': 'CREATE GROUP',
-		})
-
 def edit_group(request, group_id):
 	group = PlayerGroup.objects.filter(id=group_id)[0]
 	if request.method == 'POST':
@@ -389,63 +446,6 @@ def delete_player_from_group(request):
         group.players.remove(player)
         return HttpResponse('')
     #return HttpResponse('')
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def groups(request):
-    team = request.user.coach.team
-    groups = PlayerGroup.objects.filter(team=team)
-    if len(groups) > 0:
-        first_group = groups[0].players.all()
-        analytics = PlayerAnalytics(first_group)
-    else:
-        first_group = []
-        analytics = None
-    return render(request, 'dashboard/groups.html', {
-        'team': team,
-        'groups': groups,
-        'first_players': first_group,
-        'analytics': analytics,
-        'page_header': 'GROUPS',
-    })
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def manage_groups(request):
-	return render(request, 'dashboard/manage_groups.html', {})
-	
-	'''coach = request.user.coach
-	group = PlayerGroup.objects.filter(id=group_id)[0]
-	players = group.players.all()
-	
-	if request.POST:
-		test_id = request.POST.get('testID')
-		group_id = request.POST.get('groupID')
-		player_id = request.POST.get('playerID')
-		form_action = request.POST.get('form_action')
-		if test_id:
-			group.duplicate_and_assign_test_to_all_players(test_id, coach)
-			return HttpResponse('')
-		elif group_id and player_id and form_action == "delete_player_from_group":
-			player = Player.objects.filter(pk=player_id)[0]
-			group = PlayerGroup.objects.filter(pk=group_id)[0]
-			group.players.remove(player)
-			return HttpResponse('')
-		elif group_id and player_id and form_action == "add_player_to_group":
-			player = Player.objects.filter(pk=player_id)[0]
-			group = PlayerGroup.objects.filter(pk=group_id)[0]
-			group.players.add(player)
-			return HttpResponse('')
-	else:
-		delete_group_form = PlayerGroupForm(instance = group)
-		tests = Test.objects.filter(player__team=coach.team)
-		groups = PlayerGroup.objects.filter(team=coach.team)
-		return render(request, 'dashboard/groups/manage.html', {
-			'group': group,
-			'groups': groups,
-			'players': players,
-			'tests': tests,
-			'form': delete_group_form,
-			'page_header': 'MANAGE GROUP'
-		}) '''
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups_json(request):

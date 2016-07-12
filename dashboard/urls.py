@@ -16,12 +16,6 @@ urlpatterns = [
     url(r'^playbook$', views.playbook, name='playbook'),
     url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
     url(r'^todo$', views.todo, name='todo'),
-    url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
-    url(r'^create_test$', views.create_test, name='create_test'),
-    url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
-    url(r'^tests/(?P<test_id>[0-9]+)/analytics$', views.test_analytics, name='test_analytics'),
-    url(r'^tests$', views.all_tests, name='all_tests'),
-    url(r'^my_tests$', views.my_tests, name='my_tests'),
     url(r'^groups/$', views.groups, name='groups'),
     url(r'^groups/create$', views.create_group, name='create_group'),
     url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
@@ -31,6 +25,12 @@ urlpatterns = [
     url(r'^groups/(?P<group_id>[0-9]+)/delete$', views.delete_group, name='delete_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/delete/(?P<player_id>[0-9]+)$', views.delete_player_from_group, name='delete_player_from_group'),
     url(r'^groups/(?P<group_id>[0-9]+)/json$', views.group_json, name='group_json'),
+    url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+    url(r'^create_test$', views.create_test, name='create_test'),
+    url(r'^tests/(?P<test_id>[0-9]+)/edit$', views.edit_test, name='edit_test'),
+    url(r'^tests/(?P<test_id>[0-9]+)/analytics$', views.test_analytics, name='test_analytics'),
+    url(r'^tests$', views.all_tests, name='all_tests'),
+    url(r'^my_tests$', views.my_tests, name='my_tests'),
 ]
 
 if settings.DEBUG:
