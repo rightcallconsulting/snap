@@ -63,6 +63,7 @@ img.menu-icon{
 .create-groups .action-boxes{
   margin-bottom: 0px;
 }
+
 .coach-home .main-content-area, .playbook .main-content-area{
   margin-left: 3.5%;
   width: 45%;
@@ -128,37 +129,47 @@ img.menu-icon{
   margin-bottom: 20px;
 }
 
-.all-groups select {
+.create-groups .action-boxes, .all-groups .action-boxes, .manage-groups .action-boxes {
+	margin-bottom: 0px;
+}
+
+.create-groups .group-home, .all-groups .group-home, .manage-groups .group-home {
+	margin-bottom: 1%;
+}
+
+.create-groups label, .all-groups label, .manage-groups label {
 	margin-left: 2%;
-	margin-bottom: 2%;
+}
+
+.create-groups select, .all-groups select, .manage-groups select {
+	margin-left: 2%;
+	margin-bottom: 1%;
 	width: 65%;
 }
 
-.create-groups label {
-	margin-left: 2%;
-}
-
-.create-groups input[type="text"] {
+.create-groups input[type="text"], .all-groups input[type="text"], .manage-groups input[type="text"] {
 	margin-left: 2%;
 	margin-bottom: 2%;
 	width: 60%;
 	line-height: 2em;
 }
 
-.create-groups input[type="submit"] {
+.create-groups input[type="submit"], .all-groups input[type="submit"], .manage-groups input[type="submit"] {
 	margin-left: 2%;
 	width: 20%;
 	height: 100%;
 }
 
-.create-groups form, .create-groups table {
+.create-groups form, .create-groups table, .all-groups form, .all-groups table, .manage-groups form, .manage-groups table  {
 	margin-left: 2%;
-	margin-bottom: 1%;
+	margin-bottom: 5%;
 	width: 90%;
 }
 
-.create-groups .group-home {
+.create-groups form, .all-groups form, .manage-groups form {
+	margin-left: 2%;
 	margin-bottom: 1%;
+	width: 90%;
 }
 
 .small-sidebar .menu-text{
