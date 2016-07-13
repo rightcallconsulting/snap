@@ -21,7 +21,7 @@
 					<ul class="nav-notification clearfix">
 						<li class="profile dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								<strong>{{request.user.get_full_name}}</strong>
+								<strong>{{ request.user.get_full_name }}</strong>
 								<span>
 									<i class="fa fa-chevron-down"></i>
 								</span>
@@ -30,25 +30,20 @@
 								<li>
 									<a class="clearfix" href="profile">
 										{% if request.user.myuser.avatar_image %}
-											<img src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
+											<img class="dropdown-picture" src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
 										{% else %}
-											<img src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
+											<img class="dropdown-picture" src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
 										{% endif %}
 										
 										<div class="detail">
-											<strong>{{request.user.get_full_name}}</strong>
-											<p class="grey">{{request.user.email}}</p>
+											<strong>{{ request.user.get_full_name }}</strong>
+											<p class="grey">{{ request.user.email }}</p>
 										</div>
 									</a>
 								</li>
 								<li>
 									<a tabindex="-1" href="edit_profile" class="main-link">
 										<i class="fa fa-edit fa-lg"></i> Edit profile
-									</a>
-								</li>
-								<li>
-									<a tabindex="-1" href="/settings" class="theme-setting">
-										<i class="fa fa-cog fa-lg"></i> Settings
 									</a>
 								</li>
 								<li class="divider">
@@ -59,24 +54,6 @@
 									</a>
 								</li>
 							</ul>
-						</li>
-					</ul>
-					<ul class="nav-notification clearfix">
-						<li class="profile">
-							<span>
-								<a href="#">
-									<img class="top-nav-button" src="{% static 'dashboard/images/question-mark-icon.png' %}" alt="?">
-								</a>
-							</span>
-						</li>
-					</ul>
-					<ul class="nav-notification clearfix">
-						<li class="profile">
-							<span>
-								<a href="#">
-									<img class="top-nav-button" src="{% static 'dashboard/images/settings-icon.png' %}" alt="Settings">
-								</a>
-							</span>
 						</li>
 					</ul>
 				</td><!--/right-->

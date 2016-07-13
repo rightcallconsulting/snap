@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^tests/(?P<test_id>[0-9]+)/analytics$', views.test_analytics, name='test_analytics'),
     url(r'^tests$', views.all_tests, name='all_tests'),
     url(r'^my_tests$', views.my_tests, name='my_tests'),
-    # JSON urls
+    # JSON requests
     url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
     url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
     url(r'^groups/(?P<group_id>[0-9]+)/json$', views.group_json, name='group_json'),
