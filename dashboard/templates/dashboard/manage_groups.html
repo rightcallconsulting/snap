@@ -54,8 +54,8 @@
 				<div class="row dash-row group-home">
 					<div class="col-lg-7" id="display-group-box">
 						<div class = "table-wrapper" id="players-in-group-table-wrapper">
-							<table class="player-list" id="in-group">
-								<tbody>
+							<table class="player-list">
+								<tbody id="in-group">
 									<tr>
 										<th>REMOVE</th>
 										<th>PLAYER</th>
@@ -65,8 +65,8 @@
 									{% if players_in_group %}
 										{% for player in players_in_group %}
 											<tr>
-												<td>
-													<i class="fa fa-minus-circle fa-lg red" onclick="changeColumn(this, 'REMOVE')"></i>
+												<td class="icon-cell">
+													<i class="fa fa-minus-circle fa-2x red" onclick="changeColumn(this, 'REMOVE')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -80,8 +80,8 @@
 					</div>
 					<div class="col-lg-5">
 						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
-							<table class="player-list" id="not-in-group">
-								<tbody>
+							<table class="player-list">
+								<tbody id="not-in-group">
 									<tr>
 										<th>ADD</th>
 										<th>PLAYER</th>
@@ -91,8 +91,8 @@
 									{% if players_not_in_group %}
 										{% for player in players_not_in_group %}
 											<tr>
-												<td>
-													<i class="fa fa-plus-circle fa-lg green" onclick="changeColumn(this, 'ADD')"></i>
+												<td class="icon-cell">
+													<i class="fa fa-plus-circle fa-2x green" onclick="changeColumn(this, 'ADD')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -156,6 +156,7 @@
 
 		var createPlayersNotInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
+			innerHTML += "<tbody id=\"not-in-group\">"
 			innerHTML += "<tr>"
 			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
 			innerHTML += "</tr>"
@@ -163,20 +164,21 @@
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
-				innerHTML += "<td><i class=\"fa fa-plus-circle fa-lg green\" onclick=\"changeColumn(this, 'ADD')\"></i></td>"
+				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-plus-circle fa-2x green\" onclick=\"changeColumn(this, 'ADD')\"></i></td>"
 				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
 				innerHTML += "<td>" + user.year + "</td>"
 				innerHTML += "</tr>"
 			}
 
-			innerHTML += "</table>"
+			innerHTML += "</tbody></table>"
 
 			return innerHTML;
 		};
 
 		var createPlayersInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
+			innerHTML += "<tbody id=\"in-group\">"
 			innerHTML += "<tr>"
 			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
 			innerHTML += "</tr>"
@@ -184,14 +186,14 @@
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
-				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\" onclick=\"changeColumn(this, 'REMOVE')\"></i></td>"
+				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-minus-circle fa-2x red\" onclick=\"changeColumn(this, 'REMOVE')\"></i></td>"
 				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
 				innerHTML += "<td>" + user.year + "</td>"
 				innerHTML += "</tr>"
 			}
 
-			innerHTML += "</table>"
+			innerHTML += "</tbody></table>"
 
 			return innerHTML;
 		};
@@ -199,16 +201,46 @@
 		// When an icon is clicked call this function and update the columns.
 		// After updating the columns make a POST request to update the database.
 		var changeColumn = function(selected, action) {
+			// The table (<tbody>) and row (<tr>) of the icon that was clicked
 			var selected_row = selected.parentNode.parentNode;
 			var selected_table = selected_row.parentNode;
+			
+			// Create a new row to be inserted into the other table.
+			// Initially this is a clone of the selected row, but we need
+			// to change the icon in the first column. Argument 'true'
+			// is to make a deep copy of the element being cloned.
+			var new_row = selected_row.cloneNode(true);
 
-			selected_table.removeChild(selected_row);
+			// Create a new <td></td> for the new icon, and add a new
+			// <i></i> element to it. Also, set the class of the new
+			// cell to .icon-cell, so it can be manipulated later on.
+			var new_icon_table_data = document.createElement("td");
+			new_icon_table_data.setAttribute("class", "icon-cell");
+			new_icon_table_data.appendChild( document.createElement("i") );
 
+			// This will be set equal to the able we want to insert our
+			// new row into.
+			var target_table;
+
+			// Select the correct table that we want to append. Add the 
+			// appropriate attributes to our new icon and then replace 
+			// the old icon with the new icon. 
 			if (action == "ADD") {
-
+				target_table = document.getElementById('in-group');
+				new_icon_table_data.firstChild.setAttribute("class", "fa fa-minus-circle fa-2x red");
+				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'REMOVE')");
+				new_row.replaceChild(new_icon_table_data, new_row.querySelector(".icon-cell") );
 			} else if (action == "REMOVE") {
-
+				target_table = document.getElementById('not-in-group');
+				new_icon_table_data.firstChild.setAttribute("class", "fa fa-plus-circle fa-2x green");
+				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'ADD')");
+				new_row.replaceChild(new_icon_table_data, new_row.querySelector(".icon-cell") );
 			}
+
+			// Delete the row that was clicked on, and add our new row to the end
+			// of the target table.
+			selected_table.removeChild(selected_row);
+			target_table.appendChild(new_row);
 		}
 	</script>
 
