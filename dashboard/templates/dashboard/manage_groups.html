@@ -9,7 +9,7 @@
 	<div id="wrapper" class="preload">
 		{% include "dashboard/sidebar.html" %}
 		
-		<div id="main-container" onload="initGroupTable()">
+		<div id="main-container" onload="initGroupTable( {{ team.id }} )">
 			{% include "dashboard/navbar.html" %}
 			{% include "dashboard/grey_container.html" %}
 
@@ -40,11 +40,11 @@
 				</div>
 
 				<form>
-					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+					<select name="units" class="unit-form" id="group-form" onchange="changeBothGroups(this, {{ team.id }})">
 						<optgroup label="Groups">
 							{% for group in groups %}
 								<option value="{{ group.id }}">
-									&nbsp;&nbsp;&nbsp;{{group}}
+									&nbsp;&nbsp;&nbsp;{{ group }}
 								</option>
 							{% endfor %}
 						</optgroup>
@@ -58,9 +58,9 @@
 								<tbody>
 									<tr>
 										<th>REMOVE</th>
+										<th>PLAYER</th>
 										<th>POSITION</th>
 										<th>YEAR</th>
-										<th>RESULTS</th>
 									</tr>
 									{% if players_in_group %}
 										{% for player in players_in_group %}
@@ -84,9 +84,9 @@
 								<tbody>
 									<tr>
 										<th>ADD</th>
+										<th>PLAYER</th>
 										<th>POSITION</th>
 										<th>YEAR</th>
-										<th>RESULTS</th>
 									</tr>
 									{% if players_not_in_group %}
 										{% for player in players_not_in_group %}
@@ -120,26 +120,39 @@
 
 {% block javascript %}
 	<script type="text/javascript">
-		var createPlayersInGroupTable = function(users) {
-			var innerHTML = "<table class=\"player-list\">";
-			innerHTML += "<tr>"
-			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
-			innerHTML += "</tr>"
-			
-			for(var i = 0; i < users.length; i++) {
-				var user = users[i];
-				innerHTML += "<tr>"
-				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\"></i></td>"
-				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
-				innerHTML += "<td>" + user.position + "</td>"
-				innerHTML += "<td>" + user.year + "</td>"
-				innerHTML += "</tr>"
-			}
 
-			innerHTML += "</table>"
+		var changeBothGroups = function(sel, teamID) {
+			changeAddTable(sel.value,teamID);
+			changeRemoveTable(sel.value);
+		};
 
-			return innerHTML;
-		}
+		var changeAddTable = function(groupID, teamID) {
+			var playersNotInGroup = [];
+			var notInGroupJson = "/groups/" + groupID + "/" + teamID + "/json";
+			var playersNotInGroupTableWrapper = document.getElementById('players-not-in-group-table-wrapper');
+
+			$.getJSON(notInGroupJson, function(data, jqXHR) {
+				data.forEach(function(groupPlayerObject) {
+					var groupPlayer = createUserFromJSON(groupPlayerObject);
+					playersNotInGroup.push(groupPlayer);
+					playersNotInGroupTableWrapper.innerHTML = createPlayersNotInGroupTable(playersNotInGroup);
+				});
+			});
+		};
+
+		var changeRemoveTable = function(groupID) {
+			var playersInGroup = [];
+			var groupJson = "/groups/" + groupID + "/json";
+			var playersInGroupTableWrapper = document.getElementById('players-in-group-table-wrapper');
+
+			$.getJSON(groupJson, function(data) {
+				data.forEach(function(groupPlayerObject, jqXHR) {
+					var groupPlayer = createUserFromJSON(groupPlayerObject);
+					playersInGroup.push(groupPlayer);
+					playersInGroupTableWrapper.innerHTML = createPlayersInGroupTable(playersInGroup);
+				});
+			});
+		};
 
 		var createPlayersNotInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
@@ -160,42 +173,28 @@
 			innerHTML += "</table>"
 
 			return innerHTML;
-		}
-
-		var changeGroup = function(sel) {
-			var playersInGroupTableWrapper = document.getElementById('players-in-group-table-wrapper');
-			var playersNotInGroupTableWrapper = document.getElementById('players-not-in-group-table-wrapper');
-			var manageLink = document.getElementById('manage-groups-link');
-			var groupID = sel.value;
-
-			manageLink.href = 'manage';
-
-			var queryString = "/groups/" + groupID + "/json";
-			var users = [];
-
-			$.getJSON(queryString, function(data, jqXHR){
-				data.forEach(function(userObject){
-					var u = createUserFromJSON(userObject);
-					users.push(u);
-					playersInGroupTableWrapper.innerHTML = createPlayersInGroupTable(users);
-				});
-			});
 		};
 
-		var initGroupTable = function(){
-			debugger;
-			var sel = document.getElementById('group-form');
-			changeGroup(sel);
-		};
-	</script>
+		var createPlayersInGroupTable = function(users) {
+			var innerHTML = "<table class=\"player-list\">";
+			innerHTML += "<tr>"
+			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
+			innerHTML += "</tr>"
+			
+			for(var i = 0; i < users.length; i++) {
+				var user = users[i];
+				innerHTML += "<tr>"
+				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\"></i></td>"
+				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
+				innerHTML += "<td>" + user.position + "</td>"
+				innerHTML += "<td>" + user.year + "</td>"
+				innerHTML += "</tr>"
+			}
 
-	<script type="text/javascript">
-		$('.assign-test').click(function(){
-			testID = this.id.replace("test-", "");
-			$(this).removeClass('btn-success');
-			groupID = $('.group-header')[0].id.replace("group-","");
-			$.post( "/groups/"+ groupID, { testID: testID});
-		})
+			innerHTML += "</table>"
+
+			return innerHTML;
+		};
 	</script>
 
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>

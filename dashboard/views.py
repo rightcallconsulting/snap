@@ -549,21 +549,32 @@ def test_analytics(request, test_id):
 	})
 
 # JSON requests
-
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):
-	team = Team.objects.filter(id=team_id)
-	players = team.players.all()
-	return HttpResponse(serializers.serialize("json", players))
+	team = Team.objects.filter(id=team_id)[0]
+	players = Player.objects.filter(team=team)
+	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def players_on_team_but_not_in_group_json(request, group_id, team_id):
+	team = Team.objects.filter(id=team_id)[0]
+	group = PlayerGroup.objects.filter(id=group_id)[0]
+	players_on_team = Player.objects.filter(team=team)
+	players_in_group = group.players.all()
+	players_not_in_group = list(players_on_team)
+	for player in list(players_in_group):
+		players_not_in_group.remove(player)
+
+	return HttpResponse(serializers.serialize("json", players_not_in_group, fields = ['first_name', 'last_name', 'position', 'year']))
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def all_groups_json(request):
 	groups = PlayerGroup.objects.all()
 	players = Player.objects.filter(playergroup__in=groups)
-	return HttpResponse(serializers.serialize("json", players))
+	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def group_json(request, group_id):
 	group = PlayerGroup.objects.filter(id=group_id)[0]
 	players = group.players.all()
-	return HttpResponse(serializers.serialize("json", players))
+	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))

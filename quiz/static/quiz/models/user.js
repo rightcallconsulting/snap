@@ -34,7 +34,7 @@ var createUserFromJSON = function(jsonUser){
 		lastName: jsonUser.fields.last_name,
 		position: jsonUser.fields.position,
 		year: jsonUser.fields.year,
-		ignoreInit: true
+		ignoreInit: true,
 	});
 
 	return user
@@ -42,18 +42,18 @@ var createUserFromJSON = function(jsonUser){
 
 var createUserFromJSONSeed = function(jsonUser){
 	var user = new User({
-		id: jsonUser.user,
+		id: jsonUser.pk,
 		firstName: jsonUser.first_name,
 		lastName: jsonUser.last_name,
 		position: jsonUser.position,
 		year: jsonUser.fields.year,
-		ignoreInit: true
+		ignoreInit: true,
 	});
 
 	return user
 };
 
-// Not sure if we need the stuff under this line - Dylan
+// Not sure if we need the stuff under this line
 
 User.prototype.getFullName = function(){
   return this.firstName + " " + this.lastName;

@@ -149,8 +149,8 @@
 			var queryString = "/groups/" + groupID + "/json";
 			var users = [];
 
-			$.getJSON(queryString, function(data, jqXHR){
-				data.forEach(function(userObject){
+			$.getJSON(queryString, function(data, jqXHR) {
+				data.forEach(function(userObject) {
 					var u = createUserFromJSON(userObject);
 					users.push(u);
 					groupTableWrapper.innerHTML = createUserTable(users);
