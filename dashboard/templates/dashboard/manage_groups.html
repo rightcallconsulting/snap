@@ -54,7 +54,7 @@
 				<div class="row dash-row group-home">
 					<div class="col-lg-7" id="display-group-box">
 						<div class = "table-wrapper" id="players-in-group-table-wrapper">
-							<table class="player-list">
+							<table class="player-list" id="in-group">
 								<tbody>
 									<tr>
 										<th>REMOVE</th>
@@ -66,7 +66,7 @@
 										{% for player in players_in_group %}
 											<tr>
 												<td>
-													<i class="fa fa-minus-circle fa-lg red"></i>
+													<i class="fa fa-minus-circle fa-lg red" onclick="changeColumn(this, 'REMOVE')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -80,7 +80,7 @@
 					</div>
 					<div class="col-lg-5">
 						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
-							<table class="player-list">
+							<table class="player-list" id="not-in-group">
 								<tbody>
 									<tr>
 										<th>ADD</th>
@@ -92,7 +92,7 @@
 										{% for player in players_not_in_group %}
 											<tr>
 												<td>
-													<i class="fa fa-plus-circle fa-lg green"></i>
+													<i class="fa fa-plus-circle fa-lg green" onclick="changeColumn(this, 'ADD')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -163,7 +163,7 @@
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
-				innerHTML += "<td><i class=\"fa fa-plus-circle fa-lg green\"></i></td>"
+				innerHTML += "<td><i class=\"fa fa-plus-circle fa-lg green\" onclick=\"changeColumn(this, 'ADD')\"></i></td>"
 				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
 				innerHTML += "<td>" + user.year + "</td>"
@@ -184,7 +184,7 @@
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
-				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\"></i></td>"
+				innerHTML += "<td><i class=\"fa fa-minus-circle fa-lg red\" onclick=\"changeColumn(this, 'REMOVE')\"></i></td>"
 				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
 				innerHTML += "<td>" + user.position + "</td>"
 				innerHTML += "<td>" + user.year + "</td>"
@@ -195,6 +195,21 @@
 
 			return innerHTML;
 		};
+
+		// When an icon is clicked call this function and update the columns.
+		// After updating the columns make a POST request to update the database.
+		var changeColumn = function(selected, action) {
+			var selected_row = selected.parentNode.parentNode;
+			var selected_table = selected_row.parentNode;
+
+			selected_table.removeChild(selected_row);
+
+			if (action == "ADD") {
+
+			} else if (action == "REMOVE") {
+
+			}
+		}
 	</script>
 
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
