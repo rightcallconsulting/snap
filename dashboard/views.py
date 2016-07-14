@@ -261,6 +261,34 @@ def create_group(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_groups(request):
 	if request.method == "POST":
+		add_operations = []
+		remove_operations = []
+		players_to_add = []
+		players_to_remove = []
+		
+		group_id = int(request.POST['group'])
+		group = PlayerGroup.objects.filter(pk=group_id)[0]
+
+		# Loop through and place players on add list
+		for player_id in request.POST.getlist('add_player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			players_to_add.append(player)
+		
+		# Loop through and place players on remove list
+		for player_id in request.POST.getlist('remove_player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			players_to_remove.append(player)
+
+		# Add players left on add list
+		for player_to_add in players_to_add:
+			group.players.add(player)
+
+		# Remove players left on remove list
+		for player_to_remove in players_to_remove:
+			group.players.remove(player)
+
+		group.save()
+
 		return HttpResponseRedirect(reverse('groups'))
 	else:
 		team = request.user.coach.team

@@ -13,7 +13,7 @@
 			{% include "dashboard/navbar.html" %}
 			{% include "dashboard/grey_container.html" %}
 
-			<div class="manage-groups padding-md">
+			<div class="manage-groups padding-md" id="team-id" value="{{ team.id }}">
 				<div class="action-boxes">
 					<table class="action-table">
 						<tbody>
@@ -40,10 +40,10 @@
 				</div>
 
 				<form>
-					<select name="units" class="unit-form" id="group-form" onchange="changeBothGroups(this, {{ team.id }})">
+					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this, {{ team.id }})">
 						<optgroup label="Groups">
 							{% for group in groups %}
-								<option value="{{ group.id }}">
+								<option value="{{ group.id }}" id="group-id">
 									&nbsp;&nbsp;&nbsp;{{ group }}
 								</option>
 							{% endfor %}
@@ -64,9 +64,9 @@
 									</tr>
 									{% if players_in_group %}
 										{% for player in players_in_group %}
-											<tr>
+											<tr id="{{ player.pk }}">
 												<td class="icon-cell">
-													<i class="fa fa-minus-circle fa-2x red" onclick="changeColumn(this, 'REMOVE')"></i>
+													<i class="fa fa-minus-circle fa-2x red" onclick="changeColumnAndAddToForm(this, 'REMOVE')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -77,6 +77,10 @@
 								</tbody>
 							</table>
 						</div>
+
+						<form method="post" action="/groups/manage" id="hidden-form">
+							{% csrf_token %}
+						</form>
 					</div>
 					<div class="col-lg-5">
 						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
@@ -90,9 +94,9 @@
 									</tr>
 									{% if players_not_in_group %}
 										{% for player in players_not_in_group %}
-											<tr>
+											<tr id="{{ player.pk }}">
 												<td class="icon-cell">
-													<i class="fa fa-plus-circle fa-2x green" onclick="changeColumn(this, 'ADD')"></i>
+													<i class="fa fa-plus-circle fa-2x green" onclick="changeColumnAndAddToForm(this, 'ADD')"></i>
 												</td>
 												<td>{{ player.first_name }} {{ player.last_name }}</td>
 												<td>{{ player.position }}</td>
@@ -120,13 +124,82 @@
 
 {% block javascript %}
 	<script type="text/javascript">
-
-		var changeBothGroups = function(sel, teamID) {
-			changeAddTable(sel.value,teamID);
-			changeRemoveTable(sel.value);
+		var initGroupTable = function() {
+			var sel = document.getElementById('group-form');
+			changeGroup(sel);
 		};
 
-		var changeAddTable = function(groupID, teamID) {
+		// cancel_changes() removed all items from the hidden form except
+		// for the csrf token 
+		var cancelChanges = function() {
+			var manage_groups_div = document.getElementById('team-id');
+			var teamID = Number(manage_groups_div.getAttribute('value'));
+			var group_option = document.getElementById('group-form');
+
+			changeGroup(group_option, teamID);
+		};
+
+		// Wrapper function for updating the tables on a group change.
+		var changeGroup = function(sel, teamID) {
+			changePlayersNotInGroupTable(sel.value, teamID);
+			changePlayersInGroupTable(sel.value);
+
+			// Remove everything from the form besides the csrf token
+			var form = document.getElementById('hidden-form');
+			var form_children = form.childNodes;
+			var csrf_token = form.querySelector('input[name=csrfmiddlewaretoken]');
+			while (csrf_token.nextSibling != null) {
+				form.removeChild(csrf_token.nextSibling);
+			}
+
+			if (document.getElementById('post-group-id') == null) {
+           		var group_id = sel.value;
+				
+				var hiddenGroupField = document.createElement("input");
+				hiddenGroupField.setAttribute("type", "hidden");
+				hiddenGroupField.setAttribute("id", "post-group-id");
+				hiddenGroupField.setAttribute("name", "group");
+				hiddenGroupField.setAttribute("value", group_id); 
+				
+				form.appendChild(hiddenGroupField);
+			}
+		};
+
+		// Wrapper function for updating the tables and form when a player is moved.
+		var changeColumnAndAddToForm = function(selected, operation) {
+			changeColumn(selected, operation);
+
+			var selected_row = selected_row = selected.parentNode.parentNode;
+			var player_pk = Number(selected_row.getAttribute("id"));
+
+			// Add save and cancel buttons if they don't exist
+			var form = document.getElementById('hidden-form');
+
+			if (document.getElementById('save') == null) {
+				var save_button = document.createElement('input');
+				save_button.setAttribute("class", "btn btn-success btn-lg");
+				save_button.setAttribute("id", "save");
+				save_button.setAttribute("type", "submit");
+				save_button.setAttribute("value", "Save Changes");
+
+				form.appendChild(save_button);
+			}
+
+			if (document.getElementById('cancel') == null) {
+				var cancel_button = document.createElement('input');
+				cancel_button.setAttribute("class", "btn btn-danger btn-lg");
+				cancel_button.setAttribute("id", "cancel");
+				cancel_button.setAttribute("type", "button");
+				cancel_button.setAttribute("value", "Cancel");
+				cancel_button.addEventListener("click", cancelChanges);
+
+				form.appendChild(cancel_button);
+			}
+
+			addChangesToForm(operation, player_pk);
+		};
+
+		var changePlayersNotInGroupTable = function(groupID, teamID) {
 			var playersNotInGroup = [];
 			var notInGroupJson = "/groups/" + groupID + "/" + teamID + "/json";
 			var playersNotInGroupTableWrapper = document.getElementById('players-not-in-group-table-wrapper');
@@ -140,7 +213,7 @@
 			});
 		};
 
-		var changeRemoveTable = function(groupID) {
+		var changePlayersInGroupTable = function(groupID) {
 			var playersInGroup = [];
 			var groupJson = "/groups/" + groupID + "/json";
 			var playersInGroupTableWrapper = document.getElementById('players-in-group-table-wrapper');
@@ -156,51 +229,51 @@
 
 		var createPlayersNotInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
-			innerHTML += "<tbody id=\"not-in-group\">"
-			innerHTML += "<tr>"
-			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
-			innerHTML += "</tr>"
+			innerHTML += "<tbody id=\"not-in-group\">";
+			innerHTML += "<tr>";
+			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>";
+			innerHTML += "</tr>";
 			
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
-				innerHTML += "<tr>"
-				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-plus-circle fa-2x green\" onclick=\"changeColumn(this, 'ADD')\"></i></td>"
-				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>"
-				innerHTML += "<td>" + user.position + "</td>"
-				innerHTML += "<td>" + user.year + "</td>"
-				innerHTML += "</tr>"
+				innerHTML += "<tr id=\"" + user.id + "\">";
+				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-plus-circle fa-2x green\" onclick=\"changeColumnAndAddToForm(this, 'ADD')\"></i></td>";
+				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>";
+				innerHTML += "<td>" + user.position + "</td>";
+				innerHTML += "<td>" + user.year + "</td>";
+				innerHTML += "</tr>";
 			}
 
-			innerHTML += "</tbody></table>"
+			innerHTML += "</tbody></table>";
 
 			return innerHTML;
 		};
 
 		var createPlayersInGroupTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
-			innerHTML += "<tbody id=\"in-group\">"
-			innerHTML += "<tr>"
-			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>"
-			innerHTML += "</tr>"
+			innerHTML += "<tbody id=\"in-group\">";
+			innerHTML += "<tr>";
+			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>";
+			innerHTML += "</tr>";
 			
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
-				innerHTML += "<tr>"
-				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-minus-circle fa-2x red\" onclick=\"changeColumn(this, 'REMOVE')\"></i></td>"
-				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>"
-				innerHTML += "<td>" + user.position + "</td>"
-				innerHTML += "<td>" + user.year + "</td>"
-				innerHTML += "</tr>"
+				innerHTML += "<tr id=\"" + user.id.toString() + "\">";
+				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-minus-circle fa-2x red\" onclick=\"changeColumnAndAddToForm(this, 'REMOVE')\"></i></td>";
+				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>";
+				innerHTML += "<td>" + user.position + "</td>";
+				innerHTML += "<td>" + user.year + "</td>";
+				innerHTML += "</tr>";
 			}
 
-			innerHTML += "</tbody></table>"
+			innerHTML += "</tbody></table>";
 
 			return innerHTML;
 		};
 
 		// When an icon is clicked call this function and update the columns.
 		// After updating the columns make a POST request to update the database.
-		var changeColumn = function(selected, action) {
+		var changeColumn = function(selected, operation) {
 			// The table (<tbody>) and row (<tr>) of the icon that was clicked
 			var selected_row = selected.parentNode.parentNode;
 			var selected_table = selected_row.parentNode;
@@ -225,12 +298,12 @@
 			// Select the correct table that we want to append. Add the 
 			// appropriate attributes to our new icon and then replace 
 			// the old icon with the new icon. 
-			if (action == "ADD") {
+			if (operation == "ADD") {
 				target_table = document.getElementById('in-group');
 				new_icon_table_data.firstChild.setAttribute("class", "fa fa-minus-circle fa-2x red");
 				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'REMOVE')");
 				new_row.replaceChild(new_icon_table_data, new_row.querySelector(".icon-cell") );
-			} else if (action == "REMOVE") {
+			} else if (operation == "REMOVE") {
 				target_table = document.getElementById('not-in-group');
 				new_icon_table_data.firstChild.setAttribute("class", "fa fa-plus-circle fa-2x green");
 				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'ADD')");
@@ -241,15 +314,31 @@
 			// of the target table.
 			selected_table.removeChild(selected_row);
 			target_table.appendChild(new_row);
-		}
+		};
 
-		var postChangesToDatabase = function(player_pk, action) {
-			if (action == "ADD") {
+		// This function submits POST requests to '/groups/manage' in
+		// order to keep the database updated
+		var addChangesToForm = function(operation, player_id) {
+			// create form element and set the action to '/groups/manage'
+			// and the method to post. 
+			var form = document.getElementById("hidden-form");
 
-			} else if (action = "REMOVE") {
-				
+			if (operation == "ADD") {
+				var hiddenPlayerField = document.createElement("input");
+				hiddenPlayerField.setAttribute("type", "hidden");
+				hiddenPlayerField.setAttribute("name", "add_player");
+				hiddenPlayerField.setAttribute("value", player_id);
+
+				form.appendChild(hiddenPlayerField);
+			} else if (oepration == "REMOVE") {
+				var hiddenPlayerField = document.createElement("input");
+				hiddenPlayerField.setAttribute("type", "hidden");
+				hiddenPlayerField.setAttribute("name", "remove_player");
+				hiddenPlayerField.setAttribute("value", player_id);
+
+				form.appendChild(hiddenPlayerField);
 			}
-		}
+		};
 	</script>
 
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>

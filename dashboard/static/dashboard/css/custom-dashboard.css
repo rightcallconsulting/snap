@@ -147,22 +147,34 @@ img.menu-icon{
 	width: 65%;
 }
 
-.create-groups input[type="text"], .all-groups input[type="text"], .manage-groups input[type="text"] {
+.create-groups input[type="text"], 
+.all-groups input[type="text"], 
+.manage-groups input[type="text"] {
 	margin-left: 2%;
 	margin-bottom: 2%;
 	width: 60%;
 	line-height: 2em;
 }
 
-.create-groups input[type="submit"], .all-groups input[type="submit"], .manage-groups input[type="submit"] {
-	margin-left: 2%;
-	width: 20%;
-	height: 100%;
+.create-groups input[type="submit"], 
+.all-groups input[type="submit"], 
+.manage-groups input[type="submit"]{
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+.create-groups input[type="button"], 
+.all-groups input[type="button"], 
+.manage-groups input[type="button"]{
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
 }
 
 .create-groups form, .create-groups table, .all-groups form, .all-groups table, .manage-groups form, .manage-groups table  {
 	margin-left: 2%;
-	margin-bottom: 5%;
+	margin-bottom: 1%;
 	width: 90%;
 }
 
