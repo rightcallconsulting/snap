@@ -72,9 +72,9 @@
 			<i class="fa fa-chevron-up"></i>
 		</a>
 	</div><!--/wrapper-->
+{% endblock %}
 
-
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% block javascript %}
 	<script type="text/javascript">
 		var groups_seed = {{ groups|safe }};
 		var all_groups = createPlayerGroupsFromJSONSeed(groups_seed);
