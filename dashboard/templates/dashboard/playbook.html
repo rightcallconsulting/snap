@@ -15,36 +15,6 @@
 
 			<div class="playbook">
 				<div class="action-boxes">
-					<script type="text/javascript">
-						var changeUnit = function(sel){
-							var offenseBox = document.getElementById('choose-offensive-formation-box');
-							var defenseBox = document.getElementById('choose-defensive-formation-box');
-							var selectPlayBox = document.getElementById('select-play-box');
-							var selectOffenseBox = document.getElementById('select-offense-box');
-							var formationLink = document.getElementById('formation-link')
-							var playLink = document.getElementById('play-link')
-							document.getElementById('play-image-header').innerHTML = "Play";
-							
-							if(sel.value === 'offense') {
-								defensePlayToDraw = null;
-								defenseBox.classList.add('hidden');
-								selectOffenseBox.classList.add('hidden');
-								offenseBox.classList.remove('hidden');
-								selectPlayBox.classList.remove('hidden')
-								formationLink.href = "/quiz/create_formation"
-								playLink.href = "/quiz/create_play"
-							} else {
-								playToDraw = null;
-								selectPlayBox.classList.add('hidden');
-								offenseBox.classList.add('hidden');
-								defenseBox.classList.remove('hidden');
-								selectOffenseBox.classList.remove('hidden');
-								formationLink.href = "/quiz/create_defense_formation"
-								playLink.href = "/quiz/create_defense_formation"
-							}
-						};
-					</script>
-			
 					<table class="action-table">
 						<tbody>
 							<tr>
@@ -267,6 +237,38 @@
 			<i class="fa fa-chevron-up"></i>
 		</a>
 	</div><!--/wrapper-->
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		var changeUnit = function(sel){
+			var offenseBox = document.getElementById('choose-offensive-formation-box');
+			var defenseBox = document.getElementById('choose-defensive-formation-box');
+			var selectPlayBox = document.getElementById('select-play-box');
+			var selectOffenseBox = document.getElementById('select-offense-box');
+			var formationLink = document.getElementById('formation-link')
+			var playLink = document.getElementById('play-link')
+			document.getElementById('play-image-header').innerHTML = "Play";
+			
+			if(sel.value === 'offense') {
+				defensePlayToDraw = null;
+				defenseBox.classList.add('hidden');
+				selectOffenseBox.classList.add('hidden');
+				offenseBox.classList.remove('hidden');
+				selectPlayBox.classList.remove('hidden')
+				formationLink.href = "/quiz/create_formation"
+				playLink.href = "/quiz/create_play"
+			} else {
+				playToDraw = null;
+				selectPlayBox.classList.add('hidden');
+				offenseBox.classList.add('hidden');
+				defenseBox.classList.remove('hidden');
+				selectOffenseBox.classList.remove('hidden');
+				formationLink.href = "/quiz/create_defense_formation"
+				playLink.href = "/quiz/create_defense_formation"
+			}
+		};
+	</script>
 
 	<script type="text/javascript">
 		var playClicked;
@@ -447,6 +449,6 @@
 				drawPlays.innerHTML = newHTML;
 		};
 	</script>
+
 	<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 {% endblock %}
