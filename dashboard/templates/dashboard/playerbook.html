@@ -2,356 +2,361 @@
 {% load staticfiles %}
 
 {% block content %}
-<!-- Overlay Div -->
-<div id="overlay" class="transparent"></div>
-{% include "dashboard/theme_setting.html" %}
+	<!-- Overlay Div -->
+	<div id="overlay" class="transparent"></div>
+	{% include "dashboard/theme_setting.html" %}
 
-<div id="wrapper" class="preload">
-	{% include "dashboard/sidebar.html" %}
+	<div id="wrapper" class="preload">
+		{% include "dashboard/sidebar.html" %}
 
-	<div id="main-container">
-		{% include "dashboard/navbar.html" %}
-		{% include "dashboard/grey_container.html" %}
+		<div id="main-container">
+			{% include "dashboard/navbar.html" %}
+			{% include "dashboard/grey_container.html" %}
 
-		<div class="padding-lg playerbook">
-			<div class="row dash-row">
-				<div class="dash-col">
-					<div class="dash-header text-center">
-						<span><h4>CUSTOM QUIZZES</h4></span>
-					</div>
+			<div class="padding-lg playerbook">
+				<div class="row dash-row">
+					<div class="dash-col">
+						<div class="dash-header text-center">
+							<span><h4>CUSTOM QUIZZES</h4></span>
+						</div>
 
-					<div class="table-wrapper">
-						<table class="playerbook-action-table">
-							<tbody>
-								{% if player.position == 'WR' or player.position == 'QB' %}
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>FORMATIONS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PLAYS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>ALIGNMENT</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>AUDIBLE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>DRAW ROUTE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PASS RUSH</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-								{% elif player.position == 'RG' or player.position == 'LG' or player.position == 'C' %}
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>FORMATIONS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PLAYS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>FRONTS</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>AUDIBLES</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>DEFENSIVE SHIFTS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>SNAP COUNTS</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-								{% elif player.position == 'DE' or player.position == 'S' %}
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>FORMATIONS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PLAYS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PASS RUSH</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/coverage_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>MAN COVERAGE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_zones" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>ZONE COVERAGE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/linebacker_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PASS STRENGTH</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/call_alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>CALL SHIFTS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/motion_alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>MOTION SHIFTS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/linebacker_motion_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>MOTION CALLS</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-								{% else %}
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>FORMATIONS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PLAYS</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>ALIGNMENT</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/coverage_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>MAN COVERAGE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_zones" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>ZONE COVERAGE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/linebacker_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PASS STRENGTH</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>QB AUDIBLE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>DRAW ROUTE</h3></span>
-												</div>
-											</a>
-										</td>
-										<td>
-											<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
-												<div class="playbook-action">
-													<span><h3>PASS RUSH</h3></span>
-												</div>
-											</a>
-										</td>
-									</tr>
-								{% endif %}
-							</tbody>
-						</table>
-					</div><!--/table-wrapper-->
-				</div><!--/dash-col-->
+						<div class="table-wrapper">
+							<table class="playerbook-action-table">
+								<tbody>
+									{% if player.position == 'WR' or player.position == 'QB' %}
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>FORMATIONS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PLAYS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>ALIGNMENT</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>AUDIBLE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>DRAW ROUTE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PASS RUSH</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+									{% elif player.position == 'RG' or player.position == 'LG' or player.position == 'C' %}
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>FORMATIONS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PLAYS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>FRONTS</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>AUDIBLES</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>DEFENSIVE SHIFTS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>SNAP COUNTS</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+									{% elif player.position == 'DE' or player.position == 'S' %}
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>FORMATIONS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PLAYS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PASS RUSH</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/coverage_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>MAN COVERAGE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_zones" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>ZONE COVERAGE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/linebacker_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PASS STRENGTH</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/call_alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>CALL SHIFTS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/motion_alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>MOTION SHIFTS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/linebacker_motion_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>MOTION CALLS</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/formation_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>FORMATIONS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/play_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PLAYS</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/alignment_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>ALIGNMENT</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/coverage_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>MAN COVERAGE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_zones" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>ZONE COVERAGE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/linebacker_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PASS STRENGTH</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<a href="#" data-dest-url="/quiz/qb_call_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>QB AUDIBLE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/route_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>DRAW ROUTE</h3></span>
+													</div>
+												</a>
+											</td>
+											<td>
+												<a href="#" data-dest-url="/quiz/pass_rush_quiz" class="quiz-link" data-toggle="modal" data-target="#quizOptionsModal">
+													<div class="playbook-action">
+														<span><h3>PASS RUSH</h3></span>
+													</div>
+												</a>
+											</td>
+										</tr>
+									{% endif %}
+								</tbody>
+							</table>
+						</div><!--/table-wrapper-->
+					</div><!--/dash-col-->
 
-				<div class="modal fade" id="quizOptionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-								<h4 class="modal-title" id="myModalLabel">
-									Quiz Options
-								</h4>
-							</div>
-							<form id="quizOptionsForm">
-								<div class="modal-body">
-									<div class="form-group">
-										<label for="inputNumQuestions">
-											Number of questions
-										</label>
-									<input id="inputNumQuestions" type="number" class="form-control" placeholder="Default: 5" />
-									</div>
-									<div class="form-group">
-										<label for="inputOrder">
-											Order
-										</label>
-										<select id="inputOrder" class="form-control">
-											{% for option in quiz_order_options %}
-												<option value="{{option.url_key}}">
-													{{option}}
-												</option>
-											{% endfor %}
-										</select>
-									</div>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">
-										Cancel
+					<div class="modal fade" id="quizOptionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
 									</button>
-									<input type="submit" class="btn btn-primary" value="Quiz Me" />
+									<h4 class="modal-title" id="myModalLabel">
+										Quiz Options
+									</h4>
 								</div>
-							</form>
+								<form id="quizOptionsForm">
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="inputNumQuestions">
+												Number of questions
+											</label>
+										<input id="inputNumQuestions" type="number" class="form-control" placeholder="Default: 5" />
+										</div>
+										<div class="form-group">
+											<label for="inputOrder">
+												Order
+											</label>
+											<select id="inputOrder" class="form-control">
+												{% for option in quiz_order_options %}
+													<option value="{{option.url_key}}">
+														{{option}}
+													</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal">
+											Cancel
+										</button>
+										<input type="submit" class="btn btn-primary" value="Quiz Me" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div> <!-- #quizOptionsModal -->
+
+					<div class="col-lg-4 dash-col recently-taken">
+						<div class="dash-header text-center">
+							<span><h4>RECENTLY TAKEN</h4></span>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-danger">
+								<h2 class="m-top-none" id="userCount">
+									362
+								</h2>
+								<h5>Registered users</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i>
+								<span class="m-left-xs">5% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-user fa-3x"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="panel-stat3 bg-info">
+								<h2 class="m-top-none">
+									<span id="serverloadCount">15</span>%
+								</h2>
+								<h5>Server Load</h5>
+								<i class="fa fa-arrow-circle-o-up fa-lg"></i>
+								<span class="m-left-xs">1% Higher</span>
+								<div class="stat-icon">
+									<i class="fa fa-hdd-o fa-3x"></i>
+								</div>
+								<div class="loading-overlay">
+									<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div> <!-- #quizOptionsModal -->
+				</div><!--/dash-row-->
+			</div><!--/padding-md-->
+		</div><!--/main-container-->
 
-				<script src="{% static 'dashboard/js/customQuizForm.js' %}"></script>
-				<!-- END: Quiz Options Button + Modal -->
+		<div class="loading-overlay">
+			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
+		</div>
 
-				<div class="col-lg-4 dash-col recently-taken">
-					<div class="dash-header text-center">
-						<span><h4>RECENTLY TAKEN</h4></span>
-					</div>
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-danger">
-							<h2 class="m-top-none" id="userCount">
-								362
-							</h2>
-							<h5>Registered users</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i>
-							<span class="m-left-xs">5% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-user fa-3x"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
-					</div><!-- /.col -->
-					<div class="col-lg-6">
-						<div class="panel-stat3 bg-info">
-							<h2 class="m-top-none">
-								<span id="serverloadCount">15</span>%
-							</h2>
-							<h5>Server Load</h5>
-							<i class="fa fa-arrow-circle-o-up fa-lg"></i>
-							<span class="m-left-xs">1% Higher</span>
-							<div class="stat-icon">
-								<i class="fa fa-hdd-o fa-3x"></i>
-							</div>
-							<div class="loading-overlay">
-								<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-							</div>
-						</div>
-					</div><!-- /.col -->
-				</div>
+		<a href="" id="scroll-to-top" class="hidden-print">
+			<i class="fa fa-chevron-up"></i>
+		</a>
+	</div><!--/wrapper-->
+{% endblock %}
 
-				<div class="loading-overlay">
-					<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-				</div>
-			</div><!--/dash-row-->
-
-	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+{% block javascript %}
+	<script src="{% static 'dashboard/js/customQuizForm.js' %}"></script>
 {% endblock %}
