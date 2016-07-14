@@ -1,6 +1,7 @@
-.DS_Store
+venv
+.env
 *.pyc
 staticfiles
+.DS_Store
 TODO.txt
-venv
 media/profile/*
