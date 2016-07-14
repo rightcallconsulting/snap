@@ -113,7 +113,6 @@ def register(request):
 			user = authenticate(username=new_user.username, password=request.POST['password1'])
 			login(request, user)
 			return HttpResponseRedirect("/")
-
 	else:
 		form = UserCreateForm()
 	return render(request, 'dashboard/register.html', {
@@ -343,41 +342,6 @@ def manage_groups(request):
 			'players_not_in_group': players_not_in_group,
 			'page_header': 'MANAGE GROUPS',
 		})
-	
-	'''coach = request.user.coach
-	group = PlayerGroup.objects.filter(id=group_id)[0]
-	players = group.players.all()
-	
-	if request.POST:
-		test_id = request.POST.get('testID')
-		group_id = request.POST.get('groupID')
-		player_id = request.POST.get('playerID')
-		form_action = request.POST.get('form_action')
-		if test_id:
-			group.duplicate_and_assign_test_to_all_players(test_id, coach)
-			return HttpResponse('')
-		elif group_id and player_id and form_action == "delete_player_from_group":
-			player = Player.objects.filter(pk=player_id)[0]
-			group = PlayerGroup.objects.filter(pk=group_id)[0]
-			group.players.remove(player)
-			return HttpResponse('')
-		elif group_id and player_id and form_action == "add_player_to_group":
-			player = Player.objects.filter(pk=player_id)[0]
-			group = PlayerGroup.objects.filter(pk=group_id)[0]
-			group.players.add(player)
-			return HttpResponse('')
-	else:
-		delete_group_form = PlayerGroupForm(instance = group)
-		tests = Test.objects.filter(player__team=coach.team)
-		groups = PlayerGroup.objects.filter(team=coach.team)
-		return render(request, 'dashboard/groups/manage.html', {
-			'group': group,
-			'groups': groups,
-			'players': players,
-			'tests': tests,
-			'form': delete_group_form,
-			'page_header': 'MANAGE GROUP'
-		}) '''
 
 @login_required
 def my_tests(request):
