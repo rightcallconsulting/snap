@@ -1,6 +1,6 @@
 from quiz_master.settings.base import *
 
-DEBUG = False
+DEBUG = True
 DATABASES['default'] =  dj_database_url.config()
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
