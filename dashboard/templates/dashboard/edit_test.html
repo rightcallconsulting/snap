@@ -2,17 +2,6 @@
 {% load staticfiles %}
 
 {% block content %}
-	<!-- Overlay Div -->
-	<div id="overlay" class="transparent"></div>
-	{% include "dashboard/theme_setting.html" %}
-	
-	<div id="wrapper" class="preload">
-		{% include "dashboard/sidebar.html" %}
-		
-		<div id="main-container" class="edit-test">
-			{% include "dashboard/navbar.html" %}
-			{% include "dashboard/grey_container.html" %}
-			
 			<div class="padding-md">
 				<div class="panel panel-default">
 					<div class="main-content-area dash-col display-play-box" id="display-play-box">
@@ -152,16 +141,6 @@
 					<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
 				</div><!--/panel-->
 			</div><!--/padding-md-->
-		</div><!--/main-container-->
-
-		<div class="loading-overlay">
-			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-		</div>
-
-		<a href="" id="scroll-to-top" class="hidden-print">
-			<i class="fa fa-chevron-up"></i>
-		</a>
-	</div><!--/wrapper-->
 {% endblock %}
 
 {% block javascript %}

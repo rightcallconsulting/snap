@@ -3,22 +3,6 @@
 {% load app_filters %}
 
 {% block content %}
-	<!-- Overlay Div -->
-	<div id="overlay" class="transparent"></div>
-	{% include "dashboard/theme_setting.html" %}
-
-	<div id="wrapper" class="preload">
-
-		{% include "dashboard/sidebar.html" %}
-		<script>
-			var groupsSeed = "{{groups_seed}}";
-		</script>
-
-
-		<div id="main-container" class="to-do">
-			{% include "dashboard/navbar.html" %}
-			{% include "dashboard/grey_container.html" %}
-
 			<div class="todo padding-md">
 				{% if not request.user.myuser.is_a_player %}
 					<div class="row">
@@ -34,21 +18,6 @@
 							</select>
 						</div>
 					</div>
-
-					<script type="text/javascript">
-						var changeGroup = function(group){
-							var groupID = parseInt(group.value)
-							debugger;
-							if(groupID){
-								//get group by filtering list of groups by groupID
-								//Access list of tests
-								//Create subset of tests with players from this group
-								//Update table with only this subset of tests
-							}else{
-								//ERROR - Group doesn't have a valid ID
-							}
-						}
-					</script>
 				{% endif %}
 
 				<div class = "table-wrapper">
@@ -104,16 +73,25 @@
 					</table>
 				</div>
 			</div><!--/todo-->
-		</div><!--/main-container-->
+{% endblock %}
 
-		<div class="loading-overlay">
-			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-		</div>
+{% block javascript %}
+	<script>
+		var groupsSeed = "{{ groups_seed }}";
+	</script>
 
-		<a href="" id="scroll-to-top" class="hidden-print">
-			<i class="fa fa-chevron-up"></i>
-		</a>
-	</div><!--/wrapper-->
-
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script type="text/javascript">
+		var changeGroup = function(group){
+			var groupID = parseInt(group.value)
+			debugger;
+			if(groupID){
+				//get group by filtering list of groups by groupID
+				//Access list of tests
+				//Create subset of tests with players from this group
+				//Update table with only this subset of tests
+			}else{
+				//ERROR - Group doesn't have a valid ID
+			}
+		}
+	</script>
 {% endblock %}

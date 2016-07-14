@@ -2,17 +2,6 @@
 {% load staticfiles %}
 
 {% block content %}
-	<!-- Overlay Div -->
-	<div id="overlay" class="transparent"></div>
-	{% include "dashboard/theme_setting.html" %}
-
-	<div id="wrapper" class="preload">
-		{% include "dashboard/sidebar.html" %}
-
-		<div id="main-container">
-			{% include "dashboard/navbar.html" %}
-			{% include "dashboard/grey_container.html" %}
-
 			<div class="playbook">
 				<div class="action-boxes">
 					<table class="action-table">
@@ -226,17 +215,7 @@
 				<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
 				<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
 				<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-			</div><!-- /playbook -->
-		</div><!--/main-container-->
-
-		<div class="loading-overlay">
-			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-		</div>
-
-		<a href="" id="scroll-to-top" class="hidden-print">
-			<i class="fa fa-chevron-up"></i>
-		</a>
-	</div><!--/wrapper-->
+			</div><!--/playbook-->
 {% endblock %}
 
 {% block javascript %}

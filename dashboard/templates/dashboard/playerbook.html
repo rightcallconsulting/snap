@@ -2,17 +2,6 @@
 {% load staticfiles %}
 
 {% block content %}
-	<!-- Overlay Div -->
-	<div id="overlay" class="transparent"></div>
-	{% include "dashboard/theme_setting.html" %}
-
-	<div id="wrapper" class="preload">
-		{% include "dashboard/sidebar.html" %}
-
-		<div id="main-container">
-			{% include "dashboard/navbar.html" %}
-			{% include "dashboard/grey_container.html" %}
-
 			<div class="padding-lg playerbook">
 				<div class="row dash-row">
 					<div class="dash-col">
@@ -345,16 +334,6 @@
 					</div>
 				</div><!--/dash-row-->
 			</div><!--/padding-md-->
-		</div><!--/main-container-->
-
-		<div class="loading-overlay">
-			<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-		</div>
-
-		<a href="" id="scroll-to-top" class="hidden-print">
-			<i class="fa fa-chevron-up"></i>
-		</a>
-	</div><!--/wrapper-->
 {% endblock %}
 
 {% block javascript %}
