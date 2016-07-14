@@ -2,56 +2,56 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="padding-md">
-				<div class="row dash-row">
-					<form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
-						{% for field in form %}
-							{% if field.label == "Group" %}
-								<br>
-								<hr>
-							{% endif %}
+	<div class="padding-md">
+		<div class="row dash-row">
+			<form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
+				{% for field in form %}
+					{% if field.label == "Group" %}
+						<br>
+						<hr>
+					{% endif %}
 
-							{% if field.label == False %}
-								{% for type in types_of_tests %}
-									<div class="form-group">
-										<label class="label-checkbox">
-											<input type="checkbox" name="type_of_test" value="{{type}}"/>
-											<span class="custom-checkbox info bounceIn animation-delay6"></span>
-											{{type}}
-										</label>
-									</div><!-- /form-group -->
-								{% endfor %}
-							{% else %}
-								<div class="form-group">
-									{% if field.label == "Player" %}
-										{{ field }}
-									{% elif field.label == "Deadline" %}
-										<!-- {{ field.label_tag }} -->
-										<!-- {{ field }} -->
-									{% else %}
-										{{ field.label_tag }}
-										{{ field }}
-									{% endif %}
-								</div><!-- /form-group -->					
-							{% endif %}
+					{% if field.label == False %}
+						{% for type in types_of_tests %}
+							<div class="form-group">
+								<label class="label-checkbox">
+									<input type="checkbox" name="type_of_test" value="{{type}}"/>
+									<span class="custom-checkbox info bounceIn animation-delay6"></span>
+									{{type}}
+								</label>
+							</div><!-- /form-group -->
 						{% endfor %}
+					{% else %}
+						<div class="form-group">
+							{% if field.label == "Player" %}
+								{{ field }}
+							{% elif field.label == "Deadline" %}
+								<!-- {{ field.label_tag }} -->
+								<!-- {{ field }} -->
+							{% else %}
+								{{ field.label_tag }}
+								{{ field }}
+							{% endif %}
+						</div><!-- /form-group -->					
+					{% endif %}
+				{% endfor %}
 
-						<div class="scrollable-table">
-							<table class="players-to-test" id="assign-to-players-table">
-								<tr>
-									<th>
-										<input type="checkbox" value="all" onchange="toggleCheckbox(this)">
-									</th>
-									<th>NAME</th>
-									<th>POS</th>
-								</tr>
-							</table>
-						</div>
+				<div class="scrollable-table">
+					<table class="players-to-test" id="assign-to-players-table">
+						<tr>
+							<th>
+								<input type="checkbox" value="all" onchange="toggleCheckbox(this)">
+							</th>
+							<th>NAME</th>
+							<th>POS</th>
+						</tr>
+					</table>
+				</div>
 
-						<input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
-					</form>
-				</div><!--/row-->
-			</div><!--/padding-md-->
+				<input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
+			</form>
+		</div><!--/row-->
+	</div><!--/padding-md-->
 {% endblock %}
 
 {% block javascript %}

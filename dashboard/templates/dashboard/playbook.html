@@ -2,220 +2,220 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="playbook">
-				<div class="action-boxes">
-					<table class="action-table">
-						<tbody>
-							<tr>
-								<td>
-									<form>
-										<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
-											{% if selected_unit == "offense" %}
-												<option value="offense">
-													&nbsp;&nbsp;&nbsp;OFFENSE
-												</option>
-
-												<option value="defense">
-													&nbsp;&nbsp;&nbsp;DEFENSE
-												</option>
-											{% else %}
-												<option value="defense">
-													&nbsp;&nbsp;&nbsp;DEFENSE
-												</option>
-
-												<option value="offense">
-													&nbsp;&nbsp;&nbsp;OFFENSE
-												</option>
-											{% endif %}
-										</select>
-									</form>
-								</td>
-								<td>
+	<div class="playbook">
+		<div class="action-boxes">
+			<table class="action-table">
+				<tbody>
+					<tr>
+						<td>
+							<form>
+								<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
 									{% if selected_unit == "offense" %}
-										<a href="/quiz/create_formation" id="formation-link">
+										<option value="offense">
+											&nbsp;&nbsp;&nbsp;OFFENSE
+										</option>
+
+										<option value="defense">
+											&nbsp;&nbsp;&nbsp;DEFENSE
+										</option>
 									{% else %}
-										<a href="/quiz/create_defense_formation" id="formation-link">
+										<option value="defense">
+											&nbsp;&nbsp;&nbsp;DEFENSE
+										</option>
+
+										<option value="offense">
+											&nbsp;&nbsp;&nbsp;OFFENSE
+										</option>
 									{% endif %}
-											<span>
-												<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-												&nbsp;&nbsp;&nbsp;CREATE FORMATION
-											</span>
-										</a>
-								</td>
-								<td>
-									{% if selected_unit == "offense" %}
-										<a href="/quiz/create_play" id="play-link">
-									{% else %}
-										<a href="/quiz/create_defense_formation" id="play-link">
-									{% endif %}
-											<span>
-												<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-												&nbsp;&nbsp;&nbsp;CREATE PLAY
-											</span>
-										</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div><!--/action-boxes-->
-				
-				<div class="main-content-area dash-col display-play-box" id="display-play-box">
+								</select>
+							</form>
+						</td>
+						<td>
+							{% if selected_unit == "offense" %}
+								<a href="/quiz/create_formation" id="formation-link">
+							{% else %}
+								<a href="/quiz/create_defense_formation" id="formation-link">
+							{% endif %}
+									<span>
+										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+										&nbsp;&nbsp;&nbsp;CREATE FORMATION
+									</span>
+								</a>
+						</td>
+						<td>
+							{% if selected_unit == "offense" %}
+								<a href="/quiz/create_play" id="play-link">
+							{% else %}
+								<a href="/quiz/create_defense_formation" id="play-link">
+							{% endif %}
+									<span>
+										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+										&nbsp;&nbsp;&nbsp;CREATE PLAY
+									</span>
+								</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div><!--/action-boxes-->
+		
+		<div class="main-content-area dash-col display-play-box" id="display-play-box">
+			<div class="dash-header text-center">
+				<span>
+					<h4 id="play-image-header">
+						Play
+					</h4>
+				</span>
+			</div>
+			
+			<div id="display-play-box-2">
+			</div>
+			
+			<div class="holds-play-buttons">
+				<table class="button-table">
+					<tr>
+						<td>
+							<button id="restart-button" name="button">
+								{% include "quiz/refresh_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="play-button" name="button">
+								{% include "quiz/play_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="pause-button" name="button">
+								{% include "quiz/pause_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="edit-button" name="button">
+								Edit Play
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class = "stacked-col" id="offensive-playbook-col">
+			{% if selected_unit == "offense" %}
+				<div class="col-lg-4 secondary-content-area top" id="choose-offensive-formation-box">
+			{% else %}
+				<div class="col-lg-4 secondary-content-area top hidden" id="choose-offensive-formation-box">
+			{% endif %}
 					<div class="dash-header text-center">
 						<span>
-							<h4 id="play-image-header">
-								Play
-							</h4>
+							<h4>Formations</h4>
 						</span>
 					</div>
 					
-					<div id="display-play-box-2">
-					</div>
-					
-					<div class="holds-play-buttons">
-						<table class="button-table">
-							<tr>
-								<td>
-									<button id="restart-button" name="button">
-										{% include "quiz/refresh_button.html" %}
-									</button>
-								</td>
-								<td>
-									<button id="play-button" name="button">
-										{% include "quiz/play_button.html" %}
-									</button>
-								</td>
-								<td>
-									<button id="pause-button" name="button">
-										{% include "quiz/pause_button.html" %}
-									</button>
-								</td>
-								<td>
-									<button id="edit-button" name="button">
-										Edit Play
-									</button>
-								</td>
-							</tr>
+					<div class="scrollable-table">
+						<table class="formation-list three-column-table">
+							{% for formation in offensive_formations %}
+								{% if forloop.counter|add:"-1"|divisibleby:3 %}
+									<tr>
+								{% endif %}
+										<td>
+											<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+										</td>
+								{% if forloop.counter|divisibleby:3 %}
+									</tr>
+								{% endif %}
+							{% endfor %}
+							
+							{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
+										<td></td>
+										<td></td>
+									</tr>
+							{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
+										<td></td>
+									</tr>
+							{% endif %}
 						</table>
 					</div>
 				</div>
-				
-				<div class = "stacked-col" id="offensive-playbook-col">
-					{% if selected_unit == "offense" %}
-						<div class="col-lg-4 secondary-content-area top" id="choose-offensive-formation-box">
-					{% else %}
-						<div class="col-lg-4 secondary-content-area top hidden" id="choose-offensive-formation-box">
-					{% endif %}
-							<div class="dash-header text-center">
-								<span>
-									<h4>Formations</h4>
-								</span>
-							</div>
-							
-							<div class="scrollable-table">
-								<table class="formation-list three-column-table">
-									{% for formation in offensive_formations %}
-										{% if forloop.counter|add:"-1"|divisibleby:3 %}
-											<tr>
-										{% endif %}
-												<td>
-													<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-												</td>
-										{% if forloop.counter|divisibleby:3 %}
-											</tr>
-										{% endif %}
-									{% endfor %}
-									
-									{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
-												<td></td>
-												<td></td>
-											</tr>
-									{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
-												<td></td>
-											</tr>
-									{% endif %}
-								</table>
-							</div>
-						</div>
+			
+			{% if selected_unit == "offense" %}
+				<div class="col-lg-4 secondary-content-area top hidden" id="choose-defensive-formation-box">
+			{% else %}
+				<div class="col-lg-4 secondary-content-area top" id="choose-defensive-formation-box">
+			{% endif %}
+					<div class="dash-header text-center">
+						<span>
+							<h4>Defensive Plays</h4>
+						</span>
+					</div>
 					
-					{% if selected_unit == "offense" %}
-						<div class="col-lg-4 secondary-content-area top hidden" id="choose-defensive-formation-box">
-					{% else %}
-						<div class="col-lg-4 secondary-content-area top" id="choose-defensive-formation-box">
-					{% endif %}
-							<div class="dash-header text-center">
-								<span>
-									<h4>Defensive Plays</h4>
-								</span>
-							</div>
-							
-							<div class="scrollable-table">
-								<table class="formation-list three-column-table">
-										{% for formation in unique_defensive_formations %}
-											{% if forloop.counter|add:"-1"|divisibleby:3 %}
-												<tr>
-											{% endif %}
-													<td>
-														<input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-													</td>
-											{% if forloop.counter|divisibleby:3 %}
-												</tr>
-											{% endif %}
-										{% endfor %}
+					<div class="scrollable-table">
+						<table class="formation-list three-column-table">
+								{% for formation in unique_defensive_formations %}
+									{% if forloop.counter|add:"-1"|divisibleby:3 %}
+										<tr>
+									{% endif %}
+											<td>
+												<input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+											</td>
+									{% if forloop.counter|divisibleby:3 %}
+										</tr>
+									{% endif %}
+								{% endfor %}
 
-										{% if unique_defensive_formations|add:"-1"|length|divisibleby:3 %}
-													<td></td>
-													<td></td>
-												</tr>
-										{% elif unique_defensive_formations|add:"-2"|length|divisibleby:3 %}
-													<td></td>
-												</tr>
-										{% endif %}
-								</table>
-							</div>
-						</div>
-								
-					{% if selected_unit == "offense" %}
-						<div class="col-lg-4 secondary-content-area" id="select-play-box">
-					{% else %}
-						<div class="col-lg-4 hidden secondary-content-area" id="select-play-box">
-					{% endif %}
-							<div class="dash-header text-center">
-								<span>
-									<h4 id="change-plays-header">
-										Plays
-									</h4>
-								</span>
-							</div>
-										
-							<div class="scrollable-table" id="draw-plays">
-								{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
-								{# </form> #}
-							</div>
-						</div>
-								
-					{% if selected_unit == "offense" %}
-						<div class="col-lg-4 secondary-content-area hidden" id="select-offense-box">
-					{% else %}
-						<div class="col-lg-4 secondary-content-area" id="select-offense-box">
-					{% endif %}
-							<div class="dash-header text-center">
-								<span>
-									<h4 id="change-plays-header">
-										Offensive Looks
-									</h4>
-								</span>
-							</div>		
-							<div class="scrollable-table" id="draw-offensive-formations">
-								{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
-								{# </form>#}
-							</div>
-						</div>
+								{% if unique_defensive_formations|add:"-1"|length|divisibleby:3 %}
+											<td></td>
+											<td></td>
+										</tr>
+								{% elif unique_defensive_formations|add:"-2"|length|divisibleby:3 %}
+											<td></td>
+										</tr>
+								{% endif %}
+						</table>
+					</div>
 				</div>
+						
+			{% if selected_unit == "offense" %}
+				<div class="col-lg-4 secondary-content-area" id="select-play-box">
+			{% else %}
+				<div class="col-lg-4 hidden secondary-content-area" id="select-play-box">
+			{% endif %}
+					<div class="dash-header text-center">
+						<span>
+							<h4 id="change-plays-header">
+								Plays
+							</h4>
+						</span>
+					</div>
+								
+					<div class="scrollable-table" id="draw-plays">
+						{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
+						{# </form> #}
+					</div>
+				</div>
+						
+			{% if selected_unit == "offense" %}
+				<div class="col-lg-4 secondary-content-area hidden" id="select-offense-box">
+			{% else %}
+				<div class="col-lg-4 secondary-content-area" id="select-offense-box">
+			{% endif %}
+					<div class="dash-header text-center">
+						<span>
+							<h4 id="change-plays-header">
+								Offensive Looks
+							</h4>
+						</span>
+					</div>		
+					<div class="scrollable-table" id="draw-offensive-formations">
+						{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
+						{# </form>#}
+					</div>
+				</div>
+		</div>
 
-				<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-				<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
-				<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-			</div><!--/playbook-->
+		<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+		<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+		<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
+	</div><!--/playbook-->
 {% endblock %}
 
 {% block javascript %}

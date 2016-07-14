@@ -2,55 +2,55 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="padding-md">
-				<div class="row">
-					<div class="col-xs-6 col-sm-12 col-md-6 text-center">
-						<a href="#">
-							<img src="img/user.jpg" alt="Profile Picture" class="img-thumbnail">
-						</a>
-						
-						<div class="seperator"></div>
-						<div class="seperator"></div>
-					</div>
-				</div>
+	<div class="padding-md">
+		<div class="row">
+			<div class="col-xs-6 col-sm-12 col-md-6 text-center">
+				<a href="#">
+					<img src="img/user.jpg" alt="Profile Picture" class="img-thumbnail">
+				</a>
 				
-				<div class="panel panel-default">
-					<form class="form-horizontal form-border" method="post" action="/edit_profile"> {% csrf_token %}
-						<div class="panel-heading">
-							Basic Information
-						</div>
-						<div class="panel-body">
-							{% for field in user_form %}
-								<div class="form-group">
-									<label class="control-label col-md-2">
-										{{ field.label }}
-									</label>
-									<div class="col-md-10">
-										{{ field }}
-									</div>
-								</div>
-							{% endfor %}
-
-							{% for field in edit_profile_form %}
-								<div class="form-group">
-									<label class="control-label col-md-2">
-										{{ field.label }}
-									</label>
-									<div class="col-md-10">
-										{{ field }}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-						<div class="panel-footer">
-							<div class="text-right">
-								<button class="btn btn-sm btn-success">Update</button>
-								<button class="btn btn-sm btn-success" type="reset">Reset</button>
+				<div class="seperator"></div>
+				<div class="seperator"></div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
+			<form class="form-horizontal form-border" method="post" action="/edit_profile"> {% csrf_token %}
+				<div class="panel-heading">
+					Basic Information
+				</div>
+				<div class="panel-body">
+					{% for field in user_form %}
+						<div class="form-group">
+							<label class="control-label col-md-2">
+								{{ field.label }}
+							</label>
+							<div class="col-md-10">
+								{{ field }}
 							</div>
 						</div>
-					</form>
-				</div><!--/panel-->
-			</div><!--/padding-md-->
+					{% endfor %}
+
+					{% for field in edit_profile_form %}
+						<div class="form-group">
+							<label class="control-label col-md-2">
+								{{ field.label }}
+							</label>
+							<div class="col-md-10">
+								{{ field }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="panel-footer">
+					<div class="text-right">
+						<button class="btn btn-sm btn-success">Update</button>
+						<button class="btn btn-sm btn-success" type="reset">Reset</button>
+					</div>
+				</div>
+			</form>
+		</div><!--/panel-->
+	</div><!--/padding-md-->
 {% endblock %}
 
 {% block javascript %}

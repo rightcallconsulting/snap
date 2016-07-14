@@ -2,104 +2,104 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="manage-groups padding-md" id="team-id" value="{{ team.id }}">
-				<div class="action-boxes">
-					<table class="action-table">
-						<tbody>
-							<tr>
-								<td>
-									<a href="create">
-										<span>
-											<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-											&nbsp;&nbsp;&nbsp;CREATE GROUP
-										</span>
-									</a>
-								</td>
-								<td>
-									<a href="manage" id="manage-groups-link">
-										<span>
-											<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
-											&nbsp;&nbsp;&nbsp;MANAGE GROUPS
-										</span>
-									</a>
-								</td>
+	<div class="manage-groups padding-md" id="team-id" value="{{ team.id }}">
+		<div class="action-boxes">
+			<table class="action-table">
+				<tbody>
+					<tr>
+						<td>
+							<a href="create">
+								<span>
+									<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+									&nbsp;&nbsp;&nbsp;CREATE GROUP
+								</span>
+							</a>
+						</td>
+						<td>
+							<a href="manage" id="manage-groups-link">
+								<span>
+									<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
+									&nbsp;&nbsp;&nbsp;MANAGE GROUPS
+								</span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<form>
+			<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this, {{ team.id }})">
+				<optgroup label="Groups" id="group-optgroup" firstgroup="{{ groups.0.id }}">
+					{% for group in groups %}
+						<option value="{{ group.id }}" id="group-id">
+							&nbsp;&nbsp;&nbsp;{{ group }}
+						</option>
+					{% endfor %}
+				</optgroup>
+			</select>
+		</form>
+
+		<div class="row dash-row group-home">
+			<div class="col-lg-7" id="display-group-box">
+				<div class = "table-wrapper" id="players-in-group-table-wrapper">
+					<table class="player-list">
+						<tbody id="in-group">
+							<tr class="header">
+								<th>REMOVE</th>
+								<th>PLAYER</th>
+								<th>POSITION</th>
+								<th>YEAR</th>
 							</tr>
+							{% if players_in_group %}
+								{% for player in players_in_group %}
+									<tr id="{{ player.pk }}">
+										<td class="icon-cell">
+											<i class="fa fa-minus-circle fa-2x red" onclick="changeColumnAndAddToForm(this, 'REMOVE')"></i>
+										</td>
+										<td>{{ player.first_name }} {{ player.last_name }}</td>
+										<td>{{ player.position }}</td>
+										<td>{{ player.year }}</td>
+									</tr>
+								{% endfor %}
+							{% endif %}
 						</tbody>
 					</table>
 				</div>
 
-				<form>
-					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this, {{ team.id }})">
-						<optgroup label="Groups" id="group-optgroup" firstgroup="{{ groups.0.id }}">
-							{% for group in groups %}
-								<option value="{{ group.id }}" id="group-id">
-									&nbsp;&nbsp;&nbsp;{{ group }}
-								</option>
-							{% endfor %}
-						</optgroup>
-					</select>
+				<form method="post" action="/groups/manage" id="hidden-form">
+					{% csrf_token %}
+					<input type="hidden" id="post-group-id" name="group" value="{{ groups.0.id }}">
 				</form>
-
-				<div class="row dash-row group-home">
-					<div class="col-lg-7" id="display-group-box">
-						<div class = "table-wrapper" id="players-in-group-table-wrapper">
-							<table class="player-list">
-								<tbody id="in-group">
-									<tr class="header">
-										<th>REMOVE</th>
-										<th>PLAYER</th>
-										<th>POSITION</th>
-										<th>YEAR</th>
+			</div>
+			<div class="col-lg-5">
+				<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
+					<table class="player-list">
+						<tbody id="not-in-group">
+							<tr class="header">
+								<th>ADD</th>
+								<th>PLAYER</th>
+								<th>POSITION</th>
+								<th>YEAR</th>
+							</tr>
+							{% if players_not_in_group %}
+								{% for player in players_not_in_group %}
+									<tr id="{{ player.pk }}">
+										<td class="icon-cell">
+											<i class="fa fa-plus-circle fa-2x green" onclick="changeColumnAndAddToForm(this, 'ADD')"></i>
+										</td>
+										<td>{{ player.first_name }} {{ player.last_name }}</td>
+										<td>{{ player.position }}</td>
+										<td>{{ player.year }}</td>
 									</tr>
-									{% if players_in_group %}
-										{% for player in players_in_group %}
-											<tr id="{{ player.pk }}">
-												<td class="icon-cell">
-													<i class="fa fa-minus-circle fa-2x red" onclick="changeColumnAndAddToForm(this, 'REMOVE')"></i>
-												</td>
-												<td>{{ player.first_name }} {{ player.last_name }}</td>
-												<td>{{ player.position }}</td>
-												<td>{{ player.year }}</td>
-											</tr>
-										{% endfor %}
-									{% endif %}
-								</tbody>
-							</table>
-						</div>
-
-						<form method="post" action="/groups/manage" id="hidden-form">
-							{% csrf_token %}
-							<input type="hidden" id="post-group-id" name="group" value="{{ groups.0.id }}">
-						</form>
-					</div>
-					<div class="col-lg-5">
-						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
-							<table class="player-list">
-								<tbody id="not-in-group">
-									<tr class="header">
-										<th>ADD</th>
-										<th>PLAYER</th>
-										<th>POSITION</th>
-										<th>YEAR</th>
-									</tr>
-									{% if players_not_in_group %}
-										{% for player in players_not_in_group %}
-											<tr id="{{ player.pk }}">
-												<td class="icon-cell">
-													<i class="fa fa-plus-circle fa-2x green" onclick="changeColumnAndAddToForm(this, 'ADD')"></i>
-												</td>
-												<td>{{ player.first_name }} {{ player.last_name }}</td>
-												<td>{{ player.position }}</td>
-												<td>{{ player.year }}</td>
-											</tr>
-										{% endfor %}
-									{% endif %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!-- /panel -->
-			</div><!--all-groups-->
+								{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div><!-- /panel -->
+	</div><!--all-groups-->
 {% endblock %}
 
 {% block javascript %}

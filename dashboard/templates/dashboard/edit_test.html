@@ -2,145 +2,145 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="padding-md">
-				<div class="panel panel-default">
-					<div class="main-content-area dash-col display-play-box" id="display-play-box">
+	<div class="padding-md">
+		<div class="panel panel-default">
+			<div class="main-content-area dash-col display-play-box" id="display-play-box">
+				<div class="dash-header text-center">
+					<span>
+						<h4 id="play-image-header">
+							Play
+						</h4>
+					</span>
+				</div>
+				<div id="display-play-box-2">
+				</div>
+				<div class="holds-play-buttons">
+					<table class="button-table">
+						<tr>
+							<td>
+								<button id="play-button" name="button">
+									{% include "quiz/play_button.html" %}
+								</button>
+							</td>
+							<td>
+								<button id="pause-button" name="button">
+									{% include "quiz/pause_button.html" %}
+								</button>
+							</td>
+							<td>
+								<button id="restart-button" name="button">
+									{% include "quiz/refresh_button.html" %}
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class = "stacked-col">
+				{% if unit == "offense" %}
+					<div class="secondary-content-area top choose-offensive-formation-box">
 						<div class="dash-header text-center">
 							<span>
-								<h4 id="play-image-header">
-									Play
+								<h4>
+									Offensive Formations
 								</h4>
 							</span>
 						</div>
-						<div id="display-play-box-2">
-						</div>
-						<div class="holds-play-buttons">
-							<table class="button-table">
-								<tr>
+						<div class="scrollable-table">
+							<table class="formation-list two-column-table">
+								{% for formation in offensive_formations %}
+									{% if forloop.counter|add:"-1"|divisibleby:2 %}
+										<tr>
+									{% endif %}
 									<td>
-										<button id="play-button" name="button">
-											{% include "quiz/play_button.html" %}
-										</button>
+										<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
 									</td>
-									<td>
-										<button id="pause-button" name="button">
-											{% include "quiz/pause_button.html" %}
-										</button>
-									</td>
-									<td>
-										<button id="restart-button" name="button">
-											{% include "quiz/refresh_button.html" %}
-										</button>
-									</td>
-								</tr>
+									{% if forloop.counter|divisibleby:2 %}
+										</tr>
+									{% endif %}
+								{% endfor %}
 							</table>
 						</div>
 					</div>
-
-					<div class = "stacked-col">
-						{% if unit == "offense" %}
-							<div class="secondary-content-area top choose-offensive-formation-box">
-								<div class="dash-header text-center">
-									<span>
-										<h4>
-											Offensive Formations
-										</h4>
-									</span>
-								</div>
-								<div class="scrollable-table">
-									<table class="formation-list two-column-table">
-										{% for formation in offensive_formations %}
-											{% if forloop.counter|add:"-1"|divisibleby:2 %}
-												<tr>
-											{% endif %}
-											<td>
-												<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-											</td>
-											{% if forloop.counter|divisibleby:2 %}
-												</tr>
-											{% endif %}
-										{% endfor %}
-									</table>
-								</div>
-							</div>
-							
-							<div class="secondary-content-area change-plays-box">
-								<div class="dash-header text-center">
-									<span>
-										<h4 id="change-plays-header">
-											Change Plays
-										</h4>
-									</span>
-								</div>
-								<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-									<div class="panel-body show-plays" id="draw-plays">
-									</div><!-- /panel -->
-								</form>
-							</div>
-						{% else %}
-							<div class="col-lg-4 choose-defensive-formation-box">
-								<div class="dash-header text-center">
-									<span><h4>Plays</h4></span>
-								</div>
-							
-								{% for formation in unique_defensive_formations %}
-									<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
-								{% endfor %}
-							</div>
-							<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
-								<div class="dash-header text-center">
-									<span>
-										<h4 id="change-plays-header">
-											Offensive Looks:
-										</h4>
-									</span>
-								</div>
-								<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
-									<div class="panel-body show-plays-defense">
-									</div>
-								</form>
-							</div>
-						{% endif %}
+					
+					<div class="secondary-content-area change-plays-box">
+						<div class="dash-header text-center">
+							<span>
+								<h4 id="change-plays-header">
+									Change Plays
+								</h4>
+							</span>
+						</div>
+						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+							<div class="panel-body show-plays" id="draw-plays">
+							</div><!-- /panel -->
+						</form>
 					</div>
-
-					{% if unit == "offense" %}
-						<div class="tertiary-content-area dash-col display-plays-in-test">
-							<div class="dash-header text-center">
-								<span><h4>Plays in Test: {{test.name}}</h4></span>
+				{% else %}
+					<div class="col-lg-4 choose-defensive-formation-box">
+						<div class="dash-header text-center">
+							<span><h4>Plays</h4></span>
+						</div>
+					
+						{% for formation in unique_defensive_formations %}
+							<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
+						{% endfor %}
+					</div>
+					<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
+						<div class="dash-header text-center">
+							<span>
+								<h4 id="change-plays-header">
+									Offensive Looks:
+								</h4>
+							</span>
+						</div>
+						<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+							<div class="panel-body show-plays-defense">
 							</div>
-							<div class="panel-body existing-plays">
+						</form>
+					</div>
+				{% endif %}
+			</div>
+
+			{% if unit == "offense" %}
+				<div class="tertiary-content-area dash-col display-plays-in-test">
+					<div class="dash-header text-center">
+						<span><h4>Plays in Test: {{test.name}}</h4></span>
+					</div>
+					<div class="panel-body existing-plays">
+						{% for play in plays_in_test %}
+							<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+						{% endfor %}
+					</div>
+				</div>
+			{% else %}
+				<div class="col-lg-10 dash-col display-plays-in-test">
+					<div class="dash-header text-center">
+						<span><h4>Plays in Test: {{test.name}}</h4></span>
+					</div>
+					{% for formation in unique_defensive_formations %}
+						<div class="col-lg-2 dash-col">
+							<div class="dash-header text-center">
+								<span><h4>{{ formation }}</h4></span>
+							</div>
+							<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
 								{% for play in plays_in_test %}
-									<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+									{% if play.formation.id == formation.id %}
+										<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+									{% endif %}
 								{% endfor %}
 							</div>
 						</div>
-					{% else %}
-						<div class="col-lg-10 dash-col display-plays-in-test">
-							<div class="dash-header text-center">
-								<span><h4>Plays in Test: {{test.name}}</h4></span>
-							</div>
-							{% for formation in unique_defensive_formations %}
-								<div class="col-lg-2 dash-col">
-									<div class="dash-header text-center">
-										<span><h4>{{ formation }}</h4></span>
-									</div>
-									<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
-										{% for play in plays_in_test %}
-											{% if play.formation.id == formation.id %}
-												<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
-											{% endif %}
-										{% endfor %}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					{% endif %}
+					{% endfor %}
+				</div>
+			{% endif %}
 
-					<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-					<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
-					<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-				</div><!--/panel-->
-			</div><!--/padding-md-->
+			<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
+			<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+			<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
+		</div><!--/panel-->
+	</div><!--/padding-md-->
 {% endblock %}
 
 {% block javascript %}

@@ -3,76 +3,76 @@
 {% load app_filters %}
 
 {% block content %}
-			<div class="todo padding-md">
-				{% if not request.user.myuser.is_a_player %}
-					<div class="row">
-						<div class="col-md-4 col-sm-4">
-							<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-								<optgroup label="Groups">
-									{% for group in groups %}
-										<option value="{{group.id}}">
-											&nbsp;&nbsp;&nbsp;{{group}}
-										</option>
-									{% endfor %}
-								</optgroup>
-							</select>
-						</div>
-					</div>
-				{% endif %}
-
-				<div class = "table-wrapper">
-					<table class="table to-do-table" id="responsiveTable">
-						<thead>
-							<tr>
-								<th>Test</th>
-								<th>Type</th>
-								{% if not request.user.myuser.is_a_player %}
-									<th>Assigned To</th>
-								{% endif %}
-								<th>Due</th>
-								<th>In Progress</th>
-								{% if request.user.myuser.is_a_player %}
-									<th>Added By</th>
-								{% endif %}
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for test in uncompleted_tests %}
-								<tr id="test-{{test.id}}">
-									<td>{{ test.name }}</td>
-									<td>{{ test }}</td>
-									{% if not request.user.myuser.is_a_player %}
-										<td>{{ test.player }}</td>
-									{% endif %}
-									<td>{% due_date_default test.deadline %}</td>
-									<td>
-										{% if test.in_progress%}
-											Yes
-										{% else %}
-											No
-										{% endif %}
-									</td>
-									{% if request.user.myuser.is_a_player %}
-										<td>{{ test.coach_who_created.get_full_name }}</td>
-										<td>
-											<a href="/quiz/{{test.type_of_test}}/{{test.id}}">
-												<span class="button">Start Quiz</span>
-											</a>
-										</td>
-									{% else %}
-										<td>
-											<a href="{% url 'edit_test' test.id %}">
-												<span class="button">Edit Quiz</span>
-											</a>
-										</td>
-									{% endif %}
-								</tr>
+	<div class="todo padding-md">
+		{% if not request.user.myuser.is_a_player %}
+			<div class="row">
+				<div class="col-md-4 col-sm-4">
+					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+						<optgroup label="Groups">
+							{% for group in groups %}
+								<option value="{{group.id}}">
+									&nbsp;&nbsp;&nbsp;{{group}}
+								</option>
 							{% endfor %}
-						</tbody>
-					</table>
+						</optgroup>
+					</select>
 				</div>
-			</div><!--/todo-->
+			</div>
+		{% endif %}
+
+		<div class = "table-wrapper">
+			<table class="table to-do-table" id="responsiveTable">
+				<thead>
+					<tr>
+						<th>Test</th>
+						<th>Type</th>
+						{% if not request.user.myuser.is_a_player %}
+							<th>Assigned To</th>
+						{% endif %}
+						<th>Due</th>
+						<th>In Progress</th>
+						{% if request.user.myuser.is_a_player %}
+							<th>Added By</th>
+						{% endif %}
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for test in uncompleted_tests %}
+						<tr id="test-{{test.id}}">
+							<td>{{ test.name }}</td>
+							<td>{{ test }}</td>
+							{% if not request.user.myuser.is_a_player %}
+								<td>{{ test.player }}</td>
+							{% endif %}
+							<td>{% due_date_default test.deadline %}</td>
+							<td>
+								{% if test.in_progress%}
+									Yes
+								{% else %}
+									No
+								{% endif %}
+							</td>
+							{% if request.user.myuser.is_a_player %}
+								<td>{{ test.coach_who_created.get_full_name }}</td>
+								<td>
+									<a href="/quiz/{{test.type_of_test}}/{{test.id}}">
+										<span class="button">Start Quiz</span>
+									</a>
+								</td>
+							{% else %}
+								<td>
+									<a href="{% url 'edit_test' test.id %}">
+										<span class="button">Edit Quiz</span>
+									</a>
+								</td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div><!--/todo-->
 {% endblock %}
 
 {% block javascript %}

@@ -3,92 +3,92 @@
 {% load app_filters %}
 
 {% block content %}
-			<div class="padding-md analytics-home">
-				{% if not request.user.myuser.is_a_player %}
-					<div class="row">
-						<div class="col-lg-5">
-							<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
-								<optgroup label="Groups">
-									{% for group in groups %}
-										<option value="{{group.id}}">
-											&nbsp;&nbsp;&nbsp;{{group}}
-										</option>
-									{% endfor %}
-								</optgroup>
-							</select>
-						</div>
-					</div>
-				{% endif %}
-				<table class="analytics-main-table">
-					<tr>
-						<th>
-							CORRECT
-							<br>
-							<canvas id="percentCorrectChart"></canvas>
-						</th>
-						<th>
-							INCORRECT
-							<br>
-							<canvas id="percentIncorrectChart"></canvas>
-						</th>
-						<th>
-							SKIPPED
-							<br>
-							<canvas id="percentSkippedChart"></canvas>
-						</th>
-					</tr>
-					<tr>
-						<td>
-							<table class="analytics-play-list" id="correct-plays-list">
+	<div class="padding-md analytics-home">
+		{% if not request.user.myuser.is_a_player %}
+			<div class="row">
+				<div class="col-lg-5">
+					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this)">
+						<optgroup label="Groups">
+							{% for group in groups %}
+								<option value="{{group.id}}">
+									&nbsp;&nbsp;&nbsp;{{group}}
+								</option>
+							{% endfor %}
+						</optgroup>
+					</select>
+				</div>
+			</div>
+		{% endif %}
+		<table class="analytics-main-table">
+			<tr>
+				<th>
+					CORRECT
+					<br>
+					<canvas id="percentCorrectChart"></canvas>
+				</th>
+				<th>
+					INCORRECT
+					<br>
+					<canvas id="percentIncorrectChart"></canvas>
+				</th>
+				<th>
+					SKIPPED
+					<br>
+					<canvas id="percentSkippedChart"></canvas>
+				</th>
+			</tr>
+			<tr>
+				<td>
+					<table class="analytics-play-list" id="correct-plays-list">
+						<tr>
+							<th class="first">PLAY</th>
+							<th class="second">%</th>
+						</tr>
+						{% for play, percent in analytics.correct_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
-									<th class="first">PLAY</th>
-									<th class="second">%</th>
+									<td>{{play.name}}</td>
+									<td>{{percent}}%</td>
 								</tr>
-								{% for play, percent in analytics.correct_plays_percent %}
-									{% if forloop.counter0 < 5 %}
-										<tr>
-											<td>{{play.name}}</td>
-											<td>{{percent}}%</td>
-										</tr>
-									{% endif %}
-								{% endfor %}
-							</table>
-						</td>
-						<td>
-							<table class="analytics-play-list" id="incorrect-plays-list">
+							{% endif %}
+						{% endfor %}
+					</table>
+				</td>
+				<td>
+					<table class="analytics-play-list" id="incorrect-plays-list">
+						<tr>
+							<th class="first">PLAY</th>
+							<th class="second">%</th>
+						</tr>
+						{% for play, percent in analytics.incorrect_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
-									<th class="first">PLAY</th>
-									<th class="second">%</th>
+									<td>{{play.name}}</td>
+									<td>{{percent}}%</td>
 								</tr>
-								{% for play, percent in analytics.incorrect_plays_percent %}
-									{% if forloop.counter0 < 5 %}
-										<tr>
-											<td>{{play.name}}</td>
-											<td>{{percent}}%</td>
-										</tr>
-									{% endif %}
-								{% endfor %}
-							</table>
-						</td>
-						<td>
-							<table class="analytics-play-list" id="skipped-plays-list">
+							{% endif %}
+						{% endfor %}
+					</table>
+				</td>
+				<td>
+					<table class="analytics-play-list" id="skipped-plays-list">
+						<tr>
+							<th class="first">PLAY</th>
+							<th class="second">%</th>
+						</tr>
+						{% for play, percent in analytics.skipped_plays_percent %}
+							{% if forloop.counter0 < 5 %}
 								<tr>
-									<th class="first">PLAY</th>
-									<th class="second">%</th>
+									<td>{{play.name}}</td>
+									<td>{{percent}}%</td>
 								</tr>
-								{% for play, percent in analytics.skipped_plays_percent %}
-									{% if forloop.counter0 < 5 %}
-										<tr>
-											<td>{{play.name}}</td>
-											<td>{{percent}}%</td>
-										</tr>
-									{% endif %}
-								{% endfor %}
-							</table>
-						</td>
-					</tr>
-				</table>
-			</div><!--padding-md-->
+							{% endif %}
+						{% endfor %}
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div><!--padding-md-->
 {% endblock %}
 
 {% block javascript %}

@@ -3,185 +3,185 @@
 {% load app_filters %}
 
 {% block content %}
-			<div class="coach-home">
-				<div class="content-container">
-					<div class="coach-action-row action-boxes">
-						<table class="coach-action-table">
-							<tbody>
-								<tr>
-									<td class="first">
-										<button onclick="clickButton(0)">
-											CREATE<br />FORMATION
-										</button>
-									</td>
-									<td class="blank">
-									</td>
-									<td class="second">
-										<button onclick="clickButton(1)">
-											CREATE<br />PLAY
-										</button>
-									</td>
-									<td class="blank">
-									</td>
-									<td class="third">
-										<button onclick="clickButton(2)">
-											CREATE<br />QUIZ
-										</button>
-									</td>
-									<td class="blank">
-									</td>
-									<td class="fourth">
-										<button onclick="clickButton(3)">
-											GROUPS
-										</button>
-									</td>
-									<td class="blank"></td>
-									<td class="fifth">
-										<button onclick="clickButton(4)">
-											ANALYTICS
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div><!--coach-action-row-->
-					<div class="main-content-area">
-						<div class="dash-col">
-							<div class="dash-header">
-								<span><h4>ANALYTICS</h4></span>
-							</div>
-							{% if analytics %}
-								<div class="analytics-graph-row">
-									<table class="analytics-table">
-										<tbody>
-											<tr>
-												<td>
-													<canvas id="percentCorrectChart"></canvas>
-													<br />
-													<span>CORRECT</span>
-												</td>
-											<td>
-												<canvas id="percentIncorrectChart"></canvas>
-												<br />
-												<span>MISSED</span>
-											</td>
-											<td>
-												<canvas id="percentSkippedChart"></canvas>
-												<br />
-												<span>SKIPPED</span>
-											</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<div class="analytics-table-row">
-									<div class="table-header">
-										<span>PLAY ALERTS</span>
-									</div>
-									<table class="alerts-list">
-										<tbody>
-											<tr>
-												<th>PLAY</th>
-												<th>CORRECT %</th>
-											</tr>
-											{% for play, percentage in alarms.items %}
-												<tr>
-													<td>
-														{{play}}
-													</td>
-													<td>
-														{{percentage}}%
-													</td>
-												</tr>
-											{% endfor %}
-										</tbody>
-									</table>
-								</div>
-							{% endif %}
-						</div><!--/dash-col-->
-					</div><!--/main-content-area-->
-					<div class="stacked-col">
-						<div class="secondary-content-area top">
-							<div class="dash-header">
-								<span>
-									<h4>
-										TESTS
-									</h4>
-								</span>
-							</div>
-							<table class="table to-do-table" id="responsiveTable">
+	<div class="coach-home">
+		<div class="content-container">
+			<div class="coach-action-row action-boxes">
+				<table class="coach-action-table">
+					<tbody>
+						<tr>
+							<td class="first">
+								<button onclick="clickButton(0)">
+									CREATE<br />FORMATION
+								</button>
+							</td>
+							<td class="blank">
+							</td>
+							<td class="second">
+								<button onclick="clickButton(1)">
+									CREATE<br />PLAY
+								</button>
+							</td>
+							<td class="blank">
+							</td>
+							<td class="third">
+								<button onclick="clickButton(2)">
+									CREATE<br />QUIZ
+								</button>
+							</td>
+							<td class="blank">
+							</td>
+							<td class="fourth">
+								<button onclick="clickButton(3)">
+									GROUPS
+								</button>
+							</td>
+							<td class="blank"></td>
+							<td class="fifth">
+								<button onclick="clickButton(4)">
+									ANALYTICS
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!--coach-action-row-->
+			<div class="main-content-area">
+				<div class="dash-col">
+					<div class="dash-header">
+						<span><h4>ANALYTICS</h4></span>
+					</div>
+					{% if analytics %}
+						<div class="analytics-graph-row">
+							<table class="analytics-table">
 								<tbody>
-								<tr>
-									<th>TEST</th>
-									<th>FOR</th>
-									<th>DUE</th>
-									<th>STATUS</th>
+									<tr>
+										<td>
+											<canvas id="percentCorrectChart"></canvas>
+											<br />
+											<span>CORRECT</span>
+										</td>
+									<td>
+										<canvas id="percentIncorrectChart"></canvas>
+										<br />
+										<span>MISSED</span>
+									</td>
+									<td>
+										<canvas id="percentSkippedChart"></canvas>
+										<br />
+										<span>SKIPPED</span>
+									</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="analytics-table-row">
+							<div class="table-header">
+								<span>PLAY ALERTS</span>
+							</div>
+							<table class="alerts-list">
+								<tbody>
+									<tr>
+										<th>PLAY</th>
+										<th>CORRECT %</th>
+									</tr>
+									{% for play, percentage in alarms.items %}
+										<tr>
+											<td>
+												{{play}}
+											</td>
+											<td>
+												{{percentage}}%
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					{% endif %}
+				</div><!--/dash-col-->
+			</div><!--/main-content-area-->
+			<div class="stacked-col">
+				<div class="secondary-content-area top">
+					<div class="dash-header">
+						<span>
+							<h4>
+								TESTS
+							</h4>
+						</span>
+					</div>
+					<table class="table to-do-table" id="responsiveTable">
+						<tbody>
+						<tr>
+							<th>TEST</th>
+							<th>FOR</th>
+							<th>DUE</th>
+							<th>STATUS</th>
+						</tr>
+						{% for test in uncompleted_tests %}
+							{% if forloop.counter0 < 2 %}
+								<tr id="test-{{test.id}}">
+									<td>
+										{{test.name}}
+									</td>
+									<td>
+										{{test.player.user.first_name}} {{test.player.user.last_name}}
+									</td>
+									<td>
+										{% due_date_default test.deadline %}
+									</td>
+									<td>
+										<span class="status-complete">COMPLETE</span>
+									</td>
 								</tr>
+							{% endif %}
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="secondary-content-area bottom">
+					<div class="dash-header">
+						<span><h4>NEWS FEED</h4></span>
+					</div>
+					<div class="non-scrollable-table-wrapper">
+						<table class="table news-feed-table">
+							<tbody>
 								{% for test in uncompleted_tests %}
-									{% if forloop.counter0 < 2 %}
-										<tr id="test-{{test.id}}">
+									{% if forloop.counter0 < 1 %}
+										<tr>
 											<td>
-												{{test.name}}
+												<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
 											</td>
 											<td>
-												{{test.player.user.first_name}} {{test.player.user.last_name}}
+												<a class="coach-link" href="#">
+													{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
+												</a>: Added a new 
+												<a class="play-link" href="#">
+													PLAY
+												</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
 											</td>
 											<td>
-												{% due_date_default test.deadline %}
-											</td>
-											<td>
-												<span class="status-complete">COMPLETE</span>
+												<a class="coach-link" href="#">
+													{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
+												</a>: Added a new 
+												<a class="formation-link" href="#">
+													FORMATION
+												</a>
 											</td>
 										</tr>
 									{% endif %}
 								{% endfor %}
-								</tbody>
-							</table>
-						</div>
-						<div class="secondary-content-area bottom">
-							<div class="dash-header">
-								<span><h4>NEWS FEED</h4></span>
-							</div>
-							<div class="non-scrollable-table-wrapper">
-								<table class="table news-feed-table">
-									<tbody>
-										{% for test in uncompleted_tests %}
-											{% if forloop.counter0 < 1 %}
-												<tr>
-													<td>
-														<img class="test-row-icon" src="{% static 'dashboard/images/playbook-icon-dark.png' %}" alt="">
-													</td>
-													<td>
-														<a class="coach-link" href="#">
-															{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
-														</a>: Added a new 
-														<a class="play-link" href="#">
-															PLAY
-														</a>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img class="test-row-icon" src="{% static 'dashboard/images/formation-icon-dark.png' %}" alt="">
-													</td>
-													<td>
-														<a class="coach-link" href="#">
-															{{test.coach_who_created.first_name}} {{test.coach_who_created.last_name}}
-														</a>: Added a new 
-														<a class="formation-link" href="#">
-															FORMATION
-														</a>
-													</td>
-												</tr>
-											{% endif %}
-										{% endfor %}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div><!--/stacked-col-->
-				</div><!--/content-container-->
-			</div><!--/coach-home-->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div><!--/stacked-col-->
+		</div><!--/content-container-->
+	</div><!--/coach-home-->
 {% endblock %}
 
 {% block javascript %}

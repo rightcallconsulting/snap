@@ -2,97 +2,97 @@
 {% load staticfiles %}
 
 {% block content %}
-			<div class="all-groups padding-md">
-				<div class="action-boxes">
-					<table class="action-table">
+	<div class="all-groups padding-md">
+		<div class="action-boxes">
+			<table class="action-table">
+				<tbody>
+					<tr>
+						<td>
+							<a href="create">
+								<span>
+									<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
+									&nbsp;&nbsp;&nbsp;CREATE GROUP
+								</span>
+							</a>
+						</td>
+						<td>
+							<a href="manage" id="manage-groups-link">
+								<span>
+									<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
+									&nbsp;&nbsp;&nbsp;MANAGE GROUPS
+								</span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<form>
+			<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+				<optgroup label="Groups">
+					{% for group in groups %}
+						<option value="{{ group.id }}" id="group-id">
+							&nbsp;&nbsp;&nbsp;{{ group }}
+						</option>
+					{% endfor %}
+				</optgroup>
+			</select>
+		</form>
+
+		<div class="row group-home">
+			<div class="col-lg-8" id="display-group-box">
+				<div class="table-wrapper" id="group-table-wrapper">
+					<table class="player-list">
+						<tbody>
+							<tr>
+								<th>PLAYER</th>
+								<th>POSITION</th>
+								<th>YEAR</th>
+								<th>RESULTS</th>
+							</tr>
+							{% if players_in_group %}
+								{% for player in players_in_group %}
+									<tr>
+										<td>{{ player.first_name }} {{ player.last_name }}</td>
+										<td>{{ player.position }}</td>
+										<td>{{ player.year }}</td>
+										<td>96%</td>
+									</tr>
+								{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-lg-3 group-analytics-col no-border">
+				<div class = "table-wrapper">
+					<table class = "group-analytics">
 						<tbody>
 							<tr>
 								<td>
-									<a href="create">
-										<span>
-											<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-											&nbsp;&nbsp;&nbsp;CREATE GROUP
-										</span>
-									</a>
+									<h3>CORRECT</h3>
+									<canvas id="percentCorrectChart"></canvas>
 								</td>
+							</tr>
+							<tr>
 								<td>
-									<a href="manage" id="manage-groups-link">
-										<span>
-											<img class="coach-action-icon" src="{% static 'dashboard/images/groups-icon-dark.png' %}" alt="">
-											&nbsp;&nbsp;&nbsp;MANAGE GROUPS
-										</span>
-									</a>
+									<h3>INCORRECT</h3>
+									<canvas id="percentIncorrectChart"></canvas>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<h3>SKIPPED</h3>
+									<canvas id="percentSkippedChart"></canvas>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-
-				<form>
-					<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
-						<optgroup label="Groups">
-							{% for group in groups %}
-								<option value="{{ group.id }}" id="group-id">
-									&nbsp;&nbsp;&nbsp;{{ group }}
-								</option>
-							{% endfor %}
-						</optgroup>
-					</select>
-				</form>
-
-				<div class="row group-home">
-					<div class="col-lg-8" id="display-group-box">
-						<div class="table-wrapper" id="group-table-wrapper">
-							<table class="player-list">
-								<tbody>
-									<tr>
-										<th>PLAYER</th>
-										<th>POSITION</th>
-										<th>YEAR</th>
-										<th>RESULTS</th>
-									</tr>
-									{% if players_in_group %}
-										{% for player in players_in_group %}
-											<tr>
-												<td>{{ player.first_name }} {{ player.last_name }}</td>
-												<td>{{ player.position }}</td>
-												<td>{{ player.year }}</td>
-												<td>96%</td>
-											</tr>
-										{% endfor %}
-									{% endif %}
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div class="col-lg-3 group-analytics-col no-border">
-						<div class = "table-wrapper">
-							<table class = "group-analytics">
-								<tbody>
-									<tr>
-										<td>
-											<h3>CORRECT</h3>
-											<canvas id="percentCorrectChart"></canvas>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<h3>INCORRECT</h3>
-											<canvas id="percentIncorrectChart"></canvas>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<h3>SKIPPED</h3>
-											<canvas id="percentSkippedChart"></canvas>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div><!--/row-->
-			</div><!--/all-groups-->
+			</div>
+		</div><!--/row-->
+	</div><!--/all-groups-->
 {% endblock %}
 
 {% block javascript %}
