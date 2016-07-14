@@ -56,7 +56,7 @@
 						<div class = "table-wrapper" id="players-in-group-table-wrapper">
 							<table class="player-list">
 								<tbody id="in-group">
-									<tr>
+									<tr class="header">
 										<th>REMOVE</th>
 										<th>PLAYER</th>
 										<th>POSITION</th>
@@ -86,7 +86,7 @@
 						<div class = "table-wrapper" id="players-not-in-group-table-wrapper">
 							<table class="player-list">
 								<tbody id="not-in-group">
-									<tr>
+									<tr class="header">
 										<th>ADD</th>
 										<th>PLAYER</th>
 										<th>POSITION</th>
@@ -146,7 +146,6 @@
 
 			// Remove everything from the form besides the csrf token
 			var form = document.getElementById('hidden-form');
-			var form_children = form.childNodes;
 			var csrf_token = form.querySelector('input[name=csrfmiddlewaretoken]');
 			while (csrf_token.nextSibling != null) {
 				form.removeChild(csrf_token.nextSibling);
@@ -163,6 +162,21 @@
 				
 				form.appendChild(hiddenGroupField);
 			}
+		};
+
+		// Wrapper function for updating the tables and form when a player is moved.
+		var changeColumnAndAddToFormNoArgs = function() {
+			var selected = this;
+			var this_class = this.getAttribute("class");
+			var operation;
+
+			if (this_class == "fa fa-minus-circle fa-2x red") {
+				operation = "REMOVE";
+			} else if (this_class == "fa fa-plus-circle fa-2x green") {
+				operation = "ADD";
+			}
+
+			changeColumnAndAddToForm(selected, operation);
 		};
 
 		// Wrapper function for updating the tables and form when a player is moved.
@@ -200,75 +214,102 @@
 		};
 
 		var changePlayersNotInGroupTable = function(groupID, teamID) {
-			var playersNotInGroup = [];
 			var notInGroupJson = "/groups/" + groupID + "/" + teamID + "/json";
-			var playersNotInGroupTableWrapper = document.getElementById('players-not-in-group-table-wrapper');
+
+			var table_body = document.getElementById('not-in-group');
+			var header_row = table_body.querySelector(".header");
+
+			while (header_row.nextSibling != null) {
+				table_body.removeChild(header_row.nextSibling);
+			}
 
 			$.getJSON(notInGroupJson, function(data, jqXHR) {
 				data.forEach(function(groupPlayerObject) {
 					var groupPlayer = createUserFromJSON(groupPlayerObject);
-					playersNotInGroup.push(groupPlayer);
-					playersNotInGroupTableWrapper.innerHTML = createPlayersNotInGroupTable(playersNotInGroup);
+					createPlayersNotInGroupRow(groupPlayer);
 				});
 			});
 		};
 
 		var changePlayersInGroupTable = function(groupID) {
-			var playersInGroup = [];
 			var groupJson = "/groups/" + groupID + "/json";
-			var playersInGroupTableWrapper = document.getElementById('players-in-group-table-wrapper');
+
+			var table_body = document.getElementById('in-group');
+			var header_row = table_body.querySelector(".header");
+
+			while (header_row.nextSibling != null) {
+				table_body.removeChild(header_row.nextSibling);
+			}
 
 			$.getJSON(groupJson, function(data) {
 				data.forEach(function(groupPlayerObject, jqXHR) {
 					var groupPlayer = createUserFromJSON(groupPlayerObject);
-					playersInGroup.push(groupPlayer);
-					playersInGroupTableWrapper.innerHTML = createPlayersInGroupTable(playersInGroup);
+					createPlayersInGroupRow(groupPlayer);
 				});
 			});
 		};
 
-		var createPlayersNotInGroupTable = function(users) {
-			var innerHTML = "<table class=\"player-list\">";
-			innerHTML += "<tbody id=\"not-in-group\">";
-			innerHTML += "<tr>";
-			innerHTML += "<th>ADD</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>";
-			innerHTML += "</tr>";
-			
-			for(var i = 0; i < users.length; i++) {
-				var user = users[i];
-				innerHTML += "<tr id=\"" + user.id + "\">";
-				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-plus-circle fa-2x green\" onclick=\"changeColumnAndAddToForm(this, 'ADD')\"></i></td>";
-				innerHTML += "<td>" + user.firstName + " " + user.lastName +  "</td>";
-				innerHTML += "<td>" + user.position + "</td>";
-				innerHTML += "<td>" + user.year + "</td>";
-				innerHTML += "</tr>";
-			}
+		var createPlayersNotInGroupRow = function(user) {
+			var table_body = document.getElementById('not-in-group');
 
-			innerHTML += "</tbody></table>";
+			var	new_row = document.createElement('tr');
+			new_row.setAttribute("id", user.id.toString());
 
-			return innerHTML;
+			var new_icon_cell = document.createElement('td');
+			new_icon_cell.setAttribute("class", "icon-cell");
+
+			var new_icon = document.createElement('i');
+			new_icon.setAttribute("class", "fa fa-plus-circle fa-2x green");
+			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
+
+			var new_name_cell = document.createElement('td');
+			new_name_cell.textContent = user.firstName + " " + user.lastName;
+
+			var new_position_cell = document.createElement('td');
+			new_position_cell.textContent = user.position;
+
+			var new_year_cell = document.createElement('td');
+			new_year_cell.textContent = user.year;
+
+			new_icon_cell.appendChild(new_icon);
+			new_row.appendChild(new_icon_cell);
+			new_row.appendChild(new_name_cell);
+			new_row.appendChild(new_position_cell);
+			new_row.appendChild(new_year_cell);
+
+			table_body.appendChild(new_row);
+
 		};
 
-		var createPlayersInGroupTable = function(users) {
-			var innerHTML = "<table class=\"player-list\">";
-			innerHTML += "<tbody id=\"in-group\">";
-			innerHTML += "<tr>";
-			innerHTML += "<th>REMOVE</th><th>PLAYER</th><th>POSITION</th><th>YEAR</th>";
-			innerHTML += "</tr>";
-			
-			for(var i = 0; i < users.length; i++) {
-				var user = users[i];
-				innerHTML += "<tr id=\"" + user.id.toString() + "\">";
-				innerHTML += "<td class=\"icon-cell\"><i class=\"fa fa-minus-circle fa-2x red\" onclick=\"changeColumnAndAddToForm(this, 'REMOVE')\"></i></td>";
-				innerHTML += "<td>" + user.firstName + " " + user.lastName + "</td>";
-				innerHTML += "<td>" + user.position + "</td>";
-				innerHTML += "<td>" + user.year + "</td>";
-				innerHTML += "</tr>";
-			}
+		var createPlayersInGroupRow = function(user) {
+			var table_body = document.getElementById('in-group');
 
-			innerHTML += "</tbody></table>";
+			var	new_row = document.createElement('tr');
+			new_row.setAttribute("id", user.id.toString());
 
-			return innerHTML;
+			var new_icon_cell = document.createElement('td');
+			new_icon_cell.setAttribute("class", "icon-cell");
+
+			var new_icon = document.createElement('i');
+			new_icon.setAttribute("class", "fa fa-minus-circle fa-2x red");
+			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
+
+			var new_name_cell = document.createElement('td');
+			new_name_cell.textContent = user.firstName + " " + user.lastName;
+
+			var new_position_cell = document.createElement('td');
+			new_position_cell.textContent = user.position;
+
+			var new_year_cell = document.createElement('td');
+			new_year_cell.textContent = user.year;
+
+			new_icon_cell.appendChild(new_icon);
+			new_row.appendChild(new_icon_cell);
+			new_row.appendChild(new_name_cell);
+			new_row.appendChild(new_position_cell);
+			new_row.appendChild(new_year_cell);
+
+			table_body.appendChild(new_row);
 		};
 
 		// When an icon is clicked call this function and update the columns.
