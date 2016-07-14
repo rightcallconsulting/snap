@@ -9,7 +9,7 @@
 	<div id="wrapper" class="preload">
 		{% include "dashboard/sidebar.html" %}
 		
-		<div id="main-container" onload="initGroupTable( {{ team.id }} )">
+		<div id="main-container">
 			{% include "dashboard/navbar.html" %}
 			{% include "dashboard/grey_container.html" %}
 
@@ -41,7 +41,7 @@
 
 				<form>
 					<select name="units" class="unit-form" id="group-form" onchange="changeGroup(this, {{ team.id }})">
-						<optgroup label="Groups">
+						<optgroup label="Groups" id="group-optgroup" firstgroup="{{ groups.0.id }}">
 							{% for group in groups %}
 								<option value="{{ group.id }}" id="group-id">
 									&nbsp;&nbsp;&nbsp;{{ group }}
@@ -80,6 +80,7 @@
 
 						<form method="post" action="/groups/manage" id="hidden-form">
 							{% csrf_token %}
+							<input type="hidden" id="post-group-id" name="group" value="{{ groups.0.id }}">
 						</form>
 					</div>
 					<div class="col-lg-5">
@@ -125,16 +126,17 @@
 {% block javascript %}
 	<script type="text/javascript">
 		var initGroupTable = function() {
-			var sel = document.getElementById('group-form');
+			var sel = document.getElementById("group-form");
+
 			changeGroup(sel);
 		};
 
 		// cancel_changes() removed all items from the hidden form except
 		// for the csrf token 
 		var cancelChanges = function() {
-			var manage_groups_div = document.getElementById('team-id');
-			var teamID = Number(manage_groups_div.getAttribute('value'));
-			var group_option = document.getElementById('group-form');
+			var manage_groups_div = document.getElementById("team-id");
+			var teamID = Number(manage_groups_div.getAttribute("value"));
+			var group_option = document.getElementById("group-form");
 
 			changeGroup(group_option, teamID);
 		};
@@ -145,20 +147,18 @@
 			changePlayersInGroupTable(sel.value);
 
 			// Remove everything from the form besides the csrf token
-			var form = document.getElementById('hidden-form');
-			var csrf_token = form.querySelector('input[name=csrfmiddlewaretoken]');
+			var form = document.getElementById("hidden-form");
+			var csrf_token = form.querySelector("input[name=csrfmiddlewaretoken]");
 			while (csrf_token.nextSibling != null) {
 				form.removeChild(csrf_token.nextSibling);
 			}
 
-			if (document.getElementById('post-group-id') == null) {
-           		var group_id = sel.value;
-				
+			if (document.getElementById("post-group-id") == null) {
 				var hiddenGroupField = document.createElement("input");
 				hiddenGroupField.setAttribute("type", "hidden");
 				hiddenGroupField.setAttribute("id", "post-group-id");
 				hiddenGroupField.setAttribute("name", "group");
-				hiddenGroupField.setAttribute("value", group_id); 
+				hiddenGroupField.setAttribute("value", sel.value); 
 				
 				form.appendChild(hiddenGroupField);
 			}
@@ -187,10 +187,10 @@
 			var player_pk = Number(selected_row.getAttribute("id"));
 
 			// Add save and cancel buttons if they don't exist
-			var form = document.getElementById('hidden-form');
+			var form = document.getElementById("hidden-form");
 
-			if (document.getElementById('save') == null) {
-				var save_button = document.createElement('input');
+			if (document.getElementById("save") == null) {
+				var save_button = document.createElement("input");
 				save_button.setAttribute("class", "btn btn-success btn-lg");
 				save_button.setAttribute("id", "save");
 				save_button.setAttribute("type", "submit");
@@ -199,8 +199,8 @@
 				form.appendChild(save_button);
 			}
 
-			if (document.getElementById('cancel') == null) {
-				var cancel_button = document.createElement('input');
+			if (document.getElementById("cancel") == null) {
+				var cancel_button = document.createElement("input");
 				cancel_button.setAttribute("class", "btn btn-danger btn-lg");
 				cancel_button.setAttribute("id", "cancel");
 				cancel_button.setAttribute("type", "button");
@@ -216,7 +216,7 @@
 		var changePlayersNotInGroupTable = function(groupID, teamID) {
 			var notInGroupJson = "/groups/" + groupID + "/" + teamID + "/json";
 
-			var table_body = document.getElementById('not-in-group');
+			var table_body = document.getElementById("not-in-group");
 			var header_row = table_body.querySelector(".header");
 
 			while (header_row.nextSibling != null) {
@@ -234,7 +234,7 @@
 		var changePlayersInGroupTable = function(groupID) {
 			var groupJson = "/groups/" + groupID + "/json";
 
-			var table_body = document.getElementById('in-group');
+			var table_body = document.getElementById("in-group");
 			var header_row = table_body.querySelector(".header");
 
 			while (header_row.nextSibling != null) {
@@ -250,25 +250,25 @@
 		};
 
 		var createPlayersNotInGroupRow = function(user) {
-			var table_body = document.getElementById('not-in-group');
+			var table_body = document.getElementById("not-in-group");
 
-			var	new_row = document.createElement('tr');
+			var	new_row = document.createElement("tr");
 			new_row.setAttribute("id", user.id.toString());
 
-			var new_icon_cell = document.createElement('td');
+			var new_icon_cell = document.createElement("td");
 			new_icon_cell.setAttribute("class", "icon-cell");
 
-			var new_icon = document.createElement('i');
+			var new_icon = document.createElement("i");
 			new_icon.setAttribute("class", "fa fa-plus-circle fa-2x green");
 			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
 
-			var new_name_cell = document.createElement('td');
+			var new_name_cell = document.createElement("td");
 			new_name_cell.textContent = user.firstName + " " + user.lastName;
 
-			var new_position_cell = document.createElement('td');
+			var new_position_cell = document.createElement("td");
 			new_position_cell.textContent = user.position;
 
-			var new_year_cell = document.createElement('td');
+			var new_year_cell = document.createElement("td");
 			new_year_cell.textContent = user.year;
 
 			new_icon_cell.appendChild(new_icon);
@@ -282,25 +282,25 @@
 		};
 
 		var createPlayersInGroupRow = function(user) {
-			var table_body = document.getElementById('in-group');
+			var table_body = document.getElementById("in-group");
 
-			var	new_row = document.createElement('tr');
+			var	new_row = document.createElement("tr");
 			new_row.setAttribute("id", user.id.toString());
 
-			var new_icon_cell = document.createElement('td');
+			var new_icon_cell = document.createElement("td");
 			new_icon_cell.setAttribute("class", "icon-cell");
 
-			var new_icon = document.createElement('i');
+			var new_icon = document.createElement("i");
 			new_icon.setAttribute("class", "fa fa-minus-circle fa-2x red");
 			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
 
-			var new_name_cell = document.createElement('td');
+			var new_name_cell = document.createElement("td");
 			new_name_cell.textContent = user.firstName + " " + user.lastName;
 
-			var new_position_cell = document.createElement('td');
+			var new_position_cell = document.createElement("td");
 			new_position_cell.textContent = user.position;
 
-			var new_year_cell = document.createElement('td');
+			var new_year_cell = document.createElement("td");
 			new_year_cell.textContent = user.year;
 
 			new_icon_cell.appendChild(new_icon);
@@ -340,12 +340,12 @@
 			// appropriate attributes to our new icon and then replace 
 			// the old icon with the new icon. 
 			if (operation == "ADD") {
-				target_table = document.getElementById('in-group');
+				target_table = document.getElementById("in-group");
 				new_icon_table_data.firstChild.setAttribute("class", "fa fa-minus-circle fa-2x red");
 				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'REMOVE')");
 				new_row.replaceChild(new_icon_table_data, new_row.querySelector(".icon-cell") );
 			} else if (operation == "REMOVE") {
-				target_table = document.getElementById('not-in-group');
+				target_table = document.getElementById("not-in-group");
 				new_icon_table_data.firstChild.setAttribute("class", "fa fa-plus-circle fa-2x green");
 				new_icon_table_data.firstChild.setAttribute("onclick", "changeColumn(this, 'ADD')");
 				new_row.replaceChild(new_icon_table_data, new_row.querySelector(".icon-cell") );
@@ -359,9 +359,7 @@
 
 		// This function submits POST requests to '/groups/manage' in
 		// order to keep the database updated
-		var addChangesToForm = function(operation, player_id) {
-			// create form element and set the action to '/groups/manage'
-			// and the method to post. 
+		var addChangesToForm = function(operation, player_id) { 
 			var form = document.getElementById("hidden-form");
 
 			if (operation == "ADD") {
@@ -371,7 +369,7 @@
 				hiddenPlayerField.setAttribute("value", player_id);
 
 				form.appendChild(hiddenPlayerField);
-			} else if (oepration == "REMOVE") {
+			} else if (operation == "REMOVE") {
 				var hiddenPlayerField = document.createElement("input");
 				hiddenPlayerField.setAttribute("type", "hidden");
 				hiddenPlayerField.setAttribute("name", "remove_player");

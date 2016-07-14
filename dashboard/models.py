@@ -80,6 +80,7 @@ class PlayerGroup(models.Model):
     class Meta:
         verbose_name="Player Group"
         verbose_name_plural="Player Groups"
+        ordering = ['pk']
 
     def __str__(self):
         return self.name

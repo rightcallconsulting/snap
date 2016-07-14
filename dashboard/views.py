@@ -261,33 +261,55 @@ def create_group(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_groups(request):
 	if request.method == "POST":
-		add_operations = []
-		remove_operations = []
-		players_to_add = []
-		players_to_remove = []
-		
 		group_id = int(request.POST['group'])
 		group = PlayerGroup.objects.filter(pk=group_id)[0]
 
-		# Loop through and place players on add list
-		for player_id in request.POST.getlist('add_player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			players_to_add.append(player)
+		# Lists to contain the primary keys to be operated on including duplicates.
+		add_pks = [0]
+		remove_pks = [0]
 		
-		# Loop through and place players on remove list
+		# Loop through and place player pks on add list including duplicates.
+		for player_id in request.POST.getlist('add_player'):
+			add_pks.append(int(player_id))
+		
+		# Loop through and place player pks on remove list including duplicates.
 		for player_id in request.POST.getlist('remove_player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			players_to_remove.append(player)
+			remove_pks.append(int(player_id))
 
-		# Add players left on add list
-		for player_to_add in players_to_add:
-			group.players.add(player)
+		# The maximum primary key value in either list.
+		max_pk = max(max(add_pks), max(remove_pks))
 
-		# Remove players left on remove list
-		for player_to_remove in players_to_remove:
-			group.players.remove(player)
+		# Lists of the number of respective operation per pk.
+		number_adds = []
+		number_removes = []
 
-		group.save()
+		# Loop through player pks starting from 0.
+		for pk in range(max_pk):
+			# Append the number of adds per player pk.
+			number_adds.append(add_pks.count(pk+1))
+			# Append the number of removes per player pk.
+			number_removes.append(remove_pks.count(pk+1))
+
+			# Calculate the difference between the number of adds and number of 
+			# removes for player pk. This number should only ever be -1, 0, or 1. 
+			# A player can only be added to the group if they started out of the
+			# group or have already been removed and equal amount of times as they
+			# have they been added.
+			diff = number_adds[pk] - number_removes[pk]
+
+			# If the diff is positve 1 then add the player associated with that pk
+			# to the group. If the diff is negative 1 then remove the player. If it
+			# is 0, do nothing. Otherwise, return an error for an invalid operation.
+			if diff == 1:
+				group.players.add(Player.objects.filter(pk=(pk+1))[0])
+				group.save()
+			elif diff == -1:
+				group.players.remove(Player.objects.filter(pk=(pk+1))[0])
+				group.save()
+			elif diff == 0:
+				group.save()
+			else:
+				sys.exit(1)
 
 		return HttpResponseRedirect(reverse('groups'))
 	else:
