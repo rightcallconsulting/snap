@@ -17,15 +17,6 @@
 			<div class="coach-home">
 				<div class="content-container">
 					<div class="coach-action-row action-boxes">
-						<script>
-							var clickButton = function(index){
-								var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
-								if(index >= 0 && index < links.length){
-									window.location.href = links[index];
-								}
-							};
-						</script>
-
 						<table class="coach-action-table">
 							<tbody>
 								<tr>
@@ -215,7 +206,15 @@
 {% endblock %}
 
 {% block javascript %}
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script>
+		var clickButton = function(index){
+			var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
+			if(index >= 0 && index < links.length){
+				window.location.href = links[index];
+			}
+		};
+	</script>
+
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">
 		var percentCorrect = {{analytics.total_correct_attempts_percentage}},
@@ -228,6 +227,7 @@
 
 	<!-- Build Charts -->
 	<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+
 	<script type="text/javascript">
 		window.onresize = function(){
 			makeChart(percentCorrect, colors.correct, 'percentCorrectChart');
