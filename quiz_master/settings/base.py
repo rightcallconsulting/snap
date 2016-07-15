@@ -17,17 +17,18 @@ import os.path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_URL = '/login'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'fgz^7hqp3hohi64gm)v$rvg54@po=pznce*$j$db9h1drp4m9i'
 
-ALLOWED_HOSTS = []
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
 
 
-# Application definition
-
+# Application installed in my project
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -117,9 +118,6 @@ import dj_database_url
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
-
 # Static asset configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = 'staticfiles'
@@ -129,10 +127,8 @@ STATIC_URL = '/static/'
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
-
 # Password settings
 # https://github.com/dstufft/django-passwords
-
 PASSWORD_MIN_LENGTH         = 3     # Defaults to 6
 PASSWORD_MAX_LENGTH 		= 120   # Defaults to none
 PASSWORD_DICTIONARY         = ""    # Defaults to None, Should have a directory path to a dictionary
