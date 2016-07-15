@@ -214,6 +214,96 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
+def quizzes(request):
+	quizzes = Test.objects.all()
+	return HttpResponse(serializers.serialize("json", quizzes))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_quiz(request):
+	if request.method == 'POST':
+		player_id = Player.objects.filter(id=request.POST['player'])
+		player = Player.objects.filter(id=player_id)[0]
+		type_of_quiz = request.POST['type_of_quiz']
+		new_quiz = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_quiz'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
+		new_quiz.save()
+		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
+	else:
+		form = TestForm()
+		plays = request.user.coach.team.play_set.all()
+		groups = PlayerGroup.objects.all()
+		safeGroups = []
+		for g in groups:
+			safeGroups.append(g.build_dict_for_json_seed())
+		return render(request, 'dashboard/create_quiz.html', {
+			'form': form,
+			'plays': plays,
+			'types_of_quizzes': Test.types_of_tests,
+			'page_header': 'CREATE QUIZ',
+			'groups': json.dumps(safeGroups),
+		})
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def manage_quiz(request, test_id):
+	if request.method == 'POST':
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		add_or_remove = request.POST['add_or_remove']
+		if request.POST['defense'] == "false":
+			play_id = request.POST['play_id']
+			play = Play.objects.filter(id=play_id)[0]
+			if add_or_remove == "add":
+				play.tests.add(quiz)
+			else:
+				play.tests.remove(quiz)
+			play.save()
+		else:
+			defensive_formation_id = request.POST['defensive_formation_id']
+			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
+			if add_or_remove == "add":
+				quiz.formations.add(defensive_formation)
+			else:
+				quiz.formations.remove(defensive_formation)
+		quiz.save()
+		return HttpResponse('')
+	else:
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		unit = quiz.unit()
+		player = quiz.player
+		team = quiz.player.team
+		formations = team.formation_set.all()
+		offensive_formations = formations.filter(unit="offense")
+		defensive_formations = formations.filter(unit="defense")
+		play_id_array = []
+		plays_in_quiz = quiz.play_set.all()
+		for play in quiz.play_set.all():
+			play_id_array.append(play.id)
+		defensive_formation_id_array = []
+		defensive_formations_in_quiz = quiz.formations.all()
+		for formation in defensive_formations_in_quiz:
+			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
+		unique_defensive_formations_dict = {}
+		for formation in defensive_formations:
+			unique_defensive_formations_dict[formation.name] = formation
+			unique_defensive_formations = unique_defensive_formations_dict.values()
+		return render(request, 'dashboard/manage_quiz.html', {
+			'quiz': quiz,
+			'formations': formations,
+			'offensive_formations': offensive_formations,
+			'defensive_formations': defensive_formations,
+			'team': team,
+			'player': player,
+			'play_id_array': play_id_array,
+			'plays_in_quiz': plays_in_quiz,
+			'unit': unit,
+			'unique_defensive_formations': unique_defensive_formations,
+			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
+			'page_header': 'EDIT QUIZZES'
+		})
+
+@login_required
+def my_quizzes(request):
+	player = request.user.player
+	return render(request, 'dashboard/my_quizzes.html')
+
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def groups(request):
 	team = request.user.coach.team
@@ -343,39 +433,6 @@ def manage_groups(request):
 			'page_header': 'MANAGE GROUPS',
 		})
 
-@login_required
-def my_tests(request):
-	player = request.user.player
-	return render(request, 'dashboard/my_tests.html')
-
-def all_tests(request):
-	tests = Test.objects.all()
-	return HttpResponse(serializers.serialize("json", tests))
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def create_test(request):
-	if request.method == 'POST':
-		player_id = Player.objects.filter(id=request.POST['player'])
-		player = Player.objects.filter(id=player_id)[0]
-		type_of_test = request.POST['type_of_test']
-		new_test = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_test'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
-		new_test.save()
-		return HttpResponseRedirect(reverse('edit_test', args=[new_test.id]))
-	else:
-		form = TestForm()
-		plays = request.user.coach.team.play_set.all()
-		groups = PlayerGroup.objects.all()
-		safeGroups = []
-		for g in groups:
-			safeGroups.append(g.build_dict_for_json_seed())
-		return render(request, 'dashboard/create_test.html', {
-			'form': form,
-			'plays': plays,
-			'types_of_tests': Test.types_of_tests,
-			'page_header': 'CREATE TEST',
-			'groups': json.dumps(safeGroups),
-		})
-
 def edit_profile(request):
 	if request.method == 'POST':
 		request.user.username = request.POST['username']
@@ -401,63 +458,6 @@ def edit_profile(request):
 			'page_header': 'EDIT PROFILE'
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def edit_test(request, test_id):
-	if request.method == 'POST':
-		test = Test.objects.filter(id=test_id)[0]
-		add_or_remove = request.POST['add_or_remove']
-		if request.POST['defense'] == "false":
-			play_id = request.POST['play_id']
-			play = Play.objects.filter(id=play_id)[0]
-			if add_or_remove == "add":
-				play.tests.add(test)
-			else:
-				play.tests.remove(test)
-			play.save()
-		else:
-			defensive_formation_id = request.POST['defensive_formation_id']
-			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
-			if add_or_remove == "add":
-				test.formations.add(defensive_formation)
-			else:
-				test.formations.remove(defensive_formation)
-		test.save()
-		return HttpResponse('')
-	else:
-		test = Test.objects.filter(id=test_id)[0]
-		unit = test.unit()
-		player = test.player
-		team = test.player.team
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		play_id_array = []
-		plays_in_test = test.play_set.all()
-		for play in test.play_set.all():
-			play_id_array.append(play.id)
-		defensive_formation_id_array = []
-		defensive_formations_in_test = test.formations.all()
-		for formation in defensive_formations_in_test:
-			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
-		unique_defensive_formations_dict = {}
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
-		return render(request, 'dashboard/edit_test.html', {
-			'test': test,
-			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
-			'team': team,
-			'player': player,
-			'play_id_array': play_id_array,
-			'plays_in_test': plays_in_test,
-			'unit': unit,
-			'unique_defensive_formations': unique_defensive_formations,
-			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
-			'page_header': 'EDIT TEST'
-		})
-
 def delete_group(request):
 	if request.method == 'POST':
 		group_id = request.POST['group_id']
@@ -466,71 +466,76 @@ def delete_group(request):
 		return HttpResponse('')
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def test_analytics(request, test_id):
+def quiz_analytics(request, quiz_id):
 	coach = request.user.coach
-	test = Test.objects.filter(pk=test_id)[0]
-	formatted_list_for_graphos_missed_plays = test.get_missed_play_chart(5)
-	test_results = test.testresult_set.all()
-	test_result_queryset = test_results.reverse()[:5][::-1]
-	data_source = ModelDataSource(test_result_queryset,
+	quiz = Test.objects.filter(pk=quiz_id)[0]
+	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
+	quiz_results = quiz.quizresult_set.all()
+	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
+	data_source = ModelDataSource(quiz_result_queryset,
 								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
 	chart = gchart.ColumnChart(data_source, options=
-		{'title': "Test Results",
-		'isStacked': 'true',
-		'width': 700,
-		'xaxis':
-			{'label': "categories",
-			'side': 'top'
+		{
+			'title': "Quiz Results",
+			'isStacked': 'true',
+			'width': 700,
+			'xaxis':
+			{
+				'label': "categories",
+				'side': 'top'
 			},
-		'legend':
-			{ 'position': 'bottom' }
-			,
-		 'series': {'0': {'targetAxisIndex':'0', 'axis': 'score'},
-				   '1':{'targetAxisIndex':'0', 'axis': 'score'},
-				   '2':{'targetAxisIndex':'0', 'axis': 'score'},
-				   '3':{'targetAxisIndex':'1', 'type': 'line'},
+			'legend': {'position': 'bottom'},
+			'series': 
+			{
+				'0': {'targetAxisIndex':'0', 'axis': 'score'},
+				'1':{'targetAxisIndex':'0', 'axis': 'score'},
+				'2':{'targetAxisIndex':'0', 'axis': 'score'},
+				'3':{'targetAxisIndex':'1', 'type': 'line'},
 
-				  },
-		  'axes': {
-			  'x': {
-				'discrete': 'string',
-			  },
-			  'y': {
-				'score': {'label': '# of Quesitons'},
-				'Time Taken': {'label': 'Time Taken'}
-			  }
+			},
+			'axes': 
+			{
+				'x': 
+				{
+					'discrete': 'string',
+				},
+			  	'y': 
+			  	{
+					'score': {'label': '# of Quesitons'},
+					'Time Taken': {'label': 'Time Taken'}
+				}
 			}
-		  }
+		}
 	)
 	missed_play_data =  formatted_list_for_graphos_missed_plays
 	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
-			{'title': "Missed Plays",
+		{
+			'title': "Missed Plays",
 			'isStacked': 'true',
 			'width': 700,
 			'height': 300,
-			'legend':
-				{ 'position': 'bottom' }
-			}
+			'legend': {'position': 'bottom'}
+		}
 	)
 
 	skipped_play_data =  test.get_skipped_play_chart(5)
 	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
-			{'title': "Skipped Plays",
+		{
+			'title': "Skipped Plays",
 			'isStacked': 'true',
 			'width': 700,
-			'legend':
-				{ 'position': 'bottom' }
-			}
+			'legend': {'position': 'bottom'}
+		}
 	)
-	test_results_length = len(test_results)
+	quiz_results_length = len(quiz_results)
 	return render_to_response('dashboard/analytics.html',{
-		'test': test,
-		'test_results': test_results,
+		'test': quiz,
+		'test_results': quiz_results,
 		'chart': chart,
 		'missed_play_chart': missed_play_chart,
 		'skipped_play_chart': skipped_play_chart,
+		'test_results_length': quiz_results_length,
 		'page_header': 'ANALYTICS',
-		'test_results_length': test_results_length,
 	})
 
 # JSON requests

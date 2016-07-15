@@ -7,9 +7,7 @@
 			<div class="main-content-area dash-col display-play-box" id="display-play-box">
 				<div class="dash-header text-center">
 					<span>
-						<h4 id="play-image-header">
-							Play
-						</h4>
+						<h4 id="play-image-header">Play</h4>
 					</span>
 				</div>
 				<div id="display-play-box-2">
@@ -42,9 +40,7 @@
 					<div class="secondary-content-area top choose-offensive-formation-box">
 						<div class="dash-header text-center">
 							<span>
-								<h4>
-									Offensive Formations
-								</h4>
+								<h4>Offensive Formations</h4>
 							</span>
 						</div>
 						<div class="scrollable-table">
@@ -53,9 +49,9 @@
 									{% if forloop.counter|add:"-1"|divisibleby:2 %}
 										<tr>
 									{% endif %}
-									<td>
-										<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-									</td>
+											<td>
+												<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{ formation }}">
+											</td>
 									{% if forloop.counter|divisibleby:2 %}
 										</tr>
 									{% endif %}
@@ -67,12 +63,11 @@
 					<div class="secondary-content-area change-plays-box">
 						<div class="dash-header text-center">
 							<span>
-								<h4 id="change-plays-header">
-									Change Plays
-								</h4>
+								<h4 id="change-plays-header">Change Plays</h4>
 							</span>
 						</div>
-						<form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+						<form id="choose-play" class="" action="/quizzes/manage/{{ quiz.id }}" method="post"> 
+							{% csrf_token %}
 							<div class="panel-body show-plays" id="draw-plays">
 							</div><!-- /panel -->
 						</form>
@@ -84,18 +79,17 @@
 						</div>
 					
 						{% for formation in unique_defensive_formations %}
-							<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{formation.id}}" type="submit" value="{{formation}}">
+							<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{ formation.id }}" type="submit" value="{{ formation }}">
 						{% endfor %}
 					</div>
 					<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
 						<div class="dash-header text-center">
 							<span>
-								<h4 id="change-plays-header">
-									Offensive Looks:
-								</h4>
+								<h4 id="change-plays-header">Offensive Looks:</h4>
 							</span>
 						</div>
-						<form id="choose-play-defense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %}
+						<form id="choose-play-defense" class="" action="/tests/manage/{{ quiz.id }}" method="post"> 
+							{% csrf_token %}
 							<div class="panel-body show-plays-defense">
 							</div>
 						</form>
@@ -106,28 +100,32 @@
 			{% if unit == "offense" %}
 				<div class="tertiary-content-area dash-col display-plays-in-test">
 					<div class="dash-header text-center">
-						<span><h4>Plays in Test: {{test.name}}</h4></span>
+						<span>
+							<h4>Plays in Test: {{ quiz.name }}</h4>
+						</span>
 					</div>
 					<div class="panel-body existing-plays">
-						{% for play in plays_in_test %}
-							<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+						{% for play in plays_in_quiz %}
+							<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
 						{% endfor %}
 					</div>
 				</div>
 			{% else %}
 				<div class="col-lg-10 dash-col display-plays-in-test">
 					<div class="dash-header text-center">
-						<span><h4>Plays in Test: {{test.name}}</h4></span>
+						<span>
+							<h4>Plays in Test: {{ quiz.name }}</h4>
+						</span>
 					</div>
 					{% for formation in unique_defensive_formations %}
 						<div class="col-lg-2 dash-col">
 							<div class="dash-header text-center">
 								<span><h4>{{ formation }}</h4></span>
 							</div>
-							<div class="panel-body existing-plays" id="formation-show-{{formation.id}}">
-								{% for play in plays_in_test %}
+							<div class="panel-body existing-plays" id="formation-show-{{ formation.id }}">
+								{% for play in plays_in_quiz %}
 									{% if play.formation.id == formation.id %}
-										<input class='bounceIn play-remove play-remove-button' id='{{play.id}}' type='submit' value='{{play.name}}'>
+										<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
 									{% endif %}
 								{% endfor %}
 							</div>
@@ -136,8 +134,8 @@
 				</div>
 			{% endif %}
 
-			<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-			<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
+			<div id="test-id" data-test-id="{{ quiz.id }}" style="display: none;"></div>
+			<div id="play-id-array" data-play-id-array="{{ play_id_array }}" style="display: none;"></div>
 			<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
 		</div><!--/panel-->
 	</div><!--/padding-md-->

@@ -105,14 +105,14 @@
 					<div class="dash-header">
 						<span>
 							<h4>
-								TESTS
+								QUIZZES
 							</h4>
 						</span>
 					</div>
 					<table class="table to-do-table" id="responsiveTable">
 						<tbody>
 						<tr>
-							<th>TEST</th>
+							<th>QUIZ</th>
 							<th>FOR</th>
 							<th>DUE</th>
 							<th>STATUS</th>
@@ -187,7 +187,7 @@
 {% block javascript %}
 	<script>
 		var clickButton = function(index){
-			var links = ["/quiz/create_formation", "/quiz/create_play", "/create_test", "/groups", "/analytics"];
+			var links = ["/quiz/create_formation", "/quiz/create_play", "/quizzes/create", "/groups", "/analytics"];
 			if(index >= 0 && index < links.length){
 				window.location.href = links[index];
 			}

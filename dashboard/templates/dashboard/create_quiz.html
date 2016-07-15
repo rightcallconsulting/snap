@@ -4,7 +4,7 @@
 {% block content %}
 	<div class="padding-md">
 		<div class="row dash-row">
-			<form action="/create_test" method="post" class="form-create-test"> {% csrf_token %}
+			<form action="/create_quiz" method="post" class="form-create-quiz"> {% csrf_token %}
 				{% for field in form %}
 					{% if field.label == "Group" %}
 						<br>
@@ -12,12 +12,12 @@
 					{% endif %}
 
 					{% if field.label == False %}
-						{% for type in types_of_tests %}
+						{% for type in types_of_quizzes %}
 							<div class="form-group">
 								<label class="label-checkbox">
-									<input type="checkbox" name="type_of_test" value="{{type}}"/>
+									<input type="checkbox" name="type_of_test" value="{{ type }}"/>
 									<span class="custom-checkbox info bounceIn animation-delay6"></span>
-									{{type}}
+									{{ type }}
 								</label>
 							</div><!-- /form-group -->
 						{% endfor %}
@@ -127,7 +127,6 @@
 			}
 
 			playerIDForm.selectedIndex = 3;
-
 			return true;
 		};
 
