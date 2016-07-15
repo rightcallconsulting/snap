@@ -10,13 +10,13 @@
 .login-logo {
 	margin: 80px 0px 60px 0px;
 	width: 55%;
-	min-width: 500px;
+	min-width: 300px;
 	max-width: 785px;
 }
 
 .panel {
-	margin: 0px auto 50px auto;
+	margin: 0% auto 2% auto;
 	width: 35%;
-	min-width: 320px;
+	min-width: 300px;
 	max-width: 500px;
 }
