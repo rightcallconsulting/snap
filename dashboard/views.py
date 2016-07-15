@@ -458,41 +458,12 @@ def edit_test(request, test_id):
 			'page_header': 'EDIT TEST'
 		})
 
-def edit_group(request, group_id):
-	group = PlayerGroup.objects.filter(id=group_id)[0]
-	if request.method == 'POST':
-		group.name = request.POST['name']
-		group.players.clear()
-		for player_id in request.POST.getlist('players'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			group.players.add(player)
-		group.save()
-		return HttpResponseRedirect(reverse('group_detail', kwargs={'group_id': group.id}))
-	else:
-		edit_group_form = PlayerGroupForm(instance = group)
-		return render(request, 'dashboard/edit_group.html', {
-			'edit_group_form': edit_group_form,
-			'group': group,
-			'page_header': 'EDIT GROUP'
-		})
-
 def delete_group(request):
 	if request.method == 'POST':
 		group_id = request.POST['group_id']
 		group = PlayerGroup.objects.filter(id=group_id)[0]
 		group.delete()
 		return HttpResponse('')
-
-def delete_player_from_group(request):
-	if request.method == 'POST':
-		group_id = request.POST['groupID']
-		player_id = request.POST['playerID']
-		player = group.players.all().filter(pk=player_id)[0]
-		group = PlayerGroup.objects.filter(pk=group_id)[0]
-		embed()
-		group.players.remove(player)
-		return HttpResponse('')
-	#return HttpResponse('')
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def test_analytics(request, test_id):
