@@ -1,7 +1,11 @@
+# Prevent .DS_Store files from being pushed to the repository.
+.DS_Store
+
+# Prevent build artifacts from being pushed to the repository.
 venv
 .env
 *.pyc
 staticfiles
-.DS_Store
-TODO.txt
+
+# Prevent profile pictures from being pushed to the repository.
 media/profile/*
