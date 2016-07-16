@@ -228,18 +228,23 @@ def create_quiz(request):
 		new_quiz.save()
 		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
 	else:
-		form = TestForm()
+		team = request.user.coach.team
+		groups = PlayerGroup.objects.filter(team=team)
 		plays = request.user.coach.team.play_set.all()
-		groups = PlayerGroup.objects.all()
-		safeGroups = []
-		for g in groups:
-			safeGroups.append(g.build_dict_for_json_seed())
+
+		if len(groups) > 0:
+			players_in_group = groups[0].players.all()
+			analytics = PlayerAnalytics(players_in_group)
+		else:
+			players_in_group = []
+			analytics = None
+
 		return render(request, 'dashboard/create_quiz.html', {
-			'form': form,
 			'plays': plays,
 			'types_of_quizzes': Test.types_of_tests,
+			'groups': groups,
+			'players_in_group': players_in_group,
 			'page_header': 'CREATE QUIZ',
-			'groups': json.dumps(safeGroups),
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -308,6 +313,7 @@ def my_quizzes(request):
 def groups(request):
 	team = request.user.coach.team
 	groups = PlayerGroup.objects.filter(team=team)
+	
 	if len(groups) > 0:
 		players_in_group = groups[0].players.all()
 		analytics = PlayerAnalytics(players_in_group)

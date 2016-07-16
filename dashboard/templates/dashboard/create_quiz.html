@@ -3,137 +3,169 @@
 
 {% block content %}
 	<div class="padding-md">
-		<div class="row dash-row">
-			<form action="/create_quiz" method="post" class="form-create-quiz"> {% csrf_token %}
-				{% for field in form %}
-					{% if field.label == "Group" %}
-						<br>
-						<hr>
-					{% endif %}
+			<form action="/quizzes/create" method="post" class="form-create-quiz"> 
+				{% csrf_token %}
+				<label for="group_name">Name:</label> 
+				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
+				
+				<br>
 
-					{% if field.label == False %}
+				<label for="type_form">Type:</label> 
+				<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
+					<optgroup label="Type of Quiz">
 						{% for type in types_of_quizzes %}
-							<div class="form-group">
-								<label class="label-checkbox">
-									<input type="checkbox" name="type_of_test" value="{{ type }}"/>
-									<span class="custom-checkbox info bounceIn animation-delay6"></span>
-									{{ type }}
-								</label>
-							</div><!-- /form-group -->
+							<option value="{{ type.id }}" id="group-id">
+								&nbsp;&nbsp;&nbsp;{{ type }}
+							</option>
 						{% endfor %}
-					{% else %}
-						<div class="form-group">
-							{% if field.label == "Player" %}
-								{{ field }}
-							{% elif field.label == "Deadline" %}
-								<!-- {{ field.label_tag }} -->
-								<!-- {{ field }} -->
-							{% else %}
-								{{ field.label_tag }}
-								{{ field }}
-							{% endif %}
-						</div><!-- /form-group -->					
-					{% endif %}
-				{% endfor %}
+					</optgroup>
+				</select>
 
-				<div class="scrollable-table">
-					<table class="players-to-test" id="assign-to-players-table">
-						<tr>
-							<th>
-								<input type="checkbox" value="all" onchange="toggleCheckbox(this)">
-							</th>
-							<th>NAME</th>
-							<th>POS</th>
-						</tr>
-					</table>
+				<hr>
+
+				<label for="group_form">Group:</label> 
+				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups">
+						{% for group in groups %}
+							<option value="{{ group.id }}" id="group-id">
+								&nbsp;&nbsp;&nbsp;{{ group }}
+							</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+
+				<div class="row group-home">
+					<div class="col-lg-8" id="display-group-box">
+						<div class="table-wrapper" id="group-table-wrapper">
+							<table id="assign-quiz-table" class="player-list">
+								<tbody id="group">
+									<tr class="header">
+										<th>
+											<div class="checkbox-div">
+											    <label class="checkbox-label">
+													<input id="select-all-checkbox" type="checkbox" onclick="selectAll()" checked>
+													<span class="custom-checkbox info"></span>
+												</label>
+											</div>
+										</th>
+										<th>PLAYER</th>
+										<th>POSITION</th>
+										<th>YEAR</th>
+									</tr>
+									{% if players_in_group %}
+										{% for player in players_in_group %}
+											<tr id="{{ player.pk }}">
+												<td class="checkbox-cell">
+													<div class="checkbox-div">
+													    <label class="checkbox-label">
+															<input type="checkbox" class="checkbox-input" name="player" value="{{ player.pk }}"  checked>
+															<span class="custom-checkbox info"></span>
+														</label>
+													</div>
+												</td>
+												<td>{{ player.first_name }} {{ player.last_name }}</td>
+												<td>{{ player.position }}</td>
+												<td>{{ player.year }}</td>
+											</tr>
+										{% endfor %}
+									{% endif %}
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 
-				<input id="create-quiz-button" class="bounceIn animation-delay5 login-link create-quiz" type="submit" value="CREATE QUIZ">
+				<br>
+
+				<input id="create-quiz-button" class="btn btn-success bounceIn animation-delay2" type="submit" value="CREATE QUIZ">
 			</form>
-		</div><!--/row-->
 	</div><!--/padding-md-->
 {% endblock %}
 
 {% block javascript %}
 	<script type="text/javascript">
-		var groups_seed = {{ groups|safe }};
-		var all_groups = createPlayerGroupsFromJSONSeed(groups_seed);
+		var changeGroup = function(selected) {
+			var groupID = selected.value;
+			var groupJson = "/groups/" + groupID + "/json";
 
-		function toggleCheckbox(checkbox) {
-			var result = checkbox.checked;
-			
-			if(checkbox.value === "all") {
-				toggleAllInGroup(result);
-			} else {
-				checkbox.checked = result;
-			}
-		}
+			var table_body = document.getElementById("group");
+			var header_row = table_body.querySelector(".header");
+			var select_all_checkbox = document.getElementById("select-all-checkbox");
+			select_all_checkbox.checked = true;
 
-		function toggleAllInGroup(answer) {
-			var boxes = document.getElementsByClassName('player-checkbox');
-			
-			for(var i = 0; i < boxes.length; i++) {
-				var box = boxes[i];
-				box.checked = answer;
-			}
-		}
-
-		function selectCurrentGroup() {
-			var groupID = parseInt(document.getElementById('id_group').value);
-			var groups = all_groups.filter(function(g){return g.id === groupID});
-			
-			if(groups.length > 0) {
-				document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(groups[0]);
-			}
-		}
-
-		function createPlayerTable(group){
-			var innerHTML = "<tr><th><input type=\"checkbox\" value=\"all\" onchange=\"toggleCheckbox(this)\"></th><th>NAME</th><th>POS</th></tr>";
-			var players = group.players;
-
-			for(var i = 0; i < players.length; i++) {
-				var player = players[i];
-				innerHTML += "<tr>";
-				innerHTML += "<td><input class=\"player-checkbox\" type=\"checkbox\" value=\"" + player.id + "\"></td>";
-				innerHTML += "<td>" + player.getFullName() + "</td>";
-				innerHTML += "<td>" + player.position + "</td>";
-				innerHTML += "</tr>";
+			while (header_row.nextSibling != null) {
+				table_body.removeChild(header_row.nextSibling);
 			}
 
-			return innerHTML;
-		}
-
-		//returns array of playerIDs who are selected currently
-		function getSelectedPlayers(){
-			var selectedPlayers = [];
-			var checkboxes = document.getElementsByClassName('player-checkbox');
-			
-			for(var i = 0; i < checkboxes.length; i++) {
-				var box = checkboxes[i];
-				if(box.checked) {
-					selectedPlayers.push(parseInt(box.value));
-				}
-			}
-
-			return selectedPlayers;
-		}
-
-		document.getElementById("create-quiz-button").onclick = function(e){
-			var playerIDForm = document.getElementById('id_player');
-			var selectedPlayers = getSelectedPlayers();
-
-			if(selectedPlayers.length < 0) {
-				return false;
-			}
-
-			playerIDForm.selectedIndex = 3;
-			return true;
+			$.getJSON(groupJson, function(data) {
+				data.forEach(function(groupPlayerObject, jqXHR) {
+					var groupPlayer = createUserFromJSON(groupPlayerObject);
+					createGroupRow(groupPlayer);
+				});
+			});
 		};
 
-		if(all_groups.length > 0) {
-			document.getElementById('assign-to-players-table').innerHTML = createPlayerTable(all_groups[0]);
-		}
-		
-		document.getElementById('id_group').onchange = selectCurrentGroup;
+		var createGroupRow = function(user) {
+			var table_body = document.getElementById("group");
+
+			var	new_row = document.createElement("tr");
+			new_row.setAttribute("id", user.id.toString());
+
+			var new_checkbox_cell = document.createElement("td");
+			new_checkbox_cell.setAttribute("class", "checkbox-cell");
+
+			var new_checkbox_div = document.createElement("div");
+			new_checkbox_div.setAttribute("class", "checkbox-div");
+
+			var new_checkbox_label = document.createElement("label");
+			new_checkbox_label.setAttribute("class", "checkbox-label");
+
+			var new_checkbox = document.createElement("input");
+			new_checkbox.setAttribute("type", "checkbox");
+			new_checkbox.setAttribute("class", "checkbox-input");
+			new_checkbox.setAttribute("name", "player");
+			new_checkbox.setAttribute("value", user.id.toString());
+			new_checkbox.checked = true;
+
+			var new_checkbox_span = document.createElement("span");
+			new_checkbox_span.setAttribute("class", "custom-checkbox info");
+
+			var new_name_cell = document.createElement("td");
+			new_name_cell.textContent = user.firstName + " " + user.lastName;
+
+			var new_position_cell = document.createElement("td");
+			new_position_cell.textContent = user.position;
+
+			var new_year_cell = document.createElement("td");
+			new_year_cell.textContent = user.year;
+
+			new_checkbox_label.appendChild(new_checkbox);
+			new_checkbox_label.appendChild(new_checkbox_span);
+			new_checkbox_div.appendChild(new_checkbox_label);
+			new_checkbox_cell.appendChild(new_checkbox_div);
+			new_row.appendChild(new_checkbox_cell);
+			new_row.appendChild(new_name_cell);
+			new_row.appendChild(new_position_cell);
+			new_row.appendChild(new_year_cell);
+
+			table_body.appendChild(new_row);
+		};
+
+		var selectAll = function() {
+			// Get the create group table, header checkbox, and list of all inputs.
+			var table = document.getElementById("assign-quiz-table");
+			var header_checkbox = document.getElementById("select-all-checkbox");
+			var inputs = table.getElementsByTagName('input');
+			
+			// Get value to set all checkboxes to.
+			var setTo = header_checkbox.checked;
+
+			// Iterate through and set all checkboxes that aren't the header.
+			for (var i = 0; i < inputs.length; i++) {
+				if (inputs[i].type == 'checkbox' && inputs[i] != header_checkbox) {
+					inputs[i].checked = setTo;
+				}
+			}
+		};
 	</script>
 {% endblock %}

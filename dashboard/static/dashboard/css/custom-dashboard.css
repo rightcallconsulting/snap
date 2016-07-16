@@ -4,12 +4,16 @@
 	box-sizing: border-box;
 }
 
-#wrapper{
-  height: 100%;
-  overflow-x: hidden;
+#wrapper {
+	height: 100%;
+	overflow-x: hidden;
 }
 
-#main-container{position:relative;min-height:900px;padding-top:15px;}
+#main-container {
+	position: relative;
+	min-height: 900px;
+	padding-top: 15px;
+}
 
 .full-sidebar-container{
   margin-left: 12%;
