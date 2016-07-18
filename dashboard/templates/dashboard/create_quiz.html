@@ -3,82 +3,82 @@
 
 {% block content %}
 	<div class="padding-md">
-			<form action="/quizzes/create" method="post" class="form-create-quiz"> 
-				{% csrf_token %}
-				<label for="group_name">Name:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
-				
-				<br>
+		<form action="/quizzes/create" method="post" class="form-create-quiz"> 
+			{% csrf_token %}
+			<label for="group_name">Name:</label> 
+			<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
+			
+			<br>
 
-				<label for="type_form">Type:</label> 
-				<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
-					<optgroup label="Type of Quiz">
-						{% for type in types_of_quizzes %}
-							<option value="{{ type.id }}" id="group-id">
-								&nbsp;&nbsp;&nbsp;{{ type }}
-							</option>
-						{% endfor %}
-					</optgroup>
-				</select>
+			<label for="type_form">Type:</label> 
+			<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
+				<optgroup label="Type of Quiz">
+					{% for type in types_of_quizzes %}
+						<option value="{{ type.id }}" id="group-id">
+							&nbsp;&nbsp;&nbsp;{{ type }}
+						</option>
+					{% endfor %}
+				</optgroup>
+			</select>
 
-				<hr>
+			<hr>
 
-				<label for="group_form">Group:</label> 
-				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
-					<optgroup label="Groups">
-						{% for group in groups %}
-							<option value="{{ group.id }}" id="group-id">
-								&nbsp;&nbsp;&nbsp;{{ group }}
-							</option>
-						{% endfor %}
-					</optgroup>
-				</select>
+			<label for="group_form">Group:</label> 
+			<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+				<optgroup label="Groups">
+					{% for group in groups %}
+						<option value="{{ group.id }}" id="group-id">
+							&nbsp;&nbsp;&nbsp;{{ group }}
+						</option>
+					{% endfor %}
+				</optgroup>
+			</select>
 
-				<div class="row group-home">
-					<div class="col-lg-8" id="display-group-box">
-						<div class="table-wrapper" id="group-table-wrapper">
-							<table id="assign-quiz-table" class="player-list">
-								<tbody id="group">
-									<tr class="header">
-										<th>
-											<div class="checkbox-div">
-											    <label class="checkbox-label">
-													<input id="select-all-checkbox" type="checkbox" onclick="selectAll()" checked>
-													<span class="custom-checkbox info"></span>
-												</label>
-											</div>
-										</th>
-										<th>PLAYER</th>
-										<th>POSITION</th>
-										<th>YEAR</th>
-									</tr>
-									{% if players_in_group %}
-										{% for player in players_in_group %}
-											<tr id="{{ player.pk }}">
-												<td class="checkbox-cell">
-													<div class="checkbox-div">
-													    <label class="checkbox-label">
-															<input type="checkbox" class="checkbox-input" name="player" value="{{ player.pk }}"  checked>
-															<span class="custom-checkbox info"></span>
-														</label>
-													</div>
-												</td>
-												<td>{{ player.first_name }} {{ player.last_name }}</td>
-												<td>{{ player.position }}</td>
-												<td>{{ player.year }}</td>
-											</tr>
-										{% endfor %}
-									{% endif %}
-								</tbody>
-							</table>
-						</div>
+			<div class="row group-home">
+				<div class="col-lg-8" id="display-group-box">
+					<div class="table-wrapper" id="group-table-wrapper">
+						<table id="assign-quiz-table" class="player-list">
+							<tbody id="group">
+								<tr class="header">
+									<th>
+										<div class="checkbox-div">
+										    <label class="checkbox-label">
+												<input id="select-all-checkbox" type="checkbox" onclick="selectAll()" checked>
+												<span class="custom-checkbox info"></span>
+											</label>
+										</div>
+									</th>
+									<th>PLAYER</th>
+									<th>POSITION</th>
+									<th>YEAR</th>
+								</tr>
+								{% if players_in_group %}
+									{% for player in players_in_group %}
+										<tr id="{{ player.pk }}">
+											<td class="checkbox-cell">
+												<div class="checkbox-div">
+												    <label class="checkbox-label">
+														<input type="checkbox" class="checkbox-input" name="player" value="{{ player.pk }}"  checked>
+														<span class="custom-checkbox info"></span>
+													</label>
+												</div>
+											</td>
+											<td>{{ player.first_name }} {{ player.last_name }}</td>
+											<td>{{ player.position }}</td>
+											<td>{{ player.year }}</td>
+										</tr>
+									{% endfor %}
+								{% endif %}
+							</tbody>
+						</table>
 					</div>
 				</div>
+			</div>
 
-				<br>
+			<br>
 
-				<input id="create-quiz-button" class="btn btn-success bounceIn animation-delay2" type="submit" value="CREATE QUIZ">
-			</form>
+			<input id="create-quiz-button" class="btn btn-success bounceIn animation-delay2" type="submit" value="CREATE QUIZ">
+		</form>
 	</div><!--/padding-md-->
 {% endblock %}
 
