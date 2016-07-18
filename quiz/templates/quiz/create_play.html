@@ -28,6 +28,7 @@
 
 	$('.defensive-formation-button').click(function() {
 		var clickedID = parseInt(this.id);
+		
 		var defenseFormation = defensive_formations.filter(function(formationObject) {
 			return formationObject.id === clickedID;
 		})[0];
