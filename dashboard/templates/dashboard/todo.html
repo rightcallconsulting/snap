@@ -56,15 +56,13 @@
 							{% if request.user.myuser.is_a_player %}
 								<td>{{ test.coach_who_created.get_full_name }}</td>
 								<td>
-									<a href="/quiz/{{test.type_of_test}}/{{test.id}}">
+									<a href="/quiz/{{ test.type_of_test }}/{{ test.id }}">
 										<span class="button">Start Quiz</span>
 									</a>
 								</td>
 							{% else %}
 								<td>
-									<a href="{% url 'edit_test' test.id %}">
-										<span class="button">Edit Quiz</span>
-									</a>
+									<!-- include link for editing a quiz but we need another header as well (maybe not)-->
 								</td>
 							{% endif %}
 						</tr>

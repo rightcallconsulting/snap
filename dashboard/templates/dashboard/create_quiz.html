@@ -13,10 +13,10 @@
 
 			<div class="form-group">			
 				<label for="type_form">Type:</label> 
-				<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
+				<select id="quiz-type-select" name="type_of_quiz" class="unit-form form-sm" onchange="changeQuizType(this)">
 					<optgroup label="Type of Quiz">
 						{% for type in types_of_quizzes %}
-							<option value="{{ type.id }}" id="group-id">
+							<option value="{{ type }}" id="group-id">
 								&nbsp;&nbsp;&nbsp;{{ type }}
 							</option>
 						{% endfor %}
@@ -28,7 +28,7 @@
 
 			<div class="form-group">
 				<label for="group_form">Group:</label> 
-				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+				<select name="group" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
 					<optgroup label="Groups">
 						{% for group in groups %}
 							<option value="{{ group.id }}" id="group-id">
@@ -89,6 +89,14 @@
 
 {% block javascript %}
 	<script type="text/javascript">
+		var changeQuizType = function(selected) {
+			// Get the form and change the value of select
+			var form = document.getElementById("hidden-form");
+			var select_type_of_quiz = document.getElementById("quiz-type-select");
+			select_type_of_quiz.removeAttribute("value");
+			select_type_of_quiz.setAttribute("value", selected.value.toString());
+		};
+
 		var changeGroup = function(selected) {
 			var groupID = selected.value;
 			var groupJson = "/groups/" + groupID + "/json";

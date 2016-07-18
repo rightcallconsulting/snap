@@ -204,7 +204,6 @@ def todo(request):
 		coach = request.user.coach
 		tests_assigned = Test.objects.filter(coach_who_created=request.user)
 		groups = PlayerGroup.objects.all()
-		#embed()
 		return render(request, 'dashboard/todo.html', {
 			'uncompleted_tests': tests_assigned,
 			'current_time': timezone.now(),
@@ -221,10 +220,21 @@ def quizzes(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_quiz(request):
 	if request.method == 'POST':
-		player_id = Player.objects.filter(id=request.POST['player'])
-		player = Player.objects.filter(id=player_id)[0]
+		# Get arguments for the quiz from the POST arguments and create
+		# a new quiz using these values
+		name = request.POST['name']
+		team = request.user.coach.team
 		type_of_quiz = request.POST['type_of_quiz']
-		new_quiz = Test(name= request.POST['name'], player=player, type_of_test=request.POST['type_of_quiz'], deadline=request.POST['deadline_0'], coach_who_created=request.user)
+		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
+		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
+		new_quiz.save()
+
+		# Loop through player ids and assign them to the quiz.
+		for player_id in request.POST.getlist('player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			new_quiz.players.add(player)
+			new_quiz.save()
+
 		new_quiz.save()
 		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
 	else:
@@ -248,7 +258,9 @@ def create_quiz(request):
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def manage_quiz(request, test_id):
+# I'm going to have to blow this view up and recreate it but I'm not sure what it
+# should look like. - Dylan
+def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
 		quiz = Test.objects.filter(id=quiz_id)[0]
 		add_or_remove = request.POST['add_or_remove']
@@ -272,8 +284,9 @@ def manage_quiz(request, test_id):
 	else:
 		quiz = Test.objects.filter(id=quiz_id)[0]
 		unit = quiz.unit()
-		player = quiz.player
-		team = quiz.player.team
+		players = quiz.players
+		player = None # Gonna need to fix this
+		team = quiz.team
 		formations = team.formation_set.all()
 		offensive_formations = formations.filter(unit="offense")
 		defensive_formations = formations.filter(unit="defense")
