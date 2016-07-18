@@ -73,7 +73,7 @@ var drawOpening = function() {
 	currentFormation.drawRunAssignments(createPlayField);
 	currentFormation.drawAllPlayers(createPlayField);
 
-	if(getCurrentDefensivePlay()) {
+	if(getCurrentDefensivePlay() != null) {
 		getCurrentDefensivePlay().drawAllPlayers(createPlayField);
 	}
 };
@@ -215,14 +215,17 @@ keyPressed = function() {
 mouseClicked = function() {
 	var field = createPlayField;
 	eligibleReceivers = getCurrentFormation().eligibleReceivers;
+	selectedWR = getCurrentFormation().findSelectedWR();
 	var olClicked = getCurrentFormation().mouseInOL(field);
-	var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
 	var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
 	var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
 	var formationClicked = isFormationClicked(formationButtons, field);
 	var selectedOL = getCurrentFormation().findSelectedOL();
-	var selectedDL = getCurrentDefensivePlay().findSelectedDL();
-	selectedWR = getCurrentFormation().findSelectedWR();
+	
+	if (getCurrentDefensivePlay() != null) {
+		var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
+		var selectedDL = getCurrentDefensivePlay().findSelectedDL();
+	}
 
 	if (formationClicked) {
 		currentFormation = formations.filter(function(formation) {
@@ -331,13 +334,16 @@ var pressSaveButton = function() {
 
 var pressClearButton = function() {
 	getCurrentFormation().clearProgression();
-	getCurrentDefensivePlay().clearSelections();
 	getCurrentFormation().clearRouteDrawings();
 	getCurrentFormation().clearBlockingAssignments();
 	getCurrentFormation().clearRunAssignments();
 	playBeingCreated.runPlay = null;
 	playBeingCreated.playName = "";
 	getCurrentFormation().feedbackMessage = "";
+
+	if (getCurrentDefensivePlay() != null) {
+		getCurrentDefensivePlay().clearSelections();
+	}
 };
 
 var getCurrentFormation = function(){
