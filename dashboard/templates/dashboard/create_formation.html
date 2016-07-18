@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="create-formation padding-md">
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-4">
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script language="javascript" type="text/javascript" src="{% static 'quiz/createFormation.js' %}"></script>
+	<script type="text/javascript">
+		$('.formation-button').click(function() {
+			var starterFormation = formations.filter(function(formationObject){
+				return formationObject.name === this.value;
+			}.bind(this))[0]
+
+			starterFormation.optionsToCreate = formationExample.optionsToCreate;
+			formationExample = starterFormation;
+			formationExample.playName = "";
+
+			$('#play-image-header').text("New Formation: " + formationExample.playName);
+		})
+
+		$('#save-button').click(function(){
+			pressSaveButton();
+		});
+
+		$('#clear-button').click(function(){
+			pressClearButton();
+		});
+
+		$('#zoom-in-button').click(function() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$('#zoom-out-button').click(function(){
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		});
+	</script>
+{% endblock %}
