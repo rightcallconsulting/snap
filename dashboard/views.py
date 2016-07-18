@@ -290,6 +290,7 @@ def manage_quiz(request, quiz_id):
 		formations = team.formation_set.all()
 		offensive_formations = formations.filter(unit="offense")
 		defensive_formations = formations.filter(unit="defense")
+		unique_defensive_formations = []
 		play_id_array = []
 		plays_in_quiz = quiz.play_set.all()
 		for play in quiz.play_set.all():
