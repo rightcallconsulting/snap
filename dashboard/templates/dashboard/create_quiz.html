@@ -2,37 +2,42 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="padding-md">
+	<div class="create-quiz padding-md">
 		<form action="/quizzes/create" method="post" class="form-create-quiz"> 
 			{% csrf_token %}
-			<label for="group_name">Name:</label> 
-			<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
 			
-			<br>
+			<div class="form-group">
+				<label for="group_name">Name:</label> 
+				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
+			</div>
 
-			<label for="type_form">Type:</label> 
-			<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
-				<optgroup label="Type of Quiz">
-					{% for type in types_of_quizzes %}
-						<option value="{{ type.id }}" id="group-id">
-							&nbsp;&nbsp;&nbsp;{{ type }}
-						</option>
-					{% endfor %}
-				</optgroup>
-			</select>
-
+			<div class="form-group">			
+				<label for="type_form">Type:</label> 
+				<select name="units" class="unit-form form-sm" id="type-form" onchange="changeGroup(this)">
+					<optgroup label="Type of Quiz">
+						{% for type in types_of_quizzes %}
+							<option value="{{ type.id }}" id="group-id">
+								&nbsp;&nbsp;&nbsp;{{ type }}
+							</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+			</div>
+			
 			<hr>
 
-			<label for="group_form">Group:</label> 
-			<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
-				<optgroup label="Groups">
-					{% for group in groups %}
-						<option value="{{ group.id }}" id="group-id">
-							&nbsp;&nbsp;&nbsp;{{ group }}
-						</option>
-					{% endfor %}
-				</optgroup>
-			</select>
+			<div class="form-group">
+				<label for="group_form">Group:</label> 
+				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups">
+						{% for group in groups %}
+							<option value="{{ group.id }}" id="group-id">
+								&nbsp;&nbsp;&nbsp;{{ group }}
+							</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+			</div>			
 
 			<div class="row group-home">
 				<div class="col-lg-8" id="display-group-box">
@@ -75,11 +80,11 @@
 				</div>
 			</div>
 
-			<br>
-
-			<input id="create-quiz-button" class="btn btn-success bounceIn animation-delay2" type="submit" value="CREATE QUIZ">
+			<div class="form-group">
+				<input id="create-quiz-button" class="btn btn-success btn-lg bounceIn animation-delay2" type="submit" value="CREATE QUIZ">
+			</div>		
 		</form>
-	</div><!--/padding-md-->
+	</div><!--/create-quiz-->
 {% endblock %}
 
 {% block javascript %}
@@ -93,6 +98,19 @@
 			var select_all_checkbox = document.getElementById("select-all-checkbox");
 			select_all_checkbox.checked = true;
 
+			// Remove the Create Quiz button so the user doesn't
+			// see it flash on the screen after the table elements are deleted.
+			// Clone it so it can be added back after the table is recreated.
+			var old_create_quiz_button = document.getElementById("create-quiz-button");
+			var new_create_quiz_button = old_create_quiz_button.cloneNode(true);
+			var create_quiz_button_div = old_create_quiz_button.parentNode;
+			create_quiz_button_div.removeChild(old_create_quiz_button);
+
+			// Get rid of the bounceIn and animation-delay2 attributes of the
+			// button so it isn't animated every time you chagne the group.
+			new_create_quiz_button.removeAttribute("class");
+			new_create_quiz_button.setAttribute("class", "btn btn-success btn-lg");
+
 			while (header_row.nextSibling != null) {
 				table_body.removeChild(header_row.nextSibling);
 			}
@@ -102,7 +120,11 @@
 					var groupPlayer = createUserFromJSON(groupPlayerObject);
 					createGroupRow(groupPlayer);
 				});
+			}).done(function() {
+				create_quiz_button_div.appendChild(new_create_quiz_button);
 			});
+
+			
 		};
 
 		var createGroupRow = function(user) {

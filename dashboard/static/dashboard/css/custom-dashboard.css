@@ -141,28 +141,26 @@ img.menu-icon{
 	margin-bottom: 1%;
 }
 
-.create-groups label, .all-groups label, .manage-groups label {
+.create-groups select, 
+.all-groups select, 
+.manage-groups select {
+	width: 60%;
 	margin-left: 2%;
-}
-
-.create-groups select, .all-groups select, .manage-groups select {
-	margin-left: 2%;
-	margin-bottom: 1%;
-	width: 65%;
+	margin-bottom: 2%;
 }
 
 .create-groups input[type="text"], 
 .all-groups input[type="text"], 
-.manage-groups input[type="text"] {
-	margin-left: 2%;
-	margin-bottom: 2%;
+.manage-groups input[type="text"],
+.create-quiz input[type="text"] {
 	width: 60%;
 	line-height: 2em;
 }
 
 .create-groups input[type="submit"], 
 .all-groups input[type="submit"], 
-.manage-groups input[type="submit"]{
+.manage-groups input[type="submit"],
+.create-quiz input[type="submit"] {
 	margin-left: 3%;
 	margin-bottom: 2%;
 	width: auto;
@@ -170,15 +168,23 @@ img.menu-icon{
 
 .create-groups input[type="button"], 
 .all-groups input[type="button"], 
-.manage-groups input[type="button"]{
+.manage-groups input[type="button"],
+.create-quiz input[type="button"] {
 	margin-left: 3%;
 	margin-bottom: 2%;
 	width: auto;
 }
 
-.create-groups form, .create-groups table, .all-groups form, .all-groups table, .manage-groups form, .manage-groups table  {
+.create-groups form, 
+.create-groups table, 
+.all-groups form, 
+.all-groups table, 
+.manage-groups form, 
+.manage-groups table,
+.create-quiz form, 
+.create-quiz table   {
 	margin-left: 2%;
-	margin-bottom: 1%;
+	margin-bottom: 2%;
 	width: 90%;
 }
 
@@ -494,31 +500,31 @@ input.create-quiz{
 }
 
 .form-group, .form-group p{
-  margin-left: 5%;
-  font-size: 18px;
-  width: 70%;
-  margin-bottom: 30px;
+	margin-left: 2%;
+	font-size: 18px;
+	width: 70%;
+	margin-bottom: 15px;
 }
 
 .form-group p input{
-  width: 30%;
-  text-align: left;
+	width: 30%;
+	text-align: left;
 }
 
 .form-group .small-text{
-  font-size: 12px;
+	font-size: 12px;
 }
 
 .form-create-test input.create-quiz{
-  margin-left: 20%;
-  width: 20%;
-  font-size: 20px;
+	margin-left: 20%;
+	width: 20%;
+	font-size: 20px;
 }
 
 .form-create-test label, .datetime label{
-  font-size: 18px;
-  width: 30%;
-  text-align: center;
+	font-size: 18px;
+	width: 30%;
+	text-align: center;
 }
 
 .form-create-test input, .form-create-test select{
@@ -581,7 +587,7 @@ input.create-quiz{
 }
 
 .unit-form{
-  width: 70%;
+  width: 60%;
   font-size: 17px;
   margin-top: 20px;
   background-color: #FFFFFF;
@@ -1201,4 +1207,9 @@ select#id_player{
 
 .fa-plus-circle.green {
   	color: green;
+}
+
+.create-quiz label {
+	width: 40px;
+	text-align: right;
 }
