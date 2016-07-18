@@ -3,123 +3,158 @@
 {% load staticfiles %}
 
 {% block quiz_type %}
-  <script language="javascript" type="text/javascript" src="{% static 'quiz/createPlay.js' %}"></script>
-  <script type="text/javascript">
-    var json_seed = {{ json_seed|safe }};
-    console.log(JSON.stringify(json_seed, null, 2));
+	<script language="javascript" type="text/javascript" src="{% static 'quiz/createPlay.js' %}"></script>
 
-    $('.formation-button').click(function(){
-      var clickedID = parseInt(this.id);
-      currentFormation = formations.filter(function(formationObject){
-        return formationObject.id === clickedID;
-      })[0]
-      if(!playBeingCreated.defensiveFormationID && defensive_formations.length > 0){
-        playBeingCreated.defensiveFormationID = defensive_formations[0].id;
-        playBeingCreated.defensivePlayObject = defensive_formations[0].createDefensivePlay();
-      }
-      playBeingCreated.playName = "";
-      $('#play-image-header').text(currentFormation.playName);
-    })
+	<script type="text/javascript">
+	var json_seed = {{ json_seed|safe }};
+	console.log(JSON.stringify(json_seed, null, 2));
 
-    $('.defensive-formation-button').click(function(){
-      var clickedID = parseInt(this.id);
-      var defenseFormation = defensive_formations.filter(function(formationObject){
-        return formationObject.id === clickedID;
-      })[0];
-      defensePlay = defenseFormation.createDefensivePlay();
-      playBeingCreated.defensivePlayObject = defensePlay;
-      playBeingCreated.defensiveFormationID = defenseFormation.id;
-    })
+	$('.formation-button').click(function() {
+		var clickedID = parseInt(this.id);
 
-    $('#save-button').click(function(){
-      pressSaveButton();
-    })
+		currentFormation = formations.filter(function(formationObject) {
+			return formationObject.id === clickedID;
+		})[0]
 
-    $('#clear-button').click(function(){
-      pressClearButton();
-    })
-    $('#zoom-in-button').click(function(){
-      var heightInYards = createPlayField.heightInYards;
-      var widthInYards = createPlayField.heightInYards * createPlayField.width / createPlayField.height;
-      if(heightInYards > 25){
-        createPlayField.heightInYards -= 5;
-      }else{
-        createPlayField.heightInYards = 20;
-      }
-    })
+		if(!playBeingCreated.defensiveFormationID && defensive_formations.length > 0) {
+			playBeingCreated.defensiveFormationID = defensive_formations[0].id;
+			playBeingCreated.defensivePlayObject = defensive_formations[0].createDefensivePlay();
+		}
 
-    $('#zoom-out-button').click(function(){
-      var heightInYards = createPlayField.heightInYards;
-      var widthInYards = createPlayField.heightInYards * createPlayField.width / createPlayField.height;
-      if(heightInYards > 50){
-        createPlayField.heightInYards = 55;
-      }else{
-        createPlayField.heightInYards += 5;
-      }
-    })
-  </script>
+		playBeingCreated.playName = "";
 
+		$('#play-image-header').text(currentFormation.playName);
+	});
+
+	$('.defensive-formation-button').click(function() {
+		var clickedID = parseInt(this.id);
+		var defenseFormation = defensive_formations.filter(function(formationObject) {
+			return formationObject.id === clickedID;
+		})[0];
+
+		defensePlay = defenseFormation.createDefensivePlay();
+		playBeingCreated.defensivePlayObject = defensePlay;
+		playBeingCreated.defensiveFormationID = defenseFormation.id;
+	});
+
+	$('#save-button').click(function() {
+		pressSaveButton();
+	});
+
+	$('#clear-button').click(function() {
+		pressClearButton();
+	});
+
+	$('#zoom-in-button').click(function() {
+		var heightInYards = createPlayField.heightInYards;
+		var widthInYards = createPlayField.heightInYards * createPlayField.width / createPlayField.height;
+		
+		if(heightInYards > 25) {
+			createPlayField.heightInYards -= 5;
+		} else {
+			createPlayField.heightInYards = 20;
+		}
+	});
+ 
+	$('#zoom-out-button').click(function() {
+		var heightInYards = createPlayField.heightInYards;
+		var widthInYards = createPlayField.heightInYards * createPlayField.width / createPlayField.height;
+		
+		if(heightInYards > 50) {
+			createPlayField.heightInYards = 55;
+		} else {
+			createPlayField.heightInYards += 5;
+		}
+	});
+	</script>
 {% endblock %}
 
 {% block buttons %}
-<div class="holds-play-buttons">
-  <table class="button-table"><tr>
-  <td><button id="save-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-  <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-  <td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
-  <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
-  <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
-  </tr></table>
-</div>
+	<div class="holds-play-buttons">
+		<table class="button-table">
+			<tr>
+				<td>
+					<button id="save-button" name="button">{% include "quiz/check_button.html" %}</button>
+				</td>
+				<td>
+					<button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button>
+				</td>
+				<td>
+					<button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button>
+				</td>
+				<td>
+					<button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button>
+				</td>
+				<td>
+					<button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button>
+				</td>
+			</tr>
+		</table>
+	</div>
 {% endblock %}
 
 {% block sidebar %}
-<div class = "stacked-col" id="create-play-col">
-  <div class="create-play secondary-content-area top" id="choose-offensive-formation-box">
-    <div class="dash-header text-center">
-      <span><h4>Offensive Formations</h4></span>
-    </div>
-    <div class="table-wrapper">
-    <table class="formation-list two-column-table">
-      {% for formation in offensive_formations %}
-      {% if forloop.counter0|divisibleby:2 %}
-        <tr>
-      {% endif %}
-        <td><input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
-        {% if forloop.counter|divisibleby:2 %}
-        </tr>
-        {% endif %}
-      {% endfor %}
-      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
-        <td></td></tr>
-      {% endif %}
-    </table>
-  </div>
-      <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
-  </div>
-  <div class="secondary-content-area" id="choose-offensive-play-box">
-    <div class="dash-header text-center">
-      <span><h4>Defensive Looks</h4></span>
-    </div>
-    <div class="table-wrapper">
-    <table class="formation-list two-column-table">
-      {% for formation in defensive_formations %}
-      {% if forloop.counter0|divisibleby:2 %}
-        <tr>
-      {% endif %}
-        <td><input class="bounceIn animation-delay5 login-link formation defensive-formation-button" id="{{formation.id}}" type="submit" value="{{formation}}"></td>
-        {% if forloop.counter|divisibleby:2 %}
-        </tr>
-        {% endif %}
-      {% endfor %}
-      {% if offensive_formations|length|add:"1"|divisibleby:2 %}
-        <td></td></tr>
-      {% endif %}
-    </table>
-  </div>
-      <!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
-  </div>
-</div>
+	<div class = "stacked-col" id="create-play-col">
+		<div class="create-play secondary-content-area top" id="choose-offensive-formation-box">
+			<div class="dash-header text-center">
+				<span>
+					<h4>Offensive Formations</h4>
+				</span>
+			</div>
+
+			<div class="table-wrapper">
+				<table class="formation-list two-column-table">
+					{% for formation in offensive_formations %}
+						{% if forloop.counter0|divisibleby:2 %}
+							<tr>
+						{% endif %}
+								<td>
+									<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+								</td>
+						{% if forloop.counter|divisibleby:2 %}
+							</tr>
+						{% endif %}
+					{% endfor %}
+
+					{% if offensive_formations|length|add:"1"|divisibleby:2 %}
+								<td></td>
+							</tr>
+					{% endif %}
+				</table>
+			</div>
+			<!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
+		</div>
+
+		<div class="secondary-content-area" id="choose-offensive-play-box">
+			<div class="dash-header text-center">
+				<span>
+					<h4>Defensive Looks</h4>
+				</span>
+			</div>
+
+			<div class="table-wrapper">
+				<table class="formation-list two-column-table">
+					{% for formation in defensive_formations %}
+						{% if forloop.counter0|divisibleby:2 %}
+							<tr>
+						{% endif %}
+								<td>
+									<input class="bounceIn animation-delay5 login-link formation defensive-formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
+								</td>
+						{% if forloop.counter|divisibleby:2 %}
+							</tr>
+						{% endif %}
+					{% endfor %}
+					
+					{% if offensive_formations|length|add:"1"|divisibleby:2 %}
+								<td></td>
+							</tr>
+					{% endif %}
+				</table>
+			</div>
+			<!--<a href="{% url 'create_formation' %}"><button type="button" name="button">Create New Formation</button></a>-->
+		</div>
+	</div>
 {% endblock %}
 
 {% block scoreboard %}
