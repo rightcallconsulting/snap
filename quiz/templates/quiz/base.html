@@ -320,11 +320,15 @@
 				</div><!--/quiz-->
 			</div><!--/main-container-->
 		</div><!--/wrapper-->
-		
+
 		<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
 		<div id="team-id" data-team-id="{{team.id}}" style="display: none;"></div>
 		<div id="player-id" data-player-id="{{player.id}}" style="display: none;"></div>
 	</body>
+	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
+	<script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 
 	{% comment %}{% if has_plays %}{% endcomment %}
 	{% block quiz_type %}
@@ -360,9 +364,4 @@
 	<script language="javascript" type="text/javascript" src="{% static 'quiz/models/sampleFormations.js' %}"></script>
 	<script language="javascript" type="text/javascript" src="{% static 'quiz/models/offenseCheck.js' %}"></script>
 	<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-
-	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.20/p5.js"></script>
-	<script language="javascript" type="text/javascript" src="{% static 'quiz/js.cookie.js' %}"></script>
-	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
 </html>
