@@ -129,7 +129,7 @@ STATIC_URL = '/static/'
 
 # Password settings
 # https://github.com/dstufft/django-passwords
-PASSWORD_MIN_LENGTH         = 3     # Defaults to 6
+PASSWORD_MIN_LENGTH         = 2     # Defaults to 6
 PASSWORD_MAX_LENGTH 		= 120   # Defaults to none
 PASSWORD_DICTIONARY         = ""    # Defaults to None, Should have a directory path to a dictionary
 PASSWORD_MATCH_THRESHOLD    = 1.0   # Defaults to 0.9, should be 0.0 - 1.0 where 1.0 means exactly the same.
