@@ -28,7 +28,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li>
-									<a class="clearfix" href="profile">
+									<a class="clearfix" href="edit_profile">
 										{% if request.user.myuser.avatar_image %}
 											<img class="dropdown-picture" src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">
 										{% else %}

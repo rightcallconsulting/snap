@@ -38,7 +38,6 @@ class Team(models.Model):
 				positions.append(position)
 		return positions
 
-
 class Player(models.Model):
 	YEAR_CHOICES = (
 		('FR', 'Freshman'),
@@ -161,7 +160,6 @@ class Formation(models.Model):
 
 		return json_dict
 
-
 class Position(models.Model):
 	startX = models.FloatField()
 	startY = models.FloatField()
@@ -207,7 +205,6 @@ class Position(models.Model):
 	def dict_for_json(self):
 		"""Dict representation of the instance (used in JSON APIs)."""
 		return model_to_dict(self)
-
 
 class Test(models.Model):
 	types_of_tests = ["QBProgression", 
