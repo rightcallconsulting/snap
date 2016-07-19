@@ -14,12 +14,12 @@
 				</span>
 			</div>
 
-			<div class="table-wrapper">
-				<table class="formation-table">
+			<div class="table-wrapper formation-table">
+				<table>
 					{% for formation in formations %}
 						<tr>
 							<td>
-								<h5>{{ formation.name }}</h5>
+								<button class="btn btn-success">{{ formation.name }}</button>
 							</td>
 						</tr>
 					{% endfor %}
