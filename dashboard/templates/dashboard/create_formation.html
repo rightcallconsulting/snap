@@ -70,6 +70,29 @@
 
 {% block javascript %}
 	<script type="text/javascript">
+		//*******************************************************************//
+		// Event Listener Functions                                          //
+		//*******************************************************************//
+		var changeSelected = function(selected) {
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary");
+			}
+
+			if (old_selected != new_selected) {
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success");
+			}
+		};
+
+		//*******************************************************************//
+		// p5.js Drawing Functions                                           //
+		//*******************************************************************//
 		var setup = function() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
@@ -92,8 +115,8 @@
 			
 			field.height = height;
 			field.width = width;
-			field.heightInYards = 30;
-			field.ballYardLine = 75;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
 			background(58, 135, 70);
 
 			randomSeed(millis());
@@ -115,21 +138,22 @@
 			}
 		};
 
-		var changeSelected = function(selected) {
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
-			
-			if (old_selected != null) {
-				old_selected.removeAttribute("id");
-				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary");
-			}
+		draw = function() {
+			drawOpening();
+		};
 
-			if (old_selected != new_selected) {
-				new_selected.removeAttribute("class");
-				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success");
-			}
+		// intro scene
+		var drawOpening = function() {
+			field.drawBackground(formationExample, height, width);
+			trash.draw(field);
+			formationExample.drawOptionsToCreate();
+			formationExample.drawOLQB();
+			formationExample.drawAllPlayers();
+			defensePlay.drawAllPlayers();
+			fill(0, 0, 0);
+			textSize(20);
+			text(formationExample.feedbackMessage, 330, 20);
+			fill(176,176,176)
 		};
 
 		// I have worked on all the code above this line - Dylan
@@ -405,20 +429,6 @@
 
 			defensePlay.draw(field);
 
-			// intro scene
-			var drawOpening = function() {
-				field.drawBackground(formationExample, height, width);
-				trash.draw(field);
-				formationExample.drawOptionsToCreate();
-				formationExample.drawOLQB();
-				formationExample.drawAllPlayers();
-				defensePlay.drawAllPlayers();
-				fill(0, 0, 0);
-				textSize(20);
-				text(formationExample.feedbackMessage, 330, 20);
-				fill(176,176,176)
-			};
-
 			var isInsideTrash = function(player) {
 				return player.x > trash.x &&
 					player.x < trash.x + trash.width &&
@@ -556,10 +566,6 @@
 					formationExample.establishingNewPlayer.change = false;
 					formationExample.establishingNewPlayer = null;
 				}
-			};
-
-			draw = function() {
-				drawOpening();
 			};
 		};
 
