@@ -8,18 +8,19 @@
 			</div>
 		</div>
 		<div id="choose-existing-formation" class="col-md-4">
-			<div class="dash-header text-center">
-				<span>
-					<h4>Existing Formations</h4>
-				</span>
-			</div>
-
 			<div class="table-wrapper formation-table">
 				<table>
+					<tr class ="header-row">
+						<th>
+							<h4>Existing Formations</h4>
+						</th>
+					</tr>
 					{% for formation in formations %}
 						<tr>
 							<td>
-								<button class="btn btn-success">{{ formation.name }}</button>
+								<button class="btn btn-primary" onclick="changeSelected(this)">
+									{{ formation.name }}
+								</button>
 							</td>
 						</tr>
 					{% endfor %}
@@ -31,7 +32,7 @@
 
 {% block javascript %}
 	<script type="text/javascript">
-		function setup() {
+		var setup = function() {
 			var box = document.getElementById("display-box");
 			var sidebar = document.getElementById("choose-existing-formation");
 			var height = sidebar.offsetHeight - 90;
@@ -58,6 +59,25 @@
 				resizeBottomButtons();
 			}
 		};
+
+		var changeSelected = function(selected) {
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary");
+			}
+
+			if (old_selected != new_selected) {
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success");
+			}
+		};
+
+		// I have worked on all the code above this line - Dylan
 
 		$('.formation-button').click(function() {
 			var starterFormation = formations.filter(function(formationObject){

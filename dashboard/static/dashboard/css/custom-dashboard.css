@@ -1226,6 +1226,12 @@ div.formation-table table {
 	border-width: 2px;
 }
 
+div.formation-table th {
+	background-color: #33691e;
+	color: #ffffff;
+	text-align: center;
+}
+
 div.formation-table td {
 	border-color: #777;
 	/*border-style: none none solid none;*/
