@@ -4,7 +4,7 @@
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="header">
+			<div id="header-box" class="header display-header">
 				Create Formation
 			</div>
 
@@ -71,12 +71,25 @@
 {% block javascript %}
 	<script type="text/javascript">
 		var setup = function() {
-			var box = document.getElementById("display-box");
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
 			var sidebar = document.getElementById("choose-existing-formation");
-			var height = sidebar.offsetHeight - 90;
-			var width = box.offsetWidth;
-			var myCanvas = createCanvas(width, height);
+			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			var width = display_box.offsetWidth;
 
+			var quiz_box_div = document.getElementById("quiz-box");
+			//var new_canvas = document.createElement("canvas");
+			//new_canvas.id = "create-formation";
+			//new_canvas.height = height;
+			//new_canvas.width = width;
+
+			if (height < 500) {
+				height = 500;
+			}
+
+			var myCanvas = createCanvas(width, height);
+			
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 30;
@@ -84,13 +97,17 @@
 			background(58, 135, 70);
 
 			randomSeed(millis());
+			//quiz_box_div.appendChild("new_canvas");
 			myCanvas.parent("quiz-box");
 
 			window.onresize=function() {
-				var box = document.getElementById("display-box");
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
 				var sidebar = document.getElementById("choose-existing-formation");
-				var height = sidebar.offsetHeight - 90;
-				var width = box.offsetWidth;
+				var height = sidebar.offsetHeight - display_box_header.offsetHeight - display_box_footer.offsetHeight;
+				var width = display_box.offsetWidth;
+
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
