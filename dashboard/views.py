@@ -221,7 +221,7 @@ def create_formation(request):
 		coach = request.user.coach
 		team = coach.team
 		formations = team.formation_set.all()
-		return render(request, 'quiz/create_formation.html', {
+		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
 			'formations': formations,
 			'page_header': 'CREATE FORMATION',
