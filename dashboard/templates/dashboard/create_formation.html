@@ -3,26 +3,64 @@
 
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
-		<div id="display-box" class="col-md-8">
+		<div id="display-box" class="col-md-8 bordered-div">
+			<div id="header-box" class="header">
+				Create Formation
+			</div>
+
 			<div id="quiz-box">
 			</div>
+
+			<div class="display-buttons">
+				<table class="button-table">
+					<tr>
+						<td>
+							<button id="check-button" name="button">
+								{% include "quiz/check_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-in-button" name="button">
+								{% include "quiz/zoom_in_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button">
+								{% include "quiz/zoom_out_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="clear-button" name="button">
+								{% include "quiz/clear_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="full-screen-button" name="button">
+								{% include "quiz/full_screen_button.html" %}
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
-		<div id="choose-existing-formation" class="col-md-4">
+		
+		<div id="choose-existing-formation" class="col-md-3 bordered-div">
+			<div id="header-box" class="header">
+				Existing Formations
+			</div>
+
 			<div class="table-wrapper formation-table">
 				<table>
-					<tr class ="header-row">
-						<th>
-							<h4>Existing Formations</h4>
-						</th>
-					</tr>
 					{% for formation in formations %}
-						<tr>
-							<td>
-								<button class="btn btn-primary" onclick="changeSelected(this)">
-									{{ formation.name }}
-								</button>
-							</td>
-						</tr>
+						<tbody>
+							<tr>
+								<td>
+									<button class="btn btn-primary" onclick="changeSelected(this)">
+										{{ formation.name }}
+									</button>
+								</td>
+							</tr>
+						</tbody>
 					{% endfor %}
 				</table>
 			</div>
@@ -46,11 +84,11 @@
 			background(58, 135, 70);
 
 			randomSeed(millis());
-			myCanvas.parent('quiz-box');
+			myCanvas.parent("quiz-box");
 
 			window.onresize=function() {
-				var box = document.getElementById('display-box');
-				var sidebar = document.getElementById('choose-offensive-formation-box');
+				var box = document.getElementById("display-box");
+				var sidebar = document.getElementById("choose-existing-formation");
 				var height = sidebar.offsetHeight - 90;
 				var width = box.offsetWidth;
 				resizeCanvas(width, height);
