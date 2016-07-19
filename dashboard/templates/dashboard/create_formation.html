@@ -76,12 +76,6 @@
 	<!--<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>-->
 
 	<script type="text/javascript">
-		var formations = [];
-		var formationExample;
-		var makeJSONCall = true;
-		var trash;
-		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
-
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
@@ -105,6 +99,12 @@
 		//*******************************************************************//
 		// p5.js Drawing Functions                                           //
 		//*******************************************************************//
+		var formations = [];
+		var formationExample;
+		var makeJSONCall = true;
+		var trash;
+		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
+
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
@@ -138,8 +138,8 @@
 
 			// Create Position groups
 			formationExample = new Formation({});
-			formationExample.createOLineAndQB(field.ballYardLine);
-			formationExample.changeablePlayers.push(formationExample.qb[0]);
+			//formationExample.createOLineAndQB(field.ballYardLine);
+			//formationExample.changeablePlayers.push(formationExample.qb[0]);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -201,7 +201,10 @@
 			formationExample.optionsToCreate.push(rb);
 			formationExample.optionsToCreate.push(fb);
 
-			window.onresize=function() {
+			//  Field Position Variables
+			var scoreboard = new Scoreboard({});
+
+			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
 				var display_box_footer = display_box.querySelector(".display-buttons");
@@ -213,32 +216,31 @@
 				field.height = height;
 				field.width = width;
 				resizeBottomButtons();
-			}
-		};
+			};
 
-		function draw() {
 			drawOpening();
 		};
+
+		//function draw() {
+		//	drawOpening();
+		//};
 
 		// intro scene
 		var drawOpening = function() {
 			field.drawBackground(formationExample, height, width);
-			formationExample.drawOptionsToCreate();
-			formationExample.drawOLQB();
-			formationExample.drawAllPlayers();
 			trash.draw(field);
-			fill(0, 0, 0);
-			textSize(20);
-			text(formationExample.feedbackMessage, 330, 20);
-			fill(176,176,176)
+			formationExample.drawOptionsToCreate();
+			//formationExample.drawOLQB();
+			//formationExample.drawAllPlayers();
+			//fill(0, 0, 0);
+			//textSize(20);
+			//text(formationExample.feedbackMessage, 330, 20);
+			//fill(176,176,176)
 		};
 
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-
-		//Field Position Variables
-		var scoreboard = new Scoreboard({});
 
 		// Global Variables
 		var capitalLetter = false;
