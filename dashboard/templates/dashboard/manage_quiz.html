@@ -88,7 +88,7 @@
 							<h4 id="change-plays-header">Offensive Looks:</h4>
 						</span>
 					</div>
-					<form id="choose-play-defense" class="" action="/tests/manage/{{ quiz.id }}" method="post"> 
+					<form id="choose-play-defense" class="" action="/quizzes/manage/{{ quiz.id }}" method="post"> 
 						{% csrf_token %}
 						<div class="panel-body show-plays-defense">
 						</div>
@@ -324,7 +324,7 @@
 				addOrRemovePlay = "remove"
 			}
 
-			$.post( "/tests/"+ testID + "/edit", { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
+			$.post( "/quizzes/manage/"+ testID, { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
 			
 			if( playDomElement.hasClass('play-add-button') ) {
 				playDomElement.addClass('play-remove-button');
