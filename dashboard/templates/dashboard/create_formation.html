@@ -208,8 +208,8 @@
 				var display_box_header = display_box.querySelector(".display-header");
 				var display_box_footer = display_box.querySelector(".display-buttons");
 				var sidebar = document.getElementById("choose-existing-formation");
-				var height = sidebar.offsetHeight - display_box_header.offsetHeight - display_box_footer.offsetHeight;
-				var width = display_box.offsetWidth;
+				var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
 
 				resizeCanvas(width, height);
 				field.height = height;
@@ -221,11 +221,11 @@
 		};
 
 		function draw() {
-			//drawOpening();
+			drawOpening();
 		};
 
 		// intro scene
-		var drawOpening = function() {
+		function drawOpening() {
 			field.drawBackground(formationExample, height, width);
 			trash.draw(field);
 			formationExample.drawOptionsToCreate();
@@ -242,7 +242,7 @@
 		//***********************************************************************************************************************//
 
 		// Global Variables
-		var capitalLetter = false;
+		/*var capitalLetter = false;
 
 		var defensePlay = new DefensivePlay({
 			defensivePlayers: [],
@@ -262,7 +262,7 @@
 				player.x < trash.x + trash.width &&
 				player.y < trash.y &&
 				player.y > trash.y - trash.height
-		};
+		};*/
 
 		keyTyped = function() {
 			var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
@@ -513,9 +513,6 @@
 			}
 		};
 
-		var runTest = function() {
-			
-		};
-
+		//var runTest = function() {};
 	</script>
 {% endblock %}
