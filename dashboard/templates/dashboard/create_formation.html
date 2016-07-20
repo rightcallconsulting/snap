@@ -111,7 +111,9 @@
 			var display_box_footer = display_box.querySelector(".display-buttons");
 			var sidebar = document.getElementById("choose-existing-formation");
 			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			var width = display_box.offsetWidth;
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
 
 			var quiz_box_div = document.getElementById("quiz-box");
 			//var new_canvas = document.createElement("canvas");
@@ -138,8 +140,8 @@
 
 			// Create Position groups
 			formationExample = new Formation({});
-			//formationExample.createOLineAndQB(field.ballYardLine);
-			//formationExample.changeablePlayers.push(formationExample.qb[0]);
+			formationExample.createOLineAndQB(field.ballYardLine);
+			formationExample.changeablePlayers.push(formationExample.qb[0]); // This allows us to move the QB?
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -170,29 +172,26 @@
 			// Create Position groups
 			var wr = new Player ({
 				num: 'WR', pos: 'WR', 
-				x: field.getXOffset() + 5,
-				y: field.getYardY(height)+3,
+				x: field.getXOffset() - 9,
+				y: field.getYardY(height) + 2,
 				red: 255, green: 0, blue: 0
 			});
 
 			var te = new Player ({
 				num: 'TE', pos: 'TE',
-				x: wr.x + 3.5,
-				y: field.getYardY(height)+3,
+				x: wr.x + 3.5, y: wr.y,
 				red: 255, green: 0, blue: 0
 			});
 
 			var rb = new Player({
 				num: 'RB', pos: 'RB',
-				x: te.x + 3.5,
-				y: field.getYardY(height)+3,
+				x: te.x + 3.5, y: te.y,
 				red: 255, green: 0, blue: 0
 			});
 
 			var fb = new Player({
 				num: 'FB', pos: 'FB',
-				x: rb.x + 3.5,
-				y: field.getYardY(height)+3,
+				x: rb.x + 3.5, y: te.y,
 				red: 255, green: 0, blue: 0
 			});
 
@@ -230,22 +229,19 @@
 			field.drawBackground(formationExample, height, width);
 			trash.draw(field);
 			formationExample.drawOptionsToCreate();
-			//formationExample.drawOLQB();
-			//formationExample.drawAllPlayers();
-			//fill(0, 0, 0);
-			//textSize(20);
-			//text(formationExample.feedbackMessage, 330, 20);
-			//fill(176,176,176)
+			formationExample.drawOLQB();
+			formationExample.drawAllPlayers();
+			fill(0, 0, 0);
+			textSize(20);
+			text(formationExample.feedbackMessage, 330, 20);
+			fill(176,176,176)
 		};
 
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
 
-		// Global Variables
-		var capitalLetter = false;
-
-		Player.prototype.draw = function() {
+		/*Player.prototype.draw = function() {
 			var x = field.getTranslatedX(this.x);
 			var y = field.getTranslatedY(this.y);
 			var siz = field.yardsToPixels(this.siz);
@@ -265,7 +261,10 @@
 				textAlign(CENTER, CENTER);
 				text(this.pos, x, y);
 			}
-		};
+		};*/
+
+		// Global Variables
+		var capitalLetter = false;
 
 		var defensePlay = new DefensivePlay({
 			defensivePlayers: [],

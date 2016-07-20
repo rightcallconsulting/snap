@@ -81,7 +81,7 @@ Formation.prototype.createOLineAndQB = function(ballY){
   currentPlayer = this.oline[3];
   var tmp = new Player ({
       x: this.oline[2].x,
-      y: this.oline[2].y-3.5,
+      y: this.oline[2].y-2.25,
       num: 12,
       fill: color(212, 130, 130),
       red: 212,
