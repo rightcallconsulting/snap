@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.http import JsonResponse
 from django.core import serializers
@@ -642,13 +643,14 @@ def team_play_players(request, team_id):
 
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
-    test.change_in_progress_status(request.user)
+    #test.change_in_progress_status(request.user)
     test_results = test.testresult_set.all()
     num_plays = len(test.play_set.all())
     if len(test.play_set.all()) > 0:
         has_plays = True
     else:
         has_plays = False
+        return HttpResponseRedirect(reverse('homepage'))
     return render(request, 'quiz/qb_progression.html', {
         'test': test,
         'test_results': test_results,
