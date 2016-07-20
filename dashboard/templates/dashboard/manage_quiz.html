@@ -3,7 +3,7 @@
 
 {% block content %}
 	<div class="padding-md">
-		<div class="main-content-area dash-col display-play-box" id="display-play-box">
+		<div class="main-content-area dash-col display-play-box col-md-7 full" id="display-play-box">
 			<div class="dash-header text-center">
 				<span>
 					<h4 id="play-image-header">Play</h4>
@@ -34,9 +34,9 @@
 			</div>
 		</div>
 
-		<div class = "stacked-col">
+		<div class = "stacked-col col-md-4">
 			{% if unit == "offense" %}
-				<div class="secondary-content-area top choose-offensive-formation-box">
+				<div class="secondary-content-area top choose-offensive-formation-box thirds">
 					<div class="dash-header text-center">
 						<span>
 							<h4>Offensive Formations</h4>
@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				
-				<div class="secondary-content-area change-plays-box">
+				<div class="secondary-content-area change-plays-box thirds">
 					<div class="dash-header text-center">
 						<span>
 							<h4 id="change-plays-header">Change Plays</h4>
@@ -72,7 +72,7 @@
 					</form>
 				</div>
 			{% else %}
-				<div class="col-lg-4 choose-defensive-formation-box">
+				<div class="col-lg-4 choose-defensive-formation-box thirds">
 					<div class="dash-header text-center">
 						<span><h4>Plays</h4></span>
 					</div>
@@ -81,7 +81,8 @@
 						<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{ formation.id }}" type="submit" value="{{ formation }}">
 					{% endfor %}
 				</div>
-				<div class="col-lg-4 change-plays-box" id="draw-offensive-formations">
+
+				<div class="col-lg-4 change-plays-box thirds" id="draw-offensive-formations">
 					<div class="dash-header text-center">
 						<span>
 							<h4 id="change-plays-header">Offensive Looks:</h4>
@@ -94,44 +95,44 @@
 					</form>
 				</div>
 			{% endif %}
-		</div>
 
-		{% if unit == "offense" %}
-			<div class="tertiary-content-area dash-col display-plays-in-test">
-				<div class="dash-header text-center">
-					<span>
-						<h4>Plays in Test: {{ quiz.name }}</h4>
-					</span>
+			{% if unit == "offense" %}
+				<div class="tertiary-content-area dash-col display-plays-in-test thirds">
+					<div class="dash-header text-center">
+						<span>
+							<h4>Plays in Test: {{ quiz.name }}</h4>
+						</span>
+					</div>
+					<div class="panel-body existing-plays">
+						{% for play in plays_in_quiz %}
+							<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
+						{% endfor %}
+					</div>
 				</div>
-				<div class="panel-body existing-plays">
-					{% for play in plays_in_quiz %}
-						<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
+			{% else %}
+				<div class="col-lg-4 dash-col display-plays-in-test thirds">
+					<div class="dash-header text-center">
+						<span>
+							<h4>Plays in Test: {{ quiz.name }}</h4>
+						</span>
+					</div>
+					{% for formation in unique_defensive_formations %}
+						<div class="col-lg-2 dash-col">
+							<div class="dash-header text-center">
+								<span><h4>{{ formation }}</h4></span>
+							</div>
+							<div class="panel-body existing-plays" id="formation-show-{{ formation.id }}">
+								{% for play in plays_in_quiz %}
+									{% if play.formation.id == formation.id %}
+										<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
 					{% endfor %}
 				</div>
-			</div>
-		{% else %}
-			<div class="col-lg-10 dash-col display-plays-in-test">
-				<div class="dash-header text-center">
-					<span>
-						<h4>Plays in Test: {{ quiz.name }}</h4>
-					</span>
-				</div>
-				{% for formation in unique_defensive_formations %}
-					<div class="col-lg-2 dash-col">
-						<div class="dash-header text-center">
-							<span><h4>{{ formation }}</h4></span>
-						</div>
-						<div class="panel-body existing-plays" id="formation-show-{{ formation.id }}">
-							{% for play in plays_in_quiz %}
-								{% if play.formation.id == formation.id %}
-									<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
-								{% endif %}
-							{% endfor %}
-						</div>
-					</div>
-				{% endfor %}
-			</div>
-		{% endif %}
+			{% endif %}
+		</div>
 
 		<div id="test-id" data-test-id="{{ quiz.id }}" style="display: none;"></div>
 		<div id="play-id-array" data-play-id-array="{{ play_id_array }}" style="display: none;"></div>
@@ -140,6 +141,7 @@
 {% endblock %}
 
 {% block javascript %}
+	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var playClicked;
 		var formationID;

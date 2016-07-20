@@ -199,7 +199,7 @@ img.menu-icon{
 }
 
 .change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
-  height: 600px;
+  /*height: 600px;*/
   margin-bottom: 50px;
   margin-top: 50px;
 }
@@ -310,10 +310,6 @@ img.menu-icon{
   margin-bottom:1px;
   background-color: #D07322;
   color: #FFFFFF;
-}
-
-.display-plays-in-test {
-  height: 600px;
 }
 
 .display-plays-in-test .dash-col{

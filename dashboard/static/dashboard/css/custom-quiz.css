@@ -416,3 +416,16 @@
   display: inline-block;
   float: left;
 }
+
+.thirds {
+	height: 30vh;
+}
+
+.full {
+	height: 90vh;
+}
+
+#choose-play,
+#draw-plays {
+	height: 100%;
+}
