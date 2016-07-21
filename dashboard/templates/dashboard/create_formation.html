@@ -100,7 +100,7 @@
 		// p5.js Drawing Functions                                           //
 		//*******************************************************************//
 		var formations = [];
-		var formationExample;
+		var new_formation;
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
@@ -139,9 +139,9 @@
 			//randomSeed(millis()); // What is the random seed for?
 
 			// Create Position groups
-			formationExample = new Formation({});
-			formationExample.createOLineAndQB(field.ballYardLine);
-			formationExample.changeablePlayers.push(formationExample.qb[0]); // This allows us to move the QB?
+			new_formation = new Formation({});
+			new_formation.createOLineAndQB(field.ballYardLine);
+			new_formation.changeablePlayers.push(new_formation.qb[0]); // This allows us to move the QB?
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -195,10 +195,10 @@
 				red: 255, green: 0, blue: 0
 			});
 
-			formationExample.optionsToCreate.push(wr);
-			formationExample.optionsToCreate.push(te);
-			formationExample.optionsToCreate.push(rb);
-			formationExample.optionsToCreate.push(fb);
+			new_formation.optionsToCreate.push(wr);
+			new_formation.optionsToCreate.push(te);
+			new_formation.optionsToCreate.push(rb);
+			new_formation.optionsToCreate.push(fb);
 
 			//  Field Position Variables
 			var scoreboard = new Scoreboard({});
@@ -221,40 +221,91 @@
 		};
 
 		function draw() {
+			// Get Quarterback, Center, Left Tackle, Right Tackle, and Wide Receivers.
+			var quarterback = new_formation.qb[0];
+			var center = null;
+			var left_tackle = null;
+			var right_tackle = null;
+			var wide_receivers = new_formation.wideReceivers;
+
+			for(var ol = 0; ol < new_formation.oline.length; ol++) {
+				var lineman = new_formation.oline[ol];
+				
+				if (lineman.pos === "C") {
+					center = lineman;
+				} else if (lineman.pos === "LT") {
+					left_tackle = lineman;
+				} else if (lineman.pos === "RT") {
+					right_tackle = lineman;
+				}
+			}
+
+			// If Quarterback is close to behind center then align him with the center.
+			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
+				quarterback.x = center.x;
+			}
+
+			// If Quarterback is inside the tackle box he can only be behind the center
+			// or a few yards back.
+			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
+				if (quarterback.y > center.y-2.25) {
+					quarterback.y = center.y-2.25;
+				} else if (quarterback.y < center.y-7.5) {
+					quarterback.y = center.y-7.5;
+				}
+			}
+
+			for(var wr = 0; wr < wide_receivers.length; wr++) {
+				var receiver = wide_receivers[wr];
+				
+				if (receiver.y > left_tackle.y-1.25) {
+					receiver.y = left_tackle.y;
+				}
+			}
+
 			drawOpening();
 		};
 
 		// intro scene
 		function drawOpening() {
-			field.drawBackground(formationExample, height, width);
+			field.drawBackground(new_formation, height, width);
 			trash.draw(field);
-			formationExample.drawOptionsToCreate();
-			formationExample.drawOLQB();
-			formationExample.drawAllPlayers();
+			new_formation.drawOptionsToCreate();
+			new_formation.drawOLQB();
+			new_formation.drawAllPlayers();
 			fill(0, 0, 0);
 			textSize(20);
-			text(formationExample.feedbackMessage, 330, 20);
+			text(new_formation.feedbackMessage, 330, 20);
 			fill(176,176,176)
 		};
 
-		mouseDragged = function() {
-			// The receiver or node that is selected or null if none.
-			var receiverSelected = formationExample.mouseInReceiverOrNode(field)[0];
+		function mouseDragged() {
+			var receiverSelected = new_formation.mouseInReceiverOrNode(field)[0];
+			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
+			var centerSelected = new_formation.mouseInCenter(field);
 
-			// The new position to create that is selected or null if none.
-			var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
+			var quarterback = new_formation.qb[0];
 
-			// The center if selected or null.
-			var centerSelected = formationExample.mouseInCenter(field);
+			if (new_formation.establishingNewPlayer) {
+				new_formation.establishingNewPlayer.movePlayer(field);
+			} else if (positionOptionSelected) {
+				
+				var new_player = new Player({
+					x: positionOptionSelected.x,
+					y: positionOptionSelected.y,
+					num: positionOptionSelected.num,
+					red: 255, green: 0, blue: 0,
+					pos: positionOptionSelected.pos, 
+					change: true
+				});
 
-			if (formationExample.establishingNewPlayer) {
-				formationExample.establishingNewPlayer.movePlayer(field);
+				new_formation.createPlayer(new_player);
 			} else if (receiverSelected) {
 				receiverSelected.change = receiverSelected.change ? false : true;
-				formationExample.establishingNewPlayer = receiverSelected;
-			} else if (formationExample.qb[0].isMouseInside(field)) {
-				formationExample.qb[0].change = formationExample.qb[0].change ? false : true;
-				formationExample.establishingNewPlayer = formationExample.qb[0];
+				new_formation.establishingNewPlayer = receiverSelected;
+			} else if (quarterback.isMouseInside(field)) {
+				quarterback.change = quarterback.change ? false : true;
+				new_formation.establishingNewPlayer = quarterback;
 			} else if(centerSelected) {
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - centerSelected.x;
@@ -267,8 +318,8 @@
 					xDiff = 0;
 				}
 
-				for(var i = 0; i < formationExample.offensivePlayers.length; i++) {
-					var p = formationExample.offensivePlayers[i];
+				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
+					var p = new_formation.offensivePlayers[i];
 					p.x += xDiff;
 				}
 
@@ -291,28 +342,13 @@
 				}
 
 				return;
-			} else if (positionOptionSelected) {
-				
-				var newPlayer = new Player({
-					x: positionOptionSelected.x,
-					y: positionOptionSelected.y,
-					num: positionOptionSelected.num,
-					// fill: color(255, 0, 0),
-					red: 255,
-					green: 0,
-					blue: 0,
-					change: true,
-					pos: positionOptionSelected.pos
-				});
-
-				formationExample.createPlayer(newPlayer);
 			}
 			
-			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
-			selectedWR = formationExample.findSelectedWR();
+			//var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			//selectedWR = new_formation.findSelectedWR();
 		};
 
-		var isInsideTrash = function(player) {
+		function isInsideTrash(player) {
 			return player.x > trash.x &&
 				player.x < trash.x + trash.width &&
 				player.y < trash.y &&
@@ -345,19 +381,19 @@
 			var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
 			var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 			if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' ') {
-				formationExample.playName += key;
-				$('#play-name').text("New Formation: " + formationExample.playName);
+				new_formation.playName += key;
+				$('#play-name').text("New Formation: " + new_formation.playName);
 			}
 		};
 
 		keyPressed = function() {
 			if(keyCode === BACKSPACE) {
-					selectedWR = formationExample.findSelectedWR();
+					selectedWR = new_formation.findSelectedWR();
 				if (selectedWR) {
 					selectedWR.stepRouteBackward();
 				} else {
-					formationExample.playName = formationExample.playName.substring(0, formationExample.playName.length - 1);
-					$('#play-name').text("New Formation: " + formationExample.playName);
+					new_formation.playName = new_formation.playName.substring(0, new_formation.playName.length - 1);
+					$('#play-name').text("New Formation: " + new_formation.playName);
 				}
 				
 				return false;
@@ -365,17 +401,17 @@
 		};
 
 		/*mouseDragged = function() {
-			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
-			var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
-			var centerClicked = formationExample.mouseInCenter(field);
-			if (formationExample.establishingNewPlayer) {
-				formationExample.establishingNewPlayer.movePlayer(field);
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
+			var centerClicked = new_formation.mouseInCenter(field);
+			if (new_formation.establishingNewPlayer) {
+				new_formation.establishingNewPlayer.movePlayer(field);
 			} else if (receiverClicked) {
 				receiverClicked.change = receiverClicked.change ?  false : true;
-				formationExample.establishingNewPlayer = receiverClicked;
-			} else if (formationExample.qb[0].isMouseInside(field)) {
-				formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
-				formationExample.establishingNewPlayer = formationExample.qb[0];
+				new_formation.establishingNewPlayer = receiverClicked;
+			} else if (new_formation.qb[0].isMouseInside(field)) {
+				new_formation.qb[0].change = new_formation.qb[0].change ?  false : true;
+				new_formation.establishingNewPlayer = new_formation.qb[0];
 			} else if(centerClicked) {
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - centerClicked.x;
@@ -388,8 +424,8 @@
 					xDiff = 0;
 				}
 
-				for(var i = 0; i < formationExample.offensivePlayers.length; i++) {
-					var p = formationExample.offensivePlayers[i];
+				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
+					var p = new_formation.offensivePlayers[i];
 					p.x += xDiff;
 				}
 
@@ -425,50 +461,50 @@
 					pos: positionOptionSelected.pos
 				});
 
-				formationExample.createPlayer(newPlayer);
+				new_formation.createPlayer(newPlayer);
 			}
 			
-			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
-			selectedWR = formationExample.findSelectedWR();
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_formation.findSelectedWR();
 		};*/
 
 		pressSaveButton = function() {
-			if(formationExample.validFormation()) {
-				formationExample.eligibleReceivers.forEach(function(player){
+			if(new_formation.validFormation()) {
+				new_formation.eligibleReceivers.forEach(function(player){
 					player.convertRouteDrawingToBreakPoints();
 				});
 				var newFormation = new Formation({
-					eligibleReceivers: formationExample.eligibleReceivers,
-					playName: formationExample.playName,
-					qb: formationExample.qb,
-					oline: formationExample.oline,
-					offensivePlayers: formationExample.offensivePlayers,
-					unit: formationExample.unit
+					eligibleReceivers: new_formation.eligibleReceivers,
+					playName: new_formation.playName,
+					qb: new_formation.qb,
+					oline: new_formation.oline,
+					offensivePlayers: new_formation.offensivePlayers,
+					unit: new_formation.unit
 				});
 
 				newFormation.saveToDB();
-				formationExample.removeAllPlayers();
-				formationExample.playName = "";
-				formationExample.feedbackMessage = "Saved!";
+				new_formation.removeAllPlayers();
+				new_formation.playName = "";
+				new_formation.feedbackMessage = "Saved!";
 			} else {
-				formationExample.feedbackMessage = "Invalid Formation";
+				new_formation.feedbackMessage = "Invalid Formation";
 			}
 		};
 
 		pressClearButton = function() {
-			formationExample.removeAllPlayers();
+			new_formation.removeAllPlayers();
 		};
 
 		mouseClicked = function() {
-			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
-			selectedWR = formationExample.findSelectedWR();
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_formation.findSelectedWR();
 
-			if(formationExample.establishingNewPlayer) {
-				if(isInsideTrash(formationExample.establishingNewPlayer)) {
-					formationExample.deletePlayer(formationExample.establishingNewPlayer);
+			if(new_formation.establishingNewPlayer) {
+				if(isInsideTrash(new_formation.establishingNewPlayer)) {
+					new_formation.deletePlayer(new_formation.establishingNewPlayer);
 				}
-				formationExample.establishingNewPlayer.change = false;
-				formationExample.establishingNewPlayer = null;
+				new_formation.establishingNewPlayer.change = false;
+				new_formation.establishingNewPlayer = null;
 			}
 		};
 
@@ -478,11 +514,11 @@
 				return formationObject.name === this.value;
 			}.bind(this))[0]
 
-			starterFormation.optionsToCreate = formationExample.optionsToCreate;
-			formationExample = starterFormation;
-			formationExample.playName = "";
+			starterFormation.optionsToCreate = new_formation.optionsToCreate;
+			new_formation = starterFormation;
+			new_formation.playName = "";
 
-			$('#play-image-header').text("New Formation: " + formationExample.playName);
+			$('#play-image-header').text("New Formation: " + new_formation.playName);
 		});
 
 		$('#save-button').click(function(){
@@ -540,8 +576,8 @@
 			trash.height = trashHeight;
 			trash.x = trashX;
 			trash.y = trashY;
-			for(var i = 0; i < formationExample.optionsToCreate.length; i++) {
-				formationExample.optionsToCreate[i].y = trashY - trashHeight/2;
+			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
+				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
 			}
 		};
 

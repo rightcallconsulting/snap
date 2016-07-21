@@ -5,7 +5,7 @@
 //																			 //
 //***************************************************************************//
 //																			 //
-// Formation object represents one offensive or defensive formation.		 //
+// A formation object represents one offensive or defensive formation.		 //
 // Each instance of one of these objects maintains an array of all of the	 //
 // players in the formation and their positions on the field.				 //
 //																			 //
@@ -14,9 +14,10 @@
 var Formation = function(config){
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensivePlayers = config.offensivePlayers || [];
-	this.wideReceivers = config.wideReceivers || [];
 	this.runningBacks = config.runningBacks || [];
+	this.fullBacks = config.fullBacks || [];
 	this.tightEnds = config.tightEnds || [];
+	this.wideReceivers = config.wideReceivers || [];
 	this.name = config.name || "";
 	this.playName = config.playName || "";
 	this.qb = config.qb || [];
@@ -40,38 +41,47 @@ var Formation = function(config){
 //***************************************************************************//
 //***************************************************************************//
 
-Formation.prototype.createPlayer = function(player) {
-	if(player.unit === "defense") {
+//********************************//
+// createPlayer(new_player)       //
+//********************************//
+// Input:  A new player object to add to the formation.                      
+//															
+// Output: None.							
+//   														
+// createPlayer adds a new player to the formation.
+
+Formation.prototype.createPlayer = function(new_player) {
+	if(new_player.unit === "defense") {
 		if (this.defensivePlayers.length < 11) {
-			this.defensivePlayers.push(player);
-			this.changeablePlayers.push(player);
-			this.establishingNewPlayer = player;
-			if(player.pos === "DL" || player.pos === "DE") {
-				this.dline.push(player);
-			} else if(player.pos === "W" || player.pos === "M" || player.pos === "S") {
-				this.linebackers.push(player);
-			} else if(player.pos === "CB") {
-				this.cornerbacks.push(player);
-			} else if(player.pos === "SS" || player.pos === "FS") {
-				this.safeties.push(player);
+			this.defensivePlayers.push(new_player);
+			this.changeablePlayers.push(new_player);
+			this.establishingNewPlayer = new_player;
+			if(new_player.pos === "DL" || new_player.pos === "DE") {
+				this.dline.push(new_player);
+			} else if(new_player.pos === "W" || new_player.pos === "M" || new_player.pos === "S") {
+				this.linebackers.push(new_player);
+			} else if(new_player.pos === "CB") {
+				this.cornerbacks.push(new_player);
+			} else if(new_player.pos === "SS" || new_player.pos === "FS") {
+				this.safeties.push(new_player);
 			}
 		}
 	} else {
 		if (this.offensivePlayers.length < 11) {
-			this.offensivePlayers.push(player);
-			this.eligibleReceivers.push(player);
-			this.changeablePlayers.push(player);
-			this.establishingNewPlayer = player;
+			this.offensivePlayers.push(new_player);
+			this.eligibleReceivers.push(new_player);
+			this.changeablePlayers.push(new_player);
+			this.establishingNewPlayer = new_player;
 
-			if(player.pos == "WR") {
-				this.wideReceivers.push(player);
-				player.playerIndex = this.wideReceivers.length;
-			} else if(player.pos == "TE") {
-				this.tightEnds.push(player);
-				player.playerIndex = this.tightEnds.length;
-			} else if(player.pos == "RB" || player.pos == "FB") {
-				this.runningBacks.push(player);
-				player.playerIndex = this.runningBacks.length;
+			if(new_player.pos == "WR") {
+				this.wideReceivers.push(new_player);
+				new_player.playerIndex = this.wideReceivers.length;
+			} else if(new_player.pos == "TE") {
+				this.tightEnds.push(new_player);
+				new_player.playerIndex = this.tightEnds.length;
+			} else if(new_player.pos == "RB" || new_player.pos == "FB") {
+				this.runningBacks.push(new_player);
+				new_player.playerIndex = this.runningBacks.length;
 			} 
 		}
 	}
@@ -146,6 +156,17 @@ Formation.prototype.mouseInOptionsToCreate = function(field) {
 	return optionClicked;
 };
 
+//********************************//
+//  mouseInCenter(field)		  //
+//********************************//
+// Input:  The field that the formation exists in.                       
+//															
+// Output: The center on the oline. Null if the mouse 
+// 		   is not in the center.								
+//   														
+// mouseInOptionsToCreate iterates through the player options available 
+// and checks if the mouse is inside any of the player options.	
+
 Formation.prototype.mouseInCenter = function(field){
 	for(var i = 0; i < this.oline.length; i++) {
 		var p = this.oline[i];
@@ -153,6 +174,7 @@ Formation.prototype.mouseInCenter = function(field){
 			return p;
 		}
 	}
+
 	return null;
 };
 
