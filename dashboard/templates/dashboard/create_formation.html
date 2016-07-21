@@ -15,27 +15,27 @@
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="check-button" name="button">
+							<button id="check-button" name="button" onclick="save()">
 								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="zoom-in-button" name="button">
-								{% include "quiz/zoom_in_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="zoom-out-button" name="button">
-								{% include "quiz/zoom_out_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="clear-button" name="button">
+							<button id="clear-button" name="button" onclick="clear()">
 								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="full-screen-button" name="button">
+							<button id="zoom-in-button" name="button" onclick="zoomIn()">
+								{% include "quiz/zoom_in_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button" onclick="zoomOut()">
+								{% include "quiz/zoom_out_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="full-screen-button" name="button" onclick="fullScreen()">
 								{% include "quiz/full_screen_button.html" %}
 							</button>
 						</td>
@@ -96,8 +96,28 @@
 			}
 		};
 
+		function save() {
+
+		}
+
+		function clear() {
+			
+		}
+
+		function zoomIn() {
+			
+		}
+
+		function zoomOut() {
+			
+		}
+
+		function fullScreen() {
+			
+		}
+
 		//*******************************************************************//
-		// p5.js Drawing Functions                                           //
+		// p5.js Animation Functions                                         //
 		//*******************************************************************//
 		var formations = [];
 		var new_formation;
@@ -376,8 +396,8 @@
 						p.x = Field.WIDTH;
 					}
 				}
-
-				return;
+				// return false to prevent default behavior
+				return false;
 			}
 			
 			//var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
