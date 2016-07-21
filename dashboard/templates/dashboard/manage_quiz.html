@@ -224,7 +224,9 @@
 
 		// AJAX for posting
 		function modifyPlayWithTest(playDomElement) {
-			playID = playDomElement[0].id;
+			var playID = playDomElement[0].id;
+			var manage_quiz_url = "/quizzes/manage/" + testID;
+			var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 			
 			if ( playDomElement.hasClass('play-add-button') ) {
 				addOrRemovePlay = "add";
@@ -232,7 +234,15 @@
 				addOrRemovePlay = "remove";
 			}
 			
-			$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay, defense: false });
+			var jqxhr = $.post( manage_quiz_url, 
+					{ csrfmiddlewaretoken: csrf_token, play_id: playID, add_or_remove: addOrRemovePlay, defense: false }
+				).done(function() {
+					console.log("The play was successfully added to the quiz.");
+					alert("play added to quiz");
+				}).fail(function() {
+					console.log("error posting play.");
+					alert( "There was an error adding this play to the quiz." );
+				});
 			
 			if( playDomElement.hasClass('play-add-button') ) {
 				playDomElement.addClass('play-remove-button');
