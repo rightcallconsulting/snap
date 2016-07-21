@@ -14,28 +14,28 @@
 			<div class="display-buttons">
 				<table class="button-table">
 					<tr>
-						<td>
-							<button id="check-button" name="button" onclick="save()">
+						<td onclick="save()">
+							<button id="check-button" name="button">
 								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
-						<td>
-							<button id="clear-button" name="button" onclick="clear()">
+						<td onclick="clear()">
+							<button id="clear-button" name="button">
 								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
-						<td>
-							<button id="zoom-in-button" name="button" onclick="zoomIn()">
+						<td onclick="zoomIn()">
+							<button id="zoom-in-button" name="button">
 								{% include "quiz/zoom_in_button.html" %}
 							</button>
 						</td>
-						<td>
-							<button id="zoom-out-button" name="button" onclick="zoomOut()">
+						<td onclick="zoomOut()">
+							<button id="zoom-out-button" name="button">
 								{% include "quiz/zoom_out_button.html" %}
 							</button>
 						</td>
-						<td>
-							<button id="full-screen-button" name="button" onclick="fullScreen()">
+						<td onclick="fullScreen()">
+							<button id="full-screen-button" name="button">
 								{% include "quiz/full_screen_button.html" %}
 							</button>
 						</td>
@@ -74,7 +74,6 @@
 
 {% block javascript %}
 	<!--<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>-->
-
 	<script type="text/javascript">
 		//*******************************************************************//
 		// Event Listener Functions                                          //
@@ -97,23 +96,23 @@
 		};
 
 		function save() {
-
+			pressSave();
 		}
 
 		function clear() {
-			
+			pressClear();
 		}
 
 		function zoomIn() {
-			
+			pressZoomIn()
 		}
 
 		function zoomOut() {
-			
+			pressZoomOut()
 		}
 
 		function fullScreen() {
-			
+			pressFullScreen()
 		}
 
 		//*******************************************************************//
@@ -415,6 +414,39 @@
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
 
+		function pressSave() {
+			if(new_formation.validFormation()) {
+				new_formation.eligibleReceivers.forEach(function(player){
+					player.convertRouteDrawingToBreakPoints();
+				});
+				var newFormation = new Formation({
+					eligibleReceivers: new_formation.eligibleReceivers,
+					playName: new_formation.playName,
+					qb: new_formation.qb,
+					oline: new_formation.oline,
+					offensivePlayers: new_formation.offensivePlayers,
+					unit: new_formation.unit
+				});
+
+				newFormation.saveToDB();
+				new_formation.removeAllPlayers();
+				new_formation.playName = "";
+				new_formation.feedbackMessage = "Saved!";
+			} else {
+				new_formation.feedbackMessage = "Invalid Formation";
+			}
+		};
+
+		function pressClear() {
+			new_formation.removeAllPlayers();
+		};
+
+		function pressZoomIn() {};
+
+		function pressZoomOut() {};
+
+		function pressFullScreen() {};
+
 		// Global Variables
 		/*var capitalLetter = false;
 
@@ -440,6 +472,8 @@
 				new_formation.playName += key;
 				$('#play-name').text("New Formation: " + new_formation.playName);
 			}
+			// return false to prevent default behavior			
+			return false;
 		};
 
 		keyPressed = function() {
@@ -451,9 +485,9 @@
 					new_formation.playName = new_formation.playName.substring(0, new_formation.playName.length - 1);
 					$('#play-name').text("New Formation: " + new_formation.playName);
 				}
-				
-				return false;
 			}
+			// return false to prevent default behavior
+			return false;
 		};
 
 		/*mouseDragged = function() {
@@ -524,33 +558,6 @@
 			selectedWR = new_formation.findSelectedWR();
 		};*/
 
-		pressSaveButton = function() {
-			if(new_formation.validFormation()) {
-				new_formation.eligibleReceivers.forEach(function(player){
-					player.convertRouteDrawingToBreakPoints();
-				});
-				var newFormation = new Formation({
-					eligibleReceivers: new_formation.eligibleReceivers,
-					playName: new_formation.playName,
-					qb: new_formation.qb,
-					oline: new_formation.oline,
-					offensivePlayers: new_formation.offensivePlayers,
-					unit: new_formation.unit
-				});
-
-				newFormation.saveToDB();
-				new_formation.removeAllPlayers();
-				new_formation.playName = "";
-				new_formation.feedbackMessage = "Saved!";
-			} else {
-				new_formation.feedbackMessage = "Invalid Formation";
-			}
-		};
-
-		pressClearButton = function() {
-			new_formation.removeAllPlayers();
-		};
-
 		mouseClicked = function() {
 			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
 			selectedWR = new_formation.findSelectedWR();
@@ -562,6 +569,8 @@
 				new_formation.establishingNewPlayer.change = false;
 				new_formation.establishingNewPlayer = null;
 			}
+			// return false to prevent default behavior
+			return false;
 		};
 
 		// These are things I am going to rewrite without using jQuery - Dylan
