@@ -359,8 +359,7 @@ var runTest = function() {
 
 			formationExample.createPlayer(newPlayer);
 		}
-		
-		var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+
 		selectedWR = formationExample.findSelectedWR();
 	};
 

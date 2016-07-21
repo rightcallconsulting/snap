@@ -169,7 +169,7 @@
 				displayButton: true
 			});
 
-			// Create Position groups
+			// Create Position groups that can be added
 			var wr = new Player ({
 				num: 'WR', pos: 'WR', 
 				x: field.getXOffset() - 9,
@@ -237,6 +237,88 @@
 			fill(176,176,176)
 		};
 
+		mouseDragged = function() {
+			// The receiver or node that is selected or null if none.
+			var receiverSelected = formationExample.mouseInReceiverOrNode(field)[0];
+
+			// The new position to create that is selected or null if none.
+			var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
+
+			// The center if selected or null.
+			var centerSelected = formationExample.mouseInCenter(field);
+
+			if (formationExample.establishingNewPlayer) {
+				formationExample.establishingNewPlayer.movePlayer(field);
+			} else if (receiverSelected) {
+				receiverSelected.change = receiverSelected.change ? false : true;
+				formationExample.establishingNewPlayer = receiverSelected;
+			} else if (formationExample.qb[0].isMouseInside(field)) {
+				formationExample.qb[0].change = formationExample.qb[0].change ? false : true;
+				formationExample.establishingNewPlayer = formationExample.qb[0];
+			} else if(centerSelected) {
+				var mouseYardX = field.getYardX(mouseX);
+				var xDiff = mouseYardX - centerSelected.x;
+
+				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
+					xDiff = 0;
+				}
+
+				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
+					xDiff = 0;
+				}
+
+				for(var i = 0; i < formationExample.offensivePlayers.length; i++) {
+					var p = formationExample.offensivePlayers[i];
+					p.x += xDiff;
+				}
+
+				for(var i = 0; i < defensePlay.defensivePlayers.length; i++) {
+					var p = defensePlay.defensivePlayers[i];
+
+					if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE") {
+						p.x += xDiff;
+					} else {
+						p.x += xDiff * 0.75;
+					}
+					
+					if(p.x < 0) {
+						p.x = 0;
+					}
+					
+					if(p.x > Field.WIDTH) {
+						p.x = Field.WIDTH;
+					}
+				}
+
+				return;
+			} else if (positionOptionSelected) {
+				
+				var newPlayer = new Player({
+					x: positionOptionSelected.x,
+					y: positionOptionSelected.y,
+					num: positionOptionSelected.num,
+					// fill: color(255, 0, 0),
+					red: 255,
+					green: 0,
+					blue: 0,
+					change: true,
+					pos: positionOptionSelected.pos
+				});
+
+				formationExample.createPlayer(newPlayer);
+			}
+			
+			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
+			selectedWR = formationExample.findSelectedWR();
+		};
+
+		var isInsideTrash = function(player) {
+			return player.x > trash.x &&
+				player.x < trash.x + trash.width &&
+				player.y < trash.y &&
+				player.y > trash.y - trash.height
+		};
+
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
@@ -256,13 +338,7 @@
 		});
 
 		defensePlay.draw(field);
-
-		var isInsideTrash = function(player) {
-			return player.x > trash.x &&
-				player.x < trash.x + trash.width &&
-				player.y < trash.y &&
-				player.y > trash.y - trash.height
-		};*/
+		*/
 
 		keyTyped = function() {
 			var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
@@ -288,7 +364,7 @@
 			}
 		};
 
-		mouseDragged = function() {
+		/*mouseDragged = function() {
 			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
 			var positionOptionSelected = formationExample.mouseInOptionsToCreate(field);
 			var centerClicked = formationExample.mouseInCenter(field);
@@ -354,7 +430,7 @@
 			
 			var receiverClicked = formationExample.mouseInReceiverOrNode(field)[0];
 			selectedWR = formationExample.findSelectedWR();
-		};
+		};*/
 
 		pressSaveButton = function() {
 			if(formationExample.validFormation()) {
@@ -513,6 +589,6 @@
 			}
 		};
 
-		//var runTest = function() {};
+		var runTest = function() {};
 	</script>
 {% endblock %}

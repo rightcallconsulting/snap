@@ -1,27 +1,159 @@
+
+//***************************************************************************//
+//																			 //
+// formation.js - Right Call Consulting. All Rights Reserved. 2016			 //
+//																			 //
+//***************************************************************************//
+//																			 //
+// Formation object represents one offensive or defensive formation.		 //
+// Each instance of one of these objects maintains an array of all of the	 //
+// players in the formation and their positions on the field.				 //
+//																			 //
+//***************************************************************************//
+
 var Formation = function(config){
-  this.eligibleReceivers = config.eligibleReceivers || [];
-  this.offensivePlayers = config.offensivePlayers || [];
-  this.wideReceivers = config.wideReceivers || [];
-  this.runningBacks = config.runningBacks || [];
-  this.tightEnds = config.tightEnds || [];
-  this.name = config.name || "";
-  this.playName = config.playName || "";
-  this.qb = config.qb || [];
-  this.oline = config.oline || [];
-  this.changeablePlayers = config.changeablePlayers || [];
-  this.optionsToCreate = config.optionsToCreate || [];
-  this.feedbackMessage = "";
-  this.id = config.id || null;
-  this.updated_at = config.updated_at || null;
-  this.created_at = config.created_at || null;
-  this.positions = config.positions || [];
-  this.unit = config.unit || "offense";
-  this.dline = config.dline || [];
-  this.linebackers = config.linebackers || [];
-  this.cornerbacks = config.cornerbacks || [];
-  this.safeties = config.safeties || [];
-  this.defensivePlayers = config.defensivePlayers || [];
-  this.offensiveFormationID = config.offensiveFormationID || 0;
+	this.eligibleReceivers = config.eligibleReceivers || [];
+	this.offensivePlayers = config.offensivePlayers || [];
+	this.wideReceivers = config.wideReceivers || [];
+	this.runningBacks = config.runningBacks || [];
+	this.tightEnds = config.tightEnds || [];
+	this.name = config.name || "";
+	this.playName = config.playName || "";
+	this.qb = config.qb || [];
+	this.oline = config.oline || [];
+	this.changeablePlayers = config.changeablePlayers || [];
+	this.optionsToCreate = config.optionsToCreate || [];
+	this.feedbackMessage = "";
+	this.id = config.id || null;
+	this.updated_at = config.updated_at || null;
+	this.created_at = config.created_at || null;
+	this.positions = config.positions || [];
+	this.unit = config.unit || "offense";
+	this.dline = config.dline || [];
+	this.linebackers = config.linebackers || [];
+	this.cornerbacks = config.cornerbacks || [];
+	this.safeties = config.safeties || [];
+	this.defensivePlayers = config.defensivePlayers || [];
+	this.offensiveFormationID = config.offensiveFormationID || 0;
+};
+
+//***************************************************************************//
+//***************************************************************************//
+
+Formation.prototype.createPlayer = function(player) {
+	if(player.unit === "defense") {
+		if (this.defensivePlayers.length < 11) {
+			this.defensivePlayers.push(player);
+			this.changeablePlayers.push(player);
+			this.establishingNewPlayer = player;
+			if(player.pos === "DL" || player.pos === "DE") {
+				this.dline.push(player);
+			} else if(player.pos === "W" || player.pos === "M" || player.pos === "S") {
+				this.linebackers.push(player);
+			} else if(player.pos === "CB") {
+				this.cornerbacks.push(player);
+			} else if(player.pos === "SS" || player.pos === "FS") {
+				this.safeties.push(player);
+			}
+		}
+	} else {
+		if (this.offensivePlayers.length < 11) {
+			this.offensivePlayers.push(player);
+			this.eligibleReceivers.push(player);
+			this.changeablePlayers.push(player);
+			this.establishingNewPlayer = player;
+
+			if(player.pos == "WR") {
+				this.wideReceivers.push(player);
+				player.playerIndex = this.wideReceivers.length;
+			} else if(player.pos == "TE") {
+				this.tightEnds.push(player);
+				player.playerIndex = this.tightEnds.length;
+			} else if(player.pos == "RB" || player.pos == "FB") {
+				this.runningBacks.push(player);
+				player.playerIndex = this.runningBacks.length;
+			} 
+		}
+	}
+};
+
+//********************************//
+//  mouseInReceiverOrNode(field)  //
+//********************************//
+// Input:  The field that the formation exists in.                       
+//															
+// Output: The receiver or node that the mouse is in. Output is a tuple 
+// 		   where the first element is a reciever and the second is a node. 
+//		   The output is null for either element if the mouse is not in a 
+//		   receiver or node.							
+//   														
+// mouseInReceiverOrNode iterates through the elligible receivers       
+// in a formation and checks if the mouse is inside any of the receivers
+// of the nodes in their route.	
+
+Formation.prototype.mouseInReceiverOrNode = function(field) {
+	var receiverClicked = null; 
+	var selectedNode = null;
+
+	for(var i = 0; i < this.eligibleReceivers.length; i++) {
+		var player = this.eligibleReceivers[i];
+		
+		if (player.isMouseInside(field)) {
+			receiverClicked = player;
+		}
+
+		for(var j = 0; j < player.routeNodes.length; j++) {
+			var node = player.routeNodes[j];
+			
+			if (node.isMouseInside(field)) {
+				selectedNode = node;
+			}
+		}
+
+		for(var k = 0; k < player.runNodes.length; k++){
+			var node = player.runNodes[k];
+			
+			if (node.isMouseInside(field)){
+				selectedNode = node;
+			}
+		}
+	}
+
+	return [receiverClicked, selectedNode];
+};
+
+//********************************//
+//  mouseInOptionsToCreate(field) //
+//********************************//
+// Input:  The field that the formation exists in.                       
+//															
+// Output: The player option that the mouse is in. Null if the mouse 
+// 		   is not in a player option.								
+//   														
+// mouseInOptionsToCreate iterates through the player options available 
+// and checks if the mouse is inside any of the player options.	
+
+Formation.prototype.mouseInOptionsToCreate = function(field) {
+	var optionClicked = null;
+	
+	for(var i = 0; i < this.optionsToCreate.length; i++) {
+		var player = this.optionsToCreate[i];
+		if (player.isMouseInside(field)) {
+			optionClicked = player;
+		}
+	}
+
+	return optionClicked;
+};
+
+Formation.prototype.mouseInCenter = function(field){
+	for(var i = 0; i < this.oline.length; i++) {
+		var p = this.oline[i];
+		if (p.pos === "C" && p.isMouseInside(field)) {
+			return p;
+		}
+	}
+	return null;
 };
 
 Formation.prototype.getPlayersWithPosition = function(position){
@@ -185,65 +317,67 @@ Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
 }
 
 //pos is a str for now, but could be an int code later
-Formation.prototype.getPlayerFromPosition = function(pos){
-  var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
-  players.concat(this.defensivePlayers.filter(function(player) {return player.pos === pos}))
-  if(players.length === 0){
-    return null;
-  }
-  return players[0];
+Formation.prototype.getPlayerFromPosition = function(pos) {
+	var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
+	players.concat(this.defensivePlayers.filter(function(player) {return player.pos === pos}))
+	if(players.length === 0) {
+		return null;
+	}
+
+	return players[0];
 };
 
-Formation.prototype.establishZoneHotSpots = function(){
-  var centerYardX = this.getPlayerFromPosition("C").startX;
-  var centerYardY = this.getPlayerFromPosition("C").startY;
-
+Formation.prototype.establishZoneHotSpots = function() {
+	var centerYardX = this.getPlayerFromPosition("C").startX;
+	var centerYardY = this.getPlayerFromPosition("C").startY;
 };
 
-Formation.prototype.drawOLQB = function(){
-  this.oline.forEach(function(ol){
-    ol.draw();
-  })
-  this.qb.forEach(function(qb){
-    qb.draw();
-  })
+Formation.prototype.drawOLQB = function() {
+	this.oline.forEach(function(ol) {
+		ol.draw();
+	});
+
+	this.qb.forEach(function(qb) {
+		qb.draw();
+	});
 };
 
-Formation.prototype.drawAllPlayers = function(field){
-  this.offensivePlayers.forEach(function(player){
-    player.draw(field);
-  })
-  this.changeablePlayers.forEach(function(player){
-    player.draw(field);
-  })
-  if(this.unit === "defense"){
-    this.defensivePlayers.forEach(function(player){
-      player.draw(field);
-    })
-  }
+Formation.prototype.drawAllPlayers = function(field) {
+	this.offensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
 
+	this.changeablePlayers.forEach(function(player) {
+		player.draw(field);
+	});
+
+	if(this.unit === "defense") {
+		this.defensivePlayers.forEach(function(player) {
+			player.draw(field);
+		});
+	}
 };
 
 Formation.prototype.drawOptionsToCreate = function() {
-  this.optionsToCreate.forEach(function(player){
-    player.draw(field);
-  })
+	this.optionsToCreate.forEach(function(player){
+		player.draw(field);
+	})
 };
 
 Formation.prototype.createDefensivePlay = function() {
-  var defensivePlay = new DefensivePlay({});
-  defensivePlay.defensivePlayers = this.defensivePlayers;
-  defensivePlay.offensiveFormationID = this.offensiveFormationID;
-  defensivePlay.dline = this.dline;
-  defensivePlay.linebacker = this.linebacker;
-  defensivePlay.cornerbacks = this.cornerbacks;
-  defensivePlay.safeties = this.safeties;
-  defensivePlay.id = this.id;
-  defensivePlay.playName = this.playName;
-  defensivePlay.defensivePlayers.forEach(function(player){
-    player.unit = "defense";
-  })
-  return defensivePlay
+	var defensivePlay = new DefensivePlay({});
+	defensivePlay.defensivePlayers = this.defensivePlayers;
+	defensivePlay.offensiveFormationID = this.offensiveFormationID;
+	defensivePlay.dline = this.dline;
+	defensivePlay.linebacker = this.linebacker;
+	defensivePlay.cornerbacks = this.cornerbacks;
+	defensivePlay.safeties = this.safeties;
+	defensivePlay.id = this.id;
+	defensivePlay.playName = this.playName;
+	defensivePlay.defensivePlayers.forEach(function(player){
+		player.unit = "defense";
+	})
+	return defensivePlay
 };
 
 Formation.prototype.findSelectedWR = function(){
@@ -279,111 +413,24 @@ Formation.prototype.removeAllPlayers = function(){
   }
 };
 
-Formation.prototype.createPlayer = function(player){
-  if(player.unit === "defense"){
-    if (this.defensivePlayers.length < 11){
-      this.defensivePlayers.push(player);
-      this.changeablePlayers.push(player);
-      this.establishingNewPlayer = player;
-      if(player.pos === "DL" || player.pos === "DE"){
-        this.dline.push(player);
-      }
-      else if(player.pos === "W" || player.pos === "M" || player.pos === "S"){
-        this.linebackers.push(player);
-      }
-      else if(player.pos === "CB"){
-        this.cornerbacks.push(player);
-      }
-      else if(player.pos === "SS" || player.pos === "FS"){
-        this.safeties.push(player);
-      }
-    }
-  }
-  else{
-    if (this.offensivePlayers.length < 11){
-      this.offensivePlayers.push(player);
-      this.eligibleReceivers.push(player);
-      this.changeablePlayers.push(player);
-      this.establishingNewPlayer = player;
-      if(player.pos === "WR"){
-        this.wideReceivers.push(player);
-        player.playerIndex = this.wideReceivers.length;
-      }
-      else if(player.pos === "TE"){
-        this.tightEnds.push(player);
-        player.playerIndex = this.tightEnds.length;
-      }
-      else if(player.pos === "RB"){
-        this.runningBacks.push(player);
-        player.playerIndex = this.runningBacks.length;
-      }
-    }
-  }
+Formation.prototype.mouseInQB = function(field) {
+	for(var i = 0; i < this.qb.length; i++) {
+		var p = this.qb[i];
+		if (p.isMouseInside(field)) {
+			return [p];
+		}
+	}
+	return [];
 };
 
-Formation.prototype.mouseInReceiverOrNode = function(field){
-  var receiverClicked = null; var selectedNode = null;
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    var p = this.eligibleReceivers[i];
-    if (p.isMouseInside(field)){
-      receiverClicked = p;
-    }
-    for(var j = 0; j < p.routeNodes.length; j++){
-      var n = p.routeNodes[j];
-      if (n.isMouseInside(field)){
-        selectedNode = n;
-      }
-    }
-    for(var k = 0; k < p.runNodes.length; k++){
-      var n = p.runNodes[k];
-      if (n.isMouseInside(field)){
-        selectedNode = n;
-      }
-    }
-  }
-  return [receiverClicked, selectedNode];
-};
-
-Formation.prototype.mouseInQB = function(field){
-  for(var i = 0; i < this.qb.length; i++){
-    var p = this.qb[i];
-    if (p.isMouseInside(field)){
-      return [p];
-    }
-  }
-  return [];
-};
-
-Formation.prototype.mouseInCenter = function(field){
-  for(var i = 0; i < this.oline.length; i++){
-    var p = this.oline[i];
-    if (p.pos === "C" && p.isMouseInside(field)){
-      return p;
-    }
-  }
-  return null;
-};
-
-Formation.prototype.mouseInDefensivePlayer = function(field){
-  for(var i = 0; i < this.defensivePlayers.length; i++){
-    var p = this.defensivePlayers[i];
-    if (p.isMouseInside(field)){
-      var defensivePlayer = p;
-    }
-
-  }
-  return defensivePlayer
-};
-
-Formation.prototype.mouseInOptionsToCreate = function(field) {
-  var optionClicked = null;
-  for(var i = 0; i < this.optionsToCreate.length; i++){
-    var p = this.optionsToCreate[i];
-    if (p.isMouseInside(field)){
-      optionClicked = p;
-    }
-  }
-  return optionClicked;
+Formation.prototype.mouseInDefensivePlayer = function(field) {
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		var p = this.defensivePlayers[i];
+		if (p.isMouseInside(field)) {
+			var defensivePlayer = p;
+		}
+	}
+	return defensivePlayer;
 };
 
 Formation.prototype.validFormation = function(){

@@ -1247,3 +1247,7 @@ div.formation-table button {
 .display-buttons button img{
 	height: 20px;
 }
+
+#grey-container {
+	padding: 12px;
+}
