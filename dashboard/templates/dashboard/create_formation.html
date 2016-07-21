@@ -14,28 +14,28 @@
 			<div class="display-buttons">
 				<table class="button-table">
 					<tr>
-						<td onclick="save()">
-							<button id="check-button" name="button">
+						<td>
+							<button id="check-button" name="button" onclick="saveFormation()">
 								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
-						<td onclick="clear()">
-							<button id="clear-button" name="button">
+						<td>
+							<button id="clear-button" name="button" onclick="clearFormation()">
 								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
-						<td onclick="zoomIn()">
-							<button id="zoom-in-button" name="button">
+						<td>
+							<button id="zoom-in-button" name="button" onclick="zoomIn()">
 								{% include "quiz/zoom_in_button.html" %}
 							</button>
 						</td>
-						<td onclick="zoomOut()">
-							<button id="zoom-out-button" name="button">
+						<td>
+							<button id="zoom-out-button" name="button" onclick="zoomOut()">
 								{% include "quiz/zoom_out_button.html" %}
 							</button>
 						</td>
-						<td onclick="fullScreen()">
-							<button id="full-screen-button" name="button">
+						<td>
+							<button id="full-screen-button" name="button" onclick="fullScreen()">
 								{% include "quiz/full_screen_button.html" %}
 							</button>
 						</td>
@@ -95,11 +95,11 @@
 			}
 		};
 
-		function save() {
+		function saveFormation() {
 			pressSave();
 		}
 
-		function clear() {
+		function clearFormation() {
 			pressClear();
 		}
 
@@ -441,9 +441,31 @@
 			new_formation.removeAllPlayers();
 		};
 
-		function pressZoomIn() {};
+		function pressZoomIn() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
 
-		function pressZoomOut() {};
+			resizeBottomButtons();
+		};
+
+		function pressZoomOut() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		};
 
 		function pressFullScreen() {};
 
@@ -574,7 +596,7 @@
 		};
 
 		// These are things I am going to rewrite without using jQuery - Dylan
-		$('.formation-button').click(function() {
+		/*$('.formation-button').click(function() {
 			var starterFormation = formations.filter(function(formationObject){
 				return formationObject.name === this.value;
 			}.bind(this))[0]
@@ -618,7 +640,7 @@
 			}
 
 			resizeBottomButtons();
-		});
+		});*/
 
 		function resizeBottomButtons() {
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
@@ -646,7 +668,7 @@
 			}
 		};
 
-		var draw = function() {
+		/*var draw = function() {
 			if(makeJSONCall) {
 				makeJSONCall = false;
 				$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR) {
@@ -688,7 +710,7 @@
 					});
 				});
 			}
-		};
+		};*/
 
 		var runTest = function() {};
 	</script>
