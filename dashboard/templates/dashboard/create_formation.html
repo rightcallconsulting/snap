@@ -221,11 +221,15 @@
 		};
 
 		function draw() {
-			// Get Quarterback, Center, Left Tackle, Right Tackle, and Wide Receivers.
+			// Get Quarterback, Center, Left Tackle, Right Tackle, Running Backs, Full
+			// Backs, Tight Ends, and Wide Receivers.
 			var quarterback = new_formation.qb[0];
 			var center = null;
 			var left_tackle = null;
 			var right_tackle = null;
+			var running_backs = new_formation.runningBacks;
+			var full_backs = new_formation.fullBacks;
+			var tight_ends = new_formation.tightEnds;
 			var wide_receivers = new_formation.wideReceivers;
 
 			for(var ol = 0; ol < new_formation.oline.length; ol++) {
@@ -255,10 +259,42 @@
 				}
 			}
 
+			// If a running back is near the line of scrimmage automatically
+			// put them on the line of scrimmage.
+			for(var rb = 0; rb < running_backs.length; rb++) {
+				var runningback = running_backs[rb];
+				
+				if (runningback.y > left_tackle.y-1) {
+					runningback.y = left_tackle.y;
+				}
+			}
+
+			// If a full back is near the line of scrimmage automatically
+			// put them on the line of scrimmage.
+			for(var fb = 0; fb < full_backs.length; fb++) {
+				var fullback = full_backs[fb];
+				
+				if (fullback.y > left_tackle.y-1) {
+					fullback.y = left_tackle.y;
+				}
+			}
+
+			// If a tight end is near the line of scrimmage automatically
+			// put them on the line of scrimmage.
+			for(var te = 0; te < tight_ends.length; te++) {
+				var tightend = tight_ends[te];
+				
+				if (tightend.y > left_tackle.y-1) {
+					tightend.y = left_tackle.y;
+				}
+			}
+
+			// If a wide receiver is near the line of scrimmage automatically
+			// put them on the line of scrimmage.
 			for(var wr = 0; wr < wide_receivers.length; wr++) {
 				var receiver = wide_receivers[wr];
 				
-				if (receiver.y > left_tackle.y-1.25) {
+				if (receiver.y > left_tackle.y-1) {
 					receiver.y = left_tackle.y;
 				}
 			}

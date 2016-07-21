@@ -79,10 +79,13 @@ Formation.prototype.createPlayer = function(new_player) {
 			} else if(new_player.pos == "TE") {
 				this.tightEnds.push(new_player);
 				new_player.playerIndex = this.tightEnds.length;
-			} else if(new_player.pos == "RB" || new_player.pos == "FB") {
+			} else if(new_player.pos == "RB") {
 				this.runningBacks.push(new_player);
 				new_player.playerIndex = this.runningBacks.length;
-			} 
+			} else if(new_player.pos == "FB") {
+				this.fullBacks.push(new_player);
+				new_player.playerIndex = this.fullBacks.length;
+			}
 		}
 	}
 };
