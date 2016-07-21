@@ -12,50 +12,49 @@ var missedOrSkippedPlays = [];
 
 
 function setup() {
-  var box = document.getElementById('display-box');
-  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
-  var width = box.offsetWidth;
-  var myCanvas = createCanvas(width, height);
-  field.height = height;
-  field.width = width;
-  field.heightInYards = 54;
-  field.ballYardLine = 75;
-  background(58, 135, 70);
-  randomSeed(millis());
-  myCanvas.parent('quiz-box');
+	var box = document.getElementById('display-box');
+	var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+	var width = box.offsetWidth;
+	var myCanvas = createCanvas(width, height);
+	field.height = height;
+	field.width = width;
+	field.heightInYards = 54;
+	field.ballYardLine = 75;
+	background(58, 135, 70);
+	randomSeed(millis());
+	myCanvas.parent('quiz-box');
 
-  window.onresize=function(){
-    var box = document.getElementById('display-box');
-    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
-    var width = box.offsetWidth;
-    resizeCanvas(width, height);
-    field.height = height;
-    field.width = width;
-  }
+	window.onresize=function() {
+		var box = document.getElementById('display-box');
+		var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+		var width = box.offsetWidth;
+		resizeCanvas(width, height);
+		field.height = height;
+		field.width = width;
+	}
 
-  exitDemo = new Button({
-    label: "",
-    x: field.getYardX(50),
-    y: field.getYardY(50),
-    height: 1.5,
-    width: 1.5,
-    clicked: false,
-    fill: color(255, 255, 255)
-  });
-
+	exitDemo = new Button({
+		label: "",
+		x: field.getYardX(50),
+		y: field.getYardY(50),
+		height: 1.5,
+		width: 1.5,
+		clicked: false,
+		fill: color(255, 255, 255)
+	});
 }
 
-function setupDemoScreen(){
-  test.showDemo = true;
-  demoComplete = false;
-  test.demoStartTime = millis();
-  test.getCurrentPlay().clearProgression();
+function setupDemoScreen() {
+	test.showDemo = true;
+	demoComplete = false;
+	test.demoStartTime = millis();
+	test.getCurrentPlay().clearProgression();
 };
 
-function exitDemoScreen(){
-  test.showDemo = false;
-  demoComplete = false;
-  test.getCurrentPlay().clearProgression();
+function exitDemoScreen() {
+	test.showDemo = false;
+	demoComplete = false;
+	test.getCurrentPlay().clearProgression();
 };
 
 
@@ -98,22 +97,21 @@ function draw() {
 }
 
 function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+	var currentIndex = array.length, temporaryValue, randomIndex;
 
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
 
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
 
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
+	return array;
 }
 
 var runTest = function(type, playerTested, test){
