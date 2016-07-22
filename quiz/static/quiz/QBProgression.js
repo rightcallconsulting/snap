@@ -59,42 +59,39 @@ function exitDemoScreen() {
 
 
 function draw() {
-  // Fetch player object from Django DB
-  if(makeJSONCall){
-    makeJSONCall = false
-    $.getJSON('/quiz/tests/'+testIDFromHTML, function(data, jqXHR){
-      test = createTestFromJSON(data[0]);
-      var playerID = test.playerID;
-      $.getJSON('/quiz/players/'+ playerID, function(data2, jqXHR){
-        currentPlayerTested = createUserFromJSON(data2[0]);
-        $.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-          data3.forEach(function(play){
-            var testIDArray = play.fields.tests;
-            if(testIDArray.includes(test.id)){
-              var play = createPlayFromJSON(play);
-              play.test = test
-              test.plays.push(play);
-            }
-          })
-          $.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-            data4.forEach(function(position){
-              var player = createPlayerFromJSON(position);
-              positions.push(player);
-            })
-            test.plays.forEach(function(play){
-              play.addPositionsFromID(positions);
-              play.populatePositions();
-            })
-            originalPlayList = test.plays.slice();
-            test.plays = shuffle(test.plays);
-            test.updateProgress();
-            test.updateScoreboard();
-            runTest("QBProgression", currentPlayerTested, test);
-          })
-        })
-      })
-});
-}
+	if(makeJSONCall) {
+		makeJSONCall = false
+		$.getJSON('/quiz/tests/'+testIDFromHTML, function(data1, jqXHR){
+			test = createTestFromJSON(data1[0]);
+
+			$.getJSON('/quiz/teams/1/plays', function(data2, jqXHR){
+				data2.forEach(function(play){
+					var testIDArray = play.fields.tests;
+					if(testIDArray.includes(test.id)){
+						var play = createPlayFromJSON(play);
+						play.test = test
+						test.plays.push(play);
+					}
+				})
+				
+				$.getJSON('/quiz/teams/1/plays/players', function(data3, jqXHR){
+					data3.forEach(function(position){
+						var player = createPlayerFromJSON(position);
+						positions.push(player);
+					})
+					test.plays.forEach(function(play){
+						play.addPositionsFromID(positions);
+						play.populatePositions();
+					})
+					originalPlayList = test.plays.slice();
+					test.plays = shuffle(test.plays);
+					test.updateProgress();
+					test.updateScoreboard();
+					runTest("QBProgression", test);
+				})
+			})
+		});
+	}
 
 function shuffle(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex;
@@ -114,7 +111,7 @@ function shuffle(array) {
 	return array;
 }
 
-var runTest = function(type, playerTested, test){
+var runTest = function(type, test){
     // Create Scoreboard
     var scoreboard = new Scoreboard({
 
