@@ -19,3 +19,7 @@ Right Call Consulting Style Guide
 	browsers. Use it only if there is a good justifiable reason. Instead of 'innerHTML' 
 	use the DOM operations to manipulate nodes in the HTML as this has more consistent
 	behavior.
+
+---JQuery
+----Always use the .done() .fail() .always() (especially .fail()) callbacks when you can. It will make your debugging life and that of your 
+	friend's much less stressful
