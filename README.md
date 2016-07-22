@@ -18,3 +18,7 @@ Our Snap product's webapp code
 	use the DOM operations to manipulate nodes in the HTML as this has more consistent
 	behavior.
 </p>
+<h5>JQuery</h5>
+<ul>
+	<li>Always use the .done() .fail() .always() (especially .fail()) callbacks when you can. It will make your debugging life and that of your friend's much less stressful</li>
+</ul>
