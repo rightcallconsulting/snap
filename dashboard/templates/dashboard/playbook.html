@@ -222,13 +222,13 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 
 	<script type="text/javascript">
-		var changeUnit = function(sel){
+		var changeUnit = function(sel) {
 			var offenseBox = document.getElementById('choose-offensive-formation-box');
 			var defenseBox = document.getElementById('choose-defensive-formation-box');
 			var selectPlayBox = document.getElementById('select-play-box');
 			var selectOffenseBox = document.getElementById('select-offense-box');
-			var formationLink = document.getElementById('formation-link')
-			var playLink = document.getElementById('play-link')
+			var formationLink = document.getElementById('formation-link');
+			var playLink = document.getElementById('play-link');
 			document.getElementById('play-image-header').innerHTML = "Play";
 			
 			if(sel.value === 'offense') {
@@ -236,17 +236,17 @@
 				defenseBox.classList.add('hidden');
 				selectOffenseBox.classList.add('hidden');
 				offenseBox.classList.remove('hidden');
-				selectPlayBox.classList.remove('hidden')
-				formationLink.href = "/quiz/create_formation"
-				playLink.href = "/quiz/create_play"
+				selectPlayBox.classList.remove('hidden');
+				formationLink.href = "/quiz/create_formation";
+				playLink.href = "/quiz/create_play";
 			} else {
 				playToDraw = null;
 				selectPlayBox.classList.add('hidden');
 				offenseBox.classList.add('hidden');
 				defenseBox.classList.remove('hidden');
 				selectOffenseBox.classList.remove('hidden');
-				formationLink.href = "/quiz/create_defense_formation"
-				playLink.href = "/quiz/create_defense_formation"
+				formationLink.href = "/quiz/create_defense_formation";
+				playLink.href = "/quiz/create_defense_formation";
 			}
 		};
 	</script>
@@ -277,7 +277,7 @@
 
 		$('#draw-plays').on('click', '.play', function() {
 			$('#choose-play').data('button', this.name);
-					playClicked = $(this);
+				playClicked = $(this);
 		});
 
 		$('.existing-plays').on('click', '.play-remove', function() {
