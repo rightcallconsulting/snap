@@ -261,7 +261,8 @@
 		var removedPlaysFromFormation = [];
 		var testID = $('#test-id').data('test-id');
 		var playIDArray = $('#play-id-array').data('play-id-array');
-		$('#draw-plays').on('mouseover', '.play', function(){
+		
+		$('#draw-plays').on('mouseover', '.play', function() {
 			if(playToDraw){
 				playToDraw.resetPlayers(defensePlay)
 				playToDraw.setAllRoutes();
@@ -272,29 +273,35 @@
 			playToDraw.formation = formationToDraw;
 			$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
 			playScene = false;
-		})
-		$('#draw-plays').on('click', '.play', function(){
-		$('#choose-play').data('button', this.name);
-				playClicked = $(this);
 		});
-		$('.existing-plays').on('click', '.play-remove', function(){
+
+		$('#draw-plays').on('click', '.play', function() {
+			$('#choose-play').data('button', this.name);
+					playClicked = $(this);
+		});
+
+		$('.existing-plays').on('click', '.play-remove', function() {
 			modifyPlayWithTest($(this));
 			$(this).fadeOut();
 			$('.show-plays #'+this.id).removeClass('play-remove-button');
 			$('.show-plays #'+this.id).addClass('btn-success play-add-button');
 			playIDArray = _.without(playIDArray, Number(this.id))
 		});
+
 		$("#play-button").click(function() {
 			playScene = true;
-		})
+		});
+
 		$("#pause-button").click(function() {
 			playScene = false;
-		})
+		});
+
 		$("#restart-button").click(function() {
 			playScene = false;
 			playToDraw.resetPlayers(defensePlay);
 			playToDraw.setAllRoutes();
-		})
+		});
+
 		$(".formation").click(function() {
 			var formationName = this.value;
 			formationID = Number(this.id);
@@ -317,6 +324,7 @@
 			})
 			$('#play-image-header').text(formationToDraw.name+ ": ");
 		});
+
 		$(".defensive-play-button").click(function() {
 			var playID = Number(this.id);
 			var playName = this.value;
