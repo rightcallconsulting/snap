@@ -308,7 +308,7 @@ img.menu-icon {
 .team-logo-wrapper{
   width: 80%;
   margin-left: 10%;
-  height: 200px;
+  min-height: 200px;
   text-align: center;
   padding-top: 25px;
 }
