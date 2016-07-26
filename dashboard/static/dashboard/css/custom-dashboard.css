@@ -562,7 +562,7 @@ input.create-quiz{
 .unit-form{
   width: 60%;
   font-size: 17px;
-  margin-top: 20px;
+  margin-bottom: 20px;
   background-color: #FFFFFF;
   border: 3px solid #7CB34A;
   color: #555555;
@@ -766,7 +766,7 @@ input.create-quiz{
   vertical-align: middle;
 }
 .coach-action-table td a{
-  display:block;
+  display: block;
   width:100%;
   height: 100%;
   color: #FFF;
