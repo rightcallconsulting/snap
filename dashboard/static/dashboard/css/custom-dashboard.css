@@ -12,7 +12,29 @@
 #main-container {
 	min-height: 100vh;
 	position: relative;
-	padding-top: 15px;
+}
+
+#custom-top-nav {
+	min-height: 50px;
+	min-width: 310px;
+	background-color: #fff;
+	border-bottom: 3px solid #33691e;
+	margin: 7.5px 0px 7.5px 0px;
+	padding: 0px 15px 0px 30px;
+	white-space: nowrap;
+}
+
+#custom-top-nav ul {
+	list-style-type: none;
+}
+
+#custom-top-nav .nav-notification > li > a, 
+#custom-top-nav .nav-notification > li > span {
+	color: #999;
+	display: block;
+	padding: 13px 15px;
+	position: relative;
+	transition: all 0.2s ease 0s;
 }
 
 .coach-button-container {
