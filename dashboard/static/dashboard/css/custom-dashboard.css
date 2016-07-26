@@ -15,6 +15,63 @@
 	padding-top: 15px;
 }
 
+.coach-button-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 0px 20px 0px 40px;
+	margin: 20px 0px 40px 0px;
+}
+
+.coach-button-container a {
+	height: 100px;
+	width: 125px;
+	display: table;
+}
+
+.coach-button-container a p {
+	display: table-cell;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.coach-button-container a#create-formation-link {
+	background-image: url("/static/dashboard/images/create-formation-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#create-play-link {
+	background-image: url("/static/dashboard/images/create-play-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#create-quiz-link {
+	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#groups-link {
+	background-image: url("/static/dashboard/images/groups-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#analytics-link {
+	background-image: url("/static/dashboard/images/analytics-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
 .no-border {
 	border: none;
 	border-style: hidden;
@@ -134,24 +191,32 @@ img.menu-icon {
   float: left;
 }
 
-.coach-home .secondary-content-area, .playbook .secondary-content-area, .edit-test .secondary-content-area{
-  width: 100%;
-  height: 290px;
-  border-left: 1px solid #777;
-  border-right: 1px solid #777;
-  border-bottom: 1px solid #777;
-  padding: 0px;
+.coach-home .secondary-content-area, 
+.playbook .secondary-content-area, 
+.edit-test .secondary-content-area {
+	width: 100%;
+	min-height: 200px;
+	max-height: 500px;
+	border-left: 1px solid #777;
+	border-right: 1px solid #777;
+	border-bottom: 1px solid #777;
+	padding: 0px;
 }
 
-.coach-home .top, .playbook .top{
-  margin-bottom: 20px;
+.coach-home .top, 
+.playbook .top {
+	margin-bottom: 20px;
 }
 
-.create-groups .action-boxes, .all-groups .action-boxes, .manage-groups .action-boxes {
+.create-groups .action-boxes, 
+.all-groups .action-boxes, 
+.manage-groups .action-boxes {
 	margin-bottom: 0px;
 }
 
-.create-groups .group-home, .all-groups .group-home, .manage-groups .group-home {
+.create-groups .group-home, 
+.all-groups .group-home, 
+.manage-groups .group-home {
 	margin-bottom: 1%;
 }
 
@@ -724,136 +789,55 @@ input.create-quiz{
   vertical-align: middle;
 }
 
-.alerts-list th{
-  color: #33691E;
-  text-align: center;
-  width: 50%;
-  height: 45px;
-  font-size: 22px;
-}
-
-.alerts-list th span{
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-bottom: 2px;
-  border-bottom: 1px solid #33691E;
-}
-
-.alerts-list td{
-  text-align: center;
-  width: 50%;
-  height: 35px;
-  font-size: 18px;
-}
-
-.analytics-table-row{
-  width: 100%;
-  margin-top: 80px;
-}
-
-.analytics-table-row .table-header{
-  width: 100%;
-  font-size: 24px;
-  text-align: center;
-  margin-bottom: 20px;
-  line-height: 30px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-
-}
-
-.analytics-table-row .table-header span{
-  padding-bottom: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  border-bottom: 2px solid #777;
-}
-
-.analytics-graph{
-  height: 200px;
-}
-
-.coach-action-table {
-	width: 100%;
-}
-
-.coach-action-table td {
-	vertical-align: middle;
-}
-
-.coach-action-table td a {
-	display: block;
-	width: 100%;
-	height: 100%;
-	color: #FFF;
-}
-
-.coach-action-table td button{
-	width: 100%;
-	height: 100%;
-	background: none;
-	border: none;
-	padding: 0px;
-	font-size: 18px;
+.alerts-list th {
+	color: #33691E;
 	text-align: center;
-	font-weight: bold;
+	width: 50%;
+	height: 45px;
+	font-size: 22px;
 }
 
-.coach-action-table td.first {
-	background-color: #558B2F;
-	background-image: url("/static/dashboard/images/create-formation-action-box.png");
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
+.alerts-list th span {
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #33691E;
 }
 
-.coach-action-table td.second {
-	background-color: #009688;
-	background-image: url("/static/dashboard/images/create-play-action-box.png");
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
+.alerts-list td {
+	text-align: center;
+	width: 50%;
+	height: 35px;
+	font-size: 18px;
 }
 
-.coach-action-table td.third {
-	background-color: #FF9800;
-	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
+.analytics-table-row {
+	width: 100%;
+	margin-top: 40px;
 }
 
-.coach-action-table td.fourth {
-	background-color: #607D86;
-	background-image: url("/static/dashboard/images/groups-action-box.png");
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
+.analytics-table-row .table-header {
+	width: 100%;
+	font-size: 24px;
+	text-align: center;
+	margin-bottom: 20px;
+	line-height: 30px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
 }
 
-.coach-action-table td.fifth {
-	background-color: #42A5F5;
-	background-image: url("/static/dashboard/images/analytics-action-box.png");
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
+.analytics-table-row .table-header span {
+	padding-bottom: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
+	border-bottom: 2px solid #777;
+}
+
+.analytics-graph {
+	height: 200px;
 }
 
 .playerbook .table-wrapper {

@@ -5,46 +5,23 @@
 {% block content %}
 	<div class="coach-home">
 		<div class="content-container">
-			<div class="coach-action-row action-boxes">
-				<table class="coach-action-table">
-					<tbody>
-						<tr>
-							<td class="first">
-								<button onclick="clickButton(0)">
-									CREATE<br />FORMATION
-								</button>
-							</td>
-							<td class="blank">
-							</td>
-							<td class="second">
-								<button onclick="clickButton(1)">
-									CREATE<br />PLAY
-								</button>
-							</td>
-							<td class="blank">
-							</td>
-							<td class="third">
-								<button onclick="clickButton(2)">
-									CREATE<br />QUIZ
-								</button>
-							</td>
-							<td class="blank">
-							</td>
-							<td class="fourth">
-								<button onclick="clickButton(3)">
-									GROUPS
-								</button>
-							</td>
-							<td class="blank"></td>
-							<td class="fifth">
-								<button onclick="clickButton(4)">
-									ANALYTICS
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div><!--coach-action-row-->
+			<div class="coach-button-container col-md-12">
+				<a href="/quiz/create_formation" id="create-formation-link">
+					<p>CREATE<br />FORMATION</p>
+				</a>
+				<a href="/quiz/create_play" id="create-play-link">
+					<p>CREATE<br />PLAY</p>
+				</a>
+				<a href="/quizzes/create" id="create-quiz-link">
+					<p>CREATE<br />QUIZ</p>
+				</a>
+				<a href="/groups" id="groups-link">
+					<p>GROUPS</p>
+				</a>
+				<a href="/analytics" id="analytics-link">
+					<p>ANALYTICS</p>
+				</a>
+			</div>
 			<div class="col-md-7 no-border">
 				<div class="dash-col">
 					<div class="dash-header">
