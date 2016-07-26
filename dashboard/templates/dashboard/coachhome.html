@@ -102,7 +102,7 @@
 				{% endif %}
 			</div><!--/col-md-6-->
 			<div class="col-md-5 no-border">
-				<div class="secondary-content-area top">
+				<div class="secondary-content-area top no-border">
 					<div class="dash-header">
 						<span>
 							<h4>
@@ -111,31 +111,29 @@
 						</span>
 					</div>
 					<table class="table to-do-table" id="responsiveTable">
+						<thead>
+							<tr>
+								<th>QUIZ</th>
+								<th>DUE</th>
+								<th>STATUS</th>
+							</tr>
+						</thead>
 						<tbody>
-						<tr>
-							<th>QUIZ</th>
-							<th>FOR</th>
-							<th>DUE</th>
-							<th>STATUS</th>
-						</tr>
-						{% for test in uncompleted_tests %}
-							{% if forloop.counter0 < 2 %}
-								<tr id="test-{{test.id}}">
-									<td>
-										{{test.name}}
-									</td>
-									<td>
-										{{test.player.user.first_name}} {{test.player.user.last_name}}
-									</td>
-									<td>
-										{% due_date_default test.deadline %}
-									</td>
-									<td>
-										<span class="status-complete">COMPLETE</span>
-									</td>
-								</tr>
-							{% endif %}
-						{% endfor %}
+							{% for test in uncompleted_tests %}
+								{% if forloop.counter0 < 2 %}
+									<tr id="test-{{test.id}}">
+										<td>
+											{{test.name}}
+										</td>
+										<td>
+											{% due_date_default test.deadline %}
+										</td>
+										<td>
+											<span class="status-complete">COMPLETE</span>
+										</td>
+									</tr>
+								{% endif %}
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>
