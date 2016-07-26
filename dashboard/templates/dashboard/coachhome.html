@@ -45,7 +45,7 @@
 					</tbody>
 				</table>
 			</div><!--coach-action-row-->
-			<div class="main-content-area">
+			<div class="col-md-6 no-border">
 				<div class="dash-col">
 					<div class="dash-header">
 						<span><h4>ANALYTICS</h4></span>
@@ -60,45 +60,46 @@
 											<br />
 											<span>CORRECT</span>
 										</td>
-									<td>
-										<canvas id="percentIncorrectChart"></canvas>
-										<br />
-										<span>MISSED</span>
-									</td>
-									<td>
-										<canvas id="percentSkippedChart"></canvas>
-										<br />
-										<span>SKIPPED</span>
-									</td>
+										<td>
+											<canvas id="percentIncorrectChart"></canvas>
+											<br />
+											<span>MISSED</span>
+										</td>
+										<td>
+											<canvas id="percentSkippedChart"></canvas>
+											<br />
+											<span>SKIPPED</span>
+										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
-						<div class="analytics-table-row">
-							<div class="table-header">
-								<span>PLAY ALERTS</span>
-							</div>
-							<table class="alerts-list">
-								<tbody>
+				</div>
+
+					<div class="analytics-table-row">
+						<div class="table-header">
+							<span>PLAY ALERTS</span>
+						</div>
+						<table class="alerts-list">
+							<tbody>
+								<tr>
+									<th>PLAY</th>
+									<th>CORRECT %</th>
+								</tr>
+								{% for play, percentage in alarms.items %}
 									<tr>
-										<th>PLAY</th>
-										<th>CORRECT %</th>
+										<td>
+											{{play}}
+										</td>
+										<td>
+											{{percentage}}%
+										</td>
 									</tr>
-									{% for play, percentage in alarms.items %}
-										<tr>
-											<td>
-												{{play}}
-											</td>
-											<td>
-												{{percentage}}%
-											</td>
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
-					{% endif %}
-				</div><!--/dash-col-->
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% endif %}
 			</div><!--/main-content-area-->
 			<div class="stacked-col">
 				<div class="secondary-content-area top">
