@@ -81,11 +81,18 @@ img.menu-icon{
   border: none;
 }
 
-.coach-home .stacked-col{
-  width: 35%;
-  height: 95%;
-  display: inline-block;
-  float: left;
+.coach-home .stacked-col {
+	width: 35%;
+	height: 95%;
+	display: inline-block;
+	float: left;
+}
+
+.coach-home .stacked-col {
+	width: 35%;
+	height: 95%;
+	display: inline-block;
+	float: left;
 }
 
 .playbook .stacked-col{
@@ -516,92 +523,95 @@ input.create-quiz{
   background: #333;
 }
 
-.openable .notification-label{
-  margin-left: -15px;
-  position: relative;
+.openable .notification-label {
+	margin-left: -15px;
+	position: relative;
 }
 
-.scrollable-table{
-  overflow-y: auto;
-  height: 80%;
+.scrollable-table {
+	overflow-y: auto;
+	height: 80%;
 }
 
-.non-scrollable-table-wrapper{
-  overflow-y: hidden;
-  height: 80%;
+.non-scrollable-table-wrapper {
+	overflow-y: hidden;
+	height: 80%;
 }
 
-.two-column-table td{
-  width: 50%;
-  height: 100px;
+.two-column-table td {
+	width: 50%;
+	height: 100px;
 }
 
-.three-column-table td{
-  width: 33.33%;
-  height: 75px;
+.three-column-table td {
+	width: 33.33%;
+	height: 75px;
 }
 
-.formation-list, .play-list{
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  table-layout: fixed;
+.formation-list, .play-list {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	table-layout: fixed;
 }
 
-.action-boxes .col-lg-3{
-  text-align: center;
-  height: 100%;
+.action-boxes .col-lg-3 {
+	text-align: center;
+	height: 100%;
 }
 
-.action-boxes span{
-  font-size: 17px;
-  margin-top: auto;
-  margin-bottom: auto;
+.action-boxes span {
+	font-size: 17px;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 
-.unit-form{
-  width: 60%;
-  font-size: 17px;
-  margin-bottom: 20px;
-  background-color: #FFFFFF;
-  border: 3px solid #7CB34A;
-  color: #555555;
+.unit-form {
+	width: 60%;
+	font-size: 17px;
+	margin-bottom: 20px;
+	background-color: #FFFFFF;
+	border: 3px solid #7CB34A;
+	color: #555555;
 }
 
-.hidden{
-  display: none;
+.hidden {
+	display: none;
 }
 
-.test-row-icon{
-  height: 30px;
-  width: 30px;
+.test-row-icon {
+	height: 30px;
+	width: 30px;
 }
 
 .to-do-table {
-  border: 2px solid #C5E1A5;
+	width: 90vw;
 }
 
-.to-do-table tbody tr td {
-  height: 50px;
-  font-size: 14px;
-  vertical-align: middle;
-  text-align: center;
-  color: #000000;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  border: 2px solid #C5E1A5;
+.to-do-table tbody tr {
+	height: 50px;
+	font-size: 14px;
+	color: #000000;
+	border: 2px solid #C5E1A5;
 }
 
-.to-do-table th{
-  background-color: #D0D3D5;
-  font-size: 16px;
-  color: #000000;
-  text-align: center;
+.to-do-table tbody td {
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 25px;
+	padding-bottom: 25px;
 }
 
-.to-do-table .button{
-  background-color: #9CCC65;
-  padding: 8px;
+.to-do-table th {
+	background-color: #D0D3D5;
+	font-size: 16px;
+	color: #000000;
+	text-align: center;
+}
+
+.to-do-table .button {
+	background-color: #9CCC65;
+	padding: 8px;
 }
 
 .news-feed-table tbody tr{
@@ -763,137 +773,132 @@ input.create-quiz{
 }
 
 .coach-action-table {
-  width: 100%;
+	width: 100%;
 }
 
-.coach-action-table td{
-  vertical-align: middle;
+.coach-action-table td {
+	vertical-align: middle;
 }
-.coach-action-table td a{
-  display: block;
-  width:100%;
-  height: 100%;
-  color: #FFF;
 
+.coach-action-table td a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: #FFF;
 }
 
 .coach-action-table td button{
-  width: 100%;
-  height: 100%;
-  background: none;
-  border: none;
-  padding: 0px;
-  font-size: 18px;
-  text-align: center;
-  font-weight: bold;
+	width: 100%;
+	height: 100%;
+	background: none;
+	border: none;
+	padding: 0px;
+	font-size: 18px;
+	text-align: center;
+	font-weight: bold;
 }
 
-.coach-action-table td.first{
-  background-color: #558B2F;
-  background-image: url("/static/dashboard/images/create-formation-action-box.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+.coach-action-table td.first {
+	background-color: #558B2F;
+	background-image: url("/static/dashboard/images/create-formation-action-box.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-.coach-action-table td.second{
-  background-color: #009688;
-  background-image: url("/static/dashboard/images/create-play-action-box.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+.coach-action-table td.second {
+	background-color: #009688;
+	background-image: url("/static/dashboard/images/create-play-action-box.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-.coach-action-table td.third{
-  background-color: #FF9800;
-  background-image: url("/static/dashboard/images/create-quiz-action-box.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+.coach-action-table td.third {
+	background-color: #FF9800;
+	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-.coach-action-table td.fourth{
-  background-color: #607D86;
-  background-image: url("/static/dashboard/images/groups-action-box.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+.coach-action-table td.fourth {
+	background-color: #607D86;
+	background-image: url("/static/dashboard/images/groups-action-box.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-.coach-action-table td.fifth{
-  background-color: #42A5F5;
-  background-image: url("/static/dashboard/images/analytics-action-box.png");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+.coach-action-table td.fifth {
+	background-color: #42A5F5;
+	background-image: url("/static/dashboard/images/analytics-action-box.png");
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
-.playerbook .table-wrapper{
-  margin-top: 1%;
-  height: 90%;
-  overflow-y: hidden;
+.playerbook .table-wrapper {
+	margin-top: 1%;
+	height: 90%;
+	overflow-y: hidden;
 }
 
-.playerbook-action-table{
-  table-layout: fixed;
-  width: 100%;
-  height: 100%;
-  border-collapse: separate;
-  border-spacing: 20px;
+.playerbook-action-table {
+	table-layout: fixed;
+	width: 100%;
+	height: 100%;
+	border-collapse: separate;
+	border-spacing: 20px;
 }
 
-.playerbook-action-table td{
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  background-color: #7CB34A;
-
+.playerbook-action-table td {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: #7CB34A;
 }
 
-.playbook-action{
-
+.start-quiz {
+	background-color: #8CD0D3;
+	height: 30px;
+	padding: 8px;
+	width: 70%;
 }
 
-.start-quiz{
-  background-color: #8CD0D3;
-  height: 30px;
-  padding: 8px;
-  width: 70%;
+.group-select-panel {
+	height: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 100%;
 }
 
-.group-select-panel{
-  height: 30px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-.group-select-panel .unit-form{
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 1%;
-  height: 30px;
-  width: 30%;
+.group-select-panel .unit-form {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 1%;
+	height: 30px;
+	width: 30%;
 }
 
 .to-do #group-form{
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .group-home .table-wrapper{
@@ -916,19 +921,19 @@ input.create-quiz{
   background-color: #D80027;
 }
 
-.player-list .ui-draggable-dragging td{
-  width: 100px;
+.player-list .ui-draggable-dragging td {
+	width: 100px;
 }
 
-.player-list img{
-  margin-top: 10px;
-  margin-bottom: 10px;
-  max-height: 20px;
+.player-list img {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	max-height: 20px;
 }
 
-.player-list button{
-  background: none;
-  border: none;
+.player-list button {
+	background: none;
+	border: none;
 }
 
 .player-list th, .player-list td {
@@ -948,85 +953,88 @@ input.create-quiz{
 	border-width: 1px;
 }
 
-.group-home .news-col{
-  height: 550px;
+.group-home .news-col {
+	height: 550px;
 }
 
-.player-home .news-col, .player-home .dash-col{
-  height: 600px;
+.player-home .news-col, 
+.player-home .dash-col {
+	height: 600px;
 }
 
-.player-home .dash-col{
-  width: 65%;
-  border: none;
+.player-home .dash-col {
+	width: 65%;
+	border: none;
 }
 
-.player-home .news-col{
-  color: #33691E;
-  width: 30%;
+.player-home .news-col {
+	color: #33691E;
+	width: 30%;
 }
 
-.player-home .dash-row, .player-home .top-row{
-  height: 40%;
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 0px;
+.player-home .dash-row, 
+.player-home .top-row {
+	height: 40%;
+	width: 100%;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
-.player-home .top-row{
-  margin-bottom: 100px;
+.player-home .top-row {
+	margin-bottom: 100px;
 }
 
-.player-home .dash-row .table-wrapper{
-  border-left: 2px solid #C5E1A5;
-  border-right: 2px solid #C5E1A5;
-  border-bottom: 2px solid #C5E1A5;
-  height: 220px;
+.player-home .dash-row .table-wrapper {
+	border-left: 2px solid #C5E1A5;
+	border-right: 2px solid #C5E1A5;
+	border-bottom: 2px solid #C5E1A5;
+	height: 220px;
 }
 
-.coach-link{
-  color: #15797E;
+.coach-link {
+	color: #15797E;
 }
 
-.play-link, .formation-link{
-  margin-left: 4px;
-  color: #C5E1A5;
+.play-link, 
+.formation-link {
+	margin-left: 4px;
+	color: #C5E1A5;
 }
 
-.stacked-row{
-  height: 50%;
-  margin: 0px;
-  width: 100%;
-  border-bottom: 1px solid #777;
+.stacked-row {
+	height: 50%;
+	margin: 0px;
+	width: 100%;
+	border-bottom: 1px solid #777;
 }
 
-.group-table{
-  width: 100%;
-  text-align: center;
+.group-table {
+	width: 100%;
+	text-align: center;
 }
 
-.no-border{
-  border: none;
+.no-border {
+	border: none;
 }
 
-.table-wrapper{
-  height: 100%;
+.table-wrapper {
+	height: 100%;
 }
 
-.table-with-footer{
-  height: 90%;
+.table-with-footer {
+	height: 90%;
 }
 
-.group-analytics-col{
-  height: 575px;
+.group-analytics-col {
+	height: 575px;
 }
 
-.group-analytics{
-  max-height: 100%;
-  width: 100%;
-  text-align: center;
-  table-layout: fixed;
-  overflow: hidden;
+.group-analytics {
+	max-height: 100%;
+	width: 100%;
+	text-align: center;
+	table-layout: fixed;
+	overflow: hidden;
 }
 
 .group-analytics td{
@@ -1156,26 +1164,27 @@ input.create-quiz{
   background: #558B2F;
 }
 
-.analytics-play-list td, .analytics-play-list th{
-  border: 1px solid #000;
-  padding: 8px;
+.analytics-play-list td, 
+.analytics-play-list th {
+	border: 1px solid #000;
+	padding: 8px;
 }
 
-.panel{
-  border: none;
+.panel {
+	border: none;
 }
 
-.dash-row{
-  border: none;
+.dash-row {
+	border: none;
 }
 
-.status-complete{
-  background-color: #558B2F;
-  padding: 8px;
+.status-complete {
+	background-color: #558B2F;
+	padding: 8px;
 }
 
-select#id_player{
-  display:none;
+select#id_player {
+	display: none;
 }
 
 .fa-minus-circle.red {
