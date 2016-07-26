@@ -19,7 +19,7 @@
 	display: flex;
 	justify-content: space-between;
 	padding: 0px 20px 0px 40px;
-	margin: 20px 0px 40px 0px;
+	margin: 10px 0px 30px 0px;
 }
 
 .coach-button-container a {
@@ -686,60 +686,58 @@ input.create-quiz{
 	padding: 8px;
 }
 
-.news-feed-table tbody tr{
-  border: none;
+.news-feed-table tbody tr {
+	border: none;
 }
 
-.news-feed-table tbody tr td{
-  height: 50px;
-  font-size: 16px;
-  vertical-align: middle;
-  text-align: left;
-  color: #33691E;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  border: none;
-  min-width: 50px;
+.news-feed-table tbody tr td {
+	font-size: 15px;
+	vertical-align: middle;
+	text-align: left;
+	color: #33691E;
+	padding-top: 8px;
+	border: none;
+	min-width: 50px;
 }
 
-.home-analytics-table{
-  table-layout: fixed;
-  width: 100%;
-  text-align: center;
+.home-analytics-table {
+	table-layout: fixed;
+	width: 100%;
+	text-align: center;
 }
 
-.home-analytics-table img{
-  height: 200px;
+.home-analytics-table img {
+	height: 200px;
 }
 
-.action-table{
-  width: 100%;
-  table-layout: fixed;
-  text-align: center;
-  vertical-align: middle;
+.action-table {
+	width: 100%;
+	table-layout: fixed;
+	text-align: center;
+	vertical-align: middle;
 }
-.coach-action-table{
-  width: 85%;
-  table-layout: fixed;
-}
-
-.coach-action-table td.blank{
-  width: 85px;
+.coach-action-table {
+	width: 85%;
+	table-layout: fixed;
 }
 
-.coach-action-table td{
-  color: #FFF;
-  height: 100px;
-  padding-left: 10px;
-  padding-right: 10px;
-  vertical-align: middle;
+.coach-action-table td.blank {
+	width: 85px;
 }
 
-.coach-action-table .link-wrapper{
-  width: 70%;
-  margin-left: 15%;
-  margin-right: 15%;
-  height: 100%;
+.coach-action-table td {
+	color: #FFF;
+	height: 100px;
+	padding-left: 10px;
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
+.coach-action-table .link-wrapper {
+	width: 70%;
+	margin-left: 15%;
+	margin-right: 15%;
+	height: 100%;
 }
 
 .player-home .analytics-table {
