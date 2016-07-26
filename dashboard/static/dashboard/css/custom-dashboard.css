@@ -14,6 +14,9 @@
 	position: relative;
 }
 
+/*************************************************************************
+top navbar and sidebar css
+*************************************************************************/
 #custom-top-nav {
 	min-height: 50px;
 	min-width: 310px;
@@ -37,6 +40,89 @@
 	transition: all 0.2s ease 0s;
 }
 
+.full-sidebar {
+	width: 10vw;
+	height: 100vh;
+	overflow: scroll;
+}
+
+.full-sidebar-container,
+.full-sidebar-container#main-container {
+	margin-left: 10vw;
+}
+
+.full-sidebar .dash-header-logo {
+	height: 100px;
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.full-sidebar-container #top-nav {
+	padding-left: 4%;
+}
+
+.full-sidebar .dash-footer-logo {
+	height: 50px;
+	width: auto;
+}
+
+.small-sidebar {
+	width: 5vw;
+	height: 100vh;
+	overflow: scroll;
+}
+
+.small-sidebar-container {
+	margin-left: 5%;
+}
+
+.small-sidebar .menu-text {
+	display: none;
+}
+
+.small-sidebar .dash-header-logo {
+	width: 35px;
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.small-sidebar-container#main-container {
+	margin-left: 5%;
+}
+
+.small-sidebar-container #top-nav {
+	padding-left: 5%;
+}
+
+.sidebar-footer {
+	width: 100%;
+	margin-bottom: 50px;
+	text-align: center;
+	float: bottom;
+}
+
+.small-sidebar .dash-footer-logo {
+	height: 25px;
+}
+
+.small-sidebar .main-menu li {
+	text-align: center;
+}
+
+.sidebar-footer {
+	height: 20%;
+	width: 100%;
+	margin-top: 80%;
+	position: absolute;
+	text-align: center;
+}
+
+/*************************************************************************
+coach homepage
+*************************************************************************/
 .coach-button-container {
 	display: flex;
 	justify-content: space-between;
@@ -97,30 +183,6 @@
 .no-border {
 	border: none;
 	border-style: hidden;
-}
-
-.full-sidebar-container {
-	margin-left: 12%;
-}
-
-.small-sidebar-container {
-	margin-left: 5%;
-}
-
-.small-sidebar-container#main-container {
-	margin-left: 5%;
-}
-
-.full-sidebar-container#main-container {
-	margin-left: 12%;
-}
-
-.full-sidebar-container #top-nav {
-	padding-left: 4%;
-}
-
-.small-sidebar-container #top-nav {
-	padding-left: 5%;
 }
 
 img.menu-icon {
@@ -289,57 +351,45 @@ img.menu-icon {
 	width: 90%;
 }
 
-.create-groups form, .all-groups form, .manage-groups form {
+.create-groups form, 
+.all-groups form, 
+.manage-groups form {
 	margin-left: 2%;
 	margin-bottom: 1%;
 	width: 90%;
 }
 
-.small-sidebar .menu-text{
-  display: none;
+.change-plays-box, 
+.display-play-box, 
+.choose-offensive-formation-box, 
+.choose-defensive-formation-box, 
+.quiz-sidebar {
+	/*height: 600px;*/
+	margin-bottom: 50px;
+	margin-top: 50px;
 }
 
-.change-plays-box, .display-play-box, .choose-offensive-formation-box, .choose-defensive-formation-box, .quiz-sidebar {
-  /*height: 600px;*/
-  margin-bottom: 50px;
-  margin-top: 50px;
+.team-logo-wrapper {
+	width: 80%;
+	margin-left: 10%;
+	min-height: 200px;
+	text-align: center;
+	padding-top: 25px;
 }
 
-.team-logo-wrapper{
-  width: 80%;
-  margin-left: 10%;
-  min-height: 200px;
-  text-align: center;
-  padding-top: 25px;
+.top-nav-table {
+	width: 100%;
+	height: 50px;
+	table-layout: fixed;
 }
 
-.full-sidebar .dash-header-logo{
-  width: 100px;
-  display:block;
-  margin-left: auto;
-  margin-right: auto;
+.top-nav-table .left {
+	text-align: left;
 }
 
-.small-sidebar .dash-header-logo{
-  width: 35px;
-  display:block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.top-nav-table{
-  width: 100%;
-  height: 50px;
-  table-layout: fixed;
-}
-
-.top-nav-table .left{
-  text-align: left;
-}
-
-.top-nav-table .middle{
-  text-align: center;
-  padding-right: 4%;
+.top-nav-table .middle {
+	text-align: center;
+	padding-right: 4%;
 }
 
 .top-nav-table .middle img{
@@ -352,21 +402,6 @@ img.menu-icon {
 
 #display-play-box .dash-header {
   margin-bottom: 0px;
-}
-
-.sidebar-footer{
-  width: 100%;
-  margin-bottom: 50px;
-  text-align: center;
-  float: bottom;
-}
-
-.full-sidebar .dash-footer-logo{
-  height: 75px;
-}
-
-.small-sidebar .dash-footer-logo{
-  height: 25px;
 }
 
 #play-image-header {
@@ -1072,30 +1107,6 @@ input.create-quiz{
 .group-home #display-group-box .table-wrapper{
   height: 90%;
 }
-
-.full-sidebar{
-  width: 12%;
-  height: 100%;
-}
-
-.small-sidebar{
-  max-width: 5%;
-  min-width: 75px;
-  height: 100%;
-}
-
-.small-sidebar .main-menu li{
-  text-align: center;
-}
-
-.sidebar-footer{
-  height: 20%;
-  width: 100%;
-  margin-top: 80%;
-  position: absolute;
-  text-align: center;
-}
-
 .main-header h4{
   line-height: 30px;
 }
