@@ -306,8 +306,8 @@
 			var formationName = this.value;
 			formationID = Number(this.id);
 			formationToDraw = formations.filter(function(formation) {
-			return formation.id === formationID;
-		  })[0];
+				return formation.id === formationID;
+		  	})[0];
 			var playArray = []
 			$('#change-plays-header').text('Plays: ' + this.value)
 			$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
@@ -438,6 +438,5 @@
 				drawPlays.innerHTML = newHTML;
 		};
 	</script>
-
 	<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
 {% endblock %}
