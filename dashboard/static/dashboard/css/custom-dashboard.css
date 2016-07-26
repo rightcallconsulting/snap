@@ -59,6 +59,14 @@ top navbar and sidebar css
 	display: block;
 }
 
+.team-logo-wrapper {
+	width: 80%;
+	margin-left: 10%;
+	min-height: 100px;
+	text-align: center;
+	padding: 25px 0px 25px 0px;
+}
+
 .full-sidebar-container #top-nav {
 	padding-left: 4%;
 }
@@ -367,14 +375,6 @@ img.menu-icon {
 	/*height: 600px;*/
 	margin-bottom: 50px;
 	margin-top: 50px;
-}
-
-.team-logo-wrapper {
-	width: 80%;
-	margin-left: 10%;
-	min-height: 200px;
-	text-align: center;
-	padding-top: 25px;
 }
 
 .top-nav-table {

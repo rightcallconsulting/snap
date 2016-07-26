@@ -38,6 +38,14 @@
   transition: all 0.2s ease 0s;
 }
 
+.team-logo-wrapper {
+	width: 80%;
+	margin-left: 10%;
+	min-height: 100px;
+	text-align: center;
+	padding: 25px 0px 25px 0px;
+}
+
 .quiz .main-content-area{
   margin-left: 3%;
   width: 56%;
@@ -181,14 +189,6 @@
   margin-top: 80%;
   position: absolute;
   text-align: center;
-}
-
-.team-logo-wrapper{
-  width: 80%;
-  margin-left: 10%;
-  height: 150px;
-  text-align: center;
-  padding-top: 25px;
 }
 
 .full-sidebar .dash-header-logo{
