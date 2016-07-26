@@ -34,7 +34,6 @@
 						{% if request.user.myuser.is_a_player %}
 							<th>Added By</th>
 						{% endif %}
-						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -61,9 +60,7 @@
 									</a>
 								</td>
 							{% else %}
-								<td>
-									<!-- include link for editing a quiz but we need another header as well (maybe not)-->
-								</td>
+								<!-- include link for editing a quiz but we need another header as well (maybe not)-->
 							{% endif %}
 						</tr>
 					{% endfor %}

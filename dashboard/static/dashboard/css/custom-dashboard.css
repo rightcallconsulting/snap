@@ -577,7 +577,11 @@ input.create-quiz{
   width: 30px;
 }
 
-.to-do-table tbody tr td{
+.to-do-table {
+  border: 2px solid #C5E1A5;
+}
+
+.to-do-table tbody tr td {
   height: 50px;
   font-size: 14px;
   vertical-align: middle;
@@ -585,7 +589,7 @@ input.create-quiz{
   color: #000000;
   padding-top: 25px;
   padding-bottom: 25px;
-  border-bottom: 2px solid #C5E1A5;
+  border: 2px solid #C5E1A5;
 }
 
 .to-do-table th{
