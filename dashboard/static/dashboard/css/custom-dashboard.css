@@ -70,7 +70,7 @@ img.menu-icon{
 
 .coach-home .main-content-area, .playbook .main-content-area{
   margin-left: 3.5%;
-  width: 45%;
+  width: 55%;
   height: 500px;
   margin-right: 5%;
   display: inline-block;
@@ -82,14 +82,14 @@ img.menu-icon{
 }
 
 .coach-home .stacked-col{
-  width: 45%;
+  width: 35%;
   height: 95%;
   display: inline-block;
   float: left;
 }
 
 .playbook .stacked-col{
-  width: 45%;
+  width: 35%;
   height: 100%;
   display: inline-block;
   float: left;
