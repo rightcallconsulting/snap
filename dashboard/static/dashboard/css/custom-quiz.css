@@ -66,6 +66,7 @@
 .small-sidebar .dash-header-logo {
 	height: 10vh;
 	width: auto;
+	display: block;
 	margin-right: auto;
 	margin-left: auto;
 }
