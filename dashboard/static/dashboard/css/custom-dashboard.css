@@ -1325,9 +1325,13 @@ div.header {
 	height: 50px;
 	line-height: 50px;
 	background-color: #33691e;
-	color: #ffffff;
+	color: white;
 	font-size: large;
 	text-align: center;
+}
+
+div.header.placeholder {
+	color: silver;
 }
 
 div.formation-table table {

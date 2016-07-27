@@ -4,8 +4,8 @@
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="header display-header">
-				Create Formation
+			<div id="header-box" class="header display-header placeholder" onclick="removePlaceholder(this)">
+				New Formation Name
 			</div>
 
 			<div id="quiz-box">
@@ -78,6 +78,15 @@
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
+		function removePlaceholder(selected) {
+			selected.removeAttribute("class");
+			selected.setAttribute("class", "header display-header");
+
+			while (selected.firstChild != null) {
+				selected.removeChild(selected.firstChild);
+			}
+		};
+
 		function changeSelected(selected) {
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
@@ -101,6 +110,14 @@
 
 		function clearFormation() {
 			pressClear();
+
+			var curr_selected = document.getElementById("selected");
+			
+			if (curr_selected != null) {
+				curr_selected.removeAttribute("id");
+				curr_selected.removeAttribute("class");
+				curr_selected.setAttribute("class", "btn btn-primary");
+			}
 		}
 
 		function zoomIn() {
