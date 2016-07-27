@@ -14,6 +14,11 @@
 	position: relative;
 }
 
+.no-border {
+	border: none;
+	border-style: hidden;
+}
+
 /*************************************************************************
 top navbar and sidebar css
 *************************************************************************/
@@ -170,7 +175,7 @@ coach homepage
 .coach-button-container {
 	display: flex;
 	justify-content: space-between;
-	padding: 0px 20px 0px 40px;
+	padding: 0px 50px 0px 50px;
 	margin: 10px 0px 30px 0px;
 }
 
@@ -229,13 +234,35 @@ coach homepage
 	background-position: center center;
 }
 
-.no-border {
-	border: none;
-	border-style: hidden;
+.homepage-quiz-table {
+	width: 100%;
 }
 
-.coach-home {
-	margin-right: 2.5%;
+.homepage-quiz-table th {
+	height: 30px;
+	background-color: #d0d3d5;
+	color: #000000;
+	font-size: 16px;
+	text-align: center;
+}
+
+.homepage-quiz-table tr {
+	height: 30px;
+	font-size: 14px;
+	color: #000000;
+	border: 2px solid #c5e1a5;
+}
+
+.homepage-quiz-table td {
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+.homepage-quiz-table .button {
+	background-color: #9ccc65;
+	padding: 8px;
 }
 
 .coach-home .action-boxes, 
@@ -248,29 +275,29 @@ coach homepage
 	display: inline-block;
 }
 
-.playbook .action-boxes{
-  margin-bottom: 5%;
+.playbook .action-boxes {
+	margin-bottom: 5%;
 }
 
-.all-groups .action-boxes{
-  margin-bottom: 0px;
+.all-groups .action-boxes {
+	margin-bottom: 0px;
 }
 
-.create-groups .action-boxes{
-  margin-bottom: 0px;
+.create-groups .action-boxes {
+	margin-bottom: 0px;
 }
 
-.coach-home .main-content-area, .playbook .main-content-area{
-  margin-left: 3.5%;
-  width: 55%;
-  height: 500px;
-  margin-right: 5%;
-  display: inline-block;
-  float: left;
+.coach-home .main-content-area, .playbook .main-content-area {
+	margin-left: 3.5%;
+	width: 55%;
+	height: 500px;
+	margin-right: 5%;
+	display: inline-block;
+	float: left;
 }
 
-.coach-home .main-content-area .dash-col{
-  border: none;
+.coach-home .main-content-area .dash-col {
+	border: none;
 }
 
 .coach-home .stacked-col {
@@ -287,36 +314,36 @@ coach homepage
 	float: left;
 }
 
-.playbook .stacked-col{
-  width: 35%;
-  height: 100%;
-  display: inline-block;
-  float: left;
+.playbook .stacked-col {
+	width: 35%;
+	height: 100%;
+	display: inline-block;
+	float: left;
 }
 
-.edit-test .main-content-area{
-  margin-left: 2.5%;
-  width: 45%;
-  height: 630px;
-  margin-right: 2.5%;
-  display: inline-block;
-  float: left;
+.edit-test .main-content-area {
+	margin-left: 2.5%;
+	width: 45%;
+	height: 630px;
+	margin-right: 2.5%;
+	display: inline-block;
+	float: left;
 }
 
-.edit-test .stacked-col{
-  width: 25%;
-  height: 100%;
-  display: inline-block;
-  float: left;
-  margin-right: 2.5%;
+.edit-test .stacked-col {
+	width: 25%;
+	height: 100%;
+	display: inline-block;
+	float: left;
+	margin-right: 2.5%;
 }
 
-.edit-test .tertiary-content-area{
-  width: 20%;
-  height: 630px;
-  margin-top: 50px;
-  display: inline-block;
-  float: left;
+.edit-test .tertiary-content-area {
+	width: 20%;
+	height: 630px;
+	margin-top: 50px;
+	display: inline-block;
+	float: left;
 }
 
 .coach-home .secondary-content-area, 
