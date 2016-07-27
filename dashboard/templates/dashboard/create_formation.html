@@ -79,15 +79,18 @@
 		// Event Listener Functions                                          //
 		//*******************************************************************//
 		function removePlaceholder(selected) {
-			//selected.removeAttribute("class");
-			//selected.setAttribute("class", "header display-header");
 			var placeholder = document.getElementById("placeholder");
 			if (placeholder != null) {
-				selected.class -= "placeholder";
+				selected.removeAttribute("class");
+				selected.setAttribute("class", "header display-header");
 
 				while (selected.firstChild != null) {
 					selected.removeChild(selected.firstChild);
 				}
+
+				var formation_name = document.createElement("p");
+				formation_name.setAttribute("id", "formation-name");
+				selected.appendChild(formation_name);
 			}
 		};
 
@@ -437,19 +440,25 @@
 				player.y > trash.y - trash.height
 		};
 
-		function keyPressed() {
+		function keyTyped() {
 			var header_box = document.getElementById("header-box");
 			removePlaceholder(header_box);
+			var formation_name = document.getElementById("formation-name");
+			formation_name.textContent += keyCode;
 
-			if(keyCode === BACKSPACE) {
-					selectedWR = new_formation.findSelectedWR();
-				if (selectedWR) {
-					selectedWR.stepRouteBackward();
+			/*if ((keyCode >= 48 && keyCode <= 90) || keyCode == BACKSPACE || keycode == SPACE) {
+				var header_box = document.getElementById("header-box");
+				removePlaceholder(header_box);
+
+				var formation_name = document.getElementById("formation-name");
+
+				var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+				var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+				var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+				if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+					formation_name.textContent += key;
 				}
-			} else {
-				new_formation.playName = new_formation.playName.substring(0, new_formation.playName.length - 1);
-				$('#play-name').text("New Formation: " + new_formation.playName);
-			}
+			}*/
 			
 			// return false to prevent default behavior
 			return false;
@@ -458,7 +467,6 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-
 		function pressSave() {
 			if(new_formation.validFormation()) {
 				new_formation.eligibleReceivers.forEach(function(player){
@@ -531,7 +539,7 @@
 		defensePlay.draw(field);
 		*/
 
-		keyTyped = function() {
+		/*keyTyped = function() {
 			var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
 			var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
 			var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
@@ -541,7 +549,7 @@
 			}
 			// return false to prevent default behavior			
 			return false;
-		};
+		};*/
 
 		/*mouseDragged = function() {
 			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
