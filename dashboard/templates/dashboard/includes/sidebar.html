@@ -10,9 +10,7 @@
 			<ul>
 				<li class="active">
 					<a href="/">
-						
-							<img class="menu-icon" src="{% static 'dashboard/images/dashboard-icon.png' %}" alt="">
-						
+						<img class="menu-icon" src="{% static 'dashboard/images/dashboard-icon.png' %}" alt="">
 						<br>
 						<span class="menu-text">
 							DASHBOARD
@@ -23,13 +21,10 @@
 
 				<li class="openable open">
 					<a href="/todo">
-						
-							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
-						
+						<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
 						<br>
 						<span class="menu-text">
 							{% if request.user.myuser.is_a_player %}
-								<span class="notification-label bounceIn animation-delay6">3</span>
 								TO DO
 							{% else %}
 								QUIZZES
@@ -41,9 +36,7 @@
 
 				<li class="openable">
 					<a href="/analytics">
-						
-							<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
-						
+						<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
 						<br>
 						<span class="menu-text">
 							ANALYTICS
@@ -54,9 +47,7 @@
 
 				<li>
 					<a href="/playbook">
-						
-							<img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
-						
+						<img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
 						<br>
 						<span class="menu-text">
 							PLAYBOOK
@@ -68,9 +59,7 @@
 				{% if not request.user.myuser.is_a_player %}
 					<li>
 						<a href="{% url 'groups' %}">
-							
-								<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
-							
+							<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
 							<br>
 							<span class="menu-text">
 								GROUPS
