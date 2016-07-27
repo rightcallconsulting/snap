@@ -4,7 +4,7 @@
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="header display-header placeholder" onclick="removePlaceholder(this)">
+			<div id="header-box" class="interactive-header display-header placeholder" onclick="selectHeader(this)">
 				<p id="placeholder">Enter Formation Name</p>
 			</div>
 
@@ -73,28 +73,48 @@
 {% endblock %}
 
 {% block javascript %}
-	<!--<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>-->
+	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
-		function removePlaceholder(selected) {
-			var placeholder = document.getElementById("placeholder");
-			if (placeholder != null) {
-				selected.removeAttribute("class");
-				selected.setAttribute("class", "header display-header");
+		function selectHeader() {/* todo: implement */};
 
-				while (selected.firstChild != null) {
-					selected.removeChild(selected.firstChild);
+		function removeHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			var placeholder = document.getElementById("placeholder");
+
+			if (placeholder != null) {
+				header_box.removeAttribute("class");
+				header_box.setAttribute("class", "header display-header");
+
+				while (header_box.firstChild != null) {
+					header_box.removeChild(header_box.firstChild);
 				}
 
 				var formation_name = document.createElement("p");
 				formation_name.setAttribute("id", "formation-name");
-				selected.appendChild(formation_name);
+				header_box.appendChild(formation_name);
 			}
 		};
 
-		function addPlaceholder() {/* todo: implement */};
+		function addHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			header_box.addClass("placeholder");
+
+			var formation_name = document.getElementById("formation-name");
+
+			if (formation_name != null) {
+				while (header_box.firstChild != null) {
+					header_box.removeChild(header_box.firstChild);
+				}
+
+				var placeholder = document.createElement("p");
+				placeholder.setAttribute("id", "placeholder");
+				placeholder.textContent = "Enter Formation Name";
+				header_box.appendChild(placeholder);
+			}
+		};
 
 		function changeSelected(selected) {
 			var new_selected = selected;
@@ -444,8 +464,7 @@
 
 		function keyTyped() {
 			if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-				var header_box = document.getElementById("header-box");
-				removePlaceholder(header_box);
+				removeHeaderPlaceholder();
 
 				var formation_name = document.getElementById("formation-name");
 
@@ -469,8 +488,9 @@
 					var string_length = formation_name.textContent.length;
 					if(string_length > 1) {
 						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
+					} else {
+						addHeaderPlaceholder();
 					}
-					// else if string length is less than 1 put placeholder back
 				}
 				return false;
 			} else if (keyCode == 32) {
