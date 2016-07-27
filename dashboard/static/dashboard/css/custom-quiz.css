@@ -183,12 +183,12 @@
   height: 25%;
 }
 
-.sidebar-footer{
-  height: 20%;
-  width: 100%;
-  margin-top: 80%;
-  position: absolute;
-  text-align: center;
+.sidebar-footer {
+	height: 10vh;
+	padding-top: 1vh;
+	padding-bottom: 1vh;
+	padding-right: auto;
+	padding-left: auto;
 }
 
 .full-sidebar .dash-header-logo{

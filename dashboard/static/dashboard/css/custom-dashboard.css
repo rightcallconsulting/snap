@@ -41,37 +41,60 @@ top navbar and sidebar css
 }
 
 .full-sidebar {
-	width: 10vw;
+	width: 12vw;
 	height: 100vh;
 	overflow: scroll;
 }
 
 .full-sidebar-container,
 .full-sidebar-container#main-container {
-	margin-left: 10vw;
+	margin-left: 12vw;
 }
 
-.full-sidebar .header-section {
+.full-sidebar .sidebar-header {
 	height: 20vh;
+	padding-top: 2vh;
+	padding-bottom: 2vh;
+}
+
+.full-sidebar .dash-header-logo {
+	height: 16vh;
+	width: auto;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.full-sidebar .sidebar-selection-menu {
+	height: 70vh;
+	padding-right: auto;
+	padding-left: auto;
+}
+
+.full-sidebar .sidebar-selection-menu li {
+	height: 14vh;
+}
+
+.full-sidebar .sidebar-selection-menu img {
+	height: 7vh;
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.full-sidebar .sidebar-footer {
+	height: 10vh;
 	padding-top: 1vh;
 	padding-bottom: 1vh;
 	padding-right: auto;
 	padding-left: auto;
 }
 
-.full-sidebar .dash-header-logo {
-	height: 18vh;
-	width: auto;
-	vertical-align: middle;
-}
-
-.full-sidebar-container #top-nav {
-	padding-left: 4%;
-}
-
 .full-sidebar .dash-footer-logo {
-	height: 50px;
+	display: block;
+	height: 8vh;
 	width: auto;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .small-sidebar {
@@ -103,13 +126,6 @@ top navbar and sidebar css
 	padding-left: 5%;
 }
 
-.sidebar-footer {
-	width: 100%;
-	margin-bottom: 50px;
-	text-align: center;
-	float: bottom;
-}
-
 .small-sidebar .dash-footer-logo {
 	height: 25px;
 }
@@ -118,12 +134,11 @@ top navbar and sidebar css
 	text-align: center;
 }
 
-.sidebar-footer {
-	height: 20%;
+.small-sidebar .sidebar-footer {
 	width: 100%;
-	margin-top: 80%;
-	position: absolute;
+	margin-bottom: 50px;
 	text-align: center;
+	float: bottom;
 }
 
 /*************************************************************************
@@ -189,11 +204,6 @@ coach homepage
 .no-border {
 	border: none;
 	border-style: hidden;
-}
-
-img.menu-icon {
-	width: 50px;
-	height: 50px;
 }
 
 .coach-home {
