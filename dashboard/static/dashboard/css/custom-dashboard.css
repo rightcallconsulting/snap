@@ -265,6 +265,41 @@ coach homepage
 	padding: 8px;
 }
 
+/*************************************************************************
+player homepage
+*************************************************************************/
+
+.homepage-todo-table {
+	width: 100%;
+}
+
+.homepage-todo-table th {
+	height: 30px;
+	background-color: #d0d3d5;
+	color: #000000;
+	font-size: 16px;
+	text-align: center;
+}
+
+.homepage-todo-table tr {
+	height: 30px;
+	font-size: 14px;
+	color: #000000;
+	border: 2px solid #c5e1a5;
+}
+
+.homepage-todo-table td {
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+.homepage-todo-table .button {
+	background-color: #9ccc65;
+	padding: 8px;
+}
+
 .coach-home .action-boxes, 
 .playbook .action-boxes, 
 .all-groups .action-boxes .create-groups {
