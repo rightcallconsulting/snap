@@ -190,52 +190,54 @@ function drawDemoScreen() {
 	field.drawBackground(null, height, width);
 	var timeElapsed = millis() - test.demoStartTime;
 	var formation = test.getCurrentFormation();
-	if(formation){
-	formation.drawAllPlayers(field);
-	var x1 = field.getTranslatedX(exitDemo.x);
-	var y1 = field.getTranslatedY(exitDemo.y);
-	var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
-	var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-	noStroke();
-	fill(220,0,0);
-	exitDemo.draw(field);
-	textSize(22);
-	textAlign(LEFT);
-	text("DEMO", x2 + 5, (y1 + y2) / 2);
-	stroke(0);
-	strokeWeight(2);
-	line(x1, y1, x2, y2);
-	line(x1, y2, x2, y1);
-	strokeWeight(1);
-	noStroke();
+	
+	if(formation) {
+		formation.drawAllPlayers(field);
+		var x1 = field.getTranslatedX(exitDemo.x);
+		var y1 = field.getTranslatedY(exitDemo.y);
+		var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+		var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+		noStroke();
+		fill(220,0,0);
+		exitDemo.draw(field);
+		textSize(22);
+		textAlign(LEFT);
+		text("DEMO", x2 + 5, (y1 + y2) / 2);
+		stroke(0);
+		strokeWeight(2);
+		line(x1, y1, x2, y2);
+		line(x1, y2, x2, y1);
+		strokeWeight(1);
+		noStroke();
 
-	var x = field.getTranslatedX(49);
-	var y = field.getTranslatedY(85);
-	var x2 = field.getTranslatedX(66);
-	var y2 = field.getTranslatedY(85);
-	stroke(255,238,88);
-	fill(255,238,88);
-	strokeWeight(2);
-	line(x, y, x2, y2);
-	strokeWeight(1);
-	triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+		var x = field.getTranslatedX(49);
+		var y = field.getTranslatedY(85);
+		var x2 = field.getTranslatedX(66);
+		var y2 = field.getTranslatedY(85);
+		stroke(255,238,88);
+		fill(255,238,88);
+		strokeWeight(2);
+		line(x, y, x2, y2);
+		strokeWeight(1);
+		triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
 
-	var clicked = false;
-	for(var i = 1; i <= multipleChoiceAnswers.length; i++){
-	var answer = document.getElementById("mc-button-"+i);
-	if(answer && answer.classList.contains('clicked')){
-	clicked = true;
-	}
-	}
-	textSize(24);
-	textAlign(CENTER);
-	if(demoDoubleClick){
-	text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
-	}else if(clicked){
-	text("Click again to check answer.", x - 20, y - 115);
-	}else{
-	text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
-	}
+		var clicked = false;
+		for(var i = 1; i <= multipleChoiceAnswers.length; i++) {
+			var answer = document.getElementById("mc-button-"+i);
+			if(answer && answer.classList.contains('clicked')) {
+				clicked = true;
+			}
+		}
+
+		textSize(24);
+		textAlign(CENTER);
+		if(demoDoubleClick) {
+			text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
+		} else if(clicked) {
+			text("Click again to check answer.", x - 20, y - 115);
+		} else {
+			text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
+		}
 	}
 };
 
@@ -254,108 +256,110 @@ function exitDemoScreen() {
 
 
 mouseClicked = function() {
-	if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-	test.scoreboard.feedbackMessage = "";
+	if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
+		test.scoreboard.feedbackMessage = "";
 	}
+
 	if(bigReset.isMouseInside(field) && test.over) {
-	test.formations = shuffle(originalFormationList.slice());
-	test.restartQuiz();
-	return true;
-	}else if(resetMissed.isMouseInside(field) && test.over) {
-	var newFormations = test.missedFormations.concat(test.skippedFormations);
-	if(newFormations.length < 1){
-	newFormations = originalFormationList.slice();
-	}
-	test.formations = shuffle(newFormations);
-	test.restartQuiz();
-	return true;
-	}else if(nextQuiz.isMouseInside(field) && test.over) {
-	//Advance to next quiz or exit to dashboard
-	window.location.href = "/playbook";
-	}else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
-	exitDemoScreen();
-	}else{
-	if(test.showDemo){
-	if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
-	demoDoubleClick = true;
-	}else{
-	return;
-	}
-	}
+		test.formations = shuffle(originalFormationList.slice());
+		test.restartQuiz();
+		return true;
+	} else if(resetMissed.isMouseInside(field) && test.over) {
+		var newFormations = test.missedFormations.concat(test.skippedFormations);
+		if(newFormations.length < 1) {
+			newFormations = originalFormationList.slice();
+		}
+
+		test.formations = shuffle(newFormations);
+		test.restartQuiz();
+		return true;
+	} else if(nextQuiz.isMouseInside(field) && test.over) {
+		//Advance to next quiz or exit to dashboard
+		window.location.href = "/playbook";
+	} else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick) {
+		exitDemoScreen();
+	} else {
+		if(test.showDemo) {
+			if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
+				demoDoubleClick = true;
+			} else {
+				return;
+			}
+		}
 	}
 };
 
 keyTyped = function() {
-	if(test.over){
-	if(key === 'r'){
-	test.restartQuiz();
-	}
-	}else{
-	var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-	if(offset >= 0 && offset < multipleChoiceAnswers.length){
-	var answer = multipleChoiceAnswers[offset];
-	if(answer.clicked){
-	checkAnswer(answer);
-	}else{
-	clearAnswers();
-	answer.changeClickStatus();
-	}
-	}
+	if(test.over) {
+		if(key === 'r') {
+			test.restartQuiz();
+		}
+	} else {
+		var offset = key.charCodeAt(0) - "1".charCodeAt(0);
+		if(offset >= 0 && offset < multipleChoiceAnswers.length) {
+			var answer = multipleChoiceAnswers[offset];
+			if(answer.clicked) {
+				checkAnswer(answer);
+			} else {
+				clearAnswers();
+				answer.changeClickStatus();
+			}
+		}
 	}
 };
 
 
 
 function draw() {
-	Player.prototype.draw = function(field){
-	var x = field.getTranslatedX(this.x);
-	var y = field.getTranslatedY(this.y);
-	var siz = field.yardsToPixels(this.siz);
-	if(this.unit === "offense"){
-	noStroke();
-	fill(this.red, this.green, this.blue);
-	ellipse(x, y, siz, siz);
-	fill(0,0,0);
-	textSize(14);
-	textAlign(CENTER, CENTER);
-	text(this.num, x, y);
-	}
-	else {
-	noStroke();
-	fill(this.red, this.green, this.blue);
-	textSize(17);
-	textAlign(CENTER, CENTER);
-	text(this.pos, x, y);
-	}
+	Player.prototype.draw = function(field) {
+		var x = field.getTranslatedX(this.x);
+		var y = field.getTranslatedY(this.y);
+		var siz = field.yardsToPixels(this.siz);
+		
+		if(this.unit === "offense") {
+			noStroke();
+			fill(this.red, this.green, this.blue);
+			ellipse(x, y, siz, siz);
+			fill(0,0,0);
+			textSize(14);
+			textAlign(CENTER, CENTER);
+			text(this.num, x, y);
+		} else {
+			noStroke();
+			fill(this.red, this.green, this.blue);
+			textSize(17);
+			textAlign(CENTER, CENTER);
+			text(this.pos, x, y);
+		}
 	};
 
-	if(!setupComplete){
-	//WAIT - still executing JSON
-	}else if(test.showDemo){
-	drawDemoScreen();
-	}else if(test.over){
-	background(93, 148, 81);
-	noStroke();
-	test.drawQuizSummary();
-	bigReset.draw(field);
-	resetMissed.draw(field);
-	nextQuiz.draw(field);
-	}else if(test.feedbackScreenStartTime){
-	var timeElapsed = millis() - test.feedbackScreenStartTime;
-	if(timeElapsed < 2000){
-	drawOpening();
-	}else{
-	test.feedbackScreenStartTime = 0;
-	test.advanceToNextFormation("");
-	multipleChoiceAnswers = [];
-	}
-	}else{
-	if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()){
-	var correctAnswer = test.getCurrentFormation().name;
-	createMultipleChoiceAnswers(correctAnswer,3);
-	test.updateProgress(false);
-	test.updateMultipleChoiceLabels();
-	}
-	drawOpening();
+	if(!setupComplete) {
+		//WAIT - still executing JSON
+	} else if(test.showDemo) {
+		drawDemoScreen();
+	} else if(test.over) {
+		background(93, 148, 81);
+		noStroke();
+		test.drawQuizSummary();
+		bigReset.draw(field);
+		resetMissed.draw(field);
+		nextQuiz.draw(field);
+	} else if(test.feedbackScreenStartTime) {
+		var timeElapsed = millis() - test.feedbackScreenStartTime;
+		if(timeElapsed < 2000){
+			drawOpening();
+		} else {
+			test.feedbackScreenStartTime = 0;
+			test.advanceToNextFormation("");
+			multipleChoiceAnswers = [];
+		}
+	} else {
+		if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()) {
+			var correctAnswer = test.getCurrentFormation().name;
+			createMultipleChoiceAnswers(correctAnswer,3);
+			test.updateProgress(false);
+			test.updateMultipleChoiceLabels();
+		}
+		drawOpening();
 	}
 };
