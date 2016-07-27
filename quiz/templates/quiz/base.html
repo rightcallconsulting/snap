@@ -170,6 +170,8 @@
 														multipleChoiceAnswers = [];
 														clearMultipleChoiceAnswers();
 
+														// This is causing bugs in formation quiz. Not sure where it is used.
+														// delayCall is not defined.
 														if(delayCall){
 															delayCall = millis();
 															createDefaultMotion();
