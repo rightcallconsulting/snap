@@ -59,6 +59,7 @@ top navbar and sidebar css
 
 .full-sidebar .dash-header-logo {
 	height: 16vh;
+	display: block;
 	width: auto;
 	margin-right: auto;
 	margin-left: auto;
@@ -103,42 +104,64 @@ top navbar and sidebar css
 	overflow: scroll;
 }
 
-.small-sidebar-container {
-	margin-left: 5%;
+.small-sidebar .main-menu li {
+	text-align: center;
 }
 
 .small-sidebar .menu-text {
 	display: none;
 }
 
+.small-sidebar-container,
+.small-sidebar-container#main-container {
+	margin-left: 5vw;
+}
+
+.small-sidebar .sidebar-header {
+	height: 20vh;
+	padding-top: 5vh;
+	padding-bottom: 5vh;
+}
+
 .small-sidebar .dash-header-logo {
-	width: 35px;
-	display:block;
+	height: 10vh;
+	display: block;
+	width: auto;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.small-sidebar .sidebar-selection-menu {
+	height: 65vh;
+	padding-right: auto;
+	padding-left: auto;
+}
+
+.small-sidebar .sidebar-selection-menu li {
+	height: 14vh;
+}
+
+.small-sidebar .sidebar-selection-menu img {
+	height: 6vh;
+	width: auto;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-.small-sidebar-container#main-container {
-	margin-left: 5%;
-}
-
-.small-sidebar-container #top-nav {
-	padding-left: 5%;
+.small-sidebar .sidebar-footer {
+	height: 15vh;
+	padding-top: 6vh;
+	padding-bottom: 3vh;
+	padding-right: auto;
+	padding-left: auto;
 }
 
 .small-sidebar .dash-footer-logo {
-	height: 25px;
-}
-
-.small-sidebar .main-menu li {
-	text-align: center;
-}
-
-.small-sidebar .sidebar-footer {
-	width: 100%;
-	margin-bottom: 50px;
-	text-align: center;
-	float: bottom;
+	display: block;
+	height: 6vh;
+	width: auto;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 /*************************************************************************
