@@ -51,20 +51,18 @@ top navbar and sidebar css
 	margin-left: 10vw;
 }
 
-.full-sidebar .dash-header-logo {
-	height: 100px;
-	width: auto;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
+.full-sidebar .header-section {
+	height: 20vh;
+	padding-top: 1vh;
+	padding-bottom: 1vh;
+	padding-right: auto;
+	padding-left: auto;
 }
 
-.team-logo-wrapper {
-	width: 80%;
-	margin-left: 10%;
-	min-height: 100px;
-	text-align: center;
-	padding: 25px 0px 25px 0px;
+.full-sidebar .dash-header-logo {
+	height: 18vh;
+	width: auto;
+	vertical-align: middle;
 }
 
 .full-sidebar-container #top-nav {
