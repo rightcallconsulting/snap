@@ -513,6 +513,7 @@
 				}
 
 				document.getElementById("header-box").appendChild(formation_name);
+				var string_length = formation_name.textContent.length;
 
 				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
 					removeHeaderPlaceholderAndError();
@@ -521,7 +522,9 @@
 					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
 					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-						formation_name.textContent += key;
+						if (string_length <= 100){
+							formation_name.textContent += key;
+						}
 					}
 
 					// return false to prevent default behavior
@@ -532,18 +535,18 @@
 
 		function keyPressed() {
 			var formation_name = document.getElementById("formation-name");
+			var string_length = formation_name.textContent.length;
 
 			if (keyCode == BACKSPACE) {
 				if (formation_name != null) {
-					var string_length = formation_name.textContent.length;
 					if(string_length > 0) {
 						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
-					} else if (string_length === 0) {}
+					}
 				}
 
 				return false;
 			} else if (keyCode == 32) {
-				if (formation_name != null) {
+				if (formation_name != null && string_length < 100) {
 					formation_name.textContent += ' ';
 				}
 
