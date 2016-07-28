@@ -45,7 +45,7 @@ div.interactive-header.selected {
 
 div.interactive-header.error {
 	background-color: maroon;
-	color: white;
+	color: silver;
 }
 
 div.interactive-header p {
