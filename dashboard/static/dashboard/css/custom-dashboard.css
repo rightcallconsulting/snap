@@ -17,6 +17,8 @@
 div.fullscreen {
 	width: 100vw;
 	height: 100vw;
+	/*position: absolute;*/
+	z-index: 10;
 }
 
 .no-border {
