@@ -4,8 +4,8 @@
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="interactive-header display-header placeholder" onclick="selectHeader(this)">
-				<p id="placeholder">Enter Formation Name</p>
+			<div id="header-box" class="interactive-header display-header placeholder">
+				<p id="placeholder-message">Enter Formation Name</p>
 			</div>
 
 			<div id="quiz-box">
@@ -78,23 +78,45 @@
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
-		function selectHeader() {/* todo: implement */};
+		
+		// When the main container is clicked unselect the interactive header.
+		// This function will not call when the header is clicked because that
+		// function stops propagation of the event.
+		$(document).click(function(event) {
+			$("#header-box").removeClass("selected");
+			var formation_name = document.getElementById("formation-name");
 
-		function removeHeaderPlaceholder() {
+			if (formation_name === null) {
+				addHeaderPlaceholder();
+			}
+
+			if (formation_name != null && formation_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(formation_name);
+				addHeaderPlaceholder();
+			}
+		});
+
+		// When the header box is selected have it change colors and remove the
+		// placeholder if it exists
+		$("#header-box").click(function(event) {
+			removeHeaderPlaceholderAndError();
+			$("#header-box").addClass("selected");
+			event.stopPropagation();
+		});
+
+		function removeHeaderPlaceholderAndError() {
 			var header_box = document.getElementById("header-box");
-			var placeholder = document.getElementById("placeholder");
+			var placeholder_message = document.getElementById("placeholder-message");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("placeholder error");
 
-			if (placeholder != null) {
-				header_box.removeAttribute("class");
-				header_box.setAttribute("class", "header display-header");
-
-				while (header_box.firstChild != null) {
-					header_box.removeChild(header_box.firstChild);
-				}
-
-				var formation_name = document.createElement("p");
-				formation_name.setAttribute("id", "formation-name");
-				header_box.appendChild(formation_name);
+			var formation_name = document.createElement("p");
+			formation_name.setAttribute("id", "formation-name");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
+			} else if (error_message != null) {
+				header_box.removeChild(error_message);
 			}
 		};
 
@@ -102,18 +124,10 @@
 			var header_box = document.getElementById("header-box");
 			$("#header-box").addClass("placeholder");
 
-			var formation_name = document.getElementById("formation-name");
-
-			if (formation_name != null) {
-				while (header_box.firstChild != null) {
-					header_box.removeChild(header_box.firstChild);
-				}
-
-				var placeholder = document.createElement("p");
-				placeholder.setAttribute("id", "placeholder");
-				placeholder.textContent = "Enter Formation Name";
-				header_box.appendChild(placeholder);
-			}
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Formation Name";
+			header_box.appendChild(placeholder);
 		};
 
 		function changeSelected(selected) {
@@ -463,21 +477,30 @@
 		};
 
 		function keyTyped() {
-			if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-				removeHeaderPlaceholder();
-
+			if ($("#header-box").hasClass("selected")) {
 				var formation_name = document.getElementById("formation-name");
 
-				var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-				var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-				var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-				if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-					formation_name.textContent += key;
+				if (formation_name === null) {
+					formation_name = document.createElement("p");
+					formation_name.setAttribute("id", "formation-name");
+				}
+
+				document.getElementById("header-box").appendChild(formation_name);
+
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholderAndError();
+
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						formation_name.textContent += key;
+					}
+
+					// return false to prevent default behavior
+					return false;
 				}
 			}
-
-			// return false to prevent default behavior
-			return false;
 		};
 
 		function keyPressed() {
@@ -486,17 +509,17 @@
 			if (keyCode == BACKSPACE) {
 				if (formation_name != null) {
 					var string_length = formation_name.textContent.length;
-					if(string_length > 1) {
+					if(string_length > 0) {
 						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
-					} else {
-						addHeaderPlaceholder();
-					}
+					} else if (string_length === 0) {}
 				}
+
 				return false;
 			} else if (keyCode == 32) {
 				if (formation_name != null) {
 					formation_name.textContent += ' ';
 				}
+
 				return false;
 			}
 		};

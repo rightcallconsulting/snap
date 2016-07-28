@@ -29,12 +29,28 @@ div.interactive-header {
 	line-height: 50px;
 	background-color: #33691e;
 	color: white;
+	margin: none;
 	font-size: large;
 	text-align: center;
 }
 
 div.interactive-header.placeholder {
 	color: silver;
+}
+
+div.interactive-header.selected {
+	background-color: white;
+	color: #33691e;
+}
+
+div.interactive-header.error {
+	background-color: maroon;
+	color: white;
+}
+
+div.interactive-header p {
+	height: 100%;
+	margin: none;
 }
 
 /*************************************************************************
