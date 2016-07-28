@@ -209,15 +209,21 @@
 		});
 
 		$("#zoom-in-button").click(function(event) {
-			pressZoomIn()
+			pressZoomIn();
 		});
 
 		$("#zoom-out-button").click(function(event) {
-			pressZoomOut()
+			pressZoomOut();
 		});
 
 		$("#full-screen-button").click(function(event) {
-			pressFullScreen()
+			if ($("#display-box").hasClass("fullscreen")) {
+				$("#display-box").removeClass("fullscreen");
+			} else {
+				$("#display-box").addClass("fullscreen")
+			}
+
+			//pressFullScreen()
 		});
 
 		//*******************************************************************//
