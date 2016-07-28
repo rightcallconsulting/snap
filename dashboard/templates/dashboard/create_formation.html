@@ -171,12 +171,14 @@
 
 			if (formation_name != null && formation_name.textContent.length === 0) {
 				document.getElementById("header-box").removeChild(formation_name);
+				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
 			}
 
 			// I don't think this will ever happen, but I'm not sure.
 			if (formation_name === null) {
+				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
 			}
