@@ -83,16 +83,18 @@
 		// This function will not call when the header is clicked because that
 		// function stops propagation of the event.
 		$(document).click(function(event) {
-			$("#header-box").removeClass("selected");
-			var formation_name = document.getElementById("formation-name");
+			if ($("#header-box").hasClass("selected")) {
+				$("#header-box").removeClass("selected");
+				var formation_name = document.getElementById("formation-name");
 
-			if (formation_name === null) {
-				addHeaderPlaceholder();
-			}
+				if (formation_name === null) {
+					addHeaderPlaceholder();
+				}
 
-			if (formation_name != null && formation_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(formation_name);
-				addHeaderPlaceholder();
+				if (formation_name != null && formation_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(formation_name);
+					addHeaderPlaceholder();
+				}
 			}
 		});
 
@@ -121,6 +123,16 @@
 		};
 
 		function addHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Formation Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
 			var header_box = document.getElementById("header-box");
 			$("#header-box").addClass("placeholder");
 
@@ -690,8 +702,6 @@
 				new_formation.establishingNewPlayer.change = false;
 				new_formation.establishingNewPlayer = null;
 			}
-			// return false to prevent default behavior
-			return false;
 		};
 
 		// These are things I am going to rewrite without using jQuery - Dylan
