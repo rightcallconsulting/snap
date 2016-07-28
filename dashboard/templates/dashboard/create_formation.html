@@ -219,8 +219,12 @@
 		$("#full-screen-button").click(function(event) {
 			if ($("#display-box").hasClass("fullscreen")) {
 				$("#display-box").removeClass("fullscreen");
-			} else {
-				$("#display-box").addClass("fullscreen")
+				$("#overlay").removeClass("hidden");
+				$("#wrapper").removeClass("hidden");
+			} else if (!$("#display-box").hasClass("fullscreen")) {
+				$("#display-box").addClass("fullscreen");
+				$("#overlay").addClass("hidden");
+				$("#wrapper").removeClass("hidden");
 			}
 
 			//pressFullScreen()

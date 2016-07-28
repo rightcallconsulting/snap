@@ -21,7 +21,7 @@ div.fullscreen {
 	z-index: 10;
 }
 
-body.hidden {
+.hidden {
 	width: 0vw;
 	height: 0vw;
 	display: none;
