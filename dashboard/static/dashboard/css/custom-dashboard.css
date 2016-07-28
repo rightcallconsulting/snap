@@ -16,17 +16,11 @@
 
 div.fullscreen {
 	width: 100vw;
-	height: 100vw;
+	height: 100vh;
 	position: absolute;
+	top: 0;
+	left: 0;
 	z-index: 10;
-}
-
-.hidden {
-	width: 0vw;
-	height: 0vw;
-	display: none;
-	margin: none;
-	z-index: 1;
 }
 
 .no-border {
