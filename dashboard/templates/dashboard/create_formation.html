@@ -134,12 +134,12 @@
 
 		function addHeaderError() {
 			var header_box = document.getElementById("header-box");
-			$("#header-box").addClass("placeholder");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
 
-			var placeholder = document.createElement("p");
-			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Formation Name";
-			header_box.appendChild(placeholder);
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Valid Formation Name Required";
+			header_box.appendChild(error_message);
 		};
 
 		function changeSelected(selected) {
@@ -160,20 +160,31 @@
 		};
 
 		function saveFormation() {
-			pressSave();
+			var placeholder_message = document.getElementById("placeholder-message");
+			var formation_name = document.getElementById("formation-name");
 
-			var curr_selected = document.getElementById("selected");
-			
-			if (curr_selected != null) {
-				curr_selected.removeAttribute("id");
-				curr_selected.removeAttribute("class");
-				curr_selected.setAttribute("class", "btn btn-primary");
+			if (placeholder_message != null) {
+				removeHeaderPlaceholderAndError();
+				addHeaderError();
+				return;
 			}
-		}
+
+			if (formation_name != null && formation_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(formation_name);
+				addHeaderError();
+				return;
+			}
+
+			// I don't think this will ever happen, but I'm not sure.
+			if (formation_name === null) {
+				addHeaderError();
+				return;
+			}
+
+			//pressSave();
+		};
 
 		function clearFormation() {
-			pressClear();
-
 			var curr_selected = document.getElementById("selected");
 			
 			if (curr_selected != null) {
@@ -181,19 +192,21 @@
 				curr_selected.removeAttribute("class");
 				curr_selected.setAttribute("class", "btn btn-primary");
 			}
-		}
+
+			pressClear();
+		};
 
 		function zoomIn() {
 			pressZoomIn()
-		}
+		};
 
 		function zoomOut() {
 			pressZoomOut()
-		}
+		};
 
 		function fullScreen() {
 			pressFullScreen()
-		}
+		};
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
