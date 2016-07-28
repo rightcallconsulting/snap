@@ -15,7 +15,7 @@
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="check-button" name="button" onclick="saveFormation()">
+							<button id="save-button" name="button" onclick="saveFormation()">
 								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
@@ -111,14 +111,20 @@
 			var placeholder_message = document.getElementById("placeholder-message");
 			var error_message = document.getElementById("error-message");
 			$("#header-box").removeClass("placeholder error");
-
-			var formation_name = document.createElement("p");
-			formation_name.setAttribute("id", "formation-name");
 			
 			if (placeholder_message != null) {
 				header_box.removeChild(placeholder_message);
 			} else if (error_message != null) {
 				header_box.removeChild(error_message);
+			}
+		};
+
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var formation_name = document.getElementById("formation-name");
+
+			if (formation_name != null) {
+				header_box.removeChild(formation_name);
 			}
 		};
 
@@ -159,7 +165,7 @@
 			}
 		};
 
-		function saveFormation() {
+		$("#save-button").click(function(event) {
 			var placeholder_message = document.getElementById("placeholder-message");
 			var formation_name = document.getElementById("formation-name");
 
@@ -184,9 +190,9 @@
 			}
 
 			//pressSave();
-		};
+		});
 
-		function clearFormation() {
+		$("#clear-button").click(function(event) {
 			var curr_selected = document.getElementById("selected");
 			
 			if (curr_selected != null) {
@@ -195,20 +201,24 @@
 				curr_selected.setAttribute("class", "btn btn-primary");
 			}
 
+			removeHeaderPlaceholderAndError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
 			pressClear();
-		};
+		});
 
-		function zoomIn() {
+		$("#zoom-in-button").click(function(event) {
 			pressZoomIn()
-		};
+		});
 
-		function zoomOut() {
+		$("#zoom-out-button").click(function(event) {
 			pressZoomOut()
-		};
+		});
 
-		function fullScreen() {
+		$("#full-screen-button").click(function(event) {
 			pressFullScreen()
-		};
+		});
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
