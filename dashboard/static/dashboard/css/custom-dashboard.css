@@ -14,6 +14,11 @@
 	position: relative;
 }
 
+div.fullscreen {
+	width: 100vw;
+	height: 100vw;
+}
+
 .no-border {
 	border: none;
 	border-style: hidden;
