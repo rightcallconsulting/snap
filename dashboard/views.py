@@ -572,6 +572,42 @@ def quiz_analytics(request, quiz_id):
 		'page_header': 'ANALYTICS',
 	})
 
+# Concepts
+@login_required
+def concepts(request):
+	if request.user.myuser.is_a_player:
+		player = request.user.player
+		order = ['Random', 'Difficulty', ]
+		return render(request, 'dashboard/playerbook.html', {
+			'page_header': 'PLAYBOOK',
+			'player': player,
+			'quiz_order_options': order,
+		})
+	else:
+		team = request.user.coach.team
+		
+		formations = team.formation_set.all()
+		offensive_formations = formations.filter(unit="offense")
+		defensive_formations = formations.filter(unit="defense")
+		
+		play_id_array = []
+		
+		unique_defensive_formations_dict = {}
+		
+		for formation in defensive_formations:
+			unique_defensive_formations_dict[formation.name] = formation
+			unique_defensive_formations = unique_defensive_formations_dict.values()
+		
+		return render(request, 'dashboard/playbook.html', {
+			'formations': formations,
+			'offensive_formations': offensive_formations,
+			'defensive_formations': defensive_formations,
+			'team': team,
+			'play_id_array': play_id_array,
+			'page_header': 'PLAYBOOK',
+			'selected_unit': unit,
+		})
+
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):
