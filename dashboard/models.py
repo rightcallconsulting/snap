@@ -180,50 +180,10 @@ class Authentication(object):
 
 class Concept(models.Model):
 	name = models.CharField(max_length=100)
-	unit = models.CharField(max_length=100, default="offense")
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	unit = models.CharField(max_length=100, default="offense")
 	offensivePlayers = models.ManyToManyField(Player)
-	playName = models.CharField(max_length=100)
-	offensiveFormationID = models.IntegerField(null=True, blank=True)
-	startX = models.FloatField()
-	startY = models.FloatField()
-	routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
-	runCoordinates = models.CharField(max_length=200, null=True, blank=True)
-	progressionRank = models.IntegerField(null=True, blank=True)
-	playerIndex = models.IntegerField(null=True, blank=True)
-	routeNum = models.IntegerField(null=True, blank=True)
-	blocker = models.NullBooleanField()
-	runner = models.NullBooleanField()
-	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
-	CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
-	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
-	CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
-	zoneYardX = models.FloatField(null=True, blank=True)
-	zoneYardY = models.FloatField(max_length=200, null=True, blank=True)
-	zoneHeight = models.FloatField(max_length=200, null=True, blank=True)
-	zoneWidth = models.FloatField(max_length=200, null=True, blank=True)
-	gapYardX = models.FloatField(max_length=200, null=True, blank=True)
-	gapYardY = models.FloatField(max_length=200, null=True, blank=True)
-	blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
-	blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
-	blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
-	runAssignment = models.CharField(max_length=200, null=True, blank=True)
+	defensivePlayers = models.ManyToManyField(Player)
 
 	def __str__(self):
 		return self.name
-
-	def set_route_coordinates(self, coords):
-		self.routeCoordinates = json.dumps(coords)
-
-	def get_route_coordinates(self):
-		return json.loads(self.routeCoordinates)
-
-	def set_run_coordinates(self, coords):
-		self.routeCoordinates = json.dumps(coords)
-
-	def get_run_coordinates(self):
-		return json.loads(self.routeCoordinates)
-
-	def dict_for_json(self):
-		"""Dict representation of the instance (used in JSON APIs)."""
-		return model_to_dict(self)
