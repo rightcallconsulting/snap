@@ -12,168 +12,218 @@ from passwords.fields import PasswordField
 from datetime import datetime
 
 class UserCreateForm(UserCreationForm):
-    POSITIONS = (
-            ("", ""),
-            ("QB", "Quarterback"),
-            ("WR", "Wide Receiver"),
-            ("RB", "Running Back"),
-            ("OL", "Offensive Lineman"),
-            ("DL", "Defensive Lineman"),
-            ("LB", "Linebacker"),
-            ("DB", "Defensive Back"),
-            ("LS", "Long Snapper"),
-            ("K", "Kicker"),
-            ("P", "Punter"),
-        )
-    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
-    last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
-    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Username'}))
-    email = forms.EmailField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Email'}))
-    password1 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Password'}), label=_("Password"))
-    password2 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
-    player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': ''}), label=_("Player"))
-    coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': ''}), label=_("Coach"))
-    team = forms.ModelChoiceField(queryset=None)
-    position = forms.ChoiceField(required=False, choices=POSITIONS)
-    avatar_image = forms.ImageField(required=False)
+	POSITIONS = (
+			("", ""),
+			("QB", "Quarterback"),
+			("WR", "Wide Receiver"),
+			("RB", "Running Back"),
+			("OL", "Offensive Lineman"),
+			("DL", "Defensive Lineman"),
+			("LB", "Linebacker"),
+			("DB", "Defensive Back"),
+			("LS", "Long Snapper"),
+			("K", "Kicker"),
+			("P", "Punter"),
+		)
+	first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
+	last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
+	username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Username'}))
+	email = forms.EmailField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Email'}))
+	password1 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Password'}), label=_("Password"))
+	password2 = PasswordField(required=True, widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Confirm Password'}), label=_("Confirm Password"))
+	player = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': ''}), label=_("Player"))
+	coach = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': ''}), label=_("Coach"))
+	team = forms.ModelChoiceField(queryset=None)
+	position = forms.ChoiceField(required=False, choices=POSITIONS)
+	avatar_image = forms.ImageField(required=False)
 
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team", "avatar_image")
+	class Meta:
+		model = User
+		fields = ("first_name", "last_name", "username", "email", "password1", "password2", "team", "avatar_image")
 
-    def __init__(self, *args, **kwargs):
-        super(UserCreateForm, self).__init__(*args, **kwargs)
-        self.fields['team'].queryset = Team.objects.all()
+	def __init__(self, *args, **kwargs):
+		super(UserCreateForm, self).__init__(*args, **kwargs)
+		self.fields['team'].queryset = Team.objects.all()
 
-    def save(self, commit=True):
-        user = super(UserCreateForm, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user
+	def save(self, commit=True):
+		user = super(UserCreateForm, self).save(commit=False)
+		user.email = self.cleaned_data["email"]
+		if commit:
+			user.save()
+		return user
 
 class RFPAuthForm(AuthenticationForm):
-    username = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2','placeholder': 'Username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay4','placeholder':'Password'}))
+	username = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2','placeholder': 'Username'}))
+	password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay4','placeholder':'Password'}))
 
 
 class Coach(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    title = models.CharField(max_length=120, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True) # set when it's created
-    updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+	title = models.CharField(max_length=120, blank=True, null=True)
+	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
+	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
-    def testing_this(self):
-        return self.first_name
+	def testing_this(self):
+		return self.first_name
 
 class myUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    is_a_player = models.BooleanField(default=False)
-    avatar_image  = models.ImageField(blank=True, null=True, upload_to='profile')
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+	is_a_player = models.BooleanField(default=False)
+	avatar_image  = models.ImageField(blank=True, null=True, upload_to='profile')
 
 class PlayerGroup(models.Model):
-    name = models.CharField(max_length=30, blank=True, null=True)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-    players = models.ManyToManyField(Player)
+	name = models.CharField(max_length=30, blank=True, null=True)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+	players = models.ManyToManyField(Player)
 
-    class Meta:
-        verbose_name="Player Group"
-        verbose_name_plural="Player Groups"
-        ordering = ['pk']
+	class Meta:
+		verbose_name="Player Group"
+		verbose_name_plural="Player Groups"
+		ordering = ['pk']
 
-    def __str__(self):
-        return self.name
+	def __str__(self):
+		return self.name
 
-    def build_dict_for_json_seed(self):
-        jsonPlayers = []
-        for player in self.players.all():
-            jsonPlayers.append(player.dict_for_json())
-        return {
-            'name': self.name,
-            'players': jsonPlayers,
-            'id': self.pk
-        }
+	def build_dict_for_json_seed(self):
+		jsonPlayers = []
+		for player in self.players.all():
+			jsonPlayers.append(player.dict_for_json())
+		return {
+			'name': self.name,
+			'players': jsonPlayers,
+			'id': self.pk
+		}
 
-    def duplicate_and_assign_test_to_all_players(self, test_id, coach):
-        players = self.players.all()
-        for player in players:
-            player.duplicate_and_assign_test(test_id, coach)
+	def duplicate_and_assign_test_to_all_players(self, test_id, coach):
+		players = self.players.all()
+		for player in players:
+			player.duplicate_and_assign_test(test_id, coach)
 
 class DeletePlayerFromGroupForm(forms.Form):
-    groupID = forms.CharField(max_length=10)
-    playerID = forms.CharField(max_length=10)
+	groupID = forms.CharField(max_length=10)
+	playerID = forms.CharField(max_length=10)
 
 class PlayerGroupForm(ModelForm):
 
-    class Meta:
-        model = PlayerGroup
-        fields = ['name', 'players']
+	class Meta:
+		model = PlayerGroup
+		fields = ['name', 'players']
 
 class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+	class Meta:
+		model = User
+		fields = ['first_name', 'last_name', 'username', 'email']
 
 class PlayerForm(ModelForm):
 
-    class Meta:
-        model = Player
-        fields = ['year', 'position', 'number']
+	class Meta:
+		model = Player
+		fields = ['year', 'position', 'number']
 
 class CoachForm(ModelForm):
 
-    class Meta:
-        model = Coach
-        fields = ['title']
+	class Meta:
+		model = Coach
+		fields = ['title']
 
 class TestForm(ModelForm):
-    OPTIONS = (
-            ("QB_Progression", "QB_Progression"),
-            ("WR_Route", "WR_Route"),
-            ("OL_View", "OL_View"),
-            ("CB_Assignment", "CB_Assignment"),
-        )
+	OPTIONS = (
+			("QB_Progression", "QB_Progression"),
+			("WR_Route", "WR_Route"),
+			("OL_View", "OL_View"),
+			("CB_Assignment", "CB_Assignment"),
+		)
 
-    class Meta:
-        model = Test
-        fields = ['name','type_of_test', 'deadline']
-        widgets = {
-        #Use localization and bootstrap 3
-        }
+	class Meta:
+		model = Test
+		fields = ['name','type_of_test', 'deadline']
+		widgets = {
+		#Use localization and bootstrap 3
+		}
 
-    def __init__(self, *args, **kwargs):
-        OPTIONS = (
-            ("QBProgression", "QB Progression"),
-            ("WRRoute", "WR Route"),
-            ("OLView", "OL View"),
-            ("CBAssignment", "CB Assignment"),
-        )
+	def __init__(self, *args, **kwargs):
+		OPTIONS = (
+			("QBProgression", "QB Progression"),
+			("WRRoute", "WR Route"),
+			("OLView", "OL View"),
+			("CBAssignment", "CB Assignment"),
+		)
 
-        user = kwargs.pop('user','')
-        super(TestForm, self).__init__(*args, **kwargs)
-        self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
-        self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0)
-        self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
-        self.fields['deadline'].widget=widgets.AdminSplitDateTime()
+		user = kwargs.pop('user','')
+		super(TestForm, self).__init__(*args, **kwargs)
+		self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
+		self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0)
+		self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
+		self.fields['deadline'].widget=widgets.AdminSplitDateTime()
 
 class UserMethods(User):
   def custom_method(self):
-    pass
+	pass
   class Meta:
-    proxy=True
+	proxy=True
 
 class Authentication(object):
-    @staticmethod
-    def get_coach(user_object):
-        try:
-            return user_object.coach
-        except AttributeError:
-            return None
+	@staticmethod
+	def get_coach(user_object):
+		try:
+			return user_object.coach
+		except AttributeError:
+			return None
 
-    @staticmethod
-    def get_player(user_object):
-        try:
-            return user_object.player
-        except AttributeError:
-            return None
+	@staticmethod
+	def get_player(user_object):
+		try:
+			return user_object.player
+		except AttributeError:
+			return None
+
+class Concept(models.Model):
+	name = models.CharField(max_length=100)
+	unit = models.CharField(max_length=100, default="offense")
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	offensivePlayers = models.ManyToManyField(Player)
+	playName = models.CharField(max_length=100)
+	offensiveFormationID = models.IntegerField(null=True, blank=True)
+	startX = models.FloatField()
+	startY = models.FloatField()
+	routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	runCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	progressionRank = models.IntegerField(null=True, blank=True)
+	playerIndex = models.IntegerField(null=True, blank=True)
+	routeNum = models.IntegerField(null=True, blank=True)
+	blocker = models.NullBooleanField()
+	runner = models.NullBooleanField()
+	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
+	zoneYardX = models.FloatField(null=True, blank=True)
+	zoneYardY = models.FloatField(max_length=200, null=True, blank=True)
+	zoneHeight = models.FloatField(max_length=200, null=True, blank=True)
+	zoneWidth = models.FloatField(max_length=200, null=True, blank=True)
+	gapYardX = models.FloatField(max_length=200, null=True, blank=True)
+	gapYardY = models.FloatField(max_length=200, null=True, blank=True)
+	blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
+	blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
+	runAssignment = models.CharField(max_length=200, null=True, blank=True)
+
+	def __str__(self):
+		return self.name
+
+	def set_route_coordinates(self, coords):
+		self.routeCoordinates = json.dumps(coords)
+
+	def get_route_coordinates(self):
+		return json.loads(self.routeCoordinates)
+
+	def set_run_coordinates(self, coords):
+		self.routeCoordinates = json.dumps(coords)
+
+	def get_run_coordinates(self):
+		return json.loads(self.routeCoordinates)
+
+	def dict_for_json(self):
+		"""Dict representation of the instance (used in JSON APIs)."""
+		return model_to_dict(self)
