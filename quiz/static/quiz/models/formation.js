@@ -1277,8 +1277,8 @@ Formation.prototype.convertToPlayObject = function(){
 var formationButtons = [];
 var formations = [];
 
-/* Temporary functions for concepts */
-// createSwoop creates a static version of on of Stanfords run concepts
+/* Static functions for concepts */
+// createSwoop creates a static version Stanfords swoop blocking concept
 Formation.prototype.createSwoop = function(ballY){
 	// Create Offensive Players
 	var olPositions = ["LT", "LG", "C", "RG", "RT"];

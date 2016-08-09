@@ -62,3 +62,62 @@ Concept.prototype.reset = function() {
 	this.eligibleReceivers = [];
 	this.defensivePlayers = [];
 };
+
+/* Static functions for concepts */
+// createSwoop creates a static version Stanfords swoop blocking concept
+Concept.prototype.createSwoop = function(ballY){
+	// Create Offensive Players
+	var olPositions = ["LT", "LG", "C", "RG", "RT"];
+
+	for (var i = -2; i <= 0; i++) {
+		var xPos = Field.WIDTH / 2 + i*2.5;
+		var yPos = ballY-1.5;
+		
+		if (i !== 0) {
+			yPos -= 0.5;
+		}
+
+		var offensive_lineman = new Player({
+			num: olPositions[i+2],
+			pos: olPositions[i+2],
+			x: xPos, y: yPos,
+			red: 143, blue: 29, green: 29,
+		});
+
+		this.oline.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
+	}
+
+	var left_tackle = this.oline[0];
+
+	var f = new Player ({
+		num: "F", pos: "F", 
+		x: left_tackle.x-2.5,
+		y: left_tackle.y,
+		red: 255, green: 0, blue: 0
+	});
+
+	this.eligibleReceivers.push(f);
+	this.offensivePlayers.push(f);
+
+	// Create Defensive Players
+	var w = new Player ({
+		num: "W", pos: "W",
+		unit: "defense", 
+		change: true,
+		x: left_tackle.x,
+		y: left_tackle.y+5,
+		red: 0, green: 0, blue: 0
+	});
+
+	var e = new Player ({
+		num: "E", pos: "E",
+		unit: "defense", 
+		change: true,
+		x: f.x, y: f.y+2.5,
+		red: 0, green: 0, blue: 0
+	});
+
+	this.defensivePlayers.push(w);
+	this.defensivePlayers.push(e);
+};

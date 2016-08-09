@@ -229,8 +229,8 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
-		var formations = [];
-		var new_formation;
+		var concepts = [];
+		var new_concept;
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
@@ -269,8 +269,8 @@
 			//randomSeed(millis()); // What is the random seed for?
 
 			// Create Position groups
-			new_formation = new Formation({});
-			new_formation.createSwoop(field.ballYardLine);
+			new_concept = new Concept({});
+			new_concept.createSwoop(field.ballYardLine);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -515,6 +515,104 @@
 
 		function pressFullScreen() {};
 
+		/*mouseClicked = function() {
+			var field = createPlayField;
+			var eligibleReceivers = getCurrentFormation().eligibleReceivers;
+			var selectedWR = getCurrentFormation().findSelectedWR();
+			var olClicked = getCurrentFormation().mouseInOL(field);
+			var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
+			var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
+			var selectedOL = getCurrentFormation().findSelectedOL();
+			
+			if (getCurrentDefensivePlay() != null) {
+				var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
+				var selectedDL = getCurrentDefensivePlay().findSelectedDL();
+			}
+
+			if(selectedNode) {
+				if (selectedNode.change){
+					selectedNode.change = false;
+				} else {
+					selectedNode.change = true;
+				}
+			} else if (receiverClicked) {
+				var playerSelected = false;
+				getCurrentFormation().clearPreviousRouteDisplays();
+
+				for(var i = 0; i < eligibleReceivers.length; i++) {
+					if(receiverClicked.clicked) {
+						receiverClicked.unselect();
+						receiverClicked.showRoute = false;
+					} else {
+						receiverClicked.select();
+					}
+
+					break;
+				}
+			} else if(selectedWR) {
+				if(selectedWR.runner) {
+					if(!selectedWR.runAssignment) {
+						selectedWR.runAssignment = new RunAssignment({});
+					}
+
+					selectedWR.runAssignment.addCoordinates(createPlayField.getYardX(mouseX), createPlayField.getYardY(mouseY));
+				} else if(!selectedWR.blocker) {
+					var x = field.getYardX(mouseX);
+					var y = field.getYardY(mouseY);
+					selectedWR.routeCoordinates.push([x, y]);
+					var nodeObject = new Node({
+						x: x,
+						y: y,
+						siz: 1
+					});
+
+					selectedWR.routeNodes.push(nodeObject);
+				} else if(selectedWR.blocker && dlClicked) {
+					//OLD
+					selectedWR.blockingAssignment = dlClicked;
+					selectedWR.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+					selectedWR.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+
+					//NEW
+					if(selectedWR.blockingAssignmentObject) {
+						selectedWR.blockingAssignmentObject.blockedZone = 0;
+						selectedWR.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+					} else {
+						selectedWR.blockingAssignmentObject = new BlockingAssignment({
+							blockedPlayers: [dlClicked]
+						});
+					}
+				}
+			} else if(dlClicked && selectedOL) {
+				selectedOL.blockingAssignment = dlClicked;
+				selectedOL.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+				selectedOL.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+
+				if(selectedOL.blockingAssignmentObject) {
+					selectedOL.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+					selectedOL.blockingAssignmentObject.blockedZone = 0;
+				} else {
+					selectedOL.blockingAssignmentObject = new BlockingAssignment({
+						blockedPlayers: [dlClicked]
+					});
+				}
+			}
+		};*/
+
+		/* //Might need this function later
+		mouseClicked = function() {
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_formation.findSelectedWR();
+
+			if(new_formation.establishingNewPlayer) {
+				if(isInsideTrash(new_formation.establishingNewPlayer)) {
+					new_formation.deletePlayer(new_formation.establishingNewPlayer);
+				}
+				new_formation.establishingNewPlayer.change = false;
+				new_formation.establishingNewPlayer = null;
+			}
+		};*/
+
 		// Global Variables
 		/*var capitalLetter = false;
 
@@ -611,19 +709,6 @@
 			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
 			selectedWR = new_formation.findSelectedWR();
 		};*/
-
-		mouseClicked = function() {
-			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
-			selectedWR = new_formation.findSelectedWR();
-
-			if(new_formation.establishingNewPlayer) {
-				if(isInsideTrash(new_formation.establishingNewPlayer)) {
-					new_formation.deletePlayer(new_formation.establishingNewPlayer);
-				}
-				new_formation.establishingNewPlayer.change = false;
-				new_formation.establishingNewPlayer = null;
-			}
-		};
 
 		// These are things I am going to rewrite without using jQuery - Dylan
 		/*$('.formation-button').click(function() {
