@@ -1,4 +1,3 @@
-
 //***************************************************************************//
 //																			 //
 // formation.js - Right Call Consulting. All Rights Reserved. 2016			 //
