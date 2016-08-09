@@ -64,6 +64,9 @@ var Player = function(config) {
   this.zoneAssignment = config.zoneAssignment || 0;
   this.optionAssignment = config.optionAssignment || [];
   this.coverageAssignment = config.coverageAssignment || [];
+
+  // Blocker assignments - eventually we should just have some child object for Linemen
+  this.blockingAssignmentArray = config.blockingAssignmentArray || [[], []];
 };
 
 //***************************************************************************//
@@ -74,31 +77,33 @@ Player.altRank = -1;
 
 // Instance Methods
 Player.prototype.click = function() {
-	this.selected = !this.selected;
-
 	if (this.selected) {
-		this.setFillSelected();
+		this.setUnselected();
 	} else {
-		this.setFillUnselected();
+		this.setSelected();
 	}
 	
 };
 
-Player.prototype.setFillSelected = function () {
-	var red = 0;
-	var green = 0;
-	var blue = 0;
+Player.prototype.setSelected = function () {
+	this.selected = true;
 
-	if (this.unit === "offense") {
+	var red = 255;
+	var green = 255;
+	var blue = 0;
+	
+	/*if (this.unit === "offense") {
 		red = 255; green = 255; blue = 0;
 	} else if (this.unit === "defense") {
 		red = 200; green = 200; blue = 200;
-	}
+	}*/
 
 	this.setFill(red, green, blue);
 };
 
-Player.prototype.setFillUnselected = function () {
+Player.prototype.setUnselected = function () {
+	this.selected = false;
+
 	var red = 0;
 	var green = 0;
 	var blue = 0;
@@ -120,6 +125,18 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.red = red;
 	this.green = green;
 	this.blue = blue;
+};
+
+Player.prototype.drawBlockingAssignment = function() {
+	var primaryAssingmentLength = this.blockingAssignmentArray[0].length;
+	var secondaryAssignmentLength = this.blockingAssignmentArray[1].length;
+
+	var currentX = this.x;
+	var currentY = this.y;
+
+	for (var i = 0; i < primaryAssingmentLength; i++) {
+
+	}
 };
 
 Player.prototype.getX = function(field) {

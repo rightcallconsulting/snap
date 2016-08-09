@@ -55,6 +55,29 @@ Concept.prototype.isValid = function() {
 	//		  Inelligable setups. Illegal actions.
 };
 
+// getSelected iterates through all the players in a concept and returns
+// the one player that is selected. If no one is selected it returns null.
+// 
+// TODO: implement logic for selecting multiple players and return an array.
+Concept.prototype.getSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		if (this.offensivePlayers[i].selected) {
+			return this.offensivePlayers[i];
+		}
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		if (this.defensivePlayers[i].selected) {
+			return this.defensivePlayers[i];
+		}
+	}
+
+	return null;
+};
+
 // clearSelected iterates through all the players in a concept and makes
 // them all unselected.
 Concept.prototype.clearSelected = function() {
@@ -62,11 +85,11 @@ Concept.prototype.clearSelected = function() {
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].selected = false;
+		this.offensivePlayers[i].setUnselected();
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].selected = false;
+		this.defensivePlayers[i].setUnselected();
 	}
 };
 														

@@ -337,13 +337,18 @@
 		};
 
 		function mouseClicked() {
-			var playerSelected = swoop.mouseInPlayer(field);
+			// Here is where all the logic for creating assignments is implemented.
+			// Rules for what to do based on offensive player.
+			var currentPlayerSelected = swoop.getSelected();
 
-			if (playerSelected === null) {
+			var newPlayerSelected = swoop.mouseInPlayer(field);
+
+			if (newPlayerSelected === null) {
 				return false;
 			}
 
-			playerSelected.click();
+			swoop.clearSelected();
+			newPlayerSelected.click();
 
 			// return false to prevent default behavior
 			return false;
