@@ -182,8 +182,8 @@ class Concept(models.Model):
 	name = models.CharField(max_length=100)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	unit = models.CharField(max_length=100, default="offense")
-	offensivePlayers = models.ManyToManyField(Player)
-	defensivePlayers = models.ManyToManyField(Player)
+	offensivePlayers = models.ManyToManyField(Player, related_name="offensive_player")
+	defensivePlayers = models.ManyToManyField(Player, related_name="defensive_player")
 
 	def __str__(self):
 		return self.name
