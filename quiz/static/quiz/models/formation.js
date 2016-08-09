@@ -339,15 +339,13 @@ Formation.prototype.drawAllPlayers = function(field) {
 		player.draw(field);
 	});
 
-	this.changeablePlayers.forEach(function(player) {
+	this.defensivePlayers.forEach(function(player) {
 		player.draw(field);
 	});
 
-	if(this.unit === "defense") {
-		this.defensivePlayers.forEach(function(player) {
-			player.draw(field);
-		});
-	}
+	this.changeablePlayers.forEach(function(player) {
+		player.draw(field);
+	});
 };
 
 Formation.prototype.drawOptionsToCreate = function() {
@@ -1297,9 +1295,7 @@ Formation.prototype.createSwoop = function(ballY){
 			num: olPositions[i+2],
 			pos: olPositions[i+2],
 			x: xPos, y: yPos,
-			fill: color(143, 29, 29),
 			red: 143, blue: 29, green: 29,
-			index: i
 		});
 
 		this.oline.push(offensive_lineman);
@@ -1322,14 +1318,20 @@ Formation.prototype.createSwoop = function(ballY){
 	var w = new Player ({
 		num: "W", pos: "W",
 		unit: "defense", 
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
+		change: true,
+		x: left_tackle.x,
+		y: left_tackle.y+5,
+		red: 0, green: 0, blue: 0
 	});
 
 	var e = new Player ({
 		num: "E", pos: "E",
 		unit: "defense", 
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
+		change: true,
+		x: f.x, y: f.y+2.5,
+		red: 0, green: 0, blue: 0
 	});
+
+	this.defensivePlayers.push(w);
+	this.defensivePlayers.push(e);
 };
