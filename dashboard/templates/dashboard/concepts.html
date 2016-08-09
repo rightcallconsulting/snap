@@ -230,7 +230,7 @@
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
 		var concepts = [];
-		var new_concept;
+		var swoop;
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
@@ -269,8 +269,8 @@
 			//randomSeed(millis()); // What is the random seed for?
 
 			// Create Position groups
-			new_concept = new Concept({});
-			new_concept.createSwoop(field.ballYardLine);
+			swoop = new Concept({});
+			swoop.createSwoop(field.ballYardLine);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -326,40 +326,20 @@
 
 		// intro scene
 		function drawOpening() {
-			field.drawBackground(new_formation, height, width);
+			field.drawBackground(swoop, height, width);
 			trash.draw(field);
-			new_formation.drawOptionsToCreate();
-			new_formation.drawOLQB();
-			new_formation.drawAllPlayers();
+			swoop.drawPlayers();
+			
 			fill(0, 0, 0);
 			textSize(20);
-			text(new_formation.feedbackMessage, 330, 20);
+			text(swoop.feedbackMessage, 330, 20);
 			fill(176,176,176)
 		};
 
 		function mouseDragged() {
-			var receiverSelected = new_formation.mouseInReceiverOrNode(field)[0];
-			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
-			var centerSelected = new_formation.mouseInCenter(field);
+			var centerSelected = swoop.mouseInCenter(field);
 
-			if (new_formation.establishingNewPlayer) {
-				new_formation.establishingNewPlayer.movePlayer(field);
-			} else if (positionOptionSelected) {
-				
-				var new_player = new Player({
-					x: positionOptionSelected.x,
-					y: positionOptionSelected.y,
-					num: positionOptionSelected.num,
-					red: 255, green: 0, blue: 0,
-					pos: positionOptionSelected.pos, 
-					change: true
-				});
-
-				new_formation.createPlayer(new_player);
-			} else if (receiverSelected) {
-				receiverSelected.change = receiverSelected.change ? false : true;
-				new_formation.establishingNewPlayer = receiverSelected;
-			} else if(centerSelected) {
+			if(centerSelected) {
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - centerSelected.x;
 
@@ -371,9 +351,9 @@
 					xDiff = 0;
 				}
 
-				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
-					var p = new_formation.offensivePlayers[i];
-					p.x += xDiff;
+				for(var i = 0; i < swoop.offensivePlayers.length; i++) {
+					var player = swoop.offensivePlayers[i];
+					player.x += xDiff;
 				}
 
 				for(var i = 0; i < defensePlay.defensivePlayers.length; i++) {
@@ -460,7 +440,7 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-		function pressSave() {
+		/*function pressSave() {
 			if(new_formation.validFormation()) {
 				new_formation.eligibleReceivers.forEach(function(player){
 					player.convertRouteDrawingToBreakPoints();
@@ -513,7 +493,7 @@
 			resizeBottomButtons();
 		};
 
-		function pressFullScreen() {};
+		function pressFullScreen() {};*/
 
 		/*mouseClicked = function() {
 			var field = createPlayField;

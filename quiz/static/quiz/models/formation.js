@@ -131,7 +131,7 @@ Formation.prototype.mouseInOptionsToCreate = function(field) {
 
 	return optionClicked;
 };
-  														
+
 // mouseInOptionsToCreate iterates through the player options available 
 // and checks if the mouse is inside any of the player options.	It returns
 // the center if the mouse is inside of it or null otherwise.

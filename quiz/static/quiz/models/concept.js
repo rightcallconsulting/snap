@@ -18,9 +18,10 @@ var Concept = function(config) {
 	this.unit = config.unit || null; // There might not be a need for this - probably a smarter way to do it
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.quarterback = config.quarterback || null;
-	this.offensiveLine = config.offensiveLine || [];
+	this.offensiveLinemen = config.offensiveLine || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
+	this.feedbackMessage = config.feedbackMessage || [];
 };
 
 //***************************************************************************//
@@ -58,9 +59,23 @@ Concept.prototype.isValid = function() {
 Concept.prototype.reset = function() {
 	this.offensivePlayers = [];
 	this.quarterback = null;
-	this.offensiveLine = [];
+	this.offensiveLinemen = [];
 	this.eligibleReceivers = [];
 	this.defensivePlayers = [];
+};
+
+// mouseInCenter iterates through the players on the offensive line and checks
+// if the mouse is inside the center. It returns the center if the mouse is 
+// inside of it or null otherwise.
+Concept.prototype.mouseInCenter = function(field) {
+	for(var i = 0; i < this.offensiveLineman.length; i++) {
+		var player = this.offensiveLineman[i];
+		if (player.pos === "C" && player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
 };
 
 /* Static functions for concepts */
@@ -84,11 +99,11 @@ Concept.prototype.createSwoop = function(ballY){
 			red: 143, blue: 29, green: 29,
 		});
 
-		this.oline.push(offensive_lineman);
+		this.offensiveLinemen.push(offensive_lineman);
 		this.offensivePlayers.push(offensive_lineman);
 	}
 
-	var left_tackle = this.oline[0];
+	var left_tackle = this.offensiveLinemen[0];
 
 	var f = new Player ({
 		num: "F", pos: "F", 
