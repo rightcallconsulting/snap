@@ -43,7 +43,11 @@ Concept.prototype.drawPlayers = function () {
 
 // drawAssignments
 Concept.prototype.drawAssignments = function () {
-	// TODO: Implement
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].drawBlockingAssignment();
+	}
 };
 
   														

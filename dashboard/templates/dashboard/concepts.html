@@ -329,6 +329,7 @@
 			field.drawBackground(swoop, height, width);
 			trash.draw(field);
 			swoop.drawPlayers();
+			swoop.drawAssignments();
 			
 			fill(0, 0, 0);
 			textSize(20);
@@ -337,18 +338,41 @@
 		};
 
 		function mouseClicked() {
-			// Here is where all the logic for creating assignments is implemented.
-			// Rules for what to do based on offensive player.
 			var currentPlayerSelected = swoop.getSelected();
-
 			var newPlayerSelected = swoop.mouseInPlayer(field);
 
-			if (newPlayerSelected === null) {
+			// If no one is currently selected and no one is clicked on do 
+			// nothing. Else if no one is currently selected and someone is 
+			// clicked on, then select that player and return. Else if someone
+			// is currently selected and empty field is clicked on then clear
+			// all selections and return. Else if the currently selected player 
+			// is the same as the newly selected player then clear all
+			// selections and return. Else two seperate players are assigned to
+			// those variables and handle accordingly.
+			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				return false;
-			}
+			} else if (currentPlayerSelected === null) {
+				newPlayerSelected.click();
+				return false;
+			} else if (newPlayerSelected === null) {
+				// This will have to change to be able to add blocking landmarks
+				// Right now if you click on empty space it just unselects the 
+				swoop.clearSelected();
+				return false;
+			} else if (newPlayerSelected === currentPlayerSelected) {
+				swoop.clearSelected();
+				return false;
+			} else {
+				// CURRENT PLAYER AND NEW PLAYER ARE ONT THE SAME TEAM
 
-			swoop.clearSelected();
-			newPlayerSelected.click();
+				if (currentPlayerSelected != null) {
+					if (currentPlayerSelected.unit === "offense" && newPlayerSelected.unit === "defense" && currentPlayerSelected.pos != "QB") {
+						currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
+
+						return false;
+					}
+				}
+			}
 
 			// return false to prevent default behavior
 			return false;
