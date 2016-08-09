@@ -21,6 +21,8 @@ var Player = function(config) {
   this.blue = config.blue || 0;
   this.green = config.green || 0;
   this.clicked = config.clicked || false;
+  this.selected = config.selected || false;
+  this.eligible = config.eligible || false;
   this.pos = config.pos || "X";
   this.num = config.num || 0;
   this.rank = config.rank || 0;
@@ -71,28 +73,70 @@ Player.rank = 1;
 Player.altRank = -1;
 
 // Instance Methods
+Player.prototype.click = function() {
+	this.selected = !this.selected;
 
-Player.prototype.setFill = function(r,g,b){
-  this.red = r;
-  this.green = g;
-  this.blue = b;
-}
+	if (this.selected) {
+		this.setFillSelected();
+	} else {
+		this.setFillUnselected();
+	}
+	
+};
 
-Player.prototype.getX = function(field){
-  return field.yardsToPixels(this.getYardX() - field.getXOffset());
-}
+Player.prototype.setFillSelected = function () {
+	var red = 0;
+	var green = 0;
+	var blue = 0;
 
-Player.prototype.getY = function(field){
-  return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset());
-}
+	if (this.unit === "offense") {
+		red = 255; green = 255; blue = 0;
+	} else if (this.unit === "defense") {
+		red = 200; green = 200; blue = 200;
+	}
 
-Player.prototype.getYardX = function(){
-  return this.x;
-}
+	this.setFill(red, green, blue);
+};
 
-Player.prototype.getYardY = function(){
-  return this.y;
-}
+Player.prototype.setFillUnselected = function () {
+	var red = 0;
+	var green = 0;
+	var blue = 0;
+
+	if (this.pos === "QB") {
+		red = 212; green = 130; blue = 130;
+	} else if (this.unit === "defense") {
+		red = 0; green = 0; blue = 0;
+	} else if (this.eligible) {
+		red = 255; green = 0; blue = 0;
+	} else if (!this.eligible) {
+		red = 143; green = 29; blue = 29;
+	}
+
+	this.setFill(red, green, blue);
+};
+
+Player.prototype.setFill = function(red, green, blue) {
+	this.red = red;
+	this.green = green;
+	this.blue = blue;
+};
+
+Player.prototype.getX = function(field) {
+	return field.yardsToPixels(this.getYardX() - field.getXOffset());
+};
+
+Player.prototype.getY = function(field) {
+	return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset());
+};
+
+Player.prototype.getYardX = function() {
+	return this.x;
+};
+
+Player.prototype.getYardY = function() {
+	return this.y;
+};
 
 Player.prototype.draw = function(){
 	var x = field.getTranslatedX(this.x);

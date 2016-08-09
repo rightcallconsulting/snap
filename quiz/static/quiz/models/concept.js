@@ -54,8 +54,23 @@ Concept.prototype.isValid = function() {
 	// IDEAS: More players in a concept than can be in a play.
 	//		  Inelligable setups. Illegal actions.
 };
+
+// clearSelected iterates through all the players in a concept and makes
+// them all unselected.
+Concept.prototype.clearSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].selected = false;
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].selected = false;
+	}
+};
 														
-// reset clears the current concept and returns an empty screen
+// reset clears the current concept and returns an empty screen.
 Concept.prototype.reset = function() {
 	this.offensivePlayers = [];
 	this.quarterback = null;
@@ -64,13 +79,20 @@ Concept.prototype.reset = function() {
 	this.defensivePlayers = [];
 };
 
-// mouseInCenter iterates through the players on the offensive line and checks
-// if the mouse is inside the center. It returns the center if the mouse is 
-// inside of it or null otherwise.
-Concept.prototype.mouseInCenter = function(field) {
-	for(var i = 0; i < this.offensiveLinemen.length; i++) {
-		var player = this.offensiveLinemen[i];
-		if (player.pos === "C" && player.isMouseInside(field)) {
+// mouseInPlayer iterates through all the offensive and defensive players
+// in a concept. It returns the player that the mouse is inside of or 
+// null if the mouse is not inside any player.
+Concept.prototype.mouseInPlayer = function(field) {
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		var player = this.offensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		var player = this.defensivePlayers[i];
+		if (player.isMouseInside(field)) {
 			return player;
 		}
 	}
@@ -104,27 +126,20 @@ Concept.prototype.createSwoop = function(ballY){
 	}
 
 	var left_tackle = this.offensiveLinemen[0];
+	var left_gaurd = this.offensiveLinemen[1];
 
 	var f = new Player ({
 		num: "F", pos: "F", 
 		x: left_tackle.x-2.5,
 		y: left_tackle.y,
-		red: 255, green: 0, blue: 0
+		red: 255, green: 0, blue: 0,
+		eligible: true
 	});
 
 	this.eligibleReceivers.push(f);
 	this.offensivePlayers.push(f);
 
 	// Create Defensive Players
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense", 
-		change: true,
-		x: left_tackle.x,
-		y: left_tackle.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
 	var e = new Player ({
 		num: "E", pos: "E",
 		unit: "defense", 
@@ -133,6 +148,23 @@ Concept.prototype.createSwoop = function(ballY){
 		red: 0, green: 0, blue: 0
 	});
 
-	this.defensivePlayers.push(w);
+	var t = new Player ({
+		num: "T", pos: "T",
+		unit: "defense", 
+		change: true,
+		x: left_gaurd.x-1, y: left_gaurd.y+2.5,
+		red: 0, green: 0, blue: 0
+	});
+
+	var w = new Player ({
+		num: "W", pos: "W",
+		unit: "defense", 
+		change: true,
+		x: left_tackle.x, y: left_tackle.y+5,
+		red: 0, green: 0, blue: 0
+	});
+
 	this.defensivePlayers.push(e);
+	this.defensivePlayers.push(t);
+	this.defensivePlayers.push(w);
 };

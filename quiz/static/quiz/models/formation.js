@@ -186,7 +186,7 @@ Formation.prototype.createOLineAndQB = function(ballY){
 		if (i !== 0) {
 			yPos -= 0.5;
 		}
-		var tmp = new Player({
+		var offensive_lineman = new Player({
 			x: xPos,
 			y: yPos,
 			num: olPositions[i+2],
@@ -197,12 +197,12 @@ Formation.prototype.createOLineAndQB = function(ballY){
 			pos: olPositions[i+2],
 			index: i
 		});
-		this.oline.push(tmp);
-		this.offensivePlayers.push(tmp);
+		this.oline.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
 	}
 
 	currentPlayer = this.oline[3];
-	var tmp = new Player ({
+	var quarterback = new Player ({
 		x: this.oline[2].x,
 		y: this.oline[2].y-2.25,
 		num: 12,
@@ -210,11 +210,12 @@ Formation.prototype.createOLineAndQB = function(ballY){
 		red: 212,
 		blue: 130,
 		green: 130,
-		pos: "QB"
+		pos: "QB",
+		eligible: true
 	});
 
-	this.qb.push(tmp);
-	this.offensivePlayers.push(tmp);
+	this.qb.push(quarterback);
+	this.offensivePlayers.push(quarterback);
 };
 
 Formation.prototype.createSkillPlayers = function(){
@@ -225,7 +226,8 @@ Formation.prototype.createSkillPlayers = function(){
       pos: "RB",
       fill: color(255, 0, 0),
       progressionRank: 3,
-      routeNum: 2
+      routeNum: 2,
+      eligible: true
   });
 
   var te1 = new Player ({
@@ -235,7 +237,8 @@ Formation.prototype.createSkillPlayers = function(){
       pos: "TE",
       fill: color(255, 0, 0),
       progressionRank: 2,
-      routeNum: 3
+      routeNum: 3,
+      eligible: true
   });
   var te2 = new Player({
      x: this.oline[4].x + 40,
@@ -244,7 +247,8 @@ Formation.prototype.createSkillPlayers = function(){
      pos: "TE",
      fill: color(255, 0, 0),
      progressionRank: 4,
-     routeNum: 4
+     routeNum: 4,
+     eligible: true
   });
   var wr1 = new Player({
      x: this.oline[0].x - 80,
@@ -253,7 +257,8 @@ Formation.prototype.createSkillPlayers = function(){
      pos: "WR",
      fill: color(255, 0, 0),
      progressionRank: 1,
-     routeNum: 0
+     routeNum: 0,
+     eligible: true
   });
   var wr2 = new Player({
      x: this.oline[4].x + 80,
@@ -262,7 +267,8 @@ Formation.prototype.createSkillPlayers = function(){
      pos: "WR",
      fill: color(255, 0, 0),
      progressionRank: 5,
-     routeNum: 1
+     routeNum: 1,
+     eligible: true
   });
   this.offensivePlayers.push(rb1);
   this.offensivePlayers.push(te1);
@@ -1308,7 +1314,8 @@ Formation.prototype.createSwoop = function(ballY){
 		num: "F", pos: "F", 
 		x: left_tackle.x-2.5,
 		y: left_tackle.y,
-		red: 255, green: 0, blue: 0
+		red: 255, green: 0, blue: 0,
+		eligible: true
 	});
 
 	this.eligibleReceivers.push(f);

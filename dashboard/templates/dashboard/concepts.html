@@ -336,12 +336,25 @@
 			fill(176,176,176)
 		};
 
-		function mouseDragged() {
-			var centerSelected = swoop.mouseInCenter(field);
+		function mouseClicked() {
+			var playerSelected = swoop.mouseInPlayer(field);
 
-			if(centerSelected) {
+			if (playerSelected === null) {
+				return false;
+			}
+
+			playerSelected.click();
+
+			// return false to prevent default behavior
+			return false;
+		};
+
+		function mouseDragged() {
+			var playerSelected = swoop.mouseInPlayer(field);
+
+			if(playerSelected && playerSelected.pos === "C") {
 				var mouseYardX = field.getYardX(mouseX);
-				var xDiff = mouseYardX - centerSelected.x;
+				var xDiff = mouseYardX - playerSelected.x;
 
 				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
 					xDiff = 0;
@@ -359,7 +372,7 @@
 				for(var i = 0; i < swoop.defensivePlayers.length; i++) {
 					var player = swoop.defensivePlayers[i];
 
-					if(player.pos === "E" || player.pos === "W") {
+					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
 						player.x += xDiff;
 					} else {
 						player.x += xDiff * 0.75;
@@ -461,13 +474,13 @@
 			} else {
 				new_formation.feedbackMessage = "Invalid Formation";
 			}
-		};
+		};*/
 
 		function pressClear() {
-			new_formation.removeAllPlayers();
+			swoop.reset;
 		};
 
-		function pressZoomIn() {
+		/*function pressZoomIn() {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 			
