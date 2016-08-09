@@ -1309,7 +1309,7 @@ Formation.prototype.createSwoop = function(ballY){
 	var left_tackle = this.oline[0];
 
 	var f = new Player ({
-		num: 'F', pos: 'F', 
+		num: "F", pos: "F", 
 		x: left_tackle.x-2.5,
 		y: left_tackle.y,
 		red: 255, green: 0, blue: 0
@@ -1319,4 +1319,17 @@ Formation.prototype.createSwoop = function(ballY){
 	this.offensivePlayers.push(f);
 
 	// Create Defensive Players
+	var w = new Player ({
+		num: "W", pos: "W",
+		unit: "defense", 
+		x: left_tackle.x-2.5,
+		y: left_tackle.y,
+	});
+
+	var e = new Player ({
+		num: "E", pos: "E",
+		unit: "defense", 
+		x: left_tackle.x-2.5,
+		y: left_tackle.y,
+	});
 };
