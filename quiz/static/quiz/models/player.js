@@ -95,35 +95,26 @@ Player.prototype.getYardY = function(){
 }
 
 Player.prototype.draw = function(){
-  var x = field.getTranslatedX(this.x);
-  var y = field.getTranslatedY(this.y);
-  var siz = field.yardsToPixels(this.siz);
-  
-  if(this.unit === "offense") {
-	noStroke();
-	fill(this.red, this.green, this.blue);
-	ellipse(x, y, siz, siz);
-	fill(0,0,0);
-	textSize(14);
-	textAlign(CENTER, CENTER);
-	text(this.pos, x, y);
-  } else {
-	noStroke();
-	fill(this.red, this.green, this.blue);
-	textSize(17);
-	textAlign(CENTER, CENTER);
-	text(this.pos, x, y);
-  }
+	var x = field.getTranslatedX(this.x);
+	var y = field.getTranslatedY(this.y);
+	var siz = field.yardsToPixels(this.siz);
 
-  /*if(this.unit === "offense"){
-	noStroke();
-	fill(this.fill);
-	ellipse(this.x, this.y, this.siz, this.siz);
-	fill(0,0,0);
-	textSize(14);
-	textAlign(CENTER, CENTER);
-	text(this.pos, this.x, this.y);
-  }*/
+	if(this.unit === "offense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		ellipse(x, y, siz, siz);
+		fill(0,0,0);
+		textSize(14);
+		textAlign(CENTER, CENTER);
+		text(this.pos, x, y);
+	} else if (this.unit === "defense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		textSize(17);
+		textAlign(CENTER, CENTER);
+		text(this.pos, x, y);
+		fill(0,0,0);
+	}
 };
 
 Player.prototype.setColor = function(newFillColor) {

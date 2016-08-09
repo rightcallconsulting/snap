@@ -39,16 +39,9 @@ var Formation = function(config){
 
 //***************************************************************************//
 //***************************************************************************//
-
-//********************************//
-// createPlayer(new_player)       //
-//********************************//
-// Input:  A new player object to add to the formation.                      
-//															
-// Output: None.							
-//   														
-// createPlayer adds a new player to the formation.
-
+  														
+// createPlayer takesa new player object as an input and adds him
+// to the formation.
 Formation.prototype.createPlayer = function(new_player) {
 	if(new_player.unit === "defense") {
 		if (this.defensivePlayers.length < 11) {
@@ -88,21 +81,10 @@ Formation.prototype.createPlayer = function(new_player) {
 		}
 	}
 };
-
-//********************************//
-//  mouseInReceiverOrNode(field)  //
-//********************************//
-// Input:  The field that the formation exists in.                       
-//															
-// Output: The receiver or node that the mouse is in. Output is a tuple 
-// 		   where the first element is a reciever and the second is a node. 
-//		   The output is null for either element if the mouse is not in a 
-//		   receiver or node.							
-//   														
-// mouseInReceiverOrNode iterates through the elligible receivers       
-// in a formation and checks if the mouse is inside any of the receivers
-// of the nodes in their route.	
-
+  														
+// mouseInReceiverOrNode iterates through the elligible receivers in a 
+// formation and checks if the mouse is inside any of the receivers of the 
+// nodes in their route. It returns the player that the mouse is inside.	
 Formation.prototype.mouseInReceiverOrNode = function(field) {
 	var receiverClicked = null; 
 	var selectedNode = null;
@@ -133,18 +115,10 @@ Formation.prototype.mouseInReceiverOrNode = function(field) {
 
 	return [receiverClicked, selectedNode];
 };
-
-//********************************//
-//  mouseInOptionsToCreate(field) //
-//********************************//
-// Input:  The field that the formation exists in.                       
-//															
-// Output: The player option that the mouse is in. Null if the mouse 
-// 		   is not in a player option.								
-//   														
+  														
 // mouseInOptionsToCreate iterates through the player options available 
-// and checks if the mouse is inside any of the player options.	
-
+// and checks if the mouse is inside any of the player options. It returns
+// the player object that the mouse is in.
 Formation.prototype.mouseInOptionsToCreate = function(field) {
 	var optionClicked = null;
 	
@@ -157,18 +131,10 @@ Formation.prototype.mouseInOptionsToCreate = function(field) {
 
 	return optionClicked;
 };
-
-//********************************//
-//  mouseInCenter(field)		  //
-//********************************//
-// Input:  The field that the formation exists in.                       
-//															
-// Output: The center on the oline. Null if the mouse 
-// 		   is not in the center.								
-//   														
+  														
 // mouseInOptionsToCreate iterates through the player options available 
-// and checks if the mouse is inside any of the player options.	
-
+// and checks if the mouse is inside any of the player options.	It returns
+// the center if the mouse is inside of it or null otherwise.
 Formation.prototype.mouseInCenter = function(field){
 	for(var i = 0; i < this.oline.length; i++) {
 		var p = this.oline[i];

@@ -25,7 +25,8 @@ var Concept = function(config) {
 
 //***************************************************************************//
 //***************************************************************************//
-
+														
+// drawPlayers draws all the players in a concept.
 Concept.prototype.drawPlayers = function () {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
@@ -39,11 +40,29 @@ Concept.prototype.drawPlayers = function () {
 	}
 };
 
-Concept.prototype.isValid = function() {
-	// TODO: Implement
+Concept.prototype.drawAssignments = function () {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].draw();
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].draw();
+	}
 };
 
-
+  														
+// isValid checks the legality of a concept.
+Concept.prototype.isValid = function() {
+	// TODO: Implement
+	//
+	// IDEAS: More players in a concept than can be in a play.
+	//		  Inelligable setups. Illegal actions.
+};
+														
+// reset clears the current concept and returns an empty screen
 Concept.prototype.reset = function() {
 	this.offensivePlayers = [];
 	this.quarterback = null;
