@@ -40,17 +40,9 @@ Concept.prototype.drawPlayers = function () {
 	}
 };
 
+// drawAssignments
 Concept.prototype.drawAssignments = function () {
-	var numberOfOffensivePlayers = this.offensivePlayers.length;
-	var numberOfDefensivePlayers = this.defensivePlayers.length;
-
-	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].draw();
-	}
-
-	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].draw();
-	}
+	// TODO: Implement
 };
 
   														
