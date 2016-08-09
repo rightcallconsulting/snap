@@ -329,7 +329,7 @@
 			field.drawBackground(swoop, height, width);
 			trash.draw(field);
 			swoop.drawPlayers();
-			swoop.drawAssignments();
+			swoop.drawAssignments(field);
 			
 			fill(0, 0, 0);
 			textSize(20);
@@ -363,14 +363,13 @@
 				swoop.clearSelected();
 				return false;
 			} else {
-				// CURRENT PLAYER AND NEW PLAYER ARE ONT THE SAME TEAM
-
-				if (currentPlayerSelected != null) {
-					if (currentPlayerSelected.unit === "offense" && newPlayerSelected.unit === "defense" && currentPlayerSelected.pos != "QB") {
-						currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
-
-						return false;
-					}
+				if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+					swoop.clearSelected();
+					newPlayerSelected.click();
+					return false;
+				} else if (currentPlayerSelected.unit === "offense") {
+					currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
+					return false;
 				}
 			}
 

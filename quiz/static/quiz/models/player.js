@@ -127,26 +127,26 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.blue = blue;
 };
 
-Player.prototype.drawBlockingAssignment = function() {
+Player.prototype.drawBlockingAssignment = function(field) {
 	var primaryAssignment = this.blockingAssignmentArray[0];
 	var secondaryAssignment = this.blockingAssignmentArray[1];
 	var primaryAssingmentLength = primaryAssignment.length;
 	var secondaryAssignmentLength = secondaryAssignment.length;
 
-	var currentX = this.x;
-	var currentY = this.y;
+	var currentX = field.getTranslatedX(this.x);
+	var currentY = field.getTranslatedY(this.y);
 
 	for (var i = 0; i < primaryAssingmentLength; i++) {
 		if (primaryAssignment[i] != null) {
 			var black = color(0, 0, 0);
 			stroke(black);
-			line(currentX, currentY, primaryAssignment[i].x, primaryAssignment[i].y);
+			line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
 
-			currentX = primaryAssignment[i].x;
-			currentY = primaryAssignment[i].y;
+			currentX = field.getTranslatedX(primaryAssignment[i].x);
+			currentY = field.getTranslatedY(primaryAssignment[i].y);
 		}
 	}
-	
+
 	noStroke();
 };
 

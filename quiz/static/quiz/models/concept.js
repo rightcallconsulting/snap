@@ -42,11 +42,11 @@ Concept.prototype.drawPlayers = function () {
 };
 
 // drawAssignments
-Concept.prototype.drawAssignments = function () {
+Concept.prototype.drawAssignments = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].drawBlockingAssignment();
+		this.offensivePlayers[i].drawBlockingAssignment(field);
 	}
 };
 
