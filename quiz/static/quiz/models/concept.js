@@ -68,8 +68,8 @@ Concept.prototype.reset = function() {
 // if the mouse is inside the center. It returns the center if the mouse is 
 // inside of it or null otherwise.
 Concept.prototype.mouseInCenter = function(field) {
-	for(var i = 0; i < this.offensiveLineman.length; i++) {
-		var player = this.offensiveLineman[i];
+	for(var i = 0; i < this.offensiveLinemen.length; i++) {
+		var player = this.offensiveLinemen[i];
 		if (player.pos === "C" && player.isMouseInside(field)) {
 			return player;
 		}

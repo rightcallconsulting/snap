@@ -356,21 +356,21 @@
 					player.x += xDiff;
 				}
 
-				for(var i = 0; i < defensePlay.defensivePlayers.length; i++) {
-					var p = defensePlay.defensivePlayers[i];
+				for(var i = 0; i < swoop.defensivePlayers.length; i++) {
+					var player = swoop.defensivePlayers[i];
 
-					if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE") {
-						p.x += xDiff;
+					if(player.pos === "E" || player.pos === "W") {
+						player.x += xDiff;
 					} else {
-						p.x += xDiff * 0.75;
+						player.x += xDiff * 0.75;
 					}
 					
-					if(p.x < 0) {
-						p.x = 0;
+					if(player.x < 0) {
+						player.x = 0;
 					}
 					
-					if(p.x > Field.WIDTH) {
-						p.x = Field.WIDTH;
+					if(player.x > Field.WIDTH) {
+						player.x = Field.WIDTH;
 					}
 				}
 			}
