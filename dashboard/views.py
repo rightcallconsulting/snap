@@ -580,10 +580,10 @@ def concepts(request):
 	else:
 		coach = request.user.coach
 		team = coach.team
-		formations = team.formation_set.all()
-		return render(request, 'dashboard/create_formation.html', {
+		concepts = team.concept_set.all()
+		return render(request, 'dashboard/concepts.html', {
 			'team': team,
-			'formations': formations,
+			'concepts': concepts,
 			'page_header': 'CONCEPTS',
 		})
 
