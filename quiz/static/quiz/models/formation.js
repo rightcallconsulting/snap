@@ -180,7 +180,7 @@ Formation.prototype.getPassStrength = function(){
 
 Formation.prototype.createOLineAndQB = function(ballY){
 	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-	for (var i = -2; i < 3; i++) {
+	for (var i = -2; i <= 2; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
 		if (i !== 0) {
@@ -1282,40 +1282,41 @@ var formations = [];
 /* Temporary functions for concepts */
 // createSwoop creates a static version of on of Stanfords run concepts
 Formation.prototype.createSwoop = function(ballY){
+	// Create Offensive Players
 	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-	for (var i = -2; i < 3; i++) {
+
+	for (var i = -2; i <= 0; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
+		
 		if (i !== 0) {
 			yPos -= 0.5;
 		}
-		var tmp = new Player({
-			x: xPos,
-			y: yPos,
+
+		var offensive_lineman = new Player({
 			num: olPositions[i+2],
-			fill: color(143, 29, 29),
-			red: 143,
-			blue: 29,
-			green: 29,
 			pos: olPositions[i+2],
+			x: xPos, y: yPos,
+			fill: color(143, 29, 29),
+			red: 143, blue: 29, green: 29,
 			index: i
 		});
-		this.oline.push(tmp);
-		this.offensivePlayers.push(tmp);
+
+		this.oline.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
 	}
-	
-	currentPlayer = this.oline[3];
-	var tmp = new Player ({
-		x: this.oline[2].x,
-		y: this.oline[2].y-2.25,
-		num: 12,
-		fill: color(212, 130, 130),
-		red: 212,
-		blue: 130,
-		green: 130,
-		pos: "QB"
+
+	var left_tackle = this.oline[0];
+
+	var f = new Player ({
+		num: 'F', pos: 'F', 
+		x: left_tackle.x-2.5,
+		y: left_tackle.y,
+		red: 255, green: 0, blue: 0
 	});
 
-	this.qb.push(tmp);
-	this.offensivePlayers.push(tmp);
+	this.eligibleReceivers.push(f);
+	this.offensivePlayers.push(f);
+
+	// Create Defensive Players
 };

@@ -270,8 +270,7 @@
 
 			// Create Position groups
 			new_formation = new Formation({});
-			new_formation.createOLineAndQB(field.ballYardLine);
-			new_formation.changeablePlayers.push(new_formation.qb[0]); // This allows us to move the QB?
+			new_formation.createSwoop(field.ballYardLine);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -299,37 +298,6 @@
 				displayButton: true
 			});
 
-			// Create Position groups that can be added
-			var wr = new Player ({
-				num: 'WR', pos: 'WR', 
-				x: field.getXOffset() - 9,
-				y: field.getYardY(height) + 2,
-				red: 255, green: 0, blue: 0
-			});
-
-			var te = new Player ({
-				num: 'TE', pos: 'TE',
-				x: wr.x + 3.5, y: wr.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			var rb = new Player({
-				num: 'RB', pos: 'RB',
-				x: te.x + 3.5, y: te.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			var fb = new Player({
-				num: 'FB', pos: 'FB',
-				x: rb.x + 3.5, y: te.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			new_formation.optionsToCreate.push(wr);
-			new_formation.optionsToCreate.push(te);
-			new_formation.optionsToCreate.push(rb);
-			new_formation.optionsToCreate.push(fb);
-
 			//  Field Position Variables
 			var scoreboard = new Scoreboard({});
 
@@ -351,83 +319,7 @@
 		};
 
 		function draw() {
-			// Get Quarterback, Center, Left Tackle, Right Tackle, Running Backs, Full
-			// Backs, Tight Ends, and Wide Receivers.
-			var quarterback = new_formation.qb[0];
-			var center = null;
-			var left_tackle = null;
-			var right_tackle = null;
-			var running_backs = new_formation.runningBacks;
-			var full_backs = new_formation.fullBacks;
-			var tight_ends = new_formation.tightEnds;
-			var wide_receivers = new_formation.wideReceivers;
-
-			for(var ol = 0; ol < new_formation.oline.length; ol++) {
-				var lineman = new_formation.oline[ol];
-				
-				if (lineman.pos === "C") {
-					center = lineman;
-				} else if (lineman.pos === "LT") {
-					left_tackle = lineman;
-				} else if (lineman.pos === "RT") {
-					right_tackle = lineman;
-				}
-			}
-
-			// If Quarterback is close to behind center then align him with the center.
-			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
-				quarterback.x = center.x;
-			}
-
-			// If Quarterback is inside the tackle box he can only be behind the center
-			// or a few yards back.
-			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
-				if (quarterback.y > center.y-2.25) {
-					quarterback.y = center.y-2.25;
-				} else if (quarterback.y < center.y-7.5) {
-					quarterback.y = center.y-7.5;
-				}
-			}
-
-			// If a running back is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var rb = 0; rb < running_backs.length; rb++) {
-				var runningback = running_backs[rb];
-				
-				if (runningback.y > left_tackle.y-1) {
-					runningback.y = left_tackle.y;
-				}
-			}
-
-			// If a full back is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var fb = 0; fb < full_backs.length; fb++) {
-				var fullback = full_backs[fb];
-				
-				if (fullback.y > left_tackle.y-1) {
-					fullback.y = left_tackle.y;
-				}
-			}
-
-			// If a tight end is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var te = 0; te < tight_ends.length; te++) {
-				var tightend = tight_ends[te];
-				
-				if (tightend.y > left_tackle.y-1) {
-					tightend.y = left_tackle.y;
-				}
-			}
-
-			// If a wide receiver is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var wr = 0; wr < wide_receivers.length; wr++) {
-				var receiver = wide_receivers[wr];
-				
-				if (receiver.y > left_tackle.y-1) {
-					receiver.y = left_tackle.y;
-				}
-			}
+			// Impose limitations here
 
 			drawOpening();
 		};
@@ -450,8 +342,6 @@
 			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
 			var centerSelected = new_formation.mouseInCenter(field);
 
-			var quarterback = new_formation.qb[0];
-
 			if (new_formation.establishingNewPlayer) {
 				new_formation.establishingNewPlayer.movePlayer(field);
 			} else if (positionOptionSelected) {
@@ -469,9 +359,6 @@
 			} else if (receiverSelected) {
 				receiverSelected.change = receiverSelected.change ? false : true;
 				new_formation.establishingNewPlayer = receiverSelected;
-			} else if (quarterback.isMouseInside(field)) {
-				quarterback.change = quarterback.change ? false : true;
-				new_formation.establishingNewPlayer = quarterback;
 			} else if(centerSelected) {
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - centerSelected.x;
