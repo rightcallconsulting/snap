@@ -136,23 +136,33 @@ Player.prototype.drawAllBlocks= function(field) {
 	var currentX = field.getTranslatedX(this.x);
 	var currentY = field.getTranslatedY(this.y);
 
+	var black = color(0, 0, 0);
+	stroke(black);
+
 	for (var i = 0; i < primaryAssingmentLength; i++) {
 		if (primaryAssignment[i] != null) {
-			if(primaryAssignment[i] === "Down Block Right") {
-				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if(primaryAssignment[i] === "Down Block Left") {
-				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] instanceof Player) {
-				var black = color(0, 0, 0);
+			if (primaryAssignment[i] instanceof Player) {
+				/*var black = color(0, 0, 0);
 				stroke(black);
 				line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
 
 				currentX = field.getTranslatedX(primaryAssignment[i].x);
-				currentY = field.getTranslatedY(primaryAssignment[i].y);
+				currentY = field.getTranslatedY(primaryAssignment[i].y);*/
+				var new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, primaryAssignment[i]);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Money Block") {
+				var new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Down Block Right") {
+				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Down Block Left") {
+				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
 			}
 		}
 	}
@@ -160,10 +170,69 @@ Player.prototype.drawAllBlocks= function(field) {
 	noStroke();
 };
 
-Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
-	var black = color(0, 0, 0);
-	stroke(black);
+Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignment) {
+	var assignmentX = field.getTranslatedX(assignment.x);
+	var assignmentY = field.getTranslatedX(assignment.y);
+	var deltaX = assignmentX - currentX;
+	var deltaY = assignmentY - currentY;
+	var alpha = atan(deltaY/deltaX);
+	var distToAssignment = sqrt(deltaX^2 + deltaY^2);
+	var bufferFromAssignment = assignment.siz * 10;
 
+	var dist = distToAssignment - bufferFromAssignment;
+	var xDiff = asin(alpha)/dist;
+	var yDiff = acos(alpha)/dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX - xDiff;
+	var y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 20;
+	x1 = currentX - xDiff - lengthOfPerpLine/2;
+	y1 = currentY - yDiff;
+	x2 = currentX - xDiff + lengthOfPerpLine/2;
+	y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
+	var dist = 20;
+	var xDiff = 0;
+	var yDiff = dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX - xDiff;
+	var y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 20;
+	x1 = currentX - xDiff - lengthOfPerpLine/2;
+	y1 = currentY - yDiff;
+	x2 = currentX - xDiff + lengthOfPerpLine/2;
+	y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	var dist = 30;
 	var xDiff = (dist/2)*sqrt(2);
 	var yDiff = (dist/2)*sqrt(2);
@@ -187,15 +256,10 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 
 	line(x1, y1, x2, y2); 
 
-	noStroke();
-
 	return new_coordinates;
 };
 
 Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
-	var black = color(0, 0, 0);
-	stroke(black);
-
 	var dist = 30;
 	var xDiff = (dist/2)*sqrt(2);
 	var yDiff = (dist/2)*sqrt(2);
@@ -219,13 +283,7 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 
 	line(x1, y1, x2, y2); 
 
-	noStroke();
-
 	return new_coordinates;
-};
-
-Player.prototype.drawBlockOnPlayer = function(field, startX, startY, assignmentX, assignmentY) {
-
 };
 
 // Dylan's line
