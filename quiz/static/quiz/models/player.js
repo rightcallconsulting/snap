@@ -196,26 +196,26 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
-	var dist = 2.5;
-	var xdiff = (dist/2)*sqrt(2);
-	var ydiff = (dist/2)*sqrt(2);
+	var dist = 30;
+	var xDiff = (dist/2)*sqrt(2);
+	var yDiff = (dist/2)*sqrt(2);
 
 	// Angled line that shows the direction of the downblock
-	var x1 = field.getTranslatedX(currentX);
-	var y1 = field.getTranslatedY(currentY);
-	var x2 = field.getTranslatedX(currentX - xdiff);
-	var y2 = field.getTranslatedY(currentY + ydiff);
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX - xDiff;
+	var y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 1.5;
-	x1 = field.getTranslatedX(currentX + xDiff - lengthOfPerpLine/2);
-	y1 = field.getTranslatedY(currentY + yDiff);
-	x2 = field.getTranslatedX(currentX + xDiff + lengthOfPerpLine/2);;
-	y2 = field.getTranslatedY(currentY + yDiff);
+	var lengthOfPerpLine = 20;
+	x1 = currentX - xDiff - lengthOfPerpLine/2;
+	y1 = currentY - yDiff;
+	x2 = currentX - xDiff + lengthOfPerpLine/2;
+	y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2); 
 
