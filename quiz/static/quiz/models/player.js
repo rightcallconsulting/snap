@@ -176,7 +176,7 @@ Player.prototype.drawDownBlockRight = function(field) {
 	x2 = 0;
 	y2 = 0;
 
-	line(x2-10, y2, x2+10, y2); 
+	line(x1, y1, x2, y2); 
 
 	noStroke();
 };
