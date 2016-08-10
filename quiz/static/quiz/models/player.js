@@ -127,7 +127,7 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.blue = blue;
 };
 
-Player.prototype.drawBlockingAssignment = function(field) {
+Player.prototype.drawAllBlocks= function(field) {
 	var primaryAssignment = this.blockingAssignmentArray[0];
 	var secondaryAssignment = this.blockingAssignmentArray[1];
 	var primaryAssingmentLength = primaryAssignment.length;
@@ -148,6 +148,18 @@ Player.prototype.drawBlockingAssignment = function(field) {
 	}
 
 	noStroke();
+};
+
+Player.prototype.drawDownBlockRight = function(field) {
+
+};
+
+Player.prototype.drawDownBlockLeft = function(field) {
+	
+};
+
+Player.prototype.drawBlockOnPlayer = function(field, startX, startY, assignmentX, assignmentY) {
+
 };
 
 Player.prototype.getX = function(field) {

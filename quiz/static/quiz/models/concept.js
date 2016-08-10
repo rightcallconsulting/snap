@@ -46,7 +46,7 @@ Concept.prototype.drawAssignments = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].drawBlockingAssignment(field);
+		this.offensivePlayers[i].drawAllBlocks(field);
 	}
 };
 
