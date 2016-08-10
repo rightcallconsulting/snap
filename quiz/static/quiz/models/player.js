@@ -139,8 +139,14 @@ Player.prototype.drawAllBlocks= function(field) {
 	for (var i = 0; i < primaryAssingmentLength; i++) {
 		if (primaryAssignment[i] != null) {
 			if(primaryAssignment[i] === "Down Block Right") {
-				this.drawDownBlockRight(field);
-			} else {
+				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if(primaryAssignment[i] === "Down Block Left") {
+				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] instanceof Player) {
 				var black = color(0, 0, 0);
 				stroke(black);
 				line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
@@ -154,34 +160,39 @@ Player.prototype.drawAllBlocks= function(field) {
 	noStroke();
 };
 
-Player.prototype.drawDownBlockRight = function(field) {
+Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
-	var dist = 2.5;
-	var xdiff = (dist/2)*sqrt(2);
-	var ydiff = (dist/2)*sqrt(2);
+	var dist = 30;
+	var xDiff = (dist/2)*sqrt(2);
+	var yDiff = (dist/2)*sqrt(2);
 
 	// Angled line that shows the direction of the downblock
-	var x1 = field.getTranslatedX(this.x);
-	var y1 = field.getTranslatedY(this.y);
-	var x2 = field.getTranslatedX(this.x + xdiff);
-	var y2 = field.getTranslatedY(this.y + ydiff);
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX + xDiff;
+	var y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2);
 
+	var new_coordinates = [x2, y2];
+
 	// Perpendicular line at the end of the down block
-	x1 = 0;
-	y1 = 0;
-	x2 = 0;
-	y2 = 0;
+	var lengthOfPerpLine = 20;
+	x1 = currentX + xDiff - lengthOfPerpLine/2;
+	y1 = currentY - yDiff;
+	x2 = currentX + xDiff + lengthOfPerpLine/2;
+	y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2); 
 
 	noStroke();
+
+	return new_coordinates;
 };
 
-Player.prototype.drawDownBlockLeft = function(field, blocker) {
+Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
@@ -190,26 +201,34 @@ Player.prototype.drawDownBlockLeft = function(field, blocker) {
 	var ydiff = (dist/2)*sqrt(2);
 
 	// Angled line that shows the direction of the downblock
-	var x1 = field.getTranslatedX(this.x);
-	var y1 = field.getTranslatedY(this.y);
-	var x2 = field.getTranslatedX(this.x - xdiff);
-	var y2 = field.getTranslatedY(this.y + ydiff);
+	var x1 = field.getTranslatedX(currentX);
+	var y1 = field.getTranslatedY(currentY);
+	var x2 = field.getTranslatedX(currentX - xdiff);
+	var y2 = field.getTranslatedY(currentY + ydiff);
 
 	line(x1, y1, x2, y2);
 
+	var new_coordinates = [x2, y2];
+
 	// Perpendicular line at the end of the down block
-	x1 = 0;
-	y1 = 0;
-	x2 = 0;
-	y2 = 0;
-	line(x2-10, y2, x2+10, y2); 
-	
+	var lengthOfPerpLine = 1.5;
+	x1 = field.getTranslatedX(currentX + xDiff - lengthOfPerpLine/2);
+	y1 = field.getTranslatedY(currentY + yDiff);
+	x2 = field.getTranslatedX(currentX + xDiff + lengthOfPerpLine/2);;
+	y2 = field.getTranslatedY(currentY + yDiff);
+
+	line(x1, y1, x2, y2); 
+
 	noStroke();
+
+	return new_coordinates;
 };
 
 Player.prototype.drawBlockOnPlayer = function(field, startX, startY, assignmentX, assignmentY) {
 
 };
+
+// Dylan's line
 
 Player.prototype.getX = function(field) {
 	return field.yardsToPixels(this.getYardX() - field.getXOffset());

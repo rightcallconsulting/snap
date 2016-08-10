@@ -196,6 +196,14 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(w);
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
-		this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
+		// Add down blocks to all of the players except the center
+		if (this.offensivePlayers[i].pos != "C") {
+			this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
+		}
+
+		// Add seal block to the left gaurd
+		if (this.offensivePlayers[i].pos === "LG") {
+			//this.offensivePlayers[i].blockingAssignmentArray[0].push("Seal Block Right");
+		}
 	}
 };
