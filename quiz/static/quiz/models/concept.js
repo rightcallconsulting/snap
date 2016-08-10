@@ -18,7 +18,7 @@ var Concept = function(config) {
 	this.unit = config.unit || null; // There might not be a need for this - probably a smarter way to do it
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.quarterback = config.quarterback || null;
-	this.offensiveLinemen = config.offensiveLine || [];
+	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
 	this.feedbackMessage = config.feedbackMessage || [];
@@ -194,4 +194,8 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(e);
 	this.defensivePlayers.push(t);
 	this.defensivePlayers.push(w);
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
+	}
 };

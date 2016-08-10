@@ -138,12 +138,16 @@ Player.prototype.drawAllBlocks= function(field) {
 
 	for (var i = 0; i < primaryAssingmentLength; i++) {
 		if (primaryAssignment[i] != null) {
-			var black = color(0, 0, 0);
-			stroke(black);
-			line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
+			if(primaryAssignment[i] === "Down Block Right") {
+				this.drawDownBlockRight(field);
+			} else {
+				var black = color(0, 0, 0);
+				stroke(black);
+				line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
 
-			currentX = field.getTranslatedX(primaryAssignment[i].x);
-			currentY = field.getTranslatedY(primaryAssignment[i].y);
+				currentX = field.getTranslatedX(primaryAssignment[i].x);
+				currentY = field.getTranslatedY(primaryAssignment[i].y);
+			}
 		}
 	}
 
@@ -151,11 +155,56 @@ Player.prototype.drawAllBlocks= function(field) {
 };
 
 Player.prototype.drawDownBlockRight = function(field) {
+	var black = color(0, 0, 0);
+	stroke(black);
 
+	var dist = 2.5;
+	var xdiff = (dist/2)*sqrt(2);
+	var ydiff = (dist/2)*sqrt(2);
+
+	// Angled line that shows the direction of the downblock
+	var x1 = field.getTranslatedX(this.x);
+	var y1 = field.getTranslatedY(this.y);
+	var x2 = field.getTranslatedX(this.x + xdiff);
+	var y2 = field.getTranslatedY(this.y + ydiff);
+
+	line(x1, y1, x2, y2);
+
+	// Perpendicular line at the end of the down block
+	x1 = 0;
+	y1 = 0;
+	x2 = 0;
+	y2 = 0;
+
+	line(x2-10, y2, x2+10, y2); 
+
+	noStroke();
 };
 
-Player.prototype.drawDownBlockLeft = function(field) {
+Player.prototype.drawDownBlockLeft = function(field, blocker) {
+	var black = color(0, 0, 0);
+	stroke(black);
+
+	var dist = 2.5;
+	var xdiff = (dist/2)*sqrt(2);
+	var ydiff = (dist/2)*sqrt(2);
+
+	// Angled line that shows the direction of the downblock
+	var x1 = field.getTranslatedX(this.x);
+	var y1 = field.getTranslatedY(this.y);
+	var x2 = field.getTranslatedX(this.x - xdiff);
+	var y2 = field.getTranslatedY(this.y + ydiff);
+
+	line(x1, y1, x2, y2);
+
+	// Perpendicular line at the end of the down block
+	x1 = 0;
+	y1 = 0;
+	x2 = 0;
+	y2 = 0;
+	line(x2-10, y2, x2+10, y2); 
 	
+	noStroke();
 };
 
 Player.prototype.drawBlockOnPlayer = function(field, startX, startY, assignmentX, assignmentY) {
