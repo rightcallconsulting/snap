@@ -204,8 +204,6 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 		y2 = currentY - yDiff;
 	}
 
-	//var y2 = currentY - yDiff;
-
 	line(x1, y1, x2, y2);
 
 	var new_coordinates = [x2, y2];
