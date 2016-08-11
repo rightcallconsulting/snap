@@ -297,7 +297,7 @@ Concept.prototype.createTO = function(ballY){
 		num: "E", pos: "E",
 		unit: "defense", 
 		change: true,
-		x: right_tackle.x+2, y: right_tackle.y+2,
+		x: right_tackle.x+1.75, y: right_tackle.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -305,7 +305,7 @@ Concept.prototype.createTO = function(ballY){
 		num: "S", pos: "S",
 		unit: "defense", 
 		change: true,
-		x: y.x+2, y: y.y+2,
+		x: y.x+1.75, y: y.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
