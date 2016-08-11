@@ -153,7 +153,7 @@ Concept.prototype.createSwoop = function(ballY){
 	}
 
 	var left_tackle = this.offensiveLinemen[0];
-	var left_gaurd = this.offensiveLinemen[1];
+	var left_guard = this.offensiveLinemen[1];
 	var center = this.offensiveLinemen[2];
 
 	var f = new Player ({
@@ -180,7 +180,7 @@ Concept.prototype.createSwoop = function(ballY){
 		num: "T", pos: "T",
 		unit: "defense", 
 		change: true,
-		x: left_gaurd.x-1, y: left_gaurd.y+2.5,
+		x: left_guard.x-1, y: left_guard.y+2.5,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -197,17 +197,10 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	for (var i = 0; i < this.offensivePlayers.length; ++i) {
-		// Add down blocks to all of the players except the center
-		if (this.offensivePlayers[i].pos != "C") {
-			this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
-		}
-
-		// Add seal block to the left gaurd
-		if (this.offensivePlayers[i].pos === "LG") {
-			this.offensivePlayers[i].blockingAssignmentArray[0].push("Straight Seal Right");
-		}
-	}
+	f.blockingAssignmentArray[0].push("Down Block Right");
+	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
+	left_guard.blockingAssignmentArray[0].push("Down Block Right");
+	left_guard.blockingAssignmentArray[0].push("Straight Seal Right");
 };
 
 // createCat creates a static version Stanfords cat blocking concept
@@ -235,7 +228,7 @@ Concept.prototype.createCat = function(ballY){
 	}
 
 	var left_tackle = this.offensiveLinemen[0];
-	var left_gaurd = this.offensiveLinemen[1];
+	var left_guard = this.offensiveLinemen[1];
 	var center = this.offensiveLinemen[2];
 
 	// Create Defensive Players
@@ -243,7 +236,7 @@ Concept.prototype.createCat = function(ballY){
 		num: "T", pos: "T",
 		unit: "defense", 
 		change: true,
-		x: left_gaurd.x-1, y: left_gaurd.y+2.5,
+		x: left_guard.x-1, y: left_guard.y+2.5,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -269,6 +262,6 @@ Concept.prototype.createCat = function(ballY){
 
 	// Create offensive assignments
 	left_guard.blockingAssignmentArray[0].push("Down Block Right");
-	center.blockingAssignmentArray[0].push("Down Block Right");
-	center.blockingAssignmentArray[0].push("Down Block Right");
+	center.blockingAssignmentArray[0].push(t);
+	center.blockingAssignmentArray[0].push(w);
 };
