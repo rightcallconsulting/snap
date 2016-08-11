@@ -587,6 +587,20 @@ def concepts(request):
 			'page_header': 'CONCEPTS',
 		})
 
+@login_required
+def create_concept(request):
+	if request.method == "POST":
+		return HttpResponseRedirect(reverse('playbook'))
+	else:
+		coach = request.user.coach
+		team = coach.team
+		concepts = team.concept_set.all()
+		return render(request, 'dashboard/create_concept.html', {
+			'team': team,
+			'concepts': concepts,
+			'page_header': 'CREATE CONCEPT',
+		})
+
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):
