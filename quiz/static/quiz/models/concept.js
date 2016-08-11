@@ -207,3 +207,83 @@ Concept.prototype.createSwoop = function(ballY){
 		}
 	}
 };
+
+// createCat creates a static version Stanfords cat blocking concept
+Concept.prototype.createCat = function(ballY){
+	// Create Offensive Players
+	var olPositions = ["LT", "LG", "C", "RG", "RT"];
+
+	for (var i = -2; i <= 0; i++) {
+		var xPos = Field.WIDTH / 2 + i*2.5;
+		var yPos = ballY-1.5;
+		
+		if (i !== 0) {
+			yPos -= 0.5;
+		}
+
+		var offensive_lineman = new Player({
+			num: olPositions[i+2],
+			pos: olPositions[i+2],
+			x: xPos, y: yPos,
+			red: 143, blue: 29, green: 29,
+		});
+
+		this.offensiveLinemen.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
+	}
+
+	var left_tackle = this.offensiveLinemen[0];
+	var left_gaurd = this.offensiveLinemen[1];
+
+	var f = new Player ({
+		num: "F", pos: "F", 
+		x: left_tackle.x-2.5,
+		y: left_tackle.y,
+		red: 255, green: 0, blue: 0,
+		eligible: true
+	});
+
+	this.eligibleReceivers.push(f);
+	this.offensivePlayers.push(f);
+
+	// Create Defensive Players
+	var e = new Player ({
+		num: "E", pos: "E",
+		unit: "defense", 
+		change: true,
+		x: f.x, y: f.y+2.5,
+		red: 0, green: 0, blue: 0
+	});
+
+	var t = new Player ({
+		num: "T", pos: "T",
+		unit: "defense", 
+		change: true,
+		x: left_gaurd.x-1, y: left_gaurd.y+2.5,
+		red: 0, green: 0, blue: 0
+	});
+
+	var w = new Player ({
+		num: "W", pos: "W",
+		unit: "defense", 
+		change: true,
+		x: left_tackle.x, y: left_tackle.y+5,
+		red: 0, green: 0, blue: 0
+	});
+
+	this.defensivePlayers.push(e);
+	this.defensivePlayers.push(t);
+	this.defensivePlayers.push(w);
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		// Add down blocks to all of the players except the center
+		if (this.offensivePlayers[i].pos != "C") {
+			this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
+		}
+
+		// Add seal block to the left gaurd
+		if (this.offensivePlayers[i].pos === "LG") {
+			this.offensivePlayers[i].blockingAssignmentArray[0].push("Straight Seal Right");
+		}
+	}
+};
