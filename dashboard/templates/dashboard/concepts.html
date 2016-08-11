@@ -168,6 +168,8 @@
 		function changeSelected(selected) {
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+
+			concept.reset();
 			
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
