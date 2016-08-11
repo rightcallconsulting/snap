@@ -261,7 +261,7 @@ Concept.prototype.createCat = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	left_guard.blockingAssignmentArray[0].push("Down Block Right");
+	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
 	center.blockingAssignmentArray[0].push(t);
 	center.blockingAssignmentArray[0].push(w);
 };
