@@ -1,0 +1,889 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div id="create-formation" class="create-formation padding-md">
+		<div id="display-box" class="col-md-8 bordered-div">
+			<div id="header-box" class="interactive-header display-header placeholder">
+				<p id="placeholder-message">Enter Concept Name</p>
+			</div>
+
+			<div id="quiz-box">
+			</div>
+
+			<div class="display-buttons">
+				<table class="button-table">
+					<tr>
+						<td>
+							<button id="save-button" name="button" onclick="saveFormation()">
+								{% include "quiz/check_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="clear-button" name="button" onclick="clearFormation()">
+								{% include "quiz/clear_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-in-button" name="button" onclick="zoomIn()">
+								{% include "quiz/zoom_in_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button" onclick="zoomOut()">
+								{% include "quiz/zoom_out_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="full-screen-button" name="button" onclick="fullScreen()">
+								{% include "quiz/full_screen_button.html" %}
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div id="choose-existing-formation" class="col-md-3 bordered-div">
+			<div id="header-box" class="header">
+				Existing Concepts
+			</div>
+
+			<div class="table-wrapper formation-table">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<button static="swoop" class="btn btn-primary" onclick="changeSelected(this)">
+									Swoop
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button static="cat" class="btn btn-primary" onclick="changeSelected(this)">
+									Cat
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button static="to" class="btn btn-primary" onclick="changeSelected(this)">
+									T.O.
+								</button>
+							</td>
+						</tr>
+						{% for concept in concepts %}
+							<tr>
+								<td>
+									<button class="btn btn-primary" onclick="changeSelected(this)">
+										{{ concept.name }}
+									</button>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div><!--/create-formation-->
+
+	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
+	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
+	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
+	<script type="text/javascript">
+		var concepts = [];
+		var concept;
+
+		//*******************************************************************//
+		// Event Listener Functions                                          //
+		//*******************************************************************//
+		
+		// When the main container is clicked unselect the interactive header.
+		// This function will not call when the header is clicked because that
+		// function stops propagation of the event.
+		$(document).click(function(event) {
+			if ($("#header-box").hasClass("selected")) {
+				$("#header-box").removeClass("selected");
+				var formation_name = document.getElementById("formation-name");
+
+				if (formation_name === null) {
+					addHeaderPlaceholder();
+				}
+
+				if (formation_name != null && formation_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(formation_name);
+					addHeaderPlaceholder();
+				}
+			}
+		});
+
+		// When the header box is selected have it change colors and remove the
+		// placeholder if it exists
+		$("#header-box").click(function(event) {
+			removeHeaderPlaceholderAndError();
+			$("#header-box").addClass("selected");
+			event.stopPropagation();
+		});
+
+		function removeHeaderPlaceholderAndError() {
+			var header_box = document.getElementById("header-box");
+			var placeholder_message = document.getElementById("placeholder-message");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("placeholder error");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
+			} else if (error_message != null) {
+				header_box.removeChild(error_message);
+			}
+		};
+
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var formation_name = document.getElementById("formation-name");
+
+			if (formation_name != null) {
+				header_box.removeChild(formation_name);
+			}
+		};
+
+		function addHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Formation Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
+
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Invalid Formation Name";
+			header_box.appendChild(error_message);
+		};
+
+		function changeSelected(selected) {
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			concept.reset();
+			
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary");
+			}
+
+			var static_concept = new_selected.getAttribute("static");
+
+			if (old_selected != new_selected) {
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success");
+
+				if (static_concept != null) {
+					if (static_concept === "swoop") {
+						concept.createSwoop(field.ballYardLine);
+					} else if (static_concept === "cat") {
+						concept.createCat(field.ballYardLine);
+					} else if (static_concept === "to") {
+						concept.createTO(field.ballYardLine);
+					}
+				}
+			}
+		};
+
+		$("#save-button").click(function(event) {
+			var placeholder_message = document.getElementById("placeholder-message");
+			var formation_name = document.getElementById("formation-name");
+
+			if (placeholder_message != null) {
+				removeHeaderPlaceholderAndError();
+				addHeaderError();
+				return;
+			}
+
+			if (formation_name != null && formation_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(formation_name);
+				removeHeaderPlaceholderAndError();
+				addHeaderError();
+				return;
+			}
+
+			// I don't think this will ever happen, but I'm not sure.
+			if (formation_name === null) {
+				removeHeaderPlaceholderAndError();
+				addHeaderError();
+				return;
+			}
+
+			//pressSave();
+		});
+
+		$("#clear-button").click(function(event) {
+			/*var curr_selected = document.getElementById("selected");
+			
+			if (curr_selected != null) {
+				curr_selected.removeAttribute("id");
+				curr_selected.removeAttribute("class");
+				curr_selected.setAttribute("class", "btn btn-primary");
+			}
+
+			removeHeaderPlaceholderAndError();
+			removeHeaderName();
+			addHeaderPlaceholder();*/
+
+			pressClear();
+		});
+
+		$("#zoom-in-button").click(function(event) {
+			pressZoomIn();
+		});
+
+		$("#zoom-out-button").click(function(event) {
+			pressZoomOut();
+		});
+
+		$("#full-screen-button").click(function(event) {
+			/*if ($("#display-box").hasClass("fullscreen")) {
+				$("#display-box").removeClass("fullscreen");
+			} else if (!$("#display-box").hasClass("fullscreen")) {
+				$("#display-box").addClass("fullscreen");
+			}
+
+			pressFullScreen()*/
+		});
+
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
+		var makeJSONCall = true;
+		var trash;
+		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
+
+		function setup() {
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
+			var sidebar = document.getElementById("choose-existing-formation");
+			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
+
+			var quiz_box_div = document.getElementById("quiz-box");
+			//var new_canvas = document.createElement("canvas");
+			//new_canvas.id = "create-formation";
+			//new_canvas.height = height;
+			//new_canvas.width = width;
+
+			//Will need this to set minimum width
+			//if (height < 500) {
+			//	height = 500;
+			//}
+
+			var myCanvas = createCanvas(width, height);
+			
+			field.height = height;
+			field.width = width;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
+			background(58, 135, 70);
+
+			myCanvas.parent("quiz-box");
+
+			//randomSeed(millis()); // What is the random seed for?
+
+			// Create Position groups
+			concept = new Concept({});
+			//concept.createCat(field.ballYardLine);
+
+			var trashWidth = field.pixelsToYards(field.width * 0.12);
+			if(trashWidth < 5) {
+				trashWidth = 5;
+			}
+
+			var trashHeight = field.pixelsToYards(field.height * 0.1);
+			if(trashHeight < 4) {
+				trashHeight = 4;
+			}
+
+			var trashX = Field.WIDTH - trashWidth * 1.1;
+			var trashY = field.getYardY(field.height) + trashHeight * 1.1;
+			if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width) {
+				trashX = field.getYardX(field.width) - trashWidth*1.1;
+			}
+
+			// Create Buttons
+			trash = new Button({
+				label: "Trash",
+				x: trashX, y: trashY,
+				width: trashWidth,
+				height: trashHeight,
+				clicked: false,
+				displayButton: true
+			});
+
+			//  Field Position Variables
+			var scoreboard = new Scoreboard({});
+
+			window.onresize = function() {
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
+				var sidebar = document.getElementById("choose-existing-formation");
+				var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
+
+				resizeCanvas(width, height);
+				field.height = height;
+				field.width = width;
+				resizeBottomButtons();
+			};
+
+			drawOpening();
+		};
+
+		function draw() {
+			// Impose limitations here
+
+			drawOpening();
+		};
+
+		// intro scene
+		function drawOpening() {
+			field.drawBackground(concept, height, width);
+			trash.draw(field);
+			concept.drawAssignments(field);
+			concept.drawPlayers();
+			
+			fill(0, 0, 0);
+			textSize(20);
+			text(concept.feedbackMessage, 330, 20);
+			fill(176,176,176)
+		};
+
+		function mouseClicked() {
+			var currentPlayerSelected = concept.getSelected();
+			var newPlayerSelected = concept.mouseInPlayer(field);
+
+			// If no one is currently selected and no one is clicked on do 
+			// nothing. Else if no one is currently selected and someone is 
+			// clicked on, then select that player and return. Else if someone
+			// is currently selected and empty field is clicked on then clear
+			// all selections and return. Else if the currently selected player 
+			// is the same as the newly selected player then clear all
+			// selections and return. Else two seperate players are assigned to
+			// those variables and handle accordingly.
+			if (currentPlayerSelected === null && newPlayerSelected === null) {
+				return false;
+			} else if (currentPlayerSelected === null) {
+				newPlayerSelected.click();
+				return false;
+			} else if (newPlayerSelected === null) {
+				// This will have to change to be able to add blocking landmarks
+				// Right now if you click on empty space it just unselects the 
+				concept.clearSelected();
+				return false;
+			} else if (newPlayerSelected === currentPlayerSelected) {
+				concept.clearSelected();
+				return false;
+			} else {
+				if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+					concept.clearSelected();
+					newPlayerSelected.click();
+					return false;
+				} else if (currentPlayerSelected.unit === "offense") {
+					currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
+					return false;
+				}
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
+
+		function mouseDragged() {
+			var playerSelected = concept.mouseInPlayer(field);
+
+			if(playerSelected && playerSelected.pos === "C") {
+				var mouseYardX = field.getYardX(mouseX);
+				var xDiff = mouseYardX - playerSelected.x;
+
+				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
+					xDiff = 0;
+				}
+
+				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
+					xDiff = 0;
+				}
+
+				for(var i = 0; i < concept.offensivePlayers.length; i++) {
+					var player = concept.offensivePlayers[i];
+					player.x += xDiff;
+				}
+
+				for(var i = 0; i < concept.defensivePlayers.length; i++) {
+					var player = concept.defensivePlayers[i];
+
+					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
+						player.x += xDiff;
+					} else {
+						player.x += xDiff * 0.75;
+					}
+					
+					if(player.x < 0) {
+						player.x = 0;
+					}
+					
+					if(player.x > Field.WIDTH) {
+						player.x = Field.WIDTH;
+					}
+				}
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
+
+		function isInsideTrash(player) {
+			return player.x > trash.x &&
+				player.x < trash.x + trash.width &&
+				player.y < trash.y &&
+				player.y > trash.y - trash.height
+		};
+
+		function keyTyped() {
+			if ($("#header-box").hasClass("selected")) {
+				var formation_name = document.getElementById("formation-name");
+
+				if (formation_name === null) {
+					formation_name = document.createElement("p");
+					formation_name.setAttribute("id", "formation-name");
+				}
+
+				document.getElementById("header-box").appendChild(formation_name);
+				var string_length = formation_name.textContent.length;
+
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholderAndError();
+
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							formation_name.textContent += key;
+						}
+					}
+
+					// return false to prevent default behavior
+					return false;
+				}
+			}
+		};
+
+		function keyPressed() {
+			var formation_name = document.getElementById("formation-name");
+			var string_length = formation_name.textContent.length;
+
+			if (keyCode == BACKSPACE) {
+				if (formation_name != null) {
+					if(string_length > 0) {
+						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
+					}
+				}
+
+				return false;
+			} else if (keyCode == 32) {
+				if (formation_name != null && string_length < 100) {
+					formation_name.textContent += ' ';
+				}
+
+				return false;
+			}
+		};
+
+		//***********************************************************************************************************************//
+		//                                 I have worked on all the code above this line - Dylan                                 //
+		//***********************************************************************************************************************//
+		/*function pressSave() {
+			if(new_formation.validFormation()) {
+				new_formation.eligibleReceivers.forEach(function(player){
+					player.convertRouteDrawingToBreakPoints();
+				});
+				var newFormation = new Formation({
+					eligibleReceivers: new_formation.eligibleReceivers,
+					playName: new_formation.playName,
+					qb: new_formation.qb,
+					oline: new_formation.oline,
+					offensivePlayers: new_formation.offensivePlayers,
+					unit: new_formation.unit
+				});
+
+				newFormation.saveToDB();
+				new_formation.removeAllPlayers();
+				new_formation.playName = "";
+				new_formation.feedbackMessage = "Saved!";
+			} else {
+				new_formation.feedbackMessage = "Invalid Formation";
+			}
+		};*/
+
+		function pressClear() {
+			concept.reset();
+		};
+
+		/*function pressZoomIn() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
+		};
+
+		function pressZoomOut() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		};
+
+		function pressFullScreen() {};*/
+
+		/*mouseClicked = function() {
+			var field = createPlayField;
+			var eligibleReceivers = getCurrentFormation().eligibleReceivers;
+			var selectedWR = getCurrentFormation().findSelectedWR();
+			var olClicked = getCurrentFormation().mouseInOL(field);
+			var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
+			var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
+			var selectedOL = getCurrentFormation().findSelectedOL();
+			
+			if (getCurrentDefensivePlay() != null) {
+				var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
+				var selectedDL = getCurrentDefensivePlay().findSelectedDL();
+			}
+
+			if(selectedNode) {
+				if (selectedNode.change){
+					selectedNode.change = false;
+				} else {
+					selectedNode.change = true;
+				}
+			} else if (receiverClicked) {
+				var playerSelected = false;
+				getCurrentFormation().clearPreviousRouteDisplays();
+
+				for(var i = 0; i < eligibleReceivers.length; i++) {
+					if(receiverClicked.clicked) {
+						receiverClicked.unselect();
+						receiverClicked.showRoute = false;
+					} else {
+						receiverClicked.select();
+					}
+
+					break;
+				}
+			} else if(selectedWR) {
+				if(selectedWR.runner) {
+					if(!selectedWR.runAssignment) {
+						selectedWR.runAssignment = new RunAssignment({});
+					}
+
+					selectedWR.runAssignment.addCoordinates(createPlayField.getYardX(mouseX), createPlayField.getYardY(mouseY));
+				} else if(!selectedWR.blocker) {
+					var x = field.getYardX(mouseX);
+					var y = field.getYardY(mouseY);
+					selectedWR.routeCoordinates.push([x, y]);
+					var nodeObject = new Node({
+						x: x,
+						y: y,
+						siz: 1
+					});
+
+					selectedWR.routeNodes.push(nodeObject);
+				} else if(selectedWR.blocker && dlClicked) {
+					//OLD
+					selectedWR.blockingAssignment = dlClicked;
+					selectedWR.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+					selectedWR.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+
+					//NEW
+					if(selectedWR.blockingAssignmentObject) {
+						selectedWR.blockingAssignmentObject.blockedZone = 0;
+						selectedWR.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+					} else {
+						selectedWR.blockingAssignmentObject = new BlockingAssignment({
+							blockedPlayers: [dlClicked]
+						});
+					}
+				}
+			} else if(dlClicked && selectedOL) {
+				selectedOL.blockingAssignment = dlClicked;
+				selectedOL.blockingAssignmentPlayerIndex = dlClicked.playerIndex;
+				selectedOL.blockingAssignmentUnitIndex = dlClicked.unitIndex;
+
+				if(selectedOL.blockingAssignmentObject) {
+					selectedOL.blockingAssignmentObject.toggleBlockingPlayer(dlClicked);
+					selectedOL.blockingAssignmentObject.blockedZone = 0;
+				} else {
+					selectedOL.blockingAssignmentObject = new BlockingAssignment({
+						blockedPlayers: [dlClicked]
+					});
+				}
+			}
+		};*/
+
+		/* //Might need this function later
+		mouseClicked = function() {
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_formation.findSelectedWR();
+
+			if(new_formation.establishingNewPlayer) {
+				if(isInsideTrash(new_formation.establishingNewPlayer)) {
+					new_formation.deletePlayer(new_formation.establishingNewPlayer);
+				}
+				new_formation.establishingNewPlayer.change = false;
+				new_formation.establishingNewPlayer = null;
+			}
+		};*/
+
+		// Global Variables
+		/*var capitalLetter = false;
+
+		var defensePlay = new DefensivePlay({
+			defensivePlayers: [],
+			dlAssignments: [[5,1,2,6],[5,1,2,6],[5,1,2,6]],
+			lbAssignments: [[,-3,-4],[-3,1,4],[-3,0,8]],
+			dbAssignments: [[-6,-8,-9,-7],[-1,-2,-4,-5],[-1,-2,-4,-5]],
+			dlPositions: ["DE", "NT", "DT", "RE"],
+			lbPositions: ["W", "M", "S"],
+			dbPositions: ["CB", "SS", "F/S", "CB"],
+			dlNames: ["Gronk", "Davis", "Smith", "Evans"]
+		});
+
+		defensePlay.draw(field);
+		*/
+
+		/*keyTyped = function() {
+			var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+			var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+			var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+			if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' ') {
+				new_formation.playName += key;
+				$('#play-name').text("New Formation: " + new_formation.playName);
+			}
+			// return false to prevent default behavior			
+			return false;
+		};*/
+
+		/*mouseDragged = function() {
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
+			var centerClicked = new_formation.mouseInCenter(field);
+			if (new_formation.establishingNewPlayer) {
+				new_formation.establishingNewPlayer.movePlayer(field);
+			} else if (receiverClicked) {
+				receiverClicked.change = receiverClicked.change ?  false : true;
+				new_formation.establishingNewPlayer = receiverClicked;
+			} else if (new_formation.qb[0].isMouseInside(field)) {
+				new_formation.qb[0].change = new_formation.qb[0].change ?  false : true;
+				new_formation.establishingNewPlayer = new_formation.qb[0];
+			} else if(centerClicked) {
+				var mouseYardX = field.getYardX(mouseX);
+				var xDiff = mouseYardX - centerClicked.x;
+
+				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
+					xDiff = 0;
+				}
+
+				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
+					xDiff = 0;
+				}
+
+				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
+					var p = new_formation.offensivePlayers[i];
+					p.x += xDiff;
+				}
+
+				for(var i = 0; i < defensePlay.defensivePlayers.length; i++) {
+					var p = defensePlay.defensivePlayers[i];
+
+					if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE") {
+						p.x += xDiff;
+					} else {
+						p.x += xDiff * 0.75;
+					}
+					
+					if(p.x < 0) {
+						p.x = 0;
+					}
+					
+					if(p.x > Field.WIDTH) {
+						p.x = Field.WIDTH;
+					}
+				}
+
+				return;
+			} else if (positionOptionSelected) {
+				var newPlayer = new Player({
+					x: positionOptionSelected.x,
+					y: positionOptionSelected.y,
+					num: positionOptionSelected.num,
+					// fill: color(255, 0, 0),
+					red: 255,
+					green: 0,
+					blue: 0,
+					change: true,
+					pos: positionOptionSelected.pos
+				});
+
+				new_formation.createPlayer(newPlayer);
+			}
+			
+			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_formation.findSelectedWR();
+		};*/
+
+		// These are things I am going to rewrite without using jQuery - Dylan
+		/*$('.formation-button').click(function() {
+			var starterFormation = formations.filter(function(formationObject){
+				return formationObject.name === this.value;
+			}.bind(this))[0]
+
+			starterFormation.optionsToCreate = new_formation.optionsToCreate;
+			new_formation = starterFormation;
+			new_formation.playName = "";
+
+			$('#play-image-header').text("New Formation: " + new_formation.playName);
+		});
+
+		$('#save-button').click(function(){
+			pressSaveButton();
+		});
+
+		$('#clear-button').click(function(){
+			pressClearButton();
+		});
+
+		$('#zoom-in-button').click(function() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$('#zoom-out-button').click(function(){
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		});*/
+
+		function resizeBottomButtons() {
+			var trashWidth = field.pixelsToYards(field.width * 0.12);
+			if(trashWidth < 5){
+				trashWidth = 5;
+			}
+
+			var trashHeight = field.pixelsToYards(field.height * 0.1);
+			if(trashHeight < 5){
+				trashHeight = 5;
+			}
+
+			var trashX = Field.WIDTH - trashWidth * 1.1;
+			var trashY = field.getYardY(field.height) + trashHeight * 1.1;
+			if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width) {
+				trashX = field.getYardX(field.width) - trashWidth*1.1;
+			}
+
+			trash.width = trashWidth;
+			trash.height = trashHeight;
+			trash.x = trashX;
+			trash.y = trashY;
+			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
+				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
+			}
+		};
+
+		/*var draw = function() {
+			if(makeJSONCall) {
+				makeJSONCall = false;
+				$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR) {
+					data.forEach(function(formationObject) {
+						formationObject.fields.id = formationObject.pk;
+						formationObject.fields.positions = [];
+						var newFormation = new Formation(formationObject.fields);
+						newFormation.playName = formationObject.fields.name;
+						formations.push(newFormation);
+					})
+
+					$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations/positions', function(data, jqXHR) {
+						data.forEach(function(position) {
+							position.fields.id = position.pk;
+							position.fields.x = position.fields.startX;
+							position.fields.y = position.fields.startY;
+							position.fields.pos = position.fields.name;
+							position.fields.num = position.fields.pos;
+							var newPlayer = new Player(position.fields);
+
+							if(newPlayer.pos==="QB") {
+								newPlayer.setFill(212, 130, 130);
+							} else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT") {
+								newPlayer.setFill(143, 29, 29);
+							} else {
+								newPlayer.setFill(255, 0, 0);
+							}
+							
+							formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
+							if(formation) {
+								formation.positions.push(newPlayer);
+							}
+						});
+
+						formations.forEach(function(formation){
+							formation.populatePositions();
+						});
+						runTest();
+					});
+				});
+			}
+		};*/
+
+		var runTest = function() {};
+	</script>
+{% endblock %}
