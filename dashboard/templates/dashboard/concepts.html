@@ -51,8 +51,22 @@
 
 			<div class="table-wrapper formation-table">
 				<table>
-					{% for concept in concepts %}
-						<tbody>
+					<tbody>
+						<tr>
+							<td>
+								<button class="btn btn-primary" onclick="changeSelected(this)">
+									Swoop
+								</button>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button class="btn btn-primary" onclick="changeSelected(this)">
+									Cat
+								</button>
+							</td>
+						</tr>
+						{% for concept in concepts %}
 							<tr>
 								<td>
 									<button class="btn btn-primary" onclick="changeSelected(this)">
@@ -60,8 +74,8 @@
 									</button>
 								</td>
 							</tr>
-						</tbody>
-					{% endfor %}
+						{% endfor %}
+					</tbody>
 				</table>
 			</div>
 		</div>
