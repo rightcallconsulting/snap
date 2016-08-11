@@ -271,7 +271,7 @@ Concept.prototype.createTO = function(ballY){
 	// Create Offensive Players
 	var olPositions = ["LT", "LG", "C", "RG", "RT"];
 
-	for (var i = -2; i <= 0; i++) {
+	for (var i = 1; i <= 2; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
 		
@@ -290,41 +290,41 @@ Concept.prototype.createTO = function(ballY){
 		this.offensivePlayers.push(offensive_lineman);
 	}
 
-	var left_tackle = this.offensiveLinemen[0];
-	var left_guard = this.offensiveLinemen[1];
-	var center = this.offensiveLinemen[2];
+	var right_guard = this.offensiveLinemen[0];
+	var right_tackle = this.offensiveLinemen[1];
+
+	var y = new Player ({
+		num: "Y", pos: "Y", 
+		x: right_tackle.x+2.5,
+		y: right_tackle.y,
+		red: 255, green: 0, blue: 0,
+		eligible: true
+	});
+
+	this.eligibleReceivers.push(y);
+	this.offensivePlayers.push(y);
 
 	// Create Defensive Players
-	var t = new Player ({
-		num: "T", pos: "T",
+	var e = new Player ({
+		num: "E", pos: "E",
 		unit: "defense", 
 		change: true,
-		x: left_guard.x-1, y: left_guard.y+2.5,
+		x: right_tackle.x+2, y: right_tackle.y+2.5,
 		red: 0, green: 0, blue: 0
 	});
 
-	var n = new Player ({
-		num: "N", pos: "N",
+	var s = new Player ({
+		num: "S", pos: "S",
 		unit: "defense", 
 		change: true,
-		x: center.x+0.5, y: center.y+2.5,
+		x: y.x+2, y: y.y+2.5,
 		red: 0, green: 0, blue: 0
 	});
 
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense", 
-		change: true,
-		x: left_guard.x-1.25, y: left_guard.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(t);
-	this.defensivePlayers.push(n);
-	this.defensivePlayers.push(w);
+	this.defensivePlayers.push(e);
+	this.defensivePlayers.push(s);
 
 	// Create offensive assignments
-	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	center.blockingAssignmentArray[0].push(t);
-	center.blockingAssignmentArray[0].push(w);
+	right_tackle.blockingAssignmentArray[0].push("Down Block Right");
+	y.blockingAssignmentArray[0].push("Down Block Right");
 };
