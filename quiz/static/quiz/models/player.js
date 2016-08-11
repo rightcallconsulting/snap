@@ -204,10 +204,10 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX + xDiff - lengthOfPerpLine/2;
-	y1 = currentY - yDiff;
-	x2 = currentX + xDiff + lengthOfPerpLine/2;
-	y2 = currentY - yDiff;
+	x1 = x2 - lengthOfPerpLine/2;
+	y1 = y2;
+	x2 = x2 + lengthOfPerpLine/2;
+	y2 = y2;
 
 	line(x1, y1, x2, y2); 
 
