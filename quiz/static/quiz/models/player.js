@@ -175,9 +175,9 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	var assignmentY = field.getTranslatedY(assignment.y);
 	var deltaX = assignmentX - currentX;
 	var deltaY = assignmentY - currentY;
-	var distToAssignment = sqrt(deltaX^2 + deltaY^2);
+	var distToAssignment = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 	var alpha = atan(deltaY/deltaX);
-	var bufferFromAssignment = assignment.siz*2;
+	var bufferFromAssignment = assignment.siz*10;
 
 	var dist = distToAssignment - bufferFromAssignment;
 	var xDiff = cos(alpha)*dist;
@@ -186,7 +186,14 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	// Angled line that shows the direction of the downblock
 	var x1 = currentX;
 	var y1 = currentY;
-	var x2 = currentX - xDiff;
+	var x2;
+
+	if (deltaX > 0) {
+		x2 = currentX + xDiff;
+	} else {
+		x2 = currentX - xDiff;
+	}
+	
 	var y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2);
@@ -195,9 +202,9 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX - xDiff - lengthOfPerpLine/2;
+	x1 -= lengthOfPerpLine/2;
 	y1 = currentY - yDiff;
-	x2 = currentX - xDiff + lengthOfPerpLine/2;
+	x2 += lengthOfPerpLine;
 	y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2); 
@@ -222,9 +229,9 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX - xDiff - lengthOfPerpLine/2;
+	x1 = currentX + xDiff - lengthOfPerpLine/2;
 	y1 = currentY - yDiff;
-	x2 = currentX - xDiff + lengthOfPerpLine/2;
+	x2 = currentX + xDiff + lengthOfPerpLine/2;
 	y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2); 
