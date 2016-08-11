@@ -40,7 +40,7 @@ var Formation = function(config){
 //***************************************************************************//
 //***************************************************************************//
   														
-// createPlayer takesa new player object as an input and adds him
+// createPlayer takes a new player object as an input and adds him
 // to the formation.
 Formation.prototype.createPlayer = function(new_player) {
 	if(new_player.unit === "defense") {

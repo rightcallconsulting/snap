@@ -75,7 +75,8 @@ var Player = function(config) {
 Player.rank = 1;
 Player.altRank = -1;
 
-// Instance Methods
+// click selects or unselects a player based on their current selected status.
+// click does not return anything.
 Player.prototype.click = function() {
 	if (this.selected) {
 		this.setUnselected();
@@ -85,6 +86,8 @@ Player.prototype.click = function() {
 	
 };
 
+// setSelected changes the selected status to true and changes the color of the
+// selected player.
 Player.prototype.setSelected = function () {
 	this.selected = true;
 
@@ -92,15 +95,14 @@ Player.prototype.setSelected = function () {
 	var green = 255;
 	var blue = 0;
 	
-	/*if (this.unit === "offense") {
-		red = 255; green = 255; blue = 0;
-	} else if (this.unit === "defense") {
-		red = 200; green = 200; blue = 200;
-	}*/
+	// TODO: impletment a different scheme for selecting defensive players.
+	// Maybe try drawing a white ellipse behind them.
 
 	this.setFill(red, green, blue);
 };
 
+// setUnselected changes the selected status to false and changes the color of
+// the player to their default color.
 Player.prototype.setUnselected = function () {
 	this.selected = false;
 
@@ -121,13 +123,16 @@ Player.prototype.setUnselected = function () {
 	this.setFill(red, green, blue);
 };
 
+// setFill changes the r, g, b values of the player.
 Player.prototype.setFill = function(red, green, blue) {
 	this.red = red;
 	this.green = green;
 	this.blue = blue;
 };
 
-Player.prototype.drawAllBlocks= function(field) {
+// drawAllBlocks iterates through the players blocking assignments and draws
+// all of them. It calls noStroke() before it exits, but has no return value.
+Player.prototype.drawAllBlocks = function(field) {
 	var primaryAssignment = this.blockingAssignmentArray[0];
 	var secondaryAssignment = this.blockingAssignmentArray[1];
 	var primaryAssingmentLength = primaryAssignment.length;
@@ -175,9 +180,16 @@ Player.prototype.drawAllBlocks= function(field) {
 		}
 	}
 
+	// TODO: Implement the secondary assignments with dotted lines.
+	// Might be tricky.
+
 	noStroke();
 };
 
+// drawBlockOnPlayer draws a block from a specific starting point to a 
+// defense player that the offensive player is assigned to block. It
+// returns a 1x2 array containing the offensive players new coordinates
+// after completing their block.
 Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignment) {
 	var assignmentX = field.getTranslatedX(assignment.x);
 	var assignmentY = field.getTranslatedY(assignment.y);
@@ -222,6 +234,8 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	return new_coordinates;
 };
 
+// drawMoneyBlock draws a man on block. It returns a 1x2 array containing 
+// the offensive players new coordinates after completing their block.
 Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	var dist = 20;
 	var xDiff = 0;
@@ -251,6 +265,9 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
+// drawDownBlockRight draws a down block to the right. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
 Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	var dist = 30;
 	var xDiff = (dist/2)*sqrt(2);
@@ -280,6 +297,9 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
+// drawDownBlockLeft draws a down block to the left. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
 Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	var dist = 30;
 	var xDiff = (dist/2)*sqrt(2);
@@ -309,6 +329,9 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
+// drawStraightSealRight draws a straight block that seals the right side of
+// the field. It returns a 1x2 array containing the offensive players new 
+// coordinates after completing their block.
 Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 	var dist = 45;
 	var xDiff = 0;
@@ -338,6 +361,9 @@ Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
+// drawStraightSealLeft draws a straight block that seals the left side of
+// the field. It returns a 1x2 array containing the offensive players new 
+// coordinates after completing their block.
 Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	var dist = 45;
 	var xDiff = 0;
