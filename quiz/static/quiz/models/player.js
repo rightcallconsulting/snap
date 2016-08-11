@@ -186,15 +186,17 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	// Angled line that shows the direction of the downblock
 	var x1 = currentX;
 	var y1 = currentY;
-	var x2;
+	var x2, y2;
 
 	if (deltaX > 0) {
 		x2 = currentX + xDiff;
+		y2 = currentY + yDiff;
 	} else {
 		x2 = currentX - xDiff;
+		y2 = currentY - yDiff;
 	}
-	
-	var y2 = currentY - yDiff;
+
+	//var y2 = currentY - yDiff;
 
 	line(x1, y1, x2, y2);
 
