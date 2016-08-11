@@ -4,8 +4,8 @@
 {% block content %}
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="interactive-header display-header">
-				<p id="placeholder-message">Swoop</p>
+			<div id="header-box" class="interactive-header display-header placeholder">
+				<p id="placeholder-message">Enter Concept Name</p>
 			</div>
 
 			<div id="quiz-box">
@@ -54,14 +54,14 @@
 					<tbody>
 						<tr>
 							<td>
-								<button id="selected" class="btn btn-success" onclick="changeSelected(this)">
+								<button static="swoop" class="btn btn-primary" onclick="changeSelected(this)">
 									Swoop
 								</button>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<button class="btn btn-primary" onclick="changeSelected(this)">
+								<button static="cat" class="btn btn-primary" onclick="changeSelected(this)">
 									Cat
 								</button>
 							</td>
@@ -89,6 +89,9 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var concepts = [];
+		var concept;
+
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
@@ -172,10 +175,20 @@
 				old_selected.setAttribute("class", "btn btn-primary");
 			}
 
+			var static_concept = new_selected.getAttribute("static");
+
 			if (old_selected != new_selected) {
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success");
+
+				if (static_concept != null) {
+					if (static_concept === "swoop") {
+						concept.createSwoop(field.ballYardLine);
+					} else if (static_concept === "cat") {
+						concept.createCat(field.ballYardLine);
+					}
+				}
 			}
 		};
 
@@ -243,8 +256,6 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
-		var concepts = [];
-		var concept;
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
@@ -284,7 +295,7 @@
 
 			// Create Position groups
 			concept = new Concept({});
-			concept.createSwoop(field.ballYardLine);
+			//concept.createCat(field.ballYardLine);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
