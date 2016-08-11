@@ -163,6 +163,14 @@ Player.prototype.drawAllBlocks= function(field) {
 				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Straight Seal Right") {
+				var new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Straight Seal Left") {
+				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
 			}
 		}
 	}
@@ -204,10 +212,12 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = x2 - lengthOfPerpLine/2;
-	y1 = y2;
-	x2 = x2 + lengthOfPerpLine/2;
-	y2 = y2;
+	xDiff = lengthOfPerpLine/2;
+	yDiff = 0;
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
 
 	line(x1, y1, x2, y2); 
 
@@ -231,10 +241,12 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX + xDiff - lengthOfPerpLine/2;
-	y1 = currentY - yDiff;
-	x2 = currentX + xDiff + lengthOfPerpLine/2;
-	y2 = currentY - yDiff;
+	xDiff = lengthOfPerpLine/2;
+	yDiff = 0;
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
 
 	line(x1, y1, x2, y2); 
 
@@ -258,10 +270,12 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX + xDiff - lengthOfPerpLine/2;
-	y1 = currentY - yDiff;
-	x2 = currentX + xDiff + lengthOfPerpLine/2;
-	y2 = currentY - yDiff;
+	xDiff = lengthOfPerpLine/2;
+	yDiff = 0;
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
 
 	line(x1, y1, x2, y2); 
 
@@ -285,10 +299,70 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 
 	// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 20;
-	x1 = currentX - xDiff - lengthOfPerpLine/2;
-	y1 = currentY - yDiff;
-	x2 = currentX - xDiff + lengthOfPerpLine/2;
-	y2 = currentY - yDiff;
+	xDiff = lengthOfPerpLine/2;
+	yDiff = 0;
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
+
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
+	var dist = 45;
+	var xDiff = 0;
+	var yDiff = dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX + xDiff;
+	var y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 20;
+	xDiff = (lengthOfPerpLine/4)*sqrt(2);
+	yDiff = (lengthOfPerpLine/4)*sqrt(2);
+	x1 = x2 - xDiff;
+	y1 = y2 + yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 - yDiff;
+
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
+	var dist = 45;
+	var xDiff = 0;
+	var yDiff = dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2 = currentX - xDiff;
+	var y2 = currentY - yDiff;
+
+	line(x1, y1, x2, y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 20;
+	xDiff = (lengthOfPerpLine/4)*sqrt(2);
+	yDiff = (lengthOfPerpLine/4)*sqrt(2);
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
 
 	line(x1, y1, x2, y2); 
 

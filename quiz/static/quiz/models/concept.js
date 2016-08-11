@@ -203,7 +203,7 @@ Concept.prototype.createSwoop = function(ballY){
 
 		// Add seal block to the left gaurd
 		if (this.offensivePlayers[i].pos === "LG") {
-			//this.offensivePlayers[i].blockingAssignmentArray[0].push("Seal Block Right");
+			this.offensivePlayers[i].blockingAssignmentArray[0].push("Straight Seal Right");
 		}
 	}
 };
