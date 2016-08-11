@@ -136,10 +136,6 @@ Concept.prototype.createSwoop = function(ballY){
 	for (var i = -2; i <= 0; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
-		
-		if (i !== 0) {
-			yPos -= 0.5;
-		}
 
 		var offensive_lineman = new Player({
 			num: olPositions[i+2],
@@ -172,7 +168,7 @@ Concept.prototype.createSwoop = function(ballY){
 		num: "E", pos: "E",
 		unit: "defense", 
 		change: true,
-		x: f.x, y: f.y+2.5,
+		x: f.x, y: f.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -180,7 +176,7 @@ Concept.prototype.createSwoop = function(ballY){
 		num: "T", pos: "T",
 		unit: "defense", 
 		change: true,
-		x: left_guard.x-1, y: left_guard.y+2.5,
+		x: left_guard.x-1, y: left_guard.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -211,10 +207,6 @@ Concept.prototype.createCat = function(ballY){
 	for (var i = -2; i <= 0; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
-		
-		if (i !== 0) {
-			yPos -= 0.5;
-		}
 
 		var offensive_lineman = new Player({
 			num: olPositions[i+2],
@@ -236,7 +228,7 @@ Concept.prototype.createCat = function(ballY){
 		num: "T", pos: "T",
 		unit: "defense", 
 		change: true,
-		x: left_guard.x-1, y: left_guard.y+2.5,
+		x: left_guard.x-1, y: left_guard.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -244,7 +236,7 @@ Concept.prototype.createCat = function(ballY){
 		num: "N", pos: "N",
 		unit: "defense", 
 		change: true,
-		x: center.x+0.5, y: center.y+2.5,
+		x: center.x+0.5, y: center.y+2,
 		red: 0, green: 0, blue: 0
 	});
 
@@ -274,10 +266,6 @@ Concept.prototype.createTO = function(ballY){
 	for (var i = 1; i <= 2; i++) {
 		var xPos = Field.WIDTH / 2 + i*2.5;
 		var yPos = ballY-1.5;
-		
-		if (i !== 0) {
-			yPos -= 0.5;
-		}
 
 		var offensive_lineman = new Player({
 			num: olPositions[i+2],
