@@ -15,27 +15,27 @@
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="save-button" name="button" onclick="saveFormation()">
+							<button id="save-button" name="button">
 								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="clear-button" name="button" onclick="clearFormation()">
+							<button id="clear-button" name="button">
 								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="zoom-in-button" name="button" onclick="zoomIn()">
+							<button id="zoom-in-button" name="button">
 								{% include "quiz/zoom_in_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="zoom-out-button" name="button" onclick="zoomOut()">
+							<button id="zoom-out-button" name="button">
 								{% include "quiz/zoom_out_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="full-screen-button" name="button" onclick="fullScreen()">
+							<button id="full-screen-button" name="button">
 								{% include "quiz/full_screen_button.html" %}
 							</button>
 						</td>
@@ -839,50 +839,6 @@
 				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
 			}
 		};
-
-		/*var draw = function() {
-			if(makeJSONCall) {
-				makeJSONCall = false;
-				$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR) {
-					data.forEach(function(formationObject) {
-						formationObject.fields.id = formationObject.pk;
-						formationObject.fields.positions = [];
-						var newFormation = new Formation(formationObject.fields);
-						newFormation.playName = formationObject.fields.name;
-						formations.push(newFormation);
-					})
-
-					$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations/positions', function(data, jqXHR) {
-						data.forEach(function(position) {
-							position.fields.id = position.pk;
-							position.fields.x = position.fields.startX;
-							position.fields.y = position.fields.startY;
-							position.fields.pos = position.fields.name;
-							position.fields.num = position.fields.pos;
-							var newPlayer = new Player(position.fields);
-
-							if(newPlayer.pos==="QB") {
-								newPlayer.setFill(212, 130, 130);
-							} else if(newPlayer.pos==="OL" || newPlayer.pos ==="LT" || newPlayer.pos ==="LG" || newPlayer.pos ==="C" || newPlayer.pos ==="RG" || newPlayer.pos ==="RT") {
-								newPlayer.setFill(143, 29, 29);
-							} else {
-								newPlayer.setFill(255, 0, 0);
-							}
-							
-							formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-							if(formation) {
-								formation.positions.push(newPlayer);
-							}
-						});
-
-						formations.forEach(function(formation){
-							formation.populatePositions();
-						});
-						runTest();
-					});
-				});
-			}
-		};*/
 
 		var runTest = function() {};
 	</script>
