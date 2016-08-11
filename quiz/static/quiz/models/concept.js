@@ -154,6 +154,7 @@ Concept.prototype.createSwoop = function(ballY){
 
 	var left_tackle = this.offensiveLinemen[0];
 	var left_gaurd = this.offensiveLinemen[1];
+	var center = this.offensiveLinemen[2];
 
 	var f = new Player ({
 		num: "F", pos: "F", 
@@ -195,6 +196,7 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(t);
 	this.defensivePlayers.push(w);
 
+	// Create offensive assignments
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
 		// Add down blocks to all of the players except the center
 		if (this.offensivePlayers[i].pos != "C") {
@@ -234,27 +236,9 @@ Concept.prototype.createCat = function(ballY){
 
 	var left_tackle = this.offensiveLinemen[0];
 	var left_gaurd = this.offensiveLinemen[1];
-
-	var f = new Player ({
-		num: "F", pos: "F", 
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
-		red: 255, green: 0, blue: 0,
-		eligible: true
-	});
-
-	this.eligibleReceivers.push(f);
-	this.offensivePlayers.push(f);
+	var center = this.offensiveLinemen[2];
 
 	// Create Defensive Players
-	var e = new Player ({
-		num: "E", pos: "E",
-		unit: "defense", 
-		change: true,
-		x: f.x, y: f.y+2.5,
-		red: 0, green: 0, blue: 0
-	});
-
 	var t = new Player ({
 		num: "T", pos: "T",
 		unit: "defense", 
@@ -263,27 +247,28 @@ Concept.prototype.createCat = function(ballY){
 		red: 0, green: 0, blue: 0
 	});
 
+	var n = new Player ({
+		num: "N", pos: "N",
+		unit: "defense", 
+		change: true,
+		x: center.x+0.5, y: center.y+2.5,
+		red: 0, green: 0, blue: 0
+	});
+
 	var w = new Player ({
 		num: "W", pos: "W",
 		unit: "defense", 
 		change: true,
-		x: left_tackle.x, y: left_tackle.y+5,
+		x: left_guard.x-1.25, y: left_guard.y+5,
 		red: 0, green: 0, blue: 0
 	});
 
-	this.defensivePlayers.push(e);
 	this.defensivePlayers.push(t);
+	this.defensivePlayers.push(n);
 	this.defensivePlayers.push(w);
 
-	for (var i = 0; i < this.offensivePlayers.length; ++i) {
-		// Add down blocks to all of the players except the center
-		if (this.offensivePlayers[i].pos != "C") {
-			this.offensivePlayers[i].blockingAssignmentArray[0].push("Down Block Right");
-		}
-
-		// Add seal block to the left gaurd
-		if (this.offensivePlayers[i].pos === "LG") {
-			this.offensivePlayers[i].blockingAssignmentArray[0].push("Straight Seal Right");
-		}
-	}
+	// Create offensive assignments
+	left_guard.blockingAssignmentArray[0].push("Down Block Right");
+	center.blockingAssignmentArray[0].push("Down Block Right");
+	center.blockingAssignmentArray[0].push("Down Block Right");
 };
