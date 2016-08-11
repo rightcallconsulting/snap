@@ -49,7 +49,3 @@ Button.prototype.changeClickStatus = function() {
         this.clicked = true;
     }
 };
-
-
-
-// Create Buttons
