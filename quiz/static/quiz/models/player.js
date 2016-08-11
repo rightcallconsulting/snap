@@ -172,16 +172,16 @@ Player.prototype.drawAllBlocks= function(field) {
 
 Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignment) {
 	var assignmentX = field.getTranslatedX(assignment.x);
-	var assignmentY = field.getTranslatedX(assignment.y);
+	var assignmentY = field.getTranslatedY(assignment.y);
 	var deltaX = assignmentX - currentX;
 	var deltaY = assignmentY - currentY;
-	var alpha = atan(deltaY/deltaX);
 	var distToAssignment = sqrt(deltaX^2 + deltaY^2);
-	var bufferFromAssignment = assignment.siz * 10;
+	var alpha = atan(deltaY/deltaX);
+	var bufferFromAssignment = assignment.siz*2;
 
 	var dist = distToAssignment - bufferFromAssignment;
-	var xDiff = asin(alpha)/dist;
-	var yDiff = acos(alpha)/dist;
+	var xDiff = cos(alpha)*dist;
+	var yDiff = sin(alpha)*dist;
 
 	// Angled line that shows the direction of the downblock
 	var x1 = currentX;
