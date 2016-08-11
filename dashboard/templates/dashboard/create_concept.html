@@ -46,33 +46,12 @@
 		
 		<div id="choose-existing-formation" class="col-md-3 bordered-div">
 			<div id="header-box" class="header">
-				Existing Concepts
+				Create From Existing Concept
 			</div>
 
 			<div class="table-wrapper formation-table">
 				<table>
 					<tbody>
-						<tr>
-							<td>
-								<button static="swoop" class="btn btn-primary" onclick="changeSelected(this)">
-									Swoop
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<button static="cat" class="btn btn-primary" onclick="changeSelected(this)">
-									Cat
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<button static="to" class="btn btn-primary" onclick="changeSelected(this)">
-									T.O.
-								</button>
-							</td>
-						</tr>
 						{% for concept in concepts %}
 							<tr>
 								<td>
@@ -184,22 +163,10 @@
 				old_selected.setAttribute("class", "btn btn-primary");
 			}
 
-			var static_concept = new_selected.getAttribute("static");
-
 			if (old_selected != new_selected) {
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success");
-
-				if (static_concept != null) {
-					if (static_concept === "swoop") {
-						concept.createSwoop(field.ballYardLine);
-					} else if (static_concept === "cat") {
-						concept.createCat(field.ballYardLine);
-					} else if (static_concept === "to") {
-						concept.createTO(field.ballYardLine);
-					}
-				}
 			}
 		};
 
@@ -243,7 +210,9 @@
 			removeHeaderName();
 			addHeaderPlaceholder();*/
 
-			pressClear();
+			//pressClear();
+
+			concept.reset();
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -269,6 +238,7 @@
 		//*******************************************************************//
 		var makeJSONCall = true;
 		var trash;
+		var bottomPlayerBar;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
 		function setup() {
@@ -334,6 +304,10 @@
 				displayButton: true
 			});
 
+			var bottomPlayerBar = new Button ({
+
+			});
+
 			//  Field Position Variables
 			var scoreboard = new Scoreboard({});
 
@@ -363,7 +337,7 @@
 		// intro scene
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
-			trash.draw(field);
+			//trash.draw(field);
 			concept.drawAssignments(field);
 			concept.drawPlayers();
 			

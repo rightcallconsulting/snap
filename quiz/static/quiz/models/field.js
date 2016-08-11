@@ -93,7 +93,8 @@ Field.prototype.drawBackground = function(play, height, width) {
 	var pixelsToYards = this.heightInYards / height;
 	var yardsToPixels = height / this.heightInYards;
 	noStroke();
-	background(93, 148, 81);
+	background(93, 148, 81); // original green
+	//background(157, 202, 106); // iOS green
 	stroke(255, 255, 255);
 
 	// Sidelines
