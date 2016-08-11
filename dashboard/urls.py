@@ -27,9 +27,11 @@ urlpatterns = [
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+	
 	# Concepts
 	url(r'^concepts$', views.concepts, name='concepts'),
 	url(r'^concepts/create$', views.create_concept, name='create_concept'),
+	
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
 	url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
