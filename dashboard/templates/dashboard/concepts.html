@@ -230,7 +230,7 @@
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
 		var concepts = [];
-		var swoop;
+		var concept;
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
@@ -269,8 +269,8 @@
 			//randomSeed(millis()); // What is the random seed for?
 
 			// Create Position groups
-			swoop = new Concept({});
-			swoop.createCat(field.ballYardLine);
+			concept = new Concept({});
+			concept.createCat(field.ballYardLine);
 
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5) {
@@ -326,20 +326,20 @@
 
 		// intro scene
 		function drawOpening() {
-			field.drawBackground(swoop, height, width);
+			field.drawBackground(concept, height, width);
 			trash.draw(field);
-			swoop.drawAssignments(field);
-			swoop.drawPlayers();
+			concept.drawAssignments(field);
+			concept.drawPlayers();
 			
 			fill(0, 0, 0);
 			textSize(20);
-			text(swoop.feedbackMessage, 330, 20);
+			text(concept.feedbackMessage, 330, 20);
 			fill(176,176,176)
 		};
 
 		function mouseClicked() {
-			var currentPlayerSelected = swoop.getSelected();
-			var newPlayerSelected = swoop.mouseInPlayer(field);
+			var currentPlayerSelected = concept.getSelected();
+			var newPlayerSelected = concept.mouseInPlayer(field);
 
 			// If no one is currently selected and no one is clicked on do 
 			// nothing. Else if no one is currently selected and someone is 
@@ -357,14 +357,14 @@
 			} else if (newPlayerSelected === null) {
 				// This will have to change to be able to add blocking landmarks
 				// Right now if you click on empty space it just unselects the 
-				swoop.clearSelected();
+				concept.clearSelected();
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
-				swoop.clearSelected();
+				concept.clearSelected();
 				return false;
 			} else {
 				if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-					swoop.clearSelected();
+					concept.clearSelected();
 					newPlayerSelected.click();
 					return false;
 				} else if (currentPlayerSelected.unit === "offense") {
@@ -378,7 +378,7 @@
 		};
 
 		function mouseDragged() {
-			var playerSelected = swoop.mouseInPlayer(field);
+			var playerSelected = concept.mouseInPlayer(field);
 
 			if(playerSelected && playerSelected.pos === "C") {
 				var mouseYardX = field.getYardX(mouseX);
@@ -392,13 +392,13 @@
 					xDiff = 0;
 				}
 
-				for(var i = 0; i < swoop.offensivePlayers.length; i++) {
-					var player = swoop.offensivePlayers[i];
+				for(var i = 0; i < concept.offensivePlayers.length; i++) {
+					var player = concept.offensivePlayers[i];
 					player.x += xDiff;
 				}
 
-				for(var i = 0; i < swoop.defensivePlayers.length; i++) {
-					var player = swoop.defensivePlayers[i];
+				for(var i = 0; i < concept.defensivePlayers.length; i++) {
+					var player = concept.defensivePlayers[i];
 
 					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
 						player.x += xDiff;
@@ -505,7 +505,7 @@
 		};*/
 
 		function pressClear() {
-			swoop.reset();
+			concept.reset();
 		};
 
 		/*function pressZoomIn() {
