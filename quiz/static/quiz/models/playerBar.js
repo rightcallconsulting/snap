@@ -62,3 +62,17 @@ PlayerBar.prototype.isMouseInside = function(field) {
 		mouseY > y &&
 		mouseY < (y + height);
 };
+
+// mouseInPlayer iterates through all the offensive and defensive players
+// in the bar. It returns the player that the mouse is inside of or null 
+// if the mouse is not inside any player.
+PlayerBar.prototype.mouseInPlayer = function(field) {
+	for(var i = 0; i < this.playerOptions.length; i++) {
+		var player = this.playerOptions[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
+};

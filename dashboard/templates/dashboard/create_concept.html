@@ -328,6 +328,7 @@
 		};
 
 		function mouseClicked() {
+			// Handle clicks on players in the Concept
 			var currentPlayerSelected = concept.getSelected();
 			var newPlayerSelected = concept.mouseInPlayer(field);
 
@@ -362,6 +363,27 @@
 					return false;
 				}
 			}
+
+			// Handle clicks on players in the PlayerBar. mouseClicked will
+			// have already returned if a player on the field is clicked
+			currentPlayerSelected = bottomPlayerBar.mouseInPlayer();
+			if (currentPlayerSelected != null) {
+				/*var playerToAddToConcept = new Player({
+					num: "F", pos: "F", 
+					x: left_tackle.x-2.5,
+					y: left_tackle.y,
+					red: 255, green: 0, blue: 0,
+					eligible: true
+				});*/
+
+				currentPlayerSelected.x = Field.WIDTH / 2;
+				currentPlayerSelected.y = field.ballYardLine;
+
+				concept.offensivePlayers.push(currentPlayerSelected);
+
+				return false;
+			}
+
 
 			// return false to prevent default behavior
 			return false;
