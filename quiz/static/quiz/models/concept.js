@@ -271,7 +271,7 @@ Concept.prototype.createTO = function(ballY){
 			num: olPositions[i+2],
 			pos: olPositions[i+2],
 			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29,
+			red: 143, blue: 29, green: 29
 		});
 
 		this.offensiveLinemen.push(offensive_lineman);

@@ -8,6 +8,7 @@ secondary hashes: 2 feet wide, 1 foot from sideline?
 numbers: 6 feet high, 4 feet wide, top of numbers are 9 yards (27 feet) from sideline
 */
 
+/* Probably not used */
 var FieldNumber = function(config){
 	this.num = config.num || 50,
 	this.x1 = config.x1 || 0,
@@ -28,6 +29,7 @@ var Field = function(config){
 	this.coverageZones = config.coverageZones || [];
 };
 
+// Globals
 Field.LENGTH = 120;
 Field.WIDTH = 53.33;
 Field.leftHashYardX = 20;

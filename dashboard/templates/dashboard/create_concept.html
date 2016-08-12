@@ -237,7 +237,6 @@
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
 		var makeJSONCall = true;
-		var trash;
 		var bottomPlayerBar;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
@@ -278,34 +277,15 @@
 			concept = new Concept({});
 			//concept.createCat(field.ballYardLine);
 
-			var trashWidth = field.pixelsToYards(field.width * 0.12);
-			if(trashWidth < 5) {
-				trashWidth = 5;
-			}
+			var trashWidth = field.pixelsToYards(field.width);
+			var trashHeight = field.pixelsToYards(field.height * 0.12);
+			var trashX = field.getYardX(0);
+			var trashY = field.getYardY(field.height) + trashHeight;
 
-			var trashHeight = field.pixelsToYards(field.height * 0.1);
-			if(trashHeight < 4) {
-				trashHeight = 4;
-			}
-
-			var trashX = Field.WIDTH - trashWidth * 1.1;
-			var trashY = field.getYardY(field.height) + trashHeight * 1.1;
-			if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width) {
-				trashX = field.getYardX(field.width) - trashWidth*1.1;
-			}
-
-			// Create Buttons
-			trash = new Button({
-				label: "Trash",
+			bottomPlayerBar = new PlayerBar({
 				x: trashX, y: trashY,
 				width: trashWidth,
-				height: trashHeight,
-				clicked: false,
-				displayButton: true
-			});
-
-			var bottomPlayerBar = new Button ({
-
+				height: trashHeight
 			});
 
 			//  Field Position Variables
@@ -337,7 +317,7 @@
 		// intro scene
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
-			//trash.draw(field);
+			bottomPlayerBar.draw(field);
 			concept.drawAssignments(field);
 			concept.drawPlayers();
 			
