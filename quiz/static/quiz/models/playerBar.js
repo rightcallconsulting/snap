@@ -5,7 +5,8 @@ var PlayerBar = function(config) {
 	this.width = config.width || field.width/2;
 	this.height = config.height || 10;
 	this.fill = config.fill || color(230, 230, 230);
-	this.playerTypes = config.playerTypes || ["F", "T", "G", "C", "Y"];
+	this.playerTypes = config.playerTypes || ["G", "C", "T", "F", "Y"];
+	this.playerOptions = config.playerOptions || [];
 };
 
 PlayerBar.prototype.draw = function(field) {
@@ -16,35 +17,38 @@ PlayerBar.prototype.draw = function(field) {
 	var height = field.yardsToPixels(this.height);
 	rect(x, y, width, height);
 
-	var playerOptionX = x;
-	var playerOptionY = y + height/2;
+	var playerOptionX = field.getYardX(x+width*0.04);
+	var playerOptionY = field.getYardY(y+height/2);
 	var eligible = false;
+
 	for (var i = 0; i < this.playerTypes.length; ++i) {
-		var playerOption
+		var player;
 
 		if (this.playerTypes[i] === "F" || this.playerTypes[i] === "Y") {
-			var playerOption = new Player ({
+			var player = new Player ({
 				num: this.playerTypes[i],
 				pos: this.playerTypes[i],
 				x: playerOptionX,
 				y: playerOptionY,
-				siz: height,
+				siz: 2.5,
 				red: 255, green: 0, blue: 0,
 				eligible: true
 			});
 		} else {
-			var playerOption = new Player ({
+			var player = new Player ({
 				num: this.playerTypes[i],
 				pos: this.playerTypes[i],
 				x: playerOptionX,
 				y: playerOptionY,
-				siz: height,
+				siz: 2.5,
 				red: 143, blue: 29, green: 29,
 				eligible: true
 			});
 		}
 
-		playerOption.draw();
+		this.playerOptions.push(player);
+		this.playerOptions[i].draw();
+		playerOptionX += field.pixelsToYards(width*0.06);
 	}
 };
 
