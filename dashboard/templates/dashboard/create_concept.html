@@ -384,13 +384,20 @@
 				return false;
 			}
 
-
 			// return false to prevent default behavior
 			return false;
 		};
 
 		function mouseDragged() {
 			var playerSelected = concept.mouseInPlayer(field);
+
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
+
+			if (playerSelected != null) {
+				playerSelected.x = mouseYardX;
+				playerSelected.y = mouseYardY;
+			}
 
 			if(playerSelected && playerSelected.pos === "C") {
 				var mouseYardX = field.getYardX(mouseX);
