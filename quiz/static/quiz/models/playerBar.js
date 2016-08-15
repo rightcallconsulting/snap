@@ -5,7 +5,7 @@ var PlayerBar = function(config) {
 	this.width = config.width || field.width/2;
 	this.height = config.height || 10;
 	this.fill = config.fill || color(230, 230, 230);
-	this.playerTypes = config.playerTypes || ["G", "C", "T", "F", "Y"];
+	this.playerTypes = config.playerTypes || ["C", "G", "T", "F", "Y"];
 	this.playerOptions = config.playerOptions || [];
 };
 

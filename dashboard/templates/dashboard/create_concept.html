@@ -353,15 +353,13 @@
 			} else if (newPlayerSelected === currentPlayerSelected) {
 				concept.clearSelected();
 				return false;
-			} else {
-				if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-					concept.clearSelected();
-					newPlayerSelected.click();
-					return false;
-				} else if (currentPlayerSelected.unit === "offense") {
-					currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
-					return false;
-				}
+			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+				concept.clearSelected();
+				newPlayerSelected.click();
+				return false;
+			} else if (currentPlayerSelected.unit === "offense") {
+				currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
+				return false;
 			}
 
 			// Handle clicks on players in the PlayerBar. mouseClicked will
