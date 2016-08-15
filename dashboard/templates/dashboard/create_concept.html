@@ -77,6 +77,7 @@
 	<script type="text/javascript">
 		var concepts = [];
 		var concept;
+		var mouseBeingDragged = false;
 
 		//*******************************************************************//
 		// Event Listener Functions                                          //
@@ -328,7 +329,12 @@
 			fill(176,176,176)
 		};
 
-		function mouseClicked() {
+		function mouseReleased() {
+			if (mouseBeingDragged === true) {
+				mouseBeingDragged = false;
+				return false;
+			}
+
 			// Handle clicks on players in the Concept
 			var currentPlayerSelected = concept.getSelected();
 			var newPlayerSelected = concept.mouseInPlayer(field);
@@ -389,6 +395,8 @@
 		};
 
 		function mouseDragged() {
+			mouseBeingDragged = true;
+
 			var playerSelected = concept.mouseInPlayer(field);
 
 			var mouseYardX = field.getYardX(mouseX);

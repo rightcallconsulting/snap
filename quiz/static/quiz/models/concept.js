@@ -17,10 +17,10 @@ var Concept = function(config) {
 	this.team = config.team || null;
 	this.unit = config.unit || null; // There might not be a need for this - probably a smarter way to do it
 	this.offensivePlayers = config.offensivePlayers || [];
+	this.defensivePlayers = config.defensivePlayers || [];
 	this.quarterback = config.quarterback || null;
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
-	this.defensivePlayers = config.defensivePlayers || [];
 	this.feedbackMessage = config.feedbackMessage || [];
 };
 
