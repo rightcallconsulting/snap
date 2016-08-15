@@ -9,13 +9,11 @@ var PlayerBar = function(config) {
 	this.playerOptions = config.playerOptions || [];
 };
 
-PlayerBar.prototype.draw = function(field) {
-	fill(this.fill);
+PlayerBar.prototype.init = function(field) {
 	var x = field.getTranslatedX(this.x);
 	var y = field.getTranslatedY(this.y);
 	var width = field.yardsToPixels(this.width);
 	var height = field.yardsToPixels(this.height);
-	rect(x, y, width, height);
 
 	var playerOptionX = field.getYardX(x+width*0.04);
 	var playerOptionY = field.getYardY(y+height/2);
@@ -25,7 +23,7 @@ PlayerBar.prototype.draw = function(field) {
 		var player;
 
 		if (this.playerTypes[i] === "F" || this.playerTypes[i] === "Y") {
-			var player = new Player ({
+			player = new Player ({
 				num: this.playerTypes[i],
 				pos: this.playerTypes[i],
 				x: playerOptionX,
@@ -35,7 +33,7 @@ PlayerBar.prototype.draw = function(field) {
 				eligible: true
 			});
 		} else {
-			var player = new Player ({
+			player = new Player ({
 				num: this.playerTypes[i],
 				pos: this.playerTypes[i],
 				x: playerOptionX,
@@ -47,12 +45,24 @@ PlayerBar.prototype.draw = function(field) {
 		}
 
 		this.playerOptions.push(player);
-		this.playerOptions[i].draw();
 		playerOptionX += field.pixelsToYards(width*0.06);
+	}
+}
+
+PlayerBar.prototype.draw = function(field) {
+	fill(this.fill);
+	var x = field.getTranslatedX(this.x);
+	var y = field.getTranslatedY(this.y);
+	var width = field.yardsToPixels(this.width);
+	var height = field.yardsToPixels(this.height);
+	rect(x, y, width, height);
+
+	for (var i = 0; i < this.playerOptions.length; ++i) {
+		this.playerOptions[i].draw();
 	}
 };
 
-// getSelected iterates through all the players options in the bar and returns
+/*// getSelected iterates through all the players options in the bar and returns
 // the one player that is selected. If no one is selected it returns null.
 PlayerBar.prototype.getSelected = function() {
 	var numberOfPlayerOptions = this.playerOptions.length;
@@ -64,7 +74,7 @@ PlayerBar.prototype.getSelected = function() {
 	}
 
 	return null;
-};
+};*/
 
 PlayerBar.prototype.isMouseInside = function(field) {
 	var x = field.getTranslatedX(this.x);
