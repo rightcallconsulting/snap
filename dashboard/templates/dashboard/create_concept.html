@@ -366,8 +366,8 @@
 
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
-			currentPlayerSelected = bottomPlayerBar.getSelected();
-			if (currentPlayerSelected != null) {
+			newPlayerSelected = bottomPlayerBar.mouseInPlayer(field);
+			if (newPlayerSelected != null) {
 				/*var playerToAddToConcept = new Player({
 					num: "F", pos: "F", 
 					x: left_tackle.x-2.5,
