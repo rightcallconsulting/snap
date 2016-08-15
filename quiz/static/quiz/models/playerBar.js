@@ -40,7 +40,7 @@ PlayerBar.prototype.init = function(field) {
 				y: playerOptionY,
 				siz: 2.5,
 				red: 143, blue: 29, green: 29,
-				eligible: true
+				eligible: false
 			});
 		}
 
