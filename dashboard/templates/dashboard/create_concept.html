@@ -278,15 +278,15 @@
 			concept = new Concept({});
 			//concept.createCat(field.ballYardLine);
 
-			var trashWidth = field.pixelsToYards(field.width);
-			var trashHeight = field.pixelsToYards(field.height * 0.10);
-			var trashX = field.getYardX(0);
-			var trashY = field.getYardY(field.height) + trashHeight;
+			var playerBarWidth = field.pixelsToYards(field.width);
+			var playerBarHeight = field.pixelsToYards(field.height * 0.10);
+			var playerBarX = field.getYardX(0);
+			var playerBarY = field.getYardY(field.height) + playerBarHeight;
 
 			bottomPlayerBar = new PlayerBar({
-				x: trashX, y: trashY,
-				width: trashWidth,
-				height: trashHeight
+				x: playerBarX, y: playerBarY,
+				width: playerBarWidth,
+				height: playerBarHeight
 			});
 			bottomPlayerBar.init(field);
 
@@ -305,13 +305,19 @@
 				field.height = height;
 				field.width = width;
 				resizeBottomButtons();
+
+				bottomPlayerBar.width = field.pixelsToYards(field.width);
+				bottomPlayerBar.height = field.pixelsToYards(field.height * 0.10);
+				bottomPlayerBar.x = field.getYardX(0);
+				bottomPlayerBar.y = field.getYardY(field.height) + playerBarHeight;
 			};
 
 			drawOpening();
 		};
 
 		function draw() {
-			// Impose limitations here
+			// Limitations on where players can be
+
 
 			drawOpening();
 		};
