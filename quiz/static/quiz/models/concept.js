@@ -129,7 +129,23 @@ Concept.prototype.mouseInPlayer = function(field) {
 	return null;
 };
 
+// save handles everything that need to be done when the user pressed the save
+// button. It checks the validity of the concept and then saves it (if valid)
+// and removes everything from the frontend display.
+Concept.prototype.save = function (path) {
+
+};
+
+// post handles sending as JSON object to backend so it can be saved to the
+// database.
+Concept.prototype.post = function(path) {
+
+};
+
+/*********************************/
 /* Static functions for concepts */
+/*********************************/
+
 // createSwoop creates a static version Stanfords swoop blocking concept
 Concept.prototype.createSwoop = function(ballY){
 	// Create Offensive Players
