@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Play, Team, Test, Formation, Concept, Player, Position
+from .models import Play, Team, Test, Formation, Player, Position
+from dashboard.models import Concept
 
 class PlayAdmin(admin.ModelAdmin):
 	fields = []
