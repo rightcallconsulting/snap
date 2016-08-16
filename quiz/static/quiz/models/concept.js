@@ -142,6 +142,7 @@ Concept.prototype.save = function (path) {
 			defensivePlayers: this.defensivePlayers
 		});
 
+		conceptToPost.post(path);
 		this.reset();
 	} else {
 		this.feedbackMessage = "Invalid Concept";
@@ -166,7 +167,7 @@ Concept.prototype.post = function(path) {
 		player.startY = player.y;
 	}
 
-	conceptJson = JSON.stringify(conceptJson);
+	conceptJson = JSON.stringify(this);
 
 	var jqxhr = $.post(path, {concept: conceptJson})
 		.done(function() { /* use these for debugging at least */ })

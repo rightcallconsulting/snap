@@ -177,6 +177,7 @@
 		$("#save-button").click(function(event) {
 			var placeholder_message = document.getElementById("placeholder-message");
 			var concept_name = document.getElementById("concept-name");
+			var path = "/concepts/create";
 
 			if (placeholder_message != null) {
 				removeHeaderPlaceholderAndError();
@@ -200,7 +201,7 @@
 
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
-			concept.save();
+			concept.save(path);
 		});
 
 		$("#clear-button").click(function(event) {
