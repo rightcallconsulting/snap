@@ -167,11 +167,11 @@ Concept.prototype.post = function(path, concept) {
 		player.startY = player.y;
 	}
 
-	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
+	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(path, {concept: conceptJson})
-		.done(function() { /* use these for debugging at least */ })
-		.fail(function() { /* use these for debugging at least */ });
+		.done(function() { alert("success");/* use these for debugging at least */ })
+		.fail(function() { alert("fail");/* use these for debugging at least */ });
 };
 
 /*********************************/
