@@ -1,16 +1,16 @@
 
 var PlayerBar = function(config) {
-	this.x = config.x || field.getYardX(0);
-	this.y = config.y || field.getYardY(0);
-	this.width = config.width || field.pixelsToYards(field.width);
-	this.height = config.height || 3;
+	this.x = config.x || 0;
+	this.y = config.y || 0;
+	this.width = config.width || field.width;
+	this.height = config.height || 50;
 	this.fill = config.fill || color(230, 230, 230);
 	this.playerTypes = config.playerTypes || ["C", "G", "T", "F", "Y"];
 	this.playerOptions = config.playerOptions || [];
 };
 
 PlayerBar.prototype.init = function(field) {
-	var x = field.getTranslatedX(this.x);
+	/*var x = field.getTranslatedX(this.x);
 	var y = field.getTranslatedY(this.y);
 	var width = field.yardsToPixels(this.width);
 	var height = field.yardsToPixels(this.height);
@@ -46,20 +46,16 @@ PlayerBar.prototype.init = function(field) {
 
 		this.playerOptions.push(player);
 		playerOptionX += field.pixelsToYards(width*0.05);
-	}
+	}*/
 }
 
 PlayerBar.prototype.draw = function(field) {
 	fill(this.fill);
-	var x = field.getTranslatedX(this.x);
-	var y = field.getTranslatedY(this.y);
-	var width = field.yardsToPixels(this.width);
-	var height = field.yardsToPixels(this.height);
-	rect(x, y, width, height);
+	rect(this.x, this.y, this.width, this.height);
 
-	for (var i = 0; i < this.playerOptions.length; ++i) {
+	/*for (var i = 0; i < this.playerOptions.length; ++i) {
 		this.playerOptions[i].draw();
-	}
+	}*/
 };
 
 /*// getSelected iterates through all the players options in the bar and returns

@@ -278,15 +278,8 @@
 			concept = new Concept({});
 			//concept.createCat(field.ballYardLine);
 
-			var playerBarWidth = field.pixelsToYards(field.width);
-			var playerBarHeight = 3;
-			var playerBarX = field.getYardX(0);
-			var playerBarY = field.getYardY(field.height) + playerBarHeight;
-
 			bottomPlayerBar = new PlayerBar({
-				x: playerBarX, y: playerBarY,
-				width: playerBarWidth,
-				height: playerBarHeight
+				y: field.height - 50
 			});
 			bottomPlayerBar.init(field);
 
@@ -306,10 +299,10 @@
 				field.width = width;
 				resizeBottomButtons();
 
-				bottomPlayerBar.width = field.pixelsToYards(field.width);
-				bottomPlayerBar.height = field.pixelsToYards(field.height * 0.10);
-				bottomPlayerBar.x = field.getYardX(0);
-				bottomPlayerBar.y = field.getYardY(field.height) + playerBarHeight;
+				bottomPlayerBar.width = field.width;
+				bottomPlayerBar.height = 50;
+				bottomPlayerBar.x = 0;
+				bottomPlayerBar.y = field.height - 50;
 			};
 
 			drawOpening();
