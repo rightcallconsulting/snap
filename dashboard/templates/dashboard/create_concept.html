@@ -357,6 +357,9 @@
 		// intro scene
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
+
+			drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+
 			concept.drawAssignments(field);
 			concept.drawPlayers();
 			bottomPlayerBar.draw(field);
@@ -364,7 +367,7 @@
 			fill(0, 0, 0);
 			textSize(20);
 			text(concept.feedbackMessage, 330, 20);
-			fill(176,176,176)
+			fill(176,176,176);
 		};
 
 		function mouseReleased() {
@@ -542,6 +545,35 @@
 				return false;
 			}
 		};
+
+		function drawDebuggingInfo() {
+			textAlign(CENTER);
+
+			var textX = field.width / 2;
+			var textY = field.height * 0.25;
+			var textYSpacing = 30;
+
+			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
+			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
+			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
+			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
+
+			fill(0, 0, 0);
+			textSize(20);
+
+			text(mouseXString, textX, textY);
+			
+			textY += textYSpacing;
+			text(mouseYString, textX, textY);
+			
+			textY += textYSpacing;
+			text(widthString, textX, textY);
+			
+			textY += textYSpacing;
+			text(heightString, textX, textY);
+
+			fill(176,176,176);
+		}
 
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
