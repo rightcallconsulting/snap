@@ -198,9 +198,9 @@
 				return;
 			}
 
-			concept.name = concept_name;
+			concept.name = concept_name.textContent;
 			concept.team = teamID;
-			concept.save()
+			concept.save();
 		});
 
 		$("#clear-button").click(function(event) {
