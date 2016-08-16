@@ -179,11 +179,13 @@ class Authentication(object):
 			return None
 
 class Concept(models.Model):
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=50, blank=True, null=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	unit = models.CharField(max_length=25, default="offense")
+	unit = models.CharField(max_length=25, default="offense", blank=True, null=True)
 	offensivePlayers = models.ManyToManyField(Player, related_name="offensive_player")
 	defensivePlayers = models.ManyToManyField(Player, related_name="defensive_player")
+
+	conceptJson = TextField(max_length=none, blank=True, null=True)
 
 	def __str__(self):
 		return self.name

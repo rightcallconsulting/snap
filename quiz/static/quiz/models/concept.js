@@ -151,6 +151,20 @@ Concept.prototype.save = function (path) {
 // post handles sending as JSON object to backend so it can be saved to the
 // database.
 Concept.prototype.post = function(path) {
+	var conceptJson = "";
+	var player;
+
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		player = this.offensivePlayers[i];
+		player.startX = player.x;
+		player.startY = player.y;
+	}
+
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		player = this.defensivePlayers[i];
+		player.startX = player.x;
+		player.startY = player.y;
+	}
 
 };
 
