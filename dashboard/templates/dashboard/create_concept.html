@@ -77,7 +77,10 @@
 	<script type="text/javascript">
 		var concepts = [];
 		var concept;
+		var topPlayerBar;
+		var bottomPlayerBar;
 		var mouseBeingDragged = false;
+		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
 		// Event Listener Functions                                          //
@@ -89,14 +92,14 @@
 		$(document).click(function(event) {
 			if ($("#header-box").hasClass("selected")) {
 				$("#header-box").removeClass("selected");
-				var formation_name = document.getElementById("formation-name");
+				var concept_name = document.getElementById("concept-name");
 
-				if (formation_name === null) {
+				if (concept_name === null) {
 					addHeaderPlaceholder();
 				}
 
-				if (formation_name != null && formation_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(formation_name);
+				if (concept_name != null && concept_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(concept_name);
 					addHeaderPlaceholder();
 				}
 			}
@@ -125,10 +128,10 @@
 
 		function removeHeaderName() {
 			var header_box = document.getElementById("header-box");
-			var formation_name = document.getElementById("formation-name");
+			var concept_name = document.getElementById("concept-name");
 
-			if (formation_name != null) {
-				header_box.removeChild(formation_name);
+			if (concept_name != null) {
+				header_box.removeChild(concept_name);
 			}
 		};
 
@@ -138,7 +141,7 @@
 
 			var placeholder = document.createElement("p");
 			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Formation Name";
+			placeholder.textContent = "Enter Concept Name";
 			header_box.appendChild(placeholder);
 		};
 
@@ -148,7 +151,7 @@
 
 			var error_message = document.createElement("p");
 			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Formation Name";
+			error_message.textContent = "Invalid Concept Name";
 			header_box.appendChild(error_message);
 		};
 
@@ -173,7 +176,7 @@
 
 		$("#save-button").click(function(event) {
 			var placeholder_message = document.getElementById("placeholder-message");
-			var formation_name = document.getElementById("formation-name");
+			var concept_name = document.getElementById("concept-name");
 
 			if (placeholder_message != null) {
 				removeHeaderPlaceholderAndError();
@@ -181,15 +184,15 @@
 				return;
 			}
 
-			if (formation_name != null && formation_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(formation_name);
+			// I don't think this will ever happen, but I'm not sure.
+			if (concept_name === null) {
 				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
 			}
 
-			// I don't think this will ever happen, but I'm not sure.
-			if (formation_name === null) {
+			if (concept_name != null && concept_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(concept_name);
 				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
@@ -234,10 +237,9 @@
 			pressFullScreen()*/
 		});
 
-		var makeJSONCall = true;
-		var topPlayerBar;
-		var bottomPlayerBar;
-		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
 
 		function setup() {
 			var display_box = document.getElementById("display-box");
@@ -660,15 +662,15 @@
 
 		function keyTyped() {
 			if ($("#header-box").hasClass("selected")) {
-				var formation_name = document.getElementById("formation-name");
+				var concept_name = document.getElementById("concept-name");
 
-				if (formation_name === null) {
-					formation_name = document.createElement("p");
-					formation_name.setAttribute("id", "formation-name");
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
 				}
 
-				document.getElementById("header-box").appendChild(formation_name);
-				var string_length = formation_name.textContent.length;
+				document.getElementById("header-box").appendChild(concept_name);
+				var string_length = concept_name.textContent.length;
 
 				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
 					removeHeaderPlaceholderAndError();
@@ -678,7 +680,7 @@
 					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
 						if (string_length <= 100){
-							formation_name.textContent += key;
+							concept_name.textContent += key;
 						}
 					}
 
@@ -689,20 +691,20 @@
 		};
 
 		function keyPressed() {
-			var formation_name = document.getElementById("formation-name");
-			var string_length = formation_name.textContent.length;
+			var concept_name = document.getElementById("concept-name");
+			var string_length = concept_name.textContent.length;
 
 			if (keyCode == BACKSPACE) {
-				if (formation_name != null) {
+				if (concept_name != null) {
 					if(string_length > 0) {
-						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
+						concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
 					}
 				}
 
 				return false;
 			} else if (keyCode == 32) {
-				if (formation_name != null && string_length < 100) {
-					formation_name.textContent += ' ';
+				if (concept_name != null && string_length < 100) {
+					concept_name.textContent += ' ';
 				}
 
 				return false;
