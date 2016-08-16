@@ -5,18 +5,13 @@ var PlayerBar = function(config) {
 	this.width = config.width || field.width;
 	this.height = config.height || 50;
 	this.fill = config.fill || color(230, 230, 230);
-	this.playerTypes = config.playerTypes || ["C", "G", "T", "F", "Y"];
+	this.playerTypes = config.playerTypes || ["E", "W", "T", "N", "M", "S", "SS"];
 	this.playerOptions = config.playerOptions || [];
 };
 
 PlayerBar.prototype.init = function(field) {
-	/*var x = field.getTranslatedX(this.x);
-	var y = field.getTranslatedY(this.y);
-	var width = field.yardsToPixels(this.width);
-	var height = field.yardsToPixels(this.height);
-
-	var playerOptionX = field.getYardX(x+width*0.03);
-	var playerOptionY = field.getYardY(y+height/2);
+	var playerOptionX = 2;
+	var playerOptionY = this.height/2;
 	var eligible = false;
 
 	for (var i = 0; i < this.playerTypes.length; ++i) {
@@ -45,8 +40,8 @@ PlayerBar.prototype.init = function(field) {
 		}
 
 		this.playerOptions.push(player);
-		playerOptionX += field.pixelsToYards(width*0.05);
-	}*/
+		playerOptionX += 3;
+	}
 }
 
 PlayerBar.prototype.draw = function(field) {
