@@ -14,6 +14,9 @@ class TestAdmin(admin.ModelAdmin):
 class FormationAdmin(admin.ModelAdmin):
 	fields = []
 
+class ConceptAdmin(admin.ModelAdmin):
+	fields = []
+
 class PlayerAdmin(admin.ModelAdmin):
 	fields = []
 
@@ -24,5 +27,6 @@ admin.site.register(Play, PlayAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Test, TestAdmin)
 admin.site.register(Formation, FormationAdmin)
+admin.site.register(Model, ModelAdmin)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Position, PositionAdmin)
