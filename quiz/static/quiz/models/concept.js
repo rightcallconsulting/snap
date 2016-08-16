@@ -142,7 +142,7 @@ Concept.prototype.save = function (path) {
 			defensivePlayers: this.defensivePlayers
 		});
 
-		conceptToPost.post(path);
+		this.post(path, conceptToPost);
 		this.reset();
 	} else {
 		this.feedbackMessage = "Invalid Concept";
@@ -151,7 +151,7 @@ Concept.prototype.save = function (path) {
 
 // post handles sending as JSON object to backend so it can be saved to the
 // database.
-Concept.prototype.post = function(path) {
+Concept.prototype.post = function(path, concept) {
 	var conceptJson = "";
 	var player;
 
@@ -167,7 +167,7 @@ Concept.prototype.post = function(path) {
 		player.startY = player.y;
 	}
 
-	conceptJson = JSON.stringify(this);
+	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(path, {concept: conceptJson})
 		.done(function() { /* use these for debugging at least */ })
