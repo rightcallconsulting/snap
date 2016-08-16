@@ -600,29 +600,27 @@ Formation.prototype.mouseInOL = function(field){
 
 
 Formation.prototype.saveToDB = function(){
+	var formationJSON = "";
+	var cache = [];
 
-  var formationJSON = "";
-  var cache = [];
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		p = this.offensivePlayers[i];
+		p.startX = p.x;
+		p.startY = p.y;
+	}
 
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    p = this.offensivePlayers[i];
-    p.startX = p.x;
-    p.startY = p.y;
-  }
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		p = this.defensivePlayers[i];
+		p.startX = p.x;
+		p.startY = p.y;
+	}
 
-  for(var i = 0; i < this.defensivePlayers.length; i++){
-    p = this.defensivePlayers[i];
-    p.startX = p.x;
-    p.startY = p.y;
-  }
-
-  try{
-  formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
-  $.post( "teams/broncos/formations/new", { formation: formationJSON});
-  }catch(e){
-    console.log(e);
-  }
-
+	try {
+		formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
+		$.post( "teams/broncos/formations/new", { formation: formationJSON});
+	} catch(e) {
+		console.log(e);
+	}
 };
 
 var createFormationButtons = function(formationArray){

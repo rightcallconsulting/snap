@@ -187,6 +187,8 @@ class Position(models.Model):
 	blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
 	runAssignment = models.CharField(max_length=200, null=True, blank=True)
 
+	blockingCoordinates = models.CharField(max_length=None, null=True, blank=True);
+
 	def __str__(self):
 		return self.name
 
