@@ -5,42 +5,20 @@ var PlayerBar = function(config) {
 	this.width = config.width || field.width;
 	this.height = config.height || 50;
 	this.fill = config.fill || color(230, 230, 230);
-	this.playerTypes = config.playerTypes || ["E", "W", "T", "N", "M", "S", "SS"];
 	this.playerOptions = config.playerOptions || [];
 };
 
 PlayerBar.prototype.init = function(field) {
-	var playerOptionX = 2;
-	var playerOptionY = this.height/2;
-	var eligible = false;
+	var playerSiz = 30
+	var playerOptionX = this.x + playerSiz*0.75;
+	var playerOptionY = this.y + (this.height/2);
 
-	for (var i = 0; i < this.playerTypes.length; ++i) {
-		var player;
-
-		if (this.playerTypes[i] === "F" || this.playerTypes[i] === "Y") {
-			player = new Player ({
-				num: this.playerTypes[i],
-				pos: this.playerTypes[i],
-				x: playerOptionX,
-				y: playerOptionY,
-				siz: 2,
-				red: 255, green: 0, blue: 0,
-				eligible: true
-			});
-		} else {
-			player = new Player ({
-				num: this.playerTypes[i],
-				pos: this.playerTypes[i],
-				x: playerOptionX,
-				y: playerOptionY,
-				siz: 2,
-				red: 143, blue: 29, green: 29,
-				eligible: false
-			});
-		}
-
-		this.playerOptions.push(player);
-		playerOptionX += 3;
+	for (var i = 0; i < this.playerOptions.length; ++i) {
+		var player = this.playerOptions[i];
+		player.x = playerOptionX;
+		player.y = playerOptionY;
+		player.siz = playerSiz;
+		playerOptionX += playerSiz*1.5;
 	}
 }
 
@@ -48,9 +26,9 @@ PlayerBar.prototype.draw = function(field) {
 	fill(this.fill);
 	rect(this.x, this.y, this.width, this.height);
 
-	/*for (var i = 0; i < this.playerOptions.length; ++i) {
-		this.playerOptions[i].draw();
-	}*/
+	for (var i = 0; i < this.playerOptions.length; ++i) {
+		this.playerOptions[i].pixelDraw();
+	}
 };
 
 /*// getSelected iterates through all the players options in the bar and returns
@@ -68,14 +46,10 @@ PlayerBar.prototype.getSelected = function() {
 };*/
 
 PlayerBar.prototype.isMouseInside = function(field) {
-	var x = field.getTranslatedX(this.x);
-	var y = field.getTranslatedY(this.y);
-	var width = field.yardsToPixels(this.width);
-	var height = field.yardsToPixels(this.height);
-	return mouseX > x &&
-		mouseX < (x + width) &&
-		mouseY > y &&
-		mouseY < (y + height);
+	return mouseX > this.x &&
+		mouseX < (this.x + this.width) &&
+		mouseY > this.y &&
+		mouseY < (this.y + this.height);
 };
 
 // mouseInPlayer iterates through all the offensive and defensive players
@@ -84,7 +58,7 @@ PlayerBar.prototype.isMouseInside = function(field) {
 PlayerBar.prototype.mouseInPlayer = function(field) {
 	for(var i = 0; i < this.playerOptions.length; i++) {
 		var player = this.playerOptions[i];
-		if (player.isMouseInside(field)) {
+		if (player.pixelIsMouseInside(field)) {
 			return player;
 		}
 	}

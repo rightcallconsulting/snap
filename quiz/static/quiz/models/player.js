@@ -434,6 +434,25 @@ Player.prototype.draw = function(){
 	}
 };
 
+Player.prototype.pixelDraw = function(){
+	if(this.unit === "offense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		ellipse(this.x, this.y, this.siz, this.siz);
+		fill(0,0,0);
+		textSize(14);
+		textAlign(CENTER, CENTER);
+		text(this.pos, this.x, this.y);
+	} else if (this.unit === "defense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		textSize(17);
+		textAlign(CENTER, CENTER);
+		text(this.pos, this.x, this.y);
+		fill(0,0,0);
+	}
+};
+
 Player.prototype.setColor = function(newFillColor) {
   this.fill = newFillColor;
 };
@@ -447,23 +466,26 @@ Player.prototype.clearRoute = function(){
 };
 
 Player.prototype.isMouseInside = function(field) {
-  var siz = field.yardsToPixels(this.siz);
-  var x = field.getTranslatedX(this.x)
-  var y = field.getTranslatedY(this.y)
-  var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
-  return dist <= siz/2;
-  /*
-  return mouseX > this.x-this.siz/1 &&
-		 mouseX < (this.x + this.siz/1) &&
-		 mouseY > this.y - this.siz/1 &&
-		 mouseY < (this.y + this.siz/1);*/
-	   };
+	var siz = field.yardsToPixels(this.siz);
+	var x = field.getTranslatedX(this.x);
+	var y = field.getTranslatedY(this.y);
+	var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
+	return dist <= siz/2;
+};
 
-  Player.prototype.resetToStart = function(){
+Player.prototype.pixelIsMouseInside = function(field) {
+	var siz = this.siz;
+	var x = this.x;
+	var y = this.y;
+	var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
+	return dist <= siz/2;
+};
+
+Player.prototype.resetToStart = function(){
 	this.x = this.startX;
 	this.y = this.startY;
 	this.currentBreak = 0;
-  };
+};
 
 //Moves one step toward point x,y
 Player.prototype.moveTo = function(x, y){

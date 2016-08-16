@@ -234,11 +234,9 @@
 			pressFullScreen()*/
 		});
 
-		//*******************************************************************//
-		// p5.js Animation Functions                                         //
-		//*******************************************************************//
 		var makeJSONCall = true;
 		var bottomPlayerBar;
+		var topPlayerBar;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
 		function setup() {
@@ -278,8 +276,15 @@
 			concept = new Concept({});
 			//concept.createCat(field.ballYardLine);
 
+			// Create Player bars
+			topPlayerBar = new PlayerBar({
+				playerOptions: createDefensivePlayerOptions()
+			});
+			topPlayerBar.init(field);
+
 			bottomPlayerBar = new PlayerBar({
-				y: field.height - 50
+				y: field.height - 50,
+				playerOptions: createOffensivePlayerOptions()
 			});
 			bottomPlayerBar.init(field);
 
@@ -363,6 +368,150 @@
 			fill(176,176,176);
 		};
 
+		function createOffensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "QB", pos: "QB",
+				red: 212, green: 130, blue: 130,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "C", pos: "C",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "G", pos: "G",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "F", pos: "F",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "Y", pos: "Y",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			return players;
+		};
+
+		function createDefensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "E", pos: "E",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "W", pos: "W",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+			
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "N", pos: "N",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "M", pos: "M",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "S", pos: "S",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "SS", pos: "SS",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			return players;
+		};
+
+		function drawDebuggingInfo() {
+			textAlign(CENTER);
+
+			var textX = field.width / 2;
+			var textY = field.height * 0.25;
+			var textYSpacing = 30;
+
+			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
+			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
+			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
+			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
+
+			fill(0, 0, 0);
+			textSize(20);
+
+			text(mouseXString, textX, textY);
+			
+			textY += textYSpacing;
+			text(mouseYString, textX, textY);
+			
+			textY += textYSpacing;
+			text(widthString, textX, textY);
+			
+			textY += textYSpacing;
+			text(heightString, textX, textY);
+
+			fill(176,176,176);
+		};
+
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
 		function mouseReleased() {
 			if (mouseBeingDragged === true) {
 				mouseBeingDragged = false;
@@ -538,35 +687,6 @@
 				return false;
 			}
 		};
-
-		function drawDebuggingInfo() {
-			textAlign(CENTER);
-
-			var textX = field.width / 2;
-			var textY = field.height * 0.25;
-			var textYSpacing = 30;
-
-			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
-			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
-			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
-			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
-
-			fill(0, 0, 0);
-			textSize(20);
-
-			text(mouseXString, textX, textY);
-			
-			textY += textYSpacing;
-			text(mouseYString, textX, textY);
-			
-			textY += textYSpacing;
-			text(widthString, textX, textY);
-			
-			textY += textYSpacing;
-			text(heightString, textX, textY);
-
-			fill(176,176,176);
-		}
 
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
