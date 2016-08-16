@@ -316,18 +316,50 @@
 		};
 
 		function draw() {
-			// Limitations on where players can be
+			// Limitations on where offensive players can be
+			var numberOfOffensivePlayers = concept.offensivePlayers.length;
+			
+			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
+				var player = concept.offensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
 
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
 
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+			}
+
+			// Limitations on where defensive players can be
+			var numberOfDefensivePlayers = concept.defensivePlayers.length;
+			
+			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
+				var player = concept.defensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+			}
+
+			// Draw opening
 			drawOpening();
 		};
 
 		// intro scene
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
-			bottomPlayerBar.draw(field);
 			concept.drawAssignments(field);
 			concept.drawPlayers();
+			bottomPlayerBar.draw(field);
 			
 			fill(0, 0, 0);
 			textSize(20);
