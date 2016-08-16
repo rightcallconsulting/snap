@@ -57,6 +57,8 @@ Concept.prototype.isValid = function() {
 	//
 	// IDEAS: More players in a concept than can be in a play.
 	//		  Inelligable setups. Illegal actions.
+
+	return true;
 };
 
 // getSelected iterates through all the players in a concept and returns
