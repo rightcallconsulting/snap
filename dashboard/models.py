@@ -179,9 +179,9 @@ class Authentication(object):
 			return None
 
 class Concept(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=50)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	unit = models.CharField(max_length=100, default="offense")
+	unit = models.CharField(max_length=25, default="offense")
 	offensivePlayers = models.ManyToManyField(Player, related_name="offensive_player")
 	defensivePlayers = models.ManyToManyField(Player, related_name="defensive_player")
 
