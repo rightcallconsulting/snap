@@ -3,7 +3,7 @@ var PlayerBar = function(config) {
 	this.x = config.x || field.getYardX(0);
 	this.y = config.y || field.getYardY(0);
 	this.width = config.width || field.pixelsToYards(field.width);
-	this.height = config.height || 10;
+	this.height = config.height || 3;
 	this.fill = config.fill || color(230, 230, 230);
 	this.playerTypes = config.playerTypes || ["C", "G", "T", "F", "Y"];
 	this.playerOptions = config.playerOptions || [];
@@ -15,7 +15,7 @@ PlayerBar.prototype.init = function(field) {
 	var width = field.yardsToPixels(this.width);
 	var height = field.yardsToPixels(this.height);
 
-	var playerOptionX = field.getYardX(x+width*0.04);
+	var playerOptionX = field.getYardX(x+width*0.03);
 	var playerOptionY = field.getYardY(y+height/2);
 	var eligible = false;
 
@@ -28,7 +28,7 @@ PlayerBar.prototype.init = function(field) {
 				pos: this.playerTypes[i],
 				x: playerOptionX,
 				y: playerOptionY,
-				siz: 2.5,
+				siz: 2,
 				red: 255, green: 0, blue: 0,
 				eligible: true
 			});
@@ -38,14 +38,14 @@ PlayerBar.prototype.init = function(field) {
 				pos: this.playerTypes[i],
 				x: playerOptionX,
 				y: playerOptionY,
-				siz: 2.5,
+				siz: 2,
 				red: 143, blue: 29, green: 29,
 				eligible: false
 			});
 		}
 
 		this.playerOptions.push(player);
-		playerOptionX += field.pixelsToYards(width*0.06);
+		playerOptionX += field.pixelsToYards(width*0.05);
 	}
 }
 
