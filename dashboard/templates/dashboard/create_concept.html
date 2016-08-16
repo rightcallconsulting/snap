@@ -235,8 +235,8 @@
 		});
 
 		var makeJSONCall = true;
-		var bottomPlayerBar;
 		var topPlayerBar;
+		var bottomPlayerBar;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
 		function setup() {
@@ -360,6 +360,7 @@
 
 			concept.drawAssignments(field);
 			concept.drawPlayers();
+			topPlayerBar.draw(field);
 			bottomPlayerBar.draw(field);
 			
 			fill(0, 0, 0);
@@ -562,6 +563,26 @@
 					pos: newPlayerSelected.pos, 
 					x: Field.WIDTH / 2,
 					y: field.ballYardLine,
+					red: newPlayerSelected.red, 
+					green: newPlayerSelected.green, 
+					blue: newPlayerSelected.blue,
+					eligible: newPlayerSelected.eligible
+				});
+
+				concept.offensivePlayers.push(playerToAddToConcept);
+
+				return false;
+			}
+
+			// Handle clicks on players in the PlayerBar. mouseClicked will
+			// have already returned if a player on the field is clicked
+			newPlayerSelected = topPlayerBar.mouseInPlayer(field);
+			if (newPlayerSelected != null) {
+				var playerToAddToConcept = new Player({
+					num: newPlayerSelected.num, 
+					pos: newPlayerSelected.pos, 
+					x: Field.WIDTH / 2,
+					y: field.ballYardLine + field.pixelsToYards(30),
 					red: newPlayerSelected.red, 
 					green: newPlayerSelected.green, 
 					blue: newPlayerSelected.blue,
