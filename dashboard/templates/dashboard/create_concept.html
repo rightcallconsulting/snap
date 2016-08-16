@@ -356,7 +356,7 @@
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
 
-			drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			concept.drawAssignments(field);
 			concept.drawPlayers();
@@ -586,10 +586,10 @@
 					red: newPlayerSelected.red, 
 					green: newPlayerSelected.green, 
 					blue: newPlayerSelected.blue,
-					eligible: newPlayerSelected.eligible
+					unit: newPlayerSelected.unit
 				});
 
-				concept.offensivePlayers.push(playerToAddToConcept);
+				concept.defensivePlayers.push(playerToAddToConcept);
 
 				return false;
 			}
