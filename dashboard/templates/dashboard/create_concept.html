@@ -198,7 +198,9 @@
 				return;
 			}
 
-			//pressSave();
+			concept.name = concept_name;
+			concept.team = teamID;
+			concept.save()
 		});
 
 		$("#clear-button").click(function(event) {
@@ -412,6 +414,13 @@
 
 			player = new Player ({
 				num: "Y", pos: "Y",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "X", pos: "X",
 				red: 255, green: 0, blue: 0,
 				siz: 2, eligible: true
 			});
@@ -692,22 +701,25 @@
 
 		function keyPressed() {
 			var concept_name = document.getElementById("concept-name");
-			var string_length = concept_name.textContent.length;
 
-			if (keyCode == BACKSPACE) {
-				if (concept_name != null) {
-					if(string_length > 0) {
-						concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+			if ($("#header-box").hasClass("selected") && concept_name != null) {
+				var string_length = concept_name.textContent.length;
+
+				if (keyCode == BACKSPACE) {
+					if (concept_name != null) {
+						if(string_length > 0) {
+							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+						}
 					}
-				}
 
-				return false;
-			} else if (keyCode == 32) {
-				if (concept_name != null && string_length < 100) {
-					concept_name.textContent += ' ';
-				}
+					return false;
+				} else if (keyCode == 32) {
+					if (concept_name != null && string_length < 100) {
+						concept_name.textContent += ' ';
+					}
 
-				return false;
+					return false;
+				}
 			}
 		};
 
