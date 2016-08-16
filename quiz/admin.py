@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from .models import Play, Team, Test, Formation, Player, Position
-from dashboard.models import Concept
 
 class PlayAdmin(admin.ModelAdmin):
 	fields = []
@@ -15,9 +14,6 @@ class TestAdmin(admin.ModelAdmin):
 class FormationAdmin(admin.ModelAdmin):
 	fields = []
 
-class ConceptAdmin(admin.ModelAdmin):
-	fields = []
-
 class PlayerAdmin(admin.ModelAdmin):
 	fields = []
 
@@ -28,6 +24,5 @@ admin.site.register(Play, PlayAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Test, TestAdmin)
 admin.site.register(Formation, FormationAdmin)
-admin.site.register(Concept, ConceptAdmin)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Position, PositionAdmin)
