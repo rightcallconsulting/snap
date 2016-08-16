@@ -185,7 +185,7 @@ class Concept(models.Model):
 	offensivePlayers = models.ManyToManyField(Player, related_name="offensive_player")
 	defensivePlayers = models.ManyToManyField(Player, related_name="defensive_player")
 
-	conceptJson = TextField(max_length=none, blank=True, null=True)
+	conceptJson = models.TextField(max_length=None, blank=True, null=True)
 
 	def __str__(self):
 		return self.name

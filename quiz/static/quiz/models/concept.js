@@ -166,6 +166,11 @@ Concept.prototype.post = function(path) {
 		player.startY = player.y;
 	}
 
+	conceptJson = JSON.stringify(conceptJson);
+
+	var jqxhr = $.post(path, {concept: conceptJson})
+		.done(function() { /* use these for debugging at least */ })
+		.fail(function() { /* use these for debugging at least */ });
 };
 
 /*********************************/
