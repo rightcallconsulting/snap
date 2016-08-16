@@ -1,8 +1,8 @@
 
 var PlayerBar = function(config) {
-	this.x = config.x || 50;
-	this.y = config.y || field.height/2;
-	this.width = config.width || field.width/2;
+	this.x = config.x || field.getYardX(0);
+	this.y = config.y || field.getYardY(0);
+	this.width = config.width || field.pixelsToYards(field.width);
 	this.height = config.height || 10;
 	this.fill = config.fill || color(230, 230, 230);
 	this.playerTypes = config.playerTypes || ["C", "G", "T", "F", "Y"];
