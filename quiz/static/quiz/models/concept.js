@@ -172,6 +172,8 @@ Concept.prototype.post = function(path, concept) {
 	var jqxhr = $.post(path, {concept: conceptJson})
 		.done(function() { alert("success");/* use these for debugging at least */ })
 		.fail(function() { alert("fail");/* use these for debugging at least */ });
+
+	var hi = 10;
 };
 
 /*********************************/
