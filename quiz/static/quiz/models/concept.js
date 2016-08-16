@@ -15,7 +15,7 @@ var Concept = function(config) {
 	this.id = config.id || null;
 	this.name = config.name || null;
 	this.team = config.team || null;
-	this.unit = config.unit || null; // There might not be a need for this - probably a smarter way to do it
+	this.unit = config.unit || null;
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
 	this.quarterback = config.quarterback || null;
@@ -133,7 +133,19 @@ Concept.prototype.mouseInPlayer = function(field) {
 // button. It checks the validity of the concept and then saves it (if valid)
 // and removes everything from the frontend display.
 Concept.prototype.save = function (path) {
+	if (this.isValid()) {
+		var conceptToPost = new Concept ({ 
+			name: this.name, 
+			team: this.team,  
+			unit: this.unit,  
+			offensivePlayers: this.offensivePlayers,
+			defensivePlayers: this.defensivePlayers
+		});
 
+		this.reset();
+	} else {
+		this.feedbackMessage = "Invalid Concept";
+	}
 };
 
 // post handles sending as JSON object to backend so it can be saved to the

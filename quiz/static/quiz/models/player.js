@@ -67,6 +67,7 @@ var Player = function(config) {
 
   // Blocker assignments - eventually we should just have some child object for Linemen
   this.blockingAssignmentArray = config.blockingAssignmentArray || [[], []];
+  this.blockingCoordinates = config.blockingCoordinates || [];
 };
 
 //***************************************************************************//
