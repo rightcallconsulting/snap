@@ -178,6 +178,7 @@
 			var placeholder_message = document.getElementById("placeholder-message");
 			var concept_name = document.getElementById("concept-name");
 			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
 
 			if (placeholder_message != null) {
 				removeHeaderPlaceholderAndError();
@@ -201,7 +202,7 @@
 
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
-			concept.save(path);
+			concept.save(path, csrf_token);
 		});
 
 		$("#clear-button").click(function(event) {

@@ -132,7 +132,7 @@ Concept.prototype.mouseInPlayer = function(field) {
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the concept and then saves it (if valid)
 // and removes everything from the frontend display.
-Concept.prototype.save = function (path) {
+Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
 		var conceptToPost = new Concept ({ 
 			name: this.name, 
@@ -142,7 +142,7 @@ Concept.prototype.save = function (path) {
 			defensivePlayers: this.defensivePlayers
 		});
 
-		this.post(path, conceptToPost);
+		this.post(path, csrf_token, conceptToPost);
 		this.reset();
 	} else {
 		this.feedbackMessage = "Invalid Concept";
@@ -151,7 +151,7 @@ Concept.prototype.save = function (path) {
 
 // post handles sending as JSON object to backend so it can be saved to the
 // database.
-Concept.prototype.post = function(path, concept) {
+Concept.prototype.post = function(path, csrf_token, concept) {
 	var conceptJson = "";
 	var player;
 
@@ -169,11 +169,9 @@ Concept.prototype.post = function(path, concept) {
 
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
-	var jqxhr = $.post(path, {concept: conceptJson})
-		.done(function() { alert("success");/* use these for debugging at least */ })
-		.fail(function() { alert("fail");/* use these for debugging at least */ });
-
-	var hi = 10;
+	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, concept: conceptJson})
+		.done(function() { /* use these for debugging at least */ })
+		.fail(function() { /* use these for debugging at least */ });
 };
 
 /*********************************/
