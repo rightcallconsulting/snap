@@ -598,9 +598,9 @@ def create_concept(request):
 		print(request.POST['name'])
 		print("\n")
 		concept = Concept()
-		concept.name = "name"#request.POST['name']
+		concept.name = request.POST['name']
 		concept.team = request.user.coach.team
-		#concept.unit = "offense"#conceptJson['unit']
+		#concept.unit = request.user.unit
 		concept.conceptJson = conceptJson
 		concept.save()
 		return HttpResponse('')
