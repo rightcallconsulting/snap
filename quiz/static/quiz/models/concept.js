@@ -13,7 +13,7 @@
 
 var Concept = function(config) {
 	this.id = config.id || null;
-	this.name = config.name || null;
+	this.conceptName = config.conceptNname || null;
 	this.team = config.team || null;
 	this.unit = config.unit || null;
 	this.offensivePlayers = config.offensivePlayers || [];
