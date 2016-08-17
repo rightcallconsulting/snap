@@ -593,11 +593,11 @@ def create_concept(request):
 		conceptJson = request.POST['concept']
 		concept = Concept()
 		concept.name = conceptJson['name']
-		concept.team = conceptJson['team']
+		concept.team = request.user.coach.team
 		concept.unit = conceptJson['unit']
 		concept.conceptJson = conceptJson
 		concept.save()
-		return HttpResponseRedirect(reverse(''))
+		return HttpResponse('')
 	else:
 		coach = request.user.coach
 		team = coach.team
