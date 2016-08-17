@@ -597,7 +597,6 @@ def create_concept(request):
 		concept.unit = conceptJson['unit']
 		concept.conceptJson = conceptJson
 		concept.save()
-
 		return HttpResponseRedirect(reverse(''))
 	else:
 		coach = request.user.coach
