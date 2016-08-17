@@ -167,6 +167,7 @@ Concept.prototype.post = function(path, csrf_token, concept) {
 		player.startY = player.y;
 	}
 
+	var name = concept.name;
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, concept: conceptJson})
