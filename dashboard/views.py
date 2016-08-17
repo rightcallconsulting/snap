@@ -13,7 +13,7 @@ import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -592,10 +592,10 @@ def create_concept(request):
 	if request.method == "POST":
 		conceptJson = request.POST['concept']
 		concept = Concept()
-		concept.name = conceptJson['name']
+		concept.name = "New Concept"#conceptJson['name']
 		concept.team = request.user.coach.team
-		concept.unit = conceptJson['unit']
-		concept.conceptJson = conceptJson
+		concept.unit = "offense"#conceptJson['unit']
+		concept.conceptJson = ""#conceptJson
 		concept.save()
 		return HttpResponse('')
 	else:

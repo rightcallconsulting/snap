@@ -170,8 +170,10 @@ Concept.prototype.post = function(path, csrf_token, concept) {
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, concept: conceptJson})
-		.done(function() { /* use these for debugging at least */ })
-		.fail(function() { /* use these for debugging at least */ });
+		.done(function() { alert("success"); /* use these for debugging at least */ })
+		.fail(function() { alert("fail"); /* use these for debugging at least */ });
+
+	var i = 0;
 };
 
 /*********************************/
