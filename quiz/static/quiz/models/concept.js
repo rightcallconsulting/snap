@@ -15,7 +15,7 @@ var Concept = function(config) {
 	this.id = config.id || null;
 	this.conceptName = config.conceptNname || null;
 	this.team = config.team || null;
-	this.unit = config.unit || null;
+	this.unit = config.unit || "offense";
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
 	this.quarterback = config.quarterback || null;
@@ -168,9 +168,10 @@ Concept.prototype.post = function(path, csrf_token) {
 	}
 
 	var conceptName = this.name;
+	var conceptUnit = this.unit;
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
-	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, name: conceptName, concept: conceptJson})
+	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson})
 		.done(function() { alert("success"); /* use these for debugging at least */ })
 		.fail(function() { alert("fail"); /* use these for debugging at least */ });
 
