@@ -142,7 +142,7 @@ Concept.prototype.save = function (path, csrf_token) {
 			defensivePlayers: this.defensivePlayers
 		});
 
-		this.post(path, csrf_token, conceptToPost);
+		this.post(path, csrf_token);
 		this.reset();
 	} else {
 		this.feedbackMessage = "Invalid Concept";
@@ -151,7 +151,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 // post handles sending as JSON object to backend so it can be saved to the
 // database.
-Concept.prototype.post = function(path, csrf_token, concept) {
+Concept.prototype.post = function(path, csrf_token) {
 	var conceptJson = "";
 	var player;
 
@@ -167,10 +167,10 @@ Concept.prototype.post = function(path, csrf_token, concept) {
 		player.startY = player.y;
 	}
 
-	var name = concept.name;
+	var conceptName = this.name;
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
-	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, concept: conceptJson})
+	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, name: conceptName, concept: conceptJson})
 		.done(function() { alert("success"); /* use these for debugging at least */ })
 		.fail(function() { alert("fail"); /* use these for debugging at least */ });
 

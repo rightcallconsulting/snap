@@ -595,6 +595,8 @@ def create_concept(request):
 		print("\n")
 		print(request.POST['concept'])
 		print("\n")
+		print(request.POST['name'])
+		print("\n")
 		concept = Concept()
 		concept.name = "name"#request.POST['name']
 		concept.team = request.user.coach.team

@@ -200,6 +200,7 @@
 				return;
 			}
 
+			var name = concept_name.textContent;
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
 			concept.save(path, csrf_token);
