@@ -180,7 +180,7 @@ class Authentication(object):
 
 class Concept(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
 	unit = models.CharField(max_length=25, default="offense", blank=True, null=True)
 	offensivePlayers = models.ManyToManyField(Player, related_name="offensive_player")
 	defensivePlayers = models.ManyToManyField(Player, related_name="defensive_player")

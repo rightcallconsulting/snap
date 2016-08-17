@@ -592,10 +592,10 @@ def create_concept(request):
 	if request.method == "POST":
 		conceptJson = request.POST['concept']
 		concept = Concept()
-		concept.name = "New Concept"#conceptJson['name']
-		concept.team = request.user.coach.team
-		concept.unit = "offense"#conceptJson['unit']
-		concept.conceptJson = ""#conceptJson
+		#concept.name = conceptJson['name']
+		#concept.team = request.user.coach.team
+		#concept.unit = "offense"#conceptJson['unit']
+		concept.conceptJson = conceptJson
 		concept.save()
 		return HttpResponse('')
 	else:
