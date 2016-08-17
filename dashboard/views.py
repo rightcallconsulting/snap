@@ -590,7 +590,10 @@ def concepts(request):
 @login_required
 def create_concept(request):
 	if request.method == "POST":
-		return HttpResponseRedirect(reverse('playbook'))
+		conceptJson = request.POST['concept']
+		concept = Concept()
+
+		return HttpResponseRedirect(reverse(''))
 	else:
 		coach = request.user.coach
 		team = coach.team
