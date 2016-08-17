@@ -591,12 +591,6 @@ def concepts(request):
 def create_concept(request):
 	if request.method == "POST":
 		conceptJson = request.POST['concept']
-		print(request.POST)
-		print("\n")
-		print(request.POST['concept'])
-		print("\n")
-		print(request.POST['name'])
-		print("\n")
 		concept = Concept()
 		concept.name = request.POST['name']
 		concept.team = request.user.coach.team
