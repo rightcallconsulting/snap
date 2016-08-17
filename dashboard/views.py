@@ -592,6 +592,8 @@ def create_concept(request):
 	if request.method == "POST":
 		conceptJson = request.POST['concept']
 		concept = Concept()
+		concept.conceptJson = conceptJson
+		concept.save()
 
 		return HttpResponseRedirect(reverse(''))
 	else:
