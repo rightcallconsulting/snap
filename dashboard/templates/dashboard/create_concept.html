@@ -269,7 +269,7 @@
 			
 			// Load concepts from Json passed from database
 			var conceptsJsonFromDatabase = "{{ conceptsJson }}";
-			conceptsJsonFromDatabase = conceptsJsonFromDatabase.replace(/&#39;/g, '{').replace(/\\/g, "").replace(/&quot;/g, '"');
+			conceptsJsonFromDatabase = conceptsJsonFromDatabase.replace('[&#39;&quot;', '').replace('&quot;&#39;]', '')//.replace(/\\/g, '')//.replace(/&quot;/g, '"');
 
 			var myCanvas = createCanvas(width, height);
 			
