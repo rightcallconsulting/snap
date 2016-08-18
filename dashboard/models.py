@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from quiz.models import Team, Player, Formation, Play, Position, Test, Group
 from django.contrib.admin import widgets
+from django.forms.models import model_to_dict
 from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
 from datetime import datetime
@@ -189,3 +190,8 @@ class Concept(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def dictionary_for_json_seed(self):
+		result_dictionary = model_to_dict(self)
+
+		return result_dictionary

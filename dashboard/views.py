@@ -602,9 +602,13 @@ def create_concept(request):
 		coach = request.user.coach
 		team = coach.team
 		concepts = team.concept_set.all()
+		conceptsJson = []
+		for concept in concepts:
+			conceptsJson.append(json.dumps(concept))
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
+			'conceptsJson': conceptsJson,
 			'page_header': 'CREATE CONCEPT',
 		})
 
