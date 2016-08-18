@@ -268,8 +268,14 @@
 			//}
 			
 			// Load concepts from Json passed from database
-			var conceptsJsonFromDatabase = "{{ conceptsJson }}";
-			conceptsJsonFromDatabase = conceptsJsonFromDatabase.replace('[&#39;&quot;', '').replace('&quot;&#39;]', '')//.replace(/\\/g, '')//.replace(/&quot;/g, '"');
+				var existingConcepts = [];
+
+				{% for conceptJson in conceptsJson %}
+				var conceptsJsonFromDatabase = "{{ conceptsJson }}";
+				conceptsJsonFromDatabase = conceptsJsonFromDatabase.replace('[&#39;&quot;', '').replace('&quot;&#39;]', '').replace(/\\/g, '').replace(/&quot;/g, '"');
+
+				//var existingConcepts = JSON.parse(conceptsJsonFromDatabase);
+			{% endfor %}
 
 			var myCanvas = createCanvas(width, height);
 			
