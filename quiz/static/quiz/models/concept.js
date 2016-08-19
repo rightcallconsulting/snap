@@ -182,8 +182,24 @@ Concept.prototype.post = function(path, csrf_token) {
 /*     Non object functions      */
 /*********************************/
 
-function createConceptFromJson() {
+function createConceptFromJson(conceptJsonDictionary) {
+	var offensivePlayersArray;
+	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
+		var player = new Player({});
+	}
 
+	var defensivePlayersArray;
+
+	var result = new Concept({
+		name: conceptJsonDictionary.name,
+		team: conceptJsonDictionary.team,
+		unit: conceptJsonDictionary.unit,
+		offensivePlayers: offensivePlayersArray,
+		defensivePlayers: defensivePlayersArray,
+		quarterback: concepts[i].quarterback,
+		offensiveLinemen: concepts[i].offensiveLinemen,
+		eligibleReceivers: concepts[i].eligibleReceivers
+	});
 };
 
 /*********************************/
