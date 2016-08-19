@@ -228,21 +228,21 @@ function createConceptFromJson(conceptJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	var offensiveLinemanArray = [];
+	var offensiveLinemenArray = [];
 	if (conceptJsonDictionary.offensiveLineman != null) {
 		for (var i = 0; i < conceptJsonDictionary.offensiveLineman.length; ++i) {
 			var player = new Player({
-				num: conceptJsonDictionary.offensiveLineman[i].num, 
-				pos: conceptJsonDictionary.offensiveLineman[i].pos,
-				red: conceptJsonDictionary.offensiveLineman[i].red, 
-				green: conceptJsonDictionary.offensiveLineman[i].green, 
-				blue: conceptJsonDictionary.offensiveLineman[i].blue,
-				unit: conceptJsonDictionary.offensiveLineman[i].unit,
-				eligible: conceptJsonDictionary.offensiveLineman[i].eligible,
-				siz: conceptJsonDictionary.offensiveLineman[i].siz
+				num: conceptJsonDictionary.offensiveLinemen[i].num, 
+				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
+				red: conceptJsonDictionary.offensiveLinemen[i].red, 
+				green: conceptJsonDictionary.offensiveLinemen[i].green, 
+				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
+				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
+				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
+				siz: conceptJsonDictionary.offensiveLinemen[i].siz
 			});
 
-			offensiveLinemanArray.push(player);
+			offensiveLinemenArray.push(player);
 		}
 	}
 
