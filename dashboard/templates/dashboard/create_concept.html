@@ -55,7 +55,7 @@
 						{% for concept in concepts %}
 							<tr>
 								<td>
-									<button class="btn btn-primary" onclick="changeSelected(this)">
+									<button class="btn btn-primary" onclick="changeSelected(this)" name="{{ concept.name }}">
 										{{ concept.name }}
 									</button>
 								</td>
@@ -172,7 +172,7 @@
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success");
 
-				var concept_name = new_selected.textContent.replace(/\n/g, "");
+				var concept_name = new_selected.getAttribute("name");
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
