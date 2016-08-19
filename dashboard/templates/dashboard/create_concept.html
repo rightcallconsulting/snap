@@ -172,7 +172,7 @@
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success");
 
-				var concept_name = new_selected.textContent;
+				var concept_name = new_selected.textContent.replace(/\n/g, "");
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
