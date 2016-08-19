@@ -183,6 +183,17 @@ Concept.prototype.post = function(path, csrf_token) {
 /*********************************/
 
 function createConceptFromJson(conceptJsonDictionary) {
+	var quarterback = new Player({
+		num: conceptJsonDictionary.quarterback.num, 
+		pos: conceptJsonDictionary.quarterback.pos,
+		red: conceptJsonDictionary.quarterback.red, 
+		green: conceptJsonDictionary.quarterback.green, 
+		blue: conceptJsonDictionary.quarterback.blue,
+		unit: conceptJsonDictionary.quarterback.unit,
+		eligible: conceptJsonDictionary.quarterback.eligible,
+		siz: conceptJsonDictionary.quarterback.siz
+	});
+
 	var offensivePlayersArray;
 	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
 		var player = new Player({
@@ -210,17 +221,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 			siz: conceptJsonDictionary.defensivePlayers[i].siz
 		});
 	}
-
-	var quarterback = new Player({
-		num: conceptJsonDictionary.quarterback.num, 
-		pos: conceptJsonDictionary.quarterback.pos,
-		red: conceptJsonDictionary.quarterback.red, 
-		green: conceptJsonDictionary.quarterback.green, 
-		blue: conceptJsonDictionary.quarterback.blue,
-		unit: conceptJsonDictionary.quarterback.unit,
-		eligible: conceptJsonDictionary.quarterback.eligible,
-		siz: conceptJsonDictionary.quarterback.siz
-	});
 
 	var offensivePlayersArray;
 	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
