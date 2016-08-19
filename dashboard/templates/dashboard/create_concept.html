@@ -176,7 +176,16 @@
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
-						concept = concepts[i];
+						concept = new Concept({
+							name: concepts[i].name,
+							team: concepts[i].team,
+							unit: concepts[i].unit,
+							offensivePlayers: concepts[i].offensivePlayers,
+							defensivePlayers: concepts[i].defensivePlayers,
+							quarterback: concepts[i].quarterback,
+							offensiveLinemen: concepts[i].offensiveLinemen,
+							eligibleReceivers: concepts[i].eligibleReceivers
+						});
 					}
 				}
 			}
