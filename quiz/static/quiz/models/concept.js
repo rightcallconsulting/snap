@@ -206,6 +206,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz
 		});
+
+		offensivePlayersArray.push(player);
 	}
 
 	var defensivePlayersArray;
@@ -220,6 +222,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.defensivePlayers[i].siz
 		});
+
+		defensivePlayersArray.push(player);
 	}
 
 	var offensiveLinemanArray;
@@ -234,6 +238,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			eligible: conceptJsonDictionary.offensiveLineman[i].eligible,
 			siz: conceptJsonDictionary.offensiveLineman[i].siz
 		});
+
+		offensiveLinemanArray.push(player);
 	}
 
 	var eligibleReceiversArray;
@@ -248,6 +254,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			eligible: conceptJsonDictionary.eligibleReceivers[i].eligible,
 			siz: conceptJsonDictionary.eligibleReceivers[i].siz
 		});
+
+		eligibleReceiversArray.push(player);
 	}
 
 	var result = new Concept({
