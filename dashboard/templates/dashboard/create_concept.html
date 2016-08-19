@@ -285,7 +285,7 @@
 			conceptJsonFromDatabase = conceptJsonFromDatabase.slice(6, jsonStringLength-6);
 			conceptJsonFromDatabase = conceptJsonFromDatabase.replace(/\&quot;/g, '"');
 
-			concepts.push(JSON.parse(conceptJsonFromDatabase));
+			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}
 
 			// Create canvas and top/bottom bars

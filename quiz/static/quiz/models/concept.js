@@ -268,6 +268,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 		offensiveLinemen: offensiveLinemen,
 		eligibleReceivers: eligibleReceivers
 	});
+
+	return result;
 };
 
 /*********************************/
