@@ -182,6 +182,10 @@ Concept.prototype.post = function(path, csrf_token) {
 /*     Non object functions      */
 /*********************************/
 
+function createConceptFromJson() {
+
+};
+
 /*********************************/
 /* Static functions for concepts */
 /*********************************/
