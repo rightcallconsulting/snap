@@ -171,6 +171,14 @@
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success");
+
+				var concept_name = new_selected.textContent;
+
+				for (var i = 0; i < concepts.length; ++i) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i];
+					}
+				}
 			}
 		};
 
@@ -268,15 +276,19 @@
 			//}
 			
 			// Load concepts from Json passed from database
-				var existingConcepts = [];
+			var jsonStringLength = 0;
+			var conceptJsonFromDatabase = ""; 
 
-				{% for conceptJson in conceptsJson %}
-				var conceptsJsonFromDatabase = "{{ conceptsJson }}";
-				conceptsJsonFromDatabase = conceptsJsonFromDatabase.replace('[&#39;&quot;', '').replace('&quot;&#39;]', '').replace(/\\/g, '').replace(/&quot;/g, '"');
+			{% for conceptJson in conceptsJson %}
+			conceptJsonFromDatabase = "{{ conceptJson }}";
+			jsonStringLength = conceptJsonFromDatabase.length;
+			conceptJsonFromDatabase = conceptJsonFromDatabase.slice(6, jsonStringLength-6);
+			conceptJsonFromDatabase = conceptJsonFromDatabase.replace(/\&quot;/g, '"');
 
-				//var existingConcepts = JSON.parse(conceptsJsonFromDatabase);
+			concepts.push(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
+			// Create canvas and top/bottom bars
 			var myCanvas = createCanvas(width, height);
 			
 			field.height = height;
