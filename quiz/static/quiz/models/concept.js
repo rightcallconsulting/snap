@@ -185,6 +185,10 @@ Concept.prototype.post = function(path, csrf_token) {
 function createConceptFromJson(conceptJsonDictionary) {
 	if (conceptJsonDictionary.quarterback != null) {	
 		var quarterback = new Player({
+			x: conceptJsonDictionary.quarterback.x,
+			y: conceptJsonDictionary.quarterback.y,
+			startX: conceptJsonDictionary.quarterback.startX,
+			startY: conceptJsonDictionary.quarterback.startY,
 			num: conceptJsonDictionary.quarterback.num, 
 			pos: conceptJsonDictionary.quarterback.pos,
 			red: conceptJsonDictionary.quarterback.red, 
@@ -199,6 +203,10 @@ function createConceptFromJson(conceptJsonDictionary) {
 	var offensivePlayersArray = [];
 	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
 		var player = new Player({
+			x: conceptJsonDictionary.offensivePlayers.x,
+			y: conceptJsonDictionary.offensivePlayers.y,
+			startX: conceptJsonDictionary.offensivePlayers.startX,
+			startY: conceptJsonDictionary.offensivePlayers.startY,
 			num: conceptJsonDictionary.offensivePlayers[i].num, 
 			pos: conceptJsonDictionary.offensivePlayers[i].pos,
 			red: conceptJsonDictionary.offensivePlayers[i].red, 
@@ -215,6 +223,10 @@ function createConceptFromJson(conceptJsonDictionary) {
 	var defensivePlayersArray = [];
 	for (var i = 0; i < conceptJsonDictionary.defensivePlayers.length; ++i) {
 		var player = new Player({
+			x: conceptJsonDictionary.defensivePlayers.x,
+			y: conceptJsonDictionary.defensivePlayers.y,
+			startX: conceptJsonDictionary.defensivePlayers.startX,
+			startY: conceptJsonDictionary.defensivePlayers.startY,
 			num: conceptJsonDictionary.defensivePlayers[i].num, 
 			pos: conceptJsonDictionary.defensivePlayers[i].pos,
 			red: conceptJsonDictionary.defensivePlayers[i].red, 
@@ -230,8 +242,12 @@ function createConceptFromJson(conceptJsonDictionary) {
 
 	var offensiveLinemenArray = [];
 	if (conceptJsonDictionary.offensiveLineman != null) {
-		for (var i = 0; i < conceptJsonDictionary.offensiveLineman.length; ++i) {
+		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
 			var player = new Player({
+				x: conceptJsonDictionary.offensiveLinemen.x,
+				y: conceptJsonDictionary.offensiveLinemen.y,
+				startX: conceptJsonDictionary.offensiveLinemen.startX,
+				startY: conceptJsonDictionary.offensiveLinemen.startY,
 				num: conceptJsonDictionary.offensiveLinemen[i].num, 
 				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
 				red: conceptJsonDictionary.offensiveLinemen[i].red, 
@@ -250,6 +266,10 @@ function createConceptFromJson(conceptJsonDictionary) {
 	if (conceptJsonDictionary.offensiveLineman != null) {
 		for (var i = 0; i < conceptJsonDictionary.eligibleReceivers.length; ++i) {
 			var player = new Player({
+				x: conceptJsonDictionary.eligibleReceivers.x,
+				y: conceptJsonDictionary.eligibleReceivers.y,
+				startX: conceptJsonDictionary.eligibleReceivers.startX,
+				startY: conceptJsonDictionary.eligibleReceivers.startY,
 				num: conceptJsonDictionary.eligibleReceivers[i].num, 
 				pos: conceptJsonDictionary.eligibleReceivers[i].pos,
 				red: conceptJsonDictionary.eligibleReceivers[i].red, 
