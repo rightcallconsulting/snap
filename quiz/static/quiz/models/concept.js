@@ -179,6 +179,10 @@ Concept.prototype.post = function(path, csrf_token) {
 };
 
 /*********************************/
+/*     Non object functions      */
+/*********************************/
+
+/*********************************/
 /* Static functions for concepts */
 /*********************************/
 

@@ -1123,34 +1123,34 @@ var getDestination = function(distance, theta, x, y){
 
 
 var createPlayerFromJSONSeed = function(jsonPosition){
-  jsonPosition.x = jsonPosition.startX;
-  jsonPosition.y = jsonPosition.startY;
-  var routeCoordinates = JSON.parse(jsonPosition.routeCoordinates);
-  //var runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
-  var player = new Player(jsonPosition)
-  player.id = jsonPosition.pk;
-  player.blockingAssignmentUnitIndex = jsonPosition.blockingAssignmentUnitIndex
-  player.blockingAssignmentPlayerIndex = jsonPosition.blockingAssignmentPlayerIndex
-  player.runCoordinates = JSON.parse(jsonPosition.runCoordinates);
-  player.pos = jsonPosition.name;
-  player.num = jsonPosition.name;
-  player.routeCoordinates = [[player.startX, player.startY]]
-  if(routeCoordinates){
-	player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
-  }
+	jsonPosition.x = jsonPosition.startX;
+	jsonPosition.y = jsonPosition.startY;
+	var routeCoordinates = JSON.parse(jsonPosition.routeCoordinates);
+	//var runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
+	var player = new Player(jsonPosition)
+	player.id = jsonPosition.pk;
+	player.blockingAssignmentUnitIndex = jsonPosition.blockingAssignmentUnitIndex
+	player.blockingAssignmentPlayerIndex = jsonPosition.blockingAssignmentPlayerIndex
+	player.runCoordinates = JSON.parse(jsonPosition.runCoordinates);
+	player.pos = jsonPosition.name;
+	player.num = jsonPosition.name;
+	player.routeCoordinates = [[player.startX, player.startY]]
+	if(routeCoordinates){
+		player.breakPoints = routeCoordinates.slice(1, routeCoordinates.length);
+	}
 
-  if(jsonPosition.gapYardY){
-	player.gapYPoint = jsonPosition.gapYardY;
-	player.gapXPoint = jsonPosition.gapYardX;
-  }
-  if(jsonPosition.zoneYardY){
-	player.zoneYPoint = jsonPosition.zoneYardY;
-	player.zoneXPoint = jsonPosition.zoneYardX;
-  }
+	if(jsonPosition.gapYardY){
+		player.gapYPoint = jsonPosition.gapYardY;
+		player.gapXPoint = jsonPosition.gapYardX;
+	}
+	if(jsonPosition.zoneYardY){
+		player.zoneYPoint = jsonPosition.zoneYardY;
+		player.zoneXPoint = jsonPosition.zoneYardX;
+	}
 
-  player.establishFill();
+	player.establishFill();
 
-  return player;
+	return player;
 };
 
 var createPlayerFromJSON = function(jsonPosition){
