@@ -729,17 +729,29 @@ def run_ol_view_test(request, test_id):
     })
 
 def run_cb_view_test(request, test_id):
-    test = Test.objects.filter(pk=test_id)[0]
-    test.change_in_progress_status(request.user)
-    if len(test.play_set.all()) > 0:
-        has_plays = True
-    else:
-        has_plays = False
-    return render(request, 'quiz/cb_assignment.html', {
-        'test': test,
-        'has_plays': has_plays,
-        'page_header': 'CB TEST',
-    })
+	test = Test.objects.filter(pk=test_id)[0]
+	test.change_in_progress_status(request.user)
+	if len(test.play_set.all()) > 0:
+		has_plays = True
+	else:
+		has_plays = False
+	return render(request, 'quiz/cb_assignment.html', {
+		'test': test,
+		'has_plays': has_plays,
+		'page_header': 'CB TEST',
+	})
+
+def concept_identification_quiz(request, test_id):
+	test = Test.objects.filter(pk=test_id)[0]
+	if len(test.play_set.all()) > 0:
+		has_concepts = True
+	else:
+		has_concepts = False
+	return render(request, 'quiz/concept_identification_quiz.html', {
+		'test': test,
+		'has_plays': has_plays,
+		'page_header': 'CB TEST',
+	})
 
 def single_test(request, test_id):
     test = Test.objects.filter(pk=test_id)

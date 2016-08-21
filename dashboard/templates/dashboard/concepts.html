@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div id="create-formation" class="create-formation padding-md">
+	<div id="create-concept" class="create-concept padding-md">
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Concept Name</p>
@@ -44,35 +44,14 @@
 			</div>
 		</div>
 		
-		<div id="choose-existing-formation" class="col-md-3 bordered-div">
+		<div id="choose-existing-concept" class="col-md-3 bordered-div">
 			<div id="header-box" class="header">
-				Existing Concepts
+				Concepts
 			</div>
 
-			<div class="table-wrapper formation-table">
+			<div class="table-wrapper concept-table">
 				<table>
 					<tbody>
-						<tr>
-							<td>
-								<button static="swoop" class="btn btn-primary" onclick="changeSelected(this)">
-									Swoop
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<button static="cat" class="btn btn-primary" onclick="changeSelected(this)">
-									Cat
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<button static="to" class="btn btn-primary" onclick="changeSelected(this)">
-									T.O.
-								</button>
-							</td>
-						</tr>
 						{% for concept in concepts %}
 							<tr>
 								<td>
@@ -86,7 +65,7 @@
 				</table>
 			</div>
 		</div>
-	</div><!--/create-formation-->
+	</div><!--/create-concept-->
 
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
 	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
@@ -109,14 +88,14 @@
 		$(document).click(function(event) {
 			if ($("#header-box").hasClass("selected")) {
 				$("#header-box").removeClass("selected");
-				var formation_name = document.getElementById("formation-name");
+				var concept_name = document.getElementById("concept-name");
 
-				if (formation_name === null) {
+				if (concept_name === null) {
 					addHeaderPlaceholder();
 				}
 
-				if (formation_name != null && formation_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(formation_name);
+				if (concept_name != null && concept_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(concept_name);
 					addHeaderPlaceholder();
 				}
 			}
@@ -145,10 +124,10 @@
 
 		function removeHeaderName() {
 			var header_box = document.getElementById("header-box");
-			var formation_name = document.getElementById("formation-name");
+			var concept_name = document.getElementById("concept-name");
 
-			if (formation_name != null) {
-				header_box.removeChild(formation_name);
+			if (concept_name != null) {
+				header_box.removeChild(concept_name);
 			}
 		};
 
@@ -158,7 +137,7 @@
 
 			var placeholder = document.createElement("p");
 			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Formation Name";
+			placeholder.textContent = "Enter concept Name";
 			header_box.appendChild(placeholder);
 		};
 
@@ -168,7 +147,7 @@
 
 			var error_message = document.createElement("p");
 			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Formation Name";
+			error_message.textContent = "Invalid concept Name";
 			header_box.appendChild(error_message);
 		};
 
@@ -205,7 +184,7 @@
 
 		$("#save-button").click(function(event) {
 			var placeholder_message = document.getElementById("placeholder-message");
-			var formation_name = document.getElementById("formation-name");
+			var concept_name = document.getElementById("concept-name");
 
 			if (placeholder_message != null) {
 				removeHeaderPlaceholderAndError();
@@ -213,15 +192,15 @@
 				return;
 			}
 
-			if (formation_name != null && formation_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(formation_name);
+			if (concept_name != null && concept_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(concept_name);
 				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
 			}
 
 			// I don't think this will ever happen, but I'm not sure.
-			if (formation_name === null) {
+			if (concept_name === null) {
 				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
@@ -277,7 +256,7 @@
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
 			var display_box_footer = display_box.querySelector(".display-buttons");
-			var sidebar = document.getElementById("choose-existing-formation");
+			var sidebar = document.getElementById("choose-existing-concept");
 			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
@@ -285,7 +264,7 @@
 
 			var quiz_box_div = document.getElementById("quiz-box");
 			//var new_canvas = document.createElement("canvas");
-			//new_canvas.id = "create-formation";
+			//new_canvas.id = "create-concept";
 			//new_canvas.height = height;
 			//new_canvas.width = width;
 
@@ -343,7 +322,7 @@
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
 				var display_box_footer = display_box.querySelector(".display-buttons");
-				var sidebar = document.getElementById("choose-existing-formation");
+				var sidebar = document.getElementById("choose-existing-concept");
 				var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 				var width = display_box.offsetWidth - 4;
 
@@ -465,15 +444,15 @@
 
 		function keyTyped() {
 			if ($("#header-box").hasClass("selected")) {
-				var formation_name = document.getElementById("formation-name");
+				var concept_name = document.getElementById("concept-name");
 
-				if (formation_name === null) {
-					formation_name = document.createElement("p");
-					formation_name.setAttribute("id", "formation-name");
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
 				}
 
-				document.getElementById("header-box").appendChild(formation_name);
-				var string_length = formation_name.textContent.length;
+				document.getElementById("header-box").appendChild(concept_name);
+				var string_length = concept_name.textContent.length;
 
 				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
 					removeHeaderPlaceholderAndError();
@@ -483,7 +462,7 @@
 					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
 						if (string_length <= 100){
-							formation_name.textContent += key;
+							concept_name.textContent += key;
 						}
 					}
 
@@ -494,20 +473,20 @@
 		};
 
 		function keyPressed() {
-			var formation_name = document.getElementById("formation-name");
-			var string_length = formation_name.textContent.length;
+			var concept_name = document.getElementById("concept-name");
+			var string_length = concept_name.textContent.length;
 
 			if (keyCode == BACKSPACE) {
-				if (formation_name != null) {
+				if (concept_name != null) {
 					if(string_length > 0) {
-						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
+						concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
 					}
 				}
 
 				return false;
 			} else if (keyCode == 32) {
-				if (formation_name != null && string_length < 100) {
-					formation_name.textContent += ' ';
+				if (concept_name != null && string_length < 100) {
+					concept_name.textContent += ' ';
 				}
 
 				return false;
@@ -518,25 +497,25 @@
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
 		/*function pressSave() {
-			if(new_formation.validFormation()) {
-				new_formation.eligibleReceivers.forEach(function(player){
+			if(new_concept.validconcept()) {
+				new_concept.eligibleReceivers.forEach(function(player){
 					player.convertRouteDrawingToBreakPoints();
 				});
-				var newFormation = new Formation({
-					eligibleReceivers: new_formation.eligibleReceivers,
-					playName: new_formation.playName,
-					qb: new_formation.qb,
-					oline: new_formation.oline,
-					offensivePlayers: new_formation.offensivePlayers,
-					unit: new_formation.unit
+				var newconcept = new concept({
+					eligibleReceivers: new_concept.eligibleReceivers,
+					playName: new_concept.playName,
+					qb: new_concept.qb,
+					oline: new_concept.oline,
+					offensivePlayers: new_concept.offensivePlayers,
+					unit: new_concept.unit
 				});
 
-				newFormation.saveToDB();
-				new_formation.removeAllPlayers();
-				new_formation.playName = "";
-				new_formation.feedbackMessage = "Saved!";
+				newconcept.saveToDB();
+				new_concept.removeAllPlayers();
+				new_concept.playName = "";
+				new_concept.feedbackMessage = "Saved!";
 			} else {
-				new_formation.feedbackMessage = "Invalid Formation";
+				new_concept.feedbackMessage = "Invalid concept";
 			}
 		};*/
 
@@ -574,15 +553,15 @@
 
 		/*mouseClicked = function() {
 			var field = createPlayField;
-			var eligibleReceivers = getCurrentFormation().eligibleReceivers;
-			var selectedWR = getCurrentFormation().findSelectedWR();
-			var olClicked = getCurrentFormation().mouseInOL(field);
-			var receiverClicked = getCurrentFormation().mouseInReceiverOrNode(field)[0];
-			var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
-			var selectedOL = getCurrentFormation().findSelectedOL();
+			var eligibleReceivers = getCurrentconcept().eligibleReceivers;
+			var selectedWR = getCurrentconcept().findSelectedWR();
+			var olClicked = getCurrentconcept().mouseInOL(field);
+			var receiverClicked = getCurrentconcept().mouseInReceiverOrNode(field)[0];
+			var selectedNode = getCurrentconcept().mouseInReceiverOrNode(field)[1];
+			var selectedOL = getCurrentconcept().findSelectedOL();
 			
 			if (getCurrentDefensivePlay() != null) {
-				var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
+				var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentconcept(), field);
 				var selectedDL = getCurrentDefensivePlay().findSelectedDL();
 			}
 
@@ -594,7 +573,7 @@
 				}
 			} else if (receiverClicked) {
 				var playerSelected = false;
-				getCurrentFormation().clearPreviousRouteDisplays();
+				getCurrentconcept().clearPreviousRouteDisplays();
 
 				for(var i = 0; i < eligibleReceivers.length; i++) {
 					if(receiverClicked.clicked) {
@@ -658,15 +637,15 @@
 
 		/* //Might need this function later
 		mouseClicked = function() {
-			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
-			selectedWR = new_formation.findSelectedWR();
+			var receiverClicked = new_concept.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_concept.findSelectedWR();
 
-			if(new_formation.establishingNewPlayer) {
-				if(isInsideTrash(new_formation.establishingNewPlayer)) {
-					new_formation.deletePlayer(new_formation.establishingNewPlayer);
+			if(new_concept.establishingNewPlayer) {
+				if(isInsideTrash(new_concept.establishingNewPlayer)) {
+					new_concept.deletePlayer(new_concept.establishingNewPlayer);
 				}
-				new_formation.establishingNewPlayer.change = false;
-				new_formation.establishingNewPlayer = null;
+				new_concept.establishingNewPlayer.change = false;
+				new_concept.establishingNewPlayer = null;
 			}
 		};*/
 
@@ -692,25 +671,25 @@
 			var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
 			var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 			if(key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10) || key === ' ') {
-				new_formation.playName += key;
-				$('#play-name').text("New Formation: " + new_formation.playName);
+				new_concept.playName += key;
+				$('#play-name').text("New concept: " + new_concept.playName);
 			}
 			// return false to prevent default behavior			
 			return false;
 		};*/
 
 		/*mouseDragged = function() {
-			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
-			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
-			var centerClicked = new_formation.mouseInCenter(field);
-			if (new_formation.establishingNewPlayer) {
-				new_formation.establishingNewPlayer.movePlayer(field);
+			var receiverClicked = new_concept.mouseInReceiverOrNode(field)[0];
+			var positionOptionSelected = new_concept.mouseInOptionsToCreate(field);
+			var centerClicked = new_concept.mouseInCenter(field);
+			if (new_concept.establishingNewPlayer) {
+				new_concept.establishingNewPlayer.movePlayer(field);
 			} else if (receiverClicked) {
 				receiverClicked.change = receiverClicked.change ?  false : true;
-				new_formation.establishingNewPlayer = receiverClicked;
-			} else if (new_formation.qb[0].isMouseInside(field)) {
-				new_formation.qb[0].change = new_formation.qb[0].change ?  false : true;
-				new_formation.establishingNewPlayer = new_formation.qb[0];
+				new_concept.establishingNewPlayer = receiverClicked;
+			} else if (new_concept.qb[0].isMouseInside(field)) {
+				new_concept.qb[0].change = new_concept.qb[0].change ?  false : true;
+				new_concept.establishingNewPlayer = new_concept.qb[0];
 			} else if(centerClicked) {
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - centerClicked.x;
@@ -723,8 +702,8 @@
 					xDiff = 0;
 				}
 
-				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
-					var p = new_formation.offensivePlayers[i];
+				for(var i = 0; i < new_concept.offensivePlayers.length; i++) {
+					var p = new_concept.offensivePlayers[i];
 					p.x += xDiff;
 				}
 
@@ -760,24 +739,24 @@
 					pos: positionOptionSelected.pos
 				});
 
-				new_formation.createPlayer(newPlayer);
+				new_concept.createPlayer(newPlayer);
 			}
 			
-			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
-			selectedWR = new_formation.findSelectedWR();
+			var receiverClicked = new_concept.mouseInReceiverOrNode(field)[0];
+			selectedWR = new_concept.findSelectedWR();
 		};*/
 
 		// These are things I am going to rewrite without using jQuery - Dylan
-		/*$('.formation-button').click(function() {
-			var starterFormation = formations.filter(function(formationObject){
-				return formationObject.name === this.value;
+		/*$('.concept-button').click(function() {
+			var starterconcept = concepts.filter(function(conceptObject){
+				return conceptObject.name === this.value;
 			}.bind(this))[0]
 
-			starterFormation.optionsToCreate = new_formation.optionsToCreate;
-			new_formation = starterFormation;
-			new_formation.playName = "";
+			starterconcept.optionsToCreate = new_concept.optionsToCreate;
+			new_concept = starterconcept;
+			new_concept.playName = "";
 
-			$('#play-image-header').text("New Formation: " + new_formation.playName);
+			$('#play-image-header').text("New concept: " + new_concept.playName);
 		});
 
 		$('#save-button').click(function(){
@@ -835,24 +814,24 @@
 			trash.height = trashHeight;
 			trash.x = trashX;
 			trash.y = trashY;
-			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
-				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
+			for(var i = 0; i < new_concept.optionsToCreate.length; i++) {
+				new_concept.optionsToCreate[i].y = trashY - trashHeight/2;
 			}
 		};
 
 		/*var draw = function() {
 			if(makeJSONCall) {
 				makeJSONCall = false;
-				$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations', function(data, jqXHR) {
-					data.forEach(function(formationObject) {
-						formationObject.fields.id = formationObject.pk;
-						formationObject.fields.positions = [];
-						var newFormation = new Formation(formationObject.fields);
-						newFormation.playName = formationObject.fields.name;
-						formations.push(newFormation);
+				$.getJSON('/quiz/teams/'+teamIDFromHTML+'/concepts', function(data, jqXHR) {
+					data.forEach(function(conceptObject) {
+						conceptObject.fields.id = conceptObject.pk;
+						conceptObject.fields.positions = [];
+						var newconcept = new concept(conceptObject.fields);
+						newconcept.playName = conceptObject.fields.name;
+						concepts.push(newconcept);
 					})
 
-					$.getJSON('/quiz/teams/'+teamIDFromHTML+'/formations/positions', function(data, jqXHR) {
+					$.getJSON('/quiz/teams/'+teamIDFromHTML+'/concepts/positions', function(data, jqXHR) {
 						data.forEach(function(position) {
 							position.fields.id = position.pk;
 							position.fields.x = position.fields.startX;
@@ -869,14 +848,14 @@
 								newPlayer.setFill(255, 0, 0);
 							}
 							
-							formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-							if(formation) {
-								formation.positions.push(newPlayer);
+							concept = concepts.filter(function(concept){return concept.id == position.fields.concept})[0]
+							if(concept) {
+								concept.positions.push(newPlayer);
 							}
 						});
 
-						formations.forEach(function(formation){
-							formation.populatePositions();
+						concepts.forEach(function(concept){
+							concept.populatePositions();
 						});
 						runTest();
 					});

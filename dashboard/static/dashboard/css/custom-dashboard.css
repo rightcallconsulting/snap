@@ -551,7 +551,11 @@ player homepage
   width: 500px;
 }
 
-.formation-button, .offensive-formation-button, .group-button {
+.formation-button, 
+.concept-button, 
+.offensive-formation-button,
+.offensive-concept-button, 
+.group-button {
   width: 90%;
   height: 90%;
   margin-left: 5%;
@@ -820,7 +824,9 @@ input.create-quiz{
 	height: 75px;
 }
 
-.formation-list, .play-list {
+.formation-list,
+.concept-list, 
+.play-list {
 	width: 90%;
 	margin-left: auto;
 	margin-right: auto;
@@ -1181,7 +1187,8 @@ input.create-quiz{
 }
 
 .play-link, 
-.formation-link {
+.formation-link, 
+.concept-link {
 	margin-left: 4px;
 	color: #C5E1A5;
 }
@@ -1361,7 +1368,8 @@ select#id_player {
 	text-align: right;
 }
 
-div#create-formation div#choose-existing-formation {
+div#create-formation div#choose-existing-formation,
+div#create-concept div#choose-existing-concept {
 	height: 78vh;
 }
 
@@ -1379,16 +1387,19 @@ div.header.placeholder {
 	color: silver;
 }
 
-div.formation-table table {
+div.formation-table table,
+div.concept-table table {
 	width: 100%;
 	text-align: center;
 }
 
-div.formation-table td {
+div.formation-table td,
+div.concept-table td {
 	padding: 1%;
 }
 
-div.formation-table button {
+div.formation-table button,
+div.concept-table button {
 	width: 95%;
 	height: 95%;
 	min-height: 50px;
