@@ -183,24 +183,12 @@ Concept.prototype.post = function(path, csrf_token) {
 /*********************************/
 
 function createConceptFromJson(conceptJsonDictionary) {
-	if (conceptJsonDictionary.quarterback != null) {	
-		var quarterback = new Player({
-			x: conceptJsonDictionary.quarterback.x,
-			y: conceptJsonDictionary.quarterback.y,
-			startX: conceptJsonDictionary.quarterback.startX,
-			startY: conceptJsonDictionary.quarterback.startY,
-			num: conceptJsonDictionary.quarterback.num, 
-			pos: conceptJsonDictionary.quarterback.pos,
-			red: conceptJsonDictionary.quarterback.red, 
-			green: conceptJsonDictionary.quarterback.green, 
-			blue: conceptJsonDictionary.quarterback.blue,
-			unit: conceptJsonDictionary.quarterback.unit,
-			eligible: conceptJsonDictionary.quarterback.eligible,
-			siz: conceptJsonDictionary.quarterback.siz
-		});
-	}
-
+	var quarterback;
 	var offensivePlayersArray = [];
+	var defensivePlayersArray = [];
+	var offensiveLinemenArray = [];
+	var eligibleReceiversArray = [];
+
 	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
 		var player = new Player({
 			x: conceptJsonDictionary.offensivePlayers[i].x,
@@ -217,10 +205,17 @@ function createConceptFromJson(conceptJsonDictionary) {
 			siz: conceptJsonDictionary.offensivePlayers[i].siz
 		});
 
+		if (player.pos === "QB") {
+			quarterback = player;
+		}
+
+		if (player.eligible === true) {
+			eligibleReceiversArray.push(player);
+		}
+
 		offensivePlayersArray.push(player);
 	}
 
-	var defensivePlayersArray = [];
 	for (var i = 0; i < conceptJsonDictionary.defensivePlayers.length; ++i) {
 		var player = new Player({
 			x: conceptJsonDictionary.defensivePlayers[i].x,
@@ -240,7 +235,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	var offensiveLinemenArray = [];
 	if (conceptJsonDictionary.offensiveLineman != null) {
 		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
 			var player = new Player({
@@ -262,27 +256,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		}
 	}
 
-	var eligibleReceiversArray = [];
-	if (conceptJsonDictionary.offensiveLineman != null) {
-		for (var i = 0; i < conceptJsonDictionary.eligibleReceivers.length; ++i) {
-			var player = new Player({
-				x: conceptJsonDictionary.eligibleReceivers[i].x,
-				y: conceptJsonDictionary.eligibleReceivers[i].y,
-				startX: conceptJsonDictionary.eligibleReceivers[i].startX,
-				startY: conceptJsonDictionary.eligibleReceivers[i].startY,
-				num: conceptJsonDictionary.eligibleReceivers[i].num, 
-				pos: conceptJsonDictionary.eligibleReceivers[i].pos,
-				red: conceptJsonDictionary.eligibleReceivers[i].red, 
-				green: conceptJsonDictionary.eligibleReceivers[i].green, 
-				blue: conceptJsonDictionary.eligibleReceivers[i].blue,
-				unit: conceptJsonDictionary.eligibleReceivers[i].unit,
-				eligible: conceptJsonDictionary.eligibleReceivers[i].eligible,
-				siz: conceptJsonDictionary.eligibleReceivers[i].siz
-			});
-
-			eligibleReceiversArray.push(player);
-		}
-	}
+	//for (var i = 0; i < offensivePlayers)
 
 	var result = new Concept({
 		name: conceptJsonDictionary.name,
