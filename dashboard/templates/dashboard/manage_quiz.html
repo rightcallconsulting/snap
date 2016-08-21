@@ -238,10 +238,10 @@
 					{ csrfmiddlewaretoken: csrf_token, play_id: playID, add_or_remove: addOrRemovePlay, defense: false }
 				).done(function() {
 					console.log("The play was successfully added to the quiz.");
-					alert("play added to quiz");
+					alert( /* use these for debugging later */ );
 				}).fail(function() {
 					console.log("error posting play.");
-					alert( "There was an error adding this play to the quiz." );
+					alert( /* use these for debugging later */ );
 				});
 			
 			if( playDomElement.hasClass('play-add-button') ) {

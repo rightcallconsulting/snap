@@ -172,8 +172,8 @@ Concept.prototype.post = function(path, csrf_token) {
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(path, {csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson})
-		.done(function() { /* use these for debugging at least */ })
-		.fail(function() { /* use these for debugging at least */ });
+		.done(function() { /* use these for debugging later */ })
+		.fail(function() { /* use these for debugging later */ });
 
 	var i = 0;
 };
