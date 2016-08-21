@@ -272,8 +272,6 @@ def create_quiz(request):
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-# I'm going to have to blow this view up and recreate it but I'm not sure what it
-# should look like. - Dylan
 def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
 		quiz = Test.objects.filter(id=quiz_id)[0]
