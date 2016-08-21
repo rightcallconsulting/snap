@@ -159,7 +159,7 @@
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
-			concept.reset();
+			concept = new Concept({});
 			
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
@@ -176,8 +176,7 @@
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
-						// It's not actually from JSON but that function should still work
-						concept = createConceptFromJson(concepts[i]);
+						concept = concepts[i];
 					}
 				}
 			}
