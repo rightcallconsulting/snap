@@ -241,43 +241,47 @@ function createConceptFromJson(conceptJsonDictionary) {
 	}
 
 	var offensiveLinemenArray = [];
-	for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
-		var player = new Player({
-			x: conceptJsonDictionary.offensiveLinemen[i].x,
-			y: conceptJsonDictionary.offensiveLinemen[i].y,
-			startX: conceptJsonDictionary.offensiveLinemen[i].startX,
-			startY: conceptJsonDictionary.offensiveLinemen[i].startY,
-			num: conceptJsonDictionary.offensiveLinemen[i].num, 
-			pos: conceptJsonDictionary.offensiveLinemen[i].pos,
-			red: conceptJsonDictionary.offensiveLinemen[i].red, 
-			green: conceptJsonDictionary.offensiveLinemen[i].green, 
-			blue: conceptJsonDictionary.offensiveLinemen[i].blue,
-			unit: conceptJsonDictionary.offensiveLinemen[i].unit,
-			eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
-			siz: conceptJsonDictionary.offensiveLinemen[i].siz
-		});
+	if (conceptJsonDictionary.offensiveLineman != null) {
+		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
+			var player = new Player({
+				x: conceptJsonDictionary.offensiveLinemen[i].x,
+				y: conceptJsonDictionary.offensiveLinemen[i].y,
+				startX: conceptJsonDictionary.offensiveLinemen[i].startX,
+				startY: conceptJsonDictionary.offensiveLinemen[i].startY,
+				num: conceptJsonDictionary.offensiveLinemen[i].num, 
+				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
+				red: conceptJsonDictionary.offensiveLinemen[i].red, 
+				green: conceptJsonDictionary.offensiveLinemen[i].green, 
+				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
+				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
+				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
+				siz: conceptJsonDictionary.offensiveLinemen[i].siz
+			});
 
-		offensiveLinemenArray.push(player);
+			offensiveLinemenArray.push(player);
+		}
 	}
 
 	var eligibleReceiversArray = [];
-	for (var i = 0; i < conceptJsonDictionary.eligibleReceivers.length; ++i) {
-		var player = new Player({
-			x: conceptJsonDictionary.eligibleReceivers[i].x,
-			y: conceptJsonDictionary.eligibleReceivers[i].y,
-			startX: conceptJsonDictionary.eligibleReceivers[i].startX,
-			startY: conceptJsonDictionary.eligibleReceivers[i].startY,
-			num: conceptJsonDictionary.eligibleReceivers[i].num, 
-			pos: conceptJsonDictionary.eligibleReceivers[i].pos,
-			red: conceptJsonDictionary.eligibleReceivers[i].red, 
-			green: conceptJsonDictionary.eligibleReceivers[i].green, 
-			blue: conceptJsonDictionary.eligibleReceivers[i].blue,
-			unit: conceptJsonDictionary.eligibleReceivers[i].unit,
-			eligible: conceptJsonDictionary.eligibleReceivers[i].eligible,
-			siz: conceptJsonDictionary.eligibleReceivers[i].siz
-		});
+	if (conceptJsonDictionary.offensiveLineman != null) {
+		for (var i = 0; i < conceptJsonDictionary.eligibleReceivers.length; ++i) {
+			var player = new Player({
+				x: conceptJsonDictionary.eligibleReceivers[i].x,
+				y: conceptJsonDictionary.eligibleReceivers[i].y,
+				startX: conceptJsonDictionary.eligibleReceivers[i].startX,
+				startY: conceptJsonDictionary.eligibleReceivers[i].startY,
+				num: conceptJsonDictionary.eligibleReceivers[i].num, 
+				pos: conceptJsonDictionary.eligibleReceivers[i].pos,
+				red: conceptJsonDictionary.eligibleReceivers[i].red, 
+				green: conceptJsonDictionary.eligibleReceivers[i].green, 
+				blue: conceptJsonDictionary.eligibleReceivers[i].blue,
+				unit: conceptJsonDictionary.eligibleReceivers[i].unit,
+				eligible: conceptJsonDictionary.eligibleReceivers[i].eligible,
+				siz: conceptJsonDictionary.eligibleReceivers[i].siz
+			});
 
-		eligibleReceiversArray.push(player);
+			eligibleReceiversArray.push(player);
+		}
 	}
 
 	var result = new Concept({
