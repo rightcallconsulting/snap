@@ -234,14 +234,13 @@
 				addOrRemovePlay = "remove";
 			}
 			
-			var jqxhr = $.post( manage_quiz_url, 
+			var jqxhr = $.post( 
+					manage_quiz_url, 
 					{ csrfmiddlewaretoken: csrf_token, play_id: playID, add_or_remove: addOrRemovePlay, defense: false }
-				).done(function() {
-					console.log("The play was successfully added to the quiz.");
-					alert( /* use these for debugging later */ );
+				).done(function() { 
+					console.log("Play successfully added to quiz"); 
 				}).fail(function() {
-					console.log("error posting play.");
-					alert( /* use these for debugging later */ );
+					console.log("Error adding play to quiz");
 				});
 			
 			if( playDomElement.hasClass('play-add-button') ) {
