@@ -172,13 +172,13 @@ Concept.prototype.post = function(path, csrf_token) {
 	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
 
 	var jqxhr = $.post(
-					path, 
-					{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
-				).done(function() { 
-					/* use these for debugging later */ 
-				}).fail(function() { 
-					/* use these for debugging later */ 
-				});
+			path, 
+			{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+		).done(function() { 
+			console.log("Concept successfully posted to Django");  
+		}).fail(function() { 
+			console.log("Error posting Concept to Django"); 
+	});
 
 	var i = 0;
 };
