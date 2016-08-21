@@ -211,7 +211,7 @@ class Test(models.Model):
 						"CBAssignment", 
 						"OLView", 
 						"WRRoute",
-						"ConceptIdentification"]
+						"Concept Identification"]
 
 	name = models.CharField(max_length=100, null=True, blank=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
