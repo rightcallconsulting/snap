@@ -256,7 +256,21 @@ function createConceptFromJson(conceptJsonDictionary) {
 		}
 	}
 
-	//for (var i = 0; i < offensivePlayers)
+	for (var i = 0; i < offensivePlayersArray.length; ++i) {
+		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0].length ; ++j) {
+			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0][j];
+
+			if (primaryAssignment.x != null) {
+				for (var k = 0; k < defensivePlayersArray.length; ++k) {
+					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
+						primaryAssignment = defensivePlayersArray[k];
+					}
+				}
+			}
+
+			offensivePlayersArray[i].blockingAssignmentArray[0].push(primaryAssignment);
+		}
+	}
 
 	var result = new Concept({
 		name: conceptJsonDictionary.name,
