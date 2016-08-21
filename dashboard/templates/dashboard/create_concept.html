@@ -176,7 +176,8 @@
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
-						concept = concepts[i];
+						// It's not actually from JSON but that function should still work
+						concept = createConceptFromJson(concepts[i]);
 					}
 				}
 			}
