@@ -175,7 +175,7 @@
 				var concept_name = new_selected.getAttribute("name");
 
 				for (var i = 0; i < concepts.length; ++i) {
-					if (concept_name === concepts[i].name) {
+					if (concept_name == concepts[i].name) {
 						// It's not actually from JSON but that function should still work
 						concept = createConceptFromJson(concepts[i]);
 					}
