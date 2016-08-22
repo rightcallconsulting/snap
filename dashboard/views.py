@@ -120,26 +120,27 @@ def auth_logout(request):
 
 def edit_profile(request):
 	if request.method == 'POST':
-		request.user.username = request.POST['username']
 		request.user.first_name = request.POST['first_name']
 		request.user.last_name = request.POST['last_name']
+		request.user.username = request.POST['username']
 		request.user.email = request.POST['email']
 		request.user.save()
-		if(Authentication.get_player(request.user)):
+		'''if(Authentication.get_player(request.user)):
 			player = Authentication.get_player(request.user)
 			player.position = request.POST['position']
 			player.number = int(request.POST['number'])
-			player.save()
+			player.save()'''
 		return HttpResponseRedirect("/edit_profile")
 	else:
-		if request.user.myuser.is_a_player:
-			edit_profile_form = PlayerForm(instance = request.user.player)
-		else:
-			edit_profile_form = CoachForm(instance = request.user.coach)
-		user_form = UserForm(instance = request.user)
+		first_name = request.user.first_name
+		last_name = request.user.last_name
+		username = request.user.username
+		email = request.user.email
 		return render(request, 'dashboard/edit_profile.html', {
-			'user_form': user_form,
-			'edit_profile_form': edit_profile_form,
+			'first_name': first_name,
+			'last_name': last_name,
+			'username': username,
+			'email': email,
 			'page_header': 'EDIT PROFILE'
 		})
 

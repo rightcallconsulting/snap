@@ -3,49 +3,9 @@
 
 {% block content %}
 	<div class="padding-md">
-		<div class="row">
-			<div class="col-xs-6 col-sm-12 col-md-6 text-center">
-
-				{% if request.user.myuser.avatar_image %}
-					<!--<img class="profile-picture" src="{{ request.user.myuser.avatar_image.url }}" alt="{{ request.user.get_full_name }}">-->
-				{% else %}
-					<!--<img class="profile-picture" src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">-->
-				{% endif %}
-
-				<div class="seperator"></div>
-				<div class="seperator"></div>
-			</div>
-		</div>
-		
 		<div class="panel panel-default">
 			<form class="form-horizontal form-border" method="post" action="/edit_profile"> 
-				{% csrf_token %}
-				<div class="panel-heading">
-					Basic Information
-				</div>
-				<div class="panel-body">
-					{% for field in user_form %}
-						<div class="form-group">
-							<label class="control-label col-md-2">
-								{{ field.label }}
-							</label>
-							<div class="col-md-10">
-								{{ field }}
-							</div>
-						</div>
-					{% endfor %}
-
-					{% for field in edit_profile_form %}
-						<div class="form-group">
-							<label class="control-label col-md-2">
-								{{ field.label }}
-							</label>
-							<div class="col-md-10">
-								{{ field }}
-							</div>
-						</div>
-					{% endfor %}
-				</div>
+				{% csrf_token %
 				<div class="panel-footer">
 					<div class="text-right">
 						<button class="btn btn-sm btn-success">Update</button>
