@@ -748,7 +748,6 @@ def concept_identification_quiz(request):
 		print "Number of concepts: %r\n" %number_of_concepts
 
 		for concept in all_concepts:
-			print "%r\t" %concept.pk
 			print "%r\n" %concept.conceptJson
 
 		# While the list of JSON to send is less than the amount of questions
@@ -756,11 +755,12 @@ def concept_identification_quiz(request):
 		# new JSON seeds. In other words, stop adding concepts when you have
 		# added the full number of questions or you have added all the concepts.
 		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
-			print len(concepts_json)
 			seed = random.randint(0, number_of_concepts-1)
+			print "Seed: %r\n%r" %seed %all_concepts[seed].conceptJson
 			if (seed not in seeds):
 				concepts_json.append(all_concepts[seed].conceptJson)
 				seeds.append(seed)
+			print "Length: %r\n" %len(concepts_json)
 
 		if (len(concepts_json) == 0):
 			return render(request, '')
