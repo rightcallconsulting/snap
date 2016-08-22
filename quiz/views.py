@@ -758,6 +758,6 @@ def concept_identification_quiz(request):
 			return render(request, '')
 		
 		return render(request, 'quiz/concept_identification_quiz.html', {
-			'json_seed': concepts_json,
+			'conceptsJson': concepts_json,
 			'page_header': 'CONCEPT ID QUIZ'
 		})
