@@ -144,36 +144,6 @@ def edit_profile(request):
 		})
 
 @login_required
-def analytics(request):
-	if request.user.myuser.is_a_player:
-		analytics = PlayerAnalytics.for_single_player(request.user.player)
-		groups = []
-	else:
-		# If the user is a coach, the default analytics player set is a their
-		# entire team, but they can use request.GET params to specify the pk of
-		# one of their PlayerGroups or individual Players
-		if 'player' in request.GET:
-			player = Player.objects.get(pk=request.GET['player'])
-			players = [player]
-		elif 'playergroup' in request.GET:
-			group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
-			players = group.players.all()
-		else:
-			players = request.user.coach.team.player_set.all()
-
-		groups = PlayerGroup.objects.all()
-		analytics = PlayerAnalytics.for_players(players)
-
-	#embed()
-	return render(request, 'dashboard/show_player_list.html', {
-		# 'team': team,
-		# 'players': players,
-		'page_header': 'ANALYTICS',
-		'analytics': analytics,
-		'groups': groups,
-	})
-
-@login_required
 def playbook(request, unit="offense"):
 	if request.user.myuser.is_a_player:
 		player = request.user.player
@@ -567,6 +537,35 @@ def quiz_analytics(request, quiz_id):
 		'skipped_play_chart': skipped_play_chart,
 		'test_results_length': quiz_results_length,
 		'page_header': 'ANALYTICS',
+	})
+
+@login_required
+def analytics(request):
+	if request.user.myuser.is_a_player:
+		analytics = PlayerAnalytics.for_single_player(request.user.player)
+		groups = []
+	else:
+		# If the user is a coach, the default analytics player set is a their
+		# entire team, but they can use request.GET params to specify the pk of
+		# one of their PlayerGroups or individual Players
+		if 'player' in request.GET:
+			player = Player.objects.get(pk=request.GET['player'])
+			players = [player]
+		elif 'playergroup' in request.GET:
+			group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
+			players = group.players.all()
+		else:
+			players = request.user.coach.team.player_set.all()
+
+		groups = PlayerGroup.objects.all()
+		analytics = PlayerAnalytics.for_players(players)
+
+	return render(request, 'dashboard/show_player_list.html', {
+		# 'team': team,
+		# 'players': players,
+		'page_header': 'ANALYTICS',
+		'analytics': analytics,
+		'groups': groups,
 	})
 
 # Concepts
