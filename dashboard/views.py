@@ -66,31 +66,6 @@ def homepage(request):
 			'MEDIA_ROOT': '/media/'
 		})
 
-def auth_login(request):
-	if request.user.is_authenticated():
-		return HttpResponseRedirect("/")
-	elif request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				return HttpResponseRedirect("/")
-			# else:
-				# return HttpResponseRedirect("/login")
-		else:
-			# [TBD] Display an error message that login failed
-			return HttpResponseRedirect("/login")
-	else:
-		form = RFPAuthForm()
-		return render(request, 'dashboard/login.html', { 'form': form, })
-
-def auth_logout(request):
-	logout(request)
-	return HttpResponseRedirect("/login")
-
-
 def register(request):
 	if request.method == 'POST':
 		team = Team.objects.filter(id=request.POST['team'])[0]
@@ -118,6 +93,55 @@ def register(request):
 	return render(request, 'dashboard/register.html', {
 		'form': form,
 	})
+
+def auth_login(request):
+	if request.user.is_authenticated():
+		return HttpResponseRedirect("/")
+	elif request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return HttpResponseRedirect("/")
+			# else:
+				# return HttpResponseRedirect("/login")
+		else:
+			# [TBD] Display an error message that login failed
+			return HttpResponseRedirect("/login")
+	else:
+		form = RFPAuthForm()
+		return render(request, 'dashboard/login.html', { 'form': form, })
+
+def auth_logout(request):
+	logout(request)
+	return HttpResponseRedirect("/login")
+
+def edit_profile(request):
+	if request.method == 'POST':
+		request.user.username = request.POST['username']
+		request.user.first_name = request.POST['first_name']
+		request.user.last_name = request.POST['last_name']
+		request.user.email = request.POST['email']
+		request.user.save()
+		if(Authentication.get_player(request.user)):
+			player = Authentication.get_player(request.user)
+			player.position = request.POST['position']
+			player.number = int(request.POST['number'])
+			player.save()
+		return HttpResponseRedirect("/edit_profile")
+	else:
+		if request.user.myuser.is_a_player:
+			edit_profile_form = PlayerForm(instance = request.user.player)
+		else:
+			edit_profile_form = CoachForm(instance = request.user.coach)
+		user_form = UserForm(instance = request.user)
+		return render(request, 'dashboard/edit_profile.html', {
+			'user_form': user_form,
+			'edit_profile_form': edit_profile_form,
+			'page_header': 'EDIT PROFILE'
+		})
 
 @login_required
 def analytics(request):
@@ -463,31 +487,6 @@ def manage_groups(request):
 			'players_in_group': players_in_group,
 			'players_not_in_group': players_not_in_group,
 			'page_header': 'MANAGE GROUPS',
-		})
-
-def edit_profile(request):
-	if request.method == 'POST':
-		request.user.username = request.POST['username']
-		request.user.first_name = request.POST['first_name']
-		request.user.last_name = request.POST['last_name']
-		request.user.email = request.POST['email']
-		request.user.save()
-		if(Authentication.get_player(request.user)):
-			player = Authentication.get_player(request.user)
-			player.position = request.POST['position']
-			player.number = int(request.POST['number'])
-			player.save()
-		return HttpResponseRedirect("/edit_profile")
-	else:
-		if request.user.myuser.is_a_player:
-			edit_profile_form = PlayerForm(instance = request.user.player)
-		else:
-			edit_profile_form = CoachForm(instance = request.user.coach)
-		user_form = UserForm(instance = request.user)
-		return render(request, 'dashboard/edit_profile.html', {
-			'user_form': user_form,
-			'edit_profile_form': edit_profile_form,
-			'page_header': 'EDIT PROFILE'
 		})
 
 def delete_group(request):
