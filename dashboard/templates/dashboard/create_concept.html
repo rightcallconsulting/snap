@@ -281,10 +281,6 @@
 
 			{% for conceptJson in conceptsJson %}
 			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
-			//jsonStringLength = conceptJsonFromDatabase.length;
-			//conceptJsonFromDatabase = conceptJsonFromDatabase.slice(6, jsonStringLength-6);
-			//conceptJsonFromDatabase = conceptJsonFromDatabase.replace(/\&quot;/g, '"');
-
 			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}
 
