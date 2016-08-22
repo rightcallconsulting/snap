@@ -12,6 +12,7 @@ from IPython import embed
 from operator import attrgetter
 
 from .models import Player, Team, Play, Formation, Test, Position, TestResult
+from dashboard.models import Concept
 from .utils import QuizOrders
 from dashboard.utils import PlayerAnalytics
 
@@ -741,16 +742,10 @@ def run_cb_view_test(request, test_id):
 		'page_header': 'CB TEST',
 	})
 
-def concept_identification_quiz(request, test_id):
-	test = Test.objects.filter(pk=test_id)[0]
-	if len(test.play_set.all()) > 0:
-		has_plays = True
-	else:
-		has_plays = False
+def concept_identification_quiz(request):
+	all_concepts = Concept.objects.filter(team=request.user.player.team)
 	return render(request, 'quiz/concept_identification_quiz.html', {
-		'test': test,
-		'has_plays': has_plays,
-		'page_header': 'CB TEST',
+		'page_header': 'CONCEPT IDENTIFICATION QUIZ',
 	})
 
 def single_test(request, test_id):
