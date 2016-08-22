@@ -742,7 +742,7 @@ def concept_identification_quiz(request):
 		all_concepts = Concept.objects.filter(team=request.user.player.team)
 		number_of_concepts = all_concepts.count()
 		concepts_json = []
-		concepts_pk = []
+		seeds = []
 
 		# While the list of JSON to send is less than the amount of questions
 		# and it is less than the number of available concepts keep adding 
@@ -750,12 +750,11 @@ def concept_identification_quiz(request):
 		# added the full number of questions or you have added all the concepts.
 		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
 			seed = random.randint(0, number_of_concepts-1)
-			if (all_concepts[seed].pk not in concepts_pk):
-				print(all_concepts[seed].pk)
+			if (seed not in seeds):
 				concepts_json.append(all_concepts[seed].conceptJson)
-				concepts_pk.append(all_concepts[seed].pk)
+				seeds.append(seed)
 
-		if (concept_json == []):
+		if (concepts_json == []):
 			return render(request, '')
 		
 		return render(request, 'quiz/concept_identification_quiz.html', {
