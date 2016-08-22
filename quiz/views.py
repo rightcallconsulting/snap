@@ -154,7 +154,6 @@ def create_play(request):
         'json_seed': json.dumps(json_seed)
     })
 
-
 class CustomPlayerQuizView(generic.TemplateView):
     """Display different types of custom player quizzes.
 
@@ -232,7 +231,6 @@ class CustomPlayerQuizView(generic.TemplateView):
         context['json_seed'] = json.dumps(self.build_dict_for_json_seed())
         return context
 
-
 class PlayQuizView(CustomPlayerQuizView):
     template_name = 'quiz/play_quiz.html'
     page_header = 'PLAY QUIZ'
@@ -295,7 +293,6 @@ class WRQuizView(CustomPlayerQuizView):
 
         return [p.dict_for_json() for p in plays]
 
-
 class QbCallQuizView(PlayQuizView):
     template_name = 'quiz/qb_call_quiz.html'
     page_header = 'QB CHECK QUIZ'
@@ -306,7 +303,6 @@ class QbCallQuizView(PlayQuizView):
             'player': self.player.dict_for_json(),
             'plays': plays,
         }
-
 
 class RouteQuizView(PlayQuizView):
     template_name = 'quiz/route_quiz.html'
@@ -331,7 +327,6 @@ class QBRouteQuizView(PlayQuizView):
             'player': self.player.dict_for_json(),
             'plays': plays,
         }
-
 
 class FormationQuizView(CustomPlayerQuizView):
     template_name = 'quiz/formation_quiz.html'
@@ -364,7 +359,6 @@ class FormationQuizView(CustomPlayerQuizView):
 
         return [f.dict_for_json() for f in formations]
 
-
 class AlignmentQuizView(FormationQuizView):
     template_name = 'quiz/alignment_quiz.html'
     page_header = 'ALIGNMENT QUIZ'
@@ -391,7 +385,6 @@ class OptionQuizMCView(FormationQuizView):
             'defensive_formations': formations,
         }
 
-
 class CoverageQuizView(FormationQuizView):
     template_name = 'quiz/coverage_quiz.html'
     page_header = 'COVERAGE QUIZ'
@@ -404,7 +397,6 @@ class CoverageQuizView(FormationQuizView):
             'player': self.player.dict_for_json(),
             'defensive_plays': formations,
         }
-
 
 class LinebackerQuizView(FormationQuizView):
     template_name = 'quiz/linebacker_call_quiz.html'
@@ -471,7 +463,6 @@ class CallAlignmentQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
-
 class PassRushQuizView(FormationQuizView):
     template_name = 'quiz/pass_rush_quiz.html'
     page_header = 'PASS RUSH QUIZ'
@@ -485,7 +476,6 @@ class PassRushQuizView(FormationQuizView):
             'defensive_plays': formations,
         }
 
-
 class PassZonesQuizView(FormationQuizView):
     template_name = 'quiz/pass_zones.html'
     page_header = 'PASS ZONES QUIZ'
@@ -498,7 +488,6 @@ class PassZonesQuizView(FormationQuizView):
             'player': self.player.dict_for_json(),
             'defensive_plays': formations,
         }
-
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
