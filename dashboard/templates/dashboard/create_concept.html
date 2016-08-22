@@ -280,10 +280,10 @@
 			var conceptJsonFromDatabase = ""; 
 
 			{% for conceptJson in conceptsJson %}
-			conceptJsonFromDatabase = "{{ conceptJson }}";
-			jsonStringLength = conceptJsonFromDatabase.length;
-			conceptJsonFromDatabase = conceptJsonFromDatabase.slice(6, jsonStringLength-6);
-			conceptJsonFromDatabase = conceptJsonFromDatabase.replace(/\&quot;/g, '"');
+			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
+			//jsonStringLength = conceptJsonFromDatabase.length;
+			//conceptJsonFromDatabase = conceptJsonFromDatabase.slice(6, jsonStringLength-6);
+			//conceptJsonFromDatabase = conceptJsonFromDatabase.replace(/\&quot;/g, '"');
 
 			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}

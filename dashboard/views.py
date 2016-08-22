@@ -603,7 +603,7 @@ def create_concept(request):
 		concepts = team.concept_set.all()
 		conceptsJson = []
 		for concept in concepts:
-			conceptsJson.append(json.dumps(concept.conceptJson))
+			conceptsJson.append(concept.conceptJson)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
