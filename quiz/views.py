@@ -738,7 +738,7 @@ def single_test(request, test_id):
 
 def concept_identification_quiz(request):
 	if (request.method == 'GET'):
-		number_of_questions = request.GET['num_qs']
+		number_of_questions = 5
 		all_concepts = Concept.objects.filter(team=request.user.player.team)
 		number_of_concepts = all_concepts.count()
 		concepts_json = []
@@ -747,12 +747,16 @@ def concept_identification_quiz(request):
 		print "Number of questions: %r" %number_of_questions
 		print "Number of concepts: %r\n" %number_of_concepts
 
+		for concept in all_concepts:
+			print "%r\t" %concept.pk
+			print "%r\n" %concept.conceptJson
+
 		# While the list of JSON to send is less than the amount of questions
 		# and it is less than the number of available concepts keep adding 
 		# new JSON seeds. In other words, stop adding concepts when you have
 		# added the full number of questions or you have added all the concepts.
 		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
-			print(len(concepts_json))
+			print len(concepts_json)
 			seed = random.randint(0, number_of_concepts-1)
 			if (seed not in seeds):
 				concepts_json.append(all_concepts[seed].conceptJson)
