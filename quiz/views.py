@@ -745,7 +745,7 @@ def run_cb_view_test(request, test_id):
 def concept_identification_quiz(request):
 	all_concepts = Concept.objects.filter(team=request.user.player.team)
 	return render(request, 'quiz/concept_identification_quiz.html', {
-		'page_header': 'CONCEPT IDENTIFICATION QUIZ',
+		'page_header': 'CONCEPT ID QUIZ',
 	})
 
 def single_test(request, test_id):
