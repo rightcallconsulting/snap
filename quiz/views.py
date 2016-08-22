@@ -742,12 +742,13 @@ def run_cb_view_test(request, test_id):
 		'page_header': 'CB TEST',
 	})
 
-def concept_identification_quiz(request):
-	all_concepts = Concept.objects.filter(team=request.user.player.team)
-	return render(request, 'quiz/concept_identification_quiz.html', {
-		'page_header': 'CONCEPT ID QUIZ',
-	})
-
 def single_test(request, test_id):
     test = Test.objects.filter(pk=test_id)
     return HttpResponse(serializers.serialize("json", test))
+
+def concept_identification_quiz(request):
+	all_concepts = Concept.objects.filter(team=request.user.player.team)
+	
+	return render(request, 'quiz/concept_identification_quiz.html', {
+		'page_header': 'CONCEPT ID QUIZ',
+	})
