@@ -756,11 +756,12 @@ def concept_identification_quiz(request):
 		# added the full number of questions or you have added all the concepts.
 		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
 			seed = random.randint(0, number_of_concepts-1)
-			print "Seed: %r\n%r" %seed %all_concepts[seed].conceptJson
+			print "Seed: %r\n" %seed 
+			print all_concepts[seed].conceptJson
 			if (seed not in seeds):
 				concepts_json.append(all_concepts[seed].conceptJson)
 				seeds.append(seed)
-			print "Length: %r\n" %len(concepts_json)
+			print "\nLength: %r\n" %len(concepts_json)
 
 		if (len(concepts_json) == 0):
 			return render(request, '')
