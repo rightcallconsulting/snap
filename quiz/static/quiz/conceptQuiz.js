@@ -2,9 +2,9 @@ var setupComplete = false;
 var testIDFromHTML = 33;
 var test;
 var multipleChoiceAnswers;
-var formationNames;
-var maxFormations = 5;
-var originalFormationList;
+var conceptNames;
+var maxConcepts = 5;
+var originalConceptList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
@@ -67,33 +67,25 @@ function setup() {
 
 	if(json_seed) {
 		var scoreboard = new Scoreboard({});
-		test = new FormationTest({
-			formations: [],
+		test = new ConceptTest({
+			concepts: [],
 			scoreboard: scoreboard,
 			displayName: false
 		});
 
-		var formations = [];
-		formationNames = [];
+		var concepts = [];
+		conceptNames = [];
 
 		for(var i = 0; i < json_seed.length; i++) {
-			var formation = createFormationFromJSONSeed(json_seed[i]);
+			var concept = createConceptFromJson(json_seed[i]);
 			var positionsAsPlayers = [];
 
-			for(var j = 0; j < formation.positions.length; j++) {
-				var position = formation.positions[j];
-				var player = createPlayerFromJSONSeed(position);
-				positionsAsPlayers.push(player);
-			}
-
-			formation.positions = positionsAsPlayers;
-			formation.populatePositions();
-			formationNames.push(formation.name);
-			formations.push(formation);
+			conceptNames.push(concept.name);
+			concepts.push(concept);
 		}
 
-		originalFormationList = formations.slice();
-		test.formations = shuffle(formations);
+		originalConceptList = concepts.slice();
+		test.concepts = shuffle(concepts);
 		multipleChoiceAnswers = [];
 		test.restartQuiz();
 		test.updateScoreboard();
@@ -141,7 +133,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 	var correctIndex = Math.floor((Math.random() * numOptions));
 	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
 	multipleChoiceAnswers = [];
-	var availableNames = formationNames.slice();
+	var availableNames = conceptNames.slice();
 	shuffle(availableNames);
 	var i = 0;
 
@@ -176,23 +168,23 @@ function clearAnswers() {
 };
 
 function checkAnswer(guess) {
-	var isCorrect = test.getCurrentFormation().name === guess.label;
+	var isCorrect = test.getCurrentConcept().name === guess.label;
 	registerAnswer(isCorrect);
 };
 
 function drawOpening() {
 	field.drawBackground(null, height, width);
-	test.getCurrentFormation().drawAllPlayers(field);
+	test.getCurrentConcept().drawAllPlayers(field);
 };
 
 function drawDemoScreen() {
 	noStroke();
 	field.drawBackground(null, height, width);
 	var timeElapsed = millis() - test.demoStartTime;
-	var formation = test.getCurrentFormation();
+	var concept = test.getCurrentConcept();
 	
-	if(formation) {
-		formation.drawAllPlayers(field);
+	if(concept) {
+		concept.drawAllPlayers(field);
 		var x1 = field.getTranslatedX(exitDemo.x);
 		var y1 = field.getTranslatedY(exitDemo.y);
 		var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
@@ -261,16 +253,16 @@ mouseClicked = function() {
 	}
 
 	if(bigReset.isMouseInside(field) && test.over) {
-		test.formations = shuffle(originalFormationList.slice());
+		test.concepts = shuffle(originalConceptList.slice());
 		test.restartQuiz();
 		return true;
 	} else if(resetMissed.isMouseInside(field) && test.over) {
-		var newFormations = test.missedFormations.concat(test.skippedFormations);
-		if(newFormations.length < 1) {
-			newFormations = originalFormationList.slice();
+		var newConcepts = test.missedConcepts.concat(test.skippedConcepts);
+		if(newConcepts.length < 1) {
+			newConcepts = originalConceptList.slice();
 		}
 
-		test.formations = shuffle(newFormations);
+		test.conepts = shuffle(newConcepts);
 		test.restartQuiz();
 		return true;
 	} else if(nextQuiz.isMouseInside(field) && test.over) {
@@ -350,12 +342,12 @@ function draw() {
 			drawOpening();
 		} else {
 			test.feedbackScreenStartTime = 0;
-			test.advanceToNextFormation("");
+			test.advanceToNextConcept("");
 			multipleChoiceAnswers = [];
 		}
 	} else {
-		if(multipleChoiceAnswers.length < 2 && test.getCurrentFormation()) {
-			var correctAnswer = test.getCurrentFormation().name;
+		if(multipleChoiceAnswers.length < 2 && test.getCurrentConcept()) {
+			var correctAnswer = test.getCurrentConcept().name;
 			createMultipleChoiceAnswers(correctAnswer,3);
 			test.updateProgress(false);
 			test.updateMultipleChoiceLabels();
