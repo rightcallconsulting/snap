@@ -744,9 +744,9 @@ def run_cb_view_test(request, test_id):
 def concept_identification_quiz(request, test_id):
 	test = Test.objects.filter(pk=test_id)[0]
 	if len(test.play_set.all()) > 0:
-		has_concepts = True
+		has_plays = True
 	else:
-		has_concepts = False
+		has_plays = False
 	return render(request, 'quiz/concept_identification_quiz.html', {
 		'test': test,
 		'has_plays': has_plays,
