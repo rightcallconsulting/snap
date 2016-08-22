@@ -2,32 +2,20 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="padding-md">
-		<div class="panel panel-default">
-			<form class="form-horizontal form-border" method="post" action="/edit_profile"> 
-				{% csrf_token %}
-				
-				<div class="form-group">
-					<label for="group_name">First Name:</label> 
-					<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
-				</div>
+	<div class="create-quiz padding-md">
+		<form class="form-create-quiz" method="post" action="/edit_profile"> 
+			{% csrf_token %}
+			
+			<div class="form-group">
+				<label for="group_name">First Name:</label> 
+				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
+			</div>
 
-				<div class="form-group">			
-					<label for="type_form">Type:</label> 
-					<select id="quiz-type-select" name="type_of_quiz" class="unit-form form-sm" onchange="changeQuizType(this)">
-						<optgroup label="Type of Quiz">
-						</optgroup>
-					</select>
-				</div>
-
-				<div class="panel-footer">
-					<div class="text-right">
-						<button class="btn btn-sm btn-success">Update</button>
-						<button class="btn btn-sm btn-success" type="reset">Reset</button>
-					</div>
-				</div>
-			</form>
-		</div><!--/panel-->
+			<div class="text-left">
+				<button class="btn btn-sm btn-success">Update</button>
+				<button class="btn btn-sm btn-danger" type="reset">Reset</button>
+			</div>
+		</form>
 	</div><!--/padding-md-->
 {% endblock %}
 
