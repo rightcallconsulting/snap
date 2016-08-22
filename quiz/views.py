@@ -736,8 +736,25 @@ def single_test(request, test_id):
     return HttpResponse(serializers.serialize("json", test))
 
 def concept_identification_quiz(request):
-	all_concepts = Concept.objects.filter(team=request.user.player.team)
-	
-	return render(request, 'quiz/concept_identification_quiz.html', {
-		'page_header': 'CONCEPT ID QUIZ',
-	})
+	if (request.method == 'GET'):
+		number_of_questions = request.GET['num_qs']
+		all_concepts = Concept.objects.filter(team=request.user.player.team)
+		number_of_concepts = all_concepts.count()
+		concepts_json = []
+
+		# While the list of JSON to send is less than the amount of questions
+		# or it is less than the number of available concepts keep adding new
+		# JSON seeds. In other words, stop adding concepts when you have
+		# added the full number of questions or you have added all the concepts.
+		while(len(concepts_json) < number_of_questions or len(concepts_json) < number_of_concepts):
+			seed = randint(0, number_of_concepts-1)
+			if (all_concepts[seed].conceptJson not in concepts_json):
+				concepts_json.append(all_concepts[seed].conceptJson)
+
+		if (concept_json == []):
+			return render(request, '')
+		
+		return render(request, 'quiz/concept_identification_quiz.html', {
+			'json_seed': concepts_json,
+			'page_header': 'CONCEPT ID QUIZ'
+		})
