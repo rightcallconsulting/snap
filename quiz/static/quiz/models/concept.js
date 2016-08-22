@@ -33,11 +33,11 @@ Concept.prototype.drawPlayers = function () {
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].draw();
+		this.offensivePlayers[i].draw(field);
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].draw();
+		this.defensivePlayers[i].draw(field);
 	}
 };
 
