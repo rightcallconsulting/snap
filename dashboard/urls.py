@@ -10,9 +10,9 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
 	url(r'^login$', views.auth_login, name='auth_login'),
-	url(r'^logout$', views.auth_logout, name='auth_logout'),
 	url(r'^register$', views.register, name='register'),
-	url(r'^analytics$', views.analytics, name='analytics'),
+	url(r'^logout$', views.auth_logout, name='auth_logout'),
+	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^playbook$', views.playbook, name='playbook'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
@@ -26,7 +26,7 @@ urlpatterns = [
 	url(r'^groups/create$', views.create_group, name='create_group'),
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
-	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+	url(r'^analytics$', views.analytics, name='analytics'),
 	
 	# Concepts
 	url(r'^concepts$', views.concepts, name='concepts'),
