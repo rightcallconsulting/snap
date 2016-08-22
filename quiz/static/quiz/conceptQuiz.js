@@ -77,7 +77,7 @@ function setup() {
 		conceptNames = [];
 
 		for(var i = 0; i < json_seed.length; i++) {
-			var concept = createConceptFromJson(json_seed[i]);
+			var concept = createConceptFromJson(JSON.parse(json_seed[i]));
 			var positionsAsPlayers = [];
 
 			conceptNames.push(concept.name);
