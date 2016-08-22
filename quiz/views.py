@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.views import generic
 import json
 import simplejson
+import random
 from IPython import embed
 from operator import attrgetter
 
@@ -741,15 +742,18 @@ def concept_identification_quiz(request):
 		all_concepts = Concept.objects.filter(team=request.user.player.team)
 		number_of_concepts = all_concepts.count()
 		concepts_json = []
+		concepts_pk = []
 
 		# While the list of JSON to send is less than the amount of questions
-		# or it is less than the number of available concepts keep adding new
-		# JSON seeds. In other words, stop adding concepts when you have
+		# and it is less than the number of available concepts keep adding 
+		# new JSON seeds. In other words, stop adding concepts when you have
 		# added the full number of questions or you have added all the concepts.
-		while(len(concepts_json) < number_of_questions or len(concepts_json) < number_of_concepts):
-			seed = randint(0, number_of_concepts-1)
-			if (all_concepts[seed].conceptJson not in concepts_json):
+		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
+			seed = random.randint(0, number_of_concepts-1)
+			if (all_concepts[seed].pk not in concepts_pk):
+				print(all_concepts[seed].pk)
 				concepts_json.append(all_concepts[seed].conceptJson)
+				concepts_pk.append(all_concepts[seed].pk)
 
 		if (concept_json == []):
 			return render(request, '')
