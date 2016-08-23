@@ -369,6 +369,18 @@
 				var playerYPixel = field.getTranslatedY(player.y);
 				var playerXYard = player.x;
 				var playerYYard = player.y;
+
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
 			}
 
 			// Draw opening
