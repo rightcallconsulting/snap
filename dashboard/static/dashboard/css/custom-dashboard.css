@@ -473,7 +473,7 @@ player homepage
 
 .edit-profile input[type="text"] {
 	width: 60%;
-	line-height: 2em;
+	line-height: 2.5em;
 }
 
 .create-groups input[type="submit"], 
@@ -1407,7 +1407,7 @@ select#id_player {
 }
 
 .edit-profile label {
-	width: 60px;
+	width: 70px;
 	text-align: right;
 }
 

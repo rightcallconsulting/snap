@@ -3,27 +3,27 @@
 
 {% block content %}
 	<div class="edit-profile padding-md">
-		<form class="form-create-quiz" method="post" action="/edit_profile"> 
+		<form class="form-edit-profile" method="post" action="/edit_profile"> 
 			{% csrf_token %}
 			
 			<div class="form-group">
 				<label for="group_name">First Name:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="First Name" required>
+				<input type="text" name="name" id="profile-first-name" class="unit-form form-sm" placeholder="First Name" value="{{ first_name }}" required>
 			</div>
 
 			<div class="form-group">
 				<label for="group_name">Last Name:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Last Name" required>
+				<input type="text" name="name" id="profile-last-name" class="unit-form form-sm" placeholder="Last Name" value="{{ last_name }}" required>
 			</div>
 
 			<div class="form-group">
 				<label for="group_name">Username:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Username" required>
+				<input type="text" name="name" id="profile-username" class="unit-form form-sm" placeholder="Username" value="{{ username }}" required>
 			</div>
 
 			<div class="form-group">
 				<label for="group_name">Email:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Email Address" required>
+				<input type="text" name="name" id="profile-email" class="unit-form form-sm" placeholder="Email Address" value="{{ email }}" required>
 			</div>
 
 			<div class="form-group">
@@ -34,8 +34,8 @@
 			</div>
 
 			<div class="text-left">
-				<button class="btn btn-sm btn-success">Update</button>
-				<button class="btn btn-sm btn-danger" type="reset">Reset</button>
+				<button class="btn btn-success btn-md">Update</button>
+				<button class="btn btn-danger btn-md" type="reset">Reset</button>
 			</div>
 		</form>
 	</div><!--/padding-md-->
