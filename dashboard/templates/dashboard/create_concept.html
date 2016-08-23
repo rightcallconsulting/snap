@@ -337,6 +337,7 @@
 				var playerXYard = player.x;
 				var playerYYard = player.y;
 
+				// Keep the players within the screen
 				if (playerXPixel < 0) {
 					player.x = field.getYardX(0);
 				} else if (playerXPixel > field.width) {
@@ -349,15 +350,21 @@
 					player.y = player.getYardY(field.height)
 				}
 
+				// Keep the players on the field
 				if (playerXYard < 0) {
 					player.x = 0;
 				} else if (playerXYard > 53.33) {
 					player.x = 53.33;
 				}
 
-				if (playerYYard < 0) {
+				if (playerYYard < -10) {
 					player.y = 0;
 				} else if (playerYYard > field.ballYardLine) {
+					player.y = field.ballYardLine;
+				}
+
+				// Ineligible players must be on the line of scrimmage
+				if (!player.eligible) {
 					player.y = field.ballYardLine;
 				}
 			}
@@ -372,6 +379,7 @@
 				var playerXYard = player.x;
 				var playerYYard = player.y;
 
+				// Keep the players within the screen
 				if (playerXPixel < 0) {
 					player.x = field.getYardX(0);
 				} else if (playerXPixel > field.width) {
@@ -384,6 +392,7 @@
 					player.y = player.getYardY(field.height)
 				}
 
+				// Keep the players on the field
 				if (playerXYard < 0) {
 					player.x = 0;
 				} else if (playerXYard > 53.33) {
@@ -800,8 +809,6 @@
 
 			resizeBottomButtons();
 		};
-
-		function pressFullScreen() {};
 
 		function resizeBottomButtons() {
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
