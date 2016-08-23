@@ -2,7 +2,7 @@ all: local
 
 # Install required libraries
 install:
-	sudo pip install -r requirements.txt
+	sudo pip install --ignore-installed -r requirements.txt
 
 ###############################################################################
 # Local build 
