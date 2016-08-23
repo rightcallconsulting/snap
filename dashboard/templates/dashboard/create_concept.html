@@ -358,6 +358,18 @@
 				} else if (playerYPixel > field.height) {
 					player.y = player.getYardY(field.height)
 				}
+
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < 0) {
+					player.y = 0;
+				} else if (playerYYard > field.ballYardLine) {
+					player.y = field.ballYardLine
+				}
 			}
 
 			// Limitations on where defensive players can be
