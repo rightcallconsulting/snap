@@ -77,8 +77,8 @@
 	<script type="text/javascript">
 		var concepts = [];
 		var concept;
-		var topPlayerBar;
-		var bottomPlayerBar;
+		var defensivePlayerBar;
+		var offensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
@@ -291,16 +291,16 @@
 			//concept.createCat(field.ballYardLine);
 
 			// Create Player bars
-			topPlayerBar = new PlayerBar({
+			defensivePlayerBar = new PlayerBar({
 				playerOptions: createDefensivePlayerOptions()
 			});
-			topPlayerBar.init(field);
+			defensivePlayerBar.init(field);
 
-			bottomPlayerBar = new PlayerBar({
+			offensivePlayerBar = new PlayerBar({
 				y: field.height - 50,
 				playerOptions: createOffensivePlayerOptions()
 			});
-			bottomPlayerBar.init(field);
+			offensivePlayerBar.init(field);
 
 			//  Field Position Variables
 			var scoreboard = new Scoreboard({});
@@ -318,10 +318,10 @@
 				field.width = width;
 				resizeBottomButtons();
 
-				bottomPlayerBar.width = field.width;
-				bottomPlayerBar.height = 50;
-				bottomPlayerBar.x = 0;
-				bottomPlayerBar.y = field.height - 50;
+				offensivePlayerBar.width = field.width;
+				offensivePlayerBar.height = 50;
+				offensivePlayerBar.x = 0;
+				offensivePlayerBar.y = field.height - 50;
 			};
 
 			drawOpening();
@@ -425,8 +425,8 @@
 
 			concept.drawAssignments(field);
 			concept.drawPlayers();
-			topPlayerBar.draw(field);
-			bottomPlayerBar.draw(field);
+			defensivePlayerBar.draw(field);
+			offensivePlayerBar.draw(field);
 			
 			fill(0, 0, 0);
 			textSize(20);
@@ -636,7 +636,7 @@
 
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
-			newPlayerSelected = bottomPlayerBar.mouseInPlayer(field);
+			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToConcept = new Player({
 					num: newPlayerSelected.num, 
@@ -656,7 +656,7 @@
 
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
-			newPlayerSelected = topPlayerBar.mouseInPlayer(field);
+			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToConcept = new Player({
 					num: newPlayerSelected.num, 
