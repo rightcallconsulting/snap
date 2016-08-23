@@ -159,7 +159,7 @@ def change_password(request):
 		if (user == request.user and new_password_1 == new_password_2):
 			request.user.set_password(new_password_1)
 			request.user.save()
-			return HttpResponse(reverse("edit_profile"))
+			return HttpResponseRedirect("/edit_profile")
 		else:
 			return HttpResponseRedirect("/change_password")
 	else:
