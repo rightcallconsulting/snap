@@ -313,12 +313,14 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				resizeBottomButtons();
+				//resizeBottomButtons();
 
 				offensivePlayerBar.width = field.width;
-				offensivePlayerBar.height = 50;
 				offensivePlayerBar.x = 0;
 				offensivePlayerBar.y = field.height - 50;
+
+				defensivePlayerBar.width = field.width;
+				defensivePlayerBar.x = 0;
 			};
 
 			drawOpening();
