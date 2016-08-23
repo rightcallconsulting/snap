@@ -143,7 +143,6 @@ Concept.prototype.save = function (path, csrf_token) {
 		});
 
 		this.post(path, csrf_token);
-		this.reset();
 	} else {
 		this.feedbackMessage = "Invalid Concept";
 	}

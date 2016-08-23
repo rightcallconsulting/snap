@@ -222,6 +222,9 @@
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
 			concept.save(path, csrf_token);
+			concepts.push(concept);
+
+			concept = new Conept({});
 
 			removeHeaderName();
 			addHeaderPlaceholder();
@@ -233,7 +236,7 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			concept.reset();
+			concept = new Conept({});
 		});
 
 		$("#zoom-in-button").click(function(event) {
