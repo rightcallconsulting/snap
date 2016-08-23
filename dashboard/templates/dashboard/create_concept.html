@@ -227,8 +227,6 @@
 			removeHeaderName();
 			addHeaderPlaceholder();*/
 
-			//pressClear();
-
 			concept.reset();
 		});
 
@@ -240,15 +238,7 @@
 			pressZoomOut();
 		});
 
-		$("#full-screen-button").click(function(event) {
-			/*if ($("#display-box").hasClass("fullscreen")) {
-				$("#display-box").removeClass("fullscreen");
-			} else if (!$("#display-box").hasClass("fullscreen")) {
-				$("#display-box").addClass("fullscreen");
-			}
-
-			pressFullScreen()*/
-		});
+		$("#full-screen-button").click(function(event) {});
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -781,29 +771,6 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-		/*function pressSave() {
-			if(new_formation.validFormation()) {
-				new_formation.eligibleReceivers.forEach(function(player){
-					player.convertRouteDrawingToBreakPoints();
-				});
-				var newFormation = new Formation({
-					eligibleReceivers: new_formation.eligibleReceivers,
-					playName: new_formation.playName,
-					qb: new_formation.qb,
-					oline: new_formation.oline,
-					offensivePlayers: new_formation.offensivePlayers,
-					unit: new_formation.unit
-				});
-
-				newFormation.saveToDB();
-				new_formation.removeAllPlayers();
-				new_formation.playName = "";
-				new_formation.feedbackMessage = "Saved!";
-			} else {
-				new_formation.feedbackMessage = "Invalid Formation";
-			}
-		};*/
-
 		function pressClear() {
 			concept.reset();
 		};
