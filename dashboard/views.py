@@ -120,16 +120,19 @@ def auth_logout(request):
 
 def edit_profile(request):
 	if request.method == 'POST':
-		request.user.first_name = request.POST['first-name']
-		request.user.last_name = request.POST['last-name']
-		request.user.username = request.POST['username']
-		request.user.email = request.POST['email']
-		request.user.save()
-		'''if(Authentication.get_player(request.user)):
-			player = Authentication.get_player(request.user)
-			player.position = request.POST['position']
-			player.number = int(request.POST['number'])
-			player.save()'''
+		username = request.POST['username']
+		users_with_desired_username = User.objects.filter(username=username)
+		if (users_with_desired_username.count() == 0 or (users_with_desired_username.count() == 1 and request.user.username == username)):
+			request.user.first_name = request.POST['first-name']
+			request.user.last_name = request.POST['last-name']
+			request.user.username = request.POST['username']
+			request.user.email = request.POST['email']
+			request.user.save()
+			'''if(Authentication.get_player(request.user)):
+				player = Authentication.get_player(request.user)
+				player.position = request.POST['position']
+				player.number = int(request.POST['number'])
+				player.save()'''
 		return HttpResponseRedirect("/edit_profile")
 	else:
 		first_name = request.user.first_name
