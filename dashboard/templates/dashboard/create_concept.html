@@ -368,7 +368,7 @@
 				if (playerYYard < 0) {
 					player.y = 0;
 				} else if (playerYYard > field.ballYardLine) {
-					player.y = field.ballYardLine
+					player.y = field.ballYardLine;
 				}
 			}
 
@@ -392,6 +392,18 @@
 					player.y = player.getYardY(0);
 				} else if (playerYPixel > field.height) {
 					player.y = player.getYardY(field.height)
+				}
+
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < field.ballYardLine) {
+					player.y = field.ballYardLine;
+				} else if (playerYYard > 110) {
+					player.y = 110;
 				}
 			}
 
