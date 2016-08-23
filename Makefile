@@ -54,6 +54,14 @@ dylanseed:
 loaddylan:
 	python manage.py loaddata dylan_seed.json --settings=quiz_master.settings.local 
 
+# Dump data into dylan_seed.json
+chrisseed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/chris_seed.json --settings=quiz_master.settings.local
+
+# Load dylan seed file into database
+loadchris:
+	python manage.py loaddata chris_seed.json --settings=quiz_master.settings.local 
+
 # Dump data into stanford_seed.json
 stanfordseed:
 	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/stanford_seed.json --settings=quiz_master.settings.local
