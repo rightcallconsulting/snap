@@ -400,8 +400,8 @@
 					player.x = 53.33;
 				}
 
-				if (playerYYard < field.ballYardLine) {
-					player.y = field.ballYardLine;
+				if (playerYYard < field.ballYardLine+player.siz) {
+					player.y = field.ballYardLine+player.siz;
 				} else if (playerYYard > 110) {
 					player.y = 110;
 				}
