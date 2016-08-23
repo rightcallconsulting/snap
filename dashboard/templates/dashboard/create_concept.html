@@ -109,20 +109,28 @@
 		// When the header box is selected have it change colors and remove the
 		// placeholder if it exists
 		$("#header-box").click(function(event) {
-			removeHeaderPlaceholderAndError();
+			removeHeaderPlaceholder();
+			removeHeaderError();
 			$("#header-box").addClass("selected");
 			event.stopPropagation();
 		});
 
-		function removeHeaderPlaceholderAndError() {
+		function removeHeaderPlaceholder() {
 			var header_box = document.getElementById("header-box");
 			var placeholder_message = document.getElementById("placeholder-message");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("placeholder error");
+			$("#header-box").removeClass("placeholder");
 			
 			if (placeholder_message != null) {
 				header_box.removeChild(placeholder_message);
-			} else if (error_message != null) {
+			}
+		};
+
+		function removeHeaderError() {
+			var header_box = document.getElementById("header-box");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("error");
+			
+			if (error_message != null) {
 				header_box.removeChild(error_message);
 			}
 		};
@@ -189,22 +197,23 @@
 			var path = "/concepts/create";
 			var csrf_token = "{{ csrf_token }}";
 
+			// If there is a placeholder message remove it and add an error.
 			if (placeholder_message != null) {
-				removeHeaderPlaceholderAndError();
+				removeHeaderPlaceholder();
 				addHeaderError();
 				return;
 			}
 
 			// I don't think this will ever happen, but I'm not sure.
 			if (concept_name === null) {
-				removeHeaderPlaceholderAndError();
+				removeHeaderPlaceholder();
 				addHeaderError();
 				return;
 			}
 
+			// If the concept_name is 0 characters add an error.
 			if (concept_name != null && concept_name.textContent.length === 0) {
 				document.getElementById("header-box").removeChild(concept_name);
-				removeHeaderPlaceholderAndError();
 				addHeaderError();
 				return;
 			}
@@ -213,20 +222,16 @@
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
 			concept.save(path, csrf_token);
+
+			removeHeaderName();
+			addHeaderPlaceholder();
 		});
 
 		$("#clear-button").click(function(event) {
-			/*var curr_selected = document.getElementById("selected");
-			
-			if (curr_selected != null) {
-				curr_selected.removeAttribute("id");
-				curr_selected.removeAttribute("class");
-				curr_selected.setAttribute("class", "btn btn-primary");
-			}
-
-			removeHeaderPlaceholderAndError();
+			removeHeaderPlaceholder();
+			removeHeaderError();
 			removeHeaderName();
-			addHeaderPlaceholder();*/
+			addHeaderPlaceholder();
 
 			concept.reset();
 		});
@@ -748,7 +753,8 @@
 				var string_length = concept_name.textContent.length;
 
 				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-					removeHeaderPlaceholderAndError();
+					removeHeaderPlaceholder();
+					removeHeaderError();
 
 					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
 					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
