@@ -149,14 +149,16 @@ def edit_profile(request):
 
 def change_password(request):
 	if request.method == 'POST':
-		current_password = request.user.password
+		username = request.user.username
 		current_password_input_by_user = request.POST['current-password']
+		user = authenticate(username=username, password=current_password_input_by_user)
+		
 		new_password_1 = request.POST['new-password-1'] 
 		new_password_2 = request.POST['new-password-2']
-		if (current_password_input_by_user == current_password and new_password_1 == new_password_2):
-			request.user.password = new_password_1
+		if (user != none and new_password_1 == new_password_2):
+			request.user.set_password(new_password_1)
 			request.user.save()
-			return HttpResponseRedirect("/edit_profile")
+			return render(request, "/edit_profile")
 		else:
 			return HttpResponseRedirect("/change_password")
 	else:
