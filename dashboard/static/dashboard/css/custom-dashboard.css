@@ -471,10 +471,21 @@ player homepage
 	line-height: 2em;
 }
 
+.edit-profile input[type="text"] {
+	width: 60%;
+	line-height: 2em;
+}
+
 .create-groups input[type="submit"], 
 .all-groups input[type="submit"], 
 .manage-groups input[type="submit"],
 .create-quiz input[type="submit"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+.edit-profile input[type="submit"] {
 	margin-left: 3%;
 	margin-bottom: 2%;
 	width: auto;
@@ -489,6 +500,12 @@ player homepage
 	width: auto;
 }
 
+.edit-profile input[type="button"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
 .create-groups form, 
 .create-groups table, 
 .all-groups form, 
@@ -497,6 +514,13 @@ player homepage
 .manage-groups table,
 .create-quiz form, 
 .create-quiz table   {
+	margin-left: 2%;
+	margin-bottom: 2%;
+	width: 90%;
+}
+
+.edit-profile form, 
+.edit-profile table   {
 	margin-left: 2%;
 	margin-bottom: 2%;
 	width: 90%;
@@ -735,12 +759,20 @@ player homepage
   margin-bottom: -10px;
 }
 
-input.create-quiz{
-  background-color: #7CB34A;
-  color: #FFFFFF;
-  height: 40px;
-  width: 15%;
-  margin-top: 30px;
+input.create-quiz {
+	background-color: #7CB34A;
+	color: #FFFFFF;
+	height: 40px;
+	width: 15%;
+	margin-top: 30px;
+}
+
+input.edit-profile {
+	background-color: #7CB34A;
+	color: #FFFFFF;
+	height: 40px;
+	width: 15%;
+	margin-top: 30px;
 }
 
 .datetime{
@@ -771,7 +803,13 @@ input.create-quiz{
 	font-size: 12px;
 }
 
-.form-create-test input.create-quiz{
+.form-create-test input.create-quiz {
+	margin-left: 20%;
+	width: 20%;
+	font-size: 20px;
+}
+
+.form-create-test input.edit-profile {
 	margin-left: 20%;
 	width: 20%;
 	font-size: 20px;
@@ -1365,6 +1403,11 @@ select#id_player {
 
 .create-quiz label {
 	width: 40px;
+	text-align: right;
+}
+
+.edit-profile label {
+	width: 60px;
 	text-align: right;
 }
 
