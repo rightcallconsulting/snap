@@ -152,7 +152,6 @@ def change_password(request):
 		username = request.user.username
 		current_password_input_by_user = request.POST['current-password']
 		user = authenticate(username=username, password=current_password_input_by_user)
-		print current_password_input_by_user
 		
 		new_password_1 = request.POST['new-password-1'] 
 		new_password_2 = request.POST['new-password-2']
