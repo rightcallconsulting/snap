@@ -158,6 +158,8 @@ def change_password(request):
 		if (user == request.user and new_password_1 == new_password_2):
 			request.user.set_password(new_password_1)
 			request.user.save()
+			user = authenticate(username=username, password=new_password_1)
+			login(request, user)
 			return HttpResponseRedirect("/edit_profile")
 		else:
 			return HttpResponseRedirect("/change_password")
