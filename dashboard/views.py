@@ -150,14 +150,15 @@ def edit_profile(request):
 def change_password(request):
 	if request.method == 'POST':
 		current_password = request.user.password
+		current_password_input_by_user = request.POST['current-password']
 		new_password_1 = request.POST['new-password-1'] 
-		request.user.save()
-		'''if(Authentication.get_player(request.user)):
-			player = Authentication.get_player(request.user)
-			player.position = request.POST['position']
-			player.number = int(request.POST['number'])
-			player.save()'''
-		return HttpResponseRedirect("/edit_profile")
+		new_password_2 = request.POST['new-password-2']
+		if (current_password_input_by_user == current_password and new_password_1 == new_password_2):
+			request.user.password = new_password_1
+			request.user.save()
+			return HttpResponseRedirect("/edit_profile")
+		else:
+			return HttpResponseRedirect("/change_password")
 	else:
 		return render(request, 'dashboard/change_password.html', {
 			'page_header': 'EDIT PROFILE'
