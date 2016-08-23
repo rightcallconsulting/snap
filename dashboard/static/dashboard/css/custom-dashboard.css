@@ -471,7 +471,8 @@ player homepage
 	line-height: 2em;
 }
 
-.edit-profile input[type="text"] {
+.edit-profile input[type="text"],
+.edit-profile input[type="password"] {
 	width: 60%;
 	line-height: 2.5em;
 }
