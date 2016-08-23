@@ -364,9 +364,15 @@
 					player.y = field.ballYardLine;
 				}
 
-				// Ineligible players must be on the line of scrimmage
+				// If a player is ineligible they must be on the line of scrimmage.
+				// Otherwise if they are within a yard of the line of scrimmage they
+				// should automatically snap onto the line.
 				if (!player.eligible) {
 					player.y = field.ballYardLine;
+				} else {
+					if (player.y > field.ballYardLine - 1) {
+						player.y = field.ballYardLine;
+					} 
 				}
 			}
 
