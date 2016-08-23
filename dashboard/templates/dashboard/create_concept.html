@@ -51,7 +51,7 @@
 
 			<div class="table-wrapper formation-table">
 				<table>
-					<tbody>
+					<tbody id="concept-buttons">
 						{% for concept in concepts %}
 							<tr>
 								<td>
@@ -224,10 +224,29 @@
 			concept.save(path, csrf_token);
 			concepts.push(concept);
 
-			concept = new Conept({});
+			// Create a new concept to replace teh one you jsut saved on the screen.
+			concept = new Concept({});
 
+			// Update the top interactive text bar to have a placeholder again.
 			removeHeaderName();
 			addHeaderPlaceholder();
+
+			// Update the sidebar to include a new button for the concept that was just saved.
+			var sidebar_table_body = document.getElementById("concept-buttons");
+
+			var new_concept_button_row = document.createElement("tr");
+			var new_concept_button_cell = document.createElement("td");
+			var new_concept_button = document.createElement("button");
+			
+			// class="btn btn-primary" onclick="changeSelected(this)" name="{{ concept.name }}"
+			new_concept_button.setAttribute("class", "btn btn-primary");
+			new_concept_button.setAttribute("onclick", "changeSelected(this)");
+			new_concept_button.setAttribute("name", name);
+			new_concept_button.textContent = name;
+
+			new_concept_button_cell.appendChild(new_concept_button);
+			new_concept_button_row.appendChild(new_concept_button_cell);
+			sidebar_table_body.appendChild(new_concept_button_row);
 		});
 
 		$("#clear-button").click(function(event) {
@@ -236,7 +255,7 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			concept = new Conept({});
+			concept = new Concept({});
 		});
 
 		$("#zoom-in-button").click(function(event) {
