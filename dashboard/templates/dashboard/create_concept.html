@@ -79,6 +79,7 @@
 		var concept;
 		var topPlayerBar;
 		var bottomPlayerBar;
+		var playerBeingDragged;
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
@@ -578,9 +579,17 @@
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
+		function mousePressed() {
+			playerBeingDragged = concept.mouseInPlayer(field);
+
+			// return false to prevent default behavior
+			return false;
+		}
+
 		function mouseReleased() {
 			if (mouseBeingDragged === true) {
 				mouseBeingDragged = false;
+				playerBeingDragged = null;
 				return false;
 			}
 
@@ -666,19 +675,17 @@
 		function mouseDragged() {
 			mouseBeingDragged = true;
 
-			var playerSelected = concept.mouseInPlayer(field);
-
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
-			if (playerSelected != null) {
-				playerSelected.x = mouseYardX;
-				playerSelected.y = mouseYardY;
+			if (playerBeingDragged != null) {
+				playerBeingDragged.x = mouseYardX;
+				playerBeingDragged.y = mouseYardY;
 			}
 
-			if(playerSelected && playerSelected.pos === "C") {
+			if(playerBeingDragged && playerBeingDragged.pos === "C") {
 				var mouseYardX = field.getYardX(mouseX);
-				var xDiff = mouseYardX - playerSelected.x;
+				var xDiff = mouseYardX - playerBeingDragged.x;
 
 				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
 					xDiff = 0;
