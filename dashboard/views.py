@@ -144,6 +144,22 @@ def edit_profile(request):
 			'page_header': 'EDIT PROFILE'
 		})
 
+def change_password(request):
+	if request.method == 'POST':
+		current_password = request.user.password
+		new_password_1 = request.POST['new-password-1'] 
+		request.user.save()
+		'''if(Authentication.get_player(request.user)):
+			player = Authentication.get_player(request.user)
+			player.position = request.POST['position']
+			player.number = int(request.POST['number'])
+			player.save()'''
+		return HttpResponseRedirect("/edit_profile")
+	else:
+		return render(request, 'dashboard/change_password.html', {
+			'page_header': 'EDIT PROFILE'
+		})
+
 @login_required
 def playbook(request, unit="offense"):
 	if request.user.myuser.is_a_player:

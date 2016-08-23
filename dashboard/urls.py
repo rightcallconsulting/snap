@@ -13,6 +13,7 @@ urlpatterns = [
 	url(r'^register$', views.register, name='register'),
 	url(r'^logout$', views.auth_logout, name='auth_logout'),
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
+	url(r'^change_password$', views.change_password, name='change_password'),
 	url(r'^playbook$', views.playbook, name='playbook'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
