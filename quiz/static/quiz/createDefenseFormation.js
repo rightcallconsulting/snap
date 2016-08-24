@@ -284,7 +284,7 @@ function draw() {
     });
 
     var de = new Player ({
-        x: 13,
+        x: dl.x + dl.siz,
         y: 100-field.heightInYards,
         num: 'E',
         fill: color(0, 0, 0),
@@ -293,7 +293,7 @@ function draw() {
     });
 
     var mike = new Player ({
-      x: 16,
+      x: de.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'M',
       fill: color(0, 0, 0),
@@ -302,7 +302,7 @@ function draw() {
     });
 
     var will = new Player ({
-      x: 19,
+      x: mike.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'W',
       fill: color(0, 0, 0),
@@ -311,7 +311,7 @@ function draw() {
     });
 
     var sam = new Player ({
-      x: 22,
+      x: will.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'S',
       fill: color(0, 0, 0),
@@ -320,7 +320,7 @@ function draw() {
     });
 
     var backer = new Player ({
-      x: 22,
+      x: sam.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'B',
       fill: color(0, 0, 0),
@@ -329,7 +329,7 @@ function draw() {
     });
 
     var cb = new Player({
-      x: 25,
+      x: backer.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'C',
       fill: color(0, 0, 0),
@@ -338,7 +338,7 @@ function draw() {
     });
 
     var ss = new Player({
-      x: 28,
+      x: cb.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'SS',
       fill: color(0, 0, 0),
@@ -347,7 +347,7 @@ function draw() {
     });
 
     var fs = new Player({
-      x: 31,
+      x: ss.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'F',
       fill: color(0, 0, 0),
@@ -414,7 +414,7 @@ function draw() {
     };
 
     keyTyped = function(){
-
+      
     }
 
     keyPressed = function() {
