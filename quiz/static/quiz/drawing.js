@@ -14,18 +14,18 @@ function dottedLine(x1, y1, x2, y2) {
 	var deltaY = y2 - y1;
 	var dist = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 	var alpha = atan(deltaY/deltaX);
-	var segmentDist = dist*0.05;
+	var stepSizePercentage = 0.05;
+	var segmentDist = dist*stepSizePercentage;
 
-	var xDiff = cos(alpha)*dist;
-	var yDiff = sin(alpha)*dist;
+	var xDiff = cos(alpha)*segmentDist;
+	var yDiff = sin(alpha)*segmentDist;
 
 	var xStart = x1;
 	var yStart = y1;
 	var xEnd = xDiff;
 	var yEnd = yDiff;
-	
-	var i = 0;
-	while(x1+xEnd <= x2 && y1+yEnd <= y2) {
+
+	for (var i = 0; i <= 1/stepSizePercentage; ++i) {
 		if (i%2 == 0) {
 			line(xStart, yStart, xEnd, yEnd);
 		}
@@ -34,7 +34,5 @@ function dottedLine(x1, y1, x2, y2) {
 		yStart = yEnd;
 		xEnd += xDiff;
 		yEnd += yDiff;
-
-		i++;
 	}
 };
