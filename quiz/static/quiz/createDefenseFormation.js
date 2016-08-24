@@ -277,18 +277,18 @@ function draw() {
         x: 10,
         y: 100-field.heightInYards,
         siz: 3,
-        num: 'DL',
+        num: 'N',
         fill: color(0, 0, 0),
-        pos: 'DL',
+        pos: 'N',
         unit: "defense"
     });
 
     var de = new Player ({
         x: 13,
         y: 100-field.heightInYards,
-        num: 'DE',
+        num: 'E',
         fill: color(0, 0, 0),
-        pos: 'DE',
+        pos: 'E',
         unit: "defense"
     });
 
@@ -319,12 +319,21 @@ function draw() {
       unit: "defense"
     });
 
+    var backer = new Player ({
+      x: 22,
+      y: 100-field.heightInYards,
+      num: 'B',
+      fill: color(0, 0, 0),
+      pos: 'B',
+      unit: "defense"
+    });
+
     var cb = new Player({
       x: 25,
       y: 100-field.heightInYards,
-      num: 'CB',
+      num: 'C',
       fill: color(0, 0, 0),
-      pos: 'CB',
+      pos: 'C',
       unit: "defense"
     });
 
@@ -340,18 +349,19 @@ function draw() {
     var fs = new Player({
       x: 31,
       y: 100-field.heightInYards,
-      num: 'FS',
+      num: 'F',
       fill: color(0, 0, 0),
-      pos: 'FS',
+      pos: 'F',
       unit: "defense"
     });
 
     formationExample.optionsToCreate.push(dl);
+    formationExample.optionsToCreate.push(de);
     formationExample.optionsToCreate.push(mike);
     formationExample.optionsToCreate.push(will);
     formationExample.optionsToCreate.push(sam);
+    formationExample.optionsToCreate.push(backer);
     formationExample.optionsToCreate.push(cb);
-    formationExample.optionsToCreate.push(de);
     formationExample.optionsToCreate.push(ss);
     formationExample.optionsToCreate.push(fs);
 
