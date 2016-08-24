@@ -134,11 +134,11 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
 	// I can probably just set multiple choice answers == concept names and shuffle
 	multipleChoiceAnswers = [];
-	var availableNames = conceptNames.slice();
+	var availableNames = concept_names;
 	shuffle(availableNames);
 	var i = 0;
 
-	while(multipleChoiceAnswers.length < numOptions) {
+	while (multipleChoiceAnswers.length < numOptions) {
 		var label = availableNames[i];
 		if(multipleChoiceAnswers.length === correctIndex) {
 			label = correctAnswer;
@@ -155,6 +155,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 			label: label,
 			clicked: false
 		}));
+
 		i++;
 	}
 };
@@ -350,7 +351,7 @@ function draw() {
 	} else {
 		if(multipleChoiceAnswers.length < 2 && test.getCurrentConcept()) {
 			var correctAnswer = test.getCurrentConcept().name;
-			createMultipleChoiceAnswers(correctAnswer,3);
+			createMultipleChoiceAnswers(correctAnswer, 3);
 			test.updateProgress(false);
 			test.updateMultipleChoiceLabels();
 		}
