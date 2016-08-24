@@ -22,8 +22,8 @@ function dottedLine(x1, y1, x2, y2) {
 
 	var xStart = x1;
 	var yStart = y1;
-	var xEnd = xDiff;
-	var yEnd = yDiff;
+	var xEnd = x1+xDiff;
+	var yEnd = y1+yDiff;
 
 	for (var i = 0; i <= 1/stepSizePercentage; ++i) {
 		if (i%2 == 0) {
