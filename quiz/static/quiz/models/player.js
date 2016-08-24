@@ -466,14 +466,23 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 // drawDefensiveMovement iterates through the players defensive movements
 // and draws a dotted line to the plave on the field they should be
 Player.prototype.drawDefensiveMovement = function(field) {
-	var currentX = this.x;
-	var currentY = this.y;
+	var x1 = this.x;
+	var y1 = this.y;
 
 	var black = color(0, 0, 0);
 	stroke(black);
 
 	for (var i = 0; i < this.defensiveMovement.length; i++) {
-		
+		var x2 = this.defensiveMovement[i][0];
+		var y2 = this.defensiveMovement[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		dottedLine(x1, y1, x2, y2);
+		x1 = field.getYardX(x2);
+		y1 = field.getYardY(y2);
 	}
 
 	noStroke();
