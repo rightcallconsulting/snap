@@ -176,8 +176,8 @@ function checkAnswer(guess) {
 
 function drawOpening() {
 	field.drawBackground(null, height, width);
-	test.getCurrentConcept().drawPlayers(field);
 	test.getCurrentConcept().drawAssignments(field);
+	test.getCurrentConcept().drawPlayers(field);
 };
 
 function drawDemoScreen() {
