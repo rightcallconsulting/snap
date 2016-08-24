@@ -208,7 +208,7 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	var y1 = currentY;
 	var x2, y2;
 
-	if (deltaX > 0) {
+	if (deltaX >= 0) {
 		x2 = currentX + xDiff;
 		y2 = currentY + yDiff;
 	} else {
