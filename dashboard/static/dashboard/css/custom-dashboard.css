@@ -1415,6 +1415,7 @@ select#id_player {
 div#create-formation div#choose-existing-formation,
 div#create-concept div#choose-existing-concept {
 	height: 78vh;
+	overflow: scroll;
 }
 
 div.header {
@@ -1429,6 +1430,11 @@ div.header {
 
 div.header.placeholder {
 	color: silver;
+}
+
+div.choose-existing-formation,
+div.choose-existing-concept {
+	overflow: hidden;
 }
 
 div.formation-table table,
