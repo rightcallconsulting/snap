@@ -679,6 +679,8 @@
 			// Handle clicks on players in the Concept
 			var currentPlayerSelected = concept.getSelected()[0];
 			var newPlayerSelected = concept.mouseInPlayer(field);
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
 
 			// If no one is currently selected and no one is clicked on do 
 			// nothing. Else if no one is currently selected and someone is 
@@ -695,9 +697,11 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				// This will have to change to be able to add blocking landmarks
-				// Right now if you click on empty space it just unselects the 
-				concept.clearSelected();
+				if (currentPlayerSelected.unit === "defense") {
+					currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
+				} else {
+					concept.clearSelected();
+				}
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
 				concept.clearSelected();

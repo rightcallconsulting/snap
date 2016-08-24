@@ -48,6 +48,10 @@ Concept.prototype.drawAssignments = function (field) {
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		this.offensivePlayers[i].drawAllBlocks(field);
 	}
+
+	for(var i = 0; i < numberOfDevensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
+	}
 };
 
   														
