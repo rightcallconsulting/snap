@@ -67,6 +67,7 @@ var Player = function(config) {
 
   // Blocker assignments - eventually we should just have some child object for Linemen
   this.blockingAssignmentArray = config.blockingAssignmentArray || [[], []];
+  this.defensiveMovement = []
 };
 
 //***************************************************************************//
@@ -463,6 +464,22 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	line(x1, y1, x2, y2); 
 
 	return new_coordinates;
+};
+
+// drawDefensiveMovement iterates through the players defensive movements
+// and draws a dotted line to the plave on the field they should be
+Player.prototype.drawDefensiveMovement = function(field) {
+	var currentX = this.x;
+	var currentY = this.y;
+
+	var black = color(0, 0, 0);
+	stroke(black);
+
+	for (var i = 0; i < this.defensiveMovement.length; i++) {
+		
+	}
+
+	noStroke();
 };
 
 // Dylan's line
