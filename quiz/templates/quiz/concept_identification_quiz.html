@@ -15,6 +15,11 @@
 		{% for conceptJson in conceptsJson %}
 		json_seed.push('{{ conceptJson|safe }}');
 		{% endfor %}
+
+		var concept_names = []
+		{% for conceptName in conceptNames %}
+		json_seed.push('{{ conceptName }}');
+		{% endfor %}
 	</script>
 
 	<script language="javascript" type="text/javascript" src="{% static 'quiz/conceptQuiz.js' %}"></script>
