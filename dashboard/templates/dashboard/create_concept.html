@@ -755,11 +755,28 @@
 			return false;
 		};
 
-		function isInsideTrash(player) {
-			return player.x > trash.x &&
-				player.x < trash.x + trash.width &&
-				player.y < trash.y &&
-				player.y > trash.y - trash.height
+		function keyPressed() {
+			var concept_name = document.getElementById("concept-name");
+
+			if ($("#header-box").hasClass("selected") && concept_name != null) {
+				var string_length = concept_name.textContent.length;
+
+				if (keyCode == BACKSPACE) {
+					if (concept_name != null) {
+						if(string_length > 0) {
+							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+						}
+					}
+
+					return false;
+				} else if (keyCode == 32) {
+					if (concept_name != null && string_length < 100) {
+						concept_name.textContent += ' ';
+					}
+
+					return false;
+				}
+			}
 		};
 
 		function keyTyped() {
@@ -793,36 +810,16 @@
 			} else if ()
 		};
 
-		function keyPressed() {
-			var concept_name = document.getElementById("concept-name");
-
-			if ($("#header-box").hasClass("selected") && concept_name != null) {
-				var string_length = concept_name.textContent.length;
-
-				if (keyCode == BACKSPACE) {
-					if (concept_name != null) {
-						if(string_length > 0) {
-							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
-						}
-					}
-
-					return false;
-				} else if (keyCode == 32) {
-					if (concept_name != null && string_length < 100) {
-						concept_name.textContent += ' ';
-					}
-
-					return false;
-				}
-			}
+		function isInsideTrash(player) {
+			return player.x > trash.x &&
+				player.x < trash.x + trash.width &&
+				player.y < trash.y &&
+				player.y > trash.y - trash.height
 		};
 
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-		function pressClear() {
-			concept.reset();
-		};
 
 		function pressZoomIn() {
 			var heightInYards = field.heightInYards;
