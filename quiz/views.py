@@ -741,8 +741,12 @@ def concept_identification_quiz(request):
 		number_of_questions = 5
 		all_concepts = Concept.objects.filter(team=request.user.player.team)
 		number_of_concepts = all_concepts.count()
+		concept_names = []
 		concepts_json = []
 		seeds = []
+
+		for concept in all_concepts:
+			concept_names.append(concept.name)
 
 		#print "Number of questions: %r" %number_of_questions
 		#print "Number of concepts: %r\n" %number_of_concepts
@@ -768,5 +772,6 @@ def concept_identification_quiz(request):
 		
 		return render(request, 'quiz/concept_identification_quiz.html', {
 			'conceptsJson': concepts_json,
+			'conceptNames': concept_names,
 			'page_header': 'CONCEPT ID QUIZ'
 		})
