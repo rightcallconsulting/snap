@@ -71,17 +71,17 @@ Concept.prototype.getSelected = function() {
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		if (this.offensivePlayers[i].selected) {
-			return this.offensivePlayers[i];
+			return [this.offensivePlayers[i], i];
 		}
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
 		if (this.defensivePlayers[i].selected) {
-			return this.defensivePlayers[i];
+			return [this.defensivePlayers[i], i];
 		}
 	}
 
-	return null;
+	return [null, null];
 };
 
 // clearSelected iterates through all the players in a concept and makes

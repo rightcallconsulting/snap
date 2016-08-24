@@ -677,7 +677,7 @@
 			}
 
 			// Handle clicks on players in the Concept
-			var currentPlayerSelected = concept.getSelected();
+			var currentPlayerSelected = concept.getSelected()[0];
 			var newPlayerSelected = concept.mouseInPlayer(field);
 
 			// If no one is currently selected and no one is clicked on do 
@@ -776,6 +776,20 @@
 
 					return false;
 				}
+			} else if (concept.getSelected()[0] != null) {
+				var playerSelcted = concept.getSelected()[0];
+				var playerSelctedIndex = concept.getSelected()[1];
+				if (keyCode == BACKSPACE || keyCode == DELETE) {
+					if (playerSelcted.unit == "offense") {
+						concept.offensivePlayers.splice(playerSelctedIndex, 1);
+					} else if (playerSelcted.unit == "defense") {
+						concept.defensivePlayers.splice(playerSelctedIndex, 1);
+					}
+
+					return false;
+				}
+
+				return false;	
 			}
 		};
 
@@ -807,7 +821,9 @@
 					// return false to prevent default behavior
 					return false;
 				}
-			} else if ()
+			} else if (concept.getSelected()[0] != null) {
+
+			}
 		};
 
 		function isInsideTrash(player) {
