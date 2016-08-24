@@ -41,7 +41,7 @@
 .small-sidebar {
 	width: 5vw;
 	height: 100vh;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 .small-sidebar .main-menu li {
