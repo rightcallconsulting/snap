@@ -181,9 +181,6 @@ Player.prototype.drawAllBlocks = function(field) {
 		}
 	}
 
-	// TODO: Implement the secondary assignments with dotted lines.
-	// Might be tricky.
-
 	noStroke();
 };
 
