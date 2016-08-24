@@ -324,9 +324,9 @@
 			defensivePlayerBar.init(field);
 
 			offensivePlayerBar = new PlayerBar({
-				y: field.height - 50,
 				playerOptions: createOffensivePlayerOptions()
 			});
+			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
 			offensivePlayerBar.init(field);
 
 			window.onresize = function() {

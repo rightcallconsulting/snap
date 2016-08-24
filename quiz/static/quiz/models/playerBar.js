@@ -3,13 +3,13 @@ var PlayerBar = function(config) {
 	this.x = config.x || 0;
 	this.y = config.y || 0;
 	this.width = config.width || field.width;
-	this.height = config.height || 50;
+	this.height = config.height || 35;
 	this.fill = config.fill || color(230, 230, 230);
 	this.playerOptions = config.playerOptions || [];
 };
 
 PlayerBar.prototype.init = function(field) {
-	var playerSiz = 30
+	var playerSiz = 25
 	var playerOptionX = this.x + playerSiz*0.75;
 	var playerOptionY = this.y + (this.height/2);
 

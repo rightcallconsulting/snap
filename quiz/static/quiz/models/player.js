@@ -138,8 +138,8 @@ Player.prototype.drawAllBlocks = function(field) {
 	var primaryAssingmentLength = primaryAssignment.length;
 	var secondaryAssignmentLength = secondaryAssignment.length;
 
-	var currentX = field.getTranslatedX(this.x);
-	var currentY = field.getTranslatedY(this.y);
+	var currentX = this.x;
+	var currentY = this.y;
 
 	var black = color(0, 0, 0);
 	stroke(black);
@@ -191,13 +191,13 @@ Player.prototype.drawAllBlocks = function(field) {
 // returns a 1x2 array containing the offensive players new coordinates
 // after completing their block.
 Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignment) {
-	var assignmentX = field.getTranslatedX(assignment.x);
-	var assignmentY = field.getTranslatedY(assignment.y);
+	var assignmentX = assignment.x;
+	var assignmentY = assignment.y;
 	var deltaX = assignmentX - currentX;
 	var deltaY = assignmentY - currentY;
 	var distToAssignment = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 	var alpha = atan(deltaY/deltaX);
-	var bufferFromAssignment = assignment.siz*10;
+	var bufferFromAssignment = assignment.siz/3;
 
 	var dist = distToAssignment - bufferFromAssignment;
 	var xDiff = cos(alpha)*dist;
@@ -208,7 +208,7 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	var y1 = currentY;
 	var x2, y2;
 
-	if (deltaX > 0) {
+	if (deltaX >= 0) {
 		x2 = currentX + xDiff;
 		y2 = currentY + yDiff;
 	} else {
@@ -216,12 +216,20 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 		y2 = currentY - yDiff;
 	}
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = sin(alpha)*lengthOfPerpLine/2;
 	yDiff = cos(alpha)*lengthOfPerpLine/2;
 	x1 = x2 + xDiff;
@@ -229,6 +237,10 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	x2 = x2 - xDiff;
 	y2 = y2 + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2); 
 
 	return new_coordinates;
@@ -237,7 +249,7 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 // drawMoneyBlock draws a man on block. It returns a 1x2 array containing 
 // the offensive players new coordinates after completing their block.
 Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
-	var dist = 20;
+	var dist = 1.5;
 	var xDiff = 0;
 	var yDiff = dist;
 
@@ -245,14 +257,22 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2 = currentX - xDiff;
-	var y2 = currentY - yDiff;
+	var y2 = currentY + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = lengthOfPerpLine/2;
 	yDiff = 0;
 	x1 = x2 - xDiff;
@@ -260,7 +280,11 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	x2 = x2 + xDiff;
 	y2 = y2 + yDiff;
 
-	line(x1, y1, x2, y2); 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -269,7 +293,7 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 // array containing the offensive players new coordinates after completing 
 // their block.
 Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
-	var dist = 30;
+	var dist = 2;
 	var xDiff = (dist/2)*sqrt(2);
 	var yDiff = (dist/2)*sqrt(2);
 
@@ -277,22 +301,34 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2 = currentX + xDiff;
-	var y2 = currentY - yDiff;
+	var y2 = currentY + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = lengthOfPerpLine/2;
 	yDiff = 0;
 	x1 = x2 - xDiff;
-	y1 = y2 - yDiff;
+	y1 = y2 + yDiff;
 	x2 = x2 + xDiff;
-	y2 = y2 + yDiff;
+	y2 = y2 - yDiff;
 
-	line(x1, y1, x2, y2); 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -301,7 +337,7 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 // array containing the offensive players new coordinates after completing 
 // their block.
 Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
-	var dist = 30;
+	var dist = 2;
 	var xDiff = (dist/2)*sqrt(2);
 	var yDiff = (dist/2)*sqrt(2);
 
@@ -309,22 +345,34 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2 = currentX - xDiff;
-	var y2 = currentY - yDiff;
+	var y2 = currentY + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = lengthOfPerpLine/2;
 	yDiff = 0;
 	x1 = x2 - xDiff;
-	y1 = y2 - yDiff;
+	y1 = y2 + yDiff;
 	x2 = x2 + xDiff;
-	y2 = y2 + yDiff;
+	y2 = y2 - yDiff;
 
-	line(x1, y1, x2, y2); 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -333,7 +381,7 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 // the field. It returns a 1x2 array containing the offensive players new 
 // coordinates after completing their block.
 Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
-	var dist = 45;
+	var dist = 3;
 	var xDiff = 0;
 	var yDiff = dist;
 
@@ -341,22 +389,34 @@ Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2 = currentX + xDiff;
-	var y2 = currentY - yDiff;
+	var y2 = currentY + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = (lengthOfPerpLine/4)*sqrt(2);
 	yDiff = (lengthOfPerpLine/4)*sqrt(2);
 	x1 = x2 - xDiff;
-	y1 = y2 + yDiff;
+	y1 = y2 - yDiff;
 	x2 = x2 + xDiff;
-	y2 = y2 - yDiff;
+	y2 = y2 + yDiff;
 
-	line(x1, y1, x2, y2); 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -365,7 +425,7 @@ Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 // the field. It returns a 1x2 array containing the offensive players new 
 // coordinates after completing their block.
 Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
-	var dist = 45;
+	var dist = 3;
 	var xDiff = 0;
 	var yDiff = dist;
 
@@ -373,21 +433,33 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2 = currentX - xDiff;
-	var y2 = currentY - yDiff;
+	var y2 = currentY + yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
 
 	var new_coordinates = [x2, y2];
 
 	// Perpendicular line at the end of the down block
-	var lengthOfPerpLine = 20;
+	var lengthOfPerpLine = 1.5;
 	xDiff = (lengthOfPerpLine/4)*sqrt(2);
 	yDiff = (lengthOfPerpLine/4)*sqrt(2);
 	x1 = x2 - xDiff;
-	y1 = y2 - yDiff;
+	y1 = y2 + yDiff;
 	x2 = x2 + xDiff;
-	y2 = y2 + yDiff;
+	y2 = y2 - yDiff;
 
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2); 
 
 	return new_coordinates;
