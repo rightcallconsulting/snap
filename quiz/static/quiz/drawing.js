@@ -20,7 +20,7 @@ function dottedLine(x1, y1, x2, y2) {
 	var xDiff = cos(alpha)*segmentDist;
 	var yDiff = sin(alpha)*segmentDist;
 
-	if (deltaX <= 0) {
+	if (deltaX < 0) {
 		xDiff = -xDiff;
 		yDiff = -yDiff;
 	}
