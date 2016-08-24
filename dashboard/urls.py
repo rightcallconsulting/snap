@@ -30,7 +30,7 @@ urlpatterns = [
 	url(r'^analytics$', views.analytics, name='analytics'),
 	
 	# Concepts
-	#url(r'^concepts$', views.concepts, name='concepts'),
+	url(r'^concepts$', views.concepts, name='concepts'),
 	url(r'^concepts/create$', views.create_concept, name='create_concept'),
 	
 	# JSON requests
