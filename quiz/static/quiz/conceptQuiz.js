@@ -132,6 +132,7 @@ function shuffle(array) {
 function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 	var correctIndex = Math.floor((Math.random() * numOptions));
 	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
+	// I can probably just set multiple choice answers == concept names and shuffle
 	multipleChoiceAnswers = [];
 	var availableNames = conceptNames.slice();
 	shuffle(availableNames);
