@@ -779,14 +779,24 @@
 			} else if (concept.getSelected()[0] != null) {
 				var playerSelcted = concept.getSelected()[0];
 				var playerSelctedIndex = concept.getSelected()[1];
+				var what_kind_of_dog_is_this = key;
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
 						concept.offensivePlayers.splice(playerSelctedIndex, 1);
 					} else if (playerSelcted.unit == "defense") {
 						concept.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
-
 					return false;
+				} else if (key === "Q") {
+					playerSelcted.blockingAssignmentArray[0] = ["Money Block"];
+				} else if (key === "W") {
+					playerSelcted.blockingAssignmentArray[0] = ["Down Block Right"];
+				} else if (key === "E") {
+					playerSelcted.blockingAssignmentArray[0] = ["Down Block Left"];
+				} else if (key === "R") {
+					playerSelcted.blockingAssignmentArray[0] = ["Straight Seal Right"];
+				} else if (key === "T") {
+					playerSelcted.blockingAssignmentArray[0] = ["Straight Seal Left"];
 				}
 
 				return false;	
@@ -821,8 +831,6 @@
 					// return false to prevent default behavior
 					return false;
 				}
-			} else if (concept.getSelected()[0] != null) {
-
 			}
 		};
 
