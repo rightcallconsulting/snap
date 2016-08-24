@@ -93,7 +93,7 @@ top navbar and sidebar css
 .full-sidebar {
 	width: 12vw;
 	height: 100vh;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 .full-sidebar-container,
