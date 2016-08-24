@@ -618,6 +618,57 @@
 			return false;
 		}
 
+		function mouseDragged() {
+			mouseBeingDragged = true;
+
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
+
+			if (playerBeingDragged != null) {
+				playerBeingDragged.x = mouseYardX;
+				playerBeingDragged.y = mouseYardY;
+			}
+
+			if(playerBeingDragged && playerBeingDragged.pos === "C") {
+				var mouseYardX = field.getYardX(mouseX);
+				var xDiff = mouseYardX - playerBeingDragged.x;
+
+				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
+					xDiff = 0;
+				}
+
+				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
+					xDiff = 0;
+				}
+
+				for(var i = 0; i < concept.offensivePlayers.length; i++) {
+					var player = concept.offensivePlayers[i];
+					player.x += xDiff;
+				}
+
+				for(var i = 0; i < concept.defensivePlayers.length; i++) {
+					var player = concept.defensivePlayers[i];
+
+					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
+						player.x += xDiff;
+					} else {
+						player.x += xDiff * 0.75;
+					}
+					
+					if(player.x < 0) {
+						player.x = 0;
+					}
+					
+					if(player.x > Field.WIDTH) {
+						player.x = Field.WIDTH;
+					}
+				}
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
+
 		function mouseReleased() {
 			if (mouseBeingDragged === true) {
 				mouseBeingDragged = false;
@@ -704,57 +755,6 @@
 			return false;
 		};
 
-		function mouseDragged() {
-			mouseBeingDragged = true;
-
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
-
-			if (playerBeingDragged != null) {
-				playerBeingDragged.x = mouseYardX;
-				playerBeingDragged.y = mouseYardY;
-			}
-
-			if(playerBeingDragged && playerBeingDragged.pos === "C") {
-				var mouseYardX = field.getYardX(mouseX);
-				var xDiff = mouseYardX - playerBeingDragged.x;
-
-				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
-					xDiff = 0;
-				}
-
-				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
-					xDiff = 0;
-				}
-
-				for(var i = 0; i < concept.offensivePlayers.length; i++) {
-					var player = concept.offensivePlayers[i];
-					player.x += xDiff;
-				}
-
-				for(var i = 0; i < concept.defensivePlayers.length; i++) {
-					var player = concept.defensivePlayers[i];
-
-					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
-						player.x += xDiff;
-					} else {
-						player.x += xDiff * 0.75;
-					}
-					
-					if(player.x < 0) {
-						player.x = 0;
-					}
-					
-					if(player.x > Field.WIDTH) {
-						player.x = Field.WIDTH;
-					}
-				}
-			}
-
-			// return false to prevent default behavior
-			return false;
-		};
-
 		function isInsideTrash(player) {
 			return player.x > trash.x &&
 				player.x < trash.x + trash.width &&
@@ -790,7 +790,7 @@
 					// return false to prevent default behavior
 					return false;
 				}
-			}
+			} else if ()
 		};
 
 		function keyPressed() {
