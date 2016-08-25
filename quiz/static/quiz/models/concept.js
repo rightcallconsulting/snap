@@ -242,9 +242,9 @@ function createConceptFromJson(conceptJsonDictionary) {
 		});
 
 		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
-			for (var i = 0; i < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++i) {
-				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[i];
-				player.defensiveMovement.push([movement.x, movement.y]);
+			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
 			}
 		}
 
