@@ -192,6 +192,8 @@
 		};
 
 		$("#save-button").click(function(event) {
+			concept.clearSelected();
+
 			var placeholder_message = document.getElementById("placeholder-message");
 			var concept_name = document.getElementById("concept-name");
 			var path = "/concepts/create";
@@ -222,14 +224,29 @@
 			concept.name = concept_name.textContent;
 			concept.team = teamID;
 			concept.save(path, csrf_token);
-			concepts.push(concept);
-
-			// Create a new concept to replace teh one you jsut saved on the screen.
-			concept = new Concept({});
 
 			// Update the top interactive text bar to have a placeholder again.
 			removeHeaderName();
 			addHeaderPlaceholder();
+
+			// If this concept name already exists the backend should replace
+			// the old one and not save a new one. The frontend should also
+			// update the existing version it has and return.
+			for (var i = 0; i < concepts.length; ++i) {
+				if (concept.name === concepts[i].name) {
+					concepts[i] = concept;
+					concept = new Concept({});
+					return;
+				}
+			}
+
+			// If the concept name does not exist the backend will create a
+			// new database entry. The frontend should push this concept to
+			// its concepts array and add a new button for it to the sidebar.
+			concepts.push(concept);
+
+			// Create a new concept to replace teh one you jsut saved on the screen.
+			concept = new Concept({});
 
 			// Update the sidebar to include a new button for the concept that was just saved.
 			var sidebar_table_body = document.getElementById("concept-buttons");
@@ -247,6 +264,7 @@
 			new_concept_button_cell.appendChild(new_concept_button);
 			new_concept_button_row.appendChild(new_concept_button_cell);
 			sidebar_table_body.appendChild(new_concept_button_row);
+			return;
 		});
 
 		$("#clear-button").click(function(event) {
