@@ -221,7 +221,7 @@
 			}
 
 			var name = concept_name.textContent;
-			concept.name = concept_name.textContent;
+			concept.name = name;
 			concept.team = teamID;
 			concept.save(path, csrf_token);
 
@@ -245,7 +245,7 @@
 			// its concepts array and add a new button for it to the sidebar.
 			concepts.push(concept);
 
-			// Create a new concept to replace teh one you jsut saved on the screen.
+			// Create a new concept to replace the one you jsut saved on the screen.
 			concept = new Concept({});
 
 			// Update the sidebar to include a new button for the concept that was just saved.
