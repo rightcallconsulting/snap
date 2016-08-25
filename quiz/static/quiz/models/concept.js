@@ -238,9 +238,15 @@ function createConceptFromJson(conceptJsonDictionary) {
 			blue: conceptJsonDictionary.defensivePlayers[i].blue,
 			unit: conceptJsonDictionary.defensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
-			siz: conceptJsonDictionary.defensivePlayers[i].siz,
-			defensiveMovement: conceptJsonDictionary.defensivePlayers[i].defensiveMovement
+			siz: conceptJsonDictionary.defensivePlayers[i].siz
 		});
+
+		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var i = 0; i < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++i) {
+				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[i];
+				player.defensiveMovement.push([movement.x, movement.y]);
+			}
+		}
 
 		defensivePlayersArray.push(player);
 	}
