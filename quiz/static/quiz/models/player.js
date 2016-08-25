@@ -486,7 +486,25 @@ Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
 	var x2, y2;
 	
 	x2 = currentX + xDiff;
-	y2 = currentY + yDiff;
+	y2 = currentY - yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	dist = 4;
+	xDiff = cos(alpha)*dist;
+	yDiff = sin(alpha)*dist;
+	x1 = x2;
+	y1 = y2;
+	x2 = x1 + xDiff;
+	y2 = y1 + yDiff;
 
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);
@@ -532,8 +550,8 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	var y1 = currentY;
 	var x2, y2;
 
-	x2 = currentX + xDiff;
-	y2 = currentY + yDiff;
+	x2 = currentX - xDiff;
+	y2 = currentY - yDiff;
 
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);
