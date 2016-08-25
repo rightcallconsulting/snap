@@ -475,8 +475,8 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 // array containing the offensive players new coordinates after completing 
 // their block.
 Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
-	var dist = 2;
-	var alpha = 45*(PI/180);
+	var dist = 1.5;
+	var alpha = 55*(PI/180);
 	var xDiff = cos(alpha)*dist;
 	var yDiff = sin(alpha)*dist;
 
@@ -498,7 +498,7 @@ Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
 	x2 = field.getYardX(x2);
 	y2 = field.getYardY(y2);
 
-	dist = 4;
+	dist = 3;
 	xDiff = cos(alpha)*dist;
 	yDiff = sin(alpha)*dist;
 	x1 = x2;
