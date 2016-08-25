@@ -177,6 +177,14 @@ Player.prototype.drawAllBlocks = function(field) {
 				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Kick Out Right") {
+				var new_coordinates = this.drawKickOutRight(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Kick Out Left") {
+				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
 			}
 		}
 	}
