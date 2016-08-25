@@ -226,7 +226,7 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	var new_coordinates = [x2, y2];
 
-	// Perpendicular line at the end of the down block
+	/*// Perpendicular line at the end of the down block
 	var lengthOfPerpLine = 1.5;
 	xDiff = sin(alpha)*lengthOfPerpLine/2;
 	yDiff = cos(alpha)*lengthOfPerpLine/2;
@@ -239,7 +239,46 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2); 
+	line(x1, y1, x2, y2);*/
+
+	// Arrow
+	var lengthOfArrow = 1;
+	var beta = 0.785398 - alpha;
+	x1 = x2;
+	y1 = y2;
+	xDiff = cos(beta)*lengthOfArrow;
+	yDiff = sin(beta)*lengthOfArrow;
+	if (deltaX >= 0) {
+		x2 = x1 - yDiff;
+		y2 = y1 - xDiff;
+	} else {
+		x2 = x1 + yDiff;
+		y2 = y1 + xDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	if (deltaX >= 0) {
+		x2 = x1 - xDiff;
+		y2 = y1 + yDiff;
+	} else {
+		x2 = x1 + xDiff;
+		y2 = y1 - yDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);  
 
 	return new_coordinates;
 };
@@ -468,13 +507,14 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 Player.prototype.drawDefensiveMovement = function(field) {
 	var x1 = this.x;
 	var y1 = this.y;
+	var x2, y2;
 
 	var black = color(0, 0, 0);
 	stroke(black);
 
 	for (var i = 0; i < this.defensiveMovement.length; i++) {
-		var x2 = this.defensiveMovement[i][0];
-		var y2 = this.defensiveMovement[i][1];
+		x2 = this.defensiveMovement[i][0];
+		y2 = this.defensiveMovement[i][1];
 
 		x1 = field.getTranslatedX(x1);
 		y1 = field.getTranslatedY(y1);
@@ -484,6 +524,48 @@ Player.prototype.drawDefensiveMovement = function(field) {
 		x1 = field.getYardX(x2);
 		y1 = field.getYardY(y2);
 	}
+
+	// Arrow
+	var lengthOfArrow = 1;
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+	var beta = 0.785398 - alpha;
+	var xDiff = cos(beta)*lengthOfArrow;
+	var yDiff = sin(beta)*lengthOfArrow;
+	x1 = x2;
+	y1 = y2;
+	if (deltaX >= 0) {
+		x2 = x1 - yDiff;
+		y2 = y1 - xDiff;
+	} else {
+		x2 = x1 + yDiff;
+		y2 = y1 + xDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	if (deltaX >= 0) {
+		x2 = x1 - xDiff;
+		y2 = y1 + yDiff;
+	} else {
+		x2 = x1 + xDiff;
+		y2 = y1 - yDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2); 
 
 	noStroke();
 };
