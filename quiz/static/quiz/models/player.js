@@ -185,7 +185,7 @@ Player.prototype.drawAllBlocks = function(field) {
 				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssingmentLength - i != 1) {
+			} else {
 				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, primaryAssignment[i][0], primaryAssignment[i][1]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
