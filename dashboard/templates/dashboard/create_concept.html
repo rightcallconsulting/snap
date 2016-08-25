@@ -715,10 +715,12 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				if (currentPlayerSelected.unit === "offense") {
-					currentPlayerSelected.blockingAssignmentArray[0].push([mouseYardX, mouseYardY]);
-				} else if (currentPlayerSelected.unit === "defense") {
-					currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
+				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
+					if (currentPlayerSelected.unit === "offense") {
+						currentPlayerSelected.blockingAssignmentArray[0].push([mouseYardX, mouseYardY]);
+					} else if (currentPlayerSelected.unit === "defense") {
+						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
+					}
 				} else {
 					concept.clearSelected();
 				}
