@@ -471,8 +471,8 @@ Player.prototype.drawDefensiveMovement = function(field) {
 	var x2 = this.x;
 	var y2 = this.y;
 
-	var black = color(0, 0, 0);
-	stroke(black);
+	var gray = color(60, 60, 60);
+	stroke(gray);
 
 	for (var i = 0; i < this.defensiveMovement.length; i++) {
 		x1 = x2;
