@@ -685,11 +685,11 @@
 			// If no one is currently selected and no one is clicked on do 
 			// nothing. Else if no one is currently selected and someone is 
 			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then clear
-			// all selections and return. Else if the currently selected player 
-			// is the same as the newly selected player then clear all
-			// selections and return. Else two seperate players are assigned to
-			// those variables and handle accordingly.
+			// is currently selected and empty field is clicked on then draw 
+			// appropriate assignment based on players unit return. Else if 
+			// the currently selected player is the same as the newly selected 
+			// player then clear all selections and return. Else two seperate 
+			// players are assigned to those variables and handle accordingly.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
 				// Do nothing?		
@@ -697,7 +697,9 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				if (currentPlayerSelected.unit === "defense") {
+				if (currentPlayerSelected.unit === "offense") {
+					currentPlayerSelected.blockingAssignmentArray[0].push([mouseYardX, mouseYardY]);
+				} else if (currentPlayerSelected.unit === "defense") {
 					currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 				} else {
 					concept.clearSelected();
