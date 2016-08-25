@@ -245,7 +245,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	if (conceptJsonDictionary.offensiveLineman != null) {
+	if (conceptJsonDictionary.offensiveLinemen != null) {
 		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
 			var player = new Player({
 				x: conceptJsonDictionary.offensiveLinemen[i].x,
