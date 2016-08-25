@@ -185,6 +185,10 @@ Player.prototype.drawAllBlocks = function(field) {
 				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
+			} else if (primaryAssingmentLength - i != 1) {
+				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, primaryAssignment[i][0], primaryAssignment[i][1]);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
 			}
 		}
 	}
@@ -597,6 +601,25 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
+Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
 
 	return new_coordinates;
 };
