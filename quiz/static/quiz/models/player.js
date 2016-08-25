@@ -588,9 +588,9 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	xDiff = sin(alpha)*lengthOfPerpLine/2;
 	yDiff = cos(alpha)*lengthOfPerpLine/2;
 	x1 = x2 + xDiff;
-	y1 = y2 - yDiff;
+	y1 = y2 + yDiff;
 	x2 = x2 - xDiff;
-	y2 = y2 + yDiff;
+	y2 = y2 - yDiff;
 
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);
