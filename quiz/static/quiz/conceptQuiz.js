@@ -17,7 +17,7 @@ function setup() {
 	field.height = height;
 	field.width = width;
 	field.heightInYards = 34;
-	field.ballYardLine = 75;
+	field.ballYardLine = 65;
 	background(58, 135, 70);
 	randomSeed(millis());
 	myCanvas.parent('quiz-box');
