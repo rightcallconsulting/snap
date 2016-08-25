@@ -493,7 +493,7 @@ Player.prototype.drawDefensiveMovement = function(field) {
 	}
 
 	// Arrow
-	var lengthOfArrow = 0.75;
+	var lengthOfArrow = 0.5;
 	var deltaX = x2 - x1;
 	var deltaY = y2 - y1;
 	var alpha = atan(deltaY/deltaX);
