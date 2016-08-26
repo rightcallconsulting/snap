@@ -192,6 +192,7 @@
 		};
 
 		$("#save-button").click(function(event) {
+			// Don't save the concept with one of the players selected.
 			concept.clearSelected();
 
 			var placeholder_message = document.getElementById("placeholder-message");
@@ -220,6 +221,7 @@
 				return;
 			}
 
+			// var name gets the textContent of the header box.
 			var name = concept_name.textContent;
 
 			// Update the top interactive text bar to have a placeholder again.
