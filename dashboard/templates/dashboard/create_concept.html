@@ -167,6 +167,10 @@
 		function changeSelected(selected) {
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
 
 			concept = new Concept({});
 			
@@ -188,6 +192,15 @@
 						concept = concepts[i];
 					}
 				}
+
+				/*var concept_name = document.getElementById("concept-name");
+
+				if (concept_name === null) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
+				}*/
 			}
 		};
 
