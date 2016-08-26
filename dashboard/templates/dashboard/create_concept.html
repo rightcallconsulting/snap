@@ -178,7 +178,9 @@
 			header_box.appendChild(error_message);
 		};
 
-		$("#sideview").click(function(event) {});
+		$("#sideview").click(function(event) {
+			$(this);
+		});
 
 		function changeSelected(selected) {
 			var new_selected = selected;

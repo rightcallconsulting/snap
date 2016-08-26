@@ -230,7 +230,7 @@ div#sideview {
 	border: #777;
 	border-style: solid;
 	border-width: 2px;
-	padding: 0px;
+	padding: 0;
 }
 
 div#sideview-header {
@@ -252,7 +252,10 @@ div#sideview-buttons {
 	overflow: scroll;
 	margin: 0;
 	border-width: 0;
-	padding: 6px;
+	padding-top: 6px;
+	padding-right: 6px;
+	padding-bottom: 0;
+	padding-left: 6px;
 }
 
 button.sideview-button {
