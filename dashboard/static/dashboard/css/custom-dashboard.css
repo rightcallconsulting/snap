@@ -5,7 +5,7 @@
 }
 
 ::-webkit-scrollbar {
-	display: hidden;
+	display: none;
 }
 
 #wrapper {
