@@ -53,7 +53,6 @@
 					<button class="btn btn-primary sideview-button" name="{{ concept.name }}">
 						{{ concept.name }}
 					</button>
-					<br>
 				{% endfor %}
 			</div>
 		</div>
@@ -208,6 +207,8 @@
 			// button we are done. If it isn't we need to update the newly
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -269,12 +270,12 @@
 
 			// Deselect the currently selected sidebar because that concept is
 			// going to dissappear from the screen.
-			var selected_sidebar_button = document.getElementById("selected");
+			var selected_sideview_button = document.getElementById("selected");
 			
-			if (selected_sidebar_button != null) {
-				selected_sidebar_button.removeAttribute("id");
-				selected_sidebar_button.removeAttribute("class");
-				selected_sidebar_button.setAttribute("class", "btn btn-primary");
+			if (selected_sideview_button != null) {
+				selected_sideview_button.removeAttribute("id");
+				selected_sideview_button.removeAttribute("class");
+				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
 			}
 
 			// var name gets the textContent of the header box.
@@ -310,22 +311,16 @@
 
 			// Update the sidebar to include a new button for the concept that
 			// was just saved.
-			var sidebar_table_body = document.getElementById("concept-buttons");
-
-			var new_concept_button_row = document.createElement("tr");
-			var new_concept_button_cell = document.createElement("td");
-			var new_concept_button = document.createElement("button");
+			var sideview_buttons_div = document.getElementById("sideview-buttons");
 			
 			// Create a button for the new concept.
-			new_concept_button.setAttribute("class", "btn btn-primary");
-			new_concept_button.setAttribute("onclick", "changeSelected(this)");
+			var new_concept_button = document.createElement("button");
+			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_concept_button.setAttribute("name", name);
 			new_concept_button.textContent = name;
 
-			// Add all of our new HTML to the table body.
-			new_concept_button_cell.appendChild(new_concept_button);
-			new_concept_button_row.appendChild(new_concept_button_cell);
-			sidebar_table_body.appendChild(new_concept_button_row);
+			// Add the new button to the sideview button div.
+			sideview_buttons_div.appendChild(new_concept_button);
 			return;
 		});
 
