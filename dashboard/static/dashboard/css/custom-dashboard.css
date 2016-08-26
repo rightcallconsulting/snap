@@ -6,6 +6,8 @@
 
 ::-webkit-scrollbar {
 	display: none;
+	width: 0;
+	height: 0;
 }
 
 #wrapper {
@@ -1414,6 +1416,10 @@ select#id_player {
 .edit-profile label {
 	width: 110px;
 	text-align: right;
+}
+
+#create-formation {
+	padding: 20px;
 }
 
 div#create-formation div#choose-existing-formation,
