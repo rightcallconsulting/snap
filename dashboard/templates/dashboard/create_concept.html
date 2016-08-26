@@ -43,8 +43,22 @@
 				</table>
 			</div>
 		</div>
+
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header">
+				Existing Concepts
+			</div>
+			<div id="sideview-buttons">
+				{% for concept in concepts %}
+					<button id="{{ concept.name }}" class="btn btn-primary sideview-button">
+						{{ concept.name }}
+					</button>
+					<br>
+				{% endfor %}
+			</div>
+		</div>
 		
-		<div id="choose-existing-formation" class="col-md-3 bordered-div">
+		<!--<div id="choose-existing-formation" class="col-md-3 bordered-div">
 			<div id="header-box" class="header">
 				Existing Concepts
 			</div>
@@ -65,7 +79,7 @@
 				</table>
 			</div>
 		</div>
-	</div><!--/create-formation-->
+	</div>--><!--/create-formation-->
 
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
 	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
