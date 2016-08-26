@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for concept in concepts %}
-					<button id="{{ concept.name }}" class="btn btn-primary sideview-button">
+					<button class="btn btn-primary sideview-button" name="{{ concept.name }}">
 						{{ concept.name }}
 					</button>
 					<br>
@@ -178,36 +178,46 @@
 			header_box.appendChild(error_message);
 		};
 
-		$("#sideview").click(function(event) {
-			$(this);
-		});
-
-		function changeSelected(selected) {
-			var new_selected = selected;
+		$("button.sideview-button").click(function(event) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = $(this)[0];
 			var old_selected = document.getElementById("selected");
+			
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// concept we selected.
 			removeHeaderPlaceholder();
 			removeHeaderError();
 			removeHeaderName();
 			addHeaderPlaceholder();
 
+			// Create a new concept to replace whatever was already on screen.
 			concept = new Concept({});
-			
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
 			}
 
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
 				var concept_name = new_selected.getAttribute("name");
 
 				for (var i = 0; i < concepts.length; ++i) {
 					if (concept_name === concepts[i].name) {
 						concept = concepts[i];
+						break;
 					}
 				}
 
@@ -225,7 +235,7 @@
 				concept_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(concept_name);
 			}
-		};
+		});
 
 		$("#save-button").click(function(event) {
 			// Don't save the concept with one of the players selected.
