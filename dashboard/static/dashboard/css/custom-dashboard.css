@@ -4,6 +4,10 @@
 	box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+	display: hidden;
+}
+
 #wrapper {
 	height: 100%;
 	overflow-x: hidden;
@@ -1399,7 +1403,7 @@ select#id_player {
 }
 
 .fa-plus-circle.green {
-  	color: green;
+	color: green;
 }
 
 .create-quiz label {
