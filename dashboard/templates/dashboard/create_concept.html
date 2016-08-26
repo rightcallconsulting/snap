@@ -193,14 +193,19 @@
 					}
 				}
 
-				/*var concept_name = document.getElementById("concept-name");
+				var header_text_content = concept_name;
+				concept_name = document.getElementById("concept-name");
 
 				if (concept_name === null) {
-					removeHeaderPlaceholder();
-					removeHeaderError();
 					concept_name = document.createElement("p");
 					concept_name.setAttribute("id", "concept-name");
-				}*/
+				}
+
+				removeHeaderPlaceholder();
+				removeHeaderError();
+				removeHeaderName();
+				concept_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(concept_name);
 			}
 		};
 
