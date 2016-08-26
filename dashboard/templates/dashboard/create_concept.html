@@ -221,13 +221,6 @@
 				return;
 			}
 
-			// var name gets the textContent of the header box.
-			var name = concept_name.textContent;
-
-			// Update the top interactive text bar to have a placeholder again.
-			removeHeaderName();
-			addHeaderPlaceholder();
-
 			// Deselect the currently selected sidebar because that concept is
 			// going to dissappear from the screen.
 			var selected_sidebar_button = document.getElementById("selected");
@@ -237,6 +230,13 @@
 				selected_sidebar_button.removeAttribute("class");
 				selected_sidebar_button.setAttribute("class", "btn btn-primary");
 			}
+
+			// var name gets the textContent of the header box.
+			var name = concept_name.textContent;
+
+			// Update the top interactive text bar to have a placeholder again.
+			removeHeaderName();
+			addHeaderPlaceholder();
 
 			// If this concept name already exists the backend should replace
 			// the old one and not save a new one. The frontend should also
@@ -258,22 +258,25 @@
 			concept.save(path, csrf_token);
 			concepts.push(concept);
 
-			// Create a new concept to replace the one you jsut saved on the screen.
+			// Create a new concept to replace the one you jsut saved on the 
+			// screen.
 			concept = new Concept({});
 
-			// Update the sidebar to include a new button for the concept that was just saved.
+			// Update the sidebar to include a new button for the concept that
+			// was just saved.
 			var sidebar_table_body = document.getElementById("concept-buttons");
 
 			var new_concept_button_row = document.createElement("tr");
 			var new_concept_button_cell = document.createElement("td");
 			var new_concept_button = document.createElement("button");
 			
-			// class="btn btn-primary" onclick="changeSelected(this)" name="{{ concept.name }}"
+			// Create a button for the new concept.
 			new_concept_button.setAttribute("class", "btn btn-primary");
 			new_concept_button.setAttribute("onclick", "changeSelected(this)");
 			new_concept_button.setAttribute("name", name);
 			new_concept_button.textContent = name;
 
+			// Add all of our new HTML to the table body.
 			new_concept_button_cell.appendChild(new_concept_button);
 			new_concept_button_row.appendChild(new_concept_button_cell);
 			sidebar_table_body.appendChild(new_concept_button_row);
