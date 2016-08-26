@@ -228,6 +228,16 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
+			// Deselect the currently selected sidebar because that concept is
+			// going to dissappear from the screen.
+			var selected_sidebar_button = document.getElementById("selected");
+			
+			if (selected_sidebar_button != null) {
+				selected_sidebar_button.removeAttribute("id");
+				selected_sidebar_button.removeAttribute("class");
+				selected_sidebar_button.setAttribute("class", "btn btn-primary");
+			}
+
 			// If this concept name already exists the backend should replace
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
