@@ -221,9 +221,6 @@
 			}
 
 			var name = concept_name.textContent;
-			concept.name = name;
-			concept.team = teamID;
-			concept.save(path, csrf_token);
 
 			// Update the top interactive text bar to have a placeholder again.
 			removeHeaderName();
@@ -235,6 +232,7 @@
 			for (var i = 0; i < concepts.length; ++i) {
 				if (name === concepts[i].name) {
 					concepts[i] = concept;
+					concept.save(path, csrf_token);
 					concept = new Concept({});
 					return;
 				}
@@ -243,6 +241,9 @@
 			// If the concept name does not exist the backend will create a
 			// new database entry. The frontend should push this concept to
 			// its concepts array and add a new button for it to the sidebar.
+			concept.name = name;
+			concept.team = teamID;
+			concept.save(path, csrf_token);
 			concepts.push(concept);
 
 			// Create a new concept to replace the one you jsut saved on the screen.
