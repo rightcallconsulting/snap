@@ -578,6 +578,8 @@
 			}
 		});
 
+		$("#sideview-buttons").click(function(event) {});
+
 		$("#save-button").click(function(event) {
 			// Don't save the concept with one of the players selected.
 			concept.clearSelected();
@@ -655,8 +657,8 @@
 			
 			// Create a button for the new concept.
 			var new_concept_button = document.createElement("button");
-			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_concept_button.setAttribute("name", name);
+			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_concept_button.textContent = name;
 
 			// Add the new button to the sideview button div.
