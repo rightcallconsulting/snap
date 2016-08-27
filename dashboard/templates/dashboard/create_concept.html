@@ -565,11 +565,31 @@
 		});
 
 		$("#zoom-in-button").click(function(event) {
-			pressZoomIn();
+			//pressZoomIn();
+
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
 		});
 
 		$("#zoom-out-button").click(function(event) {
-			pressZoomOut();
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
 		});
 
 		$("#full-screen-button").click(function(event) {});
