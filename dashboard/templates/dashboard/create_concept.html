@@ -264,35 +264,6 @@
 			fill(176,176,176);
 		};
 
-		function drawDebuggingInfo() {
-			textAlign(CENTER);
-
-			var textX = field.width / 2;
-			var textY = field.height * 0.40;
-			var textYSpacing = 30;
-
-			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
-			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
-			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
-			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
-
-			fill(0, 0, 0);
-			textSize(20);
-
-			text(mouseXString, textX, textY);
-			
-			textY += textYSpacing;
-			text(mouseYString, textX, textY);
-			
-			textY += textYSpacing;
-			text(widthString, textX, textY);
-			
-			textY += textYSpacing;
-			text(heightString, textX, textY);
-
-			fill(176,176,176);
-		};
-
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
@@ -518,45 +489,6 @@
 				concept_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(concept_name);
 			}
-		};
-
-		function removeHeaderError() {
-			var header_box = document.getElementById("header-box");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("error");
-			
-			if (error_message != null) {
-				header_box.removeChild(error_message);
-			}
-		};
-
-		function removeHeaderName() {
-			var header_box = document.getElementById("header-box");
-			var concept_name = document.getElementById("concept-name");
-
-			if (concept_name != null) {
-				header_box.removeChild(concept_name);
-			}
-		};
-
-		function addHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").addClass("placeholder");
-
-			var placeholder = document.createElement("p");
-			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Concept Name";
-			header_box.appendChild(placeholder);
-		};
-
-		function addHeaderError() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").removeClass("selected placeholder").addClass("error");
-
-			var error_message = document.createElement("p");
-			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Concept Name";
-			header_box.appendChild(error_message);
 		};
 
 		//*******************************************************************//
@@ -801,11 +733,79 @@
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
+		function removeHeaderError() {
+			var header_box = document.getElementById("header-box");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("error");
+			
+			if (error_message != null) {
+				header_box.removeChild(error_message);
+			}
+		};
+
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var concept_name = document.getElementById("concept-name");
+
+			if (concept_name != null) {
+				header_box.removeChild(concept_name);
+			}
+		};
+
+		function addHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Concept Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
+
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Invalid Concept Name";
+			header_box.appendChild(error_message);
+		};
+
 		function isInsideTrash(player) {
 			return player.x > trash.x &&
 				player.x < trash.x + trash.width &&
 				player.y < trash.y &&
 				player.y > trash.y - trash.height
+		};
+
+		function drawDebuggingInfo() {
+			textAlign(CENTER);
+
+			var textX = field.width / 2;
+			var textY = field.height * 0.40;
+			var textYSpacing = 30;
+
+			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
+			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
+			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
+			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
+
+			fill(0, 0, 0);
+			textSize(20);
+
+			text(mouseXString, textX, textY);
+			
+			textY += textYSpacing;
+			text(mouseYString, textX, textY);
+			
+			textY += textYSpacing;
+			text(widthString, textX, textY);
+			
+			textY += textYSpacing;
+			text(heightString, textX, textY);
+
+			fill(176,176,176);
 		};
 
 		function createOffensivePlayerOptions() {
