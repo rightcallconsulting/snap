@@ -420,16 +420,6 @@
 
 		$("#full-screen-button").click(function(event) {});
 
-		function removeHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			var placeholder_message = document.getElementById("placeholder-message");
-			$("#header-box").removeClass("placeholder");
-			
-			if (placeholder_message != null) {
-				header_box.removeChild(placeholder_message);
-			}
-		};
-
 		function changeSelectedButton(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
@@ -733,6 +723,16 @@
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
+		function removeHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			var placeholder_message = document.getElementById("placeholder-message");
+			$("#header-box").removeClass("placeholder");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
+			}
+		};
+
 		function removeHeaderError() {
 			var header_box = document.getElementById("header-box");
 			var error_message = document.getElementById("error-message");
@@ -930,8 +930,11 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
+		
+		// Don't really need this function, but I could see it being useful
+		// later.
 		function resizeBottomButtons() {
-			var trashWidth = field.pixelsToYards(field.width * 0.12);
+			/*var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5){
 				trashWidth = 5;
 			}
@@ -953,7 +956,7 @@
 			trash.y = trashY;
 			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
 				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
-			}
+			}*/
 		};
 	</script>
 {% endblock %}
