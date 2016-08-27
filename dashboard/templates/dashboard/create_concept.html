@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for concept in concepts %}
-					<button class="btn btn-primary sideview-button" name="{{ concept.name }}">
+					<button class="btn btn-primary sideview-button" name="{{ concept.name }}" onclick="change_selected_button(this)">
 						{{ concept.name }}
 					</button>
 				{% endfor %}
@@ -517,10 +517,10 @@
 			header_box.appendChild(error_message);
 		};
 
-		$("button.sideview-button").click(function(event) {
+		function change_selected_button(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
-			var new_selected = $(this)[0];
+			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 			
 			// Add a placeholder message to the top bar of the main view. If we
@@ -576,9 +576,7 @@
 				concept_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(concept_name);
 			}
-		});
-
-		$("#sideview-buttons").click(function(event) {});
+		};
 
 		$("#save-button").click(function(event) {
 			// Don't save the concept with one of the players selected.
@@ -657,6 +655,7 @@
 			
 			// Create a button for the new concept.
 			var new_concept_button = document.createElement("button");
+			new_concept_button.setAttribute("onclick", "change_selected_button(this)");
 			new_concept_button.setAttribute("name", name);
 			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_concept_button.textContent = name;
