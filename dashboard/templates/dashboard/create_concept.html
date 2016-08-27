@@ -940,6 +940,10 @@
 			}
 		};
 
+		//*******************************************************************//
+		// Utility Functions                                                 //
+		//*******************************************************************//
+
 		function isInsideTrash(player) {
 			return player.x > trash.x &&
 				player.x < trash.x + trash.width &&
@@ -950,33 +954,6 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-
-		function pressZoomIn() {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 25) {
-				field.heightInYards -= 5;
-			} else {
-				field.heightInYards = 20;
-			}
-
-			resizeBottomButtons();
-		};
-
-		function pressZoomOut() {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 50) {
-				field.heightInYards = 55;
-			} else {
-				field.heightInYards += 5;
-			}
-
-			resizeBottomButtons();
-		};
-
 		function resizeBottomButtons() {
 			var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5){
@@ -1002,7 +979,5 @@
 				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
 			}
 		};
-
-		var runTest = function() {};
 	</script>
 {% endblock %}
