@@ -184,13 +184,15 @@ Concept.prototype.save = function (path, csrf_token) {
 // post handles sending as JSON object to backend so it can be saved to the
 // database.
 Concept.prototype.delete = function(path, csrf_token) {
+	var conceptName = this.name;
+
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: conceptName}
 		).done(function() {
-			console.log("Concept successfully posted to Django");
+			console.log("Concept successfully sent to Django to be deleted");
 		}).fail(function() {
-			console.log("Error posting Concept to Django");
+			console.log("Error sending Concept to Django to be deleted");
 	});
 };
 
