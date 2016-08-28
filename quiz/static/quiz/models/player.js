@@ -83,7 +83,7 @@ Player.prototype.click = function() {
 	} else {
 		this.setSelected();
 	}
-	
+
 };
 
 // setSelected changes the selected status to true and changes the color of the
@@ -94,7 +94,7 @@ Player.prototype.setSelected = function () {
 	var red = 255;
 	var green = 255;
 	var blue = 0;
-	
+
 	// TODO: impletment a different scheme for selecting defensive players.
 	// Maybe try drawing a white ellipse behind them.
 
@@ -186,7 +186,7 @@ Player.prototype.drawAllBlocks = function(field) {
 	noStroke();
 };
 
-// drawBlockOnPlayer draws a block from a specific starting point to a 
+// drawBlockOnPlayer draws a block from a specific starting point to a
 // defense player that the offensive player is assigned to block. It
 // returns a 1x2 array containing the offensive players new coordinates
 // after completing their block.
@@ -241,12 +241,12 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2); 
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
 
-// drawMoneyBlock draws a man on block. It returns a 1x2 array containing 
+// drawMoneyBlock draws a man on block. It returns a 1x2 array containing
 // the offensive players new coordinates after completing their block.
 Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	var dist = 1.5;
@@ -289,8 +289,8 @@ Player.prototype.drawMoneyBlock = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
-// drawDownBlockRight draws a down block to the right. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
+// drawDownBlockRight draws a down block to the right. It returns a 1x2
+// array containing the offensive players new coordinates after completing
 // their block.
 Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	var dist = 2;
@@ -333,8 +333,8 @@ Player.prototype.drawDownBlockRight = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
-// drawDownBlockLeft draws a down block to the left. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
+// drawDownBlockLeft draws a down block to the left. It returns a 1x2
+// array containing the offensive players new coordinates after completing
 // their block.
 Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 	var dist = 2;
@@ -378,7 +378,7 @@ Player.prototype.drawDownBlockLeft = function(field, currentX, currentY) {
 };
 
 // drawStraightSealRight draws a straight block that seals the right side of
-// the field. It returns a 1x2 array containing the offensive players new 
+// the field. It returns a 1x2 array containing the offensive players new
 // coordinates after completing their block.
 Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 	var dist = 3;
@@ -422,7 +422,7 @@ Player.prototype.drawStraightSealRight = function(field, currentX, currentY) {
 };
 
 // drawStraightSealLeft draws a straight block that seals the left side of
-// the field. It returns a 1x2 array containing the offensive players new 
+// the field. It returns a 1x2 array containing the offensive players new
 // coordinates after completing their block.
 Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	var dist = 3;
@@ -460,7 +460,7 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2); 
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -544,6 +544,11 @@ Player.prototype.isMouseInside = function(field) {
 	var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
 	return dist <= siz/2;
 };
+
+Player.prototype.containsPoint = function(x, y){
+	var dist = Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
+	return dist <= this.siz/2;
+}
 
 Player.prototype.pixelIsMouseInside = function(field) {
 	var siz = this.siz;
@@ -1204,6 +1209,7 @@ var createPlayerFromJSONSeed = function(jsonPosition){
 	player.blockingAssignmentUnitIndex = jsonPosition.blockingAssignmentUnitIndex
 	player.blockingAssignmentPlayerIndex = jsonPosition.blockingAssignmentPlayerIndex
 	player.runCoordinates = JSON.parse(jsonPosition.runCoordinates);
+  player.blockingCoordinates = JSON.parse(jsonPosition.blockingCoordinates);
 	player.pos = jsonPosition.name;
 	player.num = jsonPosition.name;
 	player.routeCoordinates = [[player.startX, player.startY]]

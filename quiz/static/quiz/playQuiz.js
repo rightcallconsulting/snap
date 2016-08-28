@@ -77,8 +77,6 @@ function setup() {
     var plays = [];
     playNames = [];
 
-    debugger;
-
     for(var i = 0; i < json_seed.length; i++){
       var play = createPlayFromJSONSeed(json_seed[i]);
       var positionsAsPlayers = [];

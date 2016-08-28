@@ -186,3 +186,23 @@ BlockingAssignment.prototype.createBlockedPlayersFromIDs = function(defense){
 	}
 
 }
+
+BlockingAssignment.prototype.convertToCoordinates = function(){
+	var coordinates = []
+	for(var i = 0; i < this.blockedPlayers.length; i++){
+		coordinates.push([this.blockedPlayers[i].x, this.blockedPlayers[i].y])
+	}
+	return coordinates
+};
+
+BlockingAssignment.prototype.setForDefense = function(defensivePlayers, blockingCoordinates){
+	for(var i = 0; i < blockingCoordinates.length; i++){
+		var coord = blockingCoordinates[i]
+		for(var j = 0; j < defensivePlayers.length; j++){
+			if(defensivePlayers[j].containsPoint(coord[0], coord[1])){
+				this.blockedPlayers.push(defensivePlayers[j])
+				break;
+			}
+		}
+	}
+}

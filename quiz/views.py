@@ -140,7 +140,7 @@ def create_play(request):
     formations = team.formation_set.all()
     offensive_formations = formations.filter(unit="offense")
     defensive_formations = formations.filter(unit="defense")
-    
+
     json_seed = {
         'offensive_formations': [f.dict_for_json() for f in offensive_formations],
         'defensive_formations': [f.dict_for_json() for f in defensive_formations]
@@ -632,6 +632,17 @@ def team_play_players(request, team_id):
     positions = team.play_positions()
     return HttpResponse(serializers.serialize("json", positions))
 
+def play_json(request, team_id, play_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    plays = team.play_set.filter(pk=play_id)
+    return HttpResponse(serializers.serialize("json", plays))
+
+def play_positions_json(request, team_id, play_id):
+    team = Team.objects.filter(pk=team_id)[0]
+    plays = team.play_set.filter(pk=play_id)
+    positions = plays[0].positions.all()
+    return HttpResponse(serializers.serialize("json", positions))
+
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     #test.change_in_progress_status(request.user)
@@ -755,7 +766,7 @@ def concept_identification_quiz(request):
 		#	print "%r\n" %concept.conceptJson
 
 		# While the list of JSON to send is less than the amount of questions
-		# and it is less than the number of available concepts keep adding 
+		# and it is less than the number of available concepts keep adding
 		# new JSON seeds. In other words, stop adding concepts when you have
 		# added the full number of questions or you have added all the concepts.
 		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
@@ -769,7 +780,7 @@ def concept_identification_quiz(request):
 
 		if (len(concepts_json) == 0):
 			return render(request, '')
-		
+
 		return render(request, 'quiz/concept_identification_quiz.html', {
 			'conceptsJson': concepts_json,
 			'conceptNames': concept_names,
