@@ -33,7 +33,7 @@ Node.prototype.drawArrow = function(field, prevX, prevY) {
   var y = field.getTranslatedY(this.y);
   var s = field.yardsToPixels(this.siz)*1.2;
 
-  var dx = this.x-prevX;
+  var dx = this.x - prevX;
   var dy = this.y - prevY;
   var theta;
   if(dx === 0.0){

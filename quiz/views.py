@@ -749,7 +749,7 @@ def single_test(request, test_id):
 
 def concept_identification_quiz(request):
 	if (request.method == 'GET'):
-		number_of_questions = 5
+		number_of_questions = int(request.GET.get('num_qs'))
 		all_concepts = Concept.objects.filter(team=request.user.player.team)
 		number_of_concepts = all_concepts.count()
 		concept_names = []

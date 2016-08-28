@@ -4,6 +4,12 @@
 	box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
+}
+
 #wrapper {
 	height: 100%;
 	overflow-x: hidden;
@@ -212,6 +218,53 @@ top navbar and sidebar css
 	width: auto;
 	margin-right: auto;
 	margin-left: auto;
+}
+
+/*************************************************************************
+sideview css
+*************************************************************************/
+
+div#sideview {
+	height: 79vh;
+	margin-left: 10px;
+	border: #777;
+	border-style: solid;
+	border-width: 2px;
+	padding: 0;
+}
+
+div#sideview-header {
+	height: 50px;
+	line-height: 50px;
+	width: 100%;
+	margin: 0;
+	border-width: 0;
+	padding: 0;
+	background: #33691e;
+	color: white;
+	text-align: center;
+	font-size: large;
+}
+
+div#sideview-buttons {
+	height: calc(100% - 50px);
+	width: 100%;
+	overflow: scroll;
+	margin: 0;
+	border-width: 0;
+	padding-top: 6px;
+	padding-right: 6px;
+	padding-bottom: 0;
+	padding-left: 6px;
+}
+
+button.sideview-button {
+	height: 50px;
+	width: 100%;
+	margin-top: 0;
+	margin-left: auto;
+	margin-bottom: 6px;
+	margin-right: auto;
 }
 
 /*************************************************************************
@@ -1399,7 +1452,7 @@ select#id_player {
 }
 
 .fa-plus-circle.green {
-  	color: green;
+	color: green;
 }
 
 .create-quiz label {
@@ -1410,6 +1463,10 @@ select#id_player {
 .edit-profile label {
 	width: 110px;
 	text-align: right;
+}
+
+#create-formation {
+	padding: 20px;
 }
 
 div#create-formation div#choose-existing-formation,

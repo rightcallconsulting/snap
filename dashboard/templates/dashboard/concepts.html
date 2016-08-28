@@ -109,19 +109,6 @@
 			event.stopPropagation();
 		});
 
-		function removeHeaderPlaceholderAndError() {
-			var header_box = document.getElementById("header-box");
-			var placeholder_message = document.getElementById("placeholder-message");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("placeholder error");
-			
-			if (placeholder_message != null) {
-				header_box.removeChild(placeholder_message);
-			} else if (error_message != null) {
-				header_box.removeChild(error_message);
-			}
-		};
-
 		function removeHeaderName() {
 			var header_box = document.getElementById("header-box");
 			var concept_name = document.getElementById("concept-name");

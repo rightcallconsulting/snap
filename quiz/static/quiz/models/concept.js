@@ -44,9 +44,14 @@ Concept.prototype.drawPlayers = function () {
 // drawAssignments
 Concept.prototype.drawAssignments = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		this.offensivePlayers[i].drawAllBlocks(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
 	}
 };
 
@@ -71,17 +76,17 @@ Concept.prototype.getSelected = function() {
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		if (this.offensivePlayers[i].selected) {
-			return this.offensivePlayers[i];
+			return [this.offensivePlayers[i], i];
 		}
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
 		if (this.defensivePlayers[i].selected) {
-			return this.defensivePlayers[i];
+			return [this.defensivePlayers[i], i];
 		}
 	}
 
-	return null;
+	return [null, null];
 };
 
 // clearSelected iterates through all the players in a concept and makes
@@ -168,7 +173,7 @@ Concept.prototype.post = function(path, csrf_token) {
 
 	var conceptName = this.name;
 	var conceptUnit = this.unit;
-	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray"]);
+	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
 
 	var jqxhr = $.post(
 			path,
@@ -236,10 +241,17 @@ function createConceptFromJson(conceptJsonDictionary) {
 			siz: conceptJsonDictionary.defensivePlayers[i].siz
 		});
 
+		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
+			}
+		}
+
 		defensivePlayersArray.push(player);
 	}
 
-	if (conceptJsonDictionary.offensiveLineman != null) {
+	if (conceptJsonDictionary.offensiveLinemen != null) {
 		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
 			var player = new Player({
 				x: conceptJsonDictionary.offensiveLinemen[i].x,

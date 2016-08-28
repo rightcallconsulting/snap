@@ -67,6 +67,7 @@ var Player = function(config) {
 
   // Blocker assignments - eventually we should just have some child object for Linemen
   this.blockingAssignmentArray = config.blockingAssignmentArray || [[], []];
+  this.defensiveMovement = []
 };
 
 //***************************************************************************//
@@ -176,12 +177,21 @@ Player.prototype.drawAllBlocks = function(field) {
 				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Kick Out Right") {
+				var new_coordinates = this.drawKickOutRight(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else if (primaryAssignment[i] === "Kick Out Left") {
+				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
+			} else {
+				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, primaryAssignment[i][0], primaryAssignment[i][1]);
+				currentX = new_coordinates[0];
+				currentY = new_coordinates[1];
 			}
 		}
 	}
-
-	// TODO: Implement the secondary assignments with dotted lines.
-	// Might be tricky.
 
 	noStroke();
 };
@@ -463,6 +473,229 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	line(x1, y1, x2, y2);
 
 	return new_coordinates;
+};
+
+// drawKickOutRight draws a kick out block to the right. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
+Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
+	var dist = 1.5;
+	var alpha = 55*(PI/180);
+	var xDiff = cos(alpha)*dist;
+	var yDiff = sin(alpha)*dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2, y2;
+	
+	x2 = currentX + xDiff;
+	y2 = currentY - yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	dist = 3;
+	xDiff = cos(alpha)*dist;
+	yDiff = sin(alpha)*dist;
+	x1 = x2;
+	y1 = y2;
+	x2 = x1 + xDiff;
+	y2 = y1 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 1.5;
+	xDiff = sin(alpha)*lengthOfPerpLine/2;
+	yDiff = cos(alpha)*lengthOfPerpLine/2;
+	x1 = x2 + xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 - xDiff;
+	y2 = y2 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
+Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
+	var dist = 1.5;
+	var alpha = 55*(PI/180);
+	var xDiff = cos(alpha)*dist;
+	var yDiff = sin(alpha)*dist;
+
+	// Angled line that shows the direction of the downblock
+	var x1 = currentX;
+	var y1 = currentY;
+	var x2, y2;
+	
+	x2 = currentX - xDiff;
+	y2 = currentY - yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	dist = 3;
+	xDiff = cos(alpha)*dist;
+	yDiff = sin(alpha)*dist;
+	x1 = x2;
+	y1 = y2;
+	x2 = x1 - xDiff;
+	y2 = y1 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the down block
+	var lengthOfPerpLine = 1.5;
+	xDiff = sin(alpha)*lengthOfPerpLine/2;
+	yDiff = cos(alpha)*lengthOfPerpLine/2;
+	x1 = x2 + xDiff;
+	y1 = y2 + yDiff;
+	x2 = x2 - xDiff;
+	y2 = y2 - yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2); 
+
+	return new_coordinates;
+};
+
+// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
+// array containing the offensive players new coordinates after completing 
+// their block.
+Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	return new_coordinates;
+};
+
+// drawDefensiveMovement iterates through the players defensive movements
+// and draws a dotted line to the plave on the field they should be
+Player.prototype.drawDefensiveMovement = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+	var x2 = this.x;
+	var y2 = this.y;
+
+	var gray = color(60, 60, 60);
+	stroke(gray);
+
+	for (var i = 0; i < this.defensiveMovement.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.defensiveMovement[i][0];
+		y2 = this.defensiveMovement[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		dottedLine(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+		
+	}
+
+	// Arrow
+	var lengthOfArrow = 0.5;
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+	var beta = (45*(PI/180)) - alpha;
+	var xDiff = cos(beta)*lengthOfArrow;
+	var yDiff = sin(beta)*lengthOfArrow;
+	x1 = x2;
+	y1 = y2;
+	if (deltaX >= 0) {
+		x2 = x1 - yDiff;
+		y2 = y1 - xDiff;
+	} else {
+		x2 = x1 + yDiff;
+		y2 = y1 + xDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	if (deltaX >= 0) {
+		x2 = x1 - xDiff;
+		y2 = y1 + yDiff;
+	} else {
+		x2 = x1 + xDiff;
+		y2 = y1 - yDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2); 
+
+	noStroke();
 };
 
 // Dylan's line
