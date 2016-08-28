@@ -611,11 +611,9 @@ def concepts(request):
 @login_required
 def create_concept(request):
 	if request.method == "POST":
-		print request.POST['save']
-		print request.POST['delete']
-		if request.POST['save']:
+		name = request.POST['name']
+		if request.POST['save'] == "true":
 			conceptJson = request.POST['concept']
-			name = request.POST['name']
 			concept = Concept.objects.filter(name=name)
 			if concept.count() == 1:
 				concept = concept[0]
@@ -629,7 +627,7 @@ def create_concept(request):
 				concept.conceptJson = conceptJson
 				concept.save()
 			return HttpResponse('')
-		elif request.POST['delete']:
+		elif request.POST['delete'] == "true":
 			concept = Concept.objects.filter(name=name)
 			concept.delete()
 			return HttpResponse('')

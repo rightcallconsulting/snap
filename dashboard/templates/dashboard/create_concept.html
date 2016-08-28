@@ -383,6 +383,18 @@
 		});
 
 		$("#clear-button").click(function(event) {
+			// Get the currently selected sideview button.
+			var selected = document.getElementById("selected");
+
+			// If selected is not undefined then send a delete request for
+			// the concept that is currently selected.
+			if (selected != null) {
+				var path = "/concepts/create";
+				var csrf_token = "{{ csrf_token }}";
+
+				concept.delete(path, csrf_token);
+			}
+
 			removeHeaderPlaceholder();
 			removeHeaderError();
 			removeHeaderName();
