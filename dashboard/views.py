@@ -611,21 +611,28 @@ def concepts(request):
 @login_required
 def create_concept(request):
 	if request.method == "POST":
-		conceptJson = request.POST['concept']
-		name = request.POST['name']
-		concept = Concept.objects.filter(name=name)
-		if concept.count() == 1:
-			concept = concept[0]
-			concept.conceptJson = conceptJson
-			concept.save()
-		elif concept.count() == 0:
-			concept = Concept()
-			concept.name = name
-			concept.team = request.user.coach.team
-			concept.unit = request.POST['unit']
-			concept.conceptJson = conceptJson
-			concept.save()
-		return HttpResponse('')
+		print request.POST['save']
+		print request.POST['delete']
+		if request.POST['save']:
+			conceptJson = request.POST['concept']
+			name = request.POST['name']
+			concept = Concept.objects.filter(name=name)
+			if concept.count() == 1:
+				concept = concept[0]
+				concept.conceptJson = conceptJson
+				concept.save()
+			elif concept.count() == 0:
+				concept = Concept()
+				concept.name = name
+				concept.team = request.user.coach.team
+				concept.unit = request.POST['unit']
+				concept.conceptJson = conceptJson
+				concept.save()
+			return HttpResponse('')
+		elif request.POST['delete']:
+			concept = Concept.objects.filter(name=name)
+			concept.delete()
+			return HttpResponse('')
 	else:
 		coach = request.user.coach
 		team = coach.team
