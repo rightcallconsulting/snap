@@ -139,7 +139,7 @@ Concept.prototype.mouseInPlayer = function(field) {
 // and removes everything from the frontend display.
 Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
-		var conceptToPost = new Concept ({
+		/*var conceptToPost = new Concept ({
 			name: this.name,
 			team: this.team,
 			unit: this.unit,
@@ -147,7 +147,35 @@ Concept.prototype.save = function (path, csrf_token) {
 			defensivePlayers: this.defensivePlayers
 		});
 
-		this.post(path, csrf_token);
+		this.post(path, csrf_token);*/
+
+		var conceptJson = "";
+		var player;
+
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		var conceptName = this.name;
+		var conceptUnit = this.unit;
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+			).done(function() {
+				console.log("Concept successfully posted to Django");
+			}).fail(function() {
+				console.log("Error posting Concept to Django");
+		});
 	} else {
 		this.feedbackMessage = "Invalid Concept";
 	}
@@ -183,8 +211,6 @@ Concept.prototype.post = function(path, csrf_token) {
 		}).fail(function() {
 			console.log("Error posting Concept to Django");
 	});
-
-	var i = 0;
 };
 
 /*********************************/
