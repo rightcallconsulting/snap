@@ -170,15 +170,28 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: conceptName, unit: conceptUnit, concept: conceptJson}
 			).done(function() {
-				console.log("Concept successfully posted to Django");
+				console.log("Concept successfully sent to Django to be saved");
 			}).fail(function() {
-				console.log("Error posting Concept to Django");
+				console.log("Error sending Concept to Django to be saved");
 		});
 	} else {
 		this.feedbackMessage = "Invalid Concept";
 	}
+};
+
+// post handles sending as JSON object to backend so it can be saved to the
+// database.
+Concept.prototype.delete = function(path, csrf_token) {
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+		).done(function() {
+			console.log("Concept successfully posted to Django");
+		}).fail(function() {
+			console.log("Error posting Concept to Django");
+	});
 };
 
 // post handles sending as JSON object to backend so it can be saved to the
