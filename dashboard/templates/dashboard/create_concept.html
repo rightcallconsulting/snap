@@ -99,7 +99,7 @@
 			
 			// Load concepts from Json passed from database
 			var jsonStringLength = 0;
-			var conceptJsonFromDatabase = ""; 
+			var conceptJsonFromDatabase = "";
 
 			{% for conceptJson in conceptsJson %}
 			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
