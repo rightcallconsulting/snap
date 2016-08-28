@@ -10,7 +10,7 @@ import copy
 import json
 
 # This function returns a datetime object for the deadline
-# of anything that is published. The deadline defaults to 
+# of anything that is published. The deadline defaults to
 # 1 day.
 def deadline_time():
 	deadline = datetime.now() + timedelta(days=1)
@@ -46,7 +46,7 @@ class Player(models.Model):
 		('SR', 'Senior'),
 		('RS FR', 'Redshirt Freshman'),
 		('RS SO', 'Redshirt Sophomore'),
-		('RS JR', 'Redshirt Junior'),        
+		('RS JR', 'Redshirt Junior'),
 		('RS SR', 'Redshirt Senior'),
 	)
 
@@ -167,6 +167,7 @@ class Position(models.Model):
 	formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
 	routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
 	runCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	blockingCoordinates = models.CharField(max_length=200, null=True, blank=True)
 	progressionRank = models.IntegerField(null=True, blank=True)
 	playerIndex = models.IntegerField(null=True, blank=True)
 	routeNum = models.IntegerField(null=True, blank=True)
@@ -196,6 +197,12 @@ class Position(models.Model):
 	def get_route_coordinates(self):
 		return json.loads(self.routeCoordinates)
 
+	def set_blocking_coordinates(self, coords):
+		self.blockingCoordinates = json.dumps(coords)
+
+	def get_blocking_coordinates(self):
+		return json.loads(self.blockingCoordinates)
+
 	def set_run_coordinates(self, coords):
 		self.routeCoordinates = json.dumps(coords)
 
@@ -207,9 +214,9 @@ class Position(models.Model):
 		return model_to_dict(self)
 
 class Test(models.Model):
-	types_of_tests = ["QBProgression", 
-						"CBAssignment", 
-						"OLView", 
+	types_of_tests = ["QBProgression",
+						"CBAssignment",
+						"OLView",
 						"WRRoute",
 						"Concept Identification"]
 
@@ -352,16 +359,19 @@ class Play(models.Model):
 		new_play.save()
 		for player in json['offensivePlayers']:
 			runAssignment = ""
+			blockingCoordinates = "[]"
 			if 'runAssignment' in player:
 				#embed()
 				runAssignment = player['runAssignment']
+			if 'blockingCoordinates' in player:
+				blockingCoordinates = player['blockingCoordinates']
 			new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
 			startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
 			progressionRank=player['progressionRank'],
 			blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
 			blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
 			blockingAssignmentObject=player['blockingAssignmentObject'],
-			runAssignment=runAssignment)
+			runAssignment=runAssignment, blockingCoordinates=blockingCoordinates)
 			new_position.set_route_coordinates(player['routeCoordinates'])
 			new_position.save()
 		new_play.save()

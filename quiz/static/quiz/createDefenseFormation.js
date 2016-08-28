@@ -277,23 +277,23 @@ function draw() {
         x: 10,
         y: 100-field.heightInYards,
         siz: 3,
-        num: 'DL',
+        num: 'N',
         fill: color(0, 0, 0),
-        pos: 'DL',
+        pos: 'N',
         unit: "defense"
     });
 
     var de = new Player ({
-        x: 13,
+        x: dl.x + dl.siz,
         y: 100-field.heightInYards,
-        num: 'DE',
+        num: 'E',
         fill: color(0, 0, 0),
-        pos: 'DE',
+        pos: 'E',
         unit: "defense"
     });
 
     var mike = new Player ({
-      x: 16,
+      x: de.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'M',
       fill: color(0, 0, 0),
@@ -302,7 +302,7 @@ function draw() {
     });
 
     var will = new Player ({
-      x: 19,
+      x: mike.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'W',
       fill: color(0, 0, 0),
@@ -311,7 +311,7 @@ function draw() {
     });
 
     var sam = new Player ({
-      x: 22,
+      x: will.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'S',
       fill: color(0, 0, 0),
@@ -319,17 +319,26 @@ function draw() {
       unit: "defense"
     });
 
-    var cb = new Player({
-      x: 25,
+    var backer = new Player ({
+      x: sam.x + dl.siz,
       y: 100-field.heightInYards,
-      num: 'CB',
+      num: 'B',
       fill: color(0, 0, 0),
-      pos: 'CB',
+      pos: 'B',
+      unit: "defense"
+    });
+
+    var cb = new Player({
+      x: backer.x + dl.siz,
+      y: 100-field.heightInYards,
+      num: 'C',
+      fill: color(0, 0, 0),
+      pos: 'C',
       unit: "defense"
     });
 
     var ss = new Player({
-      x: 28,
+      x: cb.x + dl.siz,
       y: 100-field.heightInYards,
       num: 'SS',
       fill: color(0, 0, 0),
@@ -338,20 +347,21 @@ function draw() {
     });
 
     var fs = new Player({
-      x: 31,
+      x: ss.x + dl.siz,
       y: 100-field.heightInYards,
-      num: 'FS',
+      num: 'F',
       fill: color(0, 0, 0),
-      pos: 'FS',
+      pos: 'F',
       unit: "defense"
     });
 
     formationExample.optionsToCreate.push(dl);
+    formationExample.optionsToCreate.push(de);
     formationExample.optionsToCreate.push(mike);
     formationExample.optionsToCreate.push(will);
     formationExample.optionsToCreate.push(sam);
+    formationExample.optionsToCreate.push(backer);
     formationExample.optionsToCreate.push(cb);
-    formationExample.optionsToCreate.push(de);
     formationExample.optionsToCreate.push(ss);
     formationExample.optionsToCreate.push(fs);
 
@@ -404,7 +414,7 @@ function draw() {
     };
 
     keyTyped = function(){
-
+      
     }
 
     keyPressed = function() {

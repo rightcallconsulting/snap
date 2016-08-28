@@ -43,30 +43,19 @@
 				</table>
 			</div>
 		</div>
-		
-		<div id="choose-existing-formation" class="col-md-3 bordered-div">
-			<div id="header-box" class="header">
+
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header">
 				Existing Concepts
 			</div>
-
-			<div class="table-wrapper formation-table">
-				<table>
-					<tbody id="concept-buttons">
-						{% for concept in concepts %}
-							<tr>
-								<td>
-									<button class="btn btn-primary" onclick="changeSelected(this)" name="{{ concept.name }}">
-										{{ concept.name }}
-									</button>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+			<div id="sideview-buttons">
+				{% for concept in concepts %}
+					<button class="btn btn-primary sideview-button" name="{{ concept.name }}" onclick="changeSelectedButton(this)">
+						{{ concept.name }}
+					</button>
+				{% endfor %}
 			</div>
 		</div>
-	</div><!--/create-formation-->
-
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
 	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
 	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
@@ -84,243 +73,6 @@
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
-		// Event Listener Functions                                          //
-		//*******************************************************************//
-		
-		// When the main container is clicked unselect the interactive header.
-		// This function will not call when the header is clicked because that
-		// function stops propagation of the event.
-		$(document).click(function(event) {
-			if ($("#header-box").hasClass("selected")) {
-				$("#header-box").removeClass("selected");
-				var concept_name = document.getElementById("concept-name");
-
-				if (concept_name === null) {
-					addHeaderPlaceholder();
-				}
-
-				if (concept_name != null && concept_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(concept_name);
-					addHeaderPlaceholder();
-				}
-			}
-		});
-
-		// When the header box is selected have it change colors and remove the
-		// placeholder if it exists
-		$("#header-box").click(function(event) {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			$("#header-box").addClass("selected");
-			event.stopPropagation();
-		});
-
-		function removeHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			var placeholder_message = document.getElementById("placeholder-message");
-			$("#header-box").removeClass("placeholder");
-			
-			if (placeholder_message != null) {
-				header_box.removeChild(placeholder_message);
-			}
-		};
-
-		function removeHeaderError() {
-			var header_box = document.getElementById("header-box");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("error");
-			
-			if (error_message != null) {
-				header_box.removeChild(error_message);
-			}
-		};
-
-		function removeHeaderName() {
-			var header_box = document.getElementById("header-box");
-			var concept_name = document.getElementById("concept-name");
-
-			if (concept_name != null) {
-				header_box.removeChild(concept_name);
-			}
-		};
-
-		function addHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").addClass("placeholder");
-
-			var placeholder = document.createElement("p");
-			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Concept Name";
-			header_box.appendChild(placeholder);
-		};
-
-		function addHeaderError() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").removeClass("selected placeholder").addClass("error");
-
-			var error_message = document.createElement("p");
-			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Concept Name";
-			header_box.appendChild(error_message);
-		};
-
-		function changeSelected(selected) {
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			concept = new Concept({});
-			
-			if (old_selected != null) {
-				old_selected.removeAttribute("id");
-				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary");
-			}
-
-			if (old_selected != new_selected) {
-				new_selected.removeAttribute("class");
-				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success");
-
-				var concept_name = new_selected.getAttribute("name");
-
-				for (var i = 0; i < concepts.length; ++i) {
-					if (concept_name === concepts[i].name) {
-						concept = concepts[i];
-					}
-				}
-
-				var header_text_content = concept_name;
-				concept_name = document.getElementById("concept-name");
-
-				if (concept_name === null) {
-					concept_name = document.createElement("p");
-					concept_name.setAttribute("id", "concept-name");
-				}
-
-				removeHeaderPlaceholder();
-				removeHeaderError();
-				removeHeaderName();
-				concept_name.textContent = header_text_content;
-				document.getElementById("header-box").appendChild(concept_name);
-			}
-		};
-
-		$("#save-button").click(function(event) {
-			// Don't save the concept with one of the players selected.
-			concept.clearSelected();
-
-			var placeholder_message = document.getElementById("placeholder-message");
-			var concept_name = document.getElementById("concept-name");
-			var path = "/concepts/create";
-			var csrf_token = "{{ csrf_token }}";
-
-			// If there is a placeholder message remove it and add an error.
-			if (placeholder_message != null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// I don't think this will ever happen, but I'm not sure.
-			if (concept_name === null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// If the concept_name is 0 characters add an error.
-			if (concept_name != null && concept_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(concept_name);
-				addHeaderError();
-				return;
-			}
-
-			// Deselect the currently selected sidebar because that concept is
-			// going to dissappear from the screen.
-			var selected_sidebar_button = document.getElementById("selected");
-			
-			if (selected_sidebar_button != null) {
-				selected_sidebar_button.removeAttribute("id");
-				selected_sidebar_button.removeAttribute("class");
-				selected_sidebar_button.setAttribute("class", "btn btn-primary");
-			}
-
-			// var name gets the textContent of the header box.
-			var name = concept_name.textContent;
-
-			// Update the top interactive text bar to have a placeholder again.
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			// If this concept name already exists the backend should replace
-			// the old one and not save a new one. The frontend should also
-			// update the existing version it has and return.
-			for (var i = 0; i < concepts.length; ++i) {
-				if (name === concepts[i].name) {
-					concepts[i] = concept;
-					concept.save(path, csrf_token);
-					concept = new Concept({});
-					return;
-				}
-			}
-
-			// If the concept name does not exist the backend will create a
-			// new database entry. The frontend should push this concept to
-			// its concepts array and add a new button for it to the sidebar.
-			concept.name = name;
-			concept.team = teamID;
-			concept.save(path, csrf_token);
-			concepts.push(concept);
-
-			// Create a new concept to replace the one you jsut saved on the 
-			// screen.
-			concept = new Concept({});
-
-			// Update the sidebar to include a new button for the concept that
-			// was just saved.
-			var sidebar_table_body = document.getElementById("concept-buttons");
-
-			var new_concept_button_row = document.createElement("tr");
-			var new_concept_button_cell = document.createElement("td");
-			var new_concept_button = document.createElement("button");
-			
-			// Create a button for the new concept.
-			new_concept_button.setAttribute("class", "btn btn-primary");
-			new_concept_button.setAttribute("onclick", "changeSelected(this)");
-			new_concept_button.setAttribute("name", name);
-			new_concept_button.textContent = name;
-
-			// Add all of our new HTML to the table body.
-			new_concept_button_cell.appendChild(new_concept_button);
-			new_concept_button_row.appendChild(new_concept_button_cell);
-			sidebar_table_body.appendChild(new_concept_button_row);
-			return;
-		});
-
-		$("#clear-button").click(function(event) {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			concept = new Concept({});
-		});
-
-		$("#zoom-in-button").click(function(event) {
-			pressZoomIn();
-		});
-
-		$("#zoom-out-button").click(function(event) {
-			pressZoomOut();
-		});
-
-		$("#full-screen-button").click(function(event) {});
-
-		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
 
@@ -328,8 +80,8 @@
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
 			var display_box_footer = display_box.querySelector(".display-buttons");
-			var sidebar = document.getElementById("choose-existing-formation");
-			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
 			var width = display_box.offsetWidth - 4; 
@@ -367,7 +119,6 @@
 
 			// Create Position groups
 			concept = new Concept({});
-			//concept.createCat(field.ballYardLine);
 
 			// Create Player bars
 			defensivePlayerBar = new PlayerBar({
@@ -512,157 +263,227 @@
 			fill(176,176,176);
 		};
 
-		function createOffensivePlayerOptions() {
-			var players = [];
-			var player;
-				
-			player = new Player ({
-				num: "QB", pos: "QB",
-				red: 212, green: 130, blue: 130,
-				siz: 2, eligible: true
-			});
-			players.push(player);
+		//*******************************************************************//
+		// Event Listener Functions                                          //
+		//*******************************************************************//
+		
+		// When the main container is clicked unselect the interactive header.
+		// This function will not call when the header is clicked because that
+		// function stops propagation of the event.
+		$(document).click(function(event) {
+			if ($("#header-box").hasClass("selected")) {
+				$("#header-box").removeClass("selected");
+				var concept_name = document.getElementById("concept-name");
 
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+				if (concept_name === null) {
+					addHeaderPlaceholder();
+				}
 
-			player = new Player ({
-				num: "G", pos: "G",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+				if (concept_name != null && concept_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(concept_name);
+					addHeaderPlaceholder();
+				}
+			}
+		});
 
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+		// When the header box is selected have it change colors and remove the
+		// placeholder if it exists
+		$("#header-box").click(function(event) {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			$("#header-box").addClass("selected");
+			event.stopPropagation();
+		});
 
-			player = new Player ({
-				num: "F", pos: "F",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
+		$("#save-button").click(function(event) {
+			// Don't save the concept with one of the players selected.
+			concept.clearSelected();
 
-			player = new Player ({
-				num: "Y", pos: "Y",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
+			var placeholder_message = document.getElementById("placeholder-message");
+			var concept_name = document.getElementById("concept-name");
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
 
-			player = new Player ({
-				num: "X", pos: "X",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
+			// If there is a placeholder message remove it and add an error.
+			if (placeholder_message != null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
 
-			return players;
-		};
+			// I don't think this will ever happen, but I'm not sure.
+			if (concept_name === null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
 
-		function createDefensivePlayerOptions() {
-			var players = [];
-			var player;
-				
-			player = new Player ({
-				num: "E", pos: "E",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// If the concept_name is 0 characters add an error.
+			if (concept_name != null && concept_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(concept_name);
+				addHeaderError();
+				return;
+			}
 
-			player = new Player ({
-				num: "W", pos: "W",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// Deselect the currently selected sidebar because that concept is
+			// going to dissappear from the screen.
+			var selected_sideview_button = document.getElementById("selected");
 			
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			if (selected_sideview_button != null) {
+				selected_sideview_button.removeAttribute("id");
+				selected_sideview_button.removeAttribute("class");
+				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
+			}
 
-			player = new Player ({
-				num: "N", pos: "N",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// var name gets the textContent of the header box.
+			var name = concept_name.textContent;
 
-			player = new Player ({
-				num: "M", pos: "M",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// Update the top interactive text bar to have a placeholder again.
+			removeHeaderName();
+			addHeaderPlaceholder();
 
-			player = new Player ({
-				num: "S", pos: "S",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// If this concept name already exists the backend should replace
+			// the old one and not save a new one. The frontend should also
+			// update the existing version it has and return.
+			for (var i = 0; i < concepts.length; ++i) {
+				if (name === concepts[i].name) {
+					concepts[i] = concept;
+					concept.save(path, csrf_token);
+					concept = new Concept({});
+					return;
+				}
+			}
 
-			player = new Player ({
-				num: "SS", pos: "SS",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			// If the concept name does not exist the backend will create a
+			// new database entry. The frontend should push this concept to
+			// its concepts array and add a new button for it to the sidebar.
+			concept.name = name;
+			concept.team = teamID;
+			concept.save(path, csrf_token);
+			concepts.push(concept);
 
-			return players;
-		};
+			// Create a new concept to replace the one you just saved on the 
+			// screen.
+			concept = new Concept({});
 
-		function drawDebuggingInfo() {
-			textAlign(CENTER);
-
-			var textX = field.width / 2;
-			var textY = field.height * 0.40;
-			var textYSpacing = 30;
-
-			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
-			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
-			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
-			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
-
-			fill(0, 0, 0);
-			textSize(20);
-
-			text(mouseXString, textX, textY);
+			// Update the sidebar to include a new button for the concept that
+			// was just saved.
+			var sideview_buttons_div = document.getElementById("sideview-buttons");
 			
-			textY += textYSpacing;
-			text(mouseYString, textX, textY);
-			
-			textY += textYSpacing;
-			text(widthString, textX, textY);
-			
-			textY += textYSpacing;
-			text(heightString, textX, textY);
+			// Create a button for the new concept.
+			var new_concept_button = document.createElement("button");
+			new_concept_button.setAttribute("onclick", "changeSelectedButton(this)");
+			new_concept_button.setAttribute("name", name);
+			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
+			new_concept_button.textContent = name;
 
-			fill(176,176,176);
+			// Add the new button to the sideview button div.
+			sideview_buttons_div.appendChild(new_concept_button);
+			return;
+		});
+
+		$("#clear-button").click(function(event) {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			concept = new Concept({});
+		});
+
+		$("#zoom-in-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$("#zoom-out-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$("#full-screen-button").click(function(event) {});
+
+		function changeSelectedButton(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// concept we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Create a new concept to replace whatever was already on screen.
+			concept = new Concept({});
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var concept_name = new_selected.getAttribute("name");
+
+				for (var i = 0; i < concepts.length; ++i) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i];
+						break;
+					}
+				}
+
+				var header_text_content = concept_name;
+				concept_name = document.getElementById("concept-name");
+
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
+				}
+
+				removeHeaderPlaceholder();
+				removeHeaderError();
+				removeHeaderName();
+				concept_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(concept_name);
+			}
 		};
 
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
+		
 		function mousePressed() {
 			playerBeingDragged = concept.mouseInPlayer(field);
 
@@ -898,6 +719,59 @@
 			}
 		};
 
+		//*******************************************************************//
+		// Utility Functions                                                 //
+		//*******************************************************************//
+
+		function removeHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			var placeholder_message = document.getElementById("placeholder-message");
+			$("#header-box").removeClass("placeholder");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
+			}
+		};
+
+		function removeHeaderError() {
+			var header_box = document.getElementById("header-box");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("error");
+			
+			if (error_message != null) {
+				header_box.removeChild(error_message);
+			}
+		};
+
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var concept_name = document.getElementById("concept-name");
+
+			if (concept_name != null) {
+				header_box.removeChild(concept_name);
+			}
+		};
+
+		function addHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Concept Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
+			var header_box = document.getElementById("header-box");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
+
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Invalid Concept Name";
+			header_box.appendChild(error_message);
+		};
+
 		function isInsideTrash(player) {
 			return player.x > trash.x &&
 				player.x < trash.x + trash.width &&
@@ -905,38 +779,162 @@
 				player.y > trash.y - trash.height
 		};
 
+		function drawDebuggingInfo() {
+			textAlign(CENTER);
+
+			var textX = field.width / 2;
+			var textY = field.height * 0.40;
+			var textYSpacing = 30;
+
+			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
+			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
+			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
+			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
+
+			fill(0, 0, 0);
+			textSize(20);
+
+			text(mouseXString, textX, textY);
+			
+			textY += textYSpacing;
+			text(mouseYString, textX, textY);
+			
+			textY += textYSpacing;
+			text(widthString, textX, textY);
+			
+			textY += textYSpacing;
+			text(heightString, textX, textY);
+
+			fill(176,176,176);
+		};
+
+		function createOffensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "QB", pos: "QB",
+				red: 212, green: 130, blue: 130,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "C", pos: "C",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "G", pos: "G",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "F", pos: "F",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "Y", pos: "Y",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "X", pos: "X",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			return players;
+		};
+
+		function createDefensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "E", pos: "E",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "W", pos: "W",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+			
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "N", pos: "N",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "M", pos: "M",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "S", pos: "S",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "SS", pos: "SS",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			return players;
+		};
+
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-
-		function pressZoomIn() {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 25) {
-				field.heightInYards -= 5;
-			} else {
-				field.heightInYards = 20;
-			}
-
-			resizeBottomButtons();
-		};
-
-		function pressZoomOut() {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 50) {
-				field.heightInYards = 55;
-			} else {
-				field.heightInYards += 5;
-			}
-
-			resizeBottomButtons();
-		};
-
+		
+		// Don't really need this function, but I could see it being useful
+		// later.
 		function resizeBottomButtons() {
-			var trashWidth = field.pixelsToYards(field.width * 0.12);
+			/*var trashWidth = field.pixelsToYards(field.width * 0.12);
 			if(trashWidth < 5){
 				trashWidth = 5;
 			}
@@ -958,9 +956,7 @@
 			trash.y = trashY;
 			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
 				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
-			}
+			}*/
 		};
-
-		var runTest = function() {};
 	</script>
 {% endblock %}

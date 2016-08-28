@@ -81,7 +81,7 @@ var drawOpening = function() {
 keyTyped = function() {
 	selectedWR = getCurrentFormation().findSelectedWR();
 	var selectedOL = getCurrentFormation().findSelectedOL();
-	
+
 	if(selectedWR && key === 'r') {
 		if(selectedWR.runner) {
 			selectedWR.runner = false;
@@ -189,7 +189,7 @@ keyPressed = function() {
 			var compoundName = getCurrentFormation().playName + ": " + playBeingCreated.playName;
 			$('#play-name').text(compoundName);
 		}
-		
+
 		return false;
 	} else if(keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW || keyCode === DOWN_ARROW || keyCode === UP_ARROW) {
 		if(selectedOL){
@@ -221,7 +221,7 @@ mouseClicked = function() {
 	var selectedNode = getCurrentFormation().mouseInReceiverOrNode(field)[1];
 	var formationClicked = isFormationClicked(formationButtons, field);
 	var selectedOL = getCurrentFormation().findSelectedOL();
-	
+
 	if (getCurrentDefensivePlay() != null) {
 		var dlClicked = getCurrentDefensivePlay().mouseInDL(getCurrentFormation(), field);
 		var selectedDL = getCurrentDefensivePlay().findSelectedDL();
@@ -324,7 +324,7 @@ var pressSaveButton = function() {
 		formation: getCurrentFormation(),
 		defensiveFormationID: playBeingCreated.defensiveFormationID
 	});
-	
+
 	// Logic to save the play to the database
 	newPlay.saveToDB();
 	pressClearButton();
@@ -411,7 +411,7 @@ function draw() {
 			}
 		} else {
 			fill(0);
-			textSize(17);
+			textSize(12 * 53.33/field.getWidthInYards());
 			textAlign(CENTER, CENTER);
 			text(this.pos, x, y);
 		}
@@ -427,8 +427,8 @@ function draw() {
 		if (this.unit == "offense") {
 			this.rank = 1;
 			this.clicked = !this.clicked;
-			
-			for(var i = 0; i < getCurrentFormation().offensivePlayers.length; i++) { 
+
+			for(var i = 0; i < getCurrentFormation().offensivePlayers.length; i++) {
 				var p = getCurrentFormation().offensivePlayers[i];
 				if(p !== this) {
 					p.clicked = false;

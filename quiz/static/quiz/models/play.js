@@ -217,11 +217,11 @@ Play.prototype.saveToDB = function(){
   for(var i = 0; i < this.offensivePlayers.length; i++){
     var assignment = this.offensivePlayers[i].blockingAssignmentObject;
     if(assignment){
-      assignment.convertBlockedPlayersToIDs();
+      //assignment.convertBlockedPlayersToIDs();
+      this.offensivePlayers[i].blockingCoordinates = assignment.convertToCoordinates();
     }
   }
-  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
-  debugger;
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'blockingCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
   $.post( "teams/broncos/plays/new", { play: playJSON});
 };
 
@@ -292,3 +292,11 @@ Play.prototype.drawBlockingAssignmentObjects = function(){
     }
   })
 };
+
+Play.prototype.updateBlockingAssignmentForDefense = function(defensivePlayers){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignmentObject && player.blockingCoordinates){
+        player.blockingAssignmentObject.setForDefense(defensivePlayers, player.blockingCoordinates)
+    }
+  })
+}

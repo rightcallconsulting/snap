@@ -221,6 +221,53 @@ top navbar and sidebar css
 }
 
 /*************************************************************************
+sideview css
+*************************************************************************/
+
+div#sideview {
+	height: 79vh;
+	margin-left: 10px;
+	border: #777;
+	border-style: solid;
+	border-width: 2px;
+	padding: 0;
+}
+
+div#sideview-header {
+	height: 50px;
+	line-height: 50px;
+	width: 100%;
+	margin: 0;
+	border-width: 0;
+	padding: 0;
+	background: #33691e;
+	color: white;
+	text-align: center;
+	font-size: large;
+}
+
+div#sideview-buttons {
+	height: calc(100% - 50px);
+	width: 100%;
+	overflow: scroll;
+	margin: 0;
+	border-width: 0;
+	padding-top: 6px;
+	padding-right: 6px;
+	padding-bottom: 0;
+	padding-left: 6px;
+}
+
+button.sideview-button {
+	height: 50px;
+	width: 100%;
+	margin-top: 0;
+	margin-left: auto;
+	margin-bottom: 6px;
+	margin-right: auto;
+}
+
+/*************************************************************************
 coach homepage
 *************************************************************************/
 .coach-button-container {
