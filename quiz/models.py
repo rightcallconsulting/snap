@@ -162,60 +162,6 @@ class Formation(models.Model):
 
 		return json_dict
 
-class Play(models.Model):
-	name = models.CharField(max_length=100)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
-	defenseID = models.CharField(max_length=10)
-	players = models.ManyToManyField(Player, blank=True)
-	positions = models.ManyToManyField(Position)
-	tests = models.ManyToManyField(Test)
-	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
-	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
-
-	def __str__(self):
-		return self.name
-
-	def position_strings(self):
-		"""Returns a list of unique string positions in the play.
-		Ex: ['QB', 'WR', etc..]"""
-		positionStrings = []
-		for pos in self.positions.all():
-			positionStrings.append(pos.name)
-		return set(positionStrings) # remove duplicates
-
-	@classmethod
-	def from_json(cls, json):
-		new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
-		formation=Formation.objects.get(pk=json['formation']['id']), defenseID=json['defensiveFormationID'])
-		new_play.save()
-		for player in json['offensivePlayers']:
-			runAssignment = ""
-			blockingCoordinates = "[]"
-			if 'runAssignment' in player:
-				#embed()
-				runAssignment = player['runAssignment']
-			if 'blockingCoordinates' in player:
-				blockingCoordinates = player['blockingCoordinates']
-			new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
-			startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
-			progressionRank=player['progressionRank'],
-			blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
-			blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
-			blockingAssignmentObject=player['blockingAssignmentObject'],
-			runAssignment=runAssignment, blockingCoordinates=blockingCoordinates)
-			new_position.set_route_coordinates(player['routeCoordinates'])
-			new_position.save()
-		new_play.save()
-
-	def dict_for_json(self):
-		"""Dict representation of the instance (used in JSON APIs)."""
-		json_dict = model_to_dict(self)
-		json_dict['positions'] = [
-			p.dict_for_json() for p in self.positions.all()
-		]
-		return json_dict
-
 class Position(models.Model):
 	startX = models.FloatField()
 	startY = models.FloatField()
@@ -384,6 +330,60 @@ class Test(models.Model):
 			return "defense"
 		else:
 			return "offense"
+
+class Play(models.Model):
+	name = models.CharField(max_length=100)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+	defenseID = models.CharField(max_length=10)
+	players = models.ManyToManyField(Player, blank=True)
+	positions = models.ManyToManyField(Position)
+	tests = models.ManyToManyField(Test)
+	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
+	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+
+	def __str__(self):
+		return self.name
+
+	def position_strings(self):
+		"""Returns a list of unique string positions in the play.
+		Ex: ['QB', 'WR', etc..]"""
+		positionStrings = []
+		for pos in self.positions.all():
+			positionStrings.append(pos.name)
+		return set(positionStrings) # remove duplicates
+
+	@classmethod
+	def from_json(cls, json):
+		new_play = Play(name=json['name'], team=Team.objects.get(pk=1),
+		formation=Formation.objects.get(pk=json['formation']['id']), defenseID=json['defensiveFormationID'])
+		new_play.save()
+		for player in json['offensivePlayers']:
+			runAssignment = ""
+			blockingCoordinates = "[]"
+			if 'runAssignment' in player:
+				#embed()
+				runAssignment = player['runAssignment']
+			if 'blockingCoordinates' in player:
+				blockingCoordinates = player['blockingCoordinates']
+			new_position = new_play.positions.create(name=player['pos'], startX=player['startX'],
+			startY=player['startY'], blocker=player['blocker'], runner=player['runner'],
+			progressionRank=player['progressionRank'],
+			blockingAssignmentPlayerIndex=player['blockingAssignmentPlayerIndex'],
+			blockingAssignmentUnitIndex=player['blockingAssignmentUnitIndex'],
+			blockingAssignmentObject=player['blockingAssignmentObject'],
+			runAssignment=runAssignment, blockingCoordinates=blockingCoordinates)
+			new_position.set_route_coordinates(player['routeCoordinates'])
+			new_position.save()
+		new_play.save()
+
+	def dict_for_json(self):
+		"""Dict representation of the instance (used in JSON APIs)."""
+		json_dict = model_to_dict(self)
+		json_dict['positions'] = [
+			p.dict_for_json() for p in self.positions.all()
+		]
+		return json_dict
 
 class TestResult(models.Model):
 	score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt
