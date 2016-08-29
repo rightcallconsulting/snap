@@ -202,21 +202,27 @@ Concept.prototype.deepCopy = function() {
 		name: this.name,
 		team: this.team,
 		unit: this.unit,
-		offensivePlayers: this.offensivePlayers,
-		defensivePlayers: this.defensivePlayers,
-		quarterback: this.quarterback,
-		offensiveLinemen: this.offensiveLinemen,
-		eligibleReceivers: this.eligibleReceivers,
 		feedbackMessage: this.feedbackMessage
 	});
 
-	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
-		var blockingAssignment = this.blockingAssignment;
-		if (blockingAssignment instanceof Player) {
-			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
-		} else {
-			result.blockingAssignmentArray.push(blockingAssignment);
-		}
+	if (this.quarterback != null) {
+		result.quarterback = this.quarterback.deepCopy();
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
 	}
 
 	return result;
