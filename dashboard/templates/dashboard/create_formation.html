@@ -253,6 +253,9 @@
 			}
 
 			var quarterback = formation.quarterback;
+			var center = formation.offensiveLinemen[2];
+			var right_tackle = formation.offensiveLinemen[4];
+			var left_tackle = formation.offensiveLinemen[0];
 
 			// If Quarterback is close to behind center then align him with the center.
 			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
