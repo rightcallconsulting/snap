@@ -831,13 +831,6 @@
 			header_box.appendChild(error_message);
 		};
 
-		function isInsideTrash(player) {
-			return player.x > trash.x &&
-				player.x < trash.x + trash.width &&
-				player.y < trash.y &&
-				player.y > trash.y - trash.height
-		};
-
 		function drawDebuggingInfo() {
 			textAlign(CENTER);
 
