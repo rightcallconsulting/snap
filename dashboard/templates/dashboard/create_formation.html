@@ -813,6 +813,20 @@
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
+		// resizeMainViewObjects resizes all of the buttons and bars in our
+		// main view. It is called when the user resizes their browser.
+		function resizeMainViewObjects() {
+			offensivePlayerBar.width = field.width;
+			offensivePlayerBar.x = 0;
+			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
+
+			defensivePlayerBar.width = field.width;
+			defensivePlayerBar.x = 0;
+
+			offensivePlayerBar.resize();
+			defensivePlayerBar.resize();
+		};
+
 		function drawDebuggingInfo() {
 			textAlign(CENTER);
 
