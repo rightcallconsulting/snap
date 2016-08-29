@@ -711,9 +711,10 @@ Player.prototype.deepCopy = function() {
 		pos: this.pos,
 		num: this.num,
 		unit: this.unit,
-		name: this.name,
-		defensiveMovement: this.defensiveMovement
+		name: this.name
 	});
+
+	result.defensiveMovement = this.defensiveMovement;
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
 		var blockingAssignment = this.blockingAssignmentArray[i];
