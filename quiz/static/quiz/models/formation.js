@@ -42,6 +42,57 @@ var Formation = function(config){
 //***************************************************************************//
 //***************************************************************************//
 
+// createOffensiveLineAndQuarterback
+Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
+	var olPositions = ["T", "G", "C", "G", "T"];
+	for (var i = -2; i <= 2; i++) {
+		var xPos = Field.WIDTH/2 + i*2.5;
+		var yPos = ballY;
+
+		var offensive_lineman = new Player({
+			x: xPos,
+			y: yPos,
+			num: olPositions[i+2],
+			fill: color(143, 29, 29),
+			red: 143,
+			blue: 29,
+			green: 29,
+			pos: olPositions[i+2],
+			index: i
+		});
+		this.offensiveLinemen.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
+	}
+
+	currentPlayer = this.oline[3];
+	var quarterback = new Player ({
+		x: this.oline[2].x,
+		y: this.oline[2].y-2.25,
+		num: 12,
+		fill: color(212, 130, 130),
+		red: 212,
+		blue: 130,
+		green: 130,
+		pos: "QB",
+		eligible: true
+	});
+
+	this.quarterback = quarterback;
+	this.offensivePlayers.push(quarterback);
+};
+
+// drawAllPlayers draws all of the players currently in the offensive and
+// defensive player arrays for this formation.
+Formation.prototype.drawAllPlayers = function(field) {
+	this.offensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
+
+	this.defensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
+};
+
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the formation and then saves it (if valid).
 Formation.prototype.save = function (path, csrf_token) {
@@ -146,13 +197,6 @@ function createFormationFromJson(formationJsonDictionary) {
 			siz: formationJsonDictionary.defensivePlayers[i].siz
 		});
 
-		if (formationJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
-			for (var j = 0; j < formationJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
-				var movement = formationJsonDictionary.defensivePlayers[i].defensiveMovement[j];
-				player.defensiveMovement.push([movement[0], movement[1]]);
-			}
-		}
-
 		defensivePlayersArray.push(player);
 	}
 
@@ -174,22 +218,6 @@ function createFormationFromJson(formationJsonDictionary) {
 			});
 
 			offensiveLinemenArray.push(player);
-		}
-	}
-
-	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < formationJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
-			var primaryAssignment = formationJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
-
-			if (primaryAssignment.x != null) {
-				for (var k = 0; k < defensivePlayersArray.length; ++k) {
-					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
-						primaryAssignment = defensivePlayersArray[k];
-					}
-				}
-			}
-
-			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
 		}
 	}
 

@@ -237,102 +237,7 @@
 		var makeJSONCall = true;
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
-
-		function draw() {
-			// Get Quarterback, Center, Left Tackle, Right Tackle, Running Backs, Full
-			// Backs, Tight Ends, and Wide Receivers.
-			var quarterback = new_formation.qb[0];
-			var center = null;
-			var left_tackle = null;
-			var right_tackle = null;
-			var running_backs = new_formation.runningBacks;
-			var full_backs = new_formation.fullBacks;
-			var tight_ends = new_formation.tightEnds;
-			var wide_receivers = new_formation.wideReceivers;
-
-			for(var ol = 0; ol < new_formation.oline.length; ol++) {
-				var lineman = new_formation.oline[ol];
-				
-				if (lineman.pos === "C") {
-					center = lineman;
-				} else if (lineman.pos === "LT") {
-					left_tackle = lineman;
-				} else if (lineman.pos === "RT") {
-					right_tackle = lineman;
-				}
-			}
-
-			// If Quarterback is close to behind center then align him with the center.
-			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
-				quarterback.x = center.x;
-			}
-
-			// If Quarterback is inside the tackle box he can only be behind the center
-			// or a few yards back.
-			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
-				if (quarterback.y > center.y-2.25) {
-					quarterback.y = center.y-2.25;
-				} else if (quarterback.y < center.y-7.5) {
-					quarterback.y = center.y-7.5;
-				}
-			}
-
-			// If a running back is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var rb = 0; rb < running_backs.length; rb++) {
-				var runningback = running_backs[rb];
-				
-				if (runningback.y > left_tackle.y-1) {
-					runningback.y = left_tackle.y;
-				}
-			}
-
-			// If a full back is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var fb = 0; fb < full_backs.length; fb++) {
-				var fullback = full_backs[fb];
-				
-				if (fullback.y > left_tackle.y-1) {
-					fullback.y = left_tackle.y;
-				}
-			}
-
-			// If a tight end is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var te = 0; te < tight_ends.length; te++) {
-				var tightend = tight_ends[te];
-				
-				if (tightend.y > left_tackle.y-1) {
-					tightend.y = left_tackle.y;
-				}
-			}
-
-			// If a wide receiver is near the line of scrimmage automatically
-			// put them on the line of scrimmage.
-			for(var wr = 0; wr < wide_receivers.length; wr++) {
-				var receiver = wide_receivers[wr];
-				
-				if (receiver.y > left_tackle.y-1) {
-					receiver.y = left_tackle.y;
-				}
-			}
-
-			drawOpening();
-		};
-
-		// intro scene
-		function drawOpening() {
-			field.drawBackground(new_formation, height, width);
-			trash.draw(field);
-			new_formation.drawOptionsToCreate();
-			new_formation.drawOLQB();
-			new_formation.drawAllPlayers();
-			fill(0, 0, 0);
-			textSize(20);
-			text(new_formation.feedbackMessage, 330, 20);
-			fill(176,176,176)
-		};
-
+		
 		function mouseDragged() {
 			var receiverSelected = new_formation.mouseInReceiverOrNode(field)[0];
 			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
@@ -746,6 +651,7 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
+		
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
@@ -778,7 +684,7 @@
 
 			// Create new Formation and add offensive linemen and quarterback
 			formation = new Formation({});
-			formation.createOlineAndQB();
+			formation.createOffensiveLineAndQuarterback();
 
 			// Create Player bars
 			defensivePlayerBar = new PlayerBar({
@@ -810,6 +716,128 @@
 			drawOpening();
 		};
 
+		function draw() {
+			// Limitations on where offensive players can be
+			var numberOfOffensivePlayers = formation.offensivePlayers.length;
+			
+			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
+				var player = formation.offensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = 0;
+				} else if (playerYYard > field.ballYardLine) {
+					player.y = field.ballYardLine;
+				}
+
+				// If a player is ineligible they must be on the line of scrimmage.
+				// Otherwise if they are within a yard of the line of scrimmage they
+				// should automatically snap onto the line.
+				if (!player.eligible) {
+					player.y = field.ballYardLine;
+				} else {
+					if (player.y > field.ballYardLine - 1) {
+						player.y = field.ballYardLine;
+					} 
+				}
+			}
+
+			var quarterback = formation.quarterback;
+
+			// If Quarterback is close to behind center then align him with the center.
+			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
+				quarterback.x = center.x;
+			}
+
+			// If Quarterback is inside the tackle box he can only be behind the center
+			// or a few yards back.
+			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
+				if (quarterback.y > center.y-2.25) {
+					quarterback.y = center.y-2.25;
+				} else if (quarterback.y < center.y-7.5) {
+					quarterback.y = center.y-7.5;
+				}
+			}
+
+			// Limitations on where defensive players can be
+			var numberOfDefensivePlayers = formation.defensivePlayers.length;
+			
+			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
+				var player = formation.defensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < field.ballYardLine+player.siz) {
+					player.y = field.ballYardLine+player.siz;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
+			}
+
+			// Draw opening
+			drawOpening();
+		};
+
+		function drawOpening() {
+			field.drawBackground(formation, height, width);
+
+			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+
+			formation.drawAllPlayers(field);
+			defensivePlayerBar.draw(field);
+			offensivePlayerBar.draw(field);
+			
+			fill(0, 0, 0);
+			textSize(20);
+			text(formation.feedbackMessage, 330, 20);
+			fill(176,176,176);
+		};
+
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
@@ -821,5 +849,124 @@
 		//*******************************************************************//
 		// Utility Functions                                                 //
 		//*******************************************************************//
+		
+		function createOffensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "QB", pos: "QB",
+				red: 212, green: 130, blue: 130,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "C", pos: "C",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "G", pos: "G",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 143, green: 29, blue: 29,
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "F", pos: "F",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "Y", pos: "Y",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "X", pos: "X",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			return players;
+		};
+
+		function createDefensivePlayerOptions() {
+			var players = [];
+			var player;
+				
+			player = new Player ({
+				num: "E", pos: "E",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "W", pos: "W",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+			
+			player = new Player ({
+				num: "T", pos: "T",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "N", pos: "N",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "M", pos: "M",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "S", pos: "S",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "SS", pos: "SS",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			return players;
+		};
 	</script>
 {% endblock %}
