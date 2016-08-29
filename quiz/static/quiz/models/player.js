@@ -716,7 +716,7 @@ Player.prototype.deepCopy = function() {
 	});
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
-		var blockingAssignment = this.blockingAssignment;
+		var blockingAssignment = this.blockingAssignmentArray[i];
 		if (blockingAssignment instanceof Player) {
 			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
 		} else {
