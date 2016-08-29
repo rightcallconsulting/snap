@@ -232,251 +232,6 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
-def quizzes(request):
-	quizzes = Test.objects.all()
-	return HttpResponse(serializers.serialize("json", quizzes))
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def create_quiz(request):
-	if request.method == 'POST':
-		# Get arguments for the quiz from the POST arguments and create
-		# a new quiz using these values
-		name = request.POST['name']
-		team = request.user.coach.team
-		type_of_quiz = request.POST['type_of_quiz']
-		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
-		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
-		new_quiz.save()
-
-		# Loop through player ids and assign them to the quiz.
-		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			new_quiz.players.add(player)
-			new_quiz.save()
-
-		new_quiz.save()
-		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
-	else:
-		team = request.user.coach.team
-		groups = PlayerGroup.objects.filter(team=team)
-		plays = request.user.coach.team.play_set.all()
-
-		if len(groups) > 0:
-			players_in_group = groups[0].players.all()
-			analytics = PlayerAnalytics(players_in_group)
-		else:
-			players_in_group = []
-			analytics = None
-
-		return render(request, 'dashboard/create_quiz.html', {
-			'plays': plays,
-			'types_of_quizzes': Test.types_of_tests,
-			'groups': groups,
-			'players_in_group': players_in_group,
-			'page_header': 'CREATE QUIZ',
-		})
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def manage_quiz(request, quiz_id):
-	if request.method == 'POST':
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		add_or_remove = request.POST['add_or_remove']
-		if request.POST['defense'] == "false":
-			play_id = request.POST['play_id']
-			play = Play.objects.filter(id=play_id)[0]
-			if add_or_remove == "add":
-				play.tests.add(quiz)
-			else:
-				play.tests.remove(quiz)
-			play.save()
-		else:
-			defensive_formation_id = request.POST['defensive_formation_id']
-			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
-			if add_or_remove == "add":
-				quiz.formations.add(defensive_formation)
-			else:
-				quiz.formations.remove(defensive_formation)
-		quiz.save()
-		return HttpResponse('')
-	else:
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		unit = quiz.unit()
-		players = quiz.players
-		player = None # Gonna need to fix this
-		team = quiz.team
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		unique_defensive_formations = []
-		play_id_array = []
-		plays_in_quiz = quiz.play_set.all()
-		for play in quiz.play_set.all():
-			play_id_array.append(play.id)
-		defensive_formation_id_array = []
-		defensive_formations_in_quiz = quiz.formations.all()
-		for formation in defensive_formations_in_quiz:
-			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
-		unique_defensive_formations_dict = {}
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
-		return render(request, 'dashboard/manage_quiz.html', {
-			'quiz': quiz,
-			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
-			'team': team,
-			'player': player,
-			'play_id_array': play_id_array,
-			'plays_in_quiz': plays_in_quiz,
-			'unit': unit,
-			'unique_defensive_formations': unique_defensive_formations,
-			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
-			'page_header': 'EDIT QUIZZES'
-		})
-
-@login_required
-def my_quizzes(request):
-	player = request.user.player
-	return render(request, 'dashboard/my_quizzes.html')
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def groups(request):
-	team = request.user.coach.team
-	groups = PlayerGroup.objects.filter(team=team)
-	
-	if len(groups) > 0:
-		players_in_group = groups[0].players.all()
-		analytics = PlayerAnalytics(players_in_group)
-	else:
-		players_in_group = []
-		analytics = None
-	
-	return render(request, 'dashboard/groups.html', {
-		'team': team,
-		'groups': groups,
-		'players_in_group': players_in_group,
-		'analytics': analytics,
-		'page_header': 'GROUPS',
-	})
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def create_group(request):
-	if request.method == "POST":
-		new_player_group = PlayerGroup()
-		new_player_group.name = request.POST['name']
-		new_player_group.team = request.user.coach.team
-		new_player_group.save()
-
-		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			new_player_group.players.add(player)
-
-		new_player_group.save()
-
-		return HttpResponseRedirect(reverse('groups'))
-	else:
-		form = PlayerGroupForm()
-		players = Player.objects.filter(team=request.user.coach.team)
-		return render(request, 'dashboard/create_group.html', {
-			'form': form,
-			'players': players,
-			'page_header': 'CREATE GROUP',
-		})
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def manage_groups(request):
-	if request.method == "POST":
-		group_id = int(request.POST['group'])
-		group = PlayerGroup.objects.filter(pk=group_id)[0]
-
-		# Lists to contain the primary keys to be operated on including duplicates.
-		add_pks = [0]
-		remove_pks = [0]
-		
-		# Loop through and place player pks on add list including duplicates.
-		for player_id in request.POST.getlist('add_player'):
-			add_pks.append(int(player_id))
-		
-		# Loop through and place player pks on remove list including duplicates.
-		for player_id in request.POST.getlist('remove_player'):
-			remove_pks.append(int(player_id))
-
-		# The maximum primary key value in either list.
-		max_pk = max(max(add_pks), max(remove_pks))
-
-		# Lists of the number of respective operation per pk.
-		number_adds = []
-		number_removes = []
-
-		# Loop through player pks starting from 0.
-		for pk in range(max_pk):
-			# Append the number of adds per player pk.
-			number_adds.append(add_pks.count(pk+1))
-			# Append the number of removes per player pk.
-			number_removes.append(remove_pks.count(pk+1))
-
-			# Calculate the difference between the number of adds and number of 
-			# removes for player pk. This number should only ever be -1, 0, or 1. 
-			# A player can only be added to the group if they started out of the
-			# group or have already been removed and equal amount of times as they
-			# have they been added.
-			diff = number_adds[pk] - number_removes[pk]
-
-			# If the diff is positve 1 then add the player associated with that pk
-			# to the group. If the diff is negative 1 then remove the player. If it
-			# is 0, do nothing. Otherwise, return an error for an invalid operation.
-			if diff == 1:
-				group.players.add(Player.objects.filter(pk=(pk+1))[0])
-				group.save()
-			elif diff == -1:
-				group.players.remove(Player.objects.filter(pk=(pk+1))[0])
-				group.save()
-			elif diff == 0:
-				group.save()
-			else:
-				sys.exit(1)
-
-		return HttpResponseRedirect(reverse('groups'))
-	else:
-		team = request.user.coach.team
-		groups = PlayerGroup.objects.filter(team=team)
-		all_players_on_team = Player.objects.filter(team=team)
-		players_not_in_group = []
-		
-		# If there is at least one group then add all the players
-		# in the first group to the players_in_group list, and add
-		# everyone else to the players_not_in_group list. Otherwise,
-		# add no one to the players_in_group list and the whole team
-		# to the players_not_in_group list.
-		#
-		# TODO: If there is no group then redirect to the create
-		# group page because a coach can't manage groups if there
-		# are none.
-		if len(groups) > 0:
-			players_in_group = groups[0].players.all()
-			for player in all_players_on_team:
-				if player not in players_in_group:
-					players_not_in_group.append(player)
-		else:
-			players_in_group = []
-			players_not_in_group = all_players_on_team
-		
-		return render(request, 'dashboard/manage_groups.html', {
-			'team': team,
-			'groups': groups,
-			'players_in_group': players_in_group,
-			'players_not_in_group': players_not_in_group,
-			'page_header': 'MANAGE GROUPS',
-		})
-
-def delete_group(request):
-	if request.method == 'POST':
-		group_id = request.POST['group_id']
-		group = PlayerGroup.objects.filter(id=group_id)[0]
-		group.delete()
-		return HttpResponse('')
-
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def quiz_analytics(request, quiz_id):
 	coach = request.user.coach
@@ -677,6 +432,253 @@ def create_play(request):
 			'plays': plays,
 			'page_header': 'CREATE PLAY',
 		})
+
+# Groups
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def groups(request):
+	team = request.user.coach.team
+	groups = PlayerGroup.objects.filter(team=team)
+	
+	if len(groups) > 0:
+		players_in_group = groups[0].players.all()
+		analytics = PlayerAnalytics(players_in_group)
+	else:
+		players_in_group = []
+		analytics = None
+	
+	return render(request, 'dashboard/groups.html', {
+		'team': team,
+		'groups': groups,
+		'players_in_group': players_in_group,
+		'analytics': analytics,
+		'page_header': 'GROUPS',
+	})
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_group(request):
+	if request.method == "POST":
+		new_player_group = PlayerGroup()
+		new_player_group.name = request.POST['name']
+		new_player_group.team = request.user.coach.team
+		new_player_group.save()
+
+		for player_id in request.POST.getlist('player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			new_player_group.players.add(player)
+
+		new_player_group.save()
+
+		return HttpResponseRedirect(reverse('groups'))
+	else:
+		form = PlayerGroupForm()
+		players = Player.objects.filter(team=request.user.coach.team)
+		return render(request, 'dashboard/create_group.html', {
+			'form': form,
+			'players': players,
+			'page_header': 'CREATE GROUP',
+		})
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def manage_groups(request):
+	if request.method == "POST":
+		group_id = int(request.POST['group'])
+		group = PlayerGroup.objects.filter(pk=group_id)[0]
+
+		# Lists to contain the primary keys to be operated on including duplicates.
+		add_pks = [0]
+		remove_pks = [0]
+		
+		# Loop through and place player pks on add list including duplicates.
+		for player_id in request.POST.getlist('add_player'):
+			add_pks.append(int(player_id))
+		
+		# Loop through and place player pks on remove list including duplicates.
+		for player_id in request.POST.getlist('remove_player'):
+			remove_pks.append(int(player_id))
+
+		# The maximum primary key value in either list.
+		max_pk = max(max(add_pks), max(remove_pks))
+
+		# Lists of the number of respective operation per pk.
+		number_adds = []
+		number_removes = []
+
+		# Loop through player pks starting from 0.
+		for pk in range(max_pk):
+			# Append the number of adds per player pk.
+			number_adds.append(add_pks.count(pk+1))
+			# Append the number of removes per player pk.
+			number_removes.append(remove_pks.count(pk+1))
+
+			# Calculate the difference between the number of adds and number of 
+			# removes for player pk. This number should only ever be -1, 0, or 1. 
+			# A player can only be added to the group if they started out of the
+			# group or have already been removed and equal amount of times as they
+			# have they been added.
+			diff = number_adds[pk] - number_removes[pk]
+
+			# If the diff is positve 1 then add the player associated with that pk
+			# to the group. If the diff is negative 1 then remove the player. If it
+			# is 0, do nothing. Otherwise, return an error for an invalid operation.
+			if diff == 1:
+				group.players.add(Player.objects.filter(pk=(pk+1))[0])
+				group.save()
+			elif diff == -1:
+				group.players.remove(Player.objects.filter(pk=(pk+1))[0])
+				group.save()
+			elif diff == 0:
+				group.save()
+			else:
+				sys.exit(1)
+
+		return HttpResponseRedirect(reverse('groups'))
+	else:
+		team = request.user.coach.team
+		groups = PlayerGroup.objects.filter(team=team)
+		all_players_on_team = Player.objects.filter(team=team)
+		players_not_in_group = []
+		
+		# If there is at least one group then add all the players
+		# in the first group to the players_in_group list, and add
+		# everyone else to the players_not_in_group list. Otherwise,
+		# add no one to the players_in_group list and the whole team
+		# to the players_not_in_group list.
+		#
+		# TODO: If there is no group then redirect to the create
+		# group page because a coach can't manage groups if there
+		# are none.
+		if len(groups) > 0:
+			players_in_group = groups[0].players.all()
+			for player in all_players_on_team:
+				if player not in players_in_group:
+					players_not_in_group.append(player)
+		else:
+			players_in_group = []
+			players_not_in_group = all_players_on_team
+		
+		return render(request, 'dashboard/manage_groups.html', {
+			'team': team,
+			'groups': groups,
+			'players_in_group': players_in_group,
+			'players_not_in_group': players_not_in_group,
+			'page_header': 'MANAGE GROUPS',
+		})
+
+def delete_group(request):
+	if request.method == 'POST':
+		group_id = request.POST['group_id']
+		group = PlayerGroup.objects.filter(id=group_id)[0]
+		group.delete()
+		return HttpResponse('')
+
+# Quizzes
+def quizzes(request):
+	quizzes = Test.objects.all()
+	return HttpResponse(serializers.serialize("json", quizzes))
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def create_quiz(request):
+	if request.method == 'POST':
+		# Get arguments for the quiz from the POST arguments and create
+		# a new quiz using these values
+		name = request.POST['name']
+		team = request.user.coach.team
+		type_of_quiz = request.POST['type_of_quiz']
+		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
+		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
+		new_quiz.save()
+
+		# Loop through player ids and assign them to the quiz.
+		for player_id in request.POST.getlist('player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			new_quiz.players.add(player)
+			new_quiz.save()
+
+		new_quiz.save()
+		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
+	else:
+		team = request.user.coach.team
+		groups = PlayerGroup.objects.filter(team=team)
+		plays = request.user.coach.team.play_set.all()
+
+		if len(groups) > 0:
+			players_in_group = groups[0].players.all()
+			analytics = PlayerAnalytics(players_in_group)
+		else:
+			players_in_group = []
+			analytics = None
+
+		return render(request, 'dashboard/create_quiz.html', {
+			'plays': plays,
+			'types_of_quizzes': Test.types_of_tests,
+			'groups': groups,
+			'players_in_group': players_in_group,
+			'page_header': 'CREATE QUIZ',
+		})
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def manage_quiz(request, quiz_id):
+	if request.method == 'POST':
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		add_or_remove = request.POST['add_or_remove']
+		if request.POST['defense'] == "false":
+			play_id = request.POST['play_id']
+			play = Play.objects.filter(id=play_id)[0]
+			if add_or_remove == "add":
+				play.tests.add(quiz)
+			else:
+				play.tests.remove(quiz)
+			play.save()
+		else:
+			defensive_formation_id = request.POST['defensive_formation_id']
+			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
+			if add_or_remove == "add":
+				quiz.formations.add(defensive_formation)
+			else:
+				quiz.formations.remove(defensive_formation)
+		quiz.save()
+		return HttpResponse('')
+	else:
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		unit = quiz.unit()
+		players = quiz.players
+		player = None # Gonna need to fix this
+		team = quiz.team
+		formations = team.formation_set.all()
+		offensive_formations = formations.filter(unit="offense")
+		defensive_formations = formations.filter(unit="defense")
+		unique_defensive_formations = []
+		play_id_array = []
+		plays_in_quiz = quiz.play_set.all()
+		for play in quiz.play_set.all():
+			play_id_array.append(play.id)
+		defensive_formation_id_array = []
+		defensive_formations_in_quiz = quiz.formations.all()
+		for formation in defensive_formations_in_quiz:
+			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
+		unique_defensive_formations_dict = {}
+		for formation in defensive_formations:
+			unique_defensive_formations_dict[formation.name] = formation
+			unique_defensive_formations = unique_defensive_formations_dict.values()
+		return render(request, 'dashboard/manage_quiz.html', {
+			'quiz': quiz,
+			'formations': formations,
+			'offensive_formations': offensive_formations,
+			'defensive_formations': defensive_formations,
+			'team': team,
+			'player': player,
+			'play_id_array': play_id_array,
+			'plays_in_quiz': plays_in_quiz,
+			'unit': unit,
+			'unique_defensive_formations': unique_defensive_formations,
+			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
+			'page_header': 'EDIT QUIZZES'
+		})
+
+@login_required
+def my_quizzes(request):
+	player = request.user.player
+	return render(request, 'dashboard/my_quizzes.html')
 
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
