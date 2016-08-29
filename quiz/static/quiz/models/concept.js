@@ -139,16 +139,6 @@ Concept.prototype.mouseInPlayer = function(field) {
 // and removes everything from the frontend display.
 Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
-		/*var conceptToPost = new Concept ({
-			name: this.name,
-			team: this.team,
-			unit: this.unit,
-			offensivePlayers: this.offensivePlayers,
-			defensivePlayers: this.defensivePlayers
-		});
-
-		this.post(path, csrf_token);*/
-
 		var conceptJson = "";
 		var player;
 

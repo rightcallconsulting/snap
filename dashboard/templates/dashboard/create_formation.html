@@ -238,121 +238,6 @@
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
-		function setup() {
-			var display_box = document.getElementById("display-box");
-			var display_box_header = display_box.querySelector(".display-header");
-			var display_box_footer = display_box.querySelector(".display-buttons");
-			var sideview = document.getElementById("sideview");
-			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
-			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
-
-			var quiz_box_div = document.getElementById("quiz-box");
-			//var new_canvas = document.createElement("canvas");
-			//new_canvas.id = "create-formation";
-			//new_canvas.height = height;
-			//new_canvas.width = width;
-
-			//Will need this to set minimum width
-			//if (height < 500) {
-			//	height = 500;
-			//}
-
-			var myCanvas = createCanvas(width, height);
-			
-			field.height = height;
-			field.width = width;
-			field.heightInYards = 35;
-			field.ballYardLine = 65;
-			background(58, 135, 70);
-
-			myCanvas.parent("quiz-box");
-
-			//randomSeed(millis()); // What is the random seed for?
-
-			// Create Position groups
-			new_formation = new Formation({});
-			new_formation.createOLineAndQB(field.ballYardLine);
-			new_formation.changeablePlayers.push(new_formation.qb[0]); // This allows us to move the QB?
-
-			var trashWidth = field.pixelsToYards(field.width * 0.12);
-			if(trashWidth < 5) {
-				trashWidth = 5;
-			}
-
-			var trashHeight = field.pixelsToYards(field.height * 0.1);
-			if(trashHeight < 4) {
-				trashHeight = 4;
-			}
-
-			var trashX = Field.WIDTH - trashWidth * 1.1;
-			var trashY = field.getYardY(field.height) + trashHeight * 1.1;
-			if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width) {
-				trashX = field.getYardX(field.width) - trashWidth*1.1;
-			}
-
-			// Create Buttons
-			trash = new Button({
-				label: "Trash",
-				x: trashX, y: trashY,
-				width: trashWidth,
-				height: trashHeight,
-				clicked: false,
-				displayButton: true
-			});
-
-			// Create Position groups that can be added
-			var wr = new Player ({
-				num: 'WR', pos: 'WR', 
-				x: field.getXOffset() - 9,
-				y: field.getYardY(height) + 2,
-				red: 255, green: 0, blue: 0
-			});
-
-			var te = new Player ({
-				num: 'TE', pos: 'TE',
-				x: wr.x + 3.5, y: wr.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			var rb = new Player({
-				num: 'RB', pos: 'RB',
-				x: te.x + 3.5, y: te.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			var fb = new Player({
-				num: 'FB', pos: 'FB',
-				x: rb.x + 3.5, y: te.y,
-				red: 255, green: 0, blue: 0
-			});
-
-			new_formation.optionsToCreate.push(wr);
-			new_formation.optionsToCreate.push(te);
-			new_formation.optionsToCreate.push(rb);
-			new_formation.optionsToCreate.push(fb);
-
-			//  Field Position Variables
-			var scoreboard = new Scoreboard({});
-
-			window.onresize = function() {
-				var display_box = document.getElementById("display-box");
-				var display_box_header = display_box.querySelector(".display-header");
-				var display_box_footer = display_box.querySelector(".display-buttons");
-				var sideview = document.getElementById("sideview");
-				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-				var width = display_box.offsetWidth - 4;
-
-				resizeCanvas(width, height);
-				field.height = height;
-				field.width = width;
-				resizeBottomButtons();
-			};
-
-			drawOpening();
-		};
-
 		function draw() {
 			// Get Quarterback, Center, Left Tackle, Right Tackle, Running Backs, Full
 			// Backs, Tight Ends, and Wide Receivers.
@@ -861,6 +746,69 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
+		function setup() {
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
+
+			// Create canvas and add it to the main view
+			var quiz_box_div = document.getElementById("quiz-box");
+			var myCanvas = createCanvas(width, height);
+			
+			field.height = height;
+			field.width = width;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
+			background(58, 135, 70);
+
+			myCanvas.parent("quiz-box");
+			
+			// Load concepts from Json passed from database
+			var conceptJsonFromDatabase = "";
+
+			{% for conceptJson in conceptsJson %}
+			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
+			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			{% endfor %}
+
+			// Create new Formation and add offensive linemen and quarterback
+			formation = new Formation({});
+			formation.createOlineAndQB();
+
+			// Create Player bars
+			defensivePlayerBar = new PlayerBar({
+				playerOptions: createDefensivePlayerOptions()
+			});
+			defensivePlayerBar.init(field);
+
+			offensivePlayerBar = new PlayerBar({
+				playerOptions: createOffensivePlayerOptions()
+			});
+			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
+			offensivePlayerBar.init(field);
+
+			window.onresize = function() {
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
+				var sideview = document.getElementById("sideview");
+				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
+
+				resizeCanvas(width, height);
+				field.height = height;
+				field.width = width;
+				
+				resizeMainViewObjects();
+			};
+
+			drawOpening();
+		};
 
 		//*******************************************************************//
 		// Event Listener Functions                                          //
