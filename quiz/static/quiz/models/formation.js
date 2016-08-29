@@ -143,6 +143,39 @@ Formation.prototype.delete = function(path, csrf_token) {
 	});
 };
 
+// deepCopy returns a new Concept object that is exactly the same as this.
+Formation.prototype.deepCopy = function() {
+	var result = new Formation({
+		id: this.id,
+		name: this.name,
+		team: this.team,
+		unit: this.unit,
+		feedbackMessage: this.feedbackMessage
+	});
+
+	if (this.quarterback != null) {
+		result.quarterback = this.quarterback.deepCopy();
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
+};
+
 /*********************************/
 /*     Non object functions      */
 /*********************************/
