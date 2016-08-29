@@ -347,7 +347,7 @@
 			// update the existing version it has and return.
 			for (var i = 0; i < concepts.length; ++i) {
 				if (name === concepts[i].name) {
-					concepts[i] = concept;
+					concepts[i] = concept.deepCopy();
 					concept.save(path, csrf_token);
 					concept = new Concept({});
 					return;

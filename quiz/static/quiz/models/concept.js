@@ -210,7 +210,7 @@ Concept.prototype.deepCopy = function() {
 	});
 
 	return result;
-}
+};
 
 /*********************************/
 /*     Non object functions      */

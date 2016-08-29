@@ -698,6 +698,10 @@ Player.prototype.drawDefensiveMovement = function(field) {
 	noStroke();
 };
 
+Player.prototype.deepCopy = function() {
+
+};
+
 // Dylan's line
 
 Player.prototype.getX = function(field) {
