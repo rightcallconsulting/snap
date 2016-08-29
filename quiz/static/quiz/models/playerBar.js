@@ -70,16 +70,4 @@ PlayerBar.prototype.mouseInPlayer = function(field) {
 // bar.
 PlayerBar.prototype.resize = function(field) {
 	this.init(field);
-
-	/*var playerSiz = 25;
-	var playerOptionX = this.x + playerSiz*0.75;
-	var playerOptionY = this.y + (this.height/2);
-
-	for (var i = 0; i < this.playerOptions.length; ++i) {
-		var player = this.playerOptions[i];
-		player.x = playerOptionX;
-		player.y = playerOptionY;
-		player.siz = playerSiz;
-		playerOptionX += playerSiz*1.5;
-	}*/
 };
