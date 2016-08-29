@@ -125,17 +125,6 @@
 			header_box.appendChild(error_message);
 		};
 
-		//*******************************************************************//
-		// p5.js Animation Functions                                         //
-		//*******************************************************************//
-		var formations = [];
-		var new_formation;
-		var makeJSONCall = true;
-		var trash;
-		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
-
-		function resizeBottomButtons() {};
-
 //*************************************************************************************************************************************************//
 
 //*************************************************************************************************************************************************//
@@ -380,8 +369,8 @@
 			}
 
 			// Handle clicks on players in the Formation
-			var currentPlayerSelected = formation.getSelected()[0]; //***************************************************************************
-			var newPlayerSelected = formation.mouseInPlayer(field); //***************************************************************************
+			var currentPlayerSelected = formation.getSelected()[0];
+			var newPlayerSelected = formation.mouseInPlayer(field);
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
@@ -407,7 +396,7 @@
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
 				} else {
-					formation.clearSelected(); //***************************************************************************
+					formation.clearSelected();
 				}
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
