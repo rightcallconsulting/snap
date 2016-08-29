@@ -56,7 +56,7 @@
 				{% endfor %}
 			</div>
 		</div>
-		
+
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
 	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
 	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
@@ -87,27 +87,8 @@
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
 			var width = display_box.offsetWidth - 4; 
 
+			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
-			//var new_canvas = document.createElement("canvas");
-			//new_canvas.id = "create-formation";
-			//new_canvas.height = height;
-			//new_canvas.width = width;
-
-			//Will need this to set minimum width
-			//if (height < 500) {
-			//	height = 500;
-			//}
-			
-			// Load concepts from Json passed from database
-			var jsonStringLength = 0;
-			var conceptJsonFromDatabase = "";
-
-			{% for conceptJson in conceptsJson %}
-			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
-			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
-			{% endfor %}
-
-			// Create canvas and top/bottom bars
 			var myCanvas = createCanvas(width, height);
 			
 			field.height = height;
@@ -117,6 +98,14 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
+			
+			// Load concepts from Json passed from database
+			var conceptJsonFromDatabase = "";
+
+			{% for conceptJson in conceptsJson %}
+			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
+			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			{% endfor %}
 
 			// Create new Concept
 			concept = new Concept({});
