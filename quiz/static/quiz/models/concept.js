@@ -195,6 +195,23 @@ Concept.prototype.delete = function(path, csrf_token) {
 	});
 };
 
+Concept.prototype.deepCopy = function() {
+	var result = new Concept({
+		id: this.id,
+		name: this.name,
+		team: this.team,
+		unit: this.unit,
+		offensivePlayers: this.offensivePlayers,
+		defensivePlayers: this.defensivePlayers,
+		quarterback: this.quarterback,
+		offensiveLinemen: this.offensiveLinemen,
+		eligibleReceivers: this.eligibleReceivers,
+		feedbackMessage: this.feedbackMessage
+	});
+
+	return result;
+}
+
 /*********************************/
 /*     Non object functions      */
 /*********************************/
