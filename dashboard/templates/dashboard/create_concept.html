@@ -393,13 +393,20 @@
 				var csrf_token = "{{ csrf_token }}";
 
 				concept.delete(path, csrf_token);
+
+				// Delete the button from the sidebar.
+				var sideview_buttons_div = document.getElementById("sideview-buttons");
+				sideview_buttons_div.removeChild(selected);
 			}
 
+			// Update the top bar to display the Placeholder message.
 			removeHeaderPlaceholder();
 			removeHeaderError();
 			removeHeaderName();
 			addHeaderPlaceholder();
 
+			// Set concept var to equal a new Concept. This will get rid of
+			// whatever is displayed on the screen.
 			concept = new Concept({});
 		});
 
@@ -649,9 +656,29 @@
 		};
 
 		function keyPressed() {
+			// Get the concept-name html element if it exists. This is what
+			// will be updated.
 			var concept_name = document.getElementById("concept-name");
 
+			// If the header box is selected update the concept name according
+			// to the key press. Otherwise, create a block.
 			if ($("#header-box").hasClass("selected") && concept_name != null) {
+				// Get the currently selected sideview button so that you can
+				// unselect it when the name in the main view's top bar is
+				// changed.
+				var selected = document.getElementById("selected");
+
+				// If there was a previously selected button remove it's selected
+				// id attribute and change it from btn-success to btn-primary.
+				if (selected != null) {
+					selected.removeAttribute("id");
+					selected.removeAttribute("class");
+					selected.setAttribute("class", "btn btn-primary sideview-button");
+				}
+
+				// Get the main view's top bar so that you can tell is the
+				// string has become empty and needs to be replaced with a
+				// placeholder message.
 				var string_length = concept_name.textContent.length;
 
 				if (keyCode == BACKSPACE) {
@@ -660,13 +687,11 @@
 							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
 						}
 					}
-
 					return false;
 				} else if (keyCode == 32) {
 					if (concept_name != null && string_length < 100) {
 						concept_name.textContent += ' ';
 					}
-
 					return false;
 				}
 			} else if (concept.getSelected()[0] != null) {
