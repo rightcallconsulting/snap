@@ -136,7 +136,6 @@ Concept.prototype.mouseInPlayer = function(field) {
 
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the concept and then saves it (if valid)
-// and removes everything from the frontend display.
 Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
 		var conceptJson = "";

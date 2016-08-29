@@ -11,8 +11,11 @@
 //***************************************************************************//
 
 var Formation = function(config){
-	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensivePlayers = config.offensivePlayers || [];
+	this.quarterback = config.quarterback || null;
+	this.eligibleReceivers = config.eligibleReceivers || [];
+	this.offensiveLinemen = config.offensiveLinemen || [];
+	this.defensivePlayers = config.defensivePlayers || [];
 	this.runningBacks = config.runningBacks || [];
 	this.fullBacks = config.fullBacks || [];
 	this.tightEnds = config.tightEnds || [];
@@ -33,12 +36,61 @@ var Formation = function(config){
 	this.linebackers = config.linebackers || [];
 	this.cornerbacks = config.cornerbacks || [];
 	this.safeties = config.safeties || [];
-	this.defensivePlayers = config.defensivePlayers || [];
 	this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
 //***************************************************************************//
 //***************************************************************************//
+
+// save handles everything that need to be done when the user pressed the save
+// button. It checks the validity of the formation and then saves it (if valid).
+Formation.prototype.save = function (path, csrf_token) {
+	if (this.isValid()) {
+		var formationJson = "";
+		var player;
+
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		var formationName = this.name;
+		var formationUnit = this.unit;
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz"]);
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, concept: formationJson}
+			).done(function() {
+				console.log("Formation successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Formation to Django to be saved");
+		});
+	} else {
+		this.feedbackMessage = "Invalid Concept";
+	}
+};
+
+// delete sends a delete request to Django for this formation.
+Formation.prototype.delete = function(path, csrf_token) {
+	var formationName = this.name;
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: formationName}
+		).done(function() {
+			console.log("Formation successfully sent to Django to be deleted");
+		}).fail(function() {
+			console.log("Error sending Formation to Django to be deleted");
+	});
+};
   														
 // createPlayer takes a new player object as an input and adds him
 // to the formation.

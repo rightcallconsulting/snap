@@ -232,20 +232,6 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
-@login_required
-def create_formation(request):
-	if request.method == "POST":
-		return HttpResponseRedirect(reverse('playbook'))
-	else:
-		coach = request.user.coach
-		team = coach.team
-		formations = team.formation_set.all()
-		return render(request, 'dashboard/create_formation.html', {
-			'team': team,
-			'formations': formations,
-			'page_header': 'CREATE FORMATION',
-		})
-
 def quizzes(request):
 	quizzes = Test.objects.all()
 	return HttpResponse(serializers.serialize("json", quizzes))
@@ -592,6 +578,25 @@ def analytics(request):
 		'analytics': analytics,
 		'groups': groups,
 	})
+
+# Formations
+@login_required
+def create_formation(request):
+	if request.method == "POST":
+		return HttpResponseRedirect(reverse(''))
+	else:
+		coach = request.user.coach
+		team = coach.team
+		formations = team.formation_set.all()
+		formationsJson = []
+		for formation in formations:
+			formationsJson.append(formation.formationJson)
+		return render(request, 'dashboard/create_formation.html', {
+			'team': team,
+			'formations': formations,
+			'conceptsJson': formationsJson,
+			'page_header': 'CREATE FORMATION',
+		})
 
 # Concepts
 @login_required
