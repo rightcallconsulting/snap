@@ -66,7 +66,7 @@ var Player = function(config) {
   this.coverageAssignment = config.coverageAssignment || [];
 
   // Blocker assignments - eventually we should just have some child object for Linemen
-  this.blockingAssignmentArray = config.blockingAssignmentArray || [[], []];
+  this.blockingAssignmentArray = config.blockingAssignmentArray || [];
   this.defensiveMovement = []
 };
 
