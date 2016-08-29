@@ -32,11 +32,11 @@ Concept.prototype.drawPlayers = function () {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
-	for(var i = numberOfOffensivePlayers-1; i > 0; i--) {
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		this.offensivePlayers[i].draw(field);
 	}
 
-	for(var i = numberOfDefensivePlayers-1; i > 0; i--) {
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
 		this.defensivePlayers[i].draw(field);
 	}
 };
@@ -117,14 +117,14 @@ Concept.prototype.reset = function() {
 // in a concept. It returns the player that the mouse is inside of or
 // null if the mouse is not inside any player.
 Concept.prototype.mouseInPlayer = function(field) {
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
+	for(var i = this.offensivePlayers.length-1; i > 0; i--) {
 		var player = this.offensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;
 		}
 	}
 
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
+	for(var i = this.defensivePlayers.length-1; i > 0; i--) {
 		var player = this.defensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;

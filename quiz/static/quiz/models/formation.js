@@ -84,16 +84,13 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 // drawAllPlayers draws all of the players currently in the offensive and
 // defensive player arrays for this formation.
 Formation.prototype.drawAllPlayers = function(field) {
-	var numberOfOffensivePlayers = this.offensivePlayers.length;
-	var numberOfDefensivePlayers = this.defensivePlayers.length;
+	this.offensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
 
-	for(var i = numberOfOffensivePlayers-1; i > 0; i--) {
-		this.offensivePlayers[i].draw(field);
-	}
-
-	for(var i = numberOfDefensivePlayers-1; i > 0; i--) {
-		this.defensivePlayers[i].draw(field);
-	}
+	this.defensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
 };
 
 // isValid checks the legality of a formation.
@@ -148,14 +145,14 @@ Formation.prototype.clearSelected = function() {
 // in a formation. It returns the player that the mouse is inside of or
 // null if the mouse is not inside any player.
 Formation.prototype.mouseInPlayer = function(field) {
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
+	for(var i = this.offensivePlayers.length-1; i > 0; i--) {
 		var player = this.offensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;
 		}
 	}
 
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
+	for(var i = this.defensivePlayers.length-1; i > 0; i--) {
 		var player = this.defensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;
