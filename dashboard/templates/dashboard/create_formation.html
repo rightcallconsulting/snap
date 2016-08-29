@@ -816,6 +816,63 @@
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
+		function removeHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			var placeholder_message = document.getElementById("placeholder-message");
+			$("#header-box").removeClass("placeholder");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
+			}
+		};
+
+		function removeHeaderError() {
+			var header_box = document.getElementById("header-box");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("error");
+			
+			if (error_message != null) {
+				header_box.removeChild(error_message);
+			}
+		};
+
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var concept_name = document.getElementById("concept-name");
+
+			if (concept_name != null) {
+				header_box.removeChild(concept_name);
+			}
+		};
+
+		function addHeaderPlaceholder() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Concept Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+
+			var header_box = document.getElementById("header-box");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
+
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Invalid Concept Name";
+			header_box.appendChild(error_message);
+		};
+
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
 		function resizeMainViewObjects() {
