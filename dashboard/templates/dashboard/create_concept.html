@@ -790,6 +790,10 @@
 		};
 
 		function addHeaderPlaceholder() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+
 			var header_box = document.getElementById("header-box");
 			$("#header-box").addClass("placeholder");
 
@@ -800,6 +804,10 @@
 		};
 
 		function addHeaderError() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			
 			var header_box = document.getElementById("header-box");
 			$("#header-box").removeClass("selected placeholder").addClass("error");
 
