@@ -268,42 +268,6 @@
 				playerBeingDragged.y = mouseYardY;
 			}
 
-			if(playerBeingDragged && playerBeingDragged.pos === "C") {
-				var mouseYardX = field.getYardX(mouseX);
-				var xDiff = mouseYardX - playerBeingDragged.x;
-
-				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
-					xDiff = 0;
-				}
-
-				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
-					xDiff = 0;
-				}
-
-				for(var i = 0; i < concept.offensivePlayers.length; i++) {
-					var player = concept.offensivePlayers[i];
-					player.x += xDiff;
-				}
-
-				for(var i = 0; i < concept.defensivePlayers.length; i++) {
-					var player = concept.defensivePlayers[i];
-
-					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
-						player.x += xDiff;
-					} else {
-						player.x += xDiff * 0.75;
-					}
-					
-					if(player.x < 0) {
-						player.x = 0;
-					}
-					
-					if(player.x > Field.WIDTH) {
-						player.x = Field.WIDTH;
-					}
-				}
-			}
-
 			// return false to prevent default behavior
 			return false;
 		};
