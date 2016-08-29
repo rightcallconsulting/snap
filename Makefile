@@ -52,7 +52,8 @@ dylan-seed:
 
 # Load dylan seed file into database
 load-dylan:
-	python manage.py loaddata dylan_seed.json --settings=quiz_master.settings.local 
+	python manage.py loaddata dylan_seed.json --settings=quiz_master.settings.local
+	python manage.py runserver --settings=quiz_master.settings.local
 
 # Dump data into dylan_seed.json
 chris-seed:
@@ -60,7 +61,8 @@ chris-seed:
 
 # Load dylan seed file into database
 load-chris:
-	python manage.py loaddata chris_seed.json --settings=quiz_master.settings.local 
+	python manage.py loaddata chris_seed.json --settings=quiz_master.settings.local
+	python manage.py runserver --settings=quiz_master.settings.local 
 
 # Dump data into stanford_seed.json
 stanford-seed:
@@ -68,7 +70,8 @@ stanford-seed:
 
 # Load stanford seed file into database
 load-stanford:
-	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local 
+	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local
+	python manage.py runserver --settings=quiz_master.settings.local 
 
 ###############################################################################
 # Django/python development commands 
