@@ -714,6 +714,17 @@ Player.prototype.deepCopy = function() {
 		name: this.name,
 		defensiveMovement: this.defensiveMovement
 	});
+
+	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
+		var blockingAssignment = this.blockingAssignment;
+		if (blockingAssignment instanceof Player) {
+			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
+		} else {
+			result.blockingAssignmentArray.push(blockingAssignment);
+		}
+	}
+
+	return result;
 };
 
 // Dylan's line
