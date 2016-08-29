@@ -103,8 +103,8 @@
 			// Load formations from Json passed from database
 			var formationJsonFromDatabase = "";
 
-			{% for formationJson in formationsJson %}
-			formationJsonFromDatabase = '{{ formationJson|safe }}';
+			{% for formation in formations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
 			{% endfor %}
 
@@ -319,27 +319,19 @@
 			// If no one is currently selected and no one is clicked on do 
 			// nothing. Else if no one is currently selected and someone is 
 			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then draw 
-			// appropriate assignment based on players unit return. Else if 
-			// the currently selected player is the same as the newly selected 
-			// player then clear all selections and return. Else two seperate 
-			// players are assigned to those variables and handle accordingly.
+			// is currently selected and empty field is clicked on then do 
+			// nothing. Else if the currently selected player is the same as 
+			// the newly selected player then clear all selections and return. 
+			// Else two seperate players are assigned to those variables and 
+			// handle accordingly.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
-				// Do nothing?		
+				// Do nothing	
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
-					if (currentPlayerSelected.unit === "offense") {
-						currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
-					} else if (currentPlayerSelected.unit === "defense") {
-						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
-					}
-				} else {
-					formation.clearSelected();
-				}
+				formation.clearSelected();
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
 				formation.clearSelected();
@@ -361,7 +353,7 @@
 					num: newPlayerSelected.num, 
 					pos: newPlayerSelected.pos, 
 					x: Field.WIDTH / 2,
-					y: field.ballYardLine,
+					y: field.ballYardLine-5,
 					red: newPlayerSelected.red, 
 					green: newPlayerSelected.green, 
 					blue: newPlayerSelected.blue,
@@ -447,20 +439,6 @@
 						formation.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
 					return false;
-				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray.push("Money Block");
-				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Right");
-				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Left");
-				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
 				}
 
 				return false;	
@@ -884,6 +862,27 @@
 				num: "T", pos: "T",
 				red: 143, green: 29, blue: 29,
 				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "HB", pos: "HB",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "WR", pos: "WR",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "TE", pos: "TE",
+				red: 255, green: 0, blue: 0,
+				siz: 2, eligible: true
 			});
 			players.push(player);
 

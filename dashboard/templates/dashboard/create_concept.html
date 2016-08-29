@@ -102,8 +102,8 @@
 			// Load concepts from Json passed from database
 			var conceptJsonFromDatabase = "";
 
-			{% for conceptJson in conceptsJson %}
-			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
+			{% for concept in concepts %}
+			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
 			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}
 
@@ -295,7 +295,7 @@
 			// players are assigned to those variables and handle accordingly.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
-				// Do nothing?		
+				// Do nothing		
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
 				return false;

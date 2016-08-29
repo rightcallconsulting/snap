@@ -606,13 +606,9 @@ def create_formation(request):
 		coach = request.user.coach
 		team = coach.team
 		formations = team.formation_set.all()
-		formationsJson = []
-		for formation in formations:
-			formationsJson.append(formation.formationJson)
 		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
 			'formations': formations,
-			'conceptsJson': formationsJson,
 			'page_header': 'CREATE FORMATION',
 		})
 
@@ -657,13 +653,9 @@ def create_concept(request):
 		coach = request.user.coach
 		team = coach.team
 		concepts = team.concept_set.all()
-		conceptsJson = []
-		for concept in concepts:
-			conceptsJson.append(concept.conceptJson)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
-			'conceptsJson': conceptsJson,
 			'page_header': 'CREATE CONCEPT',
 		})
 

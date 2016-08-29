@@ -187,7 +187,7 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, concept: formationJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, formation: formationJson}
 			).done(function() {
 				console.log("Formation successfully sent to Django to be saved");
 			}).fail(function() {
