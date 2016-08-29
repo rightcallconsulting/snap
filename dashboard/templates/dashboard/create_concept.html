@@ -247,259 +247,6 @@
 		};
 
 		//*******************************************************************//
-		// Event Listener Functions                                          //
-		//*******************************************************************//
-		
-		// When the main container is clicked unselect the interactive header.
-		// This function will not call when the header is clicked because that
-		// function stops propagation of the event.
-		$(document).click(function(event) {
-			if ($("#header-box").hasClass("selected")) {
-				$("#header-box").removeClass("selected");
-				var concept_name = document.getElementById("concept-name");
-
-				if (concept_name === null) {
-					addHeaderPlaceholder();
-				}
-
-				if (concept_name != null && concept_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(concept_name);
-					addHeaderPlaceholder();
-				}
-			}
-		});
-
-		// When the header box is selected have it change colors and remove the
-		// placeholder if it exists
-		$("#header-box").click(function(event) {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			$("#header-box").addClass("selected");
-			event.stopPropagation();
-		});
-
-		$("#save-button").click(function(event) {
-			// Don't save the concept with one of the players selected.
-			concept.clearSelected();
-
-			var placeholder_message = document.getElementById("placeholder-message");
-			var concept_name = document.getElementById("concept-name");
-			var path = "/concepts/create";
-			var csrf_token = "{{ csrf_token }}";
-
-			// If there is a placeholder message remove it and add an error.
-			if (placeholder_message != null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// I don't think this will ever happen, but I'm not sure.
-			if (concept_name === null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// If the concept_name is 0 characters add an error.
-			if (concept_name != null && concept_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(concept_name);
-				addHeaderError();
-				return;
-			}
-
-			// Deselect the currently selected sidebar because that concept is
-			// going to dissappear from the screen.
-			var selected_sideview_button = document.getElementById("selected");
-			
-			if (selected_sideview_button != null) {
-				selected_sideview_button.removeAttribute("id");
-				selected_sideview_button.removeAttribute("class");
-				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
-			}
-
-			// var name gets the textContent of the header box.
-			var name = concept_name.textContent;
-
-			// Update the top interactive text bar to have a placeholder again.
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			// If this concept name already exists the backend should replace
-			// the old one and not save a new one. The frontend should also
-			// update the existing version it has and return.
-			for (var i = 0; i < concepts.length; ++i) {
-				if (name === concepts[i].name) {
-					concepts[i] = concept.deepCopy();
-					concept.save(path, csrf_token);
-					concept = new Concept({});
-					return;
-				}
-			}
-
-			// If the concept name does not exist the backend will create a
-			// new database entry. The frontend should push this concept to
-			// its concepts array and add a new button for it to the sidebar.
-			concept.name = name;
-			concept.team = teamID;
-			concept.save(path, csrf_token);
-			concepts.push(concept);
-
-			// Create a new concept to replace the one you just saved on the 
-			// screen.
-			concept = new Concept({});
-
-			// Update the sidebar to include a new button for the concept that
-			// was just saved.
-			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
-			// Create a button for the new concept.
-			var new_concept_button = document.createElement("button");
-			new_concept_button.setAttribute("onclick", "changeSelectedButton(this)");
-			new_concept_button.setAttribute("name", name);
-			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
-			new_concept_button.textContent = name;
-
-			// Add the new button to the sideview button div.
-			sideview_buttons_div.appendChild(new_concept_button);
-			return;
-		});
-
-		$("#clear-button").click(function(event) {
-			// Get the currently selected sideview button.
-			var selected = document.getElementById("selected");
-
-			// If selected is not undefined then send a delete request for
-			// the concept that is currently selected.
-			if (selected != null) {
-				// Set the path and cross-site forgery token vars.
-				var path = "/concepts/create";
-				var csrf_token = "{{ csrf_token }}";
-
-				// Delete the concept from the backend.
-				concept.delete(path, csrf_token);
-
-				// Remove the concept from the concept array. If this didn't
-				// happen and the user deleted a concept and added one with the
-				// same name without refreshing the page, the new concept would
-				// get saved properly but no button would be added dynamically
-				// because a concept with the same name would exist in the
-				// concepts array.
-				for (var i = 0; i < concepts.length; ++i) {
-					if (concept.name === concepts[i].name) {
-						concepts.splice(i, 1);
-						break;
-					}
-				}
-
-				// Delete the button from the sidebar. After this step the
-				// concept should be entirely removed from the backend and the
-				// frontend.
-				var sideview_buttons_div = document.getElementById("sideview-buttons");
-				sideview_buttons_div.removeChild(selected);
-			}
-
-			// Update the top bar to display the Placeholder message.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			// Set concept var to equal a new Concept. This will get rid of
-			// whatever is displayed on the screen.
-			concept = new Concept({});
-		});
-
-		$("#zoom-in-button").click(function(event) {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 25) {
-				field.heightInYards -= 5;
-			} else {
-				field.heightInYards = 20;
-			}
-
-			resizeBottomButtons();
-		});
-
-		$("#zoom-out-button").click(function(event) {
-			var heightInYards = field.heightInYards;
-			var widthInYards = field.heightInYards * field.width / field.height;
-			
-			if(heightInYards > 50) {
-				field.heightInYards = 55;
-			} else {
-				field.heightInYards += 5;
-			}
-
-			resizeBottomButtons();
-		});
-
-		$("#full-screen-button").click(function(event) {});
-
-		function changeSelectedButton(selected) {
-			// The newly selected button is the one that is clicked on. The old
-			// selected button may not exist.
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
-			
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// concept we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			// Create a new concept to replace whatever was already on screen.
-			concept = new Concept({});
-
-			// If there was a previously selected button remove it's selected
-			// id attribute and change it from btn-success to btn-primary.
-			if (old_selected != null) {
-				old_selected.removeAttribute("id");
-				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary sideview-button");
-			}
-
-			// If the old selected button is the same as the newly selected
-			// button we are done. If it isn't we need to update the newly
-			// selected button and the main view area.
-			if (old_selected != new_selected) {
-				// Change the color of the newly selected button and set it's
-				// id to 
-				new_selected.removeAttribute("class");
-				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success sideview-button");
-
-				var concept_name = new_selected.getAttribute("name");
-
-				for (var i = 0; i < concepts.length; ++i) {
-					if (concept_name === concepts[i].name) {
-						concept = concepts[i].deepCopy();
-						break;
-					}
-				}
-
-				var header_text_content = concept_name;
-				concept_name = document.getElementById("concept-name");
-
-				if (concept_name === null) {
-					concept_name = document.createElement("p");
-					concept_name.setAttribute("id", "concept-name");
-				}
-
-				removeHeaderPlaceholder();
-				removeHeaderError();
-				removeHeaderName();
-				concept_name.textContent = header_text_content;
-				document.getElementById("header-box").appendChild(concept_name);
-			}
-		};
-
-		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
 		
@@ -753,6 +500,259 @@
 					// return false to prevent default behavior
 					return false;
 				}
+			}
+		};
+
+		//*******************************************************************//
+		// jQuery Event Listener Functions                                   //
+		//*******************************************************************//
+		
+		// When the main container is clicked unselect the interactive header.
+		// This function will not call when the header is clicked because that
+		// function stops propagation of the event.
+		$(document).click(function(event) {
+			if ($("#header-box").hasClass("selected")) {
+				$("#header-box").removeClass("selected");
+				var concept_name = document.getElementById("concept-name");
+
+				if (concept_name === null) {
+					addHeaderPlaceholder();
+				}
+
+				if (concept_name != null && concept_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(concept_name);
+					addHeaderPlaceholder();
+				}
+			}
+		});
+
+		// When the header box is selected have it change colors and remove the
+		// placeholder if it exists
+		$("#header-box").click(function(event) {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			$("#header-box").addClass("selected");
+			event.stopPropagation();
+		});
+
+		$("#save-button").click(function(event) {
+			// Don't save the concept with one of the players selected.
+			concept.clearSelected();
+
+			var placeholder_message = document.getElementById("placeholder-message");
+			var concept_name = document.getElementById("concept-name");
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			// If there is a placeholder message remove it and add an error.
+			if (placeholder_message != null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
+
+			// I don't think this will ever happen, but I'm not sure.
+			if (concept_name === null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
+
+			// If the concept_name is 0 characters add an error.
+			if (concept_name != null && concept_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(concept_name);
+				addHeaderError();
+				return;
+			}
+
+			// Deselect the currently selected sidebar because that concept is
+			// going to dissappear from the screen.
+			var selected_sideview_button = document.getElementById("selected");
+			
+			if (selected_sideview_button != null) {
+				selected_sideview_button.removeAttribute("id");
+				selected_sideview_button.removeAttribute("class");
+				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// var name gets the textContent of the header box.
+			var name = concept_name.textContent;
+
+			// Update the top interactive text bar to have a placeholder again.
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// If this concept name already exists the backend should replace
+			// the old one and not save a new one. The frontend should also
+			// update the existing version it has and return.
+			for (var i = 0; i < concepts.length; ++i) {
+				if (name === concepts[i].name) {
+					concepts[i] = concept.deepCopy();
+					concept.save(path, csrf_token);
+					concept = new Concept({});
+					return;
+				}
+			}
+
+			// If the concept name does not exist the backend will create a
+			// new database entry. The frontend should push this concept to
+			// its concepts array and add a new button for it to the sidebar.
+			concept.name = name;
+			concept.team = teamID;
+			concept.save(path, csrf_token);
+			concepts.push(concept);
+
+			// Create a new concept to replace the one you just saved on the 
+			// screen.
+			concept = new Concept({});
+
+			// Update the sidebar to include a new button for the concept that
+			// was just saved.
+			var sideview_buttons_div = document.getElementById("sideview-buttons");
+			
+			// Create a button for the new concept.
+			var new_concept_button = document.createElement("button");
+			new_concept_button.setAttribute("onclick", "changeSelectedButton(this)");
+			new_concept_button.setAttribute("name", name);
+			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
+			new_concept_button.textContent = name;
+
+			// Add the new button to the sideview button div.
+			sideview_buttons_div.appendChild(new_concept_button);
+			return;
+		});
+
+		$("#clear-button").click(function(event) {
+			// Get the currently selected sideview button.
+			var selected = document.getElementById("selected");
+
+			// If selected is not undefined then send a delete request for
+			// the concept that is currently selected.
+			if (selected != null) {
+				// Set the path and cross-site forgery token vars.
+				var path = "/concepts/create";
+				var csrf_token = "{{ csrf_token }}";
+
+				// Delete the concept from the backend.
+				concept.delete(path, csrf_token);
+
+				// Remove the concept from the concept array. If this didn't
+				// happen and the user deleted a concept and added one with the
+				// same name without refreshing the page, the new concept would
+				// get saved properly but no button would be added dynamically
+				// because a concept with the same name would exist in the
+				// concepts array.
+				for (var i = 0; i < concepts.length; ++i) {
+					if (concept.name === concepts[i].name) {
+						concepts.splice(i, 1);
+						break;
+					}
+				}
+
+				// Delete the button from the sidebar. After this step the
+				// concept should be entirely removed from the backend and the
+				// frontend.
+				var sideview_buttons_div = document.getElementById("sideview-buttons");
+				sideview_buttons_div.removeChild(selected);
+			}
+
+			// Update the top bar to display the Placeholder message.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Set concept var to equal a new Concept. This will get rid of
+			// whatever is displayed on the screen.
+			concept = new Concept({});
+		});
+
+		$("#zoom-in-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$("#zoom-out-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeBottomButtons();
+		});
+
+		$("#full-screen-button").click(function(event) {});
+
+		function changeSelectedButton(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// concept we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Create a new concept to replace whatever was already on screen.
+			concept = new Concept({});
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var concept_name = new_selected.getAttribute("name");
+
+				for (var i = 0; i < concepts.length; ++i) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i].deepCopy();
+						break;
+					}
+				}
+
+				var header_text_content = concept_name;
+				concept_name = document.getElementById("concept-name");
+
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
+				}
+
+				removeHeaderPlaceholder();
+				removeHeaderError();
+				removeHeaderName();
+				concept_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(concept_name);
 			}
 		};
 
