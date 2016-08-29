@@ -84,13 +84,16 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 // drawAllPlayers draws all of the players currently in the offensive and
 // defensive player arrays for this formation.
 Formation.prototype.drawAllPlayers = function(field) {
-	this.offensivePlayers.forEach(function(player) {
-		player.draw(field);
-	});
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
-	this.defensivePlayers.forEach(function(player) {
-		player.draw(field);
-	});
+	for(var i = numberOfOffensivePlayers-1; i > 0; i--) {
+		this.offensivePlayers[i].draw(field);
+	}
+
+	for(var i = numberOfDefensivePlayers-1; i > 0; i--) {
+		this.defensivePlayers[i].draw(field);
+	}
 };
 
 // isValid checks the legality of a formation.
