@@ -74,67 +74,6 @@
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
-		var formations = [];
-		var new_formation;
-		var makeJSONCall = true;
-		var trash;
-		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
-		//*******************************************************************//
-		// Event Listener Functions                                          //
-		//*******************************************************************//
-
-		function removeHeaderPlaceholderAndError() {
-			var header_box = document.getElementById("header-box");
-			var placeholder_message = document.getElementById("placeholder-message");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("placeholder error");
-			
-			if (placeholder_message != null) {
-				header_box.removeChild(placeholder_message);
-			} else if (error_message != null) {
-				header_box.removeChild(error_message);
-			}
-		};
-
-		function removeHeaderName() {
-			var header_box = document.getElementById("header-box");
-			var formation_name = document.getElementById("formation-name");
-
-			if (formation_name != null) {
-				header_box.removeChild(formation_name);
-			}
-		};
-
-		function addHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").addClass("placeholder");
-
-			var placeholder = document.createElement("p");
-			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Formation Name";
-			header_box.appendChild(placeholder);
-		};
-
-		function addHeaderError() {
-			var header_box = document.getElementById("header-box");
-			$("#header-box").removeClass("selected placeholder").addClass("error");
-
-			var error_message = document.createElement("p");
-			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Formation Name";
-			header_box.appendChild(error_message);
-		};
-
-//*************************************************************************************************************************************************//
-
-//*************************************************************************************************************************************************//
-
-//*************************************************************************************************************************************************//
-
-//*************************************************************************************************************************************************//
-
-//*************************************************************************************************************************************************//
-
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
