@@ -74,7 +74,7 @@ Formation.prototype.save = function (path, csrf_token) {
 				console.log("Error sending Formation to Django to be saved");
 		});
 	} else {
-		this.feedbackMessage = "Invalid Concept";
+		this.feedbackMessage = "Invalid Formation";
 	}
 };
 
@@ -90,6 +90,121 @@ Formation.prototype.delete = function(path, csrf_token) {
 		}).fail(function() {
 			console.log("Error sending Formation to Django to be deleted");
 	});
+};
+
+/*********************************/
+/*     Non object functions      */
+/*********************************/
+
+function createFormationFromJson(formationJsonDictionary) {
+	var quarterback;
+	var offensivePlayersArray = [];
+	var defensivePlayersArray = [];
+	var offensiveLinemenArray = [];
+	var eligibleReceiversArray = [];
+
+	for (var i = 0; i < formationJsonDictionary.offensivePlayers.length; ++i) {
+		var player = new Player({
+			x: formationJsonDictionary.offensivePlayers[i].x,
+			y: formationJsonDictionary.offensivePlayers[i].y,
+			startX: formationJsonDictionary.offensivePlayers[i].startX,
+			startY: formationJsonDictionary.offensivePlayers[i].startY,
+			num: formationJsonDictionary.offensivePlayers[i].num,
+			pos: formationJsonDictionary.offensivePlayers[i].pos,
+			red: formationJsonDictionary.offensivePlayers[i].red,
+			green: formationJsonDictionary.offensivePlayers[i].green,
+			blue: formationJsonDictionary.offensivePlayers[i].blue,
+			unit: formationJsonDictionary.offensivePlayers[i].unit,
+			eligible: formationJsonDictionary.offensivePlayers[i].eligible,
+			siz: formationJsonDictionary.offensivePlayers[i].siz
+		});
+
+		if (player.pos === "QB") {
+			quarterback = player;
+		}
+
+		if (player.eligible === true) {
+			eligibleReceiversArray.push(player);
+		}
+
+		offensivePlayersArray.push(player);
+	}
+
+	for (var i = 0; i < formationJsonDictionary.defensivePlayers.length; ++i) {
+		var player = new Player({
+			x: formationJsonDictionary.defensivePlayers[i].x,
+			y: formationJsonDictionary.defensivePlayers[i].y,
+			startX: formationJsonDictionary.defensivePlayers[i].startX,
+			startY: formationJsonDictionary.defensivePlayers[i].startY,
+			num: formationJsonDictionary.defensivePlayers[i].num,
+			pos: formationJsonDictionary.defensivePlayers[i].pos,
+			red: formationJsonDictionary.defensivePlayers[i].red,
+			green: formationJsonDictionary.defensivePlayers[i].green,
+			blue: formationJsonDictionary.defensivePlayers[i].blue,
+			unit: formationJsonDictionary.defensivePlayers[i].unit,
+			eligible: formationJsonDictionary.defensivePlayers[i].eligible,
+			siz: formationJsonDictionary.defensivePlayers[i].siz
+		});
+
+		if (formationJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < formationJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = formationJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
+			}
+		}
+
+		defensivePlayersArray.push(player);
+	}
+
+	if (formationJsonDictionary.offensiveLinemen != null) {
+		for (var i = 0; i < formationJsonDictionary.offensiveLinemen.length; ++i) {
+			var player = new Player({
+				x: formationJsonDictionary.offensiveLinemen[i].x,
+				y: formationJsonDictionary.offensiveLinemen[i].y,
+				startX: formationJsonDictionary.offensiveLinemen[i].startX,
+				startY: formationJsonDictionary.offensiveLinemen[i].startY,
+				num: formationJsonDictionary.offensiveLinemen[i].num,
+				pos: formationJsonDictionary.offensiveLinemen[i].pos,
+				red: formationJsonDictionary.offensiveLinemen[i].red,
+				green: formationJsonDictionary.offensiveLinemen[i].green,
+				blue: formationJsonDictionary.offensiveLinemen[i].blue,
+				unit: formationJsonDictionary.offensiveLinemen[i].unit,
+				eligible: formationJsonDictionary.offensiveLinemen[i].eligible,
+				siz: formationJsonDictionary.offensiveLinemen[i].siz
+			});
+
+			offensiveLinemenArray.push(player);
+		}
+	}
+
+	for (var i = 0; i < offensivePlayersArray.length; ++i) {
+		for (var j = 0; j < formationJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+			var primaryAssignment = formationJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+
+			if (primaryAssignment.x != null) {
+				for (var k = 0; k < defensivePlayersArray.length; ++k) {
+					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
+						primaryAssignment = defensivePlayersArray[k];
+					}
+				}
+			}
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
+		}
+	}
+
+	var result = new Formation({
+		name: formationJsonDictionary.name,
+		team: formationJsonDictionary.team,
+		unit: formationJsonDictionary.unit,
+		offensivePlayers: offensivePlayersArray,
+		defensivePlayers: defensivePlayersArray,
+		quarterback: quarterback,
+		offensiveLinemen: offensiveLinemenArray,
+		eligibleReceivers: eligibleReceiversArray
+	});
+
+	return result;
 };
   														
 // createPlayer takes a new player object as an input and adds him
@@ -1328,69 +1443,4 @@ Formation.prototype.convertToPlayObject = function(){
     });
   }
   return play
-};
-
-
-
-var formationButtons = [];
-var formations = [];
-
-/* Static functions for concepts */
-// createSwoop creates a static version Stanfords swoop blocking concept
-Formation.prototype.createSwoop = function(ballY){
-	// Create Offensive Players
-	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-
-	for (var i = -2; i <= 0; i++) {
-		var xPos = Field.WIDTH / 2 + i*2.5;
-		var yPos = ballY-1.5;
-		
-		if (i !== 0) {
-			yPos -= 0.5;
-		}
-
-		var offensive_lineman = new Player({
-			num: olPositions[i+2],
-			pos: olPositions[i+2],
-			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29,
-		});
-
-		this.oline.push(offensive_lineman);
-		this.offensivePlayers.push(offensive_lineman);
-	}
-
-	var left_tackle = this.oline[0];
-
-	var f = new Player ({
-		num: "F", pos: "F", 
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
-		red: 255, green: 0, blue: 0,
-		eligible: true
-	});
-
-	this.eligibleReceivers.push(f);
-	this.offensivePlayers.push(f);
-
-	// Create Defensive Players
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense", 
-		change: true,
-		x: left_tackle.x,
-		y: left_tackle.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
-	var e = new Player ({
-		num: "E", pos: "E",
-		unit: "defense", 
-		change: true,
-		x: f.x, y: f.y+2.5,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(w);
-	this.defensivePlayers.push(e);
 };

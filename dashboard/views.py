@@ -583,7 +583,25 @@ def analytics(request):
 @login_required
 def create_formation(request):
 	if request.method == "POST":
-		return HttpResponseRedirect(reverse(''))
+		name = request.POST['name']
+		if request.POST['save'] == "true":
+			formationJson = request.POST['formation']
+			formation = Formation.objects.filter(name=name)
+			if formation.count() == 1:
+				formation = formation[0]
+				formation.formationJson = formationJson
+				formation.save()
+			elif formation.count() == 0:
+				formation = Formation()
+				formation.name = name
+				formation.team = request.user.coach.team
+				formation.unit = request.POST['unit']
+				formation.formationJson = formationJson
+				formation.save()
+		elif request.POST['delete'] == "true":
+			formation = Formation.objects.filter(name=name)
+			formation.delete()
+		return HttpResponse('')
 	else:
 		coach = request.user.coach
 		team = coach.team
@@ -631,11 +649,10 @@ def create_concept(request):
 				concept.unit = request.POST['unit']
 				concept.conceptJson = conceptJson
 				concept.save()
-			return HttpResponse('')
 		elif request.POST['delete'] == "true":
 			concept = Concept.objects.filter(name=name)
 			concept.delete()
-			return HttpResponse('')
+		return HttpResponse('')
 	else:
 		coach = request.user.coach
 		team = coach.team

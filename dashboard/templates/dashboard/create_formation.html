@@ -768,12 +768,12 @@
 
 			myCanvas.parent("quiz-box");
 			
-			// Load concepts from Json passed from database
-			var conceptJsonFromDatabase = "";
+			// Load formations from Json passed from database
+			var formationJsonFromDatabase = "";
 
-			{% for conceptJson in conceptsJson %}
-			conceptJsonFromDatabase = '{{ conceptJson|safe }}';
-			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			{% for formationJson in formationsJson %}
+			formationJsonFromDatabase = '{{ formationJson|safe }}';
+			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
 			{% endfor %}
 
 			// Create new Formation and add offensive linemen and quarterback
