@@ -44,25 +44,16 @@
 			</div>
 		</div>
 		
-		<div id="choose-existing-formation" class="col-md-3 bordered-div">
-			<div id="header-box" class="header">
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header">
 				Existing Formations
 			</div>
-
-			<div class="table-wrapper formation-table">
-				<table>
-					{% for formation in formations %}
-						<tbody>
-							<tr>
-								<td>
-									<button class="btn btn-primary" onclick="changeSelected(this)">
-										{{ formation.name }}
-									</button>
-								</td>
-							</tr>
-						</tbody>
-					{% endfor %}
-				</table>
+			<div id="sideview-buttons">
+				{% for formation in formations %}
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedButton(this)">
+						{{ formation.name }}
+					</button>
+				{% endfor %}
 			</div>
 		</div>
 	</div><!--/create-formation-->
@@ -75,6 +66,18 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var formations = [];
+		var new_formation;
+		var makeJSONCall = true;
+		var trash;
+		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
+
+		var formation;
+		var defensivePlayerBar;
+		var offensivePlayerBar;
+		var playerBeingDragged;
+		var mouseBeingDragged = false;
+		var teamID = document.getElementById("team-id").getAttribute("team-id");
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
@@ -239,8 +242,8 @@
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
 			var display_box_footer = display_box.querySelector(".display-buttons");
-			var sidebar = document.getElementById("choose-existing-formation");
-			var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
 			var width = display_box.offsetWidth - 4; 
@@ -337,8 +340,8 @@
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
 				var display_box_footer = display_box.querySelector(".display-buttons");
-				var sidebar = document.getElementById("choose-existing-formation");
-				var height = sidebar.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var sideview = document.getElementById("sideview");
+				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 				var width = display_box.offsetWidth - 4;
 
 				resizeCanvas(width, height);
@@ -855,6 +858,20 @@
 			}
 		};*/
 
-		var runTest = function() {};
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
+
+		//*******************************************************************//
+		// Event Listener Functions                                          //
+		//*******************************************************************//
+
+		//*******************************************************************//
+		// p5.js Event Listeners                                             //
+		//*******************************************************************//
+
+		//*******************************************************************//
+		// Utility Functions                                                 //
+		//*******************************************************************//
 	</script>
 {% endblock %}
