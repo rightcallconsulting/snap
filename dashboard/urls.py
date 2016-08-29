@@ -17,22 +17,29 @@ urlpatterns = [
 	url(r'^playbook$', views.playbook, name='playbook'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
-	url(r'^quizzes$', views.quizzes, name='quizzes'),
-	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
-	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
-	url(r'^quizzes/analytics/(?P<test_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
-	url(r'^my_quizzes$', views.my_quizzes, name='my_quizzes'),
-	url(r'^groups/$', views.groups, name='groups'),
-	url(r'^groups/create$', views.create_group, name='create_group'),
-	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
-	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 	url(r'^analytics$', views.analytics, name='analytics'),
-	
+
 	# Formations
 	url(r'^formations/create$', views.create_formation, name='create_formation'),
 
 	# Concepts
 	url(r'^concepts/create$', views.create_concept, name='create_concept'),
+
+	# Plays
+	url(r'^plays/create$', views.create_play, name='create_play'),
+
+	# Groups
+	url(r'^groups/$', views.groups, name='groups'),
+	url(r'^groups/create$', views.create_group, name='create_group'),
+	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
+	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
+
+	# Quizzes
+	url(r'^quizzes$', views.quizzes, name='quizzes'),
+	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
+	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
+	url(r'^quizzes/analytics/(?P<test_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
+	url(r'^my_quizzes$', views.my_quizzes, name='my_quizzes'),
 	
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),

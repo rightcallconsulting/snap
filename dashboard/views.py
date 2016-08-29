@@ -614,20 +614,6 @@ def create_formation(request):
 
 # Concepts
 @login_required
-def concepts(request):
-	if request.method == "POST":
-		return HttpResponseRedirect(reverse('playbook'))
-	else:
-		coach = request.user.coach
-		team = coach.team
-		concepts = team.concept_set.all()
-		return render(request, 'dashboard/concepts.html', {
-			'team': team,
-			'concepts': concepts,
-			'page_header': 'CONCEPTS',
-		})
-
-@login_required
 def create_concept(request):
 	if request.method == "POST":
 		name = request.POST['name']
@@ -657,6 +643,39 @@ def create_concept(request):
 			'team': team,
 			'concepts': concepts,
 			'page_header': 'CREATE CONCEPT',
+		})
+
+# Plays
+def create_play(request):
+	if request.method == "POST":
+		name = request.POST['name']
+		formation_name = request.POST['formation']
+		if request.POST['save'] == "true":
+			playJson = request.POST['play']
+			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			if play.count() == 1:
+				play = play[0]
+				play.playJson = playJson
+				play.save()
+			elif play.count() == 0:
+				play = Concept()
+				play.name = name
+				play.team = request.user.coach.team
+				play.unit = request.POST['unit']
+				play.playJson = playJson
+				play.save()
+		elif request.POST['delete'] == "true":
+			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			play.delete()
+		return HttpResponse('')
+	else:
+		coach = request.user.coach
+		team = coach.team
+		plays = team.play_set.all()
+		return render(request, 'dashboard/create_play.html', {
+			'team': team,
+			'plays': plays,
+			'page_header': 'CREATE PLAY',
 		})
 
 # JSON requests
