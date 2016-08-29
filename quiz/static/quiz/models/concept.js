@@ -195,6 +195,7 @@ Concept.prototype.delete = function(path, csrf_token) {
 	});
 };
 
+// deepCopy returns a new Concept object that is exactly the same as this.
 Concept.prototype.deepCopy = function() {
 	var result = new Concept({
 		id: this.id,
@@ -298,8 +299,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 	}
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0].length ; ++j) {
-			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0][j];
+		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 
 			if (primaryAssignment.x != null) {
 				for (var k = 0; k < defensivePlayersArray.length; ++k) {
@@ -309,7 +310,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 				}
 			}
 
-			offensivePlayersArray[i].blockingAssignmentArray[0].push(primaryAssignment);
+			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
 		}
 	}
 
@@ -396,10 +397,10 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	f.blockingAssignmentArray[0].push("Down Block Right");
-	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	left_guard.blockingAssignmentArray[0].push("Down Block Right");
-	left_guard.blockingAssignmentArray[0].push("Straight Seal Right");
+	f.blockingAssignmentArray.push("Down Block Right");
+	left_tackle.blockingAssignmentArray.push("Down Block Right");
+	left_guard.blockingAssignmentArray.push("Down Block Right");
+	left_guard.blockingAssignmentArray.push("Straight Seal Right");
 };
 
 // createCat creates a static version Stanfords cat blocking concept
@@ -456,9 +457,9 @@ Concept.prototype.createCat = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	center.blockingAssignmentArray[0].push(t);
-	center.blockingAssignmentArray[0].push(w);
+	left_tackle.blockingAssignmentArray.push("Down Block Right");
+	center.blockingAssignmentArray.push(t);
+	center.blockingAssignmentArray.push(w);
 };
 
 // createTO creates a static version Stanfords T.O. blocking concept
@@ -516,6 +517,6 @@ Concept.prototype.createTO = function(ballY){
 	this.defensivePlayers.push(s);
 
 	// Create offensive assignments
-	right_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	y.blockingAssignmentArray[0].push("Down Block Right");
+	right_tackle.blockingAssignmentArray.push("Down Block Right");
+	y.blockingAssignmentArray.push("Down Block Right");
 };

@@ -134,10 +134,8 @@ Player.prototype.setFill = function(red, green, blue) {
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawAllBlocks = function(field) {
-	var primaryAssignment = this.blockingAssignmentArray[0];
-	var secondaryAssignment = this.blockingAssignmentArray[1];
-	var primaryAssingmentLength = primaryAssignment.length;
-	var secondaryAssignmentLength = secondaryAssignment.length;
+	var blockingAssignment = this.blockingAssignmentArray;
+	var blockingAssingmentLength = blockingAssignment.length;
 
 	var currentX = this.x;
 	var currentY = this.y;
@@ -145,48 +143,48 @@ Player.prototype.drawAllBlocks = function(field) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
-	for (var i = 0; i < primaryAssingmentLength; i++) {
-		if (primaryAssignment[i] != null) {
-			if (primaryAssignment[i] instanceof Player) {
+	for (var i = 0; i < blockingAssingmentLength; i++) {
+		if (blockingAssignment[i] != null) {
+			if (blockingAssignment[i] instanceof Player) {
 				/*var black = color(0, 0, 0);
 				stroke(black);
-				line(currentX, currentY, field.getTranslatedX(primaryAssignment[i].x), field.getTranslatedY(primaryAssignment[i].y));
+				line(currentX, currentY, field.getTranslatedX(blockingAssignment[i].x), field.getTranslatedY(blockingAssignment[i].y));
 
-				currentX = field.getTranslatedX(primaryAssignment[i].x);
-				currentY = field.getTranslatedY(primaryAssignment[i].y);*/
-				var new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, primaryAssignment[i]);
+				currentX = field.getTranslatedX(blockingAssignment[i].x);
+				currentY = field.getTranslatedY(blockingAssignment[i].y);*/
+				var new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Money Block") {
+			} else if (blockingAssignment[i] === "Money Block") {
 				var new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Down Block Right") {
+			} else if (blockingAssignment[i] === "Down Block Right") {
 				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Down Block Left") {
+			} else if (blockingAssignment[i] === "Down Block Left") {
 				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Straight Seal Right") {
+			} else if (blockingAssignment[i] === "Straight Seal Right") {
 				var new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Straight Seal Left") {
+			} else if (blockingAssignment[i] === "Straight Seal Left") {
 				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Kick Out Right") {
+			} else if (blockingAssignment[i] === "Kick Out Right") {
 				var new_coordinates = this.drawKickOutRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
-			} else if (primaryAssignment[i] === "Kick Out Left") {
+			} else if (blockingAssignment[i] === "Kick Out Left") {
 				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else {
-				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, primaryAssignment[i][0], primaryAssignment[i][1]);
+				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			}
@@ -698,6 +696,7 @@ Player.prototype.drawDefensiveMovement = function(field) {
 	noStroke();
 };
 
+// deepCopy returns a new Player object that is exactly the same as this.
 Player.prototype.deepCopy = function() {
 
 };

@@ -608,7 +608,7 @@
 			} else if (newPlayerSelected === null) {
 				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
 					if (currentPlayerSelected.unit === "offense") {
-						currentPlayerSelected.blockingAssignmentArray[0].push([mouseYardX, mouseYardY]);
+						currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
@@ -624,7 +624,7 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray[0].push(newPlayerSelected);
+				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
 				return false;
 			}
 
@@ -723,19 +723,19 @@
 					}
 					return false;
 				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray[0].push("Money Block");
+					playerSelcted.blockingAssignmentArray.push("Money Block");
 				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray[0].push("Down Block Right");
+					playerSelcted.blockingAssignmentArray.push("Down Block Right");
 				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray[0].push("Down Block Left");
+					playerSelcted.blockingAssignmentArray.push("Down Block Left");
 				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray[0].push("Straight Seal Right");
+					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
 				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray[0].push("Straight Seal Left");
+					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
 				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray[0].push("Kick Out Right");
+					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
 				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray[0].push("Kick Out Left");
+					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
 				}
 
 				return false;	
