@@ -181,8 +181,7 @@ Concept.prototype.save = function (path, csrf_token) {
 	}
 };
 
-// post handles sending as JSON object to backend so it can be saved to the
-// database.
+// delete sends a delete request to Django for this concept.
 Concept.prototype.delete = function(path, csrf_token) {
 	var conceptName = this.name;
 
@@ -193,38 +192,6 @@ Concept.prototype.delete = function(path, csrf_token) {
 			console.log("Concept successfully sent to Django to be deleted");
 		}).fail(function() {
 			console.log("Error sending Concept to Django to be deleted");
-	});
-};
-
-// post handles sending as JSON object to backend so it can be saved to the
-// database.
-Concept.prototype.post = function(path, csrf_token) {
-	var conceptJson = "";
-	var player;
-
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
-		player = this.offensivePlayers[i];
-		player.startX = player.x;
-		player.startY = player.y;
-	}
-
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
-		player = this.defensivePlayers[i];
-		player.startX = player.x;
-		player.startY = player.y;
-	}
-
-	var conceptName = this.name;
-	var conceptUnit = this.unit;
-	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
-
-	var jqxhr = $.post(
-			path,
-			{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
-		).done(function() {
-			console.log("Concept successfully posted to Django");
-		}).fail(function() {
-			console.log("Error posting Concept to Django");
 	});
 };
 
