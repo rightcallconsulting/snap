@@ -143,14 +143,8 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				//resizeBottomButtons();
-
-				offensivePlayerBar.width = field.width;
-				offensivePlayerBar.x = 0;
-				offensivePlayerBar.y = field.height - 50;
-
-				defensivePlayerBar.width = field.width;
-				defensivePlayerBar.x = 0;
+				
+				resizeMainViewObjects();
 			};
 
 			drawOpening();
@@ -777,6 +771,17 @@
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
+		// resizeMainViewObjects resizes all of the buttons and bars in our
+		// main view. It is called when the user resizes their browser.
+		function resizeMainViewObjects() {
+			offensivePlayerBar.width = field.width;
+			offensivePlayerBar.x = 0;
+			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
+
+			defensivePlayerBar.width = field.width;
+			defensivePlayerBar.x = 0;
+		};
+
 		function removeHeaderPlaceholder() {
 			var header_box = document.getElementById("header-box");
 			var placeholder_message = document.getElementById("placeholder-message");
@@ -992,33 +997,5 @@
 		//***********************************************************************************************************************//
 		//                                 I have worked on all the code above this line - Dylan                                 //
 		//***********************************************************************************************************************//
-		
-		// Don't really need this function, but I could see it being useful
-		// later.
-		function resizeBottomButtons() {
-			/*var trashWidth = field.pixelsToYards(field.width * 0.12);
-			if(trashWidth < 5){
-				trashWidth = 5;
-			}
-
-			var trashHeight = field.pixelsToYards(field.height * 0.1);
-			if(trashHeight < 5){
-				trashHeight = 5;
-			}
-
-			var trashX = Field.WIDTH - trashWidth * 1.1;
-			var trashY = field.getYardY(field.height) + trashHeight * 1.1;
-			if(field.getTranslatedX(trashX+trashWidth*1.1) > field.width) {
-				trashX = field.getYardX(field.width) - trashWidth*1.1;
-			}
-
-			trash.width = trashWidth;
-			trash.height = trashHeight;
-			trash.x = trashX;
-			trash.y = trashY;
-			for(var i = 0; i < new_formation.optionsToCreate.length; i++) {
-				new_formation.optionsToCreate[i].y = trashY - trashHeight/2;
-			}*/
-		};
 	</script>
 {% endblock %}
