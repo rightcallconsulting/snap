@@ -69,7 +69,9 @@ PlayerBar.prototype.mouseInPlayer = function(field) {
 // resize updates the coordinates and sizes of the buttons on the player
 // bar.
 PlayerBar.prototype.resize = function(field) {
-	var playerSiz = 25;
+	this.init(field);
+
+	/*var playerSiz = 25;
 	var playerOptionX = this.x + playerSiz*0.75;
 	var playerOptionY = this.y + (this.height/2);
 
@@ -79,5 +81,5 @@ PlayerBar.prototype.resize = function(field) {
 		player.y = playerOptionY;
 		player.siz = playerSiz;
 		playerOptionX += playerSiz*1.5;
-	}
+	}*/
 };
