@@ -490,35 +490,9 @@
 				var mouseYardX = field.getYardX(mouseX);
 				var xDiff = mouseYardX - playerBeingDragged.x;
 
-				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
-					xDiff = 0;
-				}
-
-				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
-					xDiff = 0;
-				}
-
-				for(var i = 0; i < concept.offensivePlayers.length; i++) {
-					var player = concept.offensivePlayers[i];
+				for(var i = 0; i < formation.offensivePlayers.length; i++) {
+					var player = formation.offensivePlayers[i];
 					player.x += xDiff;
-				}
-
-				for(var i = 0; i < concept.defensivePlayers.length; i++) {
-					var player = concept.defensivePlayers[i];
-
-					if(player.pos === "E" || player.pos === "T" || player.pos === "W") {
-						player.x += xDiff;
-					} else {
-						player.x += xDiff * 0.75;
-					}
-					
-					if(player.x < 0) {
-						player.x = 0;
-					}
-					
-					if(player.x > Field.WIDTH) {
-						player.x = Field.WIDTH;
-					}
 				}
 			}
 
@@ -533,9 +507,9 @@
 				return false;
 			}
 
-			// Handle clicks on players in the Concept
-			var currentPlayerSelected = concept.getSelected()[0];
-			var newPlayerSelected = concept.mouseInPlayer(field);
+			// Handle clicks on players in the Formation
+			var currentPlayerSelected = formation.getSelected()[0]; //***************************************************************************
+			var newPlayerSelected = formation.mouseInPlayer(field); //***************************************************************************
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
@@ -561,14 +535,14 @@
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
 				} else {
-					concept.clearSelected();
+					formation.clearSelected(); //***************************************************************************
 				}
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
-				concept.clearSelected();
+				formation.clearSelected();
 				return false;
 			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-				concept.clearSelected();
+				formation.clearSelected();
 				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
@@ -580,7 +554,7 @@
 			// have already returned if a player on the field is clicked
 			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
-				var playerToAddToConcept = new Player({
+				var playerToAddToFormation = new Player({
 					num: newPlayerSelected.num, 
 					pos: newPlayerSelected.pos, 
 					x: Field.WIDTH / 2,
@@ -591,7 +565,7 @@
 					eligible: newPlayerSelected.eligible
 				});
 
-				concept.offensivePlayers.push(playerToAddToConcept);
+				formation.offensivePlayers.push(playerToAddToFormation);
 
 				return false;
 			}
@@ -600,7 +574,7 @@
 			// have already returned if a player on the field is clicked
 			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
-				var playerToAddToConcept = new Player({
+				var playerToAddToFormation = new Player({
 					num: newPlayerSelected.num, 
 					pos: newPlayerSelected.pos, 
 					x: Field.WIDTH / 2,
@@ -611,7 +585,7 @@
 					unit: newPlayerSelected.unit
 				});
 
-				concept.defensivePlayers.push(playerToAddToConcept);
+				formation.defensivePlayers.push(playerToAddToFormation);
 
 				return false;
 			}
@@ -621,13 +595,13 @@
 		};
 
 		function keyPressed() {
-			// Get the concept-name html element if it exists. This is what
+			// Get the formation-name html element if it exists. This is what
 			// will be updated.
-			var concept_name = document.getElementById("concept-name");
+			var formation_name = document.getElementById("formation-name");
 
-			// If the header box is selected update the concept name according
+			// If the header box is selected update the formation name according
 			// to the key press. Otherwise, create a block.
-			if ($("#header-box").hasClass("selected") && concept_name != null) {
+			if ($("#header-box").hasClass("selected") && formation_name != null) {
 				// Get the currently selected sideview button so that you can
 				// unselect it when the name in the main view's top bar is
 				// changed.
@@ -644,30 +618,30 @@
 				// Get the main view's top bar so that you can tell is the
 				// string has become empty and needs to be replaced with a
 				// placeholder message.
-				var string_length = concept_name.textContent.length;
+				var string_length = formation_name.textContent.length;
 
 				if (keyCode == BACKSPACE) {
-					if (concept_name != null) {
+					if (formation_name != null) {
 						if(string_length > 0) {
-							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+							formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
 						}
 					}
 					return false;
 				} else if (keyCode == 32) {
-					if (concept_name != null && string_length < 100) {
-						concept_name.textContent += ' ';
+					if (formation_name != null && string_length < 100) {
+						formation_name.textContent += ' ';
 					}
 					return false;
 				}
-			} else if (concept.getSelected()[0] != null) {
-				var playerSelcted = concept.getSelected()[0];
-				var playerSelctedIndex = concept.getSelected()[1];
+			} else if (formation.getSelected()[0] != null) {
+				var playerSelcted = formation.getSelected()[0];
+				var playerSelctedIndex = formation.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						concept.offensivePlayers.splice(playerSelctedIndex, 1);
+						formation.offensivePlayers.splice(playerSelctedIndex, 1);
 					} else if (playerSelcted.unit == "defense") {
-						concept.defensivePlayers.splice(playerSelctedIndex, 1);
+						formation.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
 					return false;
 				} else if (key === "Q") {
@@ -692,15 +666,15 @@
 
 		function keyTyped() {
 			if ($("#header-box").hasClass("selected")) {
-				var concept_name = document.getElementById("concept-name");
+				var formation_name = document.getElementById("formation-name");
 
-				if (concept_name === null) {
-					concept_name = document.createElement("p");
-					concept_name.setAttribute("id", "concept-name");
+				if (formation_name === null) {
+					formation_name = document.createElement("p");
+					formation_name.setAttribute("id", "formation-name");
 				}
 
-				document.getElementById("header-box").appendChild(concept_name);
-				var string_length = concept_name.textContent.length;
+				document.getElementById("header-box").appendChild(formation_name);
+				var string_length = formation_name.textContent.length;
 
 				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
 					removeHeaderPlaceholder();
@@ -711,7 +685,7 @@
 					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
 					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
 						if (string_length <= 100){
-							concept_name.textContent += key;
+							formation_name.textContent += key;
 						}
 					}
 

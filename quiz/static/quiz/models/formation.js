@@ -93,6 +93,75 @@ Formation.prototype.drawAllPlayers = function(field) {
 	});
 };
 
+// isValid checks the legality of a formation.
+Formation.prototype.isValid = function() {
+	// TODO: Implement
+	//
+	// IDEAS: More players in a formation than can be in a play.
+	//		  Inelligable setups. Illegal actions.
+
+	return true;
+};
+
+// getSelected iterates through all the players in a formation and returns
+// the one player that is selected. If no one is selected it returns null.
+//
+// TODO: implement logic for selecting multiple players and return an array.
+Formation.prototype.getSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		if (this.offensivePlayers[i].selected) {
+			return [this.offensivePlayers[i], i];
+		}
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		if (this.defensivePlayers[i].selected) {
+			return [this.defensivePlayers[i], i];
+		}
+	}
+
+	return [null, null];
+};
+
+// clearSelected iterates through all the players in a formation and makes
+// them all unselected.
+Formation.prototype.clearSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].setUnselected();
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].setUnselected();
+	}
+};
+
+// mouseInPlayer iterates through all the offensive and defensive players
+// in a formation. It returns the player that the mouse is inside of or
+// null if the mouse is not inside any player.
+Formation.prototype.mouseInPlayer = function(field) {
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		var player = this.offensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		var player = this.defensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
+};
+
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the formation and then saves it (if valid).
 Formation.prototype.save = function (path, csrf_token) {
