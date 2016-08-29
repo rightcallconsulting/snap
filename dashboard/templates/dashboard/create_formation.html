@@ -563,6 +563,7 @@
 					formations[i] = formation.deepCopy();
 					formation.save(path, csrf_token);
 					formation = new Formation({});
+					formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 					return;
 				}
 			}
@@ -578,6 +579,7 @@
 			// Create a new formation to replace the one you just saved on the 
 			// screen.
 			formation = new Formation({});
+			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
@@ -638,6 +640,7 @@
 			// Set formation var to equal a new Formation. This will get rid of
 			// whatever is displayed on the screen.
 			formation = new Formation({});
+			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -685,6 +688,7 @@
 
 			// Create a new formation to replace whatever was already on screen.
 			formation = new Formation({});
+			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -772,7 +776,7 @@
 
 			var placeholder = document.createElement("p");
 			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Concept Name";
+			placeholder.textContent = "Enter Formation Name";
 			header_box.appendChild(placeholder);
 		};
 
@@ -786,7 +790,7 @@
 
 			var error_message = document.createElement("p");
 			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Concept Name";
+			error_message.textContent = "Invalid Formation Name";
 			header_box.appendChild(error_message);
 		};
 
