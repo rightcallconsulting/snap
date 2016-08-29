@@ -17,7 +17,6 @@ urlpatterns = [
 	url(r'^playbook$', views.playbook, name='playbook'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
-	url(r'^formations/create$', views.create_formation, name='create_formation'), # will come come back to this 
 	url(r'^quizzes$', views.quizzes, name='quizzes'),
 	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
 	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
@@ -29,8 +28,10 @@ urlpatterns = [
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 	url(r'^analytics$', views.analytics, name='analytics'),
 	
+	# Formations
+	url(r'^formations/create$', views.create_formation, name='create_formation'),
+
 	# Concepts
-	#url(r'^concepts$', views.concepts, name='concepts'),
 	url(r'^concepts/create$', views.create_concept, name='create_concept'),
 	
 	# JSON requests
