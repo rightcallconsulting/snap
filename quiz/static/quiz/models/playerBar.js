@@ -31,20 +31,6 @@ PlayerBar.prototype.draw = function(field) {
 	}
 };
 
-/*// getSelected iterates through all the players options in the bar and returns
-// the one player that is selected. If no one is selected it returns null.
-PlayerBar.prototype.getSelected = function() {
-	var numberOfPlayerOptions = this.playerOptions.length;
-
-	for(var i = 0; i < numberOfPlayerOptions; i++) {
-		if (this.playerOptions[i].selected) {
-			return this.playerOptions[i];
-		}
-	}
-
-	return null;
-};*/
-
 PlayerBar.prototype.isMouseInside = function(field) {
 	return mouseX > this.x &&
 		mouseX < (this.x + this.width) &&
