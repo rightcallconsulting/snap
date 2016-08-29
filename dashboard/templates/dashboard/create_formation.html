@@ -67,47 +67,21 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var formations = [];
-		var new_formation;
-		var makeJSONCall = true;
-		var trash;
-		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
-
 		var formation;
 		var defensivePlayerBar;
 		var offensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
+
+		var formations = [];
+		var new_formation;
+		var makeJSONCall = true;
+		var trash;
+		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 		//*******************************************************************//
 		// Event Listener Functions                                          //
 		//*******************************************************************//
-		
-		// When the main container is clicked unselect the interactive header.
-		// This function will not call when the header is clicked because that
-		// function stops propagation of the event.
-		$(document).click(function(event) {
-			if ($("#header-box").hasClass("selected")) {
-				$("#header-box").removeClass("selected");
-				var formation_name = document.getElementById("formation-name");
-
-				if (formation_name === null) {
-					addHeaderPlaceholder();
-				}
-
-				if (formation_name != null && formation_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(formation_name);
-					addHeaderPlaceholder();
-				}
-			}
-		});
-
-		// When the header box is selected have it change colors and remove the
-		// placeholder if it exists
-		$("#header-box").click(function(event) {
-			removeHeaderPlaceholderAndError();
-			$("#header-box").addClass("selected");
-			event.stopPropagation();
-		});
 
 		function removeHeaderPlaceholderAndError() {
 			var header_box = document.getElementById("header-box");
@@ -150,84 +124,6 @@
 			error_message.textContent = "Invalid Formation Name";
 			header_box.appendChild(error_message);
 		};
-
-		function changeSelected(selected) {
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
-			
-			if (old_selected != null) {
-				old_selected.removeAttribute("id");
-				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary");
-			}
-
-			if (old_selected != new_selected) {
-				new_selected.removeAttribute("class");
-				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success");
-			}
-		};
-
-		$("#save-button").click(function(event) {
-			var placeholder_message = document.getElementById("placeholder-message");
-			var formation_name = document.getElementById("formation-name");
-
-			if (placeholder_message != null) {
-				removeHeaderPlaceholderAndError();
-				addHeaderError();
-				return;
-			}
-
-			if (formation_name != null && formation_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(formation_name);
-				removeHeaderPlaceholderAndError();
-				addHeaderError();
-				return;
-			}
-
-			// I don't think this will ever happen, but I'm not sure.
-			if (formation_name === null) {
-				removeHeaderPlaceholderAndError();
-				addHeaderError();
-				return;
-			}
-
-			//pressSave();
-		});
-
-		$("#clear-button").click(function(event) {
-			var curr_selected = document.getElementById("selected");
-			
-			if (curr_selected != null) {
-				curr_selected.removeAttribute("id");
-				curr_selected.removeAttribute("class");
-				curr_selected.setAttribute("class", "btn btn-primary");
-			}
-
-			removeHeaderPlaceholderAndError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			pressClear();
-		});
-
-		$("#zoom-in-button").click(function(event) {
-			pressZoomIn();
-		});
-
-		$("#zoom-out-button").click(function(event) {
-			pressZoomOut();
-		});
-
-		$("#full-screen-button").click(function(event) {
-			/*if ($("#display-box").hasClass("fullscreen")) {
-				$("#display-box").removeClass("fullscreen");
-			} else if (!$("#display-box").hasClass("fullscreen")) {
-				$("#display-box").addClass("fullscreen");
-			}
-
-			pressFullScreen()*/
-		});
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -305,13 +201,6 @@
 			return false;
 		};
 
-		function isInsideTrash(player) {
-			return player.x > trash.x &&
-				player.x < trash.x + trash.width &&
-				player.y < trash.y &&
-				player.y > trash.y - trash.height
-		};
-
 		function keyTyped() {
 			if ($("#header-box").hasClass("selected")) {
 				var formation_name = document.getElementById("formation-name");
@@ -363,7 +252,7 @@
 			}
 		};
 
-		
+
 		mouseClicked = function() {
 			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
 			selectedWR = new_formation.findSelectedWR();
