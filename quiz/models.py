@@ -217,8 +217,7 @@ class Test(models.Model):
 	types_of_tests = ["QBProgression",
 						"CBAssignment",
 						"OLView",
-						"WRRoute",
-						"Concept Identification"]
+						"WRRoute"]
 
 	name = models.CharField(max_length=100, null=True, blank=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
