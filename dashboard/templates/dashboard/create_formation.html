@@ -134,145 +134,17 @@
 		var trash;
 		var teamIDFromHTML = document.getElementById("team-id").getAttribute("team-id");
 
-		function mouseDragged() {
-			var receiverSelected = new_formation.mouseInReceiverOrNode(field)[0];
-			var positionOptionSelected = new_formation.mouseInOptionsToCreate(field);
-			var centerSelected = new_formation.mouseInCenter(field);
-
-			var quarterback = new_formation.qb[0];
-
-			if (new_formation.establishingNewPlayer) {
-				new_formation.establishingNewPlayer.movePlayer(field);
-			} else if (positionOptionSelected) {
-				
-				var new_player = new Player({
-					x: positionOptionSelected.x,
-					y: positionOptionSelected.y,
-					num: positionOptionSelected.num,
-					red: 255, green: 0, blue: 0,
-					pos: positionOptionSelected.pos, 
-					change: true
-				});
-
-				new_formation.createPlayer(new_player);
-			} else if (receiverSelected) {
-				receiverSelected.change = receiverSelected.change ? false : true;
-				new_formation.establishingNewPlayer = receiverSelected;
-			} else if (quarterback.isMouseInside(field)) {
-				quarterback.change = quarterback.change ? false : true;
-				new_formation.establishingNewPlayer = quarterback;
-			} else if(centerSelected) {
-				var mouseYardX = field.getYardX(mouseX);
-				var xDiff = mouseYardX - centerSelected.x;
-
-				if(mouseYardX > Field.rightHashYardX && xDiff > 0) {
-					xDiff = 0;
-				}
-
-				if(mouseYardX < Field.leftHashYardX && xDiff < 0) {
-					xDiff = 0;
-				}
-
-				for(var i = 0; i < new_formation.offensivePlayers.length; i++) {
-					var p = new_formation.offensivePlayers[i];
-					p.x += xDiff;
-				}
-
-				for(var i = 0; i < defensePlay.defensivePlayers.length; i++) {
-					var p = defensePlay.defensivePlayers[i];
-
-					if(p.pos === "DT" || p.pos === "NT" || p.pos === "DL" || p.pos === "DE" || p.pos === "RE") {
-						p.x += xDiff;
-					} else {
-						p.x += xDiff * 0.75;
-					}
-					
-					if(p.x < 0) {
-						p.x = 0;
-					}
-					
-					if(p.x > Field.WIDTH) {
-						p.x = Field.WIDTH;
-					}
-				}
-			}
-
-			// return false to prevent default behavior
-			return false;
-		};
-
-		function keyTyped() {
-			if ($("#header-box").hasClass("selected")) {
-				var formation_name = document.getElementById("formation-name");
-
-				if (formation_name === null) {
-					formation_name = document.createElement("p");
-					formation_name.setAttribute("id", "formation-name");
-				}
-
-				document.getElementById("header-box").appendChild(formation_name);
-				var string_length = formation_name.textContent.length;
-
-				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-					removeHeaderPlaceholderAndError();
-
-					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-						if (string_length <= 100){
-							formation_name.textContent += key;
-						}
-					}
-
-					// return false to prevent default behavior
-					return false;
-				}
-			}
-		};
-
-		function keyPressed() {
-			var formation_name = document.getElementById("formation-name");
-			var string_length = formation_name.textContent.length;
-
-			if (keyCode == BACKSPACE) {
-				if (formation_name != null) {
-					if(string_length > 0) {
-						formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
-					}
-				}
-
-				return false;
-			} else if (keyCode == 32) {
-				if (formation_name != null && string_length < 100) {
-					formation_name.textContent += ' ';
-				}
-
-				return false;
-			}
-		};
-
-
-		mouseClicked = function() {
-			var receiverClicked = new_formation.mouseInReceiverOrNode(field)[0];
-			selectedWR = new_formation.findSelectedWR();
-
-			if(new_formation.establishingNewPlayer) {
-				if(isInsideTrash(new_formation.establishingNewPlayer)) {
-					new_formation.deletePlayer(new_formation.establishingNewPlayer);
-				}
-				new_formation.establishingNewPlayer.change = false;
-				new_formation.establishingNewPlayer = null;
-			}
-		};
-
 		function resizeBottomButtons() {};
 
-//**************************************************************************************************************************************************//
-//**************************************************************************************************************************************************//
-//**************************************************************************************************************************************************//
-//**************************************************************************************************************************************************//
-//**************************************************************************************************************************************************//
+//*************************************************************************************************************************************************//
+
+//*************************************************************************************************************************************************//
+
+//*************************************************************************************************************************************************//
+
+//*************************************************************************************************************************************************//
+
+//*************************************************************************************************************************************************//
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
