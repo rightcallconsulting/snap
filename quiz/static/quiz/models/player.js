@@ -10,64 +10,64 @@
 //***************************************************************************//
 
 var Player = function(config) {
-  this.x = config.x || width/2;
-  this.y = config.y || height/2;
-  this.startX = this.x;
-  this.startY = this.y;
-  this.siz = config.siz || 2;
-  this.fill = config.fill || color(0, 0, 0);
-  this.stroke = config.stroke || noStroke();
-  this.red = config.red || 0;
-  this.blue = config.blue || 0;
-  this.green = config.green || 0;
-  this.clicked = config.clicked || false;
-  this.selected = config.selected || false;
-  this.eligible = config.eligible || false;
-  this.pos = config.pos || "X";
-  this.num = config.num || 0;
-  this.rank = config.rank || 0;
-  this.unit = config.unit || "offense";
-  this.name = config.name || "";
-  this.playerIndex = config.index || 0;
-  this.unitIndex = config.unitIndex || 0;
-  this.gap = config.gap || 0;
-  this.breakPoints = config.breakPoints || [];
-  this.currentBreak = config.currentBreak || 0;
-  this.showRoute = false;
-  this.routeCoordinates = config.routeCoordinates || [[this.startX, this.startY]];
-  this.routeNodes = [];
-  this.runNodes = [];
-  this.change = config.change || false;
-  this.progressionRank = config.progressionRank || 0;
-  this.routeNum = config.routeNum || null;
-  this.blockingAssignment = config.blockingAssignment || null;
-  this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
-  this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
-  this.blockingAssignmentObject = createBlockingAssignmentFromJSON(config.blockingAssignmentObject) || null; //eventually replaces above three
-  this.blocker = config.blocker || false;
-  this.runner = config.runner || false;
-  if(config.runAssignment){
-	this.runAssignment = createRunAssignmentFromJSON(config.runAssignment) || null;
-  }
-  this.speed = 0.1;
-  this.initialRank = 1;
-  this.CBAssignment = config.CBAssignment || null;
-  this.CBAssignmentPlayerID = config.CBAssignmentPlayerID || null;
-  this.isBeingTested = config.isBeingTested || false;
-  this.id = config.id || null;
-  this.zoneXPoint = config.zoneXPoint || null;
-  this.zoneYPoint = config.zoneYPoint || null;
-  this.gapXPoint = config.gapXPoint || null;
-  this.gapYPoint = config.gapYPoint || null;
-  this.motionCoords = config.motionCoords || []; // assume (x, y)
-  this.currentMotionBreak = config.currentMotionBreak || 0;
-  this.zoneAssignment = config.zoneAssignment || 0;
-  this.optionAssignment = config.optionAssignment || [];
-  this.coverageAssignment = config.coverageAssignment || [];
+	this.x = config.x || width/2;
+	this.y = config.y || height/2;
+	this.startX = this.x;
+	this.startY = this.y;
+	this.siz = config.siz || 2;
+	this.fill = config.fill || color(0, 0, 0);
+	this.stroke = config.stroke || noStroke();
+	this.red = config.red || 0;
+	this.blue = config.blue || 0;
+	this.green = config.green || 0;
+	this.clicked = config.clicked || false;
+	this.selected = config.selected || false;
+	this.eligible = config.eligible || false;
+	this.pos = config.pos || "X";
+	this.num = config.num || 0;
+	this.rank = config.rank || 0;
+	this.unit = config.unit || "offense";
+	this.name = config.name || "";
+	this.playerIndex = config.index || 0;
+	this.unitIndex = config.unitIndex || 0;
+	this.gap = config.gap || 0;
+	this.breakPoints = config.breakPoints || [];
+	this.currentBreak = config.currentBreak || 0;
+	this.showRoute = false;
+	this.routeCoordinates = config.routeCoordinates || [[this.startX, this.startY]];
+	this.routeNodes = [];
+	this.runNodes = [];
+	this.change = config.change || false;
+	this.progressionRank = config.progressionRank || 0;
+	this.routeNum = config.routeNum || null;
+	this.blockingAssignment = config.blockingAssignment || null;
+	this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
+	this.blockingAssignmentUnitIndex = config.blockingAssignmentUnitIndex || null;
+	this.blockingAssignmentObject = createBlockingAssignmentFromJSON(config.blockingAssignmentObject) || null; //eventually replaces above three
+	this.blocker = config.blocker || false;
+	this.runner = config.runner || false;
+	if(config.runAssignment){
+		this.runAssignment = createRunAssignmentFromJSON(config.runAssignment) || null;
+	}
+	this.speed = 0.1;
+	this.initialRank = 1;
+	this.CBAssignment = config.CBAssignment || null;
+	this.CBAssignmentPlayerID = config.CBAssignmentPlayerID || null;
+	this.isBeingTested = config.isBeingTested || false;
+	this.id = config.id || null;
+	this.zoneXPoint = config.zoneXPoint || null;
+	this.zoneYPoint = config.zoneYPoint || null;
+	this.gapXPoint = config.gapXPoint || null;
+	this.gapYPoint = config.gapYPoint || null;
+	this.motionCoords = config.motionCoords || []; // assume (x, y)
+	this.currentMotionBreak = config.currentMotionBreak || 0;
+	this.zoneAssignment = config.zoneAssignment || 0;
+	this.optionAssignment = config.optionAssignment || [];
+	this.coverageAssignment = config.coverageAssignment || [];
 
-  // Blocker assignments - eventually we should just have some child object for Linemen
-  this.blockingAssignmentArray = config.blockingAssignmentArray || [];
-  this.defensiveMovement = []
+	// Blocker assignments - eventually we should just have some child object for Linemen
+	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
+	this.defensiveMovement = []
 };
 
 //***************************************************************************//
@@ -698,7 +698,22 @@ Player.prototype.drawDefensiveMovement = function(field) {
 
 // deepCopy returns a new Player object that is exactly the same as this.
 Player.prototype.deepCopy = function() {
-
+	var result = new Player({
+		x: this.x,
+		y: this.y,
+		startX: this.startX,
+		startY: this.startY,
+		siz: this.siz,
+		red: this.red,
+		blue: this.blue,
+		green: this.green,
+		eligible: this.eligible,
+		pos: this.pos,
+		num: this.num,
+		unit: this.unit,
+		name: this.name,
+		defensiveMovement: this.defensiveMovement
+	});
 };
 
 // Dylan's line
