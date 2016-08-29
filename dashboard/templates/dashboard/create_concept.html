@@ -389,12 +389,29 @@
 			// If selected is not undefined then send a delete request for
 			// the concept that is currently selected.
 			if (selected != null) {
+				// Set the path and cross-site forgery token vars.
 				var path = "/concepts/create";
 				var csrf_token = "{{ csrf_token }}";
 
+				// Delete the concept from the backend.
 				concept.delete(path, csrf_token);
 
-				// Delete the button from the sidebar.
+				// Remove the concept from the concept array. If this didn't
+				// happen and the user deleted a concept and added one with the
+				// same name without refreshing the page, the new concept would
+				// get saved properly but no button would be added dynamically
+				// because a concept with the same name would exist in the
+				// concepts array.
+				for (var i = 0; i < concepts.length; ++i) {
+					if (concept.name === concepts[i].name) {
+						concepts.splice(i, 1);
+						break;
+					}
+				}
+
+				// Delete the button from the sidebar. After this step the
+				// concept should be entirely removed from the backend and the
+				// frontend.
 				var sideview_buttons_div = document.getElementById("sideview-buttons");
 				sideview_buttons_div.removeChild(selected);
 			}
@@ -807,7 +824,7 @@
 			removeHeaderPlaceholder();
 			removeHeaderError();
 			removeHeaderName();
-			
+
 			var header_box = document.getElementById("header-box");
 			$("#header-box").removeClass("selected placeholder").addClass("error");
 
