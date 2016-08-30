@@ -514,6 +514,7 @@
 			for (i in formations) {
 				if (formation === formations[i].name) {
 					play.fromFormation(formations[i]);
+					break
 				}
 			}
 
@@ -667,6 +668,8 @@
 
 			play.fromFormation(formation_selected);
 
+			var sideview_buttons = document.getElementById("sideview-buttons");
+			
 			for (i in plays) {
 				if (plays[i].formation === formation_name) {
 					var play_button = document.createElement("button");
