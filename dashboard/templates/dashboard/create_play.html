@@ -278,7 +278,7 @@
 				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 					if (currentPlayerSelected.unit === "offense") {
 						if (currentPlayerSelected.eligible) {
-
+							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
 						} else {
 							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
 						}
