@@ -50,7 +50,7 @@ function dottedLine(x1, y1, x2, y2) {
 
 // draws an arrow at point x1, y1 facing in the direciton of alpha.
 function arrow(x1, y1, alpha, deltaX) {
-	var lengthOfArrow = 0.5;
+	var lengthOfArrow = 0.6;
 	var beta = (45*(PI/180)) - alpha;
 	var xDiff = cos(beta)*lengthOfArrow;
 	var yDiff = sin(beta)*lengthOfArrow;

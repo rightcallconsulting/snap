@@ -644,7 +644,7 @@ Player.prototype.drawRoute = function(field) {
 		y1 = field.getTranslatedY(y1);
 		x2 = field.getTranslatedX(x2);
 		y2 = field.getTranslatedY(y2);
-		dottedLine(x1, y1, x2, y2);
+		line(x1, y1, x2, y2);
 		x1 = field.getYardX(x1);
 		y1 = field.getYardY(y1);
 		x2 = field.getYardX(x2);
