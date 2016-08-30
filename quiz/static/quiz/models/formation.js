@@ -11,19 +11,15 @@
 //***************************************************************************//
 
 var Formation = function(config){
+	this.name = config.name || "";
+	this.unit = config.unit || "offense";
 	this.offensivePlayers = config.offensivePlayers || [];
-	this.quarterback = config.quarterback || null;
+	this.defensivePlayers = config.defensivePlayers || [];
+	this.quarterback = config.quarterback || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
-	this.defensivePlayers = config.defensivePlayers || [];
-	this.runningBacks = config.runningBacks || [];
-	this.fullBacks = config.fullBacks || [];
-	this.tightEnds = config.tightEnds || [];
-	this.wideReceivers = config.wideReceivers || [];
-	this.name = config.name || "";
+
 	this.playName = config.playName || "";
-	this.qb = config.qb || [];
-	this.oline = config.oline || [];
 	this.changeablePlayers = config.changeablePlayers || [];
 	this.optionsToCreate = config.optionsToCreate || [];
 	this.feedbackMessage = "";
@@ -31,7 +27,6 @@ var Formation = function(config){
 	this.updated_at = config.updated_at || null;
 	this.created_at = config.created_at || null;
 	this.positions = config.positions || [];
-	this.unit = config.unit || "offense";
 	this.dline = config.dline || [];
 	this.linebackers = config.linebackers || [];
 	this.cornerbacks = config.cornerbacks || [];
@@ -64,7 +59,7 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 		this.offensivePlayers.push(offensive_lineman);
 	}
 
-	currentPlayer = this.oline[3];
+	currentPlayer = this.offensiveLinemen[3];
 	var quarterback = new Player ({
 		x: this.offensiveLinemen[2].x,
 		y: this.offensiveLinemen[2].y-2.25,
@@ -77,7 +72,7 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 		eligible: true
 	});
 
-	this.quarterback = quarterback;
+	this.quarterback.push(quarterback);
 	this.offensivePlayers.push(quarterback);
 };
 
@@ -222,8 +217,8 @@ Formation.prototype.deepCopy = function() {
 		feedbackMessage: this.feedbackMessage
 	});
 
-	if (this.quarterback != null) {
-		result.quarterback = this.quarterback.deepCopy();
+	for (var i = 0; i < this.quarterback.length; ++i) {
+		result.quarterback.push(this.quarterback[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
@@ -250,7 +245,7 @@ Formation.prototype.deepCopy = function() {
 /*********************************/
 
 function createFormationFromJson(formationJsonDictionary) {
-	var quarterback;
+	var quarterback = [];
 	var offensivePlayersArray = [];
 	var defensivePlayersArray = [];
 	var offensiveLinemenArray = [];
@@ -273,7 +268,7 @@ function createFormationFromJson(formationJsonDictionary) {
 		});
 
 		if (player.pos === "QB") {
-			quarterback = player;
+			quarterback.push(player);
 		}
 
 		if (player.eligible === true) {
@@ -359,22 +354,7 @@ Formation.prototype.createPlayer = function(new_player) {
 		if (this.offensivePlayers.length < 11) {
 			this.offensivePlayers.push(new_player);
 			this.eligibleReceivers.push(new_player);
-			this.changeablePlayers.push(new_player);
 			this.establishingNewPlayer = new_player;
-
-			if(new_player.pos == "WR") {
-				this.wideReceivers.push(new_player);
-				new_player.playerIndex = this.wideReceivers.length;
-			} else if(new_player.pos == "TE") {
-				this.tightEnds.push(new_player);
-				new_player.playerIndex = this.tightEnds.length;
-			} else if(new_player.pos == "RB") {
-				this.runningBacks.push(new_player);
-				new_player.playerIndex = this.runningBacks.length;
-			} else if(new_player.pos == "FB") {
-				this.fullBacks.push(new_player);
-				new_player.playerIndex = this.fullBacks.length;
-			}
 		}
 	}
 };
@@ -433,8 +413,8 @@ Formation.prototype.mouseInOptionsToCreate = function(field) {
 // and checks if the mouse is inside any of the player options.	It returns
 // the center if the mouse is inside of it or null otherwise.
 Formation.prototype.mouseInCenter = function(field){
-	for(var i = 0; i < this.oline.length; i++) {
-		var p = this.oline[i];
+	for(var i = 0; i < this.offensiveLinemen.length; i++) {
+		var p = this.offensiveLinemen[i];
 		if (p.pos === "C" && p.isMouseInside(field)) {
 			return p;
 		}
@@ -463,7 +443,7 @@ Formation.prototype.getPlayersWithPosition = function(position){
 
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
 Formation.prototype.getPassStrength = function(){
-  var centerX = this.oline[2].x;
+  var centerX = this.offensiveLinemen[2].x;
   var count = 0;
   this.eligibleReceivers.forEach(function(wr){
     if(wr.x > centerX){
@@ -494,14 +474,14 @@ Formation.prototype.createOLineAndQB = function(ballY){
 			pos: olPositions[i+2],
 			index: i
 		});
-		this.oline.push(offensive_lineman);
+		this.offensiveLinemen.push(offensive_lineman);
 		this.offensivePlayers.push(offensive_lineman);
 	}
 
-	currentPlayer = this.oline[3];
+	currentPlayer = this.offensiveLinemen[3];
 	var quarterback = new Player ({
-		x: this.oline[2].x,
-		y: this.oline[2].y-2.25,
+		x: this.offensiveLinemen[2].x,
+		y: this.offensiveLinemen[2].y-2.25,
 		num: 12,
 		fill: color(212, 130, 130),
 		red: 212,
@@ -511,14 +491,14 @@ Formation.prototype.createOLineAndQB = function(ballY){
 		eligible: true
 	});
 
-	this.qb.push(quarterback);
+	this.quarterback.push(quarterback);
 	this.offensivePlayers.push(quarterback);
 };
 
 Formation.prototype.createSkillPlayers = function(){
 	var rb1 = new Player ({
-      x: this.qb[0].x,
-      y: this.qb[0].y + 60,
+      x: this.quarterback[0].x,
+      y: this.quarterback[0].y + 60,
       num: 22,
       pos: "RB",
       fill: color(255, 0, 0),
@@ -528,8 +508,8 @@ Formation.prototype.createSkillPlayers = function(){
   });
 
   var te1 = new Player ({
-      x: this.oline[0].x - 30,
-      y: this.oline[0].y,
+      x: this.offensiveLinemen[0].x - 30,
+      y: this.offensiveLinemen[0].y,
       num: 80,
       pos: "TE",
       fill: color(255, 0, 0),
@@ -538,8 +518,8 @@ Formation.prototype.createSkillPlayers = function(){
       eligible: true
   });
   var te2 = new Player({
-     x: this.oline[4].x + 40,
-     y: this.oline[4].y + 30,
+     x: this.offensiveLinemen[4].x + 40,
+     y: this.offensiveLinemen[4].y + 30,
      num: 17,
      pos: "TE",
      fill: color(255, 0, 0),
@@ -548,8 +528,8 @@ Formation.prototype.createSkillPlayers = function(){
      eligible: true
   });
   var wr1 = new Player({
-     x: this.oline[0].x - 80,
-     y: this.oline[4].y + 30,
+     x: this.offensiveLinemen[0].x - 80,
+     y: this.offensiveLinemen[4].y + 30,
      num: 88,
      pos: "WR",
      fill: color(255, 0, 0),
@@ -558,8 +538,8 @@ Formation.prototype.createSkillPlayers = function(){
      eligible: true
   });
   var wr2 = new Player({
-     x: this.oline[4].x + 80,
-     y: this.oline[4].y,
+     x: this.offensiveLinemen[4].x + 80,
+     y: this.offensiveLinemen[4].y,
      num: 84,
      pos: "WR",
      fill: color(255, 0, 0),
@@ -581,9 +561,9 @@ Formation.prototype.createSkillPlayers = function(){
 };
 
 
-Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
+/*Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
     if(this.unit === "offense"){
-      var unit = this.oline;
+      var unit = this.offensiveLinemen;
       if(unitIndex === 1){
           unit = this.wideReceivers;
       }else if(unitIndex === 2){
@@ -609,7 +589,7 @@ Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
       }
       return null;
     }
-}
+}*/
 
 //pos is a str for now, but could be an int code later
 Formation.prototype.getPlayerFromPosition = function(pos) {
@@ -628,12 +608,12 @@ Formation.prototype.establishZoneHotSpots = function() {
 };
 
 Formation.prototype.drawOLQB = function() {
-	this.oline.forEach(function(ol) {
-		ol.draw();
+	this.offensiveLinemen.forEach(function(offensiveLineman) {
+		offensiveLineman.draw();
 	});
 
-	this.qb.forEach(function(qb) {
-		qb.draw();
+	this.quarterback.forEach(function(quarterback) {
+		quarterback.draw();
 	});
 };
 
@@ -702,13 +682,13 @@ Formation.prototype.removeAllPlayers = function(){
         this.offensivePlayers.splice(index, 1);
     }.bind(this))
     this.eligibleReceivers = [];
-    this.changeablePlayers = [this.qb[0]];
+    this.changeablePlayers = [this.quarterback[0]];
   }
 };
 
 Formation.prototype.mouseInQB = function(field) {
-	for(var i = 0; i < this.qb.length; i++) {
-		var p = this.qb[i];
+	for(var i = 0; i < this.quarterback.length; i++) {
+		var p = this.quarterback[i];
 		if (p.isMouseInside(field)) {
 			return [p];
 		}
@@ -734,7 +714,7 @@ Formation.prototype.validFormation = function(){
     if(this.offensivePlayers.length !== 11){
       return false;
     }
-    var ballY = this.oline[2].startY;
+    var ballY = this.offensiveLinemen[2].startY;
     var playersOnLine = 0;
     for(var i = 0; i < this.offensivePlayers.length; i++){
       var py = this.offensivePlayers[i].startY;
@@ -863,38 +843,24 @@ Formation.prototype.drawBlockingAssignments = function(field, defensivePlay){
 };
 
 Formation.prototype.findSelectedOL = function(){
-  var selectedOL = this.oline.filter(function(ol) {
-    return ol.clicked === true;
-  })[0];
-  return selectedOL;
+	var selectedOffensiveLineman = this.offensiveLinemen.filter(function(offensiveLineman) {
+		return offensiveLineman.clicked === true;
+	})[0];
+
+	return selectedOffensiveLineman;
 };
 
 Formation.prototype.mouseInOL = function(field){
-  var selectedOL = this.oline.filter(function(ol) {
-    return ol.isMouseInside(field) === true;
-  })[0];
-  if (selectedOL) selectedOL.select();
-  return selectedOL;
+	var selectedOffensiveLineman = this.offensiveLinemen.filter(function(offensiveLineman) {
+		return offensiveLineman.isMouseInside(field) === true;
+	})[0];
+
+	if (selectedOL) {
+		selectedOffensiveLineman.select();
+	}
+	
+	return selectedOffensiveLineman;
 };
-
-/*Formation.prototype.populatePositions = function(){
-  var oline = this.positions.filter(function(player) {
-    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
-  });
-  oline.forEach(function(player){this.oline.push(player)}.bind(this));
-  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
-  this.qb = qb
-  var eligibleReceivers = this.positions.filter(function(player) {
-    return player.pos ==="WR" || player.pos ==="RB" || player.pos==="TE";
-  });
-  this.wideReceivers = this.positions.filter(function(player) {return player.pos ==="WR"});
-  this.runningBacks = this.positions.filter(function(player) {return player.pos ==="RB"});
-  this.tightEnds = this.positions.filter(function(player) {return player.pos ==="TE"});
-  this.eligibleReceivers = eligibleReceivers;
-  this.offensivePlayers = this.positions;
-};*/
-
-
 
 Formation.prototype.saveToDB = function(){
 	var formationJSON = "";
@@ -1521,12 +1487,12 @@ Formation.prototype.populatePositions = function(){
     this.safeties.sort(sortLeftToRight);
   }
   else{
-    var oline = this.positions.filter(function(player) {
+    var offensiveLinemen = this.positions.filter(function(player) {
       return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
     });
-    oline.forEach(function(player){this.oline.push(player)}.bind(this));
-    var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
-    this.qb = qb
+    offensiveLinemen.forEach(function(player){this.offensiveLinemen.push(player)}.bind(this));
+    var quarterback = this.positions.filter(function(player) {return player.pos ==="QB"});
+    this.quarterback = quarterback
     var receiverPositionOptions = ["X", "Y", "Z", "F", "A", "H"];
     var eligibleReceivers = this.positions.filter(function(player) {
       return receiverPositionOptions.indexOf(player.pos) >= 0;

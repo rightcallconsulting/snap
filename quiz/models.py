@@ -342,6 +342,8 @@ class Play(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
 	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+	playJson = models.TextField(max_length=None, blank=True, null=True)
+
 	def __str__(self):
 		return self.name
 
