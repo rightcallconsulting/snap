@@ -598,28 +598,57 @@
 
 		$("#full-screen-button").click(function(event) {});
 
+		// showFormations loads the formation buttons back into the sideview
+		// removes the back icon. It also adds all the formation buttons back.
+		function showFormations(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Formations";
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(var i = 0; i < formations.length; ++i) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", formations[i].name);
+				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
+				formation_button.textContent = formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
+			}
+
+			play = new Play({});
+		};
+
 		// showPlaysInFormation is called when a formation sideview button
 		// is pressed. It changes the sideview header text to the name of the
 		// formation selected. It also removes all the formation buttons and
 		// replaces them with play buttons. It adds clickable back icon to
 		// sideview header div so that you can go back to formations.
 		function showPlaysInFormation(selected) {
-			//var new_selected = selected;
 			var sideview_header = document.getElementById("sideview-header");
-			//var selected_formation = null;
 
 			var formation_selected = selected;
+			var formation_name = formation_selected.getAttribute("name");
 
 			for (var i = 0; i < formations.length; ++i) {
-				if (formation_selected.getAttribute("name") === formations[i].name) {
+				if (formation_name === formations[i].name) {
 					formation_selected = formations[i].deepCopy();
 					break;
 				}
 			}
-			
-			sideview_header.textContent = formation_selected.name;
 
 			$("#sideview-buttons").empty();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showFormations(this)");
+
+			sideview_header.textContent = formation_name;
+
+			sideview_header.appendChild(back_arrow);
 
 			play.fromFormation(formation_selected);
 		};

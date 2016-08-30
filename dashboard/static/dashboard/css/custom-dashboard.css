@@ -37,7 +37,7 @@ div.fullscreen {
 }
 
 /*************************************************************************
-interactive header
+interactive mainview and dynamic sideview
 *************************************************************************/
 
 div.interactive-header {
@@ -68,6 +68,12 @@ div.interactive-header.error {
 div.interactive-header p {
 	height: 100%;
 	margin: none;
+}
+
+i#back-arrow {
+    left: 3px;
+    line-height: 1.3em;
+    position: absolute;
 }
 
 /*************************************************************************

@@ -241,6 +241,7 @@ Play.prototype.deepCopy = function() {
 // with the same players in the formation.
 Play.prototype.fromFormation = function(formation) {
 	this.unit = formation.unit;
+	this.formation = formation.name;
 
 	for (var i = 0; i < formation.quarterback.length; ++i) {
 		this.quarterback.push(formation.quarterback[i].deepCopy());
