@@ -350,9 +350,10 @@
 				var what_kind_of_dog_is_this = key;
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						play.offensivePlayers.splice(playerSelctedIndex, 1);
+						play.offensivePlayers[playerSelctedIndex].blockingAssignmentArray = [];
+						play.offensivePlayers[playerSelctedIndex].route = [];
 					} else if (playerSelcted.unit == "defense") {
-						play.defensivePlayers.splice(playerSelctedIndex, 1);
+						play.defensivePlayers[playerSelctedIndex].defensiveMovement = [];
 					}
 					return false;
 				} else if (key === "Q") {
@@ -506,8 +507,15 @@
 			plays.push(play);
 
 			// Create a new play to replace the one you just saved on the 
-			// screen.
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
 			play = new Play({});
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i].name);
+				}
+			}
 
 			// Update the sidebar to include a new button for the play that
 			// was just saved.
@@ -515,7 +523,7 @@
 			
 			// Create a button for the new play.
 			var new_play_button = document.createElement("button");
-			new_play_button.setAttribute("onclick", "changeSelectedButton(this)");
+			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 			new_play_button.setAttribute("name", name);
 			new_play_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_play_button.textContent = name;
@@ -546,7 +554,7 @@
 				// because a play with the same name would exist in the
 				// plays array.
 				for (var i = 0; i < plays.length; ++i) {
-					if (play.name === plays[i].name) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name ) {
 						plays.splice(i, 1);
 						break;
 					}
@@ -565,9 +573,16 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			// Set play var to equal a new Play. This will get rid of
-			// whatever is displayed on the screen.
+			// Create a new play to replace the one you just deleted on the 
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
 			play = new Play({});
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i].name);
+				}
+			}
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -680,9 +695,16 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			// Create a new formation to replace whatever was already on screen.
-			formation = new Formation({});
-			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+			// Create a new play to replace the one you just deselected on the 
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
+			play = new Play({});
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i].name);
+				}
+			}
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
