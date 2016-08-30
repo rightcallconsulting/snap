@@ -18,7 +18,7 @@ var Concept = function(config) {
 	this.unit = config.unit || "offense";
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
-	this.quarterback = config.quarterback || null;
+	this.quarterback = config.quarterback || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.feedbackMessage = config.feedbackMessage || [];
@@ -107,7 +107,7 @@ Concept.prototype.clearSelected = function() {
 // reset clears the current concept and returns an empty screen.
 Concept.prototype.reset = function() {
 	this.offensivePlayers = [];
-	this.quarterback = null;
+	this.quarterback = [];
 	this.offensiveLinemen = [];
 	this.eligibleReceivers = [];
 	this.defensivePlayers = [];
@@ -194,8 +194,8 @@ Concept.prototype.deepCopy = function() {
 		feedbackMessage: this.feedbackMessage
 	});
 
-	if (this.quarterback != null) {
-		result.quarterback = this.quarterback.deepCopy();
+	for (var i = 0; i < this.quarterback.length; ++i) {
+		result.quarterback.push(this.quarterback[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
@@ -222,7 +222,7 @@ Concept.prototype.deepCopy = function() {
 /*********************************/
 
 function createConceptFromJson(conceptJsonDictionary) {
-	var quarterback;
+	var quarterback = [];
 	var offensivePlayersArray = [];
 	var defensivePlayersArray = [];
 	var offensiveLinemenArray = [];
@@ -245,7 +245,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		});
 
 		if (player.pos === "QB") {
-			quarterback = player;
+			quarterback.push(player);
 		}
 
 		if (player.eligible === true) {

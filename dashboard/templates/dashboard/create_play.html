@@ -490,7 +490,7 @@
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
 			for (i in plays) {
-				if (name === plays[i].name) {
+				if (play.formation === plays[i].formation && play.name === plays[i].name) {
 					plays[i] = play.deepCopy();
 					play.save(path, csrf_token);
 					play = new Play({});
@@ -513,7 +513,7 @@
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
-					play.fromFormation(formations[i].name);
+					play.fromFormation(formations[i]);
 				}
 			}
 
@@ -554,7 +554,7 @@
 				// because a play with the same name would exist in the
 				// plays array.
 				for (var i = 0; i < plays.length; ++i) {
-					if (play.formation === plays[i].formation && play.name === plays[i].name ) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name) {
 						plays.splice(i, 1);
 						break;
 					}
@@ -580,7 +580,7 @@
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
-					play.fromFormation(formations[i].name);
+					play.fromFormation(formations[i]);
 				}
 			}
 		});
@@ -702,7 +702,7 @@
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
-					play.fromFormation(formations[i].name);
+					play.fromFormation(formations[i]);
 				}
 			}
 
@@ -724,28 +724,28 @@
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
-				var formation_name = new_selected.getAttribute("name");
+				var play_name = new_selected.getAttribute("name");
 
-				for (var i = 0; i < formations.length; ++i) {
-					if (formation_name === formations[i].name) {
-						formation = formations[i].deepCopy();
+				for (i in plays) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name) {
+						play = plays[i].deepCopy();
 						break;
 					}
 				}
 
-				var header_text_content = formation_name;
-				formation_name = document.getElementById("formation-name");
+				var header_text_content = play_name;
+				play_name = document.getElementById("play-name");
 
-				if (formation_name === null) {
-					formation_name = document.createElement("p");
-					formation_name.setAttribute("id", "formation-name");
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
 				}
 
 				removeHeaderPlaceholder();
 				removeHeaderError();
 				removeHeaderName();
-				formation_name.textContent = header_text_content;
-				document.getElementById("header-box").appendChild(formation_name);
+				play_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(play_name);
 			}
 		};
 
