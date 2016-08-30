@@ -46,7 +46,7 @@ var Play = function(config) {
 //***************************************************************************//
 
 // drawPlayers draws all the players in a play.
-Play.prototype.drawPlayers = function () {
+Play.prototype.drawPlayers = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 

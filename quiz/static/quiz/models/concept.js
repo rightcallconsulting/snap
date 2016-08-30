@@ -28,7 +28,7 @@ var Concept = function(config) {
 //***************************************************************************//
 
 // drawPlayers draws all the players in a concept.
-Concept.prototype.drawPlayers = function () {
+Concept.prototype.drawPlayers = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
