@@ -608,10 +608,10 @@
 
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
-			for(var i = 0; i < formations.length; ++i) {
+			for(i in formations) {
 				var formation_button = document.createElement("button");
 				formation_button.setAttribute("class", "btn btn-primary sideview-button");
-				formation_button.setAttribute("name", formations[i].name);
+				formation_button.setAttribute("name", formation[i].name);
 				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
 				formation_button.textContent = formations[i].name;
 
@@ -632,7 +632,7 @@
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
 
-			for (var i = 0; i < formations.length; ++i) {
+			for (i in formations) {
 				if (formation_name === formations[i].name) {
 					formation_selected = formations[i].deepCopy();
 					break;
@@ -651,6 +651,18 @@
 			sideview_header.appendChild(back_arrow);
 
 			play.fromFormation(formation_selected);
+
+			for (i in plays) {
+				if (plays[i].formation === formation_name) {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+					play_button.textContent = plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
+			}
 		};
 
 		function changeSelectedPlay(selected) {
