@@ -49,9 +49,9 @@
 				Formations
 			</div>
 			<div id="sideview-buttons">
-				{% for play in plays %}
-					<button class="btn btn-primary sideview-button" name="{{ play.name }}" onclick="changeSelectedButton(this)">
-						{{ play.name }}
+				{% for formation in formations %}
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedButton(this)">
+						{{ formation.name }}
 					</button>
 				{% endfor %}
 			</div>
@@ -109,18 +109,6 @@
 
 			// Create new Play
 			play = new Play({});
-
-			// Create Player bars
-			defensivePlayerBar = new PlayerBar({
-				playerOptions: createDefensivePlayerOptions()
-			});
-			defensivePlayerBar.init(field);
-
-			offensivePlayerBar = new PlayerBar({
-				playerOptions: createOffensivePlayerOptions()
-			});
-			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
-			offensivePlayerBar.init(field);
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -641,7 +629,7 @@
 				field.heightInYards = 20;
 			}
 
-			resizeBottomButtons();
+			resizeMainViewObjects();
 		});
 
 		$("#zoom-out-button").click(function(event) {
@@ -654,7 +642,7 @@
 				field.heightInYards += 5;
 			}
 
-			resizeBottomButtons();
+			resizeMainViewObjects();
 		});
 
 		$("#full-screen-button").click(function(event) {});
@@ -783,17 +771,7 @@
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
-		function resizeMainViewObjects() {
-			offensivePlayerBar.width = field.width;
-			offensivePlayerBar.x = 0;
-			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
-
-			defensivePlayerBar.width = field.width;
-			defensivePlayerBar.x = 0;
-
-			offensivePlayerBar.resize();
-			defensivePlayerBar.resize();
-		};
+		function resizeMainViewObjects() {};
 
 		function drawDebuggingInfo() {
 			textAlign(CENTER);
