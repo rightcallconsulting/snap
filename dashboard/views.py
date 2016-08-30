@@ -381,7 +381,7 @@ def create_play(request):
 				play.playJson = playJson
 				play.save()
 			elif play.count() == 0:
-				play = Concept()
+				play = Play()
 				play.name = name
 				play.team = request.user.coach.team
 				play.unit = request.POST['unit']

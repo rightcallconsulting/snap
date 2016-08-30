@@ -83,7 +83,7 @@ Play.prototype.isValid = function() {
 	// IDEAS: More players in a play than can be in a play.
 	//		  Inelligable setups. Illegal actions.
 
-	if (this.offensivePlayers.length != 12) {
+	if (this.offensivePlayers.length != 11) {
 		return false;
 	}
 

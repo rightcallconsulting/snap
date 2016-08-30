@@ -488,7 +488,7 @@
 			// If this play name already exists the backend should replace
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
-			for (var i = 0; i < plays.length; ++i) {
+			for (i in plays) {
 				if (name === plays[i].name) {
 					plays[i] = play.deepCopy();
 					play.save(path, csrf_token);
