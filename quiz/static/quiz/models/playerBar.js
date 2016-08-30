@@ -9,7 +9,7 @@ var PlayerBar = function(config) {
 };
 
 PlayerBar.prototype.init = function(field) {
-	var playerSiz = 25
+	var playerSiz = 25;
 	var playerOptionX = this.x + playerSiz*0.75;
 	var playerOptionY = this.y + (this.height/2);
 
@@ -31,20 +31,6 @@ PlayerBar.prototype.draw = function(field) {
 	}
 };
 
-/*// getSelected iterates through all the players options in the bar and returns
-// the one player that is selected. If no one is selected it returns null.
-PlayerBar.prototype.getSelected = function() {
-	var numberOfPlayerOptions = this.playerOptions.length;
-
-	for(var i = 0; i < numberOfPlayerOptions; i++) {
-		if (this.playerOptions[i].selected) {
-			return this.playerOptions[i];
-		}
-	}
-
-	return null;
-};*/
-
 PlayerBar.prototype.isMouseInside = function(field) {
 	return mouseX > this.x &&
 		mouseX < (this.x + this.width) &&
@@ -64,4 +50,10 @@ PlayerBar.prototype.mouseInPlayer = function(field) {
 	}
 
 	return null;
+};
+
+// resize updates the coordinates and sizes of the buttons on the player
+// bar. It's current implmentation just calls the init function.
+PlayerBar.prototype.resize = function(field) {
+	this.init(field);
 };

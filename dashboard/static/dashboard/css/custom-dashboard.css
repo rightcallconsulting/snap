@@ -300,6 +300,14 @@ coach homepage
 	background-position: center center;
 }
 
+.coach-button-container a#create-concept-link {
+	background-color: rgb(66, 165, 245);
+	background-image: url("/static/dashboard/images/create-concept-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
 .coach-button-container a#create-play-link {
 	background-color: rgb(22, 150, 136);
 	background-image: url("/static/dashboard/images/create-play-action-box.png");

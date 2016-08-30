@@ -232,10 +232,131 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def quiz_analytics(request, quiz_id):
+	coach = request.user.coach
+	quiz = Test.objects.filter(pk=quiz_id)[0]
+	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
+	quiz_results = quiz.quizresult_set.all()
+	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
+	data_source = ModelDataSource(quiz_result_queryset,
+								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
+	chart = gchart.ColumnChart(data_source, options=
+		{
+			'title': "Quiz Results",
+			'isStacked': 'true',
+			'width': 700,
+			'xaxis':
+			{
+				'label': "categories",
+				'side': 'top'
+			},
+			'legend': {'position': 'bottom'},
+			'series': 
+			{
+				'0': {'targetAxisIndex':'0', 'axis': 'score'},
+				'1':{'targetAxisIndex':'0', 'axis': 'score'},
+				'2':{'targetAxisIndex':'0', 'axis': 'score'},
+				'3':{'targetAxisIndex':'1', 'type': 'line'},
+
+			},
+			'axes': 
+			{
+				'x': 
+				{
+					'discrete': 'string',
+				},
+			  	'y': 
+			  	{
+					'score': {'label': '# of Quesitons'},
+					'Time Taken': {'label': 'Time Taken'}
+				}
+			}
+		}
+	)
+	missed_play_data =  formatted_list_for_graphos_missed_plays
+	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
+		{
+			'title': "Missed Plays",
+			'isStacked': 'true',
+			'width': 700,
+			'height': 300,
+			'legend': {'position': 'bottom'}
+		}
+	)
+
+	skipped_play_data =  test.get_skipped_play_chart(5)
+	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
+		{
+			'title': "Skipped Plays",
+			'isStacked': 'true',
+			'width': 700,
+			'legend': {'position': 'bottom'}
+		}
+	)
+	quiz_results_length = len(quiz_results)
+	return render_to_response('dashboard/analytics.html',{
+		'test': quiz,
+		'test_results': quiz_results,
+		'chart': chart,
+		'missed_play_chart': missed_play_chart,
+		'skipped_play_chart': skipped_play_chart,
+		'test_results_length': quiz_results_length,
+		'page_header': 'ANALYTICS',
+	})
+
+@login_required
+def analytics(request):
+	if request.user.myuser.is_a_player:
+		analytics = PlayerAnalytics.for_single_player(request.user.player)
+		groups = []
+	else:
+		# If the user is a coach, the default analytics player set is a their
+		# entire team, but they can use request.GET params to specify the pk of
+		# one of their PlayerGroups or individual Players
+		if 'player' in request.GET:
+			player = Player.objects.get(pk=request.GET['player'])
+			players = [player]
+		elif 'playergroup' in request.GET:
+			group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
+			players = group.players.all()
+		else:
+			players = request.user.coach.team.player_set.all()
+
+		groups = PlayerGroup.objects.all()
+		analytics = PlayerAnalytics.for_players(players)
+
+	return render(request, 'dashboard/show_player_list.html', {
+		# 'team': team,
+		# 'players': players,
+		'page_header': 'ANALYTICS',
+		'analytics': analytics,
+		'groups': groups,
+	})
+
+# Formations
 @login_required
 def create_formation(request):
 	if request.method == "POST":
-		return HttpResponseRedirect(reverse('playbook'))
+		name = request.POST['name']
+		if request.POST['save'] == "true":
+			formationJson = request.POST['formation']
+			formation = Formation.objects.filter(name=name)
+			if formation.count() == 1:
+				formation = formation[0]
+				formation.formationJson = formationJson
+				formation.save()
+			elif formation.count() == 0:
+				formation = Formation()
+				formation.name = name
+				formation.team = request.user.coach.team
+				formation.unit = request.POST['unit']
+				formation.formationJson = formationJson
+				formation.save()
+		elif request.POST['delete'] == "true":
+			formation = Formation.objects.filter(name=name)
+			formation.delete()
+		return HttpResponse('')
 	else:
 		coach = request.user.coach
 		team = coach.team
@@ -246,114 +367,73 @@ def create_formation(request):
 			'page_header': 'CREATE FORMATION',
 		})
 
-def quizzes(request):
-	quizzes = Test.objects.all()
-	return HttpResponse(serializers.serialize("json", quizzes))
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def create_quiz(request):
-	if request.method == 'POST':
-		# Get arguments for the quiz from the POST arguments and create
-		# a new quiz using these values
+# Concepts
+@login_required
+def create_concept(request):
+	if request.method == "POST":
 		name = request.POST['name']
-		team = request.user.coach.team
-		type_of_quiz = request.POST['type_of_quiz']
-		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
-		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
-		new_quiz.save()
-
-		# Loop through player ids and assign them to the quiz.
-		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
-			new_quiz.players.add(player)
-			new_quiz.save()
-
-		new_quiz.save()
-		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
-	else:
-		team = request.user.coach.team
-		groups = PlayerGroup.objects.filter(team=team)
-		plays = request.user.coach.team.play_set.all()
-
-		if len(groups) > 0:
-			players_in_group = groups[0].players.all()
-			analytics = PlayerAnalytics(players_in_group)
-		else:
-			players_in_group = []
-			analytics = None
-
-		return render(request, 'dashboard/create_quiz.html', {
-			'plays': plays,
-			'types_of_quizzes': Test.types_of_tests,
-			'groups': groups,
-			'players_in_group': players_in_group,
-			'page_header': 'CREATE QUIZ',
-		})
-
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def manage_quiz(request, quiz_id):
-	if request.method == 'POST':
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		add_or_remove = request.POST['add_or_remove']
-		if request.POST['defense'] == "false":
-			play_id = request.POST['play_id']
-			play = Play.objects.filter(id=play_id)[0]
-			if add_or_remove == "add":
-				play.tests.add(quiz)
-			else:
-				play.tests.remove(quiz)
-			play.save()
-		else:
-			defensive_formation_id = request.POST['defensive_formation_id']
-			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
-			if add_or_remove == "add":
-				quiz.formations.add(defensive_formation)
-			else:
-				quiz.formations.remove(defensive_formation)
-		quiz.save()
+		if request.POST['save'] == "true":
+			conceptJson = request.POST['concept']
+			concept = Concept.objects.filter(name=name)
+			if concept.count() == 1:
+				concept = concept[0]
+				concept.conceptJson = conceptJson
+				concept.save()
+			elif concept.count() == 0:
+				concept = Concept()
+				concept.name = name
+				concept.team = request.user.coach.team
+				concept.unit = request.POST['unit']
+				concept.conceptJson = conceptJson
+				concept.save()
+		elif request.POST['delete'] == "true":
+			concept = Concept.objects.filter(name=name)
+			concept.delete()
 		return HttpResponse('')
 	else:
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		unit = quiz.unit()
-		players = quiz.players
-		player = None # Gonna need to fix this
-		team = quiz.team
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		unique_defensive_formations = []
-		play_id_array = []
-		plays_in_quiz = quiz.play_set.all()
-		for play in quiz.play_set.all():
-			play_id_array.append(play.id)
-		defensive_formation_id_array = []
-		defensive_formations_in_quiz = quiz.formations.all()
-		for formation in defensive_formations_in_quiz:
-			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
-		unique_defensive_formations_dict = {}
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
-		return render(request, 'dashboard/manage_quiz.html', {
-			'quiz': quiz,
-			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
+		coach = request.user.coach
+		team = coach.team
+		concepts = team.concept_set.all()
+		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
-			'player': player,
-			'play_id_array': play_id_array,
-			'plays_in_quiz': plays_in_quiz,
-			'unit': unit,
-			'unique_defensive_formations': unique_defensive_formations,
-			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
-			'page_header': 'EDIT QUIZZES'
+			'concepts': concepts,
+			'page_header': 'CREATE CONCEPT',
 		})
 
-@login_required
-def my_quizzes(request):
-	player = request.user.player
-	return render(request, 'dashboard/my_quizzes.html')
+# Plays
+def create_play(request):
+	if request.method == "POST":
+		name = request.POST['name']
+		formation_name = request.POST['formation']
+		if request.POST['save'] == "true":
+			playJson = request.POST['play']
+			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			if play.count() == 1:
+				play = play[0]
+				play.playJson = playJson
+				play.save()
+			elif play.count() == 0:
+				play = Concept()
+				play.name = name
+				play.team = request.user.coach.team
+				play.unit = request.POST['unit']
+				play.playJson = playJson
+				play.save()
+		elif request.POST['delete'] == "true":
+			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			play.delete()
+		return HttpResponse('')
+	else:
+		coach = request.user.coach
+		team = coach.team
+		plays = team.play_set.all()
+		return render(request, 'dashboard/create_play.html', {
+			'team': team,
+			'plays': plays,
+			'page_header': 'CREATE PLAY',
+		})
 
+# Groups
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def groups(request):
 	team = request.user.coach.team
@@ -491,154 +571,114 @@ def delete_group(request):
 		group.delete()
 		return HttpResponse('')
 
+# Quizzes
+def quizzes(request):
+	quizzes = Test.objects.all()
+	return HttpResponse(serializers.serialize("json", quizzes))
+
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def quiz_analytics(request, quiz_id):
-	coach = request.user.coach
-	quiz = Test.objects.filter(pk=quiz_id)[0]
-	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
-	quiz_results = quiz.quizresult_set.all()
-	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
-	data_source = ModelDataSource(quiz_result_queryset,
-								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
-	chart = gchart.ColumnChart(data_source, options=
-		{
-			'title': "Quiz Results",
-			'isStacked': 'true',
-			'width': 700,
-			'xaxis':
-			{
-				'label': "categories",
-				'side': 'top'
-			},
-			'legend': {'position': 'bottom'},
-			'series': 
-			{
-				'0': {'targetAxisIndex':'0', 'axis': 'score'},
-				'1':{'targetAxisIndex':'0', 'axis': 'score'},
-				'2':{'targetAxisIndex':'0', 'axis': 'score'},
-				'3':{'targetAxisIndex':'1', 'type': 'line'},
+def create_quiz(request):
+	if request.method == 'POST':
+		# Get arguments for the quiz from the POST arguments and create
+		# a new quiz using these values
+		name = request.POST['name']
+		team = request.user.coach.team
+		type_of_quiz = request.POST['type_of_quiz']
+		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
+		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
+		new_quiz.save()
 
-			},
-			'axes': 
-			{
-				'x': 
-				{
-					'discrete': 'string',
-				},
-			  	'y': 
-			  	{
-					'score': {'label': '# of Quesitons'},
-					'Time Taken': {'label': 'Time Taken'}
-				}
-			}
-		}
-	)
-	missed_play_data =  formatted_list_for_graphos_missed_plays
-	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
-		{
-			'title': "Missed Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'height': 300,
-			'legend': {'position': 'bottom'}
-		}
-	)
+		# Loop through player ids and assign them to the quiz.
+		for player_id in request.POST.getlist('player'):
+			player = Player.objects.filter(pk=int(player_id))[0]
+			new_quiz.players.add(player)
+			new_quiz.save()
 
-	skipped_play_data =  test.get_skipped_play_chart(5)
-	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
-		{
-			'title': "Skipped Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'legend': {'position': 'bottom'}
-		}
-	)
-	quiz_results_length = len(quiz_results)
-	return render_to_response('dashboard/analytics.html',{
-		'test': quiz,
-		'test_results': quiz_results,
-		'chart': chart,
-		'missed_play_chart': missed_play_chart,
-		'skipped_play_chart': skipped_play_chart,
-		'test_results_length': quiz_results_length,
-		'page_header': 'ANALYTICS',
-	})
-
-@login_required
-def analytics(request):
-	if request.user.myuser.is_a_player:
-		analytics = PlayerAnalytics.for_single_player(request.user.player)
-		groups = []
+		new_quiz.save()
+		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
 	else:
-		# If the user is a coach, the default analytics player set is a their
-		# entire team, but they can use request.GET params to specify the pk of
-		# one of their PlayerGroups or individual Players
-		if 'player' in request.GET:
-			player = Player.objects.get(pk=request.GET['player'])
-			players = [player]
-		elif 'playergroup' in request.GET:
-			group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
-			players = group.players.all()
+		team = request.user.coach.team
+		groups = PlayerGroup.objects.filter(team=team)
+		plays = request.user.coach.team.play_set.all()
+
+		if len(groups) > 0:
+			players_in_group = groups[0].players.all()
+			analytics = PlayerAnalytics(players_in_group)
 		else:
-			players = request.user.coach.team.player_set.all()
+			players_in_group = []
+			analytics = None
 
-		groups = PlayerGroup.objects.all()
-		analytics = PlayerAnalytics.for_players(players)
-
-	return render(request, 'dashboard/show_player_list.html', {
-		# 'team': team,
-		# 'players': players,
-		'page_header': 'ANALYTICS',
-		'analytics': analytics,
-		'groups': groups,
-	})
-
-# Concepts
-@login_required
-def concepts(request):
-	if request.method == "POST":
-		return HttpResponseRedirect(reverse('playbook'))
-	else:
-		coach = request.user.coach
-		team = coach.team
-		concepts = team.concept_set.all()
-		return render(request, 'dashboard/concepts.html', {
-			'team': team,
-			'concepts': concepts,
-			'page_header': 'CONCEPTS',
+		return render(request, 'dashboard/create_quiz.html', {
+			'plays': plays,
+			'types_of_quizzes': Test.types_of_tests,
+			'groups': groups,
+			'players_in_group': players_in_group,
+			'page_header': 'CREATE QUIZ',
 		})
 
-@login_required
-def create_concept(request):
-	if request.method == "POST":
-		conceptJson = request.POST['concept']
-		name = request.POST['name']
-		concept = Concept.objects.filter(name=name)
-		if concept.count() == 1:
-			concept = concept[0]
-			concept.conceptJson = conceptJson
-			concept.save()
-		elif concept.count() == 0:
-			concept = Concept()
-			concept.name = name
-			concept.team = request.user.coach.team
-			concept.unit = request.POST['unit']
-			concept.conceptJson = conceptJson
-			concept.save()
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def manage_quiz(request, quiz_id):
+	if request.method == 'POST':
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		add_or_remove = request.POST['add_or_remove']
+		if request.POST['defense'] == "false":
+			play_id = request.POST['play_id']
+			play = Play.objects.filter(id=play_id)[0]
+			if add_or_remove == "add":
+				play.tests.add(quiz)
+			else:
+				play.tests.remove(quiz)
+			play.save()
+		else:
+			defensive_formation_id = request.POST['defensive_formation_id']
+			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
+			if add_or_remove == "add":
+				quiz.formations.add(defensive_formation)
+			else:
+				quiz.formations.remove(defensive_formation)
+		quiz.save()
 		return HttpResponse('')
 	else:
-		coach = request.user.coach
-		team = coach.team
-		concepts = team.concept_set.all()
-		conceptsJson = []
-		for concept in concepts:
-			conceptsJson.append(concept.conceptJson)
-		return render(request, 'dashboard/create_concept.html', {
+		quiz = Test.objects.filter(id=quiz_id)[0]
+		unit = quiz.unit()
+		players = quiz.players
+		player = None # Gonna need to fix this
+		team = quiz.team
+		formations = team.formation_set.all()
+		offensive_formations = formations.filter(unit="offense")
+		defensive_formations = formations.filter(unit="defense")
+		unique_defensive_formations = []
+		play_id_array = []
+		plays_in_quiz = quiz.play_set.all()
+		for play in quiz.play_set.all():
+			play_id_array.append(play.id)
+		defensive_formation_id_array = []
+		defensive_formations_in_quiz = quiz.formations.all()
+		for formation in defensive_formations_in_quiz:
+			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
+		unique_defensive_formations_dict = {}
+		for formation in defensive_formations:
+			unique_defensive_formations_dict[formation.name] = formation
+			unique_defensive_formations = unique_defensive_formations_dict.values()
+		return render(request, 'dashboard/manage_quiz.html', {
+			'quiz': quiz,
+			'formations': formations,
+			'offensive_formations': offensive_formations,
+			'defensive_formations': defensive_formations,
 			'team': team,
-			'concepts': concepts,
-			'conceptsJson': conceptsJson,
-			'page_header': 'CREATE CONCEPT',
+			'player': player,
+			'play_id_array': play_id_array,
+			'plays_in_quiz': plays_in_quiz,
+			'unit': unit,
+			'unique_defensive_formations': unique_defensive_formations,
+			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
+			'page_header': 'EDIT QUIZZES'
 		})
+
+@login_required
+def my_quizzes(request):
+	player = request.user.player
+	return render(request, 'dashboard/my_quizzes.html')
 
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)

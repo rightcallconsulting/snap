@@ -108,6 +108,8 @@ class Formation(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
 	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
 
+	formationJson = models.TextField(max_length=None, blank=True, null=True)
+
 	def __str__(self):
 		return self.name
 
@@ -217,8 +219,7 @@ class Test(models.Model):
 	types_of_tests = ["QBProgression",
 						"CBAssignment",
 						"OLView",
-						"WRRoute",
-						"Concept Identification"]
+						"WRRoute"]
 
 	name = models.CharField(max_length=100, null=True, blank=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
@@ -383,7 +384,6 @@ class Play(models.Model):
 			p.dict_for_json() for p in self.positions.all()
 		]
 		return json_dict
-
 
 class TestResult(models.Model):
 	score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt

@@ -117,14 +117,14 @@ Concept.prototype.reset = function() {
 // in a concept. It returns the player that the mouse is inside of or
 // null if the mouse is not inside any player.
 Concept.prototype.mouseInPlayer = function(field) {
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
+	for(var i = this.offensivePlayers.length-1; i >= 0; i--) {
 		var player = this.offensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;
 		}
 	}
 
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
+	for(var i = this.defensivePlayers.length-1; i >= 0; i--) {
 		var player = this.defensivePlayers[i];
 		if (player.isMouseInside(field)) {
 			return player;
@@ -136,55 +136,85 @@ Concept.prototype.mouseInPlayer = function(field) {
 
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the concept and then saves it (if valid)
-// and removes everything from the frontend display.
 Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
-		var conceptToPost = new Concept ({
-			name: this.name,
-			team: this.team,
-			unit: this.unit,
-			offensivePlayers: this.offensivePlayers,
-			defensivePlayers: this.defensivePlayers
-		});
+		var conceptJson = "";
+		var player;
 
-		this.post(path, csrf_token);
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		var conceptName = this.name;
+		var conceptUnit = this.unit;
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: conceptName, unit: conceptUnit, concept: conceptJson}
+			).done(function() {
+				console.log("Concept successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Concept to Django to be saved");
+		});
 	} else {
 		this.feedbackMessage = "Invalid Concept";
 	}
 };
 
-// post handles sending as JSON object to backend so it can be saved to the
-// database.
-Concept.prototype.post = function(path, csrf_token) {
-	var conceptJson = "";
-	var player;
-
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
-		player = this.offensivePlayers[i];
-		player.startX = player.x;
-		player.startY = player.y;
-	}
-
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
-		player = this.defensivePlayers[i];
-		player.startX = player.x;
-		player.startY = player.y;
-	}
-
+// delete sends a delete request to Django for this concept.
+Concept.prototype.delete = function(path, csrf_token) {
 	var conceptName = this.name;
-	var conceptUnit = this.unit;
-	conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, name: conceptName, unit: conceptUnit, concept: conceptJson}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: conceptName}
 		).done(function() {
-			console.log("Concept successfully posted to Django");
+			console.log("Concept successfully sent to Django to be deleted");
 		}).fail(function() {
-			console.log("Error posting Concept to Django");
+			console.log("Error sending Concept to Django to be deleted");
+	});
+};
+
+// deepCopy returns a new Concept object that is exactly the same as this.
+Concept.prototype.deepCopy = function() {
+	var result = new Concept({
+		id: this.id,
+		name: this.name,
+		team: this.team,
+		unit: this.unit,
+		feedbackMessage: this.feedbackMessage
 	});
 
-	var i = 0;
+	if (this.quarterback != null) {
+		result.quarterback = this.quarterback.deepCopy();
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
 };
 
 /*********************************/
@@ -273,8 +303,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 	}
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0].length ; ++j) {
-			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[0][j];
+		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 
 			if (primaryAssignment.x != null) {
 				for (var k = 0; k < defensivePlayersArray.length; ++k) {
@@ -284,7 +314,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 				}
 			}
 
-			offensivePlayersArray[i].blockingAssignmentArray[0].push(primaryAssignment);
+			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
 		}
 	}
 
@@ -371,10 +401,10 @@ Concept.prototype.createSwoop = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	f.blockingAssignmentArray[0].push("Down Block Right");
-	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	left_guard.blockingAssignmentArray[0].push("Down Block Right");
-	left_guard.blockingAssignmentArray[0].push("Straight Seal Right");
+	f.blockingAssignmentArray.push("Down Block Right");
+	left_tackle.blockingAssignmentArray.push("Down Block Right");
+	left_guard.blockingAssignmentArray.push("Down Block Right");
+	left_guard.blockingAssignmentArray.push("Straight Seal Right");
 };
 
 // createCat creates a static version Stanfords cat blocking concept
@@ -431,9 +461,9 @@ Concept.prototype.createCat = function(ballY){
 	this.defensivePlayers.push(w);
 
 	// Create offensive assignments
-	left_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	center.blockingAssignmentArray[0].push(t);
-	center.blockingAssignmentArray[0].push(w);
+	left_tackle.blockingAssignmentArray.push("Down Block Right");
+	center.blockingAssignmentArray.push(t);
+	center.blockingAssignmentArray.push(w);
 };
 
 // createTO creates a static version Stanfords T.O. blocking concept
@@ -491,6 +521,6 @@ Concept.prototype.createTO = function(ballY){
 	this.defensivePlayers.push(s);
 
 	// Create offensive assignments
-	right_tackle.blockingAssignmentArray[0].push("Down Block Right");
-	y.blockingAssignmentArray[0].push("Down Block Right");
+	right_tackle.blockingAssignmentArray.push("Down Block Right");
+	y.blockingAssignmentArray.push("Down Block Right");
 };

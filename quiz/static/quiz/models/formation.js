@@ -11,8 +11,11 @@
 //***************************************************************************//
 
 var Formation = function(config){
-	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensivePlayers = config.offensivePlayers || [];
+	this.quarterback = config.quarterback || null;
+	this.eligibleReceivers = config.eligibleReceivers || [];
+	this.offensiveLinemen = config.offensiveLinemen || [];
+	this.defensivePlayers = config.defensivePlayers || [];
 	this.runningBacks = config.runningBacks || [];
 	this.fullBacks = config.fullBacks || [];
 	this.tightEnds = config.tightEnds || [];
@@ -33,12 +36,306 @@ var Formation = function(config){
 	this.linebackers = config.linebackers || [];
 	this.cornerbacks = config.cornerbacks || [];
 	this.safeties = config.safeties || [];
-	this.defensivePlayers = config.defensivePlayers || [];
 	this.offensiveFormationID = config.offensiveFormationID || 0;
 };
 
 //***************************************************************************//
 //***************************************************************************//
+
+// createOffensiveLineAndQuarterback
+Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
+	var olPositions = ["T", "G", "C", "G", "T"];
+	for (var i = -2; i <= 2; i++) {
+		var xPos = Field.WIDTH/2 + i*2.5;
+		var yPos = ballY;
+
+		var offensive_lineman = new Player({
+			x: xPos,
+			y: yPos,
+			num: olPositions[i+2],
+			fill: color(143, 29, 29),
+			red: 143,
+			blue: 29,
+			green: 29,
+			pos: olPositions[i+2],
+			index: i
+		});
+		this.offensiveLinemen.push(offensive_lineman);
+		this.offensivePlayers.push(offensive_lineman);
+	}
+
+	currentPlayer = this.oline[3];
+	var quarterback = new Player ({
+		x: this.offensiveLinemen[2].x,
+		y: this.offensiveLinemen[2].y-2.25,
+		num: 12,
+		fill: color(212, 130, 130),
+		red: 212,
+		blue: 130,
+		green: 130,
+		pos: "QB",
+		eligible: true
+	});
+
+	this.quarterback = quarterback;
+	this.offensivePlayers.push(quarterback);
+};
+
+// drawAllPlayers draws all of the players currently in the offensive and
+// defensive player arrays for this formation.
+Formation.prototype.drawAllPlayers = function(field) {
+	this.offensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
+
+	this.defensivePlayers.forEach(function(player) {
+		player.draw(field);
+	});
+};
+
+// isValid checks the legality of a formation.
+Formation.prototype.isValid = function() {
+	// TODO: Implement
+	//
+	// IDEAS: More players in a formation than can be in a play.
+	//		  Inelligable setups. Illegal actions.
+
+	return true;
+};
+
+// getSelected iterates through all the players in a formation and returns
+// the one player that is selected. If no one is selected it returns null.
+//
+// TODO: implement logic for selecting multiple players and return an array.
+Formation.prototype.getSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		if (this.offensivePlayers[i].selected) {
+			return [this.offensivePlayers[i], i];
+		}
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		if (this.defensivePlayers[i].selected) {
+			return [this.defensivePlayers[i], i];
+		}
+	}
+
+	return [null, null];
+};
+
+// clearSelected iterates through all the players in a formation and makes
+// them all unselected.
+Formation.prototype.clearSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].setUnselected();
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].setUnselected();
+	}
+};
+
+// mouseInPlayer iterates through all the offensive and defensive players
+// in a formation. It returns the player that the mouse is inside of or
+// null if the mouse is not inside any player.
+Formation.prototype.mouseInPlayer = function(field) {
+	for(var i = this.offensivePlayers.length-1; i >= 0; i--) {
+		var player = this.offensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	for(var i = this.defensivePlayers.length-1; i >= 0; i--) {
+		var player = this.defensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
+};
+
+// save handles everything that need to be done when the user pressed the save
+// button. It checks the validity of the formation and then saves it (if valid).
+Formation.prototype.save = function (path, csrf_token) {
+	if (this.isValid()) {
+		var formationJson = "";
+		var player;
+
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		var formationName = this.name;
+		var formationUnit = this.unit;
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz"]);
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, formation: formationJson}
+			).done(function() {
+				console.log("Formation successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Formation to Django to be saved");
+		});
+	} else {
+		this.feedbackMessage = "Invalid Formation";
+	}
+};
+
+// delete sends a delete request to Django for this formation.
+Formation.prototype.delete = function(path, csrf_token) {
+	var formationName = this.name;
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: formationName}
+		).done(function() {
+			console.log("Formation successfully sent to Django to be deleted");
+		}).fail(function() {
+			console.log("Error sending Formation to Django to be deleted");
+	});
+};
+
+// deepCopy returns a new Concept object that is exactly the same as this.
+Formation.prototype.deepCopy = function() {
+	var result = new Formation({
+		id: this.id,
+		name: this.name,
+		team: this.team,
+		unit: this.unit,
+		feedbackMessage: this.feedbackMessage
+	});
+
+	if (this.quarterback != null) {
+		result.quarterback = this.quarterback.deepCopy();
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
+};
+
+/*********************************/
+/*     Non object functions      */
+/*********************************/
+
+function createFormationFromJson(formationJsonDictionary) {
+	var quarterback;
+	var offensivePlayersArray = [];
+	var defensivePlayersArray = [];
+	var offensiveLinemenArray = [];
+	var eligibleReceiversArray = [];
+
+	for (var i = 0; i < formationJsonDictionary.offensivePlayers.length; ++i) {
+		var player = new Player({
+			x: formationJsonDictionary.offensivePlayers[i].x,
+			y: formationJsonDictionary.offensivePlayers[i].y,
+			startX: formationJsonDictionary.offensivePlayers[i].startX,
+			startY: formationJsonDictionary.offensivePlayers[i].startY,
+			num: formationJsonDictionary.offensivePlayers[i].num,
+			pos: formationJsonDictionary.offensivePlayers[i].pos,
+			red: formationJsonDictionary.offensivePlayers[i].red,
+			green: formationJsonDictionary.offensivePlayers[i].green,
+			blue: formationJsonDictionary.offensivePlayers[i].blue,
+			unit: formationJsonDictionary.offensivePlayers[i].unit,
+			eligible: formationJsonDictionary.offensivePlayers[i].eligible,
+			siz: formationJsonDictionary.offensivePlayers[i].siz
+		});
+
+		if (player.pos === "QB") {
+			quarterback = player;
+		}
+
+		if (player.eligible === true) {
+			eligibleReceiversArray.push(player);
+		}
+
+		offensivePlayersArray.push(player);
+	}
+
+	for (var i = 0; i < formationJsonDictionary.defensivePlayers.length; ++i) {
+		var player = new Player({
+			x: formationJsonDictionary.defensivePlayers[i].x,
+			y: formationJsonDictionary.defensivePlayers[i].y,
+			startX: formationJsonDictionary.defensivePlayers[i].startX,
+			startY: formationJsonDictionary.defensivePlayers[i].startY,
+			num: formationJsonDictionary.defensivePlayers[i].num,
+			pos: formationJsonDictionary.defensivePlayers[i].pos,
+			red: formationJsonDictionary.defensivePlayers[i].red,
+			green: formationJsonDictionary.defensivePlayers[i].green,
+			blue: formationJsonDictionary.defensivePlayers[i].blue,
+			unit: formationJsonDictionary.defensivePlayers[i].unit,
+			eligible: formationJsonDictionary.defensivePlayers[i].eligible,
+			siz: formationJsonDictionary.defensivePlayers[i].siz
+		});
+
+		defensivePlayersArray.push(player);
+	}
+
+	if (formationJsonDictionary.offensiveLinemen != null) {
+		for (var i = 0; i < formationJsonDictionary.offensiveLinemen.length; ++i) {
+			var player = new Player({
+				x: formationJsonDictionary.offensiveLinemen[i].x,
+				y: formationJsonDictionary.offensiveLinemen[i].y,
+				startX: formationJsonDictionary.offensiveLinemen[i].startX,
+				startY: formationJsonDictionary.offensiveLinemen[i].startY,
+				num: formationJsonDictionary.offensiveLinemen[i].num,
+				pos: formationJsonDictionary.offensiveLinemen[i].pos,
+				red: formationJsonDictionary.offensiveLinemen[i].red,
+				green: formationJsonDictionary.offensiveLinemen[i].green,
+				blue: formationJsonDictionary.offensiveLinemen[i].blue,
+				unit: formationJsonDictionary.offensiveLinemen[i].unit,
+				eligible: formationJsonDictionary.offensiveLinemen[i].eligible,
+				siz: formationJsonDictionary.offensiveLinemen[i].siz
+			});
+
+			offensiveLinemenArray.push(player);
+		}
+	}
+
+	var result = new Formation({
+		name: formationJsonDictionary.name,
+		team: formationJsonDictionary.team,
+		unit: formationJsonDictionary.unit,
+		offensivePlayers: offensivePlayersArray,
+		defensivePlayers: defensivePlayersArray,
+		quarterback: quarterback,
+		offensiveLinemen: offensiveLinemenArray,
+		eligibleReceivers: eligibleReceiversArray
+	});
+
+	return result;
+};
   														
 // createPlayer takes a new player object as an input and adds him
 // to the formation.
@@ -1276,69 +1573,4 @@ Formation.prototype.convertToPlayObject = function(){
     });
   }
   return play
-};
-
-
-
-var formationButtons = [];
-var formations = [];
-
-/* Static functions for concepts */
-// createSwoop creates a static version Stanfords swoop blocking concept
-Formation.prototype.createSwoop = function(ballY){
-	// Create Offensive Players
-	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-
-	for (var i = -2; i <= 0; i++) {
-		var xPos = Field.WIDTH / 2 + i*2.5;
-		var yPos = ballY-1.5;
-		
-		if (i !== 0) {
-			yPos -= 0.5;
-		}
-
-		var offensive_lineman = new Player({
-			num: olPositions[i+2],
-			pos: olPositions[i+2],
-			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29,
-		});
-
-		this.oline.push(offensive_lineman);
-		this.offensivePlayers.push(offensive_lineman);
-	}
-
-	var left_tackle = this.oline[0];
-
-	var f = new Player ({
-		num: "F", pos: "F", 
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
-		red: 255, green: 0, blue: 0,
-		eligible: true
-	});
-
-	this.eligibleReceivers.push(f);
-	this.offensivePlayers.push(f);
-
-	// Create Defensive Players
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense", 
-		change: true,
-		x: left_tackle.x,
-		y: left_tackle.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
-	var e = new Player ({
-		num: "E", pos: "E",
-		unit: "defense", 
-		change: true,
-		x: f.x, y: f.y+2.5,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(w);
-	this.defensivePlayers.push(e);
 };
