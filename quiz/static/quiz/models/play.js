@@ -14,7 +14,7 @@
 var Play = function(config) {
 	this.name = config.name || "";
 	this.unit = config.unit || "offense";
-	this.formation = config.formation || null;
+	this.formation = config.formation || "";
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
 	this.quarterback = config.quarterback || [];
@@ -213,7 +213,7 @@ Play.prototype.deepCopy = function() {
 	});
 
 	for (var i = 0; i < this.quarterback.length; ++i) {
-		result.quarterback.push(this.quarterback.deepCopy());
+		result.quarterback.push(this.quarterback[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
@@ -241,7 +241,7 @@ Play.prototype.fromFormation = function(formation) {
 	this.unit = formation.unit;
 
 	for (var i = 0; i < formation.quarterback.length; ++i) {
-		this.quarterback.push(formation.quarterback.deepCopy());
+		this.quarterback.push(formation.quarterback[i].deepCopy());
 	}
 
 	for (var i = 0; i < formation.offensivePlayers.length; ++i) {
@@ -259,8 +259,6 @@ Play.prototype.fromFormation = function(formation) {
 	for (var i = 0; i < formation.eligibleReceivers.length; ++i) {
 		this.eligibleReceivers.push(formation.eligibleReceivers[i].deepCopy());
 	}
-
-	return result;
 };
 
 /*********************************/

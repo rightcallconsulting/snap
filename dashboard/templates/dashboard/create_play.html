@@ -667,7 +667,7 @@
 			var formation_selected = selected;
 
 			for (var i = 0; i < formations.length; ++i) {
-				if (formation_selected.textContent === formations[i].name) {
+				if (formation_selected.getAttribute("name") === formations[i].name) {
 					formation_selected = formations[i].deepCopy();
 					break;
 				}
