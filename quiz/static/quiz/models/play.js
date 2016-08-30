@@ -1,8 +1,28 @@
+//***************************************************************************//
+//																			 //
+// play.js - Right Call Consulting. All Rights Reserved. 2016		     	 //
+//																			 //
+//***************************************************************************//
+//																			 //
+// A play object represents one offensive or defensive play. Each instance   //
+// of a play object is associated with one offensive formation and one       //
+// defensive formation. The object maintains an array of all of the players  //
+// in the concept and their positions on the field.				 			 //
+//																			 //
+//***************************************************************************//
+
 var Play = function(config) {
-    this.eligibleReceivers = config.eligibleReceivers || [];
-    this.offensivePlayers = config.offensivePlayers || [];
+	this.name = config.name || "";
+	this.unit = config.unit || "offense";
+	this.formation = config.formation || null;
+	this.offensivePlayers = config.offensivePlayers || [];
+	this.defensivePlayers = config.defensivePlayers || [];
+	this.quarterback = config.quarterback || [];
+	this.eligibleReceivers = config.eligibleReceivers || [];
+	this.offensiveLinemen = config.offensiveLinemen || [];
+
+
     this.playName = config.playName || "";
-    this.name = config.name || "";
     this.qb = config.qb || null;
     this.oline = config.oline || [];
     this.formation = config.formation || null;
@@ -21,6 +41,17 @@ var Play = function(config) {
     this.defensiveFormationID = config.defensiveFormationID || 0;
     this.defensivePlayObject = config.defensivePlayObject || null;
 };
+
+//***************************************************************************//
+//***************************************************************************//
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
 
 Play.prototype.getPlayerFromPosition = function(pos){
   var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
