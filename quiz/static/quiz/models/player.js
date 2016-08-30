@@ -623,6 +623,44 @@ Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
 	return new_coordinates;
 };
 
+// drawRoute itereates through a players landmarks and draws their route
+// with an arrow at the end.
+Player.prototype.drawRoute = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+	var x2 = this.x;
+	var y2 = this.y;
+
+	var red = color(255, 0, 0);
+	stroke(red);
+
+	for (var i = 0; i < this.route.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.route[i][0];
+		y2 = this.route[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		dottedLine(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+	}
+
+	// Draw arrow
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+
+	arrow(x2, y2, alpha, deltaX);
+
+	noStroke();
+};
+
 // drawDefensiveMovement iterates through the players defensive movements
 // and draws a dotted line to the plave on the field they should be
 Player.prototype.drawDefensiveMovement = function(field) {
@@ -1039,54 +1077,6 @@ Player.prototype.drawRouteCoordinates = function(field){
   this.breakPoints = this.routeCoordinates.slice();
   this.drawRoute(field);
 }
-
-Player.prototype.drawRoute = function(field){
-  if(this.breakPoints.length < 1){
-	return;
-  }
-  var routeCoordinates = [];
-  routeCoordinates.push([this.startX, this.startY]);
-  routeCoordinates = routeCoordinates.concat(this.breakPoints.slice());
-  for(var i = 0; i < routeCoordinates.length - 1; i++){
-	var x1 = field.getTranslatedX(routeCoordinates[i][0]);
-	var y1 = field.getTranslatedY(routeCoordinates[i][1]);
-	var x2 = field.getTranslatedX(routeCoordinates[i+1][0]);
-	var y2 = field.getTranslatedY(routeCoordinates[i+1][1]);
-	var yardsX = (abs(routeCoordinates[i+1][0] - routeCoordinates[i][0]))
-	var yardsY = (abs(routeCoordinates[i+1][1] - routeCoordinates[i][1]))
-	var yards = int(sqrt(yardsX * yardsX + yardsY * yardsY));
-	stroke(255, 0, 0);
-	line(x1,y1,x2,y2);
-	noStroke();
-	fill(255, 0, 0)
-	textSize(18);
-	if(yards >= 1 && i < routeCoordinates.length - 2){
-	  text(yards, x2 + 15, y2 + 15);
-	}
-
-	node = this.routeNodes[i]
-	if (node && node.change){
-	  node.x = field.getYardX(mouseX);
-	  node.y = field.getYardY(mouseY);
-	  this.routeCoordinates[i + 1][0] = node.x;
-	  this.routeCoordinates[i + 1][1] = node.y;
-	}
-	if(node){
-	  if(i === this.routeNodes.length - 1){
-		var prevX = this.startX;
-		var prevY = this.startY;
-		if(i > 0){
-		  prevX = this.routeNodes[i-1].x;
-		  prevY = this.routeNodes[i-1].y;
-		}
-		node.drawArrow(field, prevX, prevY);
-	  }else{
-		node.draw(field);
-	  }
-
-	}
-  }
-};
 
 Player.prototype.drawBreakPoints = function(field){
   var x1 = field.getTranslatedX(this.startX);
