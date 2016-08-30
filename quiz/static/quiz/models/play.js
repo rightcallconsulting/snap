@@ -45,6 +45,311 @@ var Play = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+// drawPlayers draws all the players in a concept.
+Concept.prototype.drawPlayers = function () {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].draw(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].draw(field);
+	}
+};
+
+// drawAssignments
+Concept.prototype.drawAssignments = function (field) {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].drawAllBlocks(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
+	}
+};
+
+
+// isValid checks the legality of a concept.
+Concept.prototype.isValid = function() {
+	// TODO: Implement
+	//
+	// IDEAS: More players in a concept than can be in a play.
+	//		  Inelligable setups. Illegal actions.
+
+	return true;
+};
+
+// getSelected iterates through all the players in a concept and returns
+// the one player that is selected. If no one is selected it returns null.
+//
+// TODO: implement logic for selecting multiple players and return an array.
+Concept.prototype.getSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		if (this.offensivePlayers[i].selected) {
+			return [this.offensivePlayers[i], i];
+		}
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		if (this.defensivePlayers[i].selected) {
+			return [this.defensivePlayers[i], i];
+		}
+	}
+
+	return [null, null];
+};
+
+// clearSelected iterates through all the players in a concept and makes
+// them all unselected.
+Concept.prototype.clearSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].setUnselected();
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].setUnselected();
+	}
+};
+
+// reset clears the current concept and returns an empty screen.
+Concept.prototype.reset = function() {
+	this.offensivePlayers = [];
+	this.quarterback = null;
+	this.offensiveLinemen = [];
+	this.eligibleReceivers = [];
+	this.defensivePlayers = [];
+};
+
+// mouseInPlayer iterates through all the offensive and defensive players
+// in a concept. It returns the player that the mouse is inside of or
+// null if the mouse is not inside any player.
+Concept.prototype.mouseInPlayer = function(field) {
+	for(var i = this.offensivePlayers.length-1; i >= 0; i--) {
+		var player = this.offensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	for(var i = this.defensivePlayers.length-1; i >= 0; i--) {
+		var player = this.defensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
+};
+
+// save handles everything that need to be done when the user pressed the save
+// button. It checks the validity of the concept and then saves it (if valid)
+Concept.prototype.save = function (path, csrf_token) {
+	if (this.isValid()) {
+		var conceptJson = "";
+		var player;
+
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		var conceptName = this.name;
+		var conceptUnit = this.unit;
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: conceptName, unit: conceptUnit, concept: conceptJson}
+			).done(function() {
+				console.log("Concept successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Concept to Django to be saved");
+		});
+	} else {
+		this.feedbackMessage = "Invalid Concept";
+	}
+};
+
+// delete sends a delete request to Django for this concept.
+Concept.prototype.delete = function(path, csrf_token) {
+	var conceptName = this.name;
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: conceptName}
+		).done(function() {
+			console.log("Concept successfully sent to Django to be deleted");
+		}).fail(function() {
+			console.log("Error sending Concept to Django to be deleted");
+	});
+};
+
+// deepCopy returns a new Concept object that is exactly the same as this.
+Concept.prototype.deepCopy = function() {
+	var result = new Concept({
+		id: this.id,
+		name: this.name,
+		team: this.team,
+		unit: this.unit,
+		feedbackMessage: this.feedbackMessage
+	});
+
+	if (this.quarterback != null) {
+		result.quarterback = this.quarterback.deepCopy();
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
+};
+
+/*********************************/
+/*     Non object functions      */
+/*********************************/
+
+function createConceptFromJson(conceptJsonDictionary) {
+	var quarterback;
+	var offensivePlayersArray = [];
+	var defensivePlayersArray = [];
+	var offensiveLinemenArray = [];
+	var eligibleReceiversArray = [];
+
+	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
+		var player = new Player({
+			x: conceptJsonDictionary.offensivePlayers[i].x,
+			y: conceptJsonDictionary.offensivePlayers[i].y,
+			startX: conceptJsonDictionary.offensivePlayers[i].startX,
+			startY: conceptJsonDictionary.offensivePlayers[i].startY,
+			num: conceptJsonDictionary.offensivePlayers[i].num,
+			pos: conceptJsonDictionary.offensivePlayers[i].pos,
+			red: conceptJsonDictionary.offensivePlayers[i].red,
+			green: conceptJsonDictionary.offensivePlayers[i].green,
+			blue: conceptJsonDictionary.offensivePlayers[i].blue,
+			unit: conceptJsonDictionary.offensivePlayers[i].unit,
+			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
+			siz: conceptJsonDictionary.offensivePlayers[i].siz
+		});
+
+		if (player.pos === "QB") {
+			quarterback = player;
+		}
+
+		if (player.eligible === true) {
+			eligibleReceiversArray.push(player);
+		}
+
+		offensivePlayersArray.push(player);
+	}
+
+	for (var i = 0; i < conceptJsonDictionary.defensivePlayers.length; ++i) {
+		var player = new Player({
+			x: conceptJsonDictionary.defensivePlayers[i].x,
+			y: conceptJsonDictionary.defensivePlayers[i].y,
+			startX: conceptJsonDictionary.defensivePlayers[i].startX,
+			startY: conceptJsonDictionary.defensivePlayers[i].startY,
+			num: conceptJsonDictionary.defensivePlayers[i].num,
+			pos: conceptJsonDictionary.defensivePlayers[i].pos,
+			red: conceptJsonDictionary.defensivePlayers[i].red,
+			green: conceptJsonDictionary.defensivePlayers[i].green,
+			blue: conceptJsonDictionary.defensivePlayers[i].blue,
+			unit: conceptJsonDictionary.defensivePlayers[i].unit,
+			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
+			siz: conceptJsonDictionary.defensivePlayers[i].siz
+		});
+
+		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
+			}
+		}
+
+		defensivePlayersArray.push(player);
+	}
+
+	if (conceptJsonDictionary.offensiveLinemen != null) {
+		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
+			var player = new Player({
+				x: conceptJsonDictionary.offensiveLinemen[i].x,
+				y: conceptJsonDictionary.offensiveLinemen[i].y,
+				startX: conceptJsonDictionary.offensiveLinemen[i].startX,
+				startY: conceptJsonDictionary.offensiveLinemen[i].startY,
+				num: conceptJsonDictionary.offensiveLinemen[i].num,
+				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
+				red: conceptJsonDictionary.offensiveLinemen[i].red,
+				green: conceptJsonDictionary.offensiveLinemen[i].green,
+				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
+				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
+				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
+				siz: conceptJsonDictionary.offensiveLinemen[i].siz
+			});
+
+			offensiveLinemenArray.push(player);
+		}
+	}
+
+	for (var i = 0; i < offensivePlayersArray.length; ++i) {
+		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+
+			if (primaryAssignment.x != null) {
+				for (var k = 0; k < defensivePlayersArray.length; ++k) {
+					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
+						primaryAssignment = defensivePlayersArray[k];
+					}
+				}
+			}
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
+		}
+	}
+
+	var result = new Concept({
+		name: conceptJsonDictionary.name,
+		team: conceptJsonDictionary.team,
+		unit: conceptJsonDictionary.unit,
+		offensivePlayers: offensivePlayersArray,
+		defensivePlayers: defensivePlayersArray,
+		quarterback: quarterback,
+		offensiveLinemen: offensiveLinemenArray,
+		eligibleReceivers: eligibleReceiversArray
+	});
+
+	return result;
+};
+
 /*******************************************************************************************************************************************/
 
 /*******************************************************************************************************************************************/
