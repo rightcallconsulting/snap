@@ -173,13 +173,14 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
+		playJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
 		var playName = this.name;
 		var playUnit = this.unit;
-		playJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+		var formationName = this.formation;
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, unit: playUnit, play: playJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, unit: playUnit, formation: formationName, play: playJson}
 			).done(function() {
 				console.log("Play successfully sent to Django to be saved");
 			}).fail(function() {

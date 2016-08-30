@@ -372,9 +372,10 @@ def create_play(request):
 	if request.method == "POST":
 		name = request.POST['name']
 		formation_name = request.POST['formation']
+		formation = Formation.objects.filter(name=formation_name)[0]
 		if request.POST['save'] == "true":
 			playJson = request.POST['play']
-			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			play = Play.objects.filter(formation=formation, name=name)
 			if play.count() == 1:
 				play = play[0]
 				play.playJson = playJson
@@ -384,10 +385,11 @@ def create_play(request):
 				play.name = name
 				play.team = request.user.coach.team
 				play.unit = request.POST['unit']
+				play.formation = Formation.objects.filter(name=formation_name)[0]
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":
-			play = Concept.objects.filter(formation_name=formation.name, name=name)
+			play = Play.objects.filter(formation=formation, name=name)
 			play.delete()
 		return HttpResponse('')
 	else:
