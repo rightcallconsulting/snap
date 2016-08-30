@@ -68,4 +68,5 @@ urlpatterns = [
 	url(r'^CBAssignment/(?P<test_id>[0-9]+)$', views.run_cb_view_test, name='run_cb_view_test'),
 	url(r'^ConceptID/(?P<test_id>[0-9]+)$', views.concept_identification_quiz, name='concept_identification_quiz'),
 	url(r'^tests/(?P<test_id>[0-9]+)$', views.single_test, name='single_test'),
+	url(r'^createJSONSeedStanford$', views.create_json_seed_stanford, name='stanford_json'),
 ]

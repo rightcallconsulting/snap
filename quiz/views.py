@@ -643,6 +643,33 @@ def play_positions_json(request, team_id, play_id):
     positions = plays[0].positions.all()
     return HttpResponse(serializers.serialize("json", positions))
 
+def create_json_seed_stanford(request):
+    team = Team.objects.filter(pk=1)[0]
+    seed = [] #each entry is dict with play, play positions, defense, defense positions
+    playIDs = [13, 14, 15, 16, 17]
+    defenseIDs = [11, 11, 14, 15, 16]
+    for i, pid in enumerate(playIDs):
+        #playDict = {}
+        #playDict["play"] = team.play_set.filter(pk=pid)[0]
+        #playDict["play_positions"] = playDict["play"].positions.all()
+        #playDict["defense"] = team.formation_set.filter(pk=defenseIDs[i])[0]
+        #playDict["defense_positions"] = playDict["defense"].position_set.all()
+        playArray = []
+        play = team.play_set.filter(pk=pid)
+        defense = team.formation_set.filter(pk=defenseIDs[i])
+        playArray.append(play.dict_for_json())
+        playArray.append(play[0].positions.all())
+        playArray.append(serializers.serialize("json", defense))
+        playArray.append(serializers.serialize("json", defense[0].position_set.all()))
+        seed.append(playArray)
+
+    toReturn = "["
+    for item in seed:
+        toReturn += ("" + str(item) + ",")
+
+    toReturn += "]"
+    return HttpResponse(toReturn)#json.dumps(seed))#serializers.serialize("json", seed))
+
 def run_qb_progression_test(request, test_id):
     test = Test.objects.filter(pk=test_id)[0]
     #test.change_in_progress_status(request.user)
