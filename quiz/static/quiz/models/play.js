@@ -125,7 +125,7 @@ Play.prototype.clearSelected = function() {
 // reset clears the current play and returns an empty screen.
 Play.prototype.reset = function() {
 	this.offensivePlayers = [];
-	this.quarterback = []];
+	this.quarterback = [];
 	this.offensiveLinemen = [];
 	this.eligibleReceivers = [];
 	this.defensivePlayers = [];

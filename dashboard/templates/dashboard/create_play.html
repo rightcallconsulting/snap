@@ -660,11 +660,24 @@
 		// replaces them with play buttons. It adds clickable back icon to
 		// sideview header div so that you can go back to formations.
 		function showPlaysInFormation(selected) {
-			var new_selected = selected;
+			//var new_selected = selected;
 			var sideview_header = document.getElementById("sideview-header");
-			sideview_header.textContent = selected.textContent;
+			//var selected_formation = null;
+
+			var formation_selected = selected;
+
+			for (var i = 0; i < formations.length; ++i) {
+				if (formation_selected.textContent === formations[i].name) {
+					formation_selected = formations[i].deepCopy();
+					break;
+				}
+			}
+			
+			sideview_header.textContent = formation_selected.name;
 
 			$("#sideview-buttons").empty();
+
+			play.fromFormation();
 		};
 
 		function changeSelectedPlay(selected) {
