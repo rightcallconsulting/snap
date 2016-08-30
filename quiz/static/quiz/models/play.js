@@ -125,7 +125,7 @@ Play.prototype.clearSelected = function() {
 // reset clears the current play and returns an empty screen.
 Play.prototype.reset = function() {
 	this.offensivePlayers = [];
-	this.quarterback = null;
+	this.quarterback = []];
 	this.offensiveLinemen = [];
 	this.eligibleReceivers = [];
 	this.defensivePlayers = [];
@@ -212,8 +212,8 @@ Play.prototype.deepCopy = function() {
 		feedbackMessage: this.feedbackMessage
 	});
 
-	if (this.quarterback != null) {
-		result.quarterback = this.quarterback.deepCopy();
+	for (var i = 0; i < this.quarterback.length; ++i) {
+		result.quarterback.push(this.quarterback.deepCopy());
 	}
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
@@ -235,12 +235,40 @@ Play.prototype.deepCopy = function() {
 	return result;
 };
 
+// fromFormation takes a formation object as an argument and creates a play
+// with the same players in the formation.
+Play.prototype.fromFormation = function(formation) {
+	this.unit = formation.unit;
+
+	for (var i = 0; i < formation.quarterback.length; ++i) {
+		this.quarterback.push(formation.quarterback.deepCopy());
+	}
+
+	for (var i = 0; i < formation.offensivePlayers.length; ++i) {
+		this.offensivePlayers.push(formation.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < formation.defensivePlayers.length; ++i) {
+		this.defensivePlayers.push(formation.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < formation.offensiveLinemen.length; ++i) {
+		this.offensiveLinemen.push(formation.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < formation.eligibleReceivers.length; ++i) {
+		this.eligibleReceivers.push(formation.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
+};
+
 /*********************************/
 /*     Non object functions      */
 /*********************************/
 
 function createPlayFromJson(playJsonDictionary) {
-	var quarterback;
+	var quarterback = [];
 	var offensivePlayersArray = [];
 	var defensivePlayersArray = [];
 	var offensiveLinemenArray = [];
@@ -263,7 +291,7 @@ function createPlayFromJson(playJsonDictionary) {
 		});
 
 		if (player.pos === "QB") {
-			quarterback = player;
+			quarterback.push(player);
 		}
 
 		if (player.eligible === true) {
