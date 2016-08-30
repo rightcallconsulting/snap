@@ -68,10 +68,6 @@
 		var formations = [];
 		var plays = [];
 		var play;
-		var defensivePlayerBar;
-		var offensivePlayerBar;
-		var playerBeingDragged;
-		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -233,7 +229,7 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			play.drawAssignments(field);
-			play.drawPlayers();
+			play.drawPlayers(field);
 			
 			fill(0, 0, 0);
 			textSize(20);
@@ -246,34 +242,18 @@
 		//*******************************************************************//
 		
 		function mousePressed() {
-			playerBeingDragged = play.mouseInPlayer(field);
-
+			
 			// return false to prevent default behavior
 			return false;
 		}
 
 		function mouseDragged() {
-			mouseBeingDragged = true;
-
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
-
-			if (playerBeingDragged != null) {
-				playerBeingDragged.x = mouseYardX;
-				playerBeingDragged.y = mouseYardY;
-			}
 
 			// return false to prevent default behavior
 			return false;
 		};
 
 		function mouseReleased() {
-			if (mouseBeingDragged === true) {
-				mouseBeingDragged = false;
-				playerBeingDragged = null;
-				return false;
-			}
-
 			// Handle clicks on players in the Play
 			var currentPlayerSelected = play.getSelected()[0];
 			var newPlayerSelected = play.mouseInPlayer(field);
