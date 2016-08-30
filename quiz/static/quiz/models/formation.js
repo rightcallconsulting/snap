@@ -336,7 +336,7 @@ function createFormationFromJson(formationJsonDictionary) {
 
 	return result;
 };
-  														
+
 // createPlayer takes a new player object as an input and adds him
 // to the formation.
 Formation.prototype.createPlayer = function(new_player) {
@@ -378,24 +378,24 @@ Formation.prototype.createPlayer = function(new_player) {
 		}
 	}
 };
-  														
-// mouseInReceiverOrNode iterates through the elligible receivers in a 
-// formation and checks if the mouse is inside any of the receivers of the 
-// nodes in their route. It returns the player that the mouse is inside.	
+
+// mouseInReceiverOrNode iterates through the elligible receivers in a
+// formation and checks if the mouse is inside any of the receivers of the
+// nodes in their route. It returns the player that the mouse is inside.
 Formation.prototype.mouseInReceiverOrNode = function(field) {
-	var receiverClicked = null; 
+	var receiverClicked = null;
 	var selectedNode = null;
 
 	for(var i = 0; i < this.eligibleReceivers.length; i++) {
 		var player = this.eligibleReceivers[i];
-		
+
 		if (player.isMouseInside(field)) {
 			receiverClicked = player;
 		}
 
 		for(var j = 0; j < player.routeNodes.length; j++) {
 			var node = player.routeNodes[j];
-			
+
 			if (node.isMouseInside(field)) {
 				selectedNode = node;
 			}
@@ -403,7 +403,7 @@ Formation.prototype.mouseInReceiverOrNode = function(field) {
 
 		for(var k = 0; k < player.runNodes.length; k++){
 			var node = player.runNodes[k];
-			
+
 			if (node.isMouseInside(field)){
 				selectedNode = node;
 			}
@@ -412,13 +412,13 @@ Formation.prototype.mouseInReceiverOrNode = function(field) {
 
 	return [receiverClicked, selectedNode];
 };
-  														
-// mouseInOptionsToCreate iterates through the player options available 
+
+// mouseInOptionsToCreate iterates through the player options available
 // and checks if the mouse is inside any of the player options. It returns
 // the player object that the mouse is in.
 Formation.prototype.mouseInOptionsToCreate = function(field) {
 	var optionClicked = null;
-	
+
 	for(var i = 0; i < this.optionsToCreate.length; i++) {
 		var player = this.optionsToCreate[i];
 		if (player.isMouseInside(field)) {
@@ -429,7 +429,7 @@ Formation.prototype.mouseInOptionsToCreate = function(field) {
 	return optionClicked;
 };
 
-// mouseInOptionsToCreate iterates through the player options available 
+// mouseInOptionsToCreate iterates through the player options available
 // and checks if the mouse is inside any of the player options.	It returns
 // the center if the mouse is inside of it or null otherwise.
 Formation.prototype.mouseInCenter = function(field){
@@ -923,6 +923,7 @@ Formation.prototype.saveToDB = function(){
 };
 
 var createFormationButtons = function(formationArray){
+	var formationButtons = []
   var prevYCoord
   for(var i = 0; i < formationArray.length; i++){
     var xDist;
@@ -950,6 +951,7 @@ var createFormationButtons = function(formationArray){
     prevYCoord = tmpButton.y;
     formationButtons.push(tmpButton);
   }
+	return formationButtons
 };
 
 Formation.prototype.establishPersonnel = function(personnel, field){

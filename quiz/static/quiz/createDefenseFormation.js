@@ -102,7 +102,6 @@ function draw() {
 
   var runTest = function(){
 
-
     //Field Position Variables
     currentOffensiveFormation = formations[0];
     var getCurrentFormation = function(){
@@ -387,9 +386,6 @@ function draw() {
         trash.draw(field);
         formationExample.drawOptionsToCreate(field);
         formationExample.drawAllPlayers(field);
-        formationButtons.forEach(function(button){
-          button.draw(field);
-        })
         personnelButtons.forEach(function(button){
           button.draw(field);
         })
@@ -414,7 +410,7 @@ function draw() {
     };
 
     keyTyped = function(){
-      
+
     }
 
     keyPressed = function() {
@@ -498,8 +494,6 @@ function draw() {
       var defensivePlayerClicked = formationExample.mouseInDefensivePlayer(field);
       var receiverClicked = currentOffensiveFormation.mouseInReceiverOrNode(field)[0];
       var selectedNode = currentOffensiveFormation.mouseInReceiverOrNode(field)[1];
-      // var formationClicked = isFormationClicked(formationButtons);
-      // var personnelClicked = isPersonnelClicked(personnelButtons);
       selectedWR = formationExample.findSelectedWR();
       var selectedDefensivePlayer = formationExample.findSelectedDefensivePlayer();
       if (formationExample.establishingNewPlayer){
@@ -590,8 +584,6 @@ function draw() {
     pressClearButton = function() {
       formationExample.removeAllPlayers();
     }
-
-    createFormationButtons(formations);
 
     draw = function() {
       drawOpening();
