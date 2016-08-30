@@ -47,7 +47,7 @@ Concept.prototype.drawAssignments = function (field) {
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].drawAllBlocks(field);
+		this.offensivePlayers[i].drawBlocks(field);
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {

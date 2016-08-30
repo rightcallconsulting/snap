@@ -134,7 +134,7 @@ Player.prototype.setFill = function(red, green, blue) {
 
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke() before it exits, but has no return value.
-Player.prototype.drawAllBlocks = function(field) {
+Player.prototype.drawBlocks = function(field) {
 	var blockingAssignment = this.blockingAssignmentArray;
 	var blockingAssingmentLength = blockingAssignment.length;
 

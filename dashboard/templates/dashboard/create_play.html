@@ -277,7 +277,11 @@
 			} else if (newPlayerSelected === null) {
 				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 					if (currentPlayerSelected.unit === "offense") {
-						currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+						if (currentPlayerSelected.eligible) {
+
+						} else {
+							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+						}
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
