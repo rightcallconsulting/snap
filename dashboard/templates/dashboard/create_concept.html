@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for concept in concepts %}
-					<button class="btn btn-primary sideview-button" name="{{ concept.name }}" onclick="changeSelectedButton(this)">
+					<button class="btn btn-primary sideview-button" name="{{ concept.name }}" onclick="changeSelectedConcept(this)">
 						{{ concept.name }}
 					</button>
 				{% endfor %}
@@ -576,7 +576,7 @@
 			
 			// Create a button for the new concept.
 			var new_concept_button = document.createElement("button");
-			new_concept_button.setAttribute("onclick", "changeSelectedButton(this)");
+			new_concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
 			new_concept_button.setAttribute("name", name);
 			new_concept_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_concept_button.textContent = name;
@@ -659,7 +659,7 @@
 
 		$("#full-screen-button").click(function(event) {});
 
-		function changeSelectedButton(selected) {
+		function changeSelectedConcept(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;

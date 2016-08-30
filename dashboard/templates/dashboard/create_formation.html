@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedButton(this)">
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedFormation(this)">
 						{{ formation.name }}
 					</button>
 				{% endfor %}
@@ -587,7 +587,7 @@
 			
 			// Create a button for the new formation.
 			var new_formation_button = document.createElement("button");
-			new_formation_button.setAttribute("onclick", "changeSelectedButton(this)");
+			new_formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
 			new_formation_button.setAttribute("name", name);
 			new_formation_button.setAttribute("class", "btn btn-primary sideview-button");
 			new_formation_button.textContent = name;
@@ -671,7 +671,7 @@
 
 		$("#full-screen-button").click(function(event) {});
 
-		function changeSelectedButton(selected) {
+		function changeSelectedFormation(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
