@@ -83,6 +83,10 @@ Play.prototype.isValid = function() {
 	// IDEAS: More players in a play than can be in a play.
 	//		  Inelligable setups. Illegal actions.
 
+	if (this.offensivePlayers.length != 12) {
+		return false;
+	}
+
 	return true;
 };
 
@@ -194,10 +198,11 @@ Play.prototype.save = function (path, csrf_token) {
 // delete sends a delete request to Django for this play.
 Play.prototype.delete = function(path, csrf_token) {
 	var playName = this.name;
+	var formationName = this.formation;
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName, formation: formationName}
 		).done(function() {
 			console.log("Play successfully sent to Django to be deleted");
 		}).fail(function() {
