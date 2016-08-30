@@ -22,11 +22,11 @@ urlpatterns = [
 	# Formations
 	url(r'^formations/create$', views.create_formation, name='create_formation'),
 
-	# Concepts
-	url(r'^concepts/create$', views.create_concept, name='create_concept'),
-
 	# Plays
 	url(r'^plays/create$', views.create_play, name='create_play'),
+
+	# Concepts
+	url(r'^concepts/create$', views.create_concept, name='create_concept'),
 
 	# Groups
 	url(r'^groups/$', views.groups, name='groups'),

@@ -7,7 +7,7 @@
 // A play object represents one offensive or defensive play. Each instance   //
 // of a play object is associated with one offensive formation and one       //
 // defensive formation. The object maintains an array of all of the players  //
-// in the concept and their positions on the field.				 			 //
+// in the play and their positions on the field.				 			 //
 //																			 //
 //***************************************************************************//
 
@@ -45,8 +45,8 @@ var Play = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
-// drawPlayers draws all the players in a concept.
-Concept.prototype.drawPlayers = function () {
+// drawPlayers draws all the players in a play.
+Play.prototype.drawPlayers = function () {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -59,8 +59,8 @@ Concept.prototype.drawPlayers = function () {
 	}
 };
 
-// drawAssignments
-Concept.prototype.drawAssignments = function (field) {
+// drawAssignments draws the assignments of all of the players in a play.
+Play.prototype.drawAssignments = function (field) {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -74,21 +74,21 @@ Concept.prototype.drawAssignments = function (field) {
 };
 
 
-// isValid checks the legality of a concept.
-Concept.prototype.isValid = function() {
+// isValid checks the legality of a play.
+Play.prototype.isValid = function() {
 	// TODO: Implement
 	//
-	// IDEAS: More players in a concept than can be in a play.
+	// IDEAS: More players in a play than can be in a play.
 	//		  Inelligable setups. Illegal actions.
 
 	return true;
 };
 
-// getSelected iterates through all the players in a concept and returns
+// getSelected iterates through all the players in a play and returns
 // the one player that is selected. If no one is selected it returns null.
 //
 // TODO: implement logic for selecting multiple players and return an array.
-Concept.prototype.getSelected = function() {
+Play.prototype.getSelected = function() {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -107,9 +107,9 @@ Concept.prototype.getSelected = function() {
 	return [null, null];
 };
 
-// clearSelected iterates through all the players in a concept and makes
+// clearSelected iterates through all the players in a play and makes
 // them all unselected.
-Concept.prototype.clearSelected = function() {
+Play.prototype.clearSelected = function() {
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -122,8 +122,8 @@ Concept.prototype.clearSelected = function() {
 	}
 };
 
-// reset clears the current concept and returns an empty screen.
-Concept.prototype.reset = function() {
+// reset clears the current play and returns an empty screen.
+Play.prototype.reset = function() {
 	this.offensivePlayers = [];
 	this.quarterback = null;
 	this.offensiveLinemen = [];
@@ -132,9 +132,9 @@ Concept.prototype.reset = function() {
 };
 
 // mouseInPlayer iterates through all the offensive and defensive players
-// in a concept. It returns the player that the mouse is inside of or
+// in a play. It returns the player that the mouse is inside of or
 // null if the mouse is not inside any player.
-Concept.prototype.mouseInPlayer = function(field) {
+Play.prototype.mouseInPlayer = function(field) {
 	for(var i = this.offensivePlayers.length-1; i >= 0; i--) {
 		var player = this.offensivePlayers[i];
 		if (player.isMouseInside(field)) {
@@ -153,10 +153,10 @@ Concept.prototype.mouseInPlayer = function(field) {
 };
 
 // save handles everything that need to be done when the user pressed the save
-// button. It checks the validity of the concept and then saves it (if valid)
-Concept.prototype.save = function (path, csrf_token) {
+// button. It checks the validity of the play and then saves it (if valid)
+Play.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
-		var conceptJson = "";
+		var playJson = "";
 		var player;
 
 		for(var i = 0; i < this.offensivePlayers.length; i++) {
@@ -171,40 +171,40 @@ Concept.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		var conceptName = this.name;
-		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+		var playName = this.name;
+		var playUnit = this.unit;
+		playJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: conceptName, unit: conceptUnit, concept: conceptJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, unit: playUnit, play: playJson}
 			).done(function() {
-				console.log("Concept successfully sent to Django to be saved");
+				console.log("Play successfully sent to Django to be saved");
 			}).fail(function() {
-				console.log("Error sending Concept to Django to be saved");
+				console.log("Error sending Play to Django to be saved");
 		});
 	} else {
-		this.feedbackMessage = "Invalid Concept";
+		this.feedbackMessage = "Invalid Play";
 	}
 };
 
-// delete sends a delete request to Django for this concept.
-Concept.prototype.delete = function(path, csrf_token) {
-	var conceptName = this.name;
+// delete sends a delete request to Django for this play.
+Play.prototype.delete = function(path, csrf_token) {
+	var playName = this.name;
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: conceptName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName}
 		).done(function() {
-			console.log("Concept successfully sent to Django to be deleted");
+			console.log("Play successfully sent to Django to be deleted");
 		}).fail(function() {
-			console.log("Error sending Concept to Django to be deleted");
+			console.log("Error sending Play to Django to be deleted");
 	});
 };
 
-// deepCopy returns a new Concept object that is exactly the same as this.
-Concept.prototype.deepCopy = function() {
-	var result = new Concept({
+// deepCopy returns a new Play object that is exactly the same as this.
+Play.prototype.deepCopy = function() {
+	var result = new Play({
 		id: this.id,
 		name: this.name,
 		team: this.team,
@@ -239,27 +239,27 @@ Concept.prototype.deepCopy = function() {
 /*     Non object functions      */
 /*********************************/
 
-function createConceptFromJson(conceptJsonDictionary) {
+function createPlayFromJson(playJsonDictionary) {
 	var quarterback;
 	var offensivePlayersArray = [];
 	var defensivePlayersArray = [];
 	var offensiveLinemenArray = [];
 	var eligibleReceiversArray = [];
 
-	for (var i = 0; i < conceptJsonDictionary.offensivePlayers.length; ++i) {
+	for (var i = 0; i < playJsonDictionary.offensivePlayers.length; ++i) {
 		var player = new Player({
-			x: conceptJsonDictionary.offensivePlayers[i].x,
-			y: conceptJsonDictionary.offensivePlayers[i].y,
-			startX: conceptJsonDictionary.offensivePlayers[i].startX,
-			startY: conceptJsonDictionary.offensivePlayers[i].startY,
-			num: conceptJsonDictionary.offensivePlayers[i].num,
-			pos: conceptJsonDictionary.offensivePlayers[i].pos,
-			red: conceptJsonDictionary.offensivePlayers[i].red,
-			green: conceptJsonDictionary.offensivePlayers[i].green,
-			blue: conceptJsonDictionary.offensivePlayers[i].blue,
-			unit: conceptJsonDictionary.offensivePlayers[i].unit,
-			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
-			siz: conceptJsonDictionary.offensivePlayers[i].siz
+			x: playJsonDictionary.offensivePlayers[i].x,
+			y: playJsonDictionary.offensivePlayers[i].y,
+			startX: playJsonDictionary.offensivePlayers[i].startX,
+			startY: playJsonDictionary.offensivePlayers[i].startY,
+			num: playJsonDictionary.offensivePlayers[i].num,
+			pos: playJsonDictionary.offensivePlayers[i].pos,
+			red: playJsonDictionary.offensivePlayers[i].red,
+			green: playJsonDictionary.offensivePlayers[i].green,
+			blue: playJsonDictionary.offensivePlayers[i].blue,
+			unit: playJsonDictionary.offensivePlayers[i].unit,
+			eligible: playJsonDictionary.offensivePlayers[i].eligible,
+			siz: playJsonDictionary.offensivePlayers[i].siz
 		});
 
 		if (player.pos === "QB") {
@@ -273,25 +273,25 @@ function createConceptFromJson(conceptJsonDictionary) {
 		offensivePlayersArray.push(player);
 	}
 
-	for (var i = 0; i < conceptJsonDictionary.defensivePlayers.length; ++i) {
+	for (var i = 0; i < playJsonDictionary.defensivePlayers.length; ++i) {
 		var player = new Player({
-			x: conceptJsonDictionary.defensivePlayers[i].x,
-			y: conceptJsonDictionary.defensivePlayers[i].y,
-			startX: conceptJsonDictionary.defensivePlayers[i].startX,
-			startY: conceptJsonDictionary.defensivePlayers[i].startY,
-			num: conceptJsonDictionary.defensivePlayers[i].num,
-			pos: conceptJsonDictionary.defensivePlayers[i].pos,
-			red: conceptJsonDictionary.defensivePlayers[i].red,
-			green: conceptJsonDictionary.defensivePlayers[i].green,
-			blue: conceptJsonDictionary.defensivePlayers[i].blue,
-			unit: conceptJsonDictionary.defensivePlayers[i].unit,
-			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
-			siz: conceptJsonDictionary.defensivePlayers[i].siz
+			x: playJsonDictionary.defensivePlayers[i].x,
+			y: playJsonDictionary.defensivePlayers[i].y,
+			startX: playJsonDictionary.defensivePlayers[i].startX,
+			startY: playJsonDictionary.defensivePlayers[i].startY,
+			num: playJsonDictionary.defensivePlayers[i].num,
+			pos: playJsonDictionary.defensivePlayers[i].pos,
+			red: playJsonDictionary.defensivePlayers[i].red,
+			green: playJsonDictionary.defensivePlayers[i].green,
+			blue: playJsonDictionary.defensivePlayers[i].blue,
+			unit: playJsonDictionary.defensivePlayers[i].unit,
+			eligible: playJsonDictionary.defensivePlayers[i].eligible,
+			siz: playJsonDictionary.defensivePlayers[i].siz
 		});
 
-		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
-			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
-				var movement = conceptJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+		if (playJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < playJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = playJsonDictionary.defensivePlayers[i].defensiveMovement[j];
 				player.defensiveMovement.push([movement[0], movement[1]]);
 			}
 		}
@@ -299,21 +299,21 @@ function createConceptFromJson(conceptJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	if (conceptJsonDictionary.offensiveLinemen != null) {
-		for (var i = 0; i < conceptJsonDictionary.offensiveLinemen.length; ++i) {
+	if (playJsonDictionary.offensiveLinemen != null) {
+		for (var i = 0; i < playJsonDictionary.offensiveLinemen.length; ++i) {
 			var player = new Player({
-				x: conceptJsonDictionary.offensiveLinemen[i].x,
-				y: conceptJsonDictionary.offensiveLinemen[i].y,
-				startX: conceptJsonDictionary.offensiveLinemen[i].startX,
-				startY: conceptJsonDictionary.offensiveLinemen[i].startY,
-				num: conceptJsonDictionary.offensiveLinemen[i].num,
-				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
-				red: conceptJsonDictionary.offensiveLinemen[i].red,
-				green: conceptJsonDictionary.offensiveLinemen[i].green,
-				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
-				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
-				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
-				siz: conceptJsonDictionary.offensiveLinemen[i].siz
+				x: playJsonDictionary.offensiveLinemen[i].x,
+				y: playJsonDictionary.offensiveLinemen[i].y,
+				startX: playJsonDictionary.offensiveLinemen[i].startX,
+				startY: playJsonDictionary.offensiveLinemen[i].startY,
+				num: playJsonDictionary.offensiveLinemen[i].num,
+				pos: playJsonDictionary.offensiveLinemen[i].pos,
+				red: playJsonDictionary.offensiveLinemen[i].red,
+				green: playJsonDictionary.offensiveLinemen[i].green,
+				blue: playJsonDictionary.offensiveLinemen[i].blue,
+				unit: playJsonDictionary.offensiveLinemen[i].unit,
+				eligible: playJsonDictionary.offensiveLinemen[i].eligible,
+				siz: playJsonDictionary.offensiveLinemen[i].siz
 			});
 
 			offensiveLinemenArray.push(player);
@@ -321,8 +321,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 	}
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
-			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 
 			if (primaryAssignment.x != null) {
 				for (var k = 0; k < defensivePlayersArray.length; ++k) {
@@ -336,10 +336,10 @@ function createConceptFromJson(conceptJsonDictionary) {
 		}
 	}
 
-	var result = new Concept({
-		name: conceptJsonDictionary.name,
-		team: conceptJsonDictionary.team,
-		unit: conceptJsonDictionary.unit,
+	var result = new Play({
+		name: playJsonDictionary.name,
+		team: playJsonDictionary.team,
+		unit: playJsonDictionary.unit,
 		offensivePlayers: offensivePlayersArray,
 		defensivePlayers: defensivePlayersArray,
 		quarterback: quarterback,
