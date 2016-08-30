@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="updateSideviewWithPlays(this)">
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
 						{{ formation.name }}
 					</button>
 				{% endfor %}
@@ -654,12 +654,12 @@
 
 		$("#full-screen-button").click(function(event) {});
 
-		// updateSideviewWithPlays is called when a formation sideview button
+		// showPlaysInFormation is called when a formation sideview button
 		// is pressed. It changes the sideview header text to the name of the
 		// formation selected. It also removes all the formation buttons and
 		// replaces them with play buttons. It adds clickable back icon to
 		// sideview header div so that you can go back to formations.
-		function updateSideviewWithPlays(selected) {
+		function showPlaysInFormation(selected) {
 			var new_selected = selected;
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = selected.textContent;
