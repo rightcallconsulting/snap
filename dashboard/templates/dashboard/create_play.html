@@ -65,6 +65,7 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var formations = [];
 		var plays = [];
 		var play;
 		var defensivePlayerBar;
@@ -98,8 +99,16 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
+
+			// Load formations from Json passed from databse.
+			var formationJsonFromDatabase = "";
+
+			{% for formation in formations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			{% endfor %}
 			
-			// Load plays from Json passed from database
+			// Load plays from Json passed from database.
 			var playJsonFromDatabase = "";
 
 			{% for play in plays %}

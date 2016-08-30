@@ -20,7 +20,7 @@ var Play = function(config) {
 	this.quarterback = config.quarterback || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
-
+	this.feedbackMessage = config.feedbackMessage || "";
 
     this.playName = config.playName || "";
     this.qb = config.qb || null;
