@@ -275,7 +275,7 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
+				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 					if (currentPlayerSelected.unit === "offense") {
 						currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
 					} else if (currentPlayerSelected.unit === "defense") {
@@ -294,46 +294,6 @@
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
 				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
-				return false;
-			}
-
-			// Handle clicks on players in the PlayerBar. mouseClicked will
-			// have already returned if a player on the field is clicked
-			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
-			if (newPlayerSelected != null) {
-				var playerToAddToPlay = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
-					x: Field.WIDTH / 2,
-					y: field.ballYardLine,
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
-					blue: newPlayerSelected.blue,
-					eligible: newPlayerSelected.eligible
-				});
-
-				play.offensivePlayers.push(playerToAddToPlay);
-
-				return false;
-			}
-
-			// Handle clicks on players in the PlayerBar. mouseClicked will
-			// have already returned if a player on the field is clicked
-			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
-			if (newPlayerSelected != null) {
-				var playerToAddToPlay = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
-					x: Field.WIDTH / 2,
-					y: field.ballYardLine + field.pixelsToYards(30),
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
-					blue: newPlayerSelected.blue,
-					unit: newPlayerSelected.unit
-				});
-
-				play.defensivePlayers.push(playerToAddToPlay);
-
 				return false;
 			}
 
