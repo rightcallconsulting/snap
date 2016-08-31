@@ -258,8 +258,14 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			formation.drawPlayers(field);
-			defensivePlayerBar.draw(field);
-			offensivePlayerBar.draw(field);
+			
+			if (formation.offensivePlayers.length === 0) {
+				defensivePlayerBar.draw(field);
+			}
+
+			if (formation.defensivePlayers.length === 0) {
+				offensivePlayerBar.draw(field);
+			}
 			
 			fill(0, 0, 0);
 			textSize(20);
