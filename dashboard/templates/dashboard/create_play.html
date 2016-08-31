@@ -486,14 +486,24 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
+			var formation = play.formation;
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					formation = formations[i].deepCopy();
+					break;
+				}
+			}
+
 			// If this play name already exists the backend should replace
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
 			for (i in plays) {
-				if (play.formation === plays[i].formation && play.name === plays[i].name) {
+				if (play.formation === plays[i].formation && name === plays[i].name) {
 					plays[i] = play.deepCopy();
 					play.save(path, csrf_token);
 					play = new Play({});
+					play.fromFormation(formation);
 					return;
 				}
 			}
@@ -508,15 +518,8 @@
 
 			// Create a new play to replace the one you just saved on the 
 			// screen. Use the same formation that you were already using.
-			var formation = play.formation;
 			play = new Play({});
-
-			for (i in formations) {
-				if (formation === formations[i].name) {
-					play.fromFormation(formations[i]);
-					break
-				}
-			}
+			play.fromFormation(formation);
 
 			// Update the sidebar to include a new button for the play that
 			// was just saved.

@@ -247,27 +247,29 @@ Play.prototype.deepCopy = function() {
 // fromFormation takes a formation object as an argument and creates a play
 // with the same players in the formation.
 Play.prototype.fromFormation = function(formation) {
-	this.unit = formation.unit;
-	this.formation = formation.name;
+	var play_formation = formation.deepCopy();
 
-	for (var i = 0; i < formation.quarterback.length; ++i) {
-		this.quarterback.push(formation.quarterback[i].deepCopy());
+	this.unit = play_formation.unit;
+	this.formation = play_formation.name;
+
+	for (var i = 0; i < play_formation.quarterback.length; ++i) {
+		this.quarterback.push(play_formation.quarterback[i].deepCopy());
 	}
 
-	for (var i = 0; i < formation.offensivePlayers.length; ++i) {
-		this.offensivePlayers.push(formation.offensivePlayers[i].deepCopy());
+	for (var i = 0; i < play_formation.offensivePlayers.length; ++i) {
+		this.offensivePlayers.push(play_formation.offensivePlayers[i].deepCopy());
 	}
 
-	for (var i = 0; i < formation.defensivePlayers.length; ++i) {
-		this.defensivePlayers.push(formation.defensivePlayers[i].deepCopy());
+	for (var i = 0; i < play_formation.defensivePlayers.length; ++i) {
+		this.defensivePlayers.push(play_formation.defensivePlayers[i].deepCopy());
 	}
 
-	for (var i = 0; i < formation.offensiveLinemen.length; ++i) {
-		this.offensiveLinemen.push(formation.offensiveLinemen[i].deepCopy());
+	for (var i = 0; i < play_formation.offensiveLinemen.length; ++i) {
+		this.offensiveLinemen.push(play_formation.offensiveLinemen[i].deepCopy());
 	}
 
-	for (var i = 0; i < formation.eligibleReceivers.length; ++i) {
-		this.eligibleReceivers.push(formation.eligibleReceivers[i].deepCopy());
+	for (var i = 0; i < play_formation.eligibleReceivers.length; ++i) {
+		this.eligibleReceivers.push(play_formation.eligibleReceivers[i].deepCopy());
 	}
 };
 

@@ -718,8 +718,13 @@ Player.prototype.deepCopy = function() {
 		name: this.name
 	});
 
-	result.route = this.route;
-	result.defensiveMovement = this.defensiveMovement;
+	for (var i = 0; i < this.route.length; ++i) {
+		result.route.push([this.route[i][0], this.route[i][1]])
+	}
+
+	for (var i = 0; i < this.defensiveMovement.length; ++i) {
+		result.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
+	}
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
 		var blockingAssignment = this.blockingAssignmentArray[i];
