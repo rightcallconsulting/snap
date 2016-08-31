@@ -306,6 +306,13 @@ function createPlayFromJson(playJsonDictionary) {
 			eligibleReceiversArray.push(player);
 		}
 
+		if (playJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
+				var route = playJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
+			}
+		}
+
 		offensivePlayersArray.push(player);
 	}
 
@@ -357,13 +364,6 @@ function createPlayFromJson(playJsonDictionary) {
 	}
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		if (playJsonDictionary.offensivePlayers[i].route != null) {
-			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].defensiveMovement.length; ++j) {
-				var route = playJsonDictionary.offensivePlayers[i].route[j];
-				player.route.push([route[0], route[1]]);
-			}
-		}
-
 		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 
