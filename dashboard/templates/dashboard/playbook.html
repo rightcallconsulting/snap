@@ -72,17 +72,17 @@
 					<tr>
 						<td>
 							<button id="play-button" name="button">
-								{% include "quiz/check_button.html" %}
+								{% include "quiz/play_button.html" %}
 							</button>
 						</td>
 						<td>
 							<button id="pause-button" name="button">
-								{% include "quiz/clear_button.html" %}
+								{% include "quiz/pause_button.html" %}
 							</button>
 						</td>
 						<td>
 							<button id="restart-button" name="button">
-								{% include "quiz/clear_button.html" %}
+								{% include "quiz/refresh_button.html" %}
 							</button>
 						</td>
 						<td>
@@ -297,353 +297,25 @@
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
 		
-		function mousePressed() {
-			
-			// return false to prevent default behavior
-			return false;
-		}
+		function mousePressed() {};
 
-		function mouseDragged() {
+		function mouseDragged() {};
 
-			// return false to prevent default behavior
-			return false;
-		};
+		function mouseReleased() {};
 
-		function mouseReleased() {
-			// Handle clicks on players in the Play
-			var currentPlayerSelected = play.getSelected()[0];
-			var newPlayerSelected = play.mouseInPlayer(field);
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
+		function keyPressed() {};
 
-			// If no one is currently selected and no one is clicked on do 
-			// nothing. Else if no one is currently selected and someone is 
-			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then draw 
-			// appropriate assignment based on players unit return. Else if 
-			// the currently selected player is the same as the newly selected 
-			// player then clear all selections and return. Else two seperate 
-			// players are assigned to those variables and handle accordingly.
-			if (currentPlayerSelected === null && newPlayerSelected === null) {
-				// No one is selected and no one is clicked on.
-				// Do nothing		
-			} else if (currentPlayerSelected === null) {
-				newPlayerSelected.click();
-				return false;
-			} else if (newPlayerSelected === null) {
-				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-					if (currentPlayerSelected.unit === "offense") {
-						if (currentPlayerSelected.eligible) {
-							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
-						} else {
-							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
-						}
-					} else if (currentPlayerSelected.unit === "defense") {
-						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
-					}
-				} else {
-					play.clearSelected();
-				}
-				return false;
-			} else if (newPlayerSelected === currentPlayerSelected) {
-				play.clearSelected();
-				return false;
-			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-				play.clearSelected();
-				newPlayerSelected.click();
-				return false;
-			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
-				return false;
-			}
-
-			// return false to prevent default behavior
-			return false;
-		};
-
-		function keyPressed() {
-			// Get the play-name html element if it exists. This is what
-			// will be updated.
-			var play_name = document.getElementById("play-name");
-
-			// If the header box is selected update the play name according
-			// to the key press. Otherwise, create a block.
-			if ($("#header-box").hasClass("selected") && play_name != null) {
-				// Get the currently selected sideview button so that you can
-				// unselect it when the name in the main view's top bar is
-				// changed.
-				var selected = document.getElementById("selected");
-
-				// If there was a previously selected button remove it's selected
-				// id attribute and change it from btn-success to btn-primary.
-				if (selected != null) {
-					selected.removeAttribute("id");
-					selected.removeAttribute("class");
-					selected.setAttribute("class", "btn btn-primary sideview-button");
-				}
-
-				// Get the main view's top bar so that you can tell is the
-				// string has become empty and needs to be replaced with a
-				// placeholder message.
-				var string_length = play_name.textContent.length;
-
-				if (keyCode == BACKSPACE) {
-					if (play_name != null) {
-						if(string_length > 0) {
-							play_name.textContent = play_name.textContent.slice(0, string_length-1);
-						}
-					}
-					return false;
-				} else if (keyCode == 32) {
-					if (play_name != null && string_length < 100) {
-						play_name.textContent += ' ';
-					}
-					return false;
-				}
-			} else if (play.getSelected()[0] != null) {
-				var playerSelcted = play.getSelected()[0];
-				var playerSelctedIndex = play.getSelected()[1];
-				var what_kind_of_dog_is_this = key;
-				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelcted.unit == "offense") {
-						play.offensivePlayers[playerSelctedIndex].blockingAssignmentArray = [];
-						play.offensivePlayers[playerSelctedIndex].route = [];
-					} else if (playerSelcted.unit == "defense") {
-						play.defensivePlayers[playerSelctedIndex].defensiveMovement = [];
-					}
-					return false;
-				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray.push("Money Block");
-				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Right");
-				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Left");
-				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
-				}
-
-				return false;	
-			}
-		};
-
-		function keyTyped() {
-			if ($("#header-box").hasClass("selected")) {
-				var play_name = document.getElementById("play-name");
-
-				if (play_name === null) {
-					play_name = document.createElement("p");
-					play_name.setAttribute("id", "play-name");
-				}
-
-				document.getElementById("header-box").appendChild(play_name);
-				var string_length = play_name.textContent.length;
-
-				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-					removeHeaderPlaceholder();
-					removeHeaderError();
-
-					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-						if (string_length <= 100){
-							play_name.textContent += key;
-						}
-					}
-
-					// return false to prevent default behavior
-					return false;
-				}
-			}
-		};
+		function keyTyped() {};
 
 		//*******************************************************************//
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
-		
-		// When the main container is clicked unselect the interactive header.
-		// This function will not call when the header is clicked because that
-		// function stops propagation of the event.
-		$(document).click(function(event) {
-			if ($("#header-box").hasClass("selected")) {
-				$("#header-box").removeClass("selected");
-				var play_name = document.getElementById("play-name");
 
-				if (play_name === null) {
-					addHeaderPlaceholder();
-				}
+		$("#play-button").click(function(event) {});
 
-				if (play_name != null && play_name.textContent.length === 0) {
-					document.getElementById("header-box").removeChild(play_name);
-					addHeaderPlaceholder();
-				}
-			}
-		});
+		$("#pause-button").click(function(event) {});
 
-		// When the header box is selected have it change colors and remove the
-		// placeholder if it exists
-		$("#header-box").click(function(event) {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			$("#header-box").addClass("selected");
-			event.stopPropagation();
-		});
-
-		$("#save-button").click(function(event) {
-			// Don't save the play with one of the players selected.
-			play.clearSelected();
-
-			var placeholder_message = document.getElementById("placeholder-message");
-			var play_name = document.getElementById("play-name");
-			var path = "/plays/create";
-			var csrf_token = "{{ csrf_token }}";
-
-			// If there is a placeholder message remove it and add an error.
-			if (placeholder_message != null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// I don't think this will ever happen, but I'm not sure.
-			if (play_name === null) {
-				removeHeaderPlaceholder();
-				addHeaderError();
-				return;
-			}
-
-			// If the play_name is 0 characters add an error.
-			if (play_name != null && play_name.textContent.length === 0) {
-				document.getElementById("header-box").removeChild(play_name);
-				addHeaderError();
-				return;
-			}
-
-			// Deselect the currently selected sidebar because that play is
-			// going to dissappear from the screen.
-			var selected_sideview_button = document.getElementById("selected");
-			
-			if (selected_sideview_button != null) {
-				selected_sideview_button.removeAttribute("id");
-				selected_sideview_button.removeAttribute("class");
-				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
-			}
-
-			// var name gets the textContent of the header box.
-			var name = play_name.textContent;
-
-			// Update the top interactive text bar to have a placeholder again.
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			var formation = play.formation;
-
-			for (i in formations) {
-				if (formation === formations[i].name) {
-					formation = formations[i].deepCopy();
-					break;
-				}
-			}
-
-			// If this play name already exists the backend should replace
-			// the old one and not save a new one. The frontend should also
-			// update the existing version it has and return.
-			for (i in plays) {
-				if (play.formation === plays[i].formation && name === plays[i].name) {
-					plays[i] = play.deepCopy();
-					play.save(path, csrf_token);
-					play = new Play({});
-					play.fromFormation(formation);
-					return;
-				}
-			}
-
-			// If the play name does not exist the backend will create a
-			// new database entry. The frontend should push this play to
-			// its plays array and add a new button for it to the sidebar.
-			play.name = name;
-			play.team = teamID;
-			play.save(path, csrf_token);
-			plays.push(play);
-
-			// Create a new play to replace the one you just saved on the 
-			// screen. Use the same formation that you were already using.
-			play = new Play({});
-			play.fromFormation(formation);
-
-			// Update the sidebar to include a new button for the play that
-			// was just saved.
-			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
-			// Create a button for the new play.
-			var new_play_button = document.createElement("button");
-			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
-			new_play_button.setAttribute("name", name);
-			new_play_button.setAttribute("class", "btn btn-primary sideview-button");
-			new_play_button.textContent = name;
-
-			// Add the new button to the sideview button div.
-			sideview_buttons_div.appendChild(new_play_button);
-			return;
-		});
-
-		$("#clear-button").click(function(event) {
-			// Get the currently selected sideview button.
-			var selected = document.getElementById("selected");
-
-			// If selected is not undefined then send a delete request for
-			// the play that is currently selected.
-			if (selected != null) {
-				// Set the path and cross-site forgery token vars.
-				var path = "/plays/create";
-				var csrf_token = "{{ csrf_token }}";
-
-				// Delete the play from the backend.
-				play.delete(path, csrf_token);
-
-				// Remove the play from the play array. If this didn't
-				// happen and the user deleted a play and added one with the
-				// same name without refreshing the page, the new play would
-				// get saved properly but no button would be added dynamically
-				// because a play with the same name would exist in the
-				// plays array.
-				for (var i = 0; i < plays.length; ++i) {
-					if (play.formation === plays[i].formation && play.name === plays[i].name) {
-						plays.splice(i, 1);
-						break;
-					}
-				}
-
-				// Delete the button from the sidebar. After this step the
-				// play should be entirely removed from the backend and the
-				// frontend.
-				var sideview_buttons_div = document.getElementById("sideview-buttons");
-				sideview_buttons_div.removeChild(selected);
-			}
-
-			// Update the top bar to display the Placeholder message.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
-			// Create a new play to replace the one you just deleted on the 
-			// screen. Use the same formation that you were already using.
-			var formation = play.formation;
-			play = new Play({});
-
-			for (i in formations) {
-				if (formation === formations[i].name) {
-					play.fromFormation(formations[i]);
-				}
-			}
-		});
+		$("#restart-button").click(function(event) {});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
@@ -670,8 +342,6 @@
 
 			resizeMainViewObjects();
 		});
-
-		$("#full-screen-button").click(function(event) {});
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
@@ -812,98 +482,8 @@
 			}
 		};
 
-		//*******************************************************************//
-		// Utility Functions                                                 //
-		//*******************************************************************//
-
-		function removeHeaderPlaceholder() {
-			var header_box = document.getElementById("header-box");
-			var placeholder_message = document.getElementById("placeholder-message");
-			$("#header-box").removeClass("placeholder");
-			
-			if (placeholder_message != null) {
-				header_box.removeChild(placeholder_message);
-			}
-		};
-
-		function removeHeaderError() {
-			var header_box = document.getElementById("header-box");
-			var error_message = document.getElementById("error-message");
-			$("#header-box").removeClass("error");
-			
-			if (error_message != null) {
-				header_box.removeChild(error_message);
-			}
-		};
-
-		function removeHeaderName() {
-			var header_box = document.getElementById("header-box");
-			var play_name = document.getElementById("play-name");
-
-			if (play_name != null) {
-				header_box.removeChild(play_name);
-			}
-		};
-
-		function addHeaderPlaceholder() {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-
-			var header_box = document.getElementById("header-box");
-			$("#header-box").addClass("placeholder");
-
-			var placeholder = document.createElement("p");
-			placeholder.setAttribute("id", "placeholder-message");
-			placeholder.textContent = "Enter Play Name";
-			header_box.appendChild(placeholder);
-		};
-
-		function addHeaderError() {
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-
-			var header_box = document.getElementById("header-box");
-			$("#header-box").removeClass("selected placeholder").addClass("error");
-
-			var error_message = document.createElement("p");
-			error_message.setAttribute("id", "error-message");
-			error_message.textContent = "Invalid Play Name";
-			header_box.appendChild(error_message);
-		};
-
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
 		function resizeMainViewObjects() {};
-
-		function drawDebuggingInfo() {
-			textAlign(CENTER);
-
-			var textX = field.width / 2;
-			var textY = field.height * 0.40;
-			var textYSpacing = 30;
-
-			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
-			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
-			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
-			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
-
-			fill(0, 0, 0);
-			textSize(20);
-
-			text(mouseXString, textX, textY);
-			
-			textY += textYSpacing;
-			text(mouseYString, textX, textY);
-			
-			textY += textYSpacing;
-			text(widthString, textX, textY);
-			
-			textY += textYSpacing;
-			text(heightString, textX, textY);
-
-			fill(176,176,176);
-		};
 	</script>
 {% endblock %}
