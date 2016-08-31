@@ -217,6 +217,7 @@ Play.prototype.deepCopy = function() {
 		name: this.name,
 		team: this.team,
 		unit: this.unit,
+		formation: this.formation,
 		feedbackMessage: this.feedbackMessage
 	});
 
@@ -356,6 +357,13 @@ function createPlayFromJson(playJsonDictionary) {
 	}
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
+		if (playJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].defensiveMovement.length; ++j) {
+				var route = playJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
+			}
+		}
+
 		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 
@@ -375,6 +383,7 @@ function createPlayFromJson(playJsonDictionary) {
 		name: playJsonDictionary.name,
 		team: playJsonDictionary.team,
 		unit: playJsonDictionary.unit,
+		formation: playJsonDictionary.formation,
 		offensivePlayers: offensivePlayersArray,
 		defensivePlayers: defensivePlayersArray,
 		quarterback: quarterback,
