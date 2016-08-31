@@ -24,6 +24,8 @@
 		playBeingCreated.playName = "";
 
 		$('#play-image-header').text(currentFormation.playName);
+
+		playBeingCreated.fromFormation(currentFormation);
 	});
 
 	$('.defensive-formation-button').click(function() {

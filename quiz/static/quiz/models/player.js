@@ -744,6 +744,31 @@ Player.prototype.deepCopy = function() {
 
 // Dylan's line
 
+//Moves one step toward point x,y
+Player.prototype.moveTo = function(x, y) {
+	var xDist = (x-this.x);
+		if(x < 0) {
+			xDist = 0-this.x;
+		}
+		var yDist = (y-this.y);
+		if(y < 0){
+		yDist = 0-this.y;
+	}
+	
+	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
+	var numMoves = hDist / this.speed;
+	
+	if(numMoves < 1) {
+		return true;
+	}
+	var xRate = xDist / numMoves;
+	var yRate = yDist / numMoves;
+
+	this.x += xRate;
+	this.y += yRate;
+	return false;
+};
+
 Player.prototype.getX = function(field) {
 	return field.yardsToPixels(this.getYardX() - field.getXOffset());
 };
@@ -839,29 +864,6 @@ Player.prototype.resetToStart = function(){
 	this.x = this.startX;
 	this.y = this.startY;
 	this.currentBreak = 0;
-};
-
-//Moves one step toward point x,y
-Player.prototype.moveTo = function(x, y){
-  var xDist = (x-this.x);
-  if(x < 0){
-	xDist = 0-this.x;
-  }
-  var yDist = (y-this.y);
-  if(y < 0){
-	yDist = 0-this.y;
-  }
-  var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
-  var numMoves = hDist / this.speed;
-  if(numMoves < 1){
-	return true;
-  }
-  var xRate = xDist / numMoves;
-  var yRate = yDist / numMoves;
-
-  this.x += xRate;
-  this.y += yRate;
-  return false;
 };
 
 Player.prototype.moveAtAngle = function(distance, theta){
