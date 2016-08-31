@@ -10,7 +10,7 @@
 						<td>
 							<form>
 								<select name="units" class="unit-form" id="unit-form" onchange="changeSideview(this)">
-									{% if selected_unit == "offense" %}
+									{% if unit == "offense" %}
 										<option value="offensive playbook">
 											&nbsp;&nbsp;&nbsp;Offensive Playbook
 										</option>
@@ -39,7 +39,7 @@
 							</form>
 						</td>
 						<td>
-							{% if selected_unit == "offense" %}
+							{% if unit == "offense" %}
 								<a href="/quiz/create_formation" id="formation-link">
 							{% else %}
 								<a href="/quiz/create_defense_formation" id="formation-link">
@@ -51,7 +51,7 @@
 								</a>
 						</td>
 						<td>
-							{% if selected_unit == "offense" %}
+							{% if unit == "offense" %}
 								<a href="/quiz/create_play" id="play-link">
 							{% else %}
 								<a href="/quiz/create_defense_formation" id="play-link">
@@ -186,8 +186,9 @@
 			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Play
+			// Create new Play and new Concept
 			play = new Play({});
+			concept = new Concept({});
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -292,6 +293,9 @@
 			play.drawAssignments(field);
 			play.drawPlayers(field);
 
+			concept.drawAssignments(field);
+			concept.drawPlayers(field);
+
 			fill(176,176,176);
 		};
 
@@ -355,7 +359,7 @@
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
 			} else if (sideview_content === "defensive looks") {
-
+				showDefensiveLooks();
 			}
 		};
 
@@ -447,6 +451,15 @@
 					sideview_buttons.appendChild(play_button);
 				}
 			}
+		};
+
+		// showConcepts updates the sideview to include all of the concepts in
+		// the playbook.
+		function showDefensiveLooks() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Defensive Looks";
+
+			$("#sideview-buttons").empty();
 		};
 
 		function changeSelectedPlay(selected) {

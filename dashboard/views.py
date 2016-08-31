@@ -169,41 +169,6 @@ def change_password(request):
 		})
 
 @login_required
-def playbook(request, unit="offense"):
-	if request.user.myuser.is_a_player:
-		player = request.user.player
-		order = ['Random', 'Difficulty', ]
-		return render(request, 'dashboard/playerbook.html', {
-			'page_header': 'PLAYBOOK',
-			'player': player,
-			'quiz_order_options': order,
-		})
-	else:
-		team = request.user.coach.team
-		
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		
-		play_id_array = []
-		
-		unique_defensive_formations_dict = {}
-		
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
-		
-		return render(request, 'dashboard/playbook.html', {
-			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
-			'team': team,
-			'play_id_array': play_id_array,
-			'page_header': 'PLAYBOOK',
-			'selected_unit': unit,
-		})
-
-@login_required
 def todo(request):
 	if request.user.myuser.is_a_player:
 		player = request.user.player
@@ -333,6 +298,32 @@ def analytics(request):
 		'analytics': analytics,
 		'groups': groups,
 	})
+
+# Playbook
+@login_required
+def playbook(request, unit="offense"):
+	if request.user.myuser.is_a_player:
+		player = request.user.player
+		order = ['Random', 'Difficulty', ]
+		return render(request, 'dashboard/playerbook.html', {
+			'page_header': 'PLAYBOOK',
+			'player': player,
+			'quiz_order_options': order,
+		})
+	else:
+		team = request.user.coach.team
+		
+		formations = Formation.objects.filter(team=team)
+		plays = Play.objects.filter(team=team)
+		concepts = Concept.objects.filter(team=team)
+		
+		return render(request, 'dashboard/playbook.html', {
+			'unit': unit,
+			'formations': formations,
+			'plays': plays,
+			'concepts': concepts,
+			'page_header': 'PLAYBOOK'
+		})
 
 # Formations
 @login_required

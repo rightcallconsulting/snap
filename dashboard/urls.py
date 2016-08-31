@@ -14,10 +14,12 @@ urlpatterns = [
 	url(r'^logout$', views.auth_logout, name='auth_logout'),
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
-	url(r'^playbook$', views.playbook, name='playbook'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
 	url(r'^analytics$', views.analytics, name='analytics'),
+
+	# Playbook
+	url(r'^playbook$', views.playbook, name='playbook'),
 
 	# Formations
 	url(r'^formations/create$', views.create_formation, name='create_formation'),
