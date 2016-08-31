@@ -720,26 +720,7 @@ Formation.prototype.mouseInDefensivePlayer = function(field) {
 };
 
 Formation.prototype.validFormation = function(){
-  if(this.unit === "defense"){
-    return this.defensivePlayers.length === 11;
-  }
-  else{
-    if(this.offensivePlayers.length !== 11){
-      return false;
-    }
-    var ballY = this.offensiveLinemen[2].startY;
-    var playersOnLine = 0;
-    for(var i = 0; i < this.offensivePlayers.length; i++){
-      var py = this.offensivePlayers[i].startY;
-      if(py <= ballY + 0.5 && py >= ballY - 1){
-        playersOnLine++;
-      }
-    }
-    if(playersOnLine !== 7){
-      return false;
-    }
-    return true;
-  }
+	return true;
 }
 
 Formation.prototype.deletePlayer = function(player){
