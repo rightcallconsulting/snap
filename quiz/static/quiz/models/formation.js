@@ -19,6 +19,7 @@ var Formation = function(config){
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 
+	this.qb = config.qb || [];
 	this.playName = config.playName || "";
 	this.changeablePlayers = config.changeablePlayers || [];
 	this.optionsToCreate = config.optionsToCreate || [];
@@ -28,6 +29,7 @@ var Formation = function(config){
 	this.created_at = config.created_at || null;
 	this.positions = config.positions || [];
 	this.dline = config.dline || [];
+	this.oline = config.oline || [];
 	this.linebackers = config.linebackers || [];
 	this.cornerbacks = config.cornerbacks || [];
 	this.safeties = config.safeties || [];

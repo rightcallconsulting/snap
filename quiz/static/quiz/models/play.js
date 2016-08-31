@@ -23,6 +23,7 @@ var Play = function(config) {
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
 
+	this.qb = config.qb || [];
     this.playName = config.playName || "";
     this.qb = config.qb || null;
     this.oline = config.oline || [];
