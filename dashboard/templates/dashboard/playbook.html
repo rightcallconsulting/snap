@@ -9,7 +9,7 @@
 					<tr>
 						<td>
 							<form>
-								<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
+								<select name="units" class="unit-form" id="unit-form" onchange="changeSideview(this)">
 									{% if selected_unit == "offense" %}
 										<option value="offense">
 											&nbsp;&nbsp;&nbsp;Offensive Playbook
@@ -337,7 +337,7 @@
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
-		function showFormations(selected) {
+		function showFormations() {
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
 
@@ -381,7 +381,7 @@
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
-			back_arrow.setAttribute("onclick", "showFormations(this)");
+			back_arrow.setAttribute("onclick", "showFormations()");
 
 			sideview_header.textContent = formation_name;
 
