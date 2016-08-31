@@ -12,19 +12,27 @@
 								<select name="units" class="unit-form" id="unit-form" onchange="changeUnit(this)">
 									{% if selected_unit == "offense" %}
 										<option value="offense">
-											&nbsp;&nbsp;&nbsp;OFFENSE
-										</option>
-
-										<option value="defense">
-											&nbsp;&nbsp;&nbsp;DEFENSE
-										</option>
-									{% else %}
-										<option value="defense">
-											&nbsp;&nbsp;&nbsp;DEFENSE
+											&nbsp;&nbsp;&nbsp;Offensive Playbook
 										</option>
 
 										<option value="offense">
-											&nbsp;&nbsp;&nbsp;OFFENSE
+											&nbsp;&nbsp;&nbsp;Offensive Concepts
+										</option>
+
+										<option value="defense">
+											&nbsp;&nbsp;&nbsp;Defensive Looks
+										</option>
+									{% else %}
+										<option value="defense">
+											&nbsp;&nbsp;&nbsp;Defensive Playbook
+										</option>
+
+										<option value="defense">
+											&nbsp;&nbsp;&nbsp;Defensive Concepts
+										</option>
+
+										<option value="offense">
+											&nbsp;&nbsp;&nbsp;Offensive Plays
 										</option>
 									{% endif %}
 								</select>
@@ -60,7 +68,7 @@
 		</div><!--/action-boxes-->
 		
 		<div id="display-box" class="col-md-8 bordered-div">
-			<div id="header-box" class="interactive-header display-header">
+			<div id="header-box" class="static-header display-header">
 				Playbook
 			</div>
 
@@ -222,19 +230,8 @@
 
 				if (playerYYard < -10) {
 					player.y = 0;
-				} else if (playerYYard > field.ballYardLine) {
-					player.y = field.ballYardLine;
-				}
-
-				// If a player is ineligible they must be on the line of scrimmage.
-				// Otherwise if they are within a yard of the line of scrimmage they
-				// should automatically snap onto the line.
-				if (!player.eligible) {
-					player.y = field.ballYardLine;
-				} else {
-					if (player.y > field.ballYardLine - 1) {
-						player.y = field.ballYardLine;
-					} 
+				} else if (playerYYard > 110) {
+					player.y = 110;
 				}
 			}
 
@@ -268,8 +265,8 @@
 					player.x = 53.33;
 				}
 
-				if (playerYYard < field.ballYardLine+player.siz) {
-					player.y = field.ballYardLine+player.siz;
+				if (playerYYard < -10) {
+					player.y = -10;
 				} else if (playerYYard > 110) {
 					player.y = 110;
 				}
@@ -282,14 +279,9 @@
 		function drawOpening() {
 			field.drawBackground(play, height, width);
 
-			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
-
 			play.drawAssignments(field);
 			play.drawPlayers(field);
-			
-			fill(0, 0, 0);
-			textSize(20);
-			text(play.feedbackMessage, 330, 20);
+
 			fill(176,176,176);
 		};
 
