@@ -98,118 +98,18 @@
 				</table>
 			</div>
 		</div>
-		
-		<div class = "stacked-col" id="offensive-playbook-col">
-			{% if selected_unit == "offense" %}
-				<div class="col-lg-4 secondary-content-area top" id="choose-offensive-formation-box">
-			{% else %}
-				<div class="col-lg-4 secondary-content-area top hidden" id="choose-offensive-formation-box">
-			{% endif %}
-					<div class="dash-header text-center">
-						<span>
-							<h4>Formations</h4>
-						</span>
-					</div>
-					
-					<div class="scrollable-table">
-						<table class="formation-list three-column-table">
-							{% for formation in offensive_formations %}
-								{% if forloop.counter|add:"-1"|divisibleby:3 %}
-									<tr>
-								{% endif %}
-										<td>
-											<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-										</td>
-								{% if forloop.counter|divisibleby:3 %}
-									</tr>
-								{% endif %}
-							{% endfor %}
-							
-							{% if offensive_formations|length|add:"-1"|divisibleby:3 %}
-										<td></td>
-										<td></td>
-									</tr>
-							{% elif offensive_formations|length|add:"-2"|divisibleby:3 %}
-										<td></td>
-									</tr>
-							{% endif %}
-						</table>
-					</div>
-				</div>
-			
-			{% if selected_unit == "offense" %}
-				<div class="col-lg-4 secondary-content-area top hidden" id="choose-defensive-formation-box">
-			{% else %}
-				<div class="col-lg-4 secondary-content-area top" id="choose-defensive-formation-box">
-			{% endif %}
-					<div class="dash-header text-center">
-						<span>
-							<h4>Defensive Plays</h4>
-						</span>
-					</div>
-					
-					<div class="scrollable-table">
-						<table class="formation-list three-column-table">
-								{% for formation in unique_defensive_formations %}
-									{% if forloop.counter|add:"-1"|divisibleby:3 %}
-										<tr>
-									{% endif %}
-											<td>
-												<input class="bounceIn animation-delay5 login-link defensive-play-button" id="{{formation.id}}" type="submit" value="{{formation}}">
-											</td>
-									{% if forloop.counter|divisibleby:3 %}
-										</tr>
-									{% endif %}
-								{% endfor %}
 
-								{% if unique_defensive_formations|add:"-1"|length|divisibleby:3 %}
-											<td></td>
-											<td></td>
-										</tr>
-								{% elif unique_defensive_formations|add:"-2"|length|divisibleby:3 %}
-											<td></td>
-										</tr>
-								{% endif %}
-						</table>
-					</div>
-				</div>
-						
-			{% if selected_unit == "offense" %}
-				<div class="col-lg-4 secondary-content-area" id="select-play-box">
-			{% else %}
-				<div class="col-lg-4 hidden secondary-content-area" id="select-play-box">
-			{% endif %}
-					<div class="dash-header text-center">
-						<span>
-							<h4 id="change-plays-header">
-								Plays
-							</h4>
-						</span>
-					</div>
-								
-					<div class="scrollable-table" id="draw-plays">
-						{# <form id="choose-play" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
-						{# </form> #}
-					</div>
-				</div>
-						
-			{% if selected_unit == "offense" %}
-				<div class="col-lg-4 secondary-content-area hidden" id="select-offense-box">
-			{% else %}
-				<div class="col-lg-4 secondary-content-area" id="select-offense-box">
-			{% endif %}
-					<div class="dash-header text-center">
-						<span>
-							<h4 id="change-plays-header">
-								Offensive Looks
-							</h4>
-						</span>
-					</div>		
-					<div class="scrollable-table" id="draw-offensive-formations">
-						{# <form id="choose-offense" class="" action="/tests/{{test.id}}/edit" method="post"> {% csrf_token %} #}
-						{# </form>#}
-					</div>
-				</div>
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header">
+				Formations
+			</div>
+			<div id="sideview-buttons">
+				{% for formation in formations %}
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
+						{{ formation.name }}
+					</button>
+				{% endfor %}
+			</div>
 		</div>
 
 		<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
@@ -220,38 +120,167 @@
 
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
-
 	<script type="text/javascript">
-		var changeUnit = function(sel) {
-			var offenseBox = document.getElementById('choose-offensive-formation-box');
-			var defenseBox = document.getElementById('choose-defensive-formation-box');
-			var selectPlayBox = document.getElementById('select-play-box');
-			var selectOffenseBox = document.getElementById('select-offense-box');
-			var formationLink = document.getElementById('formation-link');
-			var playLink = document.getElementById('play-link');
-			document.getElementById('play-image-header').innerHTML = "Play";
+		var formations = [];
+		var plays = [];
+		var play;
+		var teamID = document.getElementById("team-id").getAttribute("team-id");
+
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
+		
+		//*******************************************************************//
+		// p5.js Event Listeners                                             //
+		//*******************************************************************//
+
+		// showFormations loads the formation buttons back into the sideview
+		// removes the back icon. It also adds all the formation buttons back.
+		function showFormations(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Formations";
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in formations) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", formations[i].name);
+				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
+				formation_button.textContent = formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
+			}
+
+			play = new Play({});
+		};
+
+		// showPlaysInFormation is called when a formation sideview button
+		// is pressed. It changes the sideview header text to the name of the
+		// formation selected. It also removes all the formation buttons and
+		// replaces them with play buttons. It adds clickable back icon to
+		// sideview header div so that you can go back to formations.
+		function showPlaysInFormation(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+
+			var formation_selected = selected;
+			var formation_name = formation_selected.getAttribute("name");
+
+			for (i in formations) {
+				if (formation_name === formations[i].name) {
+					formation_selected = formations[i].deepCopy();
+					break;
+				}
+			}
+
+			$("#sideview-buttons").empty();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showFormations(this)");
+
+			sideview_header.textContent = formation_name;
+
+			sideview_header.appendChild(back_arrow);
+
+			play.fromFormation(formation_selected);
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
 			
-			if(sel.value === 'offense') {
-				defensePlayToDraw = null;
-				defenseBox.classList.add('hidden');
-				selectOffenseBox.classList.add('hidden');
-				offenseBox.classList.remove('hidden');
-				selectPlayBox.classList.remove('hidden');
-				formationLink.href = "/quiz/create_formation";
-				playLink.href = "/quiz/create_play";
-			} else {
-				playToDraw = null;
-				selectPlayBox.classList.add('hidden');
-				offenseBox.classList.add('hidden');
-				defenseBox.classList.remove('hidden');
-				selectOffenseBox.classList.remove('hidden');
-				formationLink.href = "/quiz/create_defense_formation";
-				playLink.href = "/quiz/create_defense_formation";
+			for (i in plays) {
+				if (plays[i].formation === formation_name) {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+					play_button.textContent = plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
 			}
 		};
-	</script>
 
-	<script type="text/javascript">
+		function changeSelectedPlay(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Create a new play to replace the one you just deselected on the 
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
+			play = new Play({});
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i]);
+					break;
+				}
+			}
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var play_name = new_selected.getAttribute("name");
+
+				for (i in plays) {
+					if (play.formation === plays[i].formation && play_name === plays[i].name) {
+						play = plays[i].deepCopy();
+						break;
+					}
+				}
+
+				var header_text_content = play_name;
+				play_name = document.getElementById("play-name");
+
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
+
+				removeHeaderPlaceholder();
+				removeHeaderError();
+				removeHeaderName();
+				play_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(play_name);
+			}
+		};
+		
+		//*******************************************************************//
+		// jQuery Event Listener Functions                                   //
+		//*******************************************************************//
+		
+		//*******************************************************************//
+		// Utility Functions                                                 //
+		//*******************************************************************//
+
 		var playClicked;
 		var formationID;
 		var formationToDraw;
