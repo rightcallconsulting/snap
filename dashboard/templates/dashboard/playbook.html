@@ -59,39 +59,40 @@
 			</table>
 		</div><!--/action-boxes-->
 		
-		<div class="main-content-area dash-col display-play-box" id="display-play-box">
-			<div class="dash-header text-center">
-				<span>
-					<h4 id="play-image-header">
-						Play
-					</h4>
-				</span>
+		<div id="display-box" class="col-md-8 bordered-div">
+			<div id="header-box" class="interactive-header display-header">
+				Playbook
 			</div>
-			
-			<div id="display-play-box-2">
+
+			<div id="quiz-box">
 			</div>
-			
-			<div class="holds-play-buttons">
+
+			<div class="display-buttons">
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="restart-button" name="button">
-								{% include "quiz/refresh_button.html" %}
-							</button>
-						</td>
-						<td>
 							<button id="play-button" name="button">
-								{% include "quiz/play_button.html" %}
+								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
 						<td>
 							<button id="pause-button" name="button">
-								{% include "quiz/pause_button.html" %}
+								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="edit-button" name="button">
-								Edit Play
+							<button id="restart-button" name="button">
+								{% include "quiz/clear_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-in-button" name="button">
+								{% include "quiz/zoom_in_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button">
+								{% include "quiz/zoom_out_button.html" %}
 							</button>
 						</td>
 					</tr>
@@ -112,10 +113,9 @@
 			</div>
 		</div>
 
-		<div id="test-id" data-test-id="{{test.id}}" style="display: none;"></div>
-		<div id="play-id-array" data-play-id-array="{{play_id_array}}" style="display: none;"></div>
-		<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-	</div><!--/playbook-->
+	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
+	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
+	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
 {% endblock %}
 
 {% block javascript %}
@@ -129,10 +129,549 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
-		
+
+		function setup() {
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
+
+			// Create canvas and add it to the main view
+			var quiz_box_div = document.getElementById("quiz-box");
+			var myCanvas = createCanvas(width, height);
+			
+			field.height = height;
+			field.width = width;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
+			background(58, 135, 70);
+
+			myCanvas.parent("quiz-box");
+
+			// Load formations from Json passed from databse.
+			var formationJsonFromDatabase = "";
+
+			{% for formation in formations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			{% endfor %}
+			
+			// Load plays from Json passed from database.
+			var playJsonFromDatabase = "";
+
+			{% for play in plays %}
+			playJsonFromDatabase = '{{ play.playJson|safe }}';
+			plays.push(createPlayFromJson(JSON.parse(playJsonFromDatabase)));
+			{% endfor %}
+
+			// Create new Play
+			play = new Play({});
+
+			window.onresize = function() {
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
+				var sideview = document.getElementById("sideview");
+				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
+
+				resizeCanvas(width, height);
+				field.height = height;
+				field.width = width;
+				
+				resizeMainViewObjects();
+			};
+
+			drawOpening();
+		};
+
+		function draw() {
+			// Limitations on where offensive players can be
+			var numberOfOffensivePlayers = play.offensivePlayers.length;
+			
+			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
+				var player = play.offensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = 0;
+				} else if (playerYYard > field.ballYardLine) {
+					player.y = field.ballYardLine;
+				}
+
+				// If a player is ineligible they must be on the line of scrimmage.
+				// Otherwise if they are within a yard of the line of scrimmage they
+				// should automatically snap onto the line.
+				if (!player.eligible) {
+					player.y = field.ballYardLine;
+				} else {
+					if (player.y > field.ballYardLine - 1) {
+						player.y = field.ballYardLine;
+					} 
+				}
+			}
+
+			// Limitations on where defensive players can be
+			var numberOfDefensivePlayers = play.defensivePlayers.length;
+			
+			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
+				var player = play.defensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < field.ballYardLine+player.siz) {
+					player.y = field.ballYardLine+player.siz;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
+			}
+
+			// Draw opening
+			drawOpening();
+		};
+
+		function drawOpening() {
+			field.drawBackground(play, height, width);
+
+			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+
+			play.drawAssignments(field);
+			play.drawPlayers(field);
+			
+			fill(0, 0, 0);
+			textSize(20);
+			text(play.feedbackMessage, 330, 20);
+			fill(176,176,176);
+		};
+
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
+		
+		function mousePressed() {
+			
+			// return false to prevent default behavior
+			return false;
+		}
+
+		function mouseDragged() {
+
+			// return false to prevent default behavior
+			return false;
+		};
+
+		function mouseReleased() {
+			// Handle clicks on players in the Play
+			var currentPlayerSelected = play.getSelected()[0];
+			var newPlayerSelected = play.mouseInPlayer(field);
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
+
+			// If no one is currently selected and no one is clicked on do 
+			// nothing. Else if no one is currently selected and someone is 
+			// clicked on, then select that player and return. Else if someone
+			// is currently selected and empty field is clicked on then draw 
+			// appropriate assignment based on players unit return. Else if 
+			// the currently selected player is the same as the newly selected 
+			// player then clear all selections and return. Else two seperate 
+			// players are assigned to those variables and handle accordingly.
+			if (currentPlayerSelected === null && newPlayerSelected === null) {
+				// No one is selected and no one is clicked on.
+				// Do nothing		
+			} else if (currentPlayerSelected === null) {
+				newPlayerSelected.click();
+				return false;
+			} else if (newPlayerSelected === null) {
+				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+					if (currentPlayerSelected.unit === "offense") {
+						if (currentPlayerSelected.eligible) {
+							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
+						} else {
+							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+						}
+					} else if (currentPlayerSelected.unit === "defense") {
+						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
+					}
+				} else {
+					play.clearSelected();
+				}
+				return false;
+			} else if (newPlayerSelected === currentPlayerSelected) {
+				play.clearSelected();
+				return false;
+			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+				play.clearSelected();
+				newPlayerSelected.click();
+				return false;
+			} else if (currentPlayerSelected.unit === "offense") {
+				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+				return false;
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
+
+		function keyPressed() {
+			// Get the play-name html element if it exists. This is what
+			// will be updated.
+			var play_name = document.getElementById("play-name");
+
+			// If the header box is selected update the play name according
+			// to the key press. Otherwise, create a block.
+			if ($("#header-box").hasClass("selected") && play_name != null) {
+				// Get the currently selected sideview button so that you can
+				// unselect it when the name in the main view's top bar is
+				// changed.
+				var selected = document.getElementById("selected");
+
+				// If there was a previously selected button remove it's selected
+				// id attribute and change it from btn-success to btn-primary.
+				if (selected != null) {
+					selected.removeAttribute("id");
+					selected.removeAttribute("class");
+					selected.setAttribute("class", "btn btn-primary sideview-button");
+				}
+
+				// Get the main view's top bar so that you can tell is the
+				// string has become empty and needs to be replaced with a
+				// placeholder message.
+				var string_length = play_name.textContent.length;
+
+				if (keyCode == BACKSPACE) {
+					if (play_name != null) {
+						if(string_length > 0) {
+							play_name.textContent = play_name.textContent.slice(0, string_length-1);
+						}
+					}
+					return false;
+				} else if (keyCode == 32) {
+					if (play_name != null && string_length < 100) {
+						play_name.textContent += ' ';
+					}
+					return false;
+				}
+			} else if (play.getSelected()[0] != null) {
+				var playerSelcted = play.getSelected()[0];
+				var playerSelctedIndex = play.getSelected()[1];
+				var what_kind_of_dog_is_this = key;
+				if (keyCode == BACKSPACE || keyCode == DELETE) {
+					if (playerSelcted.unit == "offense") {
+						play.offensivePlayers[playerSelctedIndex].blockingAssignmentArray = [];
+						play.offensivePlayers[playerSelctedIndex].route = [];
+					} else if (playerSelcted.unit == "defense") {
+						play.defensivePlayers[playerSelctedIndex].defensiveMovement = [];
+					}
+					return false;
+				} else if (key === "Q") {
+					playerSelcted.blockingAssignmentArray.push("Money Block");
+				} else if (key === "W") {
+					playerSelcted.blockingAssignmentArray.push("Down Block Right");
+				} else if (key === "E") {
+					playerSelcted.blockingAssignmentArray.push("Down Block Left");
+				} else if (key === "R") {
+					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
+				} else if (key === "T") {
+					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
+				} else if (key === "Y") {
+					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
+				} else if (key === "U") {
+					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+				}
+
+				return false;	
+			}
+		};
+
+		function keyTyped() {
+			if ($("#header-box").hasClass("selected")) {
+				var play_name = document.getElementById("play-name");
+
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
+
+				document.getElementById("header-box").appendChild(play_name);
+				var string_length = play_name.textContent.length;
+
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
+
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							play_name.textContent += key;
+						}
+					}
+
+					// return false to prevent default behavior
+					return false;
+				}
+			}
+		};
+
+		//*******************************************************************//
+		// jQuery Event Listener Functions                                   //
+		//*******************************************************************//
+		
+		// When the main container is clicked unselect the interactive header.
+		// This function will not call when the header is clicked because that
+		// function stops propagation of the event.
+		$(document).click(function(event) {
+			if ($("#header-box").hasClass("selected")) {
+				$("#header-box").removeClass("selected");
+				var play_name = document.getElementById("play-name");
+
+				if (play_name === null) {
+					addHeaderPlaceholder();
+				}
+
+				if (play_name != null && play_name.textContent.length === 0) {
+					document.getElementById("header-box").removeChild(play_name);
+					addHeaderPlaceholder();
+				}
+			}
+		});
+
+		// When the header box is selected have it change colors and remove the
+		// placeholder if it exists
+		$("#header-box").click(function(event) {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			$("#header-box").addClass("selected");
+			event.stopPropagation();
+		});
+
+		$("#save-button").click(function(event) {
+			// Don't save the play with one of the players selected.
+			play.clearSelected();
+
+			var placeholder_message = document.getElementById("placeholder-message");
+			var play_name = document.getElementById("play-name");
+			var path = "/plays/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			// If there is a placeholder message remove it and add an error.
+			if (placeholder_message != null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
+
+			// I don't think this will ever happen, but I'm not sure.
+			if (play_name === null) {
+				removeHeaderPlaceholder();
+				addHeaderError();
+				return;
+			}
+
+			// If the play_name is 0 characters add an error.
+			if (play_name != null && play_name.textContent.length === 0) {
+				document.getElementById("header-box").removeChild(play_name);
+				addHeaderError();
+				return;
+			}
+
+			// Deselect the currently selected sidebar because that play is
+			// going to dissappear from the screen.
+			var selected_sideview_button = document.getElementById("selected");
+			
+			if (selected_sideview_button != null) {
+				selected_sideview_button.removeAttribute("id");
+				selected_sideview_button.removeAttribute("class");
+				selected_sideview_button.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// var name gets the textContent of the header box.
+			var name = play_name.textContent;
+
+			// Update the top interactive text bar to have a placeholder again.
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			var formation = play.formation;
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					formation = formations[i].deepCopy();
+					break;
+				}
+			}
+
+			// If this play name already exists the backend should replace
+			// the old one and not save a new one. The frontend should also
+			// update the existing version it has and return.
+			for (i in plays) {
+				if (play.formation === plays[i].formation && name === plays[i].name) {
+					plays[i] = play.deepCopy();
+					play.save(path, csrf_token);
+					play = new Play({});
+					play.fromFormation(formation);
+					return;
+				}
+			}
+
+			// If the play name does not exist the backend will create a
+			// new database entry. The frontend should push this play to
+			// its plays array and add a new button for it to the sidebar.
+			play.name = name;
+			play.team = teamID;
+			play.save(path, csrf_token);
+			plays.push(play);
+
+			// Create a new play to replace the one you just saved on the 
+			// screen. Use the same formation that you were already using.
+			play = new Play({});
+			play.fromFormation(formation);
+
+			// Update the sidebar to include a new button for the play that
+			// was just saved.
+			var sideview_buttons_div = document.getElementById("sideview-buttons");
+			
+			// Create a button for the new play.
+			var new_play_button = document.createElement("button");
+			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+			new_play_button.setAttribute("name", name);
+			new_play_button.setAttribute("class", "btn btn-primary sideview-button");
+			new_play_button.textContent = name;
+
+			// Add the new button to the sideview button div.
+			sideview_buttons_div.appendChild(new_play_button);
+			return;
+		});
+
+		$("#clear-button").click(function(event) {
+			// Get the currently selected sideview button.
+			var selected = document.getElementById("selected");
+
+			// If selected is not undefined then send a delete request for
+			// the play that is currently selected.
+			if (selected != null) {
+				// Set the path and cross-site forgery token vars.
+				var path = "/plays/create";
+				var csrf_token = "{{ csrf_token }}";
+
+				// Delete the play from the backend.
+				play.delete(path, csrf_token);
+
+				// Remove the play from the play array. If this didn't
+				// happen and the user deleted a play and added one with the
+				// same name without refreshing the page, the new play would
+				// get saved properly but no button would be added dynamically
+				// because a play with the same name would exist in the
+				// plays array.
+				for (var i = 0; i < plays.length; ++i) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name) {
+						plays.splice(i, 1);
+						break;
+					}
+				}
+
+				// Delete the button from the sidebar. After this step the
+				// play should be entirely removed from the backend and the
+				// frontend.
+				var sideview_buttons_div = document.getElementById("sideview-buttons");
+				sideview_buttons_div.removeChild(selected);
+			}
+
+			// Update the top bar to display the Placeholder message.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Create a new play to replace the one you just deleted on the 
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
+			play = new Play({});
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i]);
+				}
+			}
+		});
+
+		$("#zoom-in-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeMainViewObjects();
+		});
+
+		$("#zoom-out-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeMainViewObjects();
+		});
+
+		$("#full-screen-button").click(function(event) {});
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
@@ -272,200 +811,99 @@
 				document.getElementById("header-box").appendChild(play_name);
 			}
 		};
-		
-		//*******************************************************************//
-		// jQuery Event Listener Functions                                   //
-		//*******************************************************************//
-		
+
 		//*******************************************************************//
 		// Utility Functions                                                 //
 		//*******************************************************************//
 
-		var playClicked;
-		var formationID;
-		var formationToDraw;
-		var playToDraw;
-		var offensivePlayToDraw; //defense
-		var duplicateDefensiveFormations; //defense
-		var removedPlaysFromFormation = [];
-		var testID = $('#test-id').data('test-id');
-		var playIDArray = $('#play-id-array').data('play-id-array');
-		
-		$('#draw-plays').on('mouseover', '.play', function() {
-			if(playToDraw){
-				playToDraw.resetPlayers(defensePlay)
-				playToDraw.setAllRoutes();
+		function removeHeaderPlaceholder() {
+			var header_box = document.getElementById("header-box");
+			var placeholder_message = document.getElementById("placeholder-message");
+			$("#header-box").removeClass("placeholder");
+			
+			if (placeholder_message != null) {
+				header_box.removeChild(placeholder_message);
 			}
-			playToDraw = plays.filter(function(play) {
-				return play.id === Number(this.id);
-			}.bind(this))[0];
-			playToDraw.formation = formationToDraw;
-			$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
-			playScene = false;
-		});
-
-		$('#draw-plays').on('click', '.play', function() {
-			$('#choose-play').data('button', this.name);
-				playClicked = $(this);
-		});
-
-		$('.existing-plays').on('click', '.play-remove', function() {
-			modifyPlayWithTest($(this));
-			$(this).fadeOut();
-			$('.show-plays #'+this.id).removeClass('play-remove-button');
-			$('.show-plays #'+this.id).addClass('btn-success play-add-button');
-			playIDArray = _.without(playIDArray, Number(this.id))
-		});
-
-		$("#play-button").click(function() {
-			playScene = true;
-		});
-
-		$("#pause-button").click(function() {
-			playScene = false;
-		});
-
-		$("#restart-button").click(function() {
-			playScene = false;
-			playToDraw.resetPlayers(defensePlay);
-			playToDraw.setAllRoutes();
-		});
-
-		$(".formation").click(function() {
-			var formationName = this.value;
-			formationID = Number(this.id);
-			formationToDraw = formations.filter(function(formation) {
-				return formation.id === formationID;
-		  	})[0];
-			var playArray = []
-			$('#change-plays-header').text('Plays: ' + this.value)
-			$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR){
-				data4.forEach(function(play){
-					if(play.fields.formation === formationID){
-						var playObject = {
-						  playName : play.fields.name,
-						  ID : play.pk
-						}
-						playArray.push(playObject);
-					}
-				})
-				displayPlays(playArray);
-			})
-			$('#play-image-header').text(formationToDraw.name+ ": ");
-		});
-
-		$(".defensive-play-button").click(function() {
-			var playID = Number(this.id);
-			var playName = this.value;
-			defensePlayName = playName;
-			var defensivePlay = null;
-			var duplicateDefensiveFormations = [];
-			var offensiveFormationIDs = [];
-			var offensiveFormationObjects = [];
-			$('.show-plays').text('');
-			document.getElementById('play-image-header').innerHTML = playName;
-			$.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
-				data.forEach(function(defensiveFormation){
-					if(defensiveFormation.fields.name === playName){
-						defensivePlay = createFormationFromJSON(defensiveFormation);
-						if(defensiveFormation.fields.offensiveFormationID){
-							offensiveFormationIDs.push(defensiveFormation.fields.offensiveFormationID);
-							duplicateDefensiveFormations.push(defensivePlay);
-						}
-					}
-				});
-				$.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-					data.forEach(function(formation){
-						if(offensiveFormationIDs.indexOf(formation.pk) >= 0){
-							var newFormation = createFormationFromJSON(formation);
-							offensiveFormationObjects.push(newFormation);
-						}
-					});
-
-					//Create the player objects from json for the offensive and defensive formations
-					//Create buttons from offensiveFormationObjects array
-					displayOffensiveFormations(offensiveFormationObjects);
-
-					//Change the main play view to display the first version of the play
-					$('#play-image-header').text(this.value);
-				});
-			});
-		});
-
-		// AJAX for posting
-		function modifyPlayWithTest(playDomElement) {
-			playID = playDomElement[0].id;
-			if(playDomElement.hasClass('play-add-button')){
-				addOrRemovePlay = "add"
-			}
-			else if (playDomElement.hasClass('play-remove-button')){
-				addOrRemovePlay = "remove"
-			}
-				$.post( "/tests/"+ testID + "/edit", { play_id: playID, add_or_remove: addOrRemovePlay });
-				if(playDomElement.hasClass('play-add-button')){
-					playDomElement.addClass('play-remove-button');
-					playDomElement.removeClass('play-add-button');
-					playDomElement.removeClass('btn-success');
-					playIDArray.push(Number(playDomElement[0].id));
-					$('#formation-show-'+formationID).append("<input class='btn btn-sm bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-				}
-				else if(playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove')){
-					playDomElement.addClass('play-add-button');
-					playDomElement.addClass('btn-success');
-					playDomElement.removeClass('play-remove-button');
-					playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-					$('#'+playDomElement[0].id+'.play-remove').remove();
-				}
 		};
 
-		function displayOffensiveFormations(formationArray){
-			var drawPlays = document.getElementById('draw-offensive-formations');
-			var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
-			for(var i = 0; i < formationArray.length; i++){
-				if(i % 3 === 0){
-					newHTML += "<tr>";
-				}
-				var formation = formationArray[i];
-				newHTML += "<td><input class='bounceIn offensive-formation-button' id='"+ formation.id+"' type='submit' value='"+ formation.name+"'></td>";
-				if(i % 3 === 2){
-					newHTML += "</tr>";
-				}
+		function removeHeaderError() {
+			var header_box = document.getElementById("header-box");
+			var error_message = document.getElementById("error-message");
+			$("#header-box").removeClass("error");
+			
+			if (error_message != null) {
+				header_box.removeChild(error_message);
 			}
-			if(formationArray.length % 3 === 1){
-				newHTML += "<td></td><td></td></tr>";
-			}else if(formationArray.length % 3 === 2){
-				newHTML += "<td></td></tr>";
-			}
-			newHTML += "</table></div>";
-			drawPlays.innerHTML = newHTML;
 		};
 
-		function displayPlays(playArray) {
-			var drawPlays = document.getElementById('draw-plays');
-				var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list three-column-table\">";
-				for(var i = 0; i < playArray.length; i++){
-					if(i % 3 === 0){
-						newHTML += "<tr>";
-					}
-					var play = playArray[i];
-					if(playIDArray.includes(play.ID)){
-						newHTML += "<td><input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
-					}
-					else{
-						newHTML += "<td><input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'></td>";
-					}
-					if(i % 3 === 2){
-						newHTML += "</tr>";
-					}
-				}
-				if(playArray.length % 3 === 1){
-					newHTML += "<td></td><td></td></tr>";
-				}else if(playArray.length % 3 === 2){
-					newHTML += "<td></td></tr>";
-				}
-				newHTML += "</table></div>";
-				drawPlays.innerHTML = newHTML;
+		function removeHeaderName() {
+			var header_box = document.getElementById("header-box");
+			var play_name = document.getElementById("play-name");
+
+			if (play_name != null) {
+				header_box.removeChild(play_name);
+			}
+		};
+
+		function addHeaderPlaceholder() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+
+			var header_box = document.getElementById("header-box");
+			$("#header-box").addClass("placeholder");
+
+			var placeholder = document.createElement("p");
+			placeholder.setAttribute("id", "placeholder-message");
+			placeholder.textContent = "Enter Play Name";
+			header_box.appendChild(placeholder);
+		};
+
+		function addHeaderError() {
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+
+			var header_box = document.getElementById("header-box");
+			$("#header-box").removeClass("selected placeholder").addClass("error");
+
+			var error_message = document.createElement("p");
+			error_message.setAttribute("id", "error-message");
+			error_message.textContent = "Invalid Play Name";
+			header_box.appendChild(error_message);
+		};
+
+		// resizeMainViewObjects resizes all of the buttons and bars in our
+		// main view. It is called when the user resizes their browser.
+		function resizeMainViewObjects() {};
+
+		function drawDebuggingInfo() {
+			textAlign(CENTER);
+
+			var textX = field.width / 2;
+			var textY = field.height * 0.40;
+			var textYSpacing = 30;
+
+			var mouseXString = "MouseX: " + mouseX.toFixed(2).toString() + " px, " + field.getYardX(mouseX).toFixed(2).toString() + " yd";
+			var mouseYString = "MouseY: " + mouseY.toFixed(2).toString() + " px, " + field.getYardY(mouseY).toFixed(2).toString() + " yd";
+			var widthString = "Width: " + field.width.toFixed(2).toString() + " px, " + field.pixelsToYards(field.width).toFixed(2).toString() + " yd";
+			var heightString = "Height: " + field.height.toFixed(2).toString() + " px, " + field.pixelsToYards(field.height).toFixed(2).toString() + " yd";
+
+			fill(0, 0, 0);
+			textSize(20);
+
+			text(mouseXString, textX, textY);
+			
+			textY += textYSpacing;
+			text(mouseYString, textX, textY);
+			
+			textY += textYSpacing;
+			text(widthString, textX, textY);
+			
+			textY += textYSpacing;
+			text(heightString, textX, textY);
+
+			fill(176,176,176);
 		};
 	</script>
-	<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
 {% endblock %}
