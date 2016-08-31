@@ -16,6 +16,7 @@ urlpatterns = [
 	url(r'^create_play$', views.create_play, name='create_play'),
 	url(r'^formation_quiz$', views.FormationQuizView.as_view(), name='formation_quiz'),
 	url(r'^concept_identification_quiz$', views.concept_identification_quiz, name='concept_identification_quiz'),
+	url(r'^formation_identification_quiz$', views.formation_identification_quiz, name='formation_identification_quiz'),
 	url(r'^pass_zones$', views.PassZonesQuizView.as_view(), name='pass_zones'),
 	url(r'^alignment_quiz$', views.AlignmentQuizView.as_view(), name='alignment_quiz'),
 	url(r'^defense_play_quiz$', views.defense_play_quiz, name='defense_play_quiz'),

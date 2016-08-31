@@ -14,8 +14,8 @@ var Player = function(config) {
 	// Main player member variables
 	this.x = config.x || width/2;
 	this.y = config.y || height/2;
-	this.startX = config.startX || width/2;
-	this.startY = config.startY || height/2;
+	this.startX = this.x;
+	this.startY = this.y;
 	this.siz = config.siz || 2;
 	this.red = config.red || 0;
 	this.blue = config.blue || 0;
@@ -830,6 +830,8 @@ Player.prototype.setColor = function(newFillColor) { this.fill = newFillColor; }
 
 Player.prototype.clearRoute = function() { this.route = []; };
 
+Player.prototype.checkPosition = function(test) { test.scoreboard.feedbackMessage = "You are at: " + this.x + "," + this.y; };
+
 // isMouseInside returns true if the mouse coordinates are somewhere inside
 // this player.
 Player.prototype.isMouseInside = function(field) {
@@ -857,62 +859,107 @@ Player.prototype.containsPoint = function(x, y){
 	return dist <= this.siz/2;
 }
 
-// reset 
+// moveAtAngle takes a distance and an angle and moves this player.
+Player.prototype.moveAtAngle = function(distance, theta) {
+	var xDist = distance*Math.cos(theta);
+	var yDist = -1*distance*Math.sin(theta);
+	this.moveTo(this.startX + xDist, this.startY + yDist);
+};
+
+// resetToStart moves teh player back to their original picture.
 Player.prototype.resetToStart = function(){
 	this.x = this.startX;
 	this.y = this.startY;
 	this.currentBreak = 0;
 };
 
-/******************************************************************************************************************************/
-/******************************************************************************************************************************/
-
-Player.prototype.moveAtAngle = function(distance, theta){
-  var xDist = distance*Math.cos(theta);
-  var yDist = -1*distance*Math.sin(theta);
-  this.moveTo(this.startX + xDist, this.startY + yDist);
-};
-
-//zone is an array [x1,y1,x2,y2]
+// zone is an array [x1,y1,x2,y2]
 Player.prototype.coverZone = function(zone, play){
+	var newX = (zone[2] + zone[0])/2;
+	var newY = (zone[3] + zone[1])/2;
 
-  var newX = (zone[2] + zone[0])/2;
-  var newY = (zone[3] + zone[1])/2;
+	var playersInZone = getPlayersFromZone(zone, play);
+	var closestPlayer = null;
 
-  var playersInZone = getPlayersFromZone(zone, play);
-  var closestPlayer = null;
-
-  for(var i = 0; i < playersInZone.length; i++){
-	var p = playersInZone[i];
-	if(p !== this){
-	  if(closestPlayer === null){
-	   closestPlayer = p;
-	 }else{
-	  var xDist = this.x - closestPlayer.x;
-	  var yDist = this.y - closestPlayer.y;
-	  var d1 = Math.sqrt(xDist*xDist + yDist*yDist);
-	  xDist = this.x - p.x;
-	  yDist = this.y - p.y;
-	  var d2 = Math.sqrt(xDist*xDist + yDist*yDist);
-	  if(d2 < d1){
-		closestPlayer = p;
-	  }
+	for(var i = 0; i < playersInZone.length; i++) {
+		var player = playersInZone[i];
+		if (player !== this) {
+			if (closestPlayer === null) {
+				closestPlayer = player;
+			} else {
+				var xDist = this.x - closestPlayer.x;
+				var yDist = this.y - closestPlayer.y;
+				var d1 = Math.sqrt(xDist*xDist + yDist*yDist);
+				xDist = this.x - player.x;
+				yDist = this.y - player.y;
+				var d2 = Math.sqrt(xDist*xDist + yDist*yDist);
+				if(d2 < d1){
+					closestPlayer = player;
+				}
+			}
+		}
 	}
 
-  }
-}
+	if(closestPlayer !== null){
+		newX = closestPlayer.x;
+		newY = closestPlayer.y;
+	}
 
-if(closestPlayer !== null){
-  newX = closestPlayer.x;
-  newY = closestPlayer.y;
-}
+	this.moveTo(newX, newY);
+};
 
-this.moveTo(newX, newY);
+/******************************************************************************************************************************/
+/******************************************************************************************************************************/
+
+// Display a lines that shows the player's route
+Player.prototype.displayRoute = function(coords){
+	if(coords.length < 1){
+		return;
+	}
+
+	fill(255, 255, 255);
+	strokeWeight(2);
+	stroke(100);
+	line(this.startX, this.startY, coords[0][0], coords[0][1]);
+
+	for (var i = 0; i < coords.length - 1; i++) {
+		line(coords[i][0], coords[i][1], coords[i+1][0], coords[i+1][1]);
+	}
+
+	strokeWeight(1);
+};
+
+Player.prototype.drawRouteCoordinates = function(field) {
+	this.breakPoints = this.routeCoordinates.slice();
+	this.drawRoute(field);
+};
+
+Player.prototype.drawBreakPoints = function(field) {
+	var x1 = field.getTranslatedX(this.startX);
+	var y1 = field.getTranslatedY(this.startY);
+	
+	if (this.breakPoints.length > 0) {
+		var x2 = field.getTranslatedX(this.breakPoints[0][0]);
+		var y2 = field.getTranslatedY(this.breakPoints[0][1]);
+		stroke(255, 0, 0);
+		line(x1,y1,x2,y2);
+		noStroke();
+		fill(255, 0, 0);
+	}
+
+	for(var i = 0; i < this.breakPoints.length - 1; i++) {
+		x1 = field.getTranslatedX(this.breakPoints[i][0]);
+		y1 = field.getTranslatedY(this.breakPoints[i][1]);
+		var x2 = field.getTranslatedX(this.breakPoints[i+1][0]);
+		var y2 = field.getTranslatedY(this.breakPoints[i+1][1]);
+		stroke(255, 0, 0);
+		line(x1, y1, x2, y2);
+		noStroke();
+		fill(255, 0, 0);
+	}
 };
 
 Player.prototype.coverMan = function(opponent) {
-	//this.y -= 1 * this.speed; //TBI
-
 	var oppX = opponent.x;
 	var oppY = opponent.y;
 	var xDist = (oppX-this.x);
@@ -922,141 +969,141 @@ Player.prototype.coverMan = function(opponent) {
 	var xRate = xDist / numMoves;
 	var yRate = yDist / numMoves;
 
-	if(abs(xDist) > 10){
-	  this.x += xRate;
-	}else{
-	  this.x += xRate/2.0;
+	if(abs(xDist) > 10) {
+		this.x += xRate;
+	}else {
+		this.x += xRate/2.0;
 	}
-	if(yDist > 0){
-	  this.y += yRate/2.0;
-	  this.x += xRate/2.0;
-	}
-	else if(yDist < -10){
-	  this.y += yRate;
-	}else{
-	  this.y += yRate/2.0;
-	}
-  };
 
-  Player.prototype.blitzGapScene = function(){
+	if(yDist > 0) {
+		this.y += yRate/2.0;
+		this.x += xRate/2.0;
+	} else if(yDist < -10) {
+		this.y += yRate;
+	} else {
+		this.y += yRate/2.0;
+	}
+};
+
+Player.prototype.blitzGapScene = function() {
 	var gapX = this.gapXPoint;
 	var gapY = this.gapYPoint;
 	this.moveTo(gapX, gapY);
-  }
+};
 
-  Player.prototype.coverZoneScene = function(){
+Player.prototype.coverZoneScene = function() {
 	var zoneX = this.zoneXPoint;
 	var zoneY = this.zoneYPoint;
 	this.moveTo(zoneX, zoneY);
-  }
+};
 
-  Player.prototype.coverManScene = function(receiver){
+Player.prototype.coverManScene = function(receiver) {
 	var destX = receiver.x;
 	var destY = receiver.y + 2;
 	this.moveTo(destX, destY);
-  };
+};
 
 
-  Player.prototype.blockMan = function(opponent, shade, isPull) {
+Player.prototype.blockMan = function(opponent, shade, isPull) {
 	var oppX = opponent.x + shade * opponent.siz / 2;
 	var oppY = opponent.y + opponent.siz/2;
 	this.moveTo(oppX, oppY);
-  };
+};
 
-  Player.prototype.isInsideZone = function(zone){
-	if(zone[0] > zone[2]){
-	  var tmp = zone[0];
-	  zone[0] = zone[2];
-	  zone[2] = tmp;
+Player.prototype.isInsideZone = function(zone) {
+	if(zone[0] > zone[2]) {
+		var tmp = zone[0];
+		zone[0] = zone[2];
+		zone[2] = tmp;
 	}
-	if(zone[1] > zone[3]){
-	  var tmp = zone[1];
-	  zone[1] = zone[3];
-	  zone[3] = tmp;
+
+	if(zone[1] > zone[3]) {
+		var tmp = zone[1];
+		zone[1] = zone[3];
+		zone[3] = tmp;
 	}
+
 	return this.x > zone[0] && this.y > zone[1] && this.x < zone[2] && this.y < zone[3];
-  };
+};
 
-  Player.prototype.runFade = function() {
+Player.prototype.runFade = function() {
 	this.breakPoints = [];
 	var dest1 = getDestination(175, PI/2, this.x, this.y);
 	this.breakPoints.push(dest1);
-  };
-
-  Player.prototype.checkPosition = function(test) {
-  //TBI
-  test.scoreboard.feedbackMessage = "You are at: " + this.x + "," + this.y;
-}
+};
 
 Player.prototype.runPost = function(direction) {
-  this.breakPoints = [];
-  var dest1 = getDestination(80, PI/2, this.x, this.y);
-  this.breakPoints.push(dest1);
-  this.breakPoints.push(getDestination(200, direction*PI/4, dest1[0], dest1[1]));
+	this.breakPoints = [];
+	var dest1 = getDestination(80, PI/2, this.x, this.y);
+	this.breakPoints.push(dest1);
+	this.breakPoints.push(getDestination(200, direction*PI/4, dest1[0], dest1[1]));
 };
 
 Player.prototype.runDeepPost = function(direction) {
-  this.breakPoints = [];
-  var dest1 = getDestination(120, PI/2, this.x, this.y);
-  this.breakPoints.push(dest1);
-  this.breakPoints.push(getDestination(150, PI/2 - direction*PI/4, dest1[0], dest1[1]));
+	this.breakPoints = [];
+	var dest1 = getDestination(120, PI/2, this.x, this.y);
+	this.breakPoints.push(dest1);
+	this.breakPoints.push(getDestination(150, PI/2 - direction*PI/4, dest1[0], dest1[1]));
 };
 
 Player.prototype.runDeepCorner = function(direction) {
-  this.breakPoints = [];
-  var dest1 = getDestination(100, PI/2, this.x, this.y);
-  this.breakPoints.push(dest1);
-  var dest2 = getDestination(40, PI/2 + direction*PI/4, dest1[0], dest1[2]);
-  this.breakPoints.push(dest2);
-  this.breakPoints.push(getDestination(100, PI/2 - direction*PI/4, dest2[0], dest2[1]));
+	this.breakPoints = [];
+	var dest1 = getDestination(100, PI/2, this.x, this.y);
+	this.breakPoints.push(dest1);
+	var dest2 = getDestination(40, PI/2 + direction*PI/4, dest1[0], dest1[2]);
+	this.breakPoints.push(dest2);
+	this.breakPoints.push(getDestination(100, PI/2 - direction*PI/4, dest2[0], dest2[1]));
 };
 
 Player.prototype.runSlant = function(direction) {
-  this.breakPoints = [];
-  var dest1 = getDestination(30, PI/2, this.x, this.y);
-  this.breakPoints.push(dest1);
-  this.breakPoints.push(getDestination(200, PI/2 - direction*PI/4, dest1[0], dest1[1]));
+	this.breakPoints = [];
+	var dest1 = getDestination(30, PI/2, this.x, this.y);
+	this.breakPoints.push(dest1);
+	this.breakPoints.push(getDestination(200, PI/2 - direction*PI/4, dest1[0], dest1[1]));
 };
 
 Player.prototype.runArrow = function(direction) {
-  this.breakPoints = [];
-  var dest1 = getDestination(300, PI/2 - direction * PI/3, this.x, this.y);
-  this.breakPoints.push(dest1);
+	this.breakPoints = [];
+	var dest1 = getDestination(300, PI/2 - direction * PI/3, this.x, this.y);
+	this.breakPoints.push(dest1);
 };
 
 //0 - slant, 1 - arrow, 2 - post, 3 - deep post, 4 - corner
 Player.prototype.setRoute = function(val, center){
-  this.currentBreak = 0;
-  var direction = 1;
-  if(this.startX > center.startX){
-	direction = -1;
-  }
-  switch(val){
-	case 0: this.runSlant(direction); break;
-	case 1: this.runArrow(direction); break;
-	case 2: this.runPost(direction); break;
-	case 3: this.runDeepPost(direction); break;
-	case 4: this.runFade(); break;//this.runDeepCorner(center, direction); break;
-	case 5: this.runDeepCorner(direction); break;//this.runFade(); break;
-  }
+	this.currentBreak = 0;
+	var direction = 1;
+	if(this.startX > center.startX) {
+		direction = -1;
+	}
+
+	switch(val) {
+		case 0: this.runSlant(direction); break;
+		case 1: this.runArrow(direction); break;
+		case 2: this.runPost(direction); break;
+		case 3: this.runDeepPost(direction); break;
+		case 4: this.runFade(); break;//this.runDeepCorner(center, direction); break;
+		case 5: this.runDeepCorner(direction); break;//this.runFade(); break;
+	}
 };
 
 Player.prototype.runRoute = function(){
-  if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length){
-	return; //TODO - dono
-  }
-  if(this.moveTo(this.breakPoints[this.currentBreak][0], this.breakPoints[this.currentBreak][1])){
-	this.currentBreak++;
-  }
+	if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length) {
+		return; //TODO - dono
+	}
+	
+	if(this.moveTo(this.breakPoints[this.currentBreak][0], this.breakPoints[this.currentBreak][1])) {
+		this.currentBreak++;
+	}
 };
 
 Player.prototype.runMotion = function(){
-  if(this.currentMotionBreak < 0 || this.currentMotionBreak >= this.motionCoords.length){
-	return; //TODO - dono
-  }
-  if(this.moveTo(this.motionCoords[this.currentMotionBreak][0], this.motionCoords[this.currentMotionBreak][1])){
-	this.currentMotionBreak++;
-  }
+	if(this.currentMotionBreak < 0 || this.currentMotionBreak >= this.motionCoords.length){
+		return; //TODO - dono
+	}
+	
+	if(this.moveTo(this.motionCoords[this.currentMotionBreak][0], this.motionCoords[this.currentMotionBreak][1])){
+		this.currentMotionBreak++;
+	}
 };
 
 Player.prototype.runBootleg = function(Player, direction) {
@@ -1068,49 +1115,6 @@ Player.prototype.runBootleg = function(Player, direction) {
 	this.x -= 0.5 * this.speed * direction;
   } else if (this.x >= 100 && this.x <= 300){
 	this.x -= 0.8 * this.speed * direction;
-  }
-};
-
-// Display a lines that shows the player's route
-Player.prototype.displayRoute = function(coords){
-  if(coords.length < 1){
-	return;
-  }
-  fill(255, 255, 255);
-  strokeWeight(2);
-  stroke(100);
-  line(this.startX, this.startY, coords[0][0], coords[0][1]);
-  for (var i = 0; i < coords.length - 1; i++) {
-	line(coords[i][0], coords[i][1], coords[i+1][0], coords[i+1][1]);
-  }
-  strokeWeight(1);
-};
-
-Player.prototype.drawRouteCoordinates = function(field){
-  this.breakPoints = this.routeCoordinates.slice();
-  this.drawRoute(field);
-}
-
-Player.prototype.drawBreakPoints = function(field){
-  var x1 = field.getTranslatedX(this.startX);
-  var y1 = field.getTranslatedY(this.startY);
-  if(this.breakPoints.length > 0){
-	var x2 = field.getTranslatedX(this.breakPoints[0][0]);
-	var y2 = field.getTranslatedY(this.breakPoints[0][1]);
-	stroke(255, 0, 0);
-	line(x1,y1,x2,y2);
-	noStroke();
-	fill(255, 0, 0)
-  }
-  for(var i = 0; i < this.breakPoints.length - 1; i++){
-	x1 = field.getTranslatedX(this.breakPoints[i][0]);
-	y1 = field.getTranslatedY(this.breakPoints[i][1]);
-	var x2 = field.getTranslatedX(this.breakPoints[i+1][0]);
-	var y2 = field.getTranslatedY(this.breakPoints[i+1][1]);
-	stroke(255, 0, 0);
-	line(x1, y1, x2, y2);
-	noStroke();
-	fill(255, 0, 0)
   }
 };
 

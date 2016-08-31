@@ -1,0 +1,123 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+{% load staticfiles %}
+
+{% block content %}
+{% endblock %}
+
+{% block header %}
+	{{ page_header }}
+{% endblock %}
+
+{% block quiz_type %}
+	<script type="text/javascript">
+		var json_seed = []
+		{% for formationJson in formationsJson %}
+		json_seed.push('{{ formationJson|safe }}');
+		{% endfor %}
+
+		var formation_names = []
+		{% for formationName in formationNames %}
+		formation_names.push('{{ formationName }}');
+		{% endfor %}
+	</script>
+
+	<script language="javascript" type="text/javascript" src="{% static 'quiz/formationQuiz.js' %}"></script>
+	
+	<script type="text/javascript">
+		$('#play-button').click(function() {
+			//pressPlayButton();
+		});
+
+		$('#pause-button').click(function() {
+			//pressPlayButton();
+		});
+
+
+		$('#check-button').click(function() {
+			for(var i = 1; i <= multipleChoiceAnswers.length; i++) {
+				var answer = document.getElementById("mc-button-"+i);
+				if(answer && answer.classList.contains('clicked')) {
+					checkMultipleChoiceAnswer(i);
+					return false;
+				}
+			}
+		});
+
+		$('#clear-button').click(function() {
+			clearMultipleChoiceAnswers();
+		});
+
+		$('#restart-button').click(function() {
+			if(test && test.feedbackScreenStartTime === 0) {
+				clearMultipleChoiceAnswers();
+				test.restartQuiz();
+			}
+		});
+
+		$('#next-play-button').click(function() {
+			if(test && !test.over && test.feedbackScreenStartTime === 0) {
+				if(test.showDemo) {
+					exitDemoScreen();
+					return;
+				}
+
+				test.skipQuestion();
+				multipleChoiceAnswers = [];
+			}
+		});
+
+		$('#question-button').click(function() {
+			if(test && test.feedbackScreenStartTime === 0) {
+				if(test.showDemo) {
+					exitDemoScreen();
+				} else {
+					setupDemoScreen();
+				}
+			}
+		});
+
+		$('#zoom-in-button').click(function() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeJSButtons();
+		});
+
+		$('#zoom-out-button').click(function() {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeJSButtons();
+		});
+	</script>
+{% endblock %}
+
+{% block buttons %}
+	<div class="holds-play-buttons">
+		<table class="button-table">
+			<tr>
+				<td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+				<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+				<td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+				<td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+				<td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+				<td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
+				<td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
+				<td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
+			</tr>
+		</table>
+	</div>
+{% endblock %}
