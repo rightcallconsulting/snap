@@ -5,7 +5,8 @@
 //																			 //
 //***************************************************************************//
 //																			 //
-// A player object represents some player on the field.						 //
+// A player object represents some player on the field. The object keeps	 //
+// track of all of it's assignments.                                         //
 //																			 //
 //***************************************************************************//
 
