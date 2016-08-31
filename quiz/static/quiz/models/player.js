@@ -25,8 +25,8 @@ var Player = function(config) {
 
 	// Player assignments - these should be converted into object types later on
 	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
-	this.defensiveMovement = config.defensiveMovement || [];
 	this.route = config.route || [];
+	this.defensiveMovement = config.defensiveMovement || [];
 
 	// Older stuff
 	this.clicked = config.clicked || false;
@@ -136,6 +136,52 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.blue = blue;
 };
 
+// draw draws the player on the field. It assumes the players coordinates
+// are in yards and not pixels.
+Player.prototype.draw = function(){
+	var x = field.getTranslatedX(this.x);
+	var y = field.getTranslatedY(this.y);
+	var siz = field.yardsToPixels(this.siz);
+
+	if(this.unit === "offense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		ellipse(x, y, siz, siz);
+		fill(0,0,0);
+		textSize(14);
+		textAlign(CENTER, CENTER);
+		text(this.pos, x, y);
+	} else if (this.unit === "defense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		textSize(17);
+		textAlign(CENTER, CENTER);
+		text(this.pos, x, y);
+		fill(0,0,0);
+	}
+};
+
+// pixelDraw draws the player on the field. It assumes the players coordinates
+// are in yards and not pixels.
+Player.prototype.pixelDraw = function(){
+	if(this.unit === "offense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		ellipse(this.x, this.y, this.siz, this.siz);
+		fill(0,0,0);
+		textSize(14);
+		textAlign(CENTER, CENTER);
+		text(this.pos, this.x, this.y);
+	} else if (this.unit === "defense") {
+		noStroke();
+		fill(this.red, this.green, this.blue);
+		textSize(17);
+		textAlign(CENTER, CENTER);
+		text(this.pos, this.x, this.y);
+		fill(0,0,0);
+	}
+};
+
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
@@ -197,6 +243,148 @@ Player.prototype.drawBlocks = function(field) {
 	}
 
 	noStroke();
+};
+
+// moveTo advances a player towards their next breakpoint. It returns true if
+// the player is at their final point and false if they are not.
+Player.prototype.moveTo = function(x, y) {
+	var xDist = (x-this.x);
+	if (x < 0) {
+		xDist = 0-this.x;
+	}
+
+	var yDist = (y-this.y);
+	if (y < 0) {
+		yDist = 0-this.y;
+	}
+	
+	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
+	var numMoves = hDist / this.speed;
+	if (numMoves < 1) {
+		return true;
+	}
+
+	var xRate = xDist / numMoves;
+	var yRate = yDist / numMoves;
+
+	this.x += xRate;
+	this.y += yRate;
+	return false;
+};
+
+// drawRoute itereates through a players landmarks and draws their route
+// with an arrow at the end.
+Player.prototype.drawRoute = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+	var x2 = this.x;
+	var y2 = this.y;
+
+	var red = color(255, 0, 0);
+	stroke(red);
+
+	for (var i = 0; i < this.route.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.route[i][0];
+		y2 = this.route[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+	}
+
+	// Draw arrow
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+
+	arrow(x2, y2, alpha, deltaX);
+
+	noStroke();
+};
+
+// drawDefensiveMovement iterates through the players defensive movements
+// and draws a dotted line to the plave on the field they should be
+Player.prototype.drawDefensiveMovement = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+	var x2 = this.x;
+	var y2 = this.y;
+
+	var gray = color(60, 60, 60);
+	stroke(gray);
+
+	for (var i = 0; i < this.defensiveMovement.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.defensiveMovement[i][0];
+		y2 = this.defensiveMovement[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		dottedLine(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+		
+	}
+
+	// Draw arrow
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+
+	arrow(x2, y2, alpha, deltaX);
+
+	noStroke();
+};
+
+// deepCopy returns a new Player object that is exactly the same as this.
+Player.prototype.deepCopy = function() {
+	var result = new Player({
+		x: this.x,
+		y: this.y,
+		startX: this.startX,
+		startY: this.startY,
+		siz: this.siz,
+		red: this.red,
+		blue: this.blue,
+		green: this.green,
+		eligible: this.eligible,
+		pos: this.pos,
+		num: this.num,
+		unit: this.unit,
+		name: this.name
+	});
+
+	for (var i = 0; i < this.route.length; ++i) {
+		result.route.push([this.route[i][0], this.route[i][1]])
+	}
+
+	for (var i = 0; i < this.defensiveMovement.length; ++i) {
+		result.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
+	}
+
+	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
+		var blockingAssignment = this.blockingAssignmentArray[i];
+		if (blockingAssignment instanceof Player) {
+			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
+		} else {
+			result.blockingAssignmentArray.push(blockingAssignment);
+		}
+	}
+
+	return result;
 };
 
 // drawBlockOnPlayer draws a block from a specific starting point to a
@@ -627,231 +815,33 @@ Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
 	return new_coordinates;
 };
 
-// drawRoute itereates through a players landmarks and draws their route
-// with an arrow at the end.
-Player.prototype.drawRoute = function(field) {
-	var x1 = this.x;
-	var y1 = this.y;
-	var x2 = this.x;
-	var y2 = this.y;
+/******************************************************************************************************************************/
+/******************************************************************************************************************************/
 
-	var red = color(255, 0, 0);
-	stroke(red);
+Player.prototype.getX = function(field) { return field.yardsToPixels(this.getYardX() - field.getXOffset()); };
 
-	for (var i = 0; i < this.route.length; i++) {
-		x1 = x2;
-		y1 = y2;
-		x2 = this.route[i][0];
-		y2 = this.route[i][1];
+Player.prototype.getY = function(field) { return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset()); };
 
-		x1 = field.getTranslatedX(x1);
-		y1 = field.getTranslatedY(y1);
-		x2 = field.getTranslatedX(x2);
-		y2 = field.getTranslatedY(y2);
-		line(x1, y1, x2, y2);
-		x1 = field.getYardX(x1);
-		y1 = field.getYardY(y1);
-		x2 = field.getYardX(x2);
-		y2 = field.getYardY(y2);
-	}
+Player.prototype.getYardX = function() { return this.x; };
 
-	// Draw arrow
-	var deltaX = x2 - x1;
-	var deltaY = y2 - y1;
-	var alpha = atan(deltaY/deltaX);
+Player.prototype.getYardY = function() { return this.y; };
 
-	arrow(x2, y2, alpha, deltaX);
+Player.prototype.setColor = function(newFillColor) { this.fill = newFillColor; };
 
-	noStroke();
-};
+Player.prototype.clearRoute = function() { this.route = []; };
 
-// drawDefensiveMovement iterates through the players defensive movements
-// and draws a dotted line to the plave on the field they should be
-Player.prototype.drawDefensiveMovement = function(field) {
-	var x1 = this.x;
-	var y1 = this.y;
-	var x2 = this.x;
-	var y2 = this.y;
-
-	var gray = color(60, 60, 60);
-	stroke(gray);
-
-	for (var i = 0; i < this.defensiveMovement.length; i++) {
-		x1 = x2;
-		y1 = y2;
-		x2 = this.defensiveMovement[i][0];
-		y2 = this.defensiveMovement[i][1];
-
-		x1 = field.getTranslatedX(x1);
-		y1 = field.getTranslatedY(y1);
-		x2 = field.getTranslatedX(x2);
-		y2 = field.getTranslatedY(y2);
-		dottedLine(x1, y1, x2, y2);
-		x1 = field.getYardX(x1);
-		y1 = field.getYardY(y1);
-		x2 = field.getYardX(x2);
-		y2 = field.getYardY(y2);
-		
-	}
-
-	// Draw arrow
-	var deltaX = x2 - x1;
-	var deltaY = y2 - y1;
-	var alpha = atan(deltaY/deltaX);
-
-	arrow(x2, y2, alpha, deltaX);
-
-	noStroke();
-};
-
-// deepCopy returns a new Player object that is exactly the same as this.
-Player.prototype.deepCopy = function() {
-	var result = new Player({
-		x: this.x,
-		y: this.y,
-		startX: this.startX,
-		startY: this.startY,
-		siz: this.siz,
-		red: this.red,
-		blue: this.blue,
-		green: this.green,
-		eligible: this.eligible,
-		pos: this.pos,
-		num: this.num,
-		unit: this.unit,
-		name: this.name
-	});
-
-	for (var i = 0; i < this.route.length; ++i) {
-		result.route.push([this.route[i][0], this.route[i][1]])
-	}
-
-	for (var i = 0; i < this.defensiveMovement.length; ++i) {
-		result.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
-	}
-
-	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
-		var blockingAssignment = this.blockingAssignmentArray[i];
-		if (blockingAssignment instanceof Player) {
-			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
-		} else {
-			result.blockingAssignmentArray.push(blockingAssignment);
-		}
-	}
-
-	return result;
-};
-
-// Dylan's line
-
-//Moves one step toward point x,y
-Player.prototype.moveTo = function(x, y) {
-	var xDist = (x-this.x);
-		if(x < 0) {
-			xDist = 0-this.x;
-		}
-		var yDist = (y-this.y);
-		if(y < 0){
-		yDist = 0-this.y;
-	}
-	
-	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
-	var numMoves = hDist / this.speed;
-	
-	if(numMoves < 1) {
-		return true;
-	}
-	var xRate = xDist / numMoves;
-	var yRate = yDist / numMoves;
-
-	this.x += xRate;
-	this.y += yRate;
-	return false;
-};
-
-Player.prototype.getX = function(field) {
-	return field.yardsToPixels(this.getYardX() - field.getXOffset());
-};
-
-Player.prototype.getY = function(field) {
-	return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset());
-};
-
-Player.prototype.getYardX = function() {
-	return this.x;
-};
-
-Player.prototype.getYardY = function() {
-	return this.y;
-};
-
-Player.prototype.draw = function(){
-	var x = field.getTranslatedX(this.x);
-	var y = field.getTranslatedY(this.y);
-	var siz = field.yardsToPixels(this.siz);
-
-	if(this.unit === "offense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
-		ellipse(x, y, siz, siz);
-		fill(0,0,0);
-		textSize(14);
-		textAlign(CENTER, CENTER);
-		text(this.pos, x, y);
-	} else if (this.unit === "defense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
-		textSize(17);
-		textAlign(CENTER, CENTER);
-		text(this.pos, x, y);
-		fill(0,0,0);
-	}
-};
-
-Player.prototype.pixelDraw = function(){
-	if(this.unit === "offense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
-		ellipse(this.x, this.y, this.siz, this.siz);
-		fill(0,0,0);
-		textSize(14);
-		textAlign(CENTER, CENTER);
-		text(this.pos, this.x, this.y);
-	} else if (this.unit === "defense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
-		textSize(17);
-		textAlign(CENTER, CENTER);
-		text(this.pos, this.x, this.y);
-		fill(0,0,0);
-	}
-};
-
-Player.prototype.setColor = function(newFillColor) {
-  this.fill = newFillColor;
-};
-
-Player.prototype.clearRoute = function(){
-  this.routeCoordinates = [[this.startX, this.startY]];
-  this.routeNodes = [];
-  this.progressionRank = 0;
-  this.showPreviousRoute = false;
-  this.showPreviousRouteGuess = false;
-};
-
+// isMouseInside returns true if the mouse coordinates are somewhere inside
+// this player.
 Player.prototype.isMouseInside = function(field) {
 	var siz = field.yardsToPixels(this.siz);
 	var x = field.getTranslatedX(this.x);
 	var y = field.getTranslatedY(this.y);
-	var dist = Math.sqrt((mouseX-x)*(mouseX-x)+(mouseY-y)*(mouseY-y));
+	var dist = Math.sqrt( (mouseX - x)*(mouseX - x)+(mouseY - y)*(mouseY - y) );
 	return dist <= siz/2;
 };
 
-Player.prototype.containsPoint = function(x, y){
-	var dist = Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
-	return dist <= this.siz/2;
-}
-
+// pixelIsMouseInside returns true if the mouse coordinates are somewhere 
+// inside this player.
 Player.prototype.pixelIsMouseInside = function(field) {
 	var siz = this.siz;
 	var x = this.x;
@@ -860,11 +850,22 @@ Player.prototype.pixelIsMouseInside = function(field) {
 	return dist <= siz/2;
 };
 
+// containsPoint takes an arbitrary set of coordinates as an argument and
+// returns true if that set of coordinates if inside the player.
+Player.prototype.containsPoint = function(x, y){
+	var dist = Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
+	return dist <= this.siz/2;
+}
+
+// reset 
 Player.prototype.resetToStart = function(){
 	this.x = this.startX;
 	this.y = this.startY;
 	this.currentBreak = 0;
 };
+
+/******************************************************************************************************************************/
+/******************************************************************************************************************************/
 
 Player.prototype.moveAtAngle = function(distance, theta){
   var xDist = distance*Math.cos(theta);
