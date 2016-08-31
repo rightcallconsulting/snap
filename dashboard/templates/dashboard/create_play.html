@@ -648,6 +648,15 @@
 		function showPlaysInFormation(selected) {
 			var sideview_header = document.getElementById("sideview-header");
 
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
 
