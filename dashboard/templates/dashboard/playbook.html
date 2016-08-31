@@ -354,6 +354,12 @@
 		function changeSideview(selected) {
 			var sideview_content = selected.value;
 
+			play = new Play({});
+			concept = new Concept({});
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
+
 			if (sideview_content === "offensive playbook") {
 				showFormations();
 			} else if (sideview_content === "offensive concepts") {
@@ -368,6 +374,9 @@
 		function showFormations() {
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
 
 			$("#sideview-buttons").empty();
 
@@ -391,6 +400,9 @@
 		function showConcepts() {
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Concepts";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
 
 			$("#sideview-buttons").empty();
 
@@ -417,6 +429,9 @@
 
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation_name;
 
 			for (i in formations) {
 				if (formation_name === formations[i].name) {
@@ -459,6 +474,9 @@
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Defensive Looks";
 
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
+
 			$("#sideview-buttons").empty();
 		};
 
@@ -467,20 +485,14 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
-			
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// formation we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
 
 			// Create a new play to replace the one you just deselected on the 
 			// screen. Use the same formation that you were already using.
 			var formation = play.formation;
 			play = new Play({});
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation;
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -509,6 +521,8 @@
 
 				var play_name = new_selected.getAttribute("name");
 
+				mainview_header.textContent = play_name;
+
 				for (i in plays) {
 					if (play.formation === plays[i].formation && play_name === plays[i].name) {
 						play = plays[i].deepCopy();
@@ -524,9 +538,6 @@
 					play_name.setAttribute("id", "play-name");
 				}
 
-				removeHeaderPlaceholder();
-				removeHeaderError();
-				removeHeaderName();
 				play_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(play_name);
 			}
@@ -537,15 +548,11 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+
+			concept = new Concept({});
 			
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// formation we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -564,6 +571,17 @@
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var concept_name = new_selected.getAttribute("name");
+
+				mainview_header.textContent = concept_name;
+
+				for (i in concepts) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i].deepCopy();
+						break;
+					}
+				}
 			}
 		};
 
