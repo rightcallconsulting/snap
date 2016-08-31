@@ -11,19 +11,27 @@
 //***************************************************************************//
 
 var Player = function(config) {
+	// Main player member variables
 	this.x = config.x || width/2;
 	this.y = config.y || height/2;
-	this.startX = this.x;
-	this.startY = this.y;
+	this.startX = config.startX || width/2;
+	this.startY = config.startY || height/2;
 	this.siz = config.siz || 2;
-	this.fill = config.fill || color(0, 0, 0);
-	this.stroke = config.stroke || noStroke();
 	this.red = config.red || 0;
 	this.blue = config.blue || 0;
 	this.green = config.green || 0;
-	this.clicked = config.clicked || false;
 	this.selected = config.selected || false;
 	this.eligible = config.eligible || false;
+
+	// Player assignments - these should be converted into object types later on
+	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
+	this.defensiveMovement = config.defensiveMovement || [];
+	this.route = config.route || [];
+
+	// Older stuff
+	this.clicked = config.clicked || false;
+	this.fill = config.fill || color(0, 0, 0);
+	this.stroke = config.stroke || noStroke();
 	this.pos = config.pos || "X";
 	this.num = config.num || 0;
 	this.rank = config.rank || 0;
@@ -65,11 +73,6 @@ var Player = function(config) {
 	this.zoneAssignment = config.zoneAssignment || 0;
 	this.optionAssignment = config.optionAssignment || [];
 	this.coverageAssignment = config.coverageAssignment || [];
-
-	// Blocker assignments - eventually we should just have some child object for Linemen
-	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
-	this.defensiveMovement = config.defensiveMovement || [];
-	this.route = config.route || [];
 };
 
 //***************************************************************************//
