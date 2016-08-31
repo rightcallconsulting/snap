@@ -1480,14 +1480,11 @@ select#id_player {
 	text-align: right;
 }
 
-#create-formation {
+#create-formation,
+#create-play,
+#create-concept,
+#playbook {
 	padding: 20px;
-}
-
-div#create-formation div#choose-existing-formation,
-div#create-concept div#choose-existing-concept {
-	height: 78vh;
-	overflow: scroll;
 }
 
 div.header {
@@ -1534,6 +1531,7 @@ div.concept-table button {
 	border-width: 2px;
 	margin-left: 10px;
 	margin-right: 10px;
+	margin-bottom: 20px;
 }
 
 .display-buttons{
