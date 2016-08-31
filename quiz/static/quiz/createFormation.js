@@ -110,7 +110,7 @@ var runTest = function() {
 	formationExample = new Formation({});
 
 	formationExample.createOLineAndQB(field.ballYardLine);
-	formationExample.changeablePlayers.push(formationExample.qb[0]);
+	formationExample.changeablePlayers.push(formationExample.quarterback[0]);
 
 	// Global Variables
 	var capitalLetter = false;
@@ -305,9 +305,9 @@ var runTest = function() {
 		} else if (receiverClicked) {
 			receiverClicked.change = receiverClicked.change ?  false : true;
 			formationExample.establishingNewPlayer = receiverClicked;
-		} else if (formationExample.qb[0].isMouseInside(field)) {
-			formationExample.qb[0].change = formationExample.qb[0].change ?  false : true;
-			formationExample.establishingNewPlayer = formationExample.qb[0];
+		} else if (formationExample.quarterback[0].isMouseInside(field)) {
+			formationExample.quarterback[0].change = formationExample.quarterback[0].change ?  false : true;
+			formationExample.establishingNewPlayer = formationExample.quarterback[0];
 		} else if(centerClicked) {
 			var mouseYardX = field.getYardX(mouseX);
 			var xDiff = mouseYardX - centerClicked.x;
@@ -371,8 +371,8 @@ var runTest = function() {
 			var newFormation = new Formation({
 				eligibleReceivers: formationExample.eligibleReceivers,
 				playName: formationExample.playName,
-				qb: formationExample.qb,
-				oline: formationExample.oline,
+				quarterback: formationExample.quarterback,
+				offensiveLinemen: formationExample.offensiveLinemen,
 				offensivePlayers: formationExample.offensivePlayers,
 				unit: formationExample.unit
 			});
