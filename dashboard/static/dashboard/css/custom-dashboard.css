@@ -37,49 +37,9 @@ div.fullscreen {
 }
 
 /*************************************************************************
-interactive mainview and dynamic sideview
-*************************************************************************/
-
-div.interactive-header,
-div.static-header {
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	background-color: #33691e;
-	color: white;
-	margin: none;
-	font-size: large;
-	text-align: center;
-}
-
-div.interactive-header.placeholder {
-	color: silver;
-}
-
-div.interactive-header.selected {
-	background-color: white;
-	color: #33691e;
-}
-
-div.interactive-header.error {
-	background-color: maroon;
-	color: silver;
-}
-
-div.interactive-header p {
-	height: 100%;
-	margin: none;
-}
-
-i#back-arrow {
-    left: 5px;
-    line-height: 1.3em;
-    position: absolute;
-}
-
-/*************************************************************************
 top navbar and sidebar css
 *************************************************************************/
+
 #custom-top-nav {
 	min-height: 50px;
 	min-width: 310px;
@@ -228,7 +188,42 @@ top navbar and sidebar css
 }
 
 /*************************************************************************
-sideview css
+interactive and static mainview
+*************************************************************************/
+
+div.interactive-header,
+div.static-header {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background-color: #33691e;
+	color: white;
+	margin: none;
+	font-size: large;
+	text-align: center;
+}
+
+div.interactive-header.placeholder {
+	color: silver;
+}
+
+div.interactive-header.selected {
+	background-color: white;
+	color: #33691e;
+}
+
+div.interactive-header.error {
+	background-color: maroon;
+	color: silver;
+}
+
+div.interactive-header p {
+	height: 100%;
+	margin: none;
+}
+
+/*************************************************************************
+dyanmic sideview
 *************************************************************************/
 
 div#sideview {
@@ -272,6 +267,20 @@ button.sideview-button {
 	margin-left: auto;
 	margin-bottom: 6px;
 	margin-right: auto;
+}
+
+div#offense-defense-toggle {
+    right: 7px;
+    display: inline-block;
+    position: absolute;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+i#back-arrow {
+	left: 5px;
+	line-height: 1.3em;
+	position: absolute;
 }
 
 /*************************************************************************
