@@ -313,13 +313,15 @@ def playbook(request, unit="offense"):
 	else:
 		team = request.user.coach.team
 		
-		formations = Formation.objects.filter(team=team)
+		formations = Formation.objects.filter(team=team, scout=False)
+		scout_formations = Formation.objects.filter(team=team, scout=True)
 		plays = Play.objects.filter(team=team)
 		concepts = Concept.objects.filter(team=team)
 		
 		return render(request, 'dashboard/playbook.html', {
 			'unit': unit,
 			'formations': formations,
+			'scoutFormations': scout_formations,
 			'plays': plays,
 			'concepts': concepts,
 			'page_header': 'PLAYBOOK'
