@@ -110,6 +110,8 @@
 		var play;
 		var concepts = [];
 		var concept;
+		var scout_formations = [];
+		var scout_formation;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -162,9 +164,18 @@
 			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Play and new Concept
+			// Load scout formations from Json passed from databse.
+			var scoutFormationJsonFromDatabase = "";
+
+			{% for scoutFormation in scoutFormations %}
+			scoutFormationJsonFromDatabase = '{{ scoutFormation.formationJson|safe }}';
+			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
+			{% endfor %}
+
+			// Create new Play, new Concept, and new Scout Formation
 			play = new Play({});
 			concept = new Concept({});
+			scout_formation = new Formation({});
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -544,6 +555,18 @@
 			mainview_header.textContent = "Playbook";
 
 			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in scout_formations) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", scout_formations[i].name);
+				formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+				formation_button.textContent = scout_formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
+			}
 		};
 
 		function changeSelectedPlay(selected) {
@@ -606,6 +629,48 @@
 
 				play_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(play_name);
+			}
+		};
+
+		function changeSelectedConcept(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			concept = new Concept({});
+			
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var concept_name = new_selected.getAttribute("name");
+
+				mainview_header.textContent = concept_name;
+
+				for (i in concepts) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i].deepCopy();
+						break;
+					}
+				}
 			}
 		};
 
