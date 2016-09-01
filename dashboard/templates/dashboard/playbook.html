@@ -3,7 +3,47 @@
 
 {% block content %}
 	<div id="playbook" class="playbook">
-		<div class="action-boxes">
+		<div id="top-buttons">
+			<select class="unit-form" onchange="changeSideview(this)">
+				{% if unit == "offense" %}
+					<option value="offensive playbook">
+						Offensive Playbook
+					</option>
+					<option value="offensive concepts">
+						Offensive Concepts
+					</option>
+					<option value="defensive looks">
+						Defensive Looks
+					</option>
+				{% else %}
+					<option value="defensive playbook">
+						Defensive Playbook
+					</option>
+					<option value="defensive concepts">
+						Defensive Concepts
+					</option>
+					<option value="offensive plays">
+						Offensive Plays
+					</option>
+				{% endif %}
+			</select>
+
+			<div id="create-formation-button">
+				<a href="/quiz/create_formation">
+					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+					&nbsp;&nbsp;&nbsp;CREATE FORMATION
+				</a>
+			</div>
+
+			<div id="create-play-button">
+				<a href="/quiz/create_formation">
+					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+					&nbsp;&nbsp;&nbsp;CREATE PLAY
+				</a>
+			</div>
+		</div>
+
+		<!--<div class="action-boxes">
 			<table class="action-table">
 				<tbody>
 					<tr>
@@ -65,7 +105,7 @@
 					</tr>
 				</tbody>
 			</table>
-		</div><!--/action-boxes-->
+		</div>--><!--/action-boxes-->
 		
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">

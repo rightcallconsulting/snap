@@ -275,6 +275,42 @@ button.sideview-button {
 }
 
 /*************************************************************************
+top options css
+*************************************************************************/
+
+div#top-options {
+	width: 100%;
+	margin: 0px 0px 20px 0px;
+	border-style: none;
+	padding: 0px;
+	text-align: center;
+}
+
+#top-options-dropdown {
+	width: 300px;
+	font-size: 17px;
+	background-color: #FFFFFF;
+	border: 3px solid #7CB34A;
+	color: #555555;
+}
+
+div#create-formation-button,
+div#create-play-button {
+	display: inline-block;
+	width: calc(50% - 300px);
+	text-align: center;
+	font-size: medium;
+}
+
+div#create-concept-button,
+div#create-defensive-looks-button {
+	display: inline-block;
+	width: calc(100% - 600px);
+	text-align: center;
+	font-size: medium;
+}
+
+/*************************************************************************
 coach homepage
 *************************************************************************/
 .coach-button-container {
