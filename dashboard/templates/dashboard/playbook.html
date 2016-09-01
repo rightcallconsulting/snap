@@ -3,8 +3,8 @@
 
 {% block content %}
 	<div id="playbook" class="playbook">
-		<div id="top-buttons">
-			<select class="unit-form" onchange="changeSideview(this)">
+		<div id="top-options">
+			<select id="top-options-dropdown" onchange="changeSideviewAndTopOptions(this)">
 				{% if unit == "offense" %}
 					<option value="offensive playbook">
 						Offensive Playbook
@@ -29,14 +29,14 @@
 			</select>
 
 			<div id="create-formation-button">
-				<a href="/quiz/create_formation">
+				<a href="/formations/create">
 					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
 					&nbsp;&nbsp;&nbsp;CREATE FORMATION
 				</a>
 			</div>
 
 			<div id="create-play-button">
-				<a href="/quiz/create_formation">
+				<a href="/plays/create">
 					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
 					&nbsp;&nbsp;&nbsp;CREATE PLAY
 				</a>
@@ -389,13 +389,20 @@
 			resizeMainViewObjects();
 		});
 
-		// Change sideview updates the sideview with the appropriate content
+		// changeSideviewAndTopOptions the sideview with the appropriate content
 		// from the playbook.
-		function changeSideview(selected) {
+		function changeSideviewAndTopOptions(selected) {
 			var sideview_content = selected.value;
 
 			play = new Play({});
 			concept = new Concept({});
+
+			// <div id="create-play-button">
+			//	<a href="/plays/create">
+			//		<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+			//		&nbsp;&nbsp;&nbsp;CREATE PLAY
+			//	</a>
+			//</div>
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
