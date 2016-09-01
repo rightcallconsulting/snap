@@ -283,6 +283,8 @@
 			concept.drawAssignments(field);
 			concept.drawPlayers(field);
 
+			scout_formation.drawPlayers(field);
+
 			fill(176,176,176);
 		};
 
@@ -344,6 +346,7 @@
 
 			play = new Play({});
 			concept = new Concept({});
+			scout_formation = new Formation({});
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -674,13 +677,13 @@
 			}
 		};
 
-		function changeSelectedConcept(selected) {
+		function changeSelectedScoutFormation(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
-			concept = new Concept({});
+			scout_formation = new Formation({});
 			
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -703,13 +706,13 @@
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
-				var concept_name = new_selected.getAttribute("name");
+				var scout_formation_name = new_selected.getAttribute("name");
 
-				mainview_header.textContent = concept_name;
+				mainview_header.textContent = scout_formation_name;
 
-				for (i in concepts) {
-					if (concept_name === concepts[i].name) {
-						concept = concepts[i].deepCopy();
+				for (i in scout_formations) {
+					if (scout_formation_name === scout_formations[i].name) {
+						scout_formation = scout_formations[i].deepCopy();
 						break;
 					}
 				}
