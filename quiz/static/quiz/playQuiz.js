@@ -90,7 +90,7 @@ function setup() {
     test.updateScoreboard();
     setupComplete = true;
   }
-}
+};
 
 function resizeJSButtons(){
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
@@ -108,8 +108,7 @@ function resizeJSButtons(){
 
   exitDemo.x =  field.getYardX(width*0.1);
   exitDemo.y = field.getYardY(height*0.1);
-
-}
+};
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -125,7 +124,7 @@ function shuffle(array) {
   }
 
   return array;
-}
+};
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
   var correctIndex = Math.floor((Math.random() * numOptions));
@@ -152,7 +151,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
     }));
     i++;
   }
-}
+};
 
 function checkAnswer(guess){
   var isCorrect = test.getCurrentPlay().name === guess.label;

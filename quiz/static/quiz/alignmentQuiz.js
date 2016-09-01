@@ -12,114 +12,103 @@ var exitDemo = null;
 var demoDoubleClick = false;
 
 function setup() {
-  var box = document.getElementById('display-box');
-  var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
-  var width = box.offsetWidth;
-  var myCanvas = createCanvas(width, height);
-  field.height = height;
-  field.width = width;
-  field.heightInYards = 30;
-  field.ballYardLine = 75;
-  background(58, 135, 70);
-  randomSeed(millis());
-  myCanvas.parent('quiz-box');
+	var box = document.getElementById('display-box');
+	var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+	var width = box.offsetWidth;
+	var myCanvas = createCanvas(width, height);
+	field.height = height;
+	field.width = width;
+	field.heightInYards = 40;
+	field.ballYardLine = 65;
+	background(58, 135, 70);
+	randomSeed(millis());
+	myCanvas.parent('quiz-box');
 
-  window.onresize=function(){
-    var box = document.getElementById('display-box');
-    var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
-    var width = box.offsetWidth;
-    resizeCanvas(width, height);
-    field.height = height;
-    field.width = width;
-    resizeJSButtons();
-  }
+	window.onresize = function() {
+		var box = document.getElementById('display-box');
+		var height = document.getElementById('quiz-sidebar').offsetHeight - 90;
+		var width = box.offsetWidth;
+		resizeCanvas(width, height);
+		field.height = height;
+		field.width = width;
+		resizeJSButtons();
+	};
 
-  var buttonWidth = field.heightInYards * field.width / field.height / 6;
-  bigReset = new Button({
-    x: field.getYardX(width*0.25) - buttonWidth / 2,
-    y: field.getYardY(height*0.8),
-    width: buttonWidth,
-    label: "Retake All"
-  })
+	var buttonWidth = field.heightInYards * field.width / field.height / 6;
+	bigReset = new Button({
+		x: field.getYardX(width*0.25) - buttonWidth / 2,
+		y: field.getYardY(height*0.8),
+		width: buttonWidth,
+		label: "Retake All"
+	});
 
-  resetMissed = new Button({
-    x: field.getYardX(width*0.5) - buttonWidth / 2,
-    y: bigReset.y,
-    width: bigReset.width,
-    label: "Retake Missed"
-  })
+	resetMissed = new Button({
+		x: field.getYardX(width*0.5) - buttonWidth / 2,
+		y: bigReset.y,
+		width: bigReset.width,
+		label: "Retake Missed"
+	});
 
-  nextQuiz = new Button({
-    x: field.getYardX(width*0.75) - buttonWidth / 2,
-    y: bigReset.y,
-    width: bigReset.width,
-    label: "Exit"
-  })
+	nextQuiz = new Button({
+		x: field.getYardX(width*0.75) - buttonWidth / 2,
+		y: bigReset.y,
+		width: bigReset.width,
+		label: "Exit"
+	});
 
-  exitDemo = new Button({
-    label: "",
-    x: field.getYardX(width*0.1),
-    y: field.getYardY(height*0.1),
-    height: 1.5,
-    width: 1.5,
-    clicked: false,
-    fill: color(255, 255, 255)
-  });
+	exitDemo = new Button({
+		label: "",
+		x: field.getYardX(width*0.1),
+		y: field.getYardY(height*0.1),
+		height: 1.5,
+		width: 1.5,
+		clicked: false,
+		fill: color(255, 255, 255)
+	});
 
-  if(json_seed){
+	if(json_seed){
+		var scoreboard = new Scoreboard({});
+		
+		test = new FormationTest({
+			formations: [],
+			scoreboard: scoreboard,
+			displayName: true
+		});
 
-    var scoreboard = new Scoreboard({
+		currentUserTested = createUserFromJson(user_json);
 
-    });
-    test = new FormationTest({
-      formations: [],
-      scoreboard: scoreboard,
-      displayName: true
-    });
-    currentUserTested = createUserFromJSONSeed(json_seed.player)
+		var formations = [];
+		answers = [];
 
-    var formations = [];
-    answers = [];
+		for(i in json_seed) {
+			var formation = createFormationFromJson(JSON.parse(json_seed[i]));
+			formations.push(formation);
+		}
 
-    for(var i = 0; i < json_seed.formations.length; i++){
-      var formation = createFormationFromJSONSeed(json_seed.formations[i]);
-      var positionsAsPlayers = [];
-      for(var j = 0; j < formation.positions.length; j++){
-        var position = formation.positions[j];
-        var player = createPlayerFromJSONSeed(position);
-        positionsAsPlayers.push(player);
-      }
-      formation.positions = positionsAsPlayers;
-      formation.populatePositions();
-      formations.push(formation);
-    }
+		var shuffled_formations = shuffle(formations);
 
+		for (var i = 0; i < shuffled_formations.length; i++) {
+			var formation = shuffled_formations[i];
+			for (var j = 0; j < formation.offensivePlayers.length; j++) {
+				var p = formation.offensivePlayers[j];
+				if(p.pos === currentUserTested.position) {
+					answers.push([p.x, p.y]);
+					var oldCopy = formation.offensivePlayers.slice();
+					formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
+					formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
+					break;
+				}
+			}
+		}
 
-    var shuffled_formations = shuffle(formations);
-
-    for(var i = 0; i < shuffled_formations.length; i++){
-      var formation = shuffled_formations[i];
-      for(var j = 0; j < formation.offensivePlayers.length; j++){
-        var p = formation.offensivePlayers[j];
-        if(p.pos === currentUserTested.position){
-          answers.push([p.x, p.y]);
-
-          var oldCopy = formation.offensivePlayers.slice();
-          formation.offensivePlayers = formation.offensivePlayers.slice(0, j);
-          formation.offensivePlayers = formation.offensivePlayers.concat(oldCopy.slice(j+1));
-          break;
-        }
-      }
-    }
-
-    originalFormationList = shuffled_formations.slice();
-    test.formations = shuffled_formations;
-    multipleChoiceAnswers = [];
-    test.restartQuiz();
-    test.updateScoreboard();
-    setupComplete = true;
-  }
-}
+		originalFormationList = shuffled_formations.slice();
+		test.formations = shuffled_formations;
+		multipleChoiceAnswers = [];
+		test.restartQuiz();
+		test.updateScoreboard();
+		setupComplete = true;
+	}
+};
 
 function resizeJSButtons(){
   var buttonWidth = field.heightInYards * field.width / field.height / 6;
@@ -137,11 +126,10 @@ function resizeJSButtons(){
 
   exitDemo.x =  field.getYardX(width*0.1);
   exitDemo.y = field.getYardY(height*0.1);
+};
 
-}
 
-
-var sortByCreationDecreasing = function(a, b){
+var sortByCreationDecreasing = function(a, b) {
   var date1 = new Date(a.created_at);
   var date2 = new Date(b.created_at);
   return date2 - date1;
@@ -164,9 +152,9 @@ function shuffle(array) {
   }
 
   return array;
-}
+};
 
-function checkAnswer(){
+function checkAnswer() {
   var answer = answers[test.questionNum];
   var dx = Math.abs(answer[0] - currentPlayerTested.x);
   var dy = Math.abs(answer[1] - currentPlayerTested.y);
@@ -187,7 +175,7 @@ function checkAnswer(){
     currentPlayerTested.y = answers[test.questionNum][1]
     currentPlayerTested.fill = color(255,238,88);
   }
-}
+};
 
 function drawFeedbackScreen(){
   field.drawBackground(test.getCurrentFormation(), height, width);
@@ -325,71 +313,39 @@ mouseClicked = function() {
     }
   }
 };
-// in mouse clicked do stuff using test player
-// when click on test player ... checking the answer
-// when no test player, clicks to place 11th man
-// when click and test player and not inside him...move the player
-
 
 keyTyped = function(){
-  if(test.over){
-    if(key === 'r'){
-      test.restartQuiz();
-    }
-  }
+	if(test.over){
+		if(key === 'r'){
+			test.restartQuiz();
+		}
+	}
 };
 
 function draw() {
-  Player.prototype.draw = function(field){
-    var x = field.getTranslatedX(this.x);
-    var y = field.getTranslatedY(this.y);
-    var siz = field.yardsToPixels(this.siz);
-    if(this.unit === "offense"){
-      noStroke();
-      fill(this.fill);
-      ellipse(x, y, siz, siz);
-      fill(0,0,0);
-      if(this === currentPlayerTested){
-        fill(0);
-      }
-      textSize(14);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
-    else {
-      noStroke();
-      fill(this.fill);
-      textSize(17);
-      textAlign(CENTER, CENTER);
-      text(this.pos, x, y);
-    }
-  };
-
-  if(!setupComplete){
-    //WAIT - still executing JSON
-  }
-  else if(test.over){
-    //debugger;
-    background(93, 148, 81);
-    noStroke();
-    test.drawQuizSummary();
-    bigReset.draw(field);
-    resetMissed.draw(field);
-    nextQuiz.draw(field);
-  }else{
-    if(test.showDemo){
-      drawDemoScreen();
-    }else if(test.feedbackScreenStartTime){
-      var elapsedTime = millis() - test.feedbackScreenStartTime;
-      if(elapsedTime > 2000){
-        test.feedbackScreenStartTime = 0;
-        test.advanceToNextFormation("");
-        currentPlayerTested = null;
-      }else{
-        drawFeedbackScreen();
-      }
-    }else{
-      drawOpening(field);
-    }
-  }
-}
+	if (!setupComplete) {
+		//WAIT - still executing JSON
+	} else if (test.over) {
+		background(93, 148, 81);
+		noStroke();
+		test.drawQuizSummary();
+		bigReset.draw(field);
+		resetMissed.draw(field);
+		nextQuiz.draw(field);
+	} else {
+		if(test.showDemo) {
+			drawDemoScreen();
+		} else if (test.feedbackScreenStartTime) {
+			var elapsedTime = millis() - test.feedbackScreenStartTime;
+			if (elapsedTime > 2000) {
+				test.feedbackScreenStartTime = 0;
+				test.advanceToNextFormation("");
+				currentPlayerTested = null;
+			} else {
+				drawFeedbackScreen();
+			}
+		} else {
+			drawOpening(field);
+		}
+	}
+};

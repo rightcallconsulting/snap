@@ -3,94 +3,109 @@
 {% load staticfiles %}
 
 {% block content %}
-
 {% endblock %}
+
 {% block header %}
-ALIGNMENT QUIZ
+	{{ page_header }}
 {% endblock %}
 
 {% block quiz_type %}
-<script type="text/javascript">
-  var json_seed = {{ json_seed|safe }};
-  // console.log(JSON.stringify(json_seed, null, 2));
-</script>
-<script language="javascript" type="text/javascript" src="{% static 'quiz/alignmentQuiz.js' %}"></script>
-<script type="text/javascript">
-$('#check-button').click(function(){
-  if(currentPlayerTested){
-    checkAnswer();
-  }
-})
+	<script type="text/javascript">
+		var user_json = JSON.parse('{{ userJson|safe }}');
 
-$('#clear-button').click(function(){
-  currentPlayerTested = null;
-})
+		var json_seed = []
+		{% for formationJson in formationsJson %}
+		json_seed.push('{{ formationJson|safe }}');
+		{% endfor %}
 
-$('#restart-button').click(function(){
-  if(test && test.feedbackScreenStartTime === 0){
-    test.restartQuiz();
-    currentPlayerTested = null;
-  }
-})
+		var formation_names = []
+		{% for formationName in formationNames %}
+		formation_names.push('{{ formationName }}');
+		{% endfor %}
+	</script>
 
-$('#next-play-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
-    if(test.showDemo){
-      exitDemoScreen();
-      return;
-    }
-    test.skipQuestion();
-    currentPlayerTested = null;
-  }
-})
+	<script language="javascript" type="text/javascript" src="{% static 'quiz/alignmentQuiz.js' %}"></script>
+	<script type="text/javascript">
+		$('#check-button').click(function(){
+			if(currentPlayerTested) {
+				checkAnswer();
+			}
+		});
 
-$('#question-button').click(function(){
-  if(test && test.feedbackScreenStartTime === 0){
-    if(test.showDemo){
-      exitDemoScreen();
-    }else{
-      setupDemoScreen();
-    }
-  }
-})
+		$('#clear-button').click(function(){
+			currentPlayerTested = null;
+		});
 
-$('#zoom-in-button').click(function(){
-  var heightInYards = field.heightInYards;
-  var widthInYards = field.heightInYards * field.width / field.height;
-  if(heightInYards > 25){
-    field.heightInYards -= 5;
-  }else{
-    field.heightInYards = 20;
-  }
-  resizeJSButtons();
-})
+		$('#restart-button').click(function(){
+			if(test && test.feedbackScreenStartTime === 0) {
+				test.restartQuiz();
+				currentPlayerTested = null;
+			}
+		});
 
-$('#zoom-out-button').click(function(){
-  var heightInYards = field.heightInYards;
-  var widthInYards = field.heightInYards * field.width / field.height;
-  if(heightInYards > 50){
-    field.heightInYards = 55;
-  }else{
-    field.heightInYards += 5;
-  }
-  resizeJSButtons();
-})
-</script>
+		$('#next-play-button').click(function(){
+			if(test && !test.over && test.feedbackScreenStartTime === 0) {
+				if(test.showDemo) {
+					exitDemoScreen();
+					return;
+				}
+
+				test.skipQuestion();
+				currentPlayerTested = null;
+			}
+		});
+
+		$('#question-button').click(function(){
+			if(test && test.feedbackScreenStartTime === 0) {
+				if(test.showDemo){ 
+					exitDemoScreen();
+				} else {
+					setupDemoScreen();
+				}
+			}
+		});
+
+		$('#zoom-in-button').click(function(){
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeJSButtons();
+		});
+
+		$('#zoom-out-button').click(function(){
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeJSButtons();
+		});
+	</script>
 {% endblock %}
 
 {% block buttons %}
-<div class="holds-play-buttons">
-
-  <table class="button-table"><tr>
-    <td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
-    <td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
-    <td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
-    <td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
-    <td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
-    <td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
-    <td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
-    <td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
-  </tr></table>
-
-</div>
+	<div class="holds-play-buttons">
+		<table class="button-table">
+			<tr>
+				<td><button id="check-button" name="button">{% include "quiz/check_button.html" %}</button></td>
+				<td><button id="restart-button" name="button">{% include "quiz/refresh_button.html" %}</button></td>
+				<td><button id="clear-button" name="button">{% include "quiz/clear_button.html" %}</button></td>
+				<td><button id="next-play-button" name="button">{% include "quiz/next_play_button.html" %}</button></td>
+				<td><button id="question-button" name="button">{% include "quiz/question_button.html" %}</button></td>
+				<td><button id="zoom-in-button" name="button">{% include "quiz/zoom_in_button.html" %}</button></td>
+				<td><button id="zoom-out-button" name="button">{% include "quiz/zoom_out_button.html" %}</button></td>
+				<td><button id="full-screen-button" name="button">{% include "quiz/full_screen_button.html" %}</button></td>
+			</tr>
+		</table>
+	</div>
 {% endblock %}

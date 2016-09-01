@@ -27,6 +27,19 @@ var User = function(config){
 	}
 };
 
+var createUserFromJson = function(jsonUser) {
+	var user = new User({
+		id: jsonUser.id,
+		firstName: jsonUser.first_name,
+		lastName: jsonUser.last_name,
+		position: jsonUser.position,
+		year: jsonUser.year,
+		ignoreInit: true,
+	});
+
+	return user
+};
+
 var createUserFromJSON = function(jsonUser){
 	var user = new User({
 		id: jsonUser.pk,
