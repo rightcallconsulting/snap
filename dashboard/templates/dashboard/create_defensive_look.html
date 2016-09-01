@@ -183,26 +183,6 @@
 				}
 			}
 
-			var quarterback = formation.quarterback;
-			var center = formation.offensiveLinemen[2];
-			var right_tackle = formation.offensiveLinemen[4];
-			var left_tackle = formation.offensiveLinemen[0];
-
-			// If Quarterback is close to behind center then align him with the center.
-			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
-				quarterback.x = center.x;
-			}
-
-			// If Quarterback is inside the tackle box he can only be behind the center
-			// or a few yards back.
-			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
-				if (quarterback.y > center.y-2.25) {
-					quarterback.y = center.y-2.25;
-				} else if (quarterback.y < center.y-7.5) {
-					quarterback.y = center.y-7.5;
-				}
-			}
-
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = formation.defensivePlayers.length;
 			
@@ -396,6 +376,11 @@
 				} else if (keyCode == 32) {
 					if (formation_name != null && string_length < 100) {
 						formation_name.textContent += ' ';
+					}
+					return false;
+				} else if (keyCode == 189) {
+					if (formation_name != null && string_length < 100) {
+						formation_name.textContent += '-';
 					}
 					return false;
 				}
@@ -798,88 +783,19 @@
 
 			fill(176,176,176);
 		};
-		
-		function createOffensivePlayerOptions() {
-			var players = [];
-			var player;
-				
-			player = new Player ({
-				num: "QB", pos: "QB",
-				red: 212, green: 130, blue: 130,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "G", pos: "G",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "H", pos: "H",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "F", pos: "F",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "A", pos: "A",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Y", pos: "Y",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "X", pos: "X",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Z", pos: "Z",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			return players;
-		};
 
 		function createDefensivePlayerOptions() {
 			var players = [];
 			var player;
 				
+			player = new Player ({
+				num: "DL", pos: "DL",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
 			player = new Player ({
 				num: "E", pos: "E",
 				red: 0, green: 0, blue: 0,
@@ -898,6 +814,14 @@
 			
 			player = new Player ({
 				num: "T", pos: "T",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "LB", pos: "LB",
 				red: 0, green: 0, blue: 0,
 				unit: "defense",
 				siz: 2
@@ -930,6 +854,14 @@
 
 			player = new Player ({
 				num: "B", pos: "B",
+				red: 0, green: 0, blue: 0,
+				unit: "defense",
+				siz: 2
+			});
+			players.push(player);
+
+			player = new Player ({
+				num: "DB", pos: "DB",
 				red: 0, green: 0, blue: 0,
 				unit: "defense",
 				siz: 2

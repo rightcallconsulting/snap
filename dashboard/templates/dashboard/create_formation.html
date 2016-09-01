@@ -190,20 +190,20 @@
 			var right_tackle = formation.offensiveLinemen[4];
 			var left_tackle = formation.offensiveLinemen[0];
 
-			// If Quarterback is close to behind center then align him with the center.
+			/*// If Quarterback is close to behind center then align him with the center.
 			if (quarterback.x <= center.x+2 && quarterback.x >= center.x-2) {
 				quarterback.x = center.x;
 			}
 
 			// If Quarterback is inside the tackle box he can only be behind the center
 			// or a few yards back.
-			if (quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
+			if (quarterback != null && quarterback.x <= right_tackle.x && quarterback.x >= left_tackle.x) {
 				if (quarterback.y > center.y-2.25) {
 					quarterback.y = center.y-2.25;
 				} else if (quarterback.y < center.y-7.5) {
 					quarterback.y = center.y-7.5;
 				}
-			}
+			}*/
 
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = formation.defensivePlayers.length;
