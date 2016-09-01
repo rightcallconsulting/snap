@@ -42,70 +42,6 @@
 				</a>
 			</div>
 		</div>
-
-		<!--<div class="action-boxes">
-			<table class="action-table">
-				<tbody>
-					<tr>
-						<td>
-							<form>
-								<select name="units" class="unit-form" id="unit-form" onchange="changeSideview(this)">
-									{% if unit == "offense" %}
-										<option value="offensive playbook">
-											&nbsp;&nbsp;&nbsp;Offensive Playbook
-										</option>
-
-										<option value="offensive concepts">
-											&nbsp;&nbsp;&nbsp;Offensive Concepts
-										</option>
-
-										<option value="defensive looks">
-											&nbsp;&nbsp;&nbsp;Defensive Looks
-										</option>
-									{% else %}
-										<option value="defensive playbook">
-											&nbsp;&nbsp;&nbsp;Defensive Playbook
-										</option>
-
-										<option value="defensive concepts">
-											&nbsp;&nbsp;&nbsp;Defensive Concepts
-										</option>
-
-										<option value="offensive plays">
-											&nbsp;&nbsp;&nbsp;Offensive Plays
-										</option>
-									{% endif %}
-								</select>
-							</form>
-						</td>
-						<td>
-							{% if unit == "offense" %}
-								<a href="/quiz/create_formation" id="formation-link">
-							{% else %}
-								<a href="/quiz/create_defense_formation" id="formation-link">
-							{% endif %}
-									<span>
-										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-										&nbsp;&nbsp;&nbsp;CREATE FORMATION
-									</span>
-								</a>
-						</td>
-						<td>
-							{% if unit == "offense" %}
-								<a href="/quiz/create_play" id="play-link">
-							{% else %}
-								<a href="/quiz/create_defense_formation" id="play-link">
-							{% endif %}
-									<span>
-										<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}" alt="">
-										&nbsp;&nbsp;&nbsp;CREATE PLAY
-									</span>
-								</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>--><!--/action-boxes-->
 		
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
@@ -397,13 +333,6 @@
 
 			play = new Play({});
 			concept = new Concept({});
-
-			// <div id="create-play-button">
-			//	<a href="/plays/create">
-			//		<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
-			//		&nbsp;&nbsp;&nbsp;CREATE PLAY
-			//	</a>
-			//</div>
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
