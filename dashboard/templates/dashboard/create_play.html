@@ -47,7 +47,7 @@
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
 				Formations
-				<div id="offense-defense-toggle">D</div>
+				<div id="offense-defense-toggle" onclick="showDefensiveLooks()">D</div>
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
@@ -69,6 +69,8 @@
 		var formations = [];
 		var plays = [];
 		var play;
+		var scout_formations = [];
+		var scout_formation;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -111,6 +113,14 @@
 			{% for play in plays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			plays.push(createPlayFromJson(JSON.parse(playJsonFromDatabase)));
+			{% endfor %}
+
+			// Load scout formations from Json passed from databse.
+			var scoutFormationJsonFromDatabase = "";
+
+			{% for scoutFormation in scoutFormations %}
+			scoutFormationJsonFromDatabase = '{{ scoutFormation.formationJson|safe }}';
+			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
 			{% endfor %}
 
 			// Create new Play
@@ -774,6 +784,27 @@
 				removeHeaderName();
 				play_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(play_name);
+			}
+		};
+
+		// showDefensiveLooks updates the sideview to include all of the defensive
+		// looks in the playbook.
+		function showDefensiveLooks() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Defensive Looks";
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in scout_formations) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", scout_formations[i].name);
+				formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+				formation_button.textContent = scout_formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
 			}
 		};
 

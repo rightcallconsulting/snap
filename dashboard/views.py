@@ -423,10 +423,12 @@ def create_play(request):
 		coach = request.user.coach
 		team = coach.team
 		formations = Formation.objects.filter(team=team, scout=False)
+		scout_formations = Formation.objects.filter(team=team, scout=True)
 		plays = Play.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_play.html', {
 			'team': team,
 			'formations': formations,
+			'scoutFormations': scout_formations,
 			'plays': plays,
 			'page_header': 'CREATE PLAY',
 		})
