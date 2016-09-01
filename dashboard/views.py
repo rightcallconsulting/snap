@@ -342,6 +342,7 @@ def create_formation(request):
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
+				formation.scout = True
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
@@ -373,6 +374,7 @@ def create_defensive_look(request):
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
+				formation.scout = False
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
@@ -407,6 +409,7 @@ def create_play(request):
 				play.name = name
 				play.team = request.user.coach.team
 				play.unit = request.POST['unit']
+				play.scout = False
 				play.formation = Formation.objects.filter(name=formation_name)[0]
 				play.playJson = playJson
 				play.save()
@@ -443,6 +446,7 @@ def create_concept(request):
 				concept.name = name
 				concept.team = request.user.coach.team
 				concept.unit = request.POST['unit']
+				concept.scout = False
 				concept.conceptJson = conceptJson
 				concept.save()
 		elif request.POST['delete'] == "true":
