@@ -630,6 +630,11 @@
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
 
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.textContent = "D";
+			sideview_header.appendChild(toggle_button);
+
 			$("#sideview-buttons").empty();
 
 			var sideview_buttons = document.getElementById("sideview-buttons")
