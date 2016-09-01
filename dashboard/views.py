@@ -332,7 +332,7 @@ def create_formation(request):
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			formationJson = request.POST['formation']
-			formation = Formation.objects.filter(name=name)
+			formation = Formation.objects.filter(scout=False, name=name)
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
@@ -346,7 +346,7 @@ def create_formation(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(name=name)
+			formation = Formation.objects.filter(scout=False, name=name)
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -364,7 +364,7 @@ def create_defensive_look(request):
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			formationJson = request.POST['formation']
-			formation = Formation.objects.filter(name=name)
+			formation = Formation.objects.filter(scout=True, name=name)
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
@@ -378,7 +378,7 @@ def create_defensive_look(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(name=name)
+			formation = Formation.objects.filter(scout=True, name=name)
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -396,10 +396,10 @@ def create_play(request):
 	if request.method == "POST":
 		name = request.POST['name']
 		formation_name = request.POST['formation']
-		formation = Formation.objects.filter(name=formation_name)[0]
+		formation = Formation.objects.filter(scout=False, name=formation_name)[0]
 		if request.POST['save'] == "true":
 			playJson = request.POST['play']
-			play = Play.objects.filter(formation=formation, name=name)
+			play = Play.objects.filter(scout=False, formation=formation, name=name)
 			if play.count() == 1:
 				play = play[0]
 				play.playJson = playJson
@@ -414,7 +414,7 @@ def create_play(request):
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":
-			play = Play.objects.filter(formation=formation, name=name)
+			play = Play.objects.filter(scout=False, formation=formation, name=name)
 			play.delete()
 		return HttpResponse('')
 	else:
@@ -436,7 +436,7 @@ def create_concept(request):
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			conceptJson = request.POST['concept']
-			concept = Concept.objects.filter(name=name)
+			concept = Concept.objects.filter(scout=False, name=name)
 			if concept.count() == 1:
 				concept = concept[0]
 				concept.conceptJson = conceptJson
@@ -450,7 +450,7 @@ def create_concept(request):
 				concept.conceptJson = conceptJson
 				concept.save()
 		elif request.POST['delete'] == "true":
-			concept = Concept.objects.filter(name=name)
+			concept = Concept.objects.filter(scout=False, name=name)
 			concept.delete()
 		return HttpResponse('')
 	else:
