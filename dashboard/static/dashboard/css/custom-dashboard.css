@@ -303,7 +303,7 @@ div#create-play-button {
 }
 
 div#create-concept-button,
-div#create-defensive-looks-button {
+div#create-defensive-look-button {
 	display: inline-block;
 	width: calc(100% - 600px);
 	text-align: center;
