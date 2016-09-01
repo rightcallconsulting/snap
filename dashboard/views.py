@@ -422,7 +422,7 @@ def create_play(request):
 	else:
 		coach = request.user.coach
 		team = coach.team
-		formations = team.formation_set.all()
+		formations = Formation.objects.filter(team=team, scout=False)
 		plays = Play.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_play.html', {
 			'team': team,
