@@ -352,7 +352,7 @@ def create_formation(request):
 	else:
 		coach = request.user.coach
 		team = coach.team
-		formations = team.formation_set.all()
+		formations = Formation.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
 			'formations': formations,
@@ -384,7 +384,7 @@ def create_defensive_look(request):
 	else:
 		coach = request.user.coach
 		team = coach.team
-		formations = team.formation_set.all()
+		formations = Formation.objects.filter(team=team, scout=True)
 		return render(request, 'dashboard/create_defensive_look.html', {
 			'team': team,
 			'formations': formations,
@@ -421,7 +421,7 @@ def create_play(request):
 		coach = request.user.coach
 		team = coach.team
 		formations = team.formation_set.all()
-		plays = team.play_set.all()
+		plays = Play.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_play.html', {
 			'team': team,
 			'formations': formations,
@@ -456,7 +456,7 @@ def create_concept(request):
 	else:
 		coach = request.user.coach
 		team = coach.team
-		concepts = team.concept_set.all()
+		concepts = Concept.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
