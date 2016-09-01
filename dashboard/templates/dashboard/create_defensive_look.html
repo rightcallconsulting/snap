@@ -68,7 +68,7 @@
 	<script type="text/javascript">
 		var formations = [];
 		var formation;
-		var offensivePlayerBar;
+		var defensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
@@ -107,16 +107,14 @@
 			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Formation and add offensive linemen and quarterback
+			// Create new Formation
 			formation = new Formation({});
-			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
-			// Create player bar
-			offensivePlayerBar = new PlayerBar({
-				playerOptions: createOffensivePlayerOptions()
+			// Create Player bar
+			defensivePlayerBar = new PlayerBar({
+				playerOptions: createDefensivePlayerOptions()
 			});
-			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
-			offensivePlayerBar.init(field);
+			defensivePlayerBar.init(field);
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -252,7 +250,7 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			formation.drawPlayers(field);
-			offensivePlayerBar.draw(field);
+			defensivePlayerBar.draw(field);
 			
 			fill(0, 0, 0);
 			textSize(20);
@@ -340,20 +338,20 @@
 
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
-			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
+			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToFormation = new Player({
 					num: newPlayerSelected.num, 
 					pos: newPlayerSelected.pos, 
 					x: Field.WIDTH / 2,
-					y: field.ballYardLine-5,
+					y: field.ballYardLine + field.pixelsToYards(30),
 					red: newPlayerSelected.red, 
 					green: newPlayerSelected.green, 
 					blue: newPlayerSelected.blue,
-					eligible: newPlayerSelected.eligible
+					unit: newPlayerSelected.unit
 				});
 
-				formation.offensivePlayers.push(playerToAddToFormation);
+				formation.defensivePlayers.push(playerToAddToFormation);
 
 				return false;
 			}
@@ -536,7 +534,6 @@
 					formations[i] = formation.deepCopy();
 					formation.save(path, csrf_token);
 					formation = new Formation({});
-					formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 					return;
 				}
 			}
@@ -552,7 +549,6 @@
 			// Create a new formation to replace the one you just saved on the 
 			// screen.
 			formation = new Formation({});
-			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
@@ -613,7 +609,6 @@
 			// Set formation var to equal a new Formation. This will get rid of
 			// whatever is displayed on the screen.
 			formation = new Formation({});
-			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -661,7 +656,6 @@
 
 			// Create a new formation to replace whatever was already on screen.
 			formation = new Formation({});
-			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -770,9 +764,10 @@
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
 		function resizeMainViewObjects() {
-			offensivePlayerBar.width = field.width;
-			offensivePlayerBar.x = 0;
-			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
+			defensivePlayerBar.width = field.width;
+			defensivePlayerBar.x = 0;
+
+			defensivePlayerBar.resize();
 		};
 
 		function drawDebuggingInfo() {
