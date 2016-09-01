@@ -16,8 +16,8 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 54;
-  field.ballYardLine = 75;
+  field.heightInYards = 40;
+  field.ballYardLine = 65;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -77,21 +77,11 @@ function setup() {
     var plays = [];
     playNames = [];
 
-    for(var i = 0; i < json_seed.length; i++){
-      var play = createPlayFromJSONSeed(json_seed[i]);
-      var positionsAsPlayers = [];
-      for(var j = 0; j < play.positions.length; j++){
-        var position = play.positions[j];
-        var player = createPlayerFromJSONSeed(position);
-        positionsAsPlayers.push(player);
-      }
-      play.positions = positionsAsPlayers;
-      play.populatePositions();
-      if(play.name && play.name !== ""){
-        playNames.push(play.name);
-      }
-      plays.push(play);
-    }
+	for(i in json_seed) {
+		var play = createPlayFromJson(JSON.parse(json_seed[i]));
+		playNames.push(play.name);
+		plays.push(play);
+	}
 
     originalPlayList = plays.slice();
     test.plays = shuffle(plays);
@@ -141,7 +131,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
   var correctIndex = Math.floor((Math.random() * numOptions));
   document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
   multipleChoiceAnswers = [];
-  var availableNames = playNames.slice();
+  var availableNames = play_names;
   shuffle(availableNames);
   var i = 0;
   while(multipleChoiceAnswers.length < numOptions){
@@ -332,61 +322,38 @@ keyTyped = function(){
 
 
 function draw() {
-  Player.prototype.draw = function(field){
-    var x = field.getTranslatedX(this.x);
-    var y = field.getTranslatedY(this.y);
-    var siz = field.yardsToPixels(this.siz);
-    if(this.unit === "offense"){
-     noStroke();
-     fill(this.fill);
-     ellipse(x, y, siz, siz);
-     fill(0,0,0);
-     textSize(14);
-     textAlign(CENTER, CENTER);
-     text(this.num, x, y);
-   }
-   else {
-    noStroke();
-    fill(this.fill);
-    textSize(17);
-    textAlign(CENTER, CENTER);
-    text(this.pos, x, y);
-  }
+	if(!setupComplete) {
+		//WAIT - still executing JSON
+	} else if(test.over) {
+		background(93, 148, 81);
+		noStroke();
+		test.drawQuizSummary();
+		bigReset.draw(field);
+		nextQuiz.draw(field);
+		resetMissed.draw(field);
+	} else {
+		if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()) {
+			var correctAnswer = test.getCurrentPlay().name;
+			createMultipleChoiceAnswers(correctAnswer,3);
+			test.updateProgress(false);
+			test.updateMultipleChoiceLabels();
+		}
 
-};
-
-
-if(!setupComplete){
-    //WAIT - still executing JSON
-  }else if(test.over){
-    background(93, 148, 81);
-    noStroke();
-    test.drawQuizSummary();
-    bigReset.draw(field);
-    nextQuiz.draw(field);
-    resetMissed.draw(field);
-  }else{
-    if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()){
-      var correctAnswer = test.getCurrentPlay().name;
-      createMultipleChoiceAnswers(correctAnswer,3);
-      test.updateProgress(false);
-      test.updateMultipleChoiceLabels();
-    }
-    if(test.feedbackScreenStartTime){
-      var timeElapsed = millis() - test.feedbackScreenStartTime;
-      if(timeElapsed > 1000){
-        clearMultipleChoiceAnswers();
-        test.feedbackScreenStartTime = 0;
-        test.advanceToNextPlay("");
-      }else{
-        drawOpening(field);
-      }
-    }else{
-      if(test.getCurrentPlay().inProgress){
-        drawScene(field);
-      }else{
-        drawOpening(field);
-      }
-    }
-  }
+		if(test.feedbackScreenStartTime) {
+			var timeElapsed = millis() - test.feedbackScreenStartTime;
+			if(timeElapsed > 1000) {
+				clearMultipleChoiceAnswers();
+				test.feedbackScreenStartTime = 0;
+				test.advanceToNextPlay("");
+			} else {
+				drawOpening(field);
+			}
+		} else {
+			if(test.getCurrentPlay().inProgress) {
+				drawScene(field);
+			} else {
+				drawOpening(field);
+			}
+		}
+	}
 };

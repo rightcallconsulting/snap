@@ -304,28 +304,6 @@ keyTyped = function() {
 
 
 function draw() {
-	Player.prototype.draw = function(field) {
-		var x = field.getTranslatedX(this.x);
-		var y = field.getTranslatedY(this.y);
-		var siz = field.yardsToPixels(this.siz);
-		
-		if(this.unit === "offense") {
-			noStroke();
-			fill(this.red, this.green, this.blue);
-			ellipse(x, y, siz, siz);
-			fill(0,0,0);
-			textSize(14);
-			textAlign(CENTER, CENTER);
-			text(this.num, x, y);
-		} else {
-			noStroke();
-			fill(this.red, this.green, this.blue);
-			textSize(17);
-			textAlign(CENTER, CENTER);
-			text(this.pos, x, y);
-		}
-	};
-
 	if(!setupComplete) {
 		//WAIT - still executing JSON
 	} else if(test.showDemo) {

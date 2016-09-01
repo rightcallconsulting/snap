@@ -56,32 +56,32 @@ def formation_identification_quiz(request):
 def play_identification_quiz(request):
 	if (request.method == 'GET'):
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_formations = Formation.objects.filter(team=request.user.player.team)
-		number_of_formations = all_formations.count()
-		formation_names = []
-		formations_json = []
+		all_plays = Play.objects.filter(team=request.user.player.team)
+		number_of_plays = all_plays.count()
+		play_names = []
+		plays_json = []
 		seeds = []
 
-		for formation in all_formations:
-			formation_names.append(formation.name)
+		for play in all_plays:
+			play_names.append(play.name)
 
 		# While the list of JSON to send is less than the amount of questions
-		# and it is less than the number of available formations keep adding
-		# new JSON seeds. In other words, stop adding formations when you have
-		# added the full number of questions or you have added all the formations.
-		while(len(formations_json) < number_of_questions and len(formations_json) < number_of_formations):
-			seed = random.randint(0, number_of_formations-1)
+		# and it is less than the number of available plays keep adding
+		# new JSON seeds. In other words, stop adding plays when you have
+		# added the full number of questions or you have added all the plays.
+		while(len(plays_json) < number_of_questions and len(plays_json) < number_of_plays):
+			seed = random.randint(0, number_of_plays-1)
 			if (seed not in seeds):
-				formations_json.append(all_formations[seed].formationJson)
+				plays_json.append(all_plays[seed].playJson)
 				seeds.append(seed)
 
-		if (len(formations_json) == 0):
+		if (len(plays_json) == 0):
 			return render(request, '')
 
-		return render(request, 'quiz/formation_identification_quiz.html', {
-			'formationsJson': formations_json,
-			'formationNames': formation_names,
-			'page_header': 'FORMATION ID QUIZ'
+		return render(request, 'quiz/play_identification_quiz.html', {
+			'playsJson': plays_json,
+			'playNames': play_names,
+			'page_header': 'PLAY ID QUIZ'
 			})
 
 def concept_identification_quiz(request):
