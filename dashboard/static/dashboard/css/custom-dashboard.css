@@ -815,8 +815,8 @@ player homepage
 .coach-action-icon{
   height: 75px;
   width: 75px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .coach-dash-analytics{

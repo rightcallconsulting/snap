@@ -31,14 +31,14 @@
 			<div id="create-formation-button">
 				<a href="/formations/create">
 					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
-					&nbsp;&nbsp;&nbsp;CREATE FORMATION
+					CREATE FORMATION
 				</a>
 			</div>
 
 			<div id="create-play-button">
 				<a href="/plays/create">
 					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
-					&nbsp;&nbsp;&nbsp;CREATE PLAY
+					CREATE PLAY
 				</a>
 			</div>
 		</div>
@@ -416,6 +416,21 @@
 
 				if (create_concept_button != null) { top_options.removeChild(create_concept_button); } 
 				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
+
+				var create_play_button_image = document.createElement("img");
+				create_play_button_image.setAttribute("class", "coach-action-icon");
+				create_play_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
+
+				var create_play_button_link = document.createElement("a");
+				create_play_button_link.setAttribute("href", "/plays/create");
+				create_play_button_link.textContent = "CREATE PLAY";
+				create_play_button_link.appendChild(create_play_button_image);
+
+				var create_play_button = document.createElement("div");
+				create_play_button.setAttribute("id", "create-play-button");
+				create_play_button.appendChild(create_play_button_link);
+
+				top_options.appendChild(create_play_button);
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
 
