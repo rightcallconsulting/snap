@@ -5,9 +5,9 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
 	url(r'^formation_identification_quiz$', views.formation_identification_quiz, name='formation_identification_quiz'),
+	url(r'^formation_alignment_quiz$', views.formation_alignment_quiz, name='formation_alignment_quiz'),
 	url(r'^play_identification_quiz$', views.play_identification_quiz, name='play_identification_quiz'),
 	url(r'^concept_identification_quiz$', views.concept_identification_quiz, name='concept_identification_quiz'),
-	url(r'^alignment_quiz$', views.formation_alignment_quiz, name='alignment_quiz'),
 	url(r'^players$', views.players, name='players'),
 	url(r'^qb_progression$', views.qb_progression, name='qb_progression'),
 	url(r'^cb_assignment$', views.cb_assignment, name='cb_assignment'),
