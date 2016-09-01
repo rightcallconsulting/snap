@@ -400,6 +400,11 @@
 						formation_name.textContent += ' ';
 					}
 					return false;
+				} else if (keyCode == 189) {
+					if (formation_name != null && string_length < 100) {
+						formation_name.textContent += '-';
+					}
+					return false;
 				}
 			} else if (formation.getSelected()[0] != null) {
 				var playerSelcted = formation.getSelected()[0];

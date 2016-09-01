@@ -404,7 +404,13 @@
 						concept_name.textContent += ' ';
 					}
 					return false;
+				} else if (keyCode == 189) {
+					if (formation_name != null && string_length < 100) {
+						formation_name.textContent += '-';
+					}
+					return false;
 				}
+				
 			} else if (concept.getSelected()[0] != null) {
 				var playerSelcted = concept.getSelected()[0];
 				var playerSelctedIndex = concept.getSelected()[1];
