@@ -100,15 +100,14 @@ class Group(models.Model):
 
 class Formation(models.Model):
 	name = models.CharField(max_length=100)
-	offensivePlayers = models.ManyToManyField(Player)
-	playName = models.CharField(max_length=100)
-	offensiveFormationID = models.IntegerField(null=True, blank=True)
-	unit = models.CharField(max_length=100, default="offense")
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
-	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+	unit = models.CharField(max_length=100, default="offense")
+	scout = models.NullBooleanField(default=False, blank=True, null=True)
 
 	formationJson = models.TextField(max_length=None, blank=True, null=True)
+
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.name

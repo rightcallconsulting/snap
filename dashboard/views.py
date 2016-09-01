@@ -358,6 +358,37 @@ def create_formation(request):
 			'page_header': 'CREATE FORMATION',
 		})
 
+def create_defensive_look(request):
+	if request.method == "POST":
+		name = request.POST['name']
+		if request.POST['save'] == "true":
+			formationJson = request.POST['formation']
+			formation = Formation.objects.filter(name=name)
+			if formation.count() == 1:
+				formation = formation[0]
+				formation.formationJson = formationJson
+				formation.save()
+			elif formation.count() == 0:
+				formation = Formation()
+				formation.name = name
+				formation.team = request.user.coach.team
+				formation.unit = request.POST['unit']
+				formation.formationJson = formationJson
+				formation.save()
+		elif request.POST['delete'] == "true":
+			formation = Formation.objects.filter(name=name)
+			formation.delete()
+		return HttpResponse('')
+	else:
+		coach = request.user.coach
+		team = coach.team
+		formations = team.formation_set.all()
+		return render(request, 'dashboard/create_defensive_look.html', {
+			'team': team,
+			'formations': formations,
+			'page_header': 'CREATE DEFENSIVE LOOK',
+		})
+
 # Plays
 def create_play(request):
 	if request.method == "POST":

@@ -23,6 +23,7 @@ urlpatterns = [
 
 	# Formations
 	url(r'^formations/create$', views.create_formation, name='create_formation'),
+	url(r'^formations/create/defensive_look$', views.create_defensive_look, name='create_defensive_look'),
 
 	# Plays
 	url(r'^plays/create$', views.create_play, name='create_play'),
