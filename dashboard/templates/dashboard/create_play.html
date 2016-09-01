@@ -47,7 +47,6 @@
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
 				Formations
-				<div id="offense-defense-toggle" onclick="showDefensiveLooks()">D</div>
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
@@ -640,11 +639,6 @@
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
 
-			var toggle_button = document.createElement("div");
-			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.textContent = "D";
-			sideview_header.appendChild(toggle_button);
-
 			$("#sideview-buttons").empty();
 
 			var sideview_buttons = document.getElementById("sideview-buttons")
@@ -699,6 +693,12 @@
 			sideview_header.textContent = formation_name;
 
 			sideview_header.appendChild(back_arrow);
+
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showDefensiveLooks()");
+			toggle_button.textContent = "D";
+			sideview_header.appendChild(toggle_button);
 
 			play.fromFormation(formation_selected);
 
@@ -793,6 +793,12 @@
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Defensive Looks";
 
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showFormations()");
+			toggle_button.textContent = "O";
+			sideview_header.appendChild(toggle_button);
+
 			$("#sideview-buttons").empty();
 
 			var sideview_buttons = document.getElementById("sideview-buttons")
@@ -801,10 +807,49 @@
 				var formation_button = document.createElement("button");
 				formation_button.setAttribute("class", "btn btn-primary sideview-button");
 				formation_button.setAttribute("name", scout_formations[i].name);
-				formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+				formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
 				formation_button.textContent = scout_formations[i].name;
 
 				sideview_buttons.appendChild(formation_button);
+			}
+		};
+
+		function addScoutFormationToPlay(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+
+				play.defensivePlayers = [];
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var scout_formation_name = new_selected.getAttribute("name");
+
+				for (i in scout_formations) {
+					if (scout_formation_name === scout_formations[i].name) {
+						scout_formation = scout_formations[i].deepCopy();
+						break;
+					}
+				}
+
+				play.scoutFromFormation(scout_formation);
 			}
 		};
 

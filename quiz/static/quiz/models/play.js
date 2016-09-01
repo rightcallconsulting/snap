@@ -274,6 +274,18 @@ Play.prototype.fromFormation = function(formation) {
 	}
 };
 
+// scoutFromFormation takes a cout formation object as an argument and adds the
+// defensive look to this play.
+Play.prototype.scoutFromFormation = function(formation) {
+	var scout_formation = formation.deepCopy();
+
+	this.defensivePlayers = [];
+
+	for (var i = 0; i < scout_formation.defensivePlayers.length; ++i) {
+		this.defensivePlayers.push(scout_formation.defensivePlayers[i].deepCopy());
+	}
+};
+
 /*********************************/
 /*     Non object functions      */
 /*********************************/
