@@ -390,9 +390,10 @@
 		});
 
 		// changeSideviewAndTopOptions the sideview with the appropriate content
-		// from the playbook.
+		// from the playbook and updates the buttons on the top of the screen.
 		function changeSideviewAndTopOptions(selected) {
 			var sideview_content = selected.value;
+			var top_options = document.getElementById("top_options");
 
 			play = new Play({});
 			concept = new Concept({});
@@ -409,10 +410,43 @@
 
 			if (sideview_content === "offensive playbook") {
 				showFormations();
+
+				var create_concept_button = document.getElementById("create-concept-button");
+				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
+
+				if (create_concept_button != null) {
+					top_options.removeChild(create_concept_button)
+				} else if (create_defensive_look_button != null) {
+					top_options.removeChild(create_defensive_look_button);
+				}
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
+
+				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
+				var create_formation_button = document.getElementById("create-formation-button");
+				var create_play_button = document.getElementById("create-play-button");
+
+				if (create_defensive_look_button != null) {
+					top_options.removeChild(create_defensive_look_button)
+				} else if (create_formation_button != null) {
+					top_options.removeChild(create_formation_button);
+				} else if (create_play_button != null) {
+					top_options.removeChild(create_play_button);
+				}
 			} else if (sideview_content === "defensive looks") {
 				showDefensiveLooks();
+
+				var create_concept_button = document.getElementById("create-concept-button");
+				var create_formation_button = document.getElementById("create-formation-button");
+				var create_play_button = document.getElementById("create-play-button");
+
+				if (create_concept_button != null) {
+					top_options.removeChild(create_concept_button)
+				} else if (create_formation_button != null) {
+					top_options.removeChild(create_formation_button);
+				} else if (create_play_button != null) {
+					top_options.removeChild(create_play_button);
+				}
 			}
 		};
 
