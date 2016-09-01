@@ -22,6 +22,99 @@ def index(request):
     context = {'player_list': player_list}
     return render(request, 'quiz/index.html', context)
 
+def formation_identification_quiz(request):
+	if (request.method == 'GET'):
+		number_of_questions = int(request.GET.get('num_qs'))
+		all_formations = Formation.objects.filter(team=request.user.player.team)
+		number_of_formations = all_formations.count()
+		formation_names = []
+		formations_json = []
+		seeds = []
+
+		for formation in all_formations:
+			formation_names.append(formation.name)
+
+		# While the list of JSON to send is less than the amount of questions
+		# and it is less than the number of available formations keep adding
+		# new JSON seeds. In other words, stop adding formations when you have
+		# added the full number of questions or you have added all the formations.
+		while(len(formations_json) < number_of_questions and len(formations_json) < number_of_formations):
+			seed = random.randint(0, number_of_formations-1)
+			if (seed not in seeds):
+				formations_json.append(all_formations[seed].formationJson)
+				seeds.append(seed)
+
+		if (len(formations_json) == 0):
+			return render(request, '')
+
+		return render(request, 'quiz/formation_identification_quiz.html', {
+			'formationsJson': formations_json,
+			'formationNames': formation_names,
+			'page_header': 'FORMATION ID QUIZ'
+			})
+
+def play_identification_quiz(request):
+	if (request.method == 'GET'):
+		number_of_questions = int(request.GET.get('num_qs'))
+		all_formations = Formation.objects.filter(team=request.user.player.team)
+		number_of_formations = all_formations.count()
+		formation_names = []
+		formations_json = []
+		seeds = []
+
+		for formation in all_formations:
+			formation_names.append(formation.name)
+
+		# While the list of JSON to send is less than the amount of questions
+		# and it is less than the number of available formations keep adding
+		# new JSON seeds. In other words, stop adding formations when you have
+		# added the full number of questions or you have added all the formations.
+		while(len(formations_json) < number_of_questions and len(formations_json) < number_of_formations):
+			seed = random.randint(0, number_of_formations-1)
+			if (seed not in seeds):
+				formations_json.append(all_formations[seed].formationJson)
+				seeds.append(seed)
+
+		if (len(formations_json) == 0):
+			return render(request, '')
+
+		return render(request, 'quiz/formation_identification_quiz.html', {
+			'formationsJson': formations_json,
+			'formationNames': formation_names,
+			'page_header': 'FORMATION ID QUIZ'
+			})
+
+def concept_identification_quiz(request):
+	if (request.method == 'GET'):
+		number_of_questions = int(request.GET.get('num_qs'))
+		all_concepts = Concept.objects.filter(team=request.user.player.team)
+		number_of_concepts = all_concepts.count()
+		concept_names = []
+		concepts_json = []
+		seeds = []
+
+		for concept in all_concepts:
+			concept_names.append(concept.name)
+
+		# While the list of JSON to send is less than the amount of questions
+		# and it is less than the number of available concepts keep adding
+		# new JSON seeds. In other words, stop adding concepts when you have
+		# added the full number of questions or you have added all the concepts.
+		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
+			seed = random.randint(0, number_of_concepts-1)
+			if (seed not in seeds):
+				concepts_json.append(all_concepts[seed].conceptJson)
+				seeds.append(seed)
+
+		if (len(concepts_json) == 0):
+			return render(request, '')
+
+		return render(request, 'quiz/concept_identification_quiz.html', {
+			'conceptsJson': concepts_json,
+			'conceptNames': concept_names,
+			'page_header': 'CONCEPT ID QUIZ'
+		})
+
 def qb_progression(request):
     return render(request, 'quiz/qb_progression.html')
 
@@ -773,65 +866,3 @@ def run_cb_view_test(request, test_id):
 def single_test(request, test_id):
     test = Test.objects.filter(pk=test_id)
     return HttpResponse(serializers.serialize("json", test))
-
-def concept_identification_quiz(request):
-	if (request.method == 'GET'):
-		number_of_questions = int(request.GET.get('num_qs'))
-		all_concepts = Concept.objects.filter(team=request.user.player.team)
-		number_of_concepts = all_concepts.count()
-		concept_names = []
-		concepts_json = []
-		seeds = []
-
-		for concept in all_concepts:
-			concept_names.append(concept.name)
-
-		# While the list of JSON to send is less than the amount of questions
-		# and it is less than the number of available concepts keep adding
-		# new JSON seeds. In other words, stop adding concepts when you have
-		# added the full number of questions or you have added all the concepts.
-		while(len(concepts_json) < number_of_questions and len(concepts_json) < number_of_concepts):
-			seed = random.randint(0, number_of_concepts-1)
-			if (seed not in seeds):
-				concepts_json.append(all_concepts[seed].conceptJson)
-				seeds.append(seed)
-
-		if (len(concepts_json) == 0):
-			return render(request, '')
-
-		return render(request, 'quiz/concept_identification_quiz.html', {
-			'conceptsJson': concepts_json,
-			'conceptNames': concept_names,
-			'page_header': 'CONCEPT ID QUIZ'
-		})
-
-def formation_identification_quiz(request):
-    if (request.method == 'GET'):
-        number_of_questions = int(request.GET.get('num_qs'))
-        all_formations = Formation.objects.filter(team=request.user.player.team)
-        number_of_formations = all_formations.count()
-        formation_names = []
-        formations_json = []
-        seeds = []
-
-        for formation in all_formations:
-            formation_names.append(formation.name)
-
-        # While the list of JSON to send is less than the amount of questions
-        # and it is less than the number of available formations keep adding
-        # new JSON seeds. In other words, stop adding formations when you have
-        # added the full number of questions or you have added all the formations.
-        while(len(formations_json) < number_of_questions and len(formations_json) < number_of_formations):
-            seed = random.randint(0, number_of_formations-1)
-            if (seed not in seeds):
-                formations_json.append(all_formations[seed].formationJson)
-                seeds.append(seed)
-
-        if (len(formations_json) == 0):
-            return render(request, '')
-
-        return render(request, 'quiz/formation_identification_quiz.html', {
-            'formationsJson': formations_json,
-            'formationNames': formation_names,
-            'page_header': 'FORMATION ID QUIZ'
-        })

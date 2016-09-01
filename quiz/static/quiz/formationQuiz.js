@@ -17,7 +17,7 @@ function setup() {
 	field.height = height;
 	field.width = width;
 	field.heightInYards = 34;
-	field.ballYardLine = 75;
+	field.ballYardLine = 65;
 	background(58, 135, 70);
 	randomSeed(millis());
 	myCanvas.parent('quiz-box');
@@ -76,18 +76,8 @@ function setup() {
 		var formations = [];
 		formationNames = [];
 
-		for(var i = 0; i < json_seed.length; i++) {
-			var formation = createFormationFromJSONSeed(json_seed[i]);
-			var positionsAsPlayers = [];
-
-			for(var j = 0; j < formation.positions.length; j++) {
-				var position = formation.positions[j];
-				var player = createPlayerFromJSONSeed(position);
-				positionsAsPlayers.push(player);
-			}
-
-			formation.positions = positionsAsPlayers;
-			formation.populatePositions();
+		for(i in json_seed) {
+			var formation = createFormationFromJson(JSON.parse(json_seed[i]));
 			formationNames.push(formation.name);
 			formations.push(formation);
 		}
@@ -141,7 +131,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 	var correctIndex = Math.floor((Math.random() * numOptions));
 	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
 	multipleChoiceAnswers = [];
-	var availableNames = formationNames.slice();
+	var availableNames = formation_names;
 	shuffle(availableNames);
 	var i = 0;
 
