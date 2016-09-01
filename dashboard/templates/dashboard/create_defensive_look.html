@@ -470,7 +470,7 @@
 
 			var placeholder_message = document.getElementById("placeholder-message");
 			var formation_name = document.getElementById("formation-name");
-			var path = "/formations/create";
+			var path = "/formations/create/defensive_look";
 			var csrf_token = "{{ csrf_token }}";
 
 			// If there is a placeholder message remove it and add an error.
@@ -559,7 +559,7 @@
 			// the formation that is currently selected.
 			if (selected != null) {
 				// Set the path and cross-site forgery token vars.
-				var path = "/formations/create";
+				var path = "/formations/create/defensive_look";
 				var csrf_token = "{{ csrf_token }}";
 
 				// Delete the formation from the backend.

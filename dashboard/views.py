@@ -344,7 +344,7 @@ def create_formation(request):
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
-				formation.scout = True
+				formation.scout = False
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
@@ -376,7 +376,7 @@ def create_defensive_look(request):
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
-				formation.scout = False
+				formation.scout = True
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
