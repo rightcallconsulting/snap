@@ -22,7 +22,7 @@ var Play = function(config) {
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
-	this.scoutFormations = config.scoutFormations || null;
+	this.scoutFormations = config.scoutFormations || [];
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";
