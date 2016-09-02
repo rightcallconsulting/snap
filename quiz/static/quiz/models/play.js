@@ -287,6 +287,15 @@ Play.prototype.scoutFromFormation = function(formation) {
 	}
 };
 
+// removeScoutFormation gets rid of 
+Play.prototype.removeScoutFormation = function() {
+	this.defensivePlayers = [];
+
+	//for (var i = 0; i < this.offensivePlayers.length; ++i) {
+	//	this.offensivePlayers[i].blockingAssignmentArray = [];
+	//}
+};
+
 /*********************************/
 /*     Non object functions      */
 /*********************************/

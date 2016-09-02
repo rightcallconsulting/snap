@@ -822,6 +822,7 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+			play.removeScoutFormation();
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -829,8 +830,6 @@
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
 				old_selected.setAttribute("class", "btn btn-primary sideview-button");
-
-				play.defensivePlayers = [];
 			}
 
 			// If the old selected button is the same as the newly selected
