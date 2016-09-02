@@ -22,6 +22,7 @@ var Play = function(config) {
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
+	this.scoutFormations = config.scoutFormations || null;
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";
@@ -178,7 +179,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
+		playJson = JSON.stringify(this, ["name", "team", "unit", "formation", "scoutFormations", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
 		var playName = this.name;
 		var playUnit = this.unit;
 		var formationName = this.formation;
