@@ -287,7 +287,8 @@ Play.prototype.scoutFromFormation = function(formation) {
 	}
 };
 
-// removeScoutFormation gets rid of 
+// removeScoutFormation gets rid of the defensive look and player blocks from
+// and offensive play.
 Play.prototype.removeScoutFormation = function() {
 	this.defensivePlayers = [];
 

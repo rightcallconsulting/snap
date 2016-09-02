@@ -72,7 +72,7 @@
 		var scout_formation;
 		var formation_name_selected = "";
 		var play_name_selected = "";
-		var scout_play_name_selected = "";
+		var scout_formation_name_selected = "";
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -678,6 +678,7 @@
 
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
+			formation_name_selected = formation_name;
 
 			for (i in formations) {
 				if (formation_name === formations[i].name) {
@@ -691,7 +692,7 @@
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
-			back_arrow.setAttribute("onclick", "showFormations()");
+			back_arrow.setAttribute("onclick", "showScout()");
 
 			sideview_header.textContent = formation_name;
 
@@ -699,7 +700,7 @@
 
 			var toggle_button = document.createElement("div");
 			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showDefensiveLooks()");
+			toggle_button.setAttribute("onclick", "showScout()");
 			toggle_button.textContent = "D";
 			sideview_header.appendChild(toggle_button);
 
@@ -725,6 +726,9 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+
+			play_name_selected = "";
+			scout_formation_name_selected = "";
 			
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
@@ -766,6 +770,7 @@
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
 				var play_name = new_selected.getAttribute("name");
+				play_name_selected = play_name;
 
 				for (i in plays) {
 					if (play.formation === plays[i].formation && play_name === plays[i].name) {
@@ -798,7 +803,7 @@
 
 			var toggle_button = document.createElement("div");
 			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showFormations()");
+			toggle_button.setAttribute("onclick", "showOffense()");
 			toggle_button.textContent = "O";
 			sideview_header.appendChild(toggle_button);
 
@@ -822,7 +827,9 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+			
 			play.removeScoutFormation();
+			scout_formation_name_selected = "";
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -843,6 +850,7 @@
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
 				var scout_formation_name = new_selected.getAttribute("name");
+				scout_formation_name_selected = scout_formation_name;
 
 				for (i in scout_formations) {
 					if (scout_formation_name === scout_formations[i].name) {
@@ -852,6 +860,70 @@
 				}
 
 				play.scoutFromFormation(scout_formation);
+			}
+		};
+
+		function showOffense() {
+			// Show Plays in Formation
+			var sideview_header = document.getElementById("sideview-header");
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			$("#sideview-buttons").empty();
+
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showScout()");
+
+			sideview_header.textContent = formation_name_selected;
+
+			sideview_header.appendChild(back_arrow);
+
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showScout()");
+			toggle_button.textContent = "D";
+			sideview_header.appendChild(toggle_button);
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
+			
+			for (i in plays) {
+				if (plays[i].formation === formation_name_selected) {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+					play_button.textContent = plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
+			}
+			
+			// Change selected
+			if (play_name_selected != "") {
+				var play = $("[name=\"" + play_name_selected + "\"]")[0];
+				play.removeAttribute("class");
+				play.setAttribute("id", "selected");
+				play.setAttribute("class", "btn btn-success sideview-button");
+			}
+		};
+
+		function showScout() {
+			showDefensiveLooks();
+
+			if (scout_formation_name_selected != "") {
+				var queryString = "[name=\"" + scout_formation_name_selected + "\"]";
+				var scout_formation = $("[name=\"" + scout_formation_name_selected + "\"]");
+				addScoutFormationToPlay(scout_formation);
 			}
 		};
 
