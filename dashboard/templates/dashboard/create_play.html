@@ -809,7 +809,7 @@
 
 			$("#sideview-buttons").empty();
 
-			var sideview_buttons = document.getElementById("sideview-buttons")
+			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for(i in scout_formations) {
 				var formation_button = document.createElement("button");
@@ -921,8 +921,7 @@
 			showDefensiveLooks();
 
 			if (scout_formation_name_selected != "") {
-				var queryString = "[name=\"" + scout_formation_name_selected + "\"]";
-				var scout_formation = $("[name=\"" + scout_formation_name_selected + "\"]");
+				var scout_formation = $("[name=\"" + scout_formation_name_selected + "\"]")[0];
 				addScoutFormationToPlay(scout_formation);
 			}
 		};
