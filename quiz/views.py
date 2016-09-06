@@ -149,6 +149,30 @@ def formation_alignment_quiz(request):
 			'page_header': 'FORMATION ALIGNMENT QUIZ'
 		})
 
+def blitz_quiz(request):
+    return render(request, 'quiz/blitz_quiz.html')
+
+def call_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+        #playerID = player.id
+    return render(request, 'quiz/call_quiz.html', {
+        'player': player
+    })
+
+class OLineBlitzQuizView(FormationQuizView):
+    template_name = 'quiz/oline_blitz_quiz.html'
+    page_header = 'OLine Blitz Quiz'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 def qb_progression(request):
     return render(request, 'quiz/qb_progression.html')
 
@@ -171,17 +195,6 @@ def option_quiz(request):
     return render(request, 'quiz/option_quiz.html', {
         'player': player,
         'page_header': 'OPTION ASSIGNMENT'
-    })
-
-def blitz_quiz(request):
-    return render(request, 'quiz/blitz_quiz.html')
-
-def call_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/call_quiz.html', {
-        'player': player
     })
 
 def db_call_quiz(request):
@@ -547,19 +560,6 @@ class LinebackerMotionQuizView(FormationQuizView):
 
     def build_dict_for_json_seed(self):
         formations = super(LinebackerMotionQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
-        }
-
-class OLineBlitzQuizView(FormationQuizView):
-    template_name = 'quiz/oline_blitz_quiz.html'
-    page_header = 'OLine Blitz Quiz'
-    formation_unit = 'defense'
-    exclude_formations_that_dont_include_players_position = False
-
-    def build_dict_for_json_seed(self):
-        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
         return {
             'player': self.player.dict_for_json(),
             'defensive_formations': formations,
