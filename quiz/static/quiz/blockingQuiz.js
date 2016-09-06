@@ -1,17 +1,13 @@
-var makeJSONCall = true;
+var setupComplete = false;
 var playerIDFromHTML = $('#player-id').data('player-id');
 var test;
+var multipleChoiceAnswers;
 var playNames;
 var maxPlays = 5;
+var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
-var currentUserTested = null;
-var currentPlayerTested = null;
-var guessedAssignment = null;
 var exitDemo = null;
 var demoDoubleClick = false;
-var originalPlayList = [];
-var questionPart = 0;
-var multipleChoiceAnswers = [];
 
 function setup() {
   var box = document.getElementById('display-box');
@@ -20,8 +16,8 @@ function setup() {
   var myCanvas = createCanvas(width, height);
   field.height = height;
   field.width = width;
-  field.heightInYards = 30;
-  field.ballYardLine = 75;
+  field.heightInYards = 40;
+  field.ballYardLine = 65;
   background(58, 135, 70);
   randomSeed(millis());
   myCanvas.parent('quiz-box');
@@ -33,521 +29,301 @@ function setup() {
     resizeCanvas(width, height);
     field.height = height;
     field.width = width;
+    resizeJSButtons();
   }
-
+  multipleChoiceAnswers = [];
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
   bigReset = new Button({
-    x: field.getYardX(width*0.5)-3,
+    x: field.getYardX(width*0.25) - buttonWidth / 2,
     y: field.getYardY(height*0.8),
-    width: 6,
-    height: 4,
+    width: buttonWidth,
     label: "Retake All"
   })
+
   resetMissed = new Button({
-    x: bigReset.x - bigReset.width * 1.2,
+    x: field.getYardX(width*0.5) - buttonWidth / 2,
     y: bigReset.y,
     width: bigReset.width,
-    height: bigReset.height,
     label: "Retake Missed"
   })
+
   nextQuiz = new Button({
-    x: bigReset.x + bigReset.width * 1.2,
+    x: field.getYardX(width*0.75) - buttonWidth / 2,
     y: bigReset.y,
     width: bigReset.width,
-    height: bigReset.height,
     label: "Exit"
   })
 
   exitDemo = new Button({
     label: "",
-    x: field.getYardX(25),
-    y: field.getYardY(25),
+    x: field.getYardX(width*0.1),
+    y: field.getYardY(height*0.1),
     height: 1.5,
     width: 1.5,
     clicked: false,
     fill: color(255, 255, 255)
   });
 
-  if(makeJSONCall){
+  if(json_seed){
     var scoreboard = new Scoreboard({
 
     });
     test = new PlayTest({
-      plays: [],
+      formations: [],
       scoreboard: scoreboard,
-      displayName: true
+      displayName: false
     });
-    var formations = [];
-    var offensiveFormations = [];
-    var defensivePlays = [];
+
     var plays = [];
-    var positions = [];
     playNames = [];
 
-    currentUserTested = createUserFromJSONSeed(json_seed.player);
-
-    $.getJSON('/quiz/teams/1/formations', function(data, jqXHR){
-      data.forEach(function(formationObject){
-        var newFormation = createFormationFromJSON(formationObject);
-        offensiveFormations.push(newFormation);
-      })
-      $.getJSON('/quiz/teams/1/defensive_formations', function(data, jqXHR){
-        data.forEach(function(formationObject){
-          var newFormation = createFormationFromJSON(formationObject);
-          formations.push(newFormation);
-        })
-        $.getJSON('/quiz/teams/1/formations/positions', function(data, jqXHR){
-          data.forEach(function(position){
-            var newPlayer = createPlayerFromJSON(position);
-            var formation = formations.filter(function(formation){return formation.id == position.fields.formation})[0]
-            var offensiveFormation = offensiveFormations.filter(function(formation){return formation.id == position.fields.formation})[0]
-
-            if(formation){
-              formation.positions.push(newPlayer);
-            }
-            if(offensiveFormation){
-              offensiveFormation.positions.push(newPlayer);
-            }
-          })
-          offensiveFormations.forEach(function(formation){
-            formation.populatePositions();
-          })
-          formations.forEach(function(formation){
-            formation.populatePositions();
-            var defensivePlay = formation.createDefensivePlay();
-            defensivePlay.establishOffensiveFormationFromArray(offensiveFormations);
-            defensivePlays.push(defensivePlay);
-            if(playNames.indexOf(defensivePlay.playName) < 0){
-              playNames.push(defensivePlay.playName);
-            }
-          })
-
-	$.getJSON('/quiz/teams/1/plays', function(data3, jqXHR){
-	data3.forEach(function(play){
-	var testIDArray = play.fields.tests;
-	var play = createPlayFromJSON(play);
-	plays.push(play);
-	})
-	$.getJSON('/quiz/teams/1/plays/players', function(data4, jqXHR){
-	data4.forEach(function(position){
-	var player = createPlayerFromJSON(position);
-	positions.push(player);
-	})
-	plays.forEach(function(play){
-	play.addPositionsFromID(positions);
-	play.populatePositions();
-	})
-	defensivePlays.forEach(function(play){
-	play.populatePositions();
-	})
-
-	while(defensivePlays.length > plays.length){
-	  defensivePlays.pop();
+	for(i in json_seed) {
+		var play = createPlayFromJson(JSON.parse(json_seed[i]));
+		playNames.push(play.name);
+		plays.push(play);
 	}
-	while(defensivePlays.length < plays.length){
-	  defensivePlays.push(defensivePlays[0]);
-	}
-	originalPlayList = plays.slice();
-	test.plays = shuffle(plays);
-	test.defensivePlays = defensivePlays;
-	test.restartQuiz();
-	test.updateScoreboard();
-	test.updateProgress();
-	makeJSONCall = false;
-	})
-	});
-	
-})
-})
 
-});
-
-}
-}
-
-var sortByPlayName = function(a, b) {
-	var name1 = a.playName;
-	var name2 = b.playName;
-	
-	if (name1.length < 1) {
-		return 1;
-	} else if(name2.length < 1) {
-		return -1;
-	} else if(name1 < name2) {
-		return -1;
-	} else {
-		return 1;
-	}
+    originalPlayList = plays.slice();
+    test.plays = shuffle(plays);
+    multipleChoiceAnswers = [];
+    test.restartQuiz();
+    test.updateScoreboard();
+    setupComplete = true;
+  }
 };
 
-function clearSelections() {
-	var play = test.getCurrentDefensivePlay();
-	if (play) {
-		for (var i = 0; i < play.defensivePlayers.length; i++) {
-			var p = play.defensivePlayers[i];
-			p.clicked = false;
-		}
-	}
+function resizeJSButtons(){
+  var buttonWidth = field.heightInYards * field.width / field.height / 6;
+  bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
+  bigReset.y = field.getYardY(height*0.8);
+  bigReset.width = buttonWidth;
+
+  resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+  resetMissed.y = bigReset.y;
+  resetMissed.width = bigReset.width;
+
+  nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
+  nextQuiz.y = bigReset.y;
+  nextQuiz.width = bigReset.width;
+
+  exitDemo.x =  field.getYardX(width*0.1);
+  exitDemo.y = field.getYardY(height*0.1);
 };
 
-function checkAnswer() {
-	var isCorrect = currentPlayerTested.blockingAssignmentObject.equals(guessedAssignment);
-	if (isCorrect) {
-		clearSelections();
-		test.score++;
-		questionPart++;
-	} else {
-		clearSelections();
-		test.missedPlays.push(test.getCurrentPlay());
-		test.scoreboard.feedbackMessage = test.incorrectAnswerMessage;
-		test.incorrectGuesses++;
-		test.updateScoreboard();
-		test.feedbackScreenStartTime = millis();
-	}
-};
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-function drawFeedbackScreen() {
-	field.drawBackground(test.getCurrentPlay(), height, width);
-	var play = test.getCurrentPlay();
-	var defensivePlay = test.getCurrentDefensivePlay();
-	
-	if (play) {
-		play.drawAllPlayers(field);
-	}
-
-	if (defensivePlay) {
-		defensivePlay.drawAllPlayers(field);
-	}
-
-	if (currentPlayerTested) {
-		currentPlayerTested.blockingAssignmentObject.draw(currentPlayerTested, field);
-	}
-};
-
-function drawOpening(){
-	field.drawBackground(test.getCurrentPlay(), height, width);
-	var play = test.getCurrentPlay();
-	var defensivePlay = test.getCurrentDefensivePlay();
-	
-	if (play) {
-		if (defensivePlay) {
-			defensivePlay.drawAllPlayers(field);
-		}
-
-		play.drawAllPlayers(field);
-	}
-
-	if (currentPlayerTested && guessedAssignment) {
-		guessedAssignment.draw(currentPlayerTested, field);
-	}
-};
-
-function drawDemoScreen() {
-	field.drawBackground(test.getCurrentPlay(), height, width);
-	var play = test.getCurrentPlay();
-	var defensivePlay = test.getCurrentDefensivePlay();
-	var timeElapsed = millis() - test.demoStartTime;
-
-	if (play) {
-		if (defensivePlay) {
-			defensivePlay.drawAllPlayers(field);
-		}
-
-		play.drawAllPlayers(field);
-		var x1 = field.getTranslatedX(exitDemo.x);
-		var y1 = field.getTranslatedY(exitDemo.y);
-		var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
-		var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
-		noStroke();
-		fill(220,0,0);
-		exitDemo.draw(field);
-		textSize(22);
-		textAlign(LEFT);
-		text("DEMO", x2 + 5, (y1 + y2) / 2);
-		stroke(0);
-		strokeWeight(2);
-		line(x1, y1, x2, y2);
-		line(x1, y2, x2, y1);
-		strokeWeight(1);
-		noStroke();
-
-		if (currentPlayerTested) {
-			var x = field.getTranslatedX(currentPlayerTested.startX);
-			var y = field.getTranslatedY(currentPlayerTested.startY);
-			var siz = field.yardsToPixels(currentPlayerTested.siz) * 1.5;
-			textAlign(LEFT);
-			textSize(18);
-			noStroke();
-
-			if(timeElapsed < 2000) {
-				noStroke();
-				noFill();
-				stroke(255,238,88);
-				strokeWeight(2);
-				ellipse(x, y, siz, siz);
-				noStroke();
-				strokeWeight(1);
-				fill(255,238,88);
-				textSize(22);
-				text("You are in yellow", x - 100, y - 90);
-				noStroke();
-			} else if(timeElapsed < 4000) {
-				fill(255,238,88);
-				stroke(255,238,88);
-				line(field.width / 2, 80, field.width/2, 20);
-				triangle(field.width / 2 - 20, 20, field.width / 2 + 20, 20, field.width/2, 0);
-				noStroke();
-				fill(0);
-				textSize(22);
-				fill(255,238,88);
-				text("Your play call is here", field.width / 2 + 10, 50);
-			} else {
-				stroke(255,238,88);
-				fill(255,238,88);
-				var clickedDefender = null;
-				for (var i = 0; i < defensivePlay.defensivePlayers.length; i++) {
-					var defender = defensivePlay.defensivePlayers[i];
-					if (defender.clicked) {
-						clickedDefender = defender;
-					}
-				}
-
-				if (clickedDefender === null) {
-					for(var i = 0; i < defensivePlay.defensivePlayers.length; i++) {
-						var defender = defensivePlay.defensivePlayers[i];
-						var x = field.getTranslatedX(defender.startX);
-						var y = field.getTranslatedY(defender.startY);
-						var siz = field.yardsToPixels(defender.siz);
-						y -= siz / 2;
-						stroke(255,238,88);
-						strokeWeight(2);
-						line(x, y - 80, x, y - 15);
-						triangle(x - 15, y - 15, x + 15, y - 15, x, y);
-						strokeWeight(1);
-					}
-				}
-
-				textAlign(CENTER);
-				textSize(22);
-
-				if (clickedDefender) {
-					if (demoDoubleClick) {
-						text("Great!  You're ready to start!\nClick anywhere to continue.", field.width / 2, (5 * field.height) / 6);
-					} else if (currentPlayerTested && guessedAssignment) {
-						guessedAssignment.draw(currentPlayerTested, field);
-						text("Click on next blocking assignment if you have one.\nClick spacebar to cycle between block types\nClick again to check answer.", field.width / 2, (5 * field.height) / 6);
-					} else {
-						text("Click again to check answer", field.width / 2, (5 * field.height) / 6);
-					}
-				} else {
-					text("Click on the player you are assigned to block", field.width / 2, (5 * field.height) / 6);
-					noStroke();
-				}
-			}
-
-			noStroke();
-		}
-	}
-};
-
-keyPressed = function(){
-	if (keyCode === BACKSPACE) {
-		if (guessedAssignment) {
-			guessedAssignment.removeLastBlockedPlayer();
-		}
-		return false;
-	} else if (keyCode === LEFT_ARROW) {
-		if(guessedAssignment) {
-			if (guessedAssignment.blockedZone === 1) {
-				checkAnswer();
-			} else {
-				guessedAssignment.blockedZone = 1;
-			}
-		} else {
-			guessedAssignment = new BlockingAssignment({
-				blockedZone: 1
-			});
-		}
-		return false;
-	} else if(keyCode === RIGHT_ARROW) {
-		if(guessedAssignment) {
-			if(guessedAssignment.blockedZone === 2) {
-				checkAnswer();
-			} else {
-				guessedAssignment.blockedZone = 2;
-			}
-		} else {
-			guessedAssignment = new BlockingAssignment({
-				blockedZone: 2
-			});
-		}
-
-		return false;
-	} else if (keyCode === DOWN_ARROW) {
-		if (guessedAssignment) {
-			if (guessedAssignment.blockedZone === 3) {
-				checkAnswer();
-			} else {
-				guessedAssignment.blockedZone = 3;
-			}
-		} else {
-			guessedAssignment = new BlockingAssignment({
-				blockedZone: 3
-			});
-		}
-
-		return false;
-	} else if (keyCode === UP_ARROW) {
-		if(guessedAssignment) {
-			guessedAssignment.blockedZone = 0;
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
-
-function setupDemoScreen(){
-	clearSelections();
-	test.showDemo = true;
-	demoDoubleClick = false;
-	test.demoStartTime = millis();
-};
-
-function exitDemoScreen(){
-	test.showDemo = false;
-	demoDoubleClick = false;
-	clearSelections();
-};
-
-
-mouseClicked = function() {
-	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
-		test.scoreboard.feedbackMessage = "";
-	} else {
-		return true;
-	}
-
-	if (bigReset.isMouseInside(field) && test.over) {
-		test.plays = shuffle(originalPlayList.slice());
-		test.restartQuiz();
-		return true;
-	} else if (resetMissed.isMouseInside(field) && test.over) {
-		var newPlays = test.missedPlays.concat(test.skippedPlays);
-		if(newPlays.length < 1) {
-			newPlays = originalPlayList.slice();
-		}
-		test.plays = shuffle(newPlays);
-		test.restartQuiz();
-
-		return true;
-	} else if (nextQuiz.isMouseInside(field) && test.over) {
-		//Advance to next quiz or exit to dashboard
-		window.location.href = "/";
-	} else if (test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick) {
-		exitDemoScreen();
-	} else if (!test.over) {
-		var play = test.getCurrentDefensivePlay();
-		var clickedPlayer = null;
-		for (var i = 0; i < play.defensivePlayers.length; i++) {
-			var answer = play.defensivePlayers[i];
-			if (answer.clicked) {
-				if(answer.isMouseInside(field)) {
-					if (test.showDemo) {
-						demoDoubleClick = true;
-					} else {
-						checkAnswer(answer);
-					}
-				} else {
-					clearSelections();
-					answer.clicked = true;
-				}
-			} else {
-				if(answer.isMouseInside(field)) {
-					clearSelections();
-					answer.clicked = true;
-					clickedPlayer = answer;
-				}
-			}
-		}
-
-		if (clickedPlayer) {
-			if (guessedAssignment){
-				var i = guessedAssignment.blockedPlayers.indexOf(clickedPlayer);
-				if (i < 0) {
-					guessedAssignment.addBlockedPlayer(clickedPlayer);
-				} else if (i === guessedAssignment.blockedPlayers.length - 1) {
-					checkAnswer();
-				} else {
-					guessedAssignment.removeBlockedPlayer(i);
-				}
-			} else {
-				guessedAssignment = new BlockingAssignment({
-					blockedPlayers: [clickedPlayer]
-				});
-			}
-		} else {
-			if(guessedAssignment) {
-				guessedAssignment.clearBlockedPlayers();
-			}
-		}
-	}
-};
-
-keyTyped = function(){
-	if (test.over) {
-		if (key === 'r') {
-			test.restartQuiz();
-		}
-	} else {
-		if (key === ' ') {
-			if (guessedAssignment) {
-				if (guessedAssignment.type === "") {
-					guessedAssignment.type = "PULL";
-				} else {
-					guessedAssignment.type = "";
-				}
-			}
-			return false;
-		}
-	}
+  return array;
 };
 
 function createMultipleChoiceAnswers(correctAnswer, numOptions){
-	var correctIndex = Math.floor((Math.random() * numOptions));
-	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-	multipleChoiceAnswers = [];
-	var availableNames = ["CUT", "SEAL", "HINGE", "PULL"];
-	shuffle(availableNames);
-	var i = 0;
-	
-	while (multipleChoiceAnswers.length < numOptions) {
-		var label = availableNames[i];
-		if (multipleChoiceAnswers.length === correctIndex) {
-			label = correctAnswer;
-		} else if(label === correctAnswer) {
-			i++;
-			label = availableNames[i];
-		}
-
-		multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-			x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-			y: height - 60,
-			width: width / (numOptions + 2),
-			height: 50,
-			label: label,
-			clicked: false
-		}));
-		i++;
-	}
+  var correctIndex = Math.floor((Math.random() * numOptions));
+  document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
+  multipleChoiceAnswers = [];
+  var availableNames = play_names;
+  shuffle(availableNames);
+  var i = 0;
+  while(multipleChoiceAnswers.length < numOptions){
+    var label = availableNames[i];
+    if(multipleChoiceAnswers.length === correctIndex){
+      label = correctAnswer;
+    }else if(label === correctAnswer){
+      i++;
+      label = availableNames[i];
+    }
+    multipleChoiceAnswers.push(new MultipleChoiceAnswer({
+      x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
+      y: height - 60,
+      width: width / (numOptions + 2),
+      height: 50,
+      label: label,
+      clicked: false
+    }));
+    i++;
+  }
 };
 
+function checkAnswer(guess){
+  var isCorrect = test.getCurrentPlay().name === guess.label;
+  registerAnswer(isCorrect);
+};
+
+function drawOpening(){
+  field.drawBackground(null, height, width);
+  test.getCurrentPlay().drawAllRoutes(field);
+  test.getCurrentPlay().drawBlockingAssignmentObjects(field);
+  test.getCurrentPlay().drawRunAssignments(field);
+  test.getCurrentPlay().drawAllPlayers(field);
+};
+
+function drawScene(field){
+  field.drawBackground(null, height, width);
+  clearMultipleChoiceAnswers();
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    for(var i = 0; i < play.offensivePlayers.length; i++){
+      play.offensivePlayers[i].runRoute();
+    }
+  }
+};
+
+function restartScene(){
+  var play = test.getCurrentPlay();
+  for (var i = 0; i < play.offensivePlayers.length; i++){
+    play.offensivePlayers[i].resetToStart();
+  }
+};
+
+function drawDemoScreen(){
+  field.drawBackground(null, height, width);
+  var timeElapsed = millis() - test.demoStartTime;
+  var play = test.getCurrentPlay();
+  if(play){
+    play.drawAllRoutes(field);
+    play.drawAllPlayers(field);
+    var x1 = field.getTranslatedX(exitDemo.x);
+    var y1 = field.getTranslatedY(exitDemo.y);
+    var x2 = field.getTranslatedX(exitDemo.x + exitDemo.width);
+    var y2 = field.getTranslatedY(exitDemo.y - exitDemo.height);
+    noStroke();
+    exitDemo.draw(field);
+    textSize(22);
+    textAlign(LEFT);
+    text("DEMO", x2 + 5, (y1 + y2) / 2);
+    stroke(0);
+    strokeWeight(2);
+    line(x1, y1, x2, y2);
+    line(x1, y2, x2, y1);
+    strokeWeight(1);
+    noStroke();
+
+    var playButtonX = 85;
+    var playButtonY = 400;
+
+    fill(255,238,88);
+    stroke(255,238,88);
+    strokeWeight(2);
+    line(playButtonX, playButtonY, playButtonX, playButtonY + 80);
+    triangle(85, 480, 105, 460, 65, 460);
+
+    textAlign(LEFT);
+    textSize(18);
+    strokeWeight(0);
+    text("Click play button anytime to animate play.\nClick again to pause animation.", 100, 420);
+
+    var x = field.getTranslatedX(49);
+    var y = field.getTranslatedY(85);
+    var x2 = field.getTranslatedX(66);
+    var y2 = field.getTranslatedY(85);
+    stroke(255,238,88);
+    fill(255,238,88);
+    strokeWeight(2);
+    line(x, y, x2, y2);
+    strokeWeight(1);
+    triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
+
+    var clicked = false;
+    for(var i = 1; i <= multipleChoiceAnswers.length; i++){
+      var answer = document.getElementById("mc-button-"+i);
+      if(answer && answer.classList.contains('clicked')){
+        clicked = true;
+      }
+    }
+    textSize(18);
+    textAlign(RIGHT);
+    strokeWeight(0);
+    if(demoDoubleClick){
+      text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
+    }else if(clicked){
+      text("Click again to check answer.", x - 20, y - 115);
+    }else{
+      text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
+    }
+    strokeWeight(1);
+  }
+};
+
+function setupDemoScreen(){
+  test.showDemo = true;
+  demoDoubleClick = false;
+  test.demoStartTime = millis();
+  clearMultipleChoiceAnswers();
+};
+
+function exitDemoScreen(){
+  test.showDemo = false;
+  demoDoubleClick = false;
+  clearMultipleChoiceAnswers();
+};
+
+mouseClicked = function() {
+  if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+    test.scoreboard.feedbackMessage = "";
+  }
+  if(bigReset.isMouseInside(field) && test.over) {
+    test.plays = shuffle(originalPlayList.slice());
+    test.restartQuiz();
+    return true;
+  }else if(resetMissed.isMouseInside(field) && test.over) {
+    var newPlays = test.missedPlays.concat(test.skippedPlays);
+    if(newPlays.length < 1){
+      newPlays = originalPlayList.slice();
+    }
+    test.plays = shuffle(newPlays);
+    test.restartQuiz();
+    return true;
+  }else if(nextQuiz.isMouseInside(field) && test.over) {
+    //Advance to next quiz or exit to dashboard
+    window.location.href = "/playbook";
+  }else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick){
+    exitDemoScreen();
+  }else{
+    if(test.showDemo){
+      if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height){
+        demoDoubleClick = true;
+      }else{
+        return;
+      }
+    }
+  }
+};
+
+keyTyped = function(){
+  if(test.over){
+    if(key === 'r'){
+      test.restartQuiz();
+    }
+  }else{
+    var offset = key.charCodeAt(0) - "1".charCodeAt(0);
+    if(offset >= 0 && offset < multipleChoiceAnswers.length){
+      var answer = multipleChoiceAnswers[offset];
+      if(answer.clicked){
+        checkAnswer(answer);
+      }else{
+        clearMultipleChoiceAnswers();
+        answer.changeClickStatus();
+      }
+    }
+  }
+};
+
+
 function draw() {
-	if (makeJSONCall) {
+	if(!setupComplete) {
 		//WAIT - still executing JSON
-		background(93, 148, 81);
-	} else if (test.over) {
+	} else if(test.over) {
 		background(93, 148, 81);
 		noStroke();
 		test.drawQuizSummary();
@@ -555,33 +331,28 @@ function draw() {
 		nextQuiz.draw(field);
 		resetMissed.draw(field);
 	} else {
-		if (!currentPlayerTested) {
-			currentPlayerTested = test.getCurrentPlay().getPlayerFromPosition(currentUserTested.position);
-			if (currentPlayerTested.blockingAssignmentObject) {
-				currentPlayerTested.blockingAssignmentObject.createBlockedPlayersFromIDs(test.getCurrentDefensivePlay());
-			}
+		if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()) {
+			var correctAnswer = test.getCurrentPlay().name;
+			createMultipleChoiceAnswers(correctAnswer,3);
+			test.updateProgress(false);
+			test.updateMultipleChoiceLabels();
 		}
 
-		if (test.showDemo) {
-			drawDemoScreen();
-		} else if(test.feedbackScreenStartTime) {
-			var elapsedTime = millis() - test.feedbackScreenStartTime;
-			
-			if (elapsedTime > 2000) {
+		if(test.feedbackScreenStartTime) {
+			var timeElapsed = millis() - test.feedbackScreenStartTime;
+			if(timeElapsed > 1000) {
+				clearMultipleChoiceAnswers();
 				test.feedbackScreenStartTime = 0;
-				test.advanceToNextPlay(test.incorrectAnswerMessage);
-				currentPlayerTested = null;
-				guessedAssignment = null;
+				test.advanceToNextPlay("");
 			} else {
-				drawFeedbackScreen(field);
-			}
-		} else if(questionPart > 0) {
-			if(multipleChoiceAnswers.length < 1) {
-				createMultipleChoiceAnswers("CUT", 3);
-				test.updateMultipleChoiceLabels();
+				drawOpening(field);
 			}
 		} else {
-			drawOpening(field);
+			if(test.getCurrentPlay().inProgress) {
+				drawScene(field);
+			} else {
+				drawOpening(field);
+			}
 		}
 	}
 };

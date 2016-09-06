@@ -150,12 +150,35 @@ def formation_alignment_quiz(request):
 		})
 
 def blocking_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-    return render(request, 'quiz/blocking_quiz.html', {
-        'player': player,
-        'page_header': 'BLOCKING QUIZ'
-    })
+    if (request.method == 'GET'):
+        number_of_questions = int(request.GET.get('num_qs'))
+        all_plays = Play.objects.filter(team=request.user.player.team)
+        number_of_plays = all_plays.count()
+        play_names = []
+        plays_json = []
+        seeds = []
+
+        for play in all_plays:
+            play_names.append(play.name)
+
+        # While the list of JSON to send is less than the amount of questions
+        # and it is less than the number of available plays keep adding
+        # new JSON seeds. In other words, stop adding plays when you have
+        # added the full number of questions or you have added all the plays.
+        while(len(plays_json) < number_of_questions and len(plays_json) < number_of_plays):
+            seed = random.randint(0, number_of_plays-1)
+            if (seed not in seeds):
+                plays_json.append(all_plays[seed].playJson)
+                seeds.append(seed)
+
+        if (len(plays_json) == 0):
+            return render(request, '')
+
+        return render(request, 'quiz/blocking_quiz.html', {
+            'playsJson': plays_json,
+            'playNames': play_names,
+            'page_header': 'BLOCKING QUIZ'
+        })
 
 def call_quiz(request):
     if(request.user.myuser.is_a_player):
