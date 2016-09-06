@@ -149,16 +149,47 @@ def formation_alignment_quiz(request):
 			'page_header': 'FORMATION ALIGNMENT QUIZ'
 		})
 
-def blitz_quiz(request):
-    return render(request, 'quiz/blitz_quiz.html')
+def blocking_quiz(request):
+    if(request.user.myuser.is_a_player):
+        player = request.user.player
+    return render(request, 'quiz/blocking_quiz.html', {
+        'player': player,
+        'page_header': 'BLOCKING QUIZ'
+    })
 
 def call_quiz(request):
     if(request.user.myuser.is_a_player):
         player = request.user.player
-        #playerID = player.id
     return render(request, 'quiz/call_quiz.html', {
         'player': player
     })
+
+def ol_view(request):
+    return render(request, 'quiz/ol_view.html')
+
+class CallAlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/call_alignment_quiz.html'
+    page_header = 'CALL ALIGNMENT QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
+class QbCallQuizView(PlayQuizView):
+    template_name = 'quiz/qb_call_quiz.html'
+    page_header = 'QB CHECK QUIZ'
+
+    def build_dict_for_json_seed(self):
+        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
 
 class OLineBlitzQuizView(FormationQuizView):
     template_name = 'quiz/oline_blitz_quiz.html'
@@ -172,6 +203,9 @@ class OLineBlitzQuizView(FormationQuizView):
             'player': self.player.dict_for_json(),
             'defensive_formations': formations,
         }
+
+def blitz_quiz(request):
+    return render(request, 'quiz/blitz_quiz.html')
 
 def qb_progression(request):
     return render(request, 'quiz/qb_progression.html')
@@ -212,15 +246,6 @@ def motion_quiz(request):
     return render(request, 'quiz/motion_quiz.html', {
         'player': player,
         'page_header': 'MOTION QUIZ'
-    })
-
-def blocking_quiz(request):
-    if(request.user.myuser.is_a_player):
-        player = request.user.player
-        #playerID = player.id
-    return render(request, 'quiz/blocking_quiz.html', {
-        'player': player,
-        'page_header': 'BLOCKING QUIZ'
     })
 
 def run_quiz(request):
@@ -434,17 +459,6 @@ class WRQuizView(CustomPlayerQuizView):
 
         return [p.dict_for_json() for p in plays]
 
-class QbCallQuizView(PlayQuizView):
-    template_name = 'quiz/qb_call_quiz.html'
-    page_header = 'QB CHECK QUIZ'
-
-    def build_dict_for_json_seed(self):
-        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'plays': plays,
-        }
-
 class RouteQuizView(PlayQuizView):
     template_name = 'quiz/route_quiz.html'
     page_header = 'ROUTE QUIZ'
@@ -578,19 +592,6 @@ class MotionAlignmentQuizView(FormationQuizView):
             'defensive_formations': formations,
         }
 
-class CallAlignmentQuizView(FormationQuizView):
-    template_name = 'quiz/call_alignment_quiz.html'
-    page_header = 'CALL ALIGNMENT QUIZ'
-    formation_unit = 'defense'
-    exclude_formations_that_dont_include_players_position = True
-
-    def build_dict_for_json_seed(self):
-        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
-        }
-
 class PassRushQuizView(FormationQuizView):
     template_name = 'quiz/pass_rush_quiz.html'
     page_header = 'PASS RUSH QUIZ'
@@ -628,9 +629,6 @@ def stunt_quiz(request):
         'player': player,
         'page_header': 'STUNT QUIZ'
     })
-
-def ol_view(request):
-    return render(request, 'quiz/ol_view.html')
 
 def rb_quiz(request):
     return render(request, 'quiz/rb_quiz.html')
