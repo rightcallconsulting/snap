@@ -186,7 +186,7 @@ Player.prototype.pixelDraw = function(){
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
 	var blockingAssignment = this.blockingAssignmentArray;
-	var blockingAssingmentLength = blockingAssignment.length;
+	var blockingAssignmentLength = blockingAssignment.length;
 
 	var currentX = this.x;
 	var currentY = this.y;
@@ -196,7 +196,7 @@ Player.prototype.drawBlocks = function(field) {
 
 	var new_coordinates;
 
-	for (var i = 0; i < blockingAssingmentLength; i++) {
+	for (var i = 0; i < blockingAssignmentLength; i++) {
 		if (blockingAssignment[i] != null) {
 			if (blockingAssignment[i] instanceof Player) {
 				new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
@@ -231,7 +231,11 @@ Player.prototype.drawBlocks = function(field) {
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else {
-				new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				if (!this.selected && i === blockingAssignmentLength-1) {
+					new_coordinates = this.drawBlockingMovementWithEnd(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				} else {
+					new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				}
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			}
