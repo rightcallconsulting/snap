@@ -194,48 +194,44 @@ Player.prototype.drawBlocks = function(field) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
+	var new_coordinates;
+
 	for (var i = 0; i < blockingAssingmentLength; i++) {
 		if (blockingAssignment[i] != null) {
 			if (blockingAssignment[i] instanceof Player) {
-				/*var black = color(0, 0, 0);
-				stroke(black);
-				line(currentX, currentY, field.getTranslatedX(blockingAssignment[i].x), field.getTranslatedY(blockingAssignment[i].y));
-
-				currentX = field.getTranslatedX(blockingAssignment[i].x);
-				currentY = field.getTranslatedY(blockingAssignment[i].y);*/
-				var new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
+				new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Money Block") {
-				var new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
+				new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Down Block Right") {
-				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
+				new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Down Block Left") {
-				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
+				new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Straight Seal Right") {
-				var new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
+				new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Straight Seal Left") {
-				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
+				new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Kick Out Right") {
-				var new_coordinates = this.drawKickOutRight(field, currentX, currentY);
+				new_coordinates = this.drawKickOutRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Kick Out Left") {
-				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
+				new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else {
-				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			}
