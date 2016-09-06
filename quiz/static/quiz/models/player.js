@@ -429,10 +429,64 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	var new_coordinates = [x2, y2];
 
-	// Perpendicular line at the end of the down block
+	// Perpendicular line at the end of the block
 	var lengthOfPerpLine = 1.5;
 	xDiff = sin(alpha)*lengthOfPerpLine/2;
 	yDiff = cos(alpha)*lengthOfPerpLine/2;
+	x1 = x2 + xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 - xDiff;
+	y2 = y2 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+
+	return new_coordinates;
+};
+
+// drawBlockingMovement draws a straight line from (x1, y1) to (x2, y2) as a
+// part of a blocking assignment. There is no perpendicular blocking line drawn
+// at the end.
+Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	return new_coordinates;
+};
+
+// drawBlockingMovementWithEnd draws a straight line from (x1, y1) to (x2, y2)
+// as a part of a blocking assignment. There is a perpendicular blocking line 
+// drawn at the end.
+Player.prototype.drawBlockingMovementWithEnd = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the block
+	var lengthOfPerpLine = 1.5;
+	var alpha = atan((y2 - y1)/(x2 - x1));
+	var xDiff = sin(alpha)*lengthOfPerpLine/2;
+	var yDiff = cos(alpha)*lengthOfPerpLine/2;
 	x1 = x2 + xDiff;
 	y1 = y2 - yDiff;
 	x2 = x2 - xDiff;
@@ -792,25 +846,6 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2); 
-
-	return new_coordinates;
-};
-
-// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
-// their block.
-Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
-	x1 = field.getTranslatedX(x1);
-	y1 = field.getTranslatedY(y1);
-	x2 = field.getTranslatedX(x2);
-	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2);
-	x1 = field.getYardX(x1);
-	y1 = field.getYardY(y1);
-	x2 = field.getYardX(x2);
-	y2 = field.getYardY(y2);
-
-	var new_coordinates = [x2, y2];
 
 	return new_coordinates;
 };

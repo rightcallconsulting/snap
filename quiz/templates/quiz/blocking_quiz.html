@@ -13,72 +13,75 @@ BLOCKING QUIZ
 <script language="javascript" type="text/javascript" src="{% static 'quiz/blockingQuiz.js' %}"></script>
 <script type="text/javascript">
 var json_seed = {{ json_seed|safe }};
-$('#play-button').click(function(){
-        //pressPlayButton();
-      })
 
-$('#pause-button').click(function(){
-        //pressPlayButton();
-      })
+$('#play-button').click(function() {
+	//pressPlayButton();
+});
 
-$('#check-button').click(function(){
-  if(guessedAssignment){
-    checkAnswer();
-  }
+$('#pause-button').click(function() {
+	//pressPlayButton();
+});
+
+$('#check-button').click(function() {
+	if(guessedAssignment){
+		checkAnswer();
+	}
+});
+
+$('#clear-button').click(function() {
+	guessedAssignment = null;
+});
+
+$('#restart-button').click(function() {
+	if(test && test.feedbackScreenStartTime === 0){
+		clearSelections();
+		currentPlayerTested = null;
+		test.restartQuiz();
+	}
+});
+
+
+$('#next-play-button').click(function() {
+	if(test && !test.over && test.feedbackScreenStartTime === 0) {
+		if(test.showDemo) {
+			exitDemoScreen();
+			return;
+		}
+		clearSelections();
+		test.skipQuestion();
+		currentPlayerTested = null;
+	}
+});
+
+$('#question-button').click(function() {
+	if(test && !test.over && test.feedbackScreenStartTime === 0) {
+		if(test.showDemo) {
+			exitDemoScreen();
+		} else {
+			setupDemoScreen();
+		}
+	}
+});
+
+$('#zoom-in-button').click(function() {
+	var heightInYards = field.heightInYards;
+	var widthInYards = field.heightInYards * field.width / field.height;
+	if (heightInYards > 25) {
+		field.heightInYards -= 5;
+	} else {
+		field.heightInYards = 20;
+	}
 })
 
-$('#clear-button').click(function(){
-  guessedAssignment = null;
-})
-
-$('#restart-button').click(function(){
-  if(test && test.feedbackScreenStartTime === 0){
-    clearSelections();
-    currentPlayerTested = null;
-    test.restartQuiz();
-  }
-})
-
-
-$('#next-play-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
-    if(test.showDemo){
-      exitDemoScreen();
-      return;
-    }
-    clearSelections();
-    test.skipQuestion();
-    currentPlayerTested = null;
-  }
-})
-$('#question-button').click(function(){
-  if(test && !test.over && test.feedbackScreenStartTime === 0){
-    if(test.showDemo){
-      exitDemoScreen();
-    }else{
-      setupDemoScreen();
-    }
-  }
-})
-$('#zoom-in-button').click(function(){
-  var heightInYards = field.heightInYards;
-  var widthInYards = field.heightInYards * field.width / field.height;
-  if(heightInYards > 25){
-    field.heightInYards -= 5;
-  }else{
-    field.heightInYards = 20;
-  }
-})
-
-$('#zoom-out-button').click(function(){
-  var heightInYards = field.heightInYards;
-  var widthInYards = field.heightInYards * field.width / field.height;
-  if(heightInYards > 50){
-    field.heightInYards = 55;
-  }else{
-    field.heightInYards += 5;
-  }
-})
+$('#zoom-out-button').click(function() {
+	var heightInYards = field.heightInYards;
+	var widthInYards = field.heightInYards * field.width / field.height;
+	if (heightInYards > 50) {
+		field.heightInYards = 55;
+	} else {
+		field.heightInYards += 5;
+	}
+});
 </script>
 {% endblock %}
 

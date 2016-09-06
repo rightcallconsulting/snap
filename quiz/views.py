@@ -167,43 +167,6 @@ def call_quiz(request):
 def ol_view(request):
     return render(request, 'quiz/ol_view.html')
 
-class CallAlignmentQuizView(FormationQuizView):
-    template_name = 'quiz/call_alignment_quiz.html'
-    page_header = 'CALL ALIGNMENT QUIZ'
-    formation_unit = 'defense'
-    exclude_formations_that_dont_include_players_position = True
-
-    def build_dict_for_json_seed(self):
-        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
-        }
-
-class QbCallQuizView(PlayQuizView):
-    template_name = 'quiz/qb_call_quiz.html'
-    page_header = 'QB CHECK QUIZ'
-
-    def build_dict_for_json_seed(self):
-        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'plays': plays,
-        }
-
-class OLineBlitzQuizView(FormationQuizView):
-    template_name = 'quiz/oline_blitz_quiz.html'
-    page_header = 'OLine Blitz Quiz'
-    formation_unit = 'defense'
-    exclude_formations_that_dont_include_players_position = False
-
-    def build_dict_for_json_seed(self):
-        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
-        return {
-            'player': self.player.dict_for_json(),
-            'defensive_formations': formations,
-        }
-
 def blitz_quiz(request):
     return render(request, 'quiz/blitz_quiz.html')
 
@@ -617,6 +580,44 @@ class PassZonesQuizView(FormationQuizView):
             'player': self.player.dict_for_json(),
             'defensive_plays': formations,
         }
+
+class CallAlignmentQuizView(FormationQuizView):
+    template_name = 'quiz/call_alignment_quiz.html'
+    page_header = 'CALL ALIGNMENT QUIZ'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = True
+
+    def build_dict_for_json_seed(self):
+        formations = super(CallAlignmentQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
+class QbCallQuizView(PlayQuizView):
+    template_name = 'quiz/qb_call_quiz.html'
+    page_header = 'QB CHECK QUIZ'
+
+    def build_dict_for_json_seed(self):
+        plays = super(QbCallQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'plays': plays,
+        }
+
+class OLineBlitzQuizView(FormationQuizView):
+    template_name = 'quiz/oline_blitz_quiz.html'
+    page_header = 'OLine Blitz Quiz'
+    formation_unit = 'defense'
+    exclude_formations_that_dont_include_players_position = False
+
+    def build_dict_for_json_seed(self):
+        formations = super(OLineBlitzQuizView, self).build_dict_for_json_seed()
+        return {
+            'player': self.player.dict_for_json(),
+            'defensive_formations': formations,
+        }
+
 
 def defense_play_quiz(request):
     return render(request, 'quiz/defense_play_quiz.html')
