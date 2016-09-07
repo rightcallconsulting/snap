@@ -14,6 +14,7 @@
 
 var Play = function(config) {
 	this.name = config.name || "";
+	this.scoutName = config.scoutName || "";
 	this.unit = config.unit || "offense";
 	this.formation = config.formation || "";
 	this.offensivePlayers = config.offensivePlayers || [];
@@ -192,7 +193,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "team", "unit", "formation", "scoutFormations", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
 		var playName = this.name;
 		var playUnit = this.unit;
 		var formationName = this.formation;
@@ -230,6 +231,7 @@ Play.prototype.deepCopy = function() {
 	var result = new Play({
 		id: this.id,
 		name: this.name,
+		scoutName: this.scoutName,
 		team: this.team,
 		unit: this.unit,
 		formation: this.formation,

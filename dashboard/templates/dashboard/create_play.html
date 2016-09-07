@@ -519,9 +519,13 @@
 			for (i in plays) {
 				if (play.formation === plays[i].formation && name === plays[i].name) {
 					plays[i] = play.deepCopy();
+					play.scoutName = scout_formation_name_selected;
 					play.save(path, csrf_token);
 					play = new Play({});
 					play.fromFormation(formation);
+
+					play_name_selected = "";
+					showOffense();
 					return;
 				}
 			}
@@ -531,6 +535,7 @@
 			// its plays array and add a new button for it to the sidebar.
 			play.name = name;
 			play.team = teamID;
+			play.scoutName = scout_formation_name_selected;
 			play.save(path, csrf_token);
 			plays.push(play);
 
@@ -552,6 +557,9 @@
 
 			// Add the new button to the sideview button div.
 			sideview_buttons_div.appendChild(new_play_button);
+
+			play_name_selected = "";
+			showOffense();
 			return;
 		});
 
@@ -567,6 +575,7 @@
 				var csrf_token = "{{ csrf_token }}";
 
 				// Delete the play from the backend.
+				play.scoutName = scout_formation_name_selected;
 				play.delete(path, csrf_token);
 
 				// Remove the play from the play array. If this didn't
