@@ -382,26 +382,59 @@ function createPlayFromJson(playJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	if (playJsonDictionary.offensiveLinemen != null) {
-		for (var i = 0; i < playJsonDictionary.offensiveLinemen.length; ++i) {
-			var player = new Player({
-				x: playJsonDictionary.offensiveLinemen[i].x,
-				y: playJsonDictionary.offensiveLinemen[i].y,
-				startX: playJsonDictionary.offensiveLinemen[i].startX,
-				startY: playJsonDictionary.offensiveLinemen[i].startY,
-				num: playJsonDictionary.offensiveLinemen[i].num,
-				pos: playJsonDictionary.offensiveLinemen[i].pos,
-				red: playJsonDictionary.offensiveLinemen[i].red,
-				green: playJsonDictionary.offensiveLinemen[i].green,
-				blue: playJsonDictionary.offensiveLinemen[i].blue,
-				unit: playJsonDictionary.offensiveLinemen[i].unit,
-				eligible: playJsonDictionary.offensiveLinemen[i].eligible,
-				siz: playJsonDictionary.offensiveLinemen[i].siz
-			});
+	var left_tackle = new Player({});
+	var left_guard = new Player({});
+	var center = new Player({});
+	var right_guard = new Player({});
+	var right_tackle = new Player({});
 
-			offensiveLinemenArray.push(player);
+	for (i in offensivePlayersArray) {
+		player = offensivePlayersArray[i];
+
+		if (player.pos === "LT") {
+			left_tackle = player;
+		} else if (player.pos === "RT") {
+			right_tackle = player;
+		} else if (player.pos === "LG") {
+			left_guard = player;
+		} else if (player.pos === "RG") {
+			right_guard = player;
+		} else if (player.pos === "C") {
+			center = player;
+		} else if (player.pos === "T") {
+			if (left_tackle === null) {
+				player.pos = "LT";
+				left_tackle === player;
+			} else if (player.x < left_tackle.x) {
+				left_tackle.pos = "RT";
+				right_tackle = left_tackle;
+				player.pos = "LT";
+				left_tackle = player;
+			} else {
+				player.pos = "RT";
+				right_tackle === player;
+			}
+		} else if (player.pos === "G") {
+			if (left_guard === null) {
+				player.pos = "LG";
+				left_guard === player;
+			} else if (player.x < left_guard.x) {
+				left_guard.pos = "RG";
+				right_guard = left_guard;
+				player.pos = "LG";
+				left_guard = player;
+			} else {
+				player.pos = "RG";
+				right_guard === player;
+			}
 		}
 	}
+
+	offensiveLinemenArray.push(left_tackle);
+	offensiveLinemenArray.push(left_guard);
+	offensiveLinemenArray.push(center);
+	offensiveLinemenArray.push(right_guard);
+	offensiveLinemenArray.push(right_tackle);
 
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
 		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
