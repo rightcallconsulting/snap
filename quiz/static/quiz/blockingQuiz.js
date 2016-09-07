@@ -288,6 +288,30 @@ function mouseClicked() {
 	}
 };
 
+function keyPressed() {
+	var playerSelcted = answer_player;
+	if (keyCode == BACKSPACE || keyCode == DELETE) {
+		answer_player.blockingAssignmentArray = [];
+		return false;
+	} else if (key === "Q") {
+		playerSelcted.blockingAssignmentArray.push("Money Block");
+	} else if (key === "W") {
+		playerSelcted.blockingAssignmentArray.push("Down Block Right");
+	} else if (key === "E") {
+		playerSelcted.blockingAssignmentArray.push("Down Block Left");
+	} else if (key === "R") {
+		playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
+	} else if (key === "T") {
+		playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
+	} else if (key === "Y") {
+		playerSelcted.blockingAssignmentArray.push("Kick Out Right");
+	} else if (key === "U") {
+		playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+	}
+
+	return false;	
+};
+
 function keyTyped() {
 	if(test.over) {
 		if(key === 'r') {
@@ -308,7 +332,69 @@ function keyTyped() {
 };
 
 function checkAnswer() {
+	var wrong_answer = false;
 
+	var original_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
+	if (original_player.blockingAssignmentArray.length != answer_player.blockingAssignmentArray.length) {
+		test.advanceToNextPlay("Incorrect");
+		wrong_answer = true;
+		break;
+	} else {
+		for (i in original_player.blockingAssignmentArray) {
+			if (original_player.blockingAssignmentArray[i] instanceof Player && answer_player.blockingAssignmentArray[i] instanceof Player) {
+				if (original_player.blockingAssignmentArray[i] != answer_player.blockingAssignmentArray[i]) {
+					test.advanceToNextPlay("Incorrect");
+					wrong_answer = true;
+					break;
+				}
+			} else if (original_player.blockingAssignmentArray[i] === "Money Block" && answer_player.blockingAssignmentArray[i] != "Money Block") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Down Block Right" && answer_player.blockingAssignmentArray[i] != "Down Block Right") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Down Block Left" && answer_player.blockingAssignmentArray[i] != "Down Block Left") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Straight Seal Right" && answer_player.blockingAssignmentArray[i] != "Straight Seal Right") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Straight Seal Left" && answer_player.blockingAssignmentArray[i] != "Straight Seal Left") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Kick Out Right" && answer_player.blockingAssignmentArray[i] != "Kick Out Right") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else if (original_player.blockingAssignmentArray[i] === "Kick Out Left" && answer_player.blockingAssignmentArray[i] != "Kick Out Left") {
+				test.advanceToNextPlay("Incorrect");
+				wrong_answer = true;
+				break;
+			} else {
+				if (answer_player.blockingAssignmentArray[i].x < (original_player.blockingAssignmentArray[i].x - 1) || answer_player.blockingAssignmentArray[i].x > (original_player.blockingAssignmentArray[i].x + 1)) {
+					test.advanceToNextPlay("Incorrect");
+					wrong_answer = true;
+					break;
+				} else if (answer_player.blockingAssignmentArray[i].y < (original_player.blockingAssignmentArray[i].y - 1) || answer_player.blockingAssignmentArray[i].y > (original_player.blockingAssignmentArray[i].y + 1)) {
+					test.advanceToNextPlay("Incorrect");
+					wrong_answer = true;
+					break;
+				}
+			}
+		}
+
+		if (!wrong_answer) {
+			test.score += 1;
+			test.advanceToNextPlay("Correct");
+		}
+	}
+
+	changeAnswerPlayer();
 };
 
 function skipQuestion() {
