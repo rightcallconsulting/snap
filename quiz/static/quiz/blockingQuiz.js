@@ -8,6 +8,7 @@ var originalPlayList;
 var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
+var answer_player = null;
 
 function setup() {
 	var box = document.getElementById('display-box');
@@ -91,6 +92,8 @@ function setup() {
 		test.updateScoreboard();
 		setupComplete = true;
 	}
+
+	changeAnswerPlayer();
 };
 
 function resizeJSButtons() {
@@ -125,39 +128,6 @@ function shuffle(array) {
 	}
 
 	return array;
-};
-
-function createMultipleChoiceAnswers(correctAnswer, numOptions){
-	var correctIndex = Math.floor((Math.random() * numOptions));
-	document.getElementById('correct-answer-index').innerHTML = str(correctIndex+1);
-	multipleChoiceAnswers = [];
-	var availableNames = play_names;
-	shuffle(availableNames);
-	var i = 0;
-	while(multipleChoiceAnswers.length < numOptions) {
-		var label = availableNames[i];
-		if(multipleChoiceAnswers.length === correctIndex) {
-			label = correctAnswer;
-		} else if (label === correctAnswer) {
-			i++;
-			label = availableNames[i];
-		}
-
-		multipleChoiceAnswers.push(new MultipleChoiceAnswer({
-			x: 50 + multipleChoiceAnswers.length * width / (numOptions+1),
-			y: height - 60,
-			width: width / (numOptions + 2),
-			height: 50,
-			label: label,
-			clicked: false
-		}));
-		i++;
-	}
-};
-
-function checkAnswer(guess) {
-	var isCorrect = test.getCurrentPlay().name === guess.label;
-	registerAnswer(isCorrect);
 };
 
 function drawScene(field) {
@@ -265,7 +235,7 @@ function exitDemoScreen() {
 
 function mouseReleased() {
 	// Handle clicks on players in the Play
-	var currentPlayerSelected = test.getCurrentPlay().getSelected()[0];
+	var currentPlayerSelected = answer_player;
 	var newPlayerSelected = test.getCurrentPlay().mouseInPlayer(field);
 	var mouseYardX = field.getYardX(mouseX);
 	var mouseYardY = field.getYardY(mouseY);
@@ -285,7 +255,7 @@ function mouseReleased() {
 	return false;
 };
 
-mouseClicked = function() {
+function mouseClicked() {
 	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
 		test.scoreboard.feedbackMessage = "";
 	}
@@ -318,7 +288,7 @@ mouseClicked = function() {
 	}
 };
 
-keyTyped = function() {
+function keyTyped() {
 	if(test.over) {
 		if(key === 'r') {
 			test.restartQuiz();
@@ -337,6 +307,20 @@ keyTyped = function() {
 	}
 };
 
+function checkAnswer() {
+
+};
+
+function skipQuestion() {
+	test.skipQuestion();
+	changeAnswerPlayer();
+};
+
+function changeAnswerPlayer() {
+	answer_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
+	answer_player.blockingAssignmentArray = [];
+	answer_player.setSelected();
+};
 
 function draw() {
 	if(!setupComplete) {
@@ -349,14 +333,7 @@ function draw() {
 		nextQuiz.draw(field);
 		resetMissed.draw(field);
 	} else {
-		if(multipleChoiceAnswers.length < 2 && test.getCurrentPlay()) {
-			var correctAnswer = test.getCurrentPlay().name;
-			createMultipleChoiceAnswers(correctAnswer,3);
-			test.updateProgress(false);
-			test.updateMultipleChoiceLabels();
-		}
-
-		if(test.feedbackScreenStartTime) {
+		if (test.feedbackScreenStartTime) {
 			var timeElapsed = millis() - test.feedbackScreenStartTime;
 			if(timeElapsed > 1000) {
 				clearMultipleChoiceAnswers();
@@ -375,9 +352,11 @@ function draw() {
 	}
 };
 
-function drawOpening(){
+function drawOpening() {
 	field.drawBackground(null, height, width);
-	test.getCurrentPlay().offensivePlayers[2].setSelected();
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
+
+	answer_player.drawBlocks(field);
+	answer_player.draw(field);
 };

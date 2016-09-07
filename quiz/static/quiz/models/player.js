@@ -138,7 +138,7 @@ Player.prototype.setFill = function(red, green, blue) {
 
 // draw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
-Player.prototype.draw = function(){
+Player.prototype.draw = function(field) {
 	var x = field.getTranslatedX(this.x);
 	var y = field.getTranslatedY(this.y);
 	var siz = field.yardsToPixels(this.siz);
@@ -163,7 +163,7 @@ Player.prototype.draw = function(){
 
 // pixelDraw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
-Player.prototype.pixelDraw = function(){
+Player.prototype.pixelDraw = function(field) {
 	if(this.unit === "offense") {
 		noStroke();
 		fill(this.red, this.green, this.blue);

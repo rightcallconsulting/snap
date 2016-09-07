@@ -35,7 +35,7 @@
 		});
 
 		$('#check-button').click(function() {
-			if(guessedAssignment){
+			if(test && !test.over && test.feedbackScreenStartTime === 0) {
 				checkAnswer();
 			}
 		});
@@ -55,13 +55,7 @@
 
 		$('#next-play-button').click(function() {
 			if(test && !test.over && test.feedbackScreenStartTime === 0) {
-				if(test.showDemo) {
-					exitDemoScreen();
-					return;
-				}
-				clearSelections();
-				test.skipQuestion();
-				currentPlayerTested = null;
+				skipQuestion();
 			}
 		});
 
