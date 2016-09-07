@@ -155,12 +155,12 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions){
 	}
 };
 
-function checkAnswer(guess){
+function checkAnswer(guess) {
 	var isCorrect = test.getCurrentPlay().name === guess.label;
 	registerAnswer(isCorrect);
 };
 
-function drawScene(field){
+function drawScene(field) {
 	field.drawBackground(null, height, width);
 	clearMultipleChoiceAnswers();
 	var play = test.getCurrentPlay();
@@ -173,14 +173,14 @@ function drawScene(field){
 	}
 };
 
-function restartScene(){
+function restartScene() {
 	var play = test.getCurrentPlay();
 	for (var i = 0; i < play.offensivePlayers.length; i++) {
 		play.offensivePlayers[i].resetToStart();
 	}
 };
 
-function drawDemoScreen(){
+function drawDemoScreen() {
 	field.drawBackground(null, height, width);
 	var timeElapsed = millis() - test.demoStartTime;
 	var play = test.getCurrentPlay();
@@ -250,14 +250,14 @@ function drawDemoScreen(){
 	}
 };
 
-function setupDemoScreen(){
+function setupDemoScreen() {
 	test.showDemo = true;
 	demoDoubleClick = false;
 	test.demoStartTime = millis();
 	clearMultipleChoiceAnswers();
 };
 
-function exitDemoScreen(){
+function exitDemoScreen() {
 	test.showDemo = false;
 	demoDoubleClick = false;
 	clearMultipleChoiceAnswers();
@@ -318,7 +318,7 @@ mouseClicked = function() {
 	}
 };
 
-keyTyped = function(){
+keyTyped = function() {
 	if(test.over) {
 		if(key === 'r') {
 			test.restartQuiz();
@@ -377,6 +377,7 @@ function draw() {
 
 function drawOpening(){
 	field.drawBackground(null, height, width);
+	test.getCurrentPlay().offensivePlayers[2].setSelected();
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
 };

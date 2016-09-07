@@ -25,7 +25,7 @@ def index(request):
 def formation_identification_quiz(request):
 	if (request.method == 'GET'):
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_formations = Formation.objects.filter(team=request.user.player.team)
+		all_formations = Formation.objects.filter(team=request.user.player.team, scout=False)
 		number_of_formations = all_formations.count()
 		formation_names = []
 		formations_json = []
@@ -56,7 +56,7 @@ def formation_identification_quiz(request):
 def play_identification_quiz(request):
 	if (request.method == 'GET'):
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_plays = Play.objects.filter(team=request.user.player.team)
+		all_plays = Play.objects.filter(team=request.user.player.team, scout=False)
 		number_of_plays = all_plays.count()
 		play_names = []
 		plays_json = []
@@ -87,7 +87,7 @@ def play_identification_quiz(request):
 def concept_identification_quiz(request):
 	if (request.method == 'GET'):
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_concepts = Concept.objects.filter(team=request.user.player.team)
+		all_concepts = Concept.objects.filter(team=request.user.player.team, scout=False)
 		number_of_concepts = all_concepts.count()
 		concept_names = []
 		concepts_json = []
@@ -118,7 +118,7 @@ def concept_identification_quiz(request):
 def formation_alignment_quiz(request):
 	if (request.method == 'GET'):
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_formations = Formation.objects.filter(team=request.user.player.team)
+		all_formations = Formation.objects.filter(team=request.user.player.team, scout=False)
 		number_of_formations = all_formations.count()
 		formation_names = []
 		formations_json = []
@@ -152,7 +152,7 @@ def formation_alignment_quiz(request):
 def blocking_quiz(request):
     if (request.method == 'GET'):
         number_of_questions = int(request.GET.get('num_qs'))
-        all_plays = Play.objects.filter(team=request.user.player.team)
+        all_plays = Play.objects.filter(team=request.user.player.team, scout=False)
         number_of_plays = all_plays.count()
         play_names = []
         plays_json = []
