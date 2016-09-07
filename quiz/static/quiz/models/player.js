@@ -138,7 +138,7 @@ Player.prototype.setFill = function(red, green, blue) {
 
 // draw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
-Player.prototype.draw = function(){
+Player.prototype.draw = function(field) {
 	var x = field.getTranslatedX(this.x);
 	var y = field.getTranslatedY(this.y);
 	var siz = field.yardsToPixels(this.siz);
@@ -163,7 +163,7 @@ Player.prototype.draw = function(){
 
 // pixelDraw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
-Player.prototype.pixelDraw = function(){
+Player.prototype.pixelDraw = function(field) {
 	if(this.unit === "offense") {
 		noStroke();
 		fill(this.red, this.green, this.blue);
@@ -186,7 +186,7 @@ Player.prototype.pixelDraw = function(){
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
 	var blockingAssignment = this.blockingAssignmentArray;
-	var blockingAssingmentLength = blockingAssignment.length;
+	var blockingAssignmentLength = blockingAssignment.length;
 
 	var currentX = this.x;
 	var currentY = this.y;
@@ -194,48 +194,48 @@ Player.prototype.drawBlocks = function(field) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
-	for (var i = 0; i < blockingAssingmentLength; i++) {
+	var new_coordinates;
+
+	for (var i = 0; i < blockingAssignmentLength; i++) {
 		if (blockingAssignment[i] != null) {
 			if (blockingAssignment[i] instanceof Player) {
-				/*var black = color(0, 0, 0);
-				stroke(black);
-				line(currentX, currentY, field.getTranslatedX(blockingAssignment[i].x), field.getTranslatedY(blockingAssignment[i].y));
-
-				currentX = field.getTranslatedX(blockingAssignment[i].x);
-				currentY = field.getTranslatedY(blockingAssignment[i].y);*/
-				var new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
+				new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Money Block") {
-				var new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
+				new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Down Block Right") {
-				var new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
+				new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Down Block Left") {
-				var new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
+				new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Straight Seal Right") {
-				var new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
+				new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Straight Seal Left") {
-				var new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
+				new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Kick Out Right") {
-				var new_coordinates = this.drawKickOutRight(field, currentX, currentY);
+				new_coordinates = this.drawKickOutRight(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else if (blockingAssignment[i] === "Kick Out Left") {
-				var new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
+				new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			} else {
-				var new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				if (!this.selected && i === blockingAssignmentLength-1) {
+					new_coordinates = this.drawBlockingMovementWithEnd(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				} else {
+					new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
+				}
 				currentX = new_coordinates[0];
 				currentY = new_coordinates[1];
 			}
@@ -429,10 +429,64 @@ Player.prototype.drawBlockOnPlayer = function(field, currentX, currentY, assignm
 
 	var new_coordinates = [x2, y2];
 
-	// Perpendicular line at the end of the down block
+	// Perpendicular line at the end of the block
 	var lengthOfPerpLine = 1.5;
 	xDiff = sin(alpha)*lengthOfPerpLine/2;
 	yDiff = cos(alpha)*lengthOfPerpLine/2;
+	x1 = x2 + xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 - xDiff;
+	y2 = y2 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+
+	return new_coordinates;
+};
+
+// drawBlockingMovement draws a straight line from (x1, y1) to (x2, y2) as a
+// part of a blocking assignment. There is no perpendicular blocking line drawn
+// at the end.
+Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	return new_coordinates;
+};
+
+// drawBlockingMovementWithEnd draws a straight line from (x1, y1) to (x2, y2)
+// as a part of a blocking assignment. There is a perpendicular blocking line 
+// drawn at the end.
+Player.prototype.drawBlockingMovementWithEnd = function(field, x1, y1, x2, y2) {
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	var new_coordinates = [x2, y2];
+
+	// Perpendicular line at the end of the block
+	var lengthOfPerpLine = 1.5;
+	var alpha = atan((y2 - y1)/(x2 - x1));
+	var xDiff = sin(alpha)*lengthOfPerpLine/2;
+	var yDiff = cos(alpha)*lengthOfPerpLine/2;
 	x1 = x2 + xDiff;
 	y1 = y2 - yDiff;
 	x2 = x2 - xDiff;
@@ -792,25 +846,6 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2); 
-
-	return new_coordinates;
-};
-
-// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
-// their block.
-Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
-	x1 = field.getTranslatedX(x1);
-	y1 = field.getTranslatedY(y1);
-	x2 = field.getTranslatedX(x2);
-	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2);
-	x1 = field.getYardX(x1);
-	y1 = field.getYardY(y1);
-	x2 = field.getYardX(x2);
-	y2 = field.getYardY(y2);
-
-	var new_coordinates = [x2, y2];
 
 	return new_coordinates;
 };
@@ -1316,7 +1351,6 @@ Player.prototype.saveToDB = function(){
   //create a connection to playerDB
   //get the variables we need for the DB in the proper format
   //push an entry into the players DB for this player with all data we need
-
 };
 
 Player.prototype.establishFill = function(){

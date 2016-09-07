@@ -41,7 +41,7 @@ var Formation = function(config){
 
 // createOffensiveLineAndQuarterback
 Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
-	var olPositions = ["T", "G", "C", "G", "T"];
+	var olPositions = ["LT", "LG", "C", "RG", "RT"];
 	for (var i = -2; i <= 2; i++) {
 		var xPos = Field.WIDTH/2 + i*2.5;
 		var yPos = ballY;
@@ -302,26 +302,59 @@ function createFormationFromJson(formationJsonDictionary) {
 		defensivePlayersArray.push(player);
 	}
 
-	if (formationJsonDictionary.offensiveLinemen != null) {
-		for (var i = 0; i < formationJsonDictionary.offensiveLinemen.length; ++i) {
-			var player = new Player({
-				x: formationJsonDictionary.offensiveLinemen[i].x,
-				y: formationJsonDictionary.offensiveLinemen[i].y,
-				startX: formationJsonDictionary.offensiveLinemen[i].startX,
-				startY: formationJsonDictionary.offensiveLinemen[i].startY,
-				num: formationJsonDictionary.offensiveLinemen[i].num,
-				pos: formationJsonDictionary.offensiveLinemen[i].pos,
-				red: formationJsonDictionary.offensiveLinemen[i].red,
-				green: formationJsonDictionary.offensiveLinemen[i].green,
-				blue: formationJsonDictionary.offensiveLinemen[i].blue,
-				unit: formationJsonDictionary.offensiveLinemen[i].unit,
-				eligible: formationJsonDictionary.offensiveLinemen[i].eligible,
-				siz: formationJsonDictionary.offensiveLinemen[i].siz
-			});
+	var left_tackle = new Player({});
+	var left_guard = new Player({});
+	var center = new Player({});
+	var right_guard = new Player({});
+	var right_tackle = new Player({});
 
-			offensiveLinemenArray.push(player);
+	for (i in offensivePlayersArray) {
+		player = offensivePlayersArray[i];
+
+		if (player.pos === "LT") {
+			left_tackle = player;
+		} else if (player.pos === "RT") {
+			right_tackle = player;
+		} else if (player.pos === "LG") {
+			left_guard = player;
+		} else if (player.pos === "RG") {
+			right_guard = player;
+		} else if (player.pos === "C") {
+			center = player;
+		} else if (player.pos === "T") {
+			if (left_tackle === null) {
+				player.pos = "LT";
+				left_tackle === player;
+			} else if (player.x < left_tackle.x) {
+				left_tackle.pos = "RT";
+				right_tackle = left_tackle;
+				player.pos = "LT";
+				left_tackle = player;
+			} else {
+				player.pos = "RT";
+				right_tackle === player;
+			}
+		} else if (player.pos === "G") {
+			if (left_guard === null) {
+				player.pos = "LG";
+				left_guard === player;
+			} else if (player.x < left_guard.x) {
+				left_guard.pos = "RG";
+				right_guard = left_guard;
+				player.pos = "LG";
+				left_guard = player;
+			} else {
+				player.pos = "RG";
+				right_guard === player;
+			}
 		}
 	}
+
+	offensiveLinemenArray.push(left_tackle);
+	offensiveLinemenArray.push(left_guard);
+	offensiveLinemenArray.push(center);
+	offensiveLinemenArray.push(right_guard);
+	offensiveLinemenArray.push(right_tackle);
 
 	var result = new Formation({
 		name: formationJsonDictionary.name,

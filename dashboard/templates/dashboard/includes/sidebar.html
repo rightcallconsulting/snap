@@ -19,6 +19,17 @@
 					</a>
 				</li>
 
+				<li>
+					<a href="/playbook">
+						<img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
+						<br>
+						<span class="menu-text">
+							PLAYBOOK
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
+
 				<li class="openable open">
 					<a href="/todo">
 						<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
@@ -29,28 +40,6 @@
 							{% else %}
 								QUIZZES
 							{% endif %}
-						</span>
-						<span class="menu-hover"></span>
-					</a>
-				</li>
-
-				<li class="openable">
-					<a href="/analytics">
-						<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
-						<br>
-						<span class="menu-text">
-							ANALYTICS
-						</span>
-						<span class="menu-hover"></span>
-					</a>
-				</li>
-
-				<li>
-					<a href="/playbook">
-						<img class="menu-icon" src="{% static 'dashboard/images/playbook-icon.png' %}" alt="">
-						<br>
-						<span class="menu-text">
-							PLAYBOOK
 						</span>
 						<span class="menu-hover"></span>
 					</a>
@@ -68,6 +57,17 @@
 						</a>
 					</li>
 				{% endif %}
+
+				<li class="openable">
+					<a href="/analytics">
+						<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
+						<br>
+						<span class="menu-text">
+							ANALYTICS
+						</span>
+						<span class="menu-hover"></span>
+					</a>
+				</li>
 			</ul>
 		</div><!-- /main-menu -->
 	</div><!-- /sidebar-inner -->
