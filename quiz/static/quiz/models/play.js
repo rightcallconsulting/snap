@@ -77,6 +77,20 @@ Play.prototype.drawAssignments = function (field) {
 	}
 };
 
+// drawAssignmentsExceptBlocks draws the assignments except blocking
+// assignments of all of the players in a play.
+Play.prototype.drawAssignmentsExceptBlocks = function (field) {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].drawRoute(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
+	}
+};
 
 // isValid checks the legality of a play.
 Play.prototype.isValid = function() {
