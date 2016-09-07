@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
+					<button class="btn btn-primary sideview-button formation-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
 						{{ formation.name }}
 					</button>
 				{% endfor %}
@@ -547,7 +547,7 @@
 			var new_play_button = document.createElement("button");
 			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 			new_play_button.setAttribute("name", name);
-			new_play_button.setAttribute("class", "btn btn-primary sideview-button");
+			new_play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 			new_play_button.textContent = name;
 
 			// Add the new button to the sideview button div.
@@ -651,7 +651,7 @@
 
 			for(i in formations) {
 				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
 				formation_button.setAttribute("name", formations[i].name);
 				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
 				formation_button.textContent = formations[i].name;
@@ -714,7 +714,7 @@
 			for (i in plays) {
 				if (plays[i].formation === formation_name) {
 					var play_button = document.createElement("button");
-					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
@@ -759,7 +759,7 @@
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button play-button");
 			}
 
 			// If the old selected button is the same as the newly selected
@@ -770,7 +770,7 @@
 				// id to 
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success sideview-button");
+				new_selected.setAttribute("class", "btn btn-success sideview-button play-button");
 
 				var play_name = new_selected.getAttribute("name");
 				play_name_selected = play_name;
@@ -815,13 +815,13 @@
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for(i in scout_formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
-				formation_button.setAttribute("name", scout_formations[i].name);
-				formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
-				formation_button.textContent = scout_formations[i].name;
+				var scout_formation_button = document.createElement("button");
+				scout_formation_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
+				scout_formation_button.setAttribute("name", scout_formations[i].name);
+				scout_formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
+				scout_formation_button.textContent = scout_formations[i].name;
 
-				sideview_buttons.appendChild(formation_button);
+				sideview_buttons.appendChild(scout_formation_button);
 			}
 		};
 
@@ -839,7 +839,7 @@
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button scout-button");
 			}
 
 			// If the old selected button is the same as the newly selected
@@ -850,7 +850,7 @@
 				// id to 
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success sideview-button");
+				new_selected.setAttribute("class", "btn btn-success sideview-button scout-button");
 
 				var scout_formation_name = new_selected.getAttribute("name");
 				scout_formation_name_selected = scout_formation_name;
@@ -867,6 +867,9 @@
 		};
 
 		function showOffense() {
+			play.removeScoutFormation();
+			scout_formation_name_selected = "";
+
 			// Show Plays in Formation
 			var sideview_header = document.getElementById("sideview-header");
 			var sideview_buttons = document.getElementById("sideview-buttons");
@@ -902,7 +905,7 @@
 			for (i in plays) {
 				if (plays[i].formation === formation_name_selected) {
 					var play_button = document.createElement("button");
-					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
@@ -913,10 +916,10 @@
 			
 			// Change selected
 			if (play_name_selected != "") {
-				var play = $("[name=\"" + play_name_selected + "\"]")[0];
-				play.removeAttribute("class");
-				play.setAttribute("id", "selected");
-				play.setAttribute("class", "btn btn-success sideview-button");
+				var play_selected_button = $("[name=\"" + play_name_selected + "\"]")[0];
+				play_selected_button.removeAttribute("class");
+				play_selected_button.setAttribute("id", "selected");
+				play_selected_button.setAttribute("class", "btn btn-success sideview-button play-button");
 			}
 		};
 

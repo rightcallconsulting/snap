@@ -22,7 +22,7 @@ var Play = function(config) {
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
-	this.scoutFormations = config.scoutFormations || [];
+	this.scoutFormations = config.scoutFormations || [new Formation({})];
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";
@@ -304,11 +304,13 @@ Play.prototype.scoutFromFormation = function(formation) {
 // removeScoutFormation gets rid of the defensive look and player blocks from
 // and offensive play.
 Play.prototype.removeScoutFormation = function() {
+	//this.scoutFormation.pop();
+
 	this.defensivePlayers = [];
 
-	//for (var i = 0; i < this.offensivePlayers.length; ++i) {
-	//	this.offensivePlayers[i].blockingAssignmentArray = [];
-	//}
+	/*for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		this.offensivePlayers[i].blockingAssignmentArray = [];
+	}*/
 };
 
 /*********************************/
