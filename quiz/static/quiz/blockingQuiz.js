@@ -263,6 +263,28 @@ function exitDemoScreen(){
 	clearMultipleChoiceAnswers();
 };
 
+function mouseReleased() {
+	// Handle clicks on players in the Play
+	var currentPlayerSelected = test.getCurrentPlay().getSelected()[0];
+	var newPlayerSelected = test.getCurrentPlay().mouseInPlayer(field);
+	var mouseYardX = field.getYardX(mouseX);
+	var mouseYardY = field.getYardY(mouseY);
+
+	if (newPlayerSelected === null || newPlayerSelected.unit === "offense") {
+		if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+			currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+		}
+		
+		return false;
+	} else if (newPlayerSelected.unit === "defense") {
+		currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+		return false;
+	}
+
+	// return false to prevent default behavior
+	return false;
+};
+
 mouseClicked = function() {
 	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
 		test.scoreboard.feedbackMessage = "";
@@ -355,8 +377,6 @@ function draw() {
 
 function drawOpening(){
 	field.drawBackground(null, height, width);
-	test.getCurrentPlay().drawAllRoutes(field);
-	test.getCurrentPlay().drawBlockingAssignmentObjects(field);
-	test.getCurrentPlay().drawRunAssignments(field);
+	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
 };

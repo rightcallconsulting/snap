@@ -1351,7 +1351,6 @@ Player.prototype.saveToDB = function(){
   //create a connection to playerDB
   //get the variables we need for the DB in the proper format
   //push an entry into the players DB for this player with all data we need
-
 };
 
 Player.prototype.establishFill = function(){
