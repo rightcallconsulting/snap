@@ -233,104 +233,6 @@ function exitDemoScreen() {
 	clearMultipleChoiceAnswers();
 };
 
-function mouseReleased() {
-	// Handle clicks on players in the Play
-	var currentPlayerSelected = answer_player;
-	var newPlayerSelected = test.getCurrentPlay().mouseInPlayer(field);
-	var mouseYardX = field.getYardX(mouseX);
-	var mouseYardY = field.getYardY(mouseY);
-
-	if (newPlayerSelected === null || newPlayerSelected.unit === "offense") {
-		if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-			currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
-		}
-		
-		return false;
-	} else if (newPlayerSelected.unit === "defense") {
-		currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
-		return false;
-	}
-
-	// return false to prevent default behavior
-	return false;
-};
-
-function mouseClicked() {
-	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
-		test.scoreboard.feedbackMessage = "";
-	}
-
-	if (bigReset.isMouseInside(field) && test.over) {
-		test.plays = shuffle(originalPlayList.slice());
-		test.restartQuiz();
-		return true;
-	} else if (resetMissed.isMouseInside(field) && test.over) {
-		var newPlays = test.missedPlays.concat(test.skippedPlays);
-		if(newPlays.length < 1){
-			newPlays = originalPlayList.slice();
-		}
-		test.plays = shuffle(newPlays);
-		test.restartQuiz();
-		return true;
-	} else if (nextQuiz.isMouseInside(field) && test.over) {
-		//Advance to next quiz or exit to dashboard
-		window.location.href = "/playbook";
-	} else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick) {
-		exitDemoScreen();
-	} else {
-		if(test.showDemo) {
-			if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
-				demoDoubleClick = true;
-			} else {
-				return;
-			}
-		}
-	}
-};
-
-function keyPressed() {
-	var playerSelcted = answer_player;
-	if (keyCode == BACKSPACE || keyCode == DELETE) {
-		answer_player.blockingAssignmentArray = [];
-		return false;
-	} else if (key === "Q") {
-		playerSelcted.blockingAssignmentArray.push("Money Block");
-	} else if (key === "W") {
-		playerSelcted.blockingAssignmentArray.push("Down Block Right");
-	} else if (key === "E") {
-		playerSelcted.blockingAssignmentArray.push("Down Block Left");
-	} else if (key === "R") {
-		playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-	} else if (key === "T") {
-		playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-	} else if (key === "Y") {
-		playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-	} else if (key === "U") {
-		playerSelcted.blockingAssignmentArray.push("Kick Out Left");
-	}
-
-	return false;	
-};
-
-function keyTyped() {
-	if(test.over) {
-		if(key === 'r') {
-			test.restartQuiz();
-		}
-	} else {
-		var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-		if (offset >= 0 && offset < multipleChoiceAnswers.length) {
-			var answer = multipleChoiceAnswers[offset];
-			if (answer.clicked) {
-				checkAnswer(answer);
-			} else {
-				clearMultipleChoiceAnswers();
-				answer.changeClickStatus();
-			}
-		}
-	}
-};
-
 function checkAnswer() {
 	var wrong_answer = false;
 
@@ -338,7 +240,6 @@ function checkAnswer() {
 	if (original_player.blockingAssignmentArray.length != answer_player.blockingAssignmentArray.length) {
 		test.advanceToNextPlay("Incorrect");
 		wrong_answer = true;
-		break;
 	} else {
 		for (i in original_player.blockingAssignmentArray) {
 			if (original_player.blockingAssignmentArray[i] instanceof Player && answer_player.blockingAssignmentArray[i] instanceof Player) {
@@ -406,6 +307,104 @@ function changeAnswerPlayer() {
 	answer_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
 	answer_player.blockingAssignmentArray = [];
 	answer_player.setSelected();
+};
+
+function mouseReleased() {
+	// Handle clicks on players in the Play
+	var currentPlayerSelected = answer_player;
+	var newPlayerSelected = test.getCurrentPlay().mouseInPlayer(field);
+	var mouseYardX = field.getYardX(mouseX);
+	var mouseYardY = field.getYardY(mouseY);
+
+	if (newPlayerSelected === null || newPlayerSelected.unit === "offense") {
+		if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+			currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+		}
+		
+		return false;
+	} else if (newPlayerSelected.unit === "defense") {
+		currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+		return false;
+	}
+
+	// return false to prevent default behavior
+	return false;
+};
+
+function mouseClicked() {
+	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
+		test.scoreboard.feedbackMessage = "";
+	}
+
+	if (bigReset.isMouseInside(field) && test.over) {
+		test.plays = shuffle(originalPlayList.slice());
+		test.restartQuiz();
+		return true;
+	} else if (resetMissed.isMouseInside(field) && test.over) {
+		var newPlays = test.missedPlays.concat(test.skippedPlays);
+		if(newPlays.length < 1){
+			newPlays = originalPlayList.slice();
+		}
+		test.plays = shuffle(newPlays);
+		test.restartQuiz();
+		return true;
+	} else if (nextQuiz.isMouseInside(field) && test.over) {
+		//Advance to next quiz or exit to dashboard
+		window.location.href = "/playbook";
+	} else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick) {
+		exitDemoScreen();
+	} else {
+		if(test.showDemo) {
+			if(mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
+				demoDoubleClick = true;
+			} else {
+				return;
+			}
+		}
+	}
+};
+
+function keyPressed() {
+	var playerSelcted = answer_player;
+	if (keyCode == BACKSPACE || keyCode == DELETE) {
+		playerSelcted.blockingAssignmentArray = [];
+		return false;
+	} else if (key === "Q") {
+		playerSelcted.blockingAssignmentArray.push("Money Block");
+	} else if (key === "W") {
+		playerSelcted.blockingAssignmentArray.push("Down Block Right");
+	} else if (key === "E") {
+		playerSelcted.blockingAssignmentArray.push("Down Block Left");
+	} else if (key === "R") {
+		playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
+	} else if (key === "T") {
+		playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
+	} else if (key === "Y") {
+		playerSelcted.blockingAssignmentArray.push("Kick Out Right");
+	} else if (key === "U") {
+		playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+	}
+
+	return false;	
+};
+
+function keyTyped() {
+	if(test.over) {
+		if(key === 'r') {
+			test.restartQuiz();
+		}
+	} else {
+		var offset = key.charCodeAt(0) - "1".charCodeAt(0);
+		if (offset >= 0 && offset < multipleChoiceAnswers.length) {
+			var answer = multipleChoiceAnswers[offset];
+			if (answer.clicked) {
+				checkAnswer(answer);
+			} else {
+				clearMultipleChoiceAnswers();
+				answer.changeClickStatus();
+			}
+		}
+	}
 };
 
 function draw() {
