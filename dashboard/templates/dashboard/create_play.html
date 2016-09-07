@@ -876,15 +876,6 @@
 
 			$("#sideview-buttons").empty();
 
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// formation we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
-
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
