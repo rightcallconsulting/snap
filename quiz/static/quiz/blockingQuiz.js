@@ -442,6 +442,13 @@ function drawOpening() {
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
 
+	var original_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
+	if (original_player.blockingAssignmentArray.length === answer_player.blockingAssignmentArray.length) {
+		answer_player.setUnselected();
+	}
+
 	answer_player.drawBlocks(field);
+
+	answer_player.setSelected();
 	answer_player.draw(field);
 };
