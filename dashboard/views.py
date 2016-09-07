@@ -152,8 +152,8 @@ def change_password(request):
 		username = request.user.username
 		current_password_input_by_user = request.POST['current-password']
 		user = authenticate(username=username, password=current_password_input_by_user)
-		
-		new_password_1 = request.POST['new-password-1'] 
+
+		new_password_1 = request.POST['new-password-1']
 		new_password_2 = request.POST['new-password-2']
 		if (user == request.user and new_password_1 == new_password_2):
 			request.user.set_password(new_password_1)
@@ -217,7 +217,7 @@ def quiz_analytics(request, quiz_id):
 				'side': 'top'
 			},
 			'legend': {'position': 'bottom'},
-			'series': 
+			'series':
 			{
 				'0': {'targetAxisIndex':'0', 'axis': 'score'},
 				'1':{'targetAxisIndex':'0', 'axis': 'score'},
@@ -225,13 +225,13 @@ def quiz_analytics(request, quiz_id):
 				'3':{'targetAxisIndex':'1', 'type': 'line'},
 
 			},
-			'axes': 
+			'axes':
 			{
-				'x': 
+				'x':
 				{
 					'discrete': 'string',
 				},
-			  	'y': 
+			  	'y':
 			  	{
 					'score': {'label': '# of Quesitons'},
 					'Time Taken': {'label': 'Time Taken'}
@@ -312,12 +312,12 @@ def playbook(request, unit="offense"):
 		})
 	else:
 		team = request.user.coach.team
-		
+
 		formations = Formation.objects.filter(team=team, scout=False)
 		scout_formations = Formation.objects.filter(team=team, scout=True)
 		plays = Play.objects.filter(team=team)
 		concepts = Concept.objects.filter(team=team)
-		
+
 		return render(request, 'dashboard/playbook.html', {
 			'unit': unit,
 			'formations': formations,
@@ -472,14 +472,14 @@ def create_concept(request):
 def groups(request):
 	team = request.user.coach.team
 	groups = PlayerGroup.objects.filter(team=team)
-	
+
 	if len(groups) > 0:
 		players_in_group = groups[0].players.all()
 		analytics = PlayerAnalytics(players_in_group)
 	else:
 		players_in_group = []
 		analytics = None
-	
+
 	return render(request, 'dashboard/groups.html', {
 		'team': team,
 		'groups': groups,
@@ -521,11 +521,11 @@ def manage_groups(request):
 		# Lists to contain the primary keys to be operated on including duplicates.
 		add_pks = [0]
 		remove_pks = [0]
-		
+
 		# Loop through and place player pks on add list including duplicates.
 		for player_id in request.POST.getlist('add_player'):
 			add_pks.append(int(player_id))
-		
+
 		# Loop through and place player pks on remove list including duplicates.
 		for player_id in request.POST.getlist('remove_player'):
 			remove_pks.append(int(player_id))
@@ -544,8 +544,8 @@ def manage_groups(request):
 			# Append the number of removes per player pk.
 			number_removes.append(remove_pks.count(pk+1))
 
-			# Calculate the difference between the number of adds and number of 
-			# removes for player pk. This number should only ever be -1, 0, or 1. 
+			# Calculate the difference between the number of adds and number of
+			# removes for player pk. This number should only ever be -1, 0, or 1.
 			# A player can only be added to the group if they started out of the
 			# group or have already been removed and equal amount of times as they
 			# have they been added.
@@ -571,7 +571,7 @@ def manage_groups(request):
 		groups = PlayerGroup.objects.filter(team=team)
 		all_players_on_team = Player.objects.filter(team=team)
 		players_not_in_group = []
-		
+
 		# If there is at least one group then add all the players
 		# in the first group to the players_in_group list, and add
 		# everyone else to the players_not_in_group list. Otherwise,
@@ -589,7 +589,7 @@ def manage_groups(request):
 		else:
 			players_in_group = []
 			players_not_in_group = all_players_on_team
-		
+
 		return render(request, 'dashboard/manage_groups.html', {
 			'team': team,
 			'groups': groups,
@@ -744,3 +744,13 @@ def group_json(request, group_id):
 	group = PlayerGroup.objects.filter(id=group_id)[0]
 	players = group.players.all()
 	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
+
+def concepts_json(request):
+	concepts = Concept.objects.all()
+	#concept = concepts[0]
+	return HttpResponse(serializers.serialize("json", concepts))
+
+def concept_json(request, concept_id):
+	concepts = Concept.objects.filter(id=concept_id)
+	#concept = concepts[0]
+	return HttpResponse(serializers.serialize("json", concepts))
