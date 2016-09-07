@@ -397,11 +397,12 @@ def create_defensive_look(request):
 def create_play(request):
 	if request.method == "POST":
 		name = request.POST['name']
+		scout_name = request.POST['scout_name']
 		formation_name = request.POST['formation']
 		formation = Formation.objects.filter(scout=False, name=formation_name)[0]
 		if request.POST['save'] == "true":
 			playJson = request.POST['play']
-			play = Play.objects.filter(scout=False, formation=formation, name=name)
+			play = Play.objects.filter(scout=False, formation=formation, name=name, scoutName=scout_name)
 			if play.count() == 1:
 				play = play[0]
 				play.playJson = playJson
@@ -409,6 +410,7 @@ def create_play(request):
 			elif play.count() == 0:
 				play = Play()
 				play.name = name
+				play.scoutName = scout_name
 				play.team = request.user.coach.team
 				play.unit = request.POST['unit']
 				play.scout = False
@@ -416,7 +418,7 @@ def create_play(request):
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":
-			play = Play.objects.filter(scout=False, formation=formation, name=name)
+			play = Play.objects.filter(scout=False, formation=formation, name=name, scoutName=scout_name)
 			play.delete()
 		return HttpResponse('')
 	else:

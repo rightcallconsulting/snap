@@ -710,12 +710,6 @@
 
 			sideview_header.appendChild(back_arrow);
 
-			var toggle_button = document.createElement("div");
-			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showScout()");
-			toggle_button.textContent = "D";
-			sideview_header.appendChild(toggle_button);
-
 			play.fromFormation(formation_selected);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
@@ -734,6 +728,13 @@
 		};
 
 		function changeSelectedPlay(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+			var toggle_button = document.getElementById("offense-defense-toggle");
+
+			if (toggle_button != null) {
+				sideview_header.removeChild(toggle_button);
+			}
+
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
@@ -780,6 +781,12 @@
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button play-button");
+
+				toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showScout()");
+				toggle_button.textContent = "D";
+				sideview_header.appendChild(toggle_button);
 
 				var play_name = new_selected.getAttribute("name");
 				play_name_selected = play_name;
@@ -894,12 +901,6 @@
 
 			sideview_header.appendChild(back_arrow);
 
-			var toggle_button = document.createElement("div");
-			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showScout()");
-			toggle_button.textContent = "D";
-			sideview_header.appendChild(toggle_button);
-
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
@@ -920,6 +921,12 @@
 				play_selected_button.removeAttribute("class");
 				play_selected_button.setAttribute("id", "selected");
 				play_selected_button.setAttribute("class", "btn btn-success sideview-button play-button");
+
+				var toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showScout()");
+				toggle_button.textContent = "D";
+				sideview_header.appendChild(toggle_button);
 			}
 		};
 
