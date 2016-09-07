@@ -9,6 +9,7 @@ var bigReset; var resetMissed; var nextQuiz;
 var exitDemo = null;
 var demoDoubleClick = false;
 var answer_player = null;
+var original_player = null;
 
 function setup() {
 	var box = document.getElementById('display-box');
@@ -236,7 +237,6 @@ function exitDemoScreen() {
 function checkAnswer() {
 	var wrong_answer = false;
 
-	var original_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
 	if (original_player.blockingAssignmentArray.length != answer_player.blockingAssignmentArray.length) {
 		test.advanceToNextPlay("Incorrect");
 		wrong_answer = true;
@@ -304,7 +304,16 @@ function skipQuestion() {
 };
 
 function changeAnswerPlayer() {
-	answer_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
+	answer_player = null;
+	original_player = null;
+
+	// Todo: Implement logic for matching player logged in with postions in
+	// offensivePlayer arrays.
+
+	// Else choose some random lineman.
+	var random_index = Math.floor(Math.random()*5);
+	original_player = test.getCurrentPlay().offensivePlayers[random_index].deepCopy()
+	answer_player = original_player.deepCopy();
 	answer_player.blockingAssignmentArray = [];
 	answer_player.setSelected();
 };
@@ -442,7 +451,6 @@ function drawOpening() {
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
 
-	var original_player = test.getCurrentPlay().offensivePlayers[2].deepCopy();
 	if (original_player.blockingAssignmentArray.length === answer_player.blockingAssignmentArray.length) {
 		answer_player.setUnselected();
 	}
