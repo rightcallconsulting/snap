@@ -454,8 +454,14 @@ function createPlayFromJson(playJsonDictionary) {
 		}
 	}
 
+	var scoutName = "";
+	if (playJsonDictionary.scoutName != null) {
+		scoutName = playJsonDictionary.scoutName;
+	}
+
 	var result = new Play({
 		name: playJsonDictionary.name,
+		scoutName: scoutName,
 		team: playJsonDictionary.team,
 		unit: playJsonDictionary.unit,
 		formation: playJsonDictionary.formation,

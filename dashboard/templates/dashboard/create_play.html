@@ -883,7 +883,6 @@
 		};
 
 		function showOffense() {
-			play.removeScoutFormation();
 			scout_formation_name_selected = "";
 
 			// Show Plays in Formation
@@ -904,7 +903,7 @@
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected) {
+				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
@@ -912,6 +911,10 @@
 					play_button.textContent = plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
+				}
+
+				if (plays[i].name === play.name && plays[i].scoutName === "") {
+					play = plays[i].deepCopy();
 				}
 			}
 			
