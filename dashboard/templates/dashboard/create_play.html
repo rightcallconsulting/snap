@@ -524,6 +524,16 @@
 					play = new Play({});
 					play.fromFormation(formation);
 
+					var check_mark = selected_sideview_button.querySelector("i");
+
+					if (check_mark === null) {
+						check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						selected_sideview_button.appendChild(check_mark);
+
+						plays.push(play);
+					}
+
 					play_name_selected = "";
 					showOffense();
 					return;
