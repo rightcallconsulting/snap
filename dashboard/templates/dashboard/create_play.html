@@ -517,22 +517,12 @@
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
 			for (i in plays) {
-				if (play.formation === plays[i].formation && name === plays[i].name) {
+				if (play.formation === plays[i].formation && name === plays[i].name && scout_formation_name_selected === plays[i].scoutName) {
 					plays[i] = play.deepCopy();
 					play.scoutName = scout_formation_name_selected;
 					play.save(path, csrf_token);
 					play = new Play({});
 					play.fromFormation(formation);
-
-					var check_mark = selected_sideview_button.querySelector("i");
-
-					if (check_mark === null) {
-						check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg");
-						selected_sideview_button.appendChild(check_mark);
-
-						plays.push(play);
-					}
 
 					play_name_selected = "";
 					showOffense();
@@ -557,16 +547,23 @@
 			// Update the sidebar to include a new button for the play that
 			// was just saved.
 			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
-			// Create a button for the new play.
-			var new_play_button = document.createElement("button");
-			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
-			new_play_button.setAttribute("name", name);
-			new_play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
-			new_play_button.textContent = name;
 
-			// Add the new button to the sideview button div.
-			sideview_buttons_div.appendChild(new_play_button);
+			// If there is no scout formation selected create a button for 
+			// the new play.
+			if (scout_formation_name_selected === "") {
+				var new_play_button = document.createElement("button");
+				new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+				new_play_button.setAttribute("name", name);
+				new_play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+				new_play_button.textContent = name;
+
+				// Add the new button to the sideview button div.
+				sideview_buttons_div.appendChild(new_play_button);
+			} else {
+				var check_mark = document.createElement("i");
+				check_mark.setAttribute("class", "fa fa-check fa-lg");
+				selected_sideview_button.appendChild(check_mark);
+			}
 
 			play_name_selected = "";
 			showOffense();
@@ -580,14 +577,6 @@
 			// If selected is not undefined then send a delete request for
 			// the play that is currently selected.
 			if (selected != null) {
-				// Set the path and cross-site forgery token vars.
-				var path = "/plays/create";
-				var csrf_token = "{{ csrf_token }}";
-
-				// Delete the play from the backend.
-				play.scoutName = scout_formation_name_selected;
-				play.delete(path, csrf_token);
-
 				// Remove the play from the play array. If this didn't
 				// happen and the user deleted a play and added one with the
 				// same name without refreshing the page, the new play would
@@ -595,17 +584,32 @@
 				// because a play with the same name would exist in the
 				// plays array.
 				for (var i = 0; i < plays.length; ++i) {
-					if (play.formation === plays[i].formation && play.name === plays[i].name) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name && play.scoutName === plays[i].scoutName) {
+						// Set the path and cross-site forgery token vars.
+						var path = "/plays/create";
+						var csrf_token = "{{ csrf_token }}";
+
+						// Delete the play from the backend.
+						play.scoutName = scout_formation_name_selected;
+						play.delete(path, csrf_token);
+
 						plays.splice(i, 1);
 						break;
 					}
 				}
 
-				// Delete the button from the sidebar. After this step the
-				// play should be entirely removed from the backend and the
-				// frontend.
-				var sideview_buttons_div = document.getElementById("sideview-buttons");
-				sideview_buttons_div.removeChild(selected);
+				if (scout_formation_name_selected === "") {
+					// Delete the button from the sidebar. After this step the
+					// play should be entirely removed from the backend and the
+					// frontend.
+					var sideview_buttons_div = document.getElementById("sideview-buttons");
+					sideview_buttons_div.removeChild(selected);
+				} else {
+					var check_mark = selected.querySelector("i");
+					if (check_mark != null) {
+						selected.removeChild(check_mark);
+					}
+				}
 			}
 
 			// Update the top bar to display the Placeholder message.
@@ -624,6 +628,9 @@
 					play.fromFormation(formations[i]);
 				}
 			}
+
+			play_name_selected = "";
+			showOffense();
 		});
 
 		$("#zoom-in-button").click(function(event) {
