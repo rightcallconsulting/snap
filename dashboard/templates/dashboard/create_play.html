@@ -715,7 +715,7 @@
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
-				if (plays[i].formation === formation_name) {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
@@ -792,7 +792,7 @@
 				play_name_selected = play_name;
 
 				for (i in plays) {
-					if (play.formation === plays[i].formation && play_name === plays[i].name) {
+					if (play.formation === plays[i].formation && play_name === plays[i].name && plays[i].scoutName === "") {
 						play = plays[i].deepCopy();
 						break;
 					}
