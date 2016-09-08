@@ -784,7 +784,7 @@
 
 				toggle_button = document.createElement("div");
 				toggle_button.setAttribute("id", "offense-defense-toggle");
-				toggle_button.setAttribute("onclick", "showScout()");
+				toggle_button.setAttribute("onclick", "showDefensiveLooks()");
 				toggle_button.textContent = "D";
 				sideview_header.appendChild(toggle_button);
 
@@ -837,6 +837,10 @@
 				scout_formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
 				scout_formation_button.textContent = scout_formations[i].name;
 
+				var check_mark = document.createElement("i");
+				check_mark.setAttribute("class", "fa fa-check fa-lg");
+
+				scout_formation_button.appendChild(check_mark);
 				sideview_buttons.appendChild(scout_formation_button);
 			}
 		};
@@ -927,18 +931,9 @@
 
 				var toggle_button = document.createElement("div");
 				toggle_button.setAttribute("id", "offense-defense-toggle");
-				toggle_button.setAttribute("onclick", "showScout()");
+				toggle_button.setAttribute("onclick", "showDefensiveLooks()");
 				toggle_button.textContent = "D";
 				sideview_header.appendChild(toggle_button);
-			}
-		};
-
-		function showScout() {
-			showDefensiveLooks();
-
-			if (scout_formation_name_selected != "") {
-				var scout_formation = $("[name=\"" + scout_formation_name_selected + "\"]")[0];
-				addScoutFormationToPlay(scout_formation);
 			}
 		};
 
