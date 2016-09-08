@@ -192,6 +192,10 @@ Player.prototype.drawBlocks = function(field) {
 		blockPart.draw(prevX, prevY, field)
 		prevX = blockPart.x
 		prevY = blockPart.y
+		if(blockPart.type === 1 && blockPart.player !== null){
+			prevX = blockPart.player.x
+			prevY = blockPart.player.y - (blockPart.player.siz / 3)
+		}
 	}
 
 	/*

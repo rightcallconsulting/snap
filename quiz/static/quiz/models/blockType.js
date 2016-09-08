@@ -21,7 +21,7 @@ var BlockType = function(config) {
 			this.y = config.y
 	}else if(this.type === 1 && this.player !== null){
 		this.x = this.player.x
-		this.y = this.player.y
+		this.y = this.player.y - (this.player.siz / 2)
 	}else if(config.prevX && config.prevY){
 		if(this.type === 2){
 			this.x = config.prevX
@@ -42,7 +42,7 @@ var BlockType = function(config) {
 			this.x = config.prevX + xDiff
 			this.y = config.prevY + yDiff
 		}else if(this.type === 7 || this.type === 8){
-			var dist = 1.5;
+			var dist = 2.5;
 			var alpha = 55*(PI/180);
 			if(this.type === 8){
 				alpha = PI - alpha
@@ -50,7 +50,7 @@ var BlockType = function(config) {
 			var xDiff = cos(alpha)*dist;
 			var yDiff = sin(alpha)*dist;
 			this.x = config.prevX + xDiff
-			this.y = config.prevY + yDiff
+			this.y = config.prevY// + yDiff
 		}
 	}
 };
@@ -70,17 +70,48 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var y2 = field.getTranslatedY(this.y)
 	if(this.type === 1 && this.player){
 		x2 = field.getTranslatedX(this.player.x)
-		y2 = field.getTranslatedY(this.player.y)
+		y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
+	}else if(this.type === 7 || this.type === 8){
+		xMid = (x1+x2)/2
+		yMid = field.getTranslatedY(this.y - 1)
+		line(x1, y1, xMid, yMid)
+		x1 = xMid
+		y1 = yMid
 	}
 
 	line(x1, y1, x2, y2)
 
-	if(this.type === 2){
-		//money
-	}else if(this.type === 3){
+	x1 = field.getYardX(x1)
+	y1 = field.getYardY(y1)
+	x2 = field.getYardX(x2)
+	y2 = field.getYardY(y2)
 
-	}else{
-		//tbi
+	var lengthOfPerpLine = 1.5;
+	xDiff = lengthOfPerpLine/2;
+	yDiff = 0;
+	if(this.type === 5 || this.type === 6){
+		xDiff = (lengthOfPerpLine/4)*sqrt(2);
+		yDiff = (lengthOfPerpLine/4)*sqrt(2);
+	}else if(this.type === 7 || this.type === 8){
+		xDiff = (lengthOfPerpLine/4)*sqrt(2);
+		yDiff = (lengthOfPerpLine/4)*sqrt(2);
+		if(this.type === 7){
+			xDiff *= -1
+		}
+	}
+
+	x1 = x2 - xDiff;
+	y1 = y2 - yDiff;
+	x2 = x2 + xDiff;
+	y2 = y2 + yDiff;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+
+	if(this.type > 0 && this.type < 9){
+		line(x1, y1, x2, y2);
 	}
 
 	noStroke()
