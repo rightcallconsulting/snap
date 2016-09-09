@@ -14,6 +14,7 @@
 
 var Play = function(config) {
 	this.name = config.name || "";
+	this.scoutName = config.scoutName || "";
 	this.unit = config.unit || "offense";
 	this.formation = config.formation || "";
 	this.offensivePlayers = config.offensivePlayers || [];
@@ -22,7 +23,6 @@ var Play = function(config) {
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
-	this.scoutFormations = config.scoutFormations || [];
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";
@@ -193,14 +193,15 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "team", "unit", "formation", "scoutFormations", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route"]);
 		var playName = this.name;
+		var scoutName = this.scoutName;
 		var playUnit = this.unit;
 		var formationName = this.formation;
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, unit: playUnit, formation: formationName, play: playJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, scout_name: scoutName, unit: playUnit, formation: formationName, play: playJson}
 			).done(function() {
 				console.log("Play successfully sent to Django to be saved");
 			}).fail(function() {
@@ -214,11 +215,12 @@ Play.prototype.save = function (path, csrf_token) {
 // delete sends a delete request to Django for this play.
 Play.prototype.delete = function(path, csrf_token) {
 	var playName = this.name;
+	var scoutName = this.scoutName;
 	var formationName = this.formation;
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName, formation: formationName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName, scout_name: scoutName, formation: formationName}
 		).done(function() {
 			console.log("Play successfully sent to Django to be deleted");
 		}).fail(function() {
@@ -231,6 +233,7 @@ Play.prototype.deepCopy = function() {
 	var result = new Play({
 		id: this.id,
 		name: this.name,
+		scoutName: this.scoutName,
 		team: this.team,
 		unit: this.unit,
 		formation: this.formation,
@@ -306,9 +309,9 @@ Play.prototype.scoutFromFormation = function(formation) {
 Play.prototype.removeScoutFormation = function() {
 	this.defensivePlayers = [];
 
-	//for (var i = 0; i < this.offensivePlayers.length; ++i) {
-	//	this.offensivePlayers[i].blockingAssignmentArray = [];
-	//}
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		this.offensivePlayers[i].blockingAssignmentArray = [];
+	}
 };
 
 /*********************************/
@@ -436,24 +439,36 @@ function createPlayFromJson(playJsonDictionary) {
 	offensiveLinemenArray.push(right_guard);
 	offensiveLinemenArray.push(right_tackle);
 
-	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+	for (i in offensivePlayersArray) {
+		for (j in playJsonDictionary.offensivePlayers[i].blockingAssignmentArray) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+			var playerToBlock = null;
 
-			if (primaryAssignment.x != null) {
-				for (var k = 0; k < defensivePlayersArray.length; ++k) {
-					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
-						primaryAssignment = defensivePlayersArray[k];
-					}
+			for (k in defensivePlayersArray) {
+				if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
+					playerToBlock = defensivePlayersArray[k];
 				}
 			}
 
-			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
+			var block = new BlockType ({
+				type: primaryAssignment.type,
+				player: playerToBlock,
+				x: primaryAssignment.x,
+				y: primaryAssignment.y
+			});
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(block);
 		}
+	}
+
+	var scoutName = "";
+	if (playJsonDictionary.scoutName != null) {
+		scoutName = playJsonDictionary.scoutName;
 	}
 
 	var result = new Play({
 		name: playJsonDictionary.name,
+		scoutName: scoutName,
 		team: playJsonDictionary.team,
 		unit: playJsonDictionary.unit,
 		formation: playJsonDictionary.formation,

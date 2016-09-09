@@ -155,7 +155,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement"]);
 
 		var jqxhr = $.post(
 				path,
@@ -302,19 +302,25 @@ function createConceptFromJson(conceptJsonDictionary) {
 		}
 	}
 
-	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+	for (i in offensivePlayersArray) {
+		for (j in conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray) {
 			var primaryAssignment = conceptJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+			var playerToBlock = null;
 
-			if (primaryAssignment.x != null) {
-				for (var k = 0; k < defensivePlayersArray.length; ++k) {
-					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
-						primaryAssignment = defensivePlayersArray[k];
-					}
+			for (k in defensivePlayersArray) {
+				if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
+					playerToBlock = defensivePlayersArray[k];
 				}
 			}
 
-			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
+			var block = new BlockType ({
+				type: primaryAssignment.type,
+				player: playerToBlock,
+				x: primaryAssignment.x,
+				y: primaryAssignment.y
+			});
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(block);
 		}
 	}
 

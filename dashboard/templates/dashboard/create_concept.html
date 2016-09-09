@@ -83,14 +83,14 @@
 			var display_box_footer = display_box.querySelector(".display-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
+
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
+			var width = display_box.offsetWidth - 4;
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
-			
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -98,7 +98,7 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
-			
+
 			// Load concepts from Json passed from database
 			var conceptJsonFromDatabase = "";
 
@@ -133,7 +133,7 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				
+
 				resizeMainViewObjects();
 			};
 
@@ -143,7 +143,7 @@
 		function draw() {
 			// Limitations on where offensive players can be
 			var numberOfOffensivePlayers = concept.offensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
 				var player = concept.offensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -185,13 +185,13 @@
 				} else {
 					if (player.y > field.ballYardLine - 1) {
 						player.y = field.ballYardLine;
-					} 
+					}
 				}
 			}
 
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = concept.defensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
 				var player = concept.defensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -239,7 +239,7 @@
 			concept.drawPlayers(field);
 			defensivePlayerBar.draw(field);
 			offensivePlayerBar.draw(field);
-			
+
 			fill(0, 0, 0);
 			textSize(20);
 			text(concept.feedbackMessage, 330, 20);
@@ -249,7 +249,7 @@
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
-		
+
 		function mousePressed() {
 			playerBeingDragged = concept.mouseInPlayer(field);
 
@@ -285,24 +285,31 @@
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
-			// If no one is currently selected and no one is clicked on do 
-			// nothing. Else if no one is currently selected and someone is 
+			// If no one is currently selected and no one is clicked on do
+			// nothing. Else if no one is currently selected and someone is
 			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then draw 
-			// appropriate assignment based on players unit return. Else if 
-			// the currently selected player is the same as the newly selected 
-			// player then clear all selections and return. Else two seperate 
+			// is currently selected and empty field is clicked on then draw
+			// appropriate assignment based on players unit return. Else if
+			// the currently selected player is the same as the newly selected
+			// player then clear all selections and return. Else two seperate
 			// players are assigned to those variables and handle accordingly.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
-				// Do nothing		
+				// Do nothing
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
 				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
 					if (currentPlayerSelected.unit === "offense") {
-						currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+						//add new blocking assignment stuff instead
+						var blockPoint = new BlockType({
+							type: 0,
+							x: mouseYardX,
+							y: mouseYardY
+						})
+						currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
+						//currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
@@ -318,7 +325,13 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+				var blockPoint = new BlockType({
+					type: 1,
+					player: newPlayerSelected,
+					x: mouseYardX,
+					y: mouseYardY
+				})
+				currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 				return false;
 			}
 
@@ -327,12 +340,12 @@
 			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToConcept = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
+					num: newPlayerSelected.num,
+					pos: newPlayerSelected.pos,
 					x: Field.WIDTH / 2,
 					y: field.ballYardLine,
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
+					red: newPlayerSelected.red,
+					green: newPlayerSelected.green,
 					blue: newPlayerSelected.blue,
 					eligible: newPlayerSelected.eligible
 				});
@@ -347,12 +360,12 @@
 			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToConcept = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
+					num: newPlayerSelected.num,
+					pos: newPlayerSelected.pos,
 					x: Field.WIDTH / 2,
 					y: field.ballYardLine + field.pixelsToYards(30),
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
+					red: newPlayerSelected.red,
+					green: newPlayerSelected.green,
 					blue: newPlayerSelected.blue,
 					unit: newPlayerSelected.unit
 				});
@@ -410,35 +423,57 @@
 					}
 					return false;
 				}
-				
+
 			} else if (concept.getSelected()[0] != null) {
 				var playerSelcted = concept.getSelected()[0];
 				var playerSelctedIndex = concept.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						concept.offensivePlayers.splice(playerSelctedIndex, 1);
+						if(playerSelcted.blockingAssignmentArray.length > 0){
+							playerSelcted.blockingAssignmentArray.pop()
+						}/*else if(playerSelcted.routeCoordinates.length > 0){
+							playerSelcted.routeCoordinates.pop()
+						}*/else{
+							concept.offensivePlayers.splice(playerSelctedIndex, 1);
+						}
 					} else if (playerSelcted.unit == "defense") {
 						concept.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
 					return false;
-				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray.push("Money Block");
-				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Right");
-				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Left");
-				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+				}else if(specialBlockKeys.indexOf(key) >= 0){
+					var prevX = playerSelcted.x
+					var prevY = playerSelcted.y
+					var blockSize = playerSelcted.blockingAssignmentArray.length
+					if(blockSize > 0){
+						prevX = playerSelcted.blockingAssignmentArray[blockSize - 1].x
+						prevY = playerSelcted.blockingAssignmentArray[blockSize - 1].y
+					}
+					playerSelcted.blockingAssignmentArray.push(new BlockType({
+						type: 2 + specialBlockKeys.indexOf(key),
+						player: null,
+						prevX: prevX,
+						prevY: prevY
+					}))
+					/*if (key === "Q") {
+						playerSelcted.blockingAssignmentArray.push("Money Block");
+					} else if (key === "W") {
+						playerSelcted.blockingAssignmentArray.push("Down Block Right");
+					} else if (key === "E") {
+						playerSelcted.blockingAssignmentArray.push("Down Block Left");
+					} else if (key === "R") {
+						playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
+					} else if (key === "T") {
+						playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
+					} else if (key === "Y") {
+						playerSelcted.blockingAssignmentArray.push("Kick Out Right");
+					} else if (key === "U") {
+						playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+					}*/
 				}
 
-				return false;	
+				return false;
 			}
 		};
 
@@ -476,7 +511,7 @@
 		//*******************************************************************//
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
-		
+
 		// When the main container is clicked unselect the interactive header.
 		// This function will not call when the header is clicked because that
 		// function stops propagation of the event.
@@ -538,7 +573,7 @@
 			// Deselect the currently selected sidebar because that concept is
 			// going to dissappear from the screen.
 			var selected_sideview_button = document.getElementById("selected");
-			
+
 			if (selected_sideview_button != null) {
 				selected_sideview_button.removeAttribute("id");
 				selected_sideview_button.removeAttribute("class");
@@ -572,14 +607,14 @@
 			concept.save(path, csrf_token);
 			concepts.push(concept);
 
-			// Create a new concept to replace the one you just saved on the 
+			// Create a new concept to replace the one you just saved on the
 			// screen.
 			concept = new Concept({});
 
 			// Update the sidebar to include a new button for the concept that
 			// was just saved.
 			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
+
 			// Create a button for the new concept.
 			var new_concept_button = document.createElement("button");
 			new_concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
@@ -640,7 +675,7 @@
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
@@ -653,7 +688,7 @@
 		$("#zoom-out-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
@@ -670,7 +705,7 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
-			
+
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
 			// are selecting a button it will get replaced with the name of the
@@ -696,7 +731,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -734,7 +769,7 @@
 			var header_box = document.getElementById("header-box");
 			var placeholder_message = document.getElementById("placeholder-message");
 			$("#header-box").removeClass("placeholder");
-			
+
 			if (placeholder_message != null) {
 				header_box.removeChild(placeholder_message);
 			}
@@ -744,7 +779,7 @@
 			var header_box = document.getElementById("header-box");
 			var error_message = document.getElementById("error-message");
 			$("#header-box").removeClass("error");
-			
+
 			if (error_message != null) {
 				header_box.removeChild(error_message);
 			}
@@ -817,13 +852,13 @@
 			textSize(20);
 
 			text(mouseXString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(mouseYString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(widthString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(heightString, textX, textY);
 
@@ -833,7 +868,7 @@
 		function createOffensivePlayerOptions() {
 			var players = [];
 			var player;
-				
+
 			player = new Player ({
 				num: "QB", pos: "QB",
 				red: 212, green: 130, blue: 130,
@@ -889,7 +924,7 @@
 		function createDefensivePlayerOptions() {
 			var players = [];
 			var player;
-				
+
 			player = new Player ({
 				num: "E", pos: "E",
 				red: 0, green: 0, blue: 0,
@@ -905,7 +940,7 @@
 				siz: 2
 			});
 			players.push(player);
-			
+
 			player = new Player ({
 				num: "T", pos: "T",
 				red: 0, green: 0, blue: 0,

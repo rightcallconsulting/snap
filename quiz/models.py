@@ -283,6 +283,7 @@ class Test(models.Model):
 
 class Play(models.Model):
 	name = models.CharField(max_length=100)
+	scoutName = models.CharField(max_length=100, default="")
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
 	scout = models.BooleanField(default=False)
@@ -293,7 +294,12 @@ class Play(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return self.name
+		display_name = self.name + " from " + self.formation.name
+
+		if (self.scoutName != ""):
+			display_name += " vs " + self.scoutName
+
+		return display_name
 
 class TestResult(models.Model):
 	score = models.FloatField(null=True, blank=True) # number of correct answers in the attempt

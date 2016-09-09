@@ -185,6 +185,20 @@ Player.prototype.pixelDraw = function(field) {
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
+	var prevX = this.x;
+	var prevY = this.y;
+	for (var i = 0; i < this.blockingAssignmentArray.length; i++) {
+		var blockPart = this.blockingAssignmentArray[i]
+		blockPart.draw(prevX, prevY, field)
+		prevX = blockPart.x
+		prevY = blockPart.y
+		if (blockPart.type === 1 && blockPart.player !== null) {
+			prevX = blockPart.player.x
+			prevY = blockPart.player.y - (blockPart.player.siz / 3)
+		}
+	}
+
+	/*
 	var blockingAssignment = this.blockingAssignmentArray;
 	var blockingAssignmentLength = blockingAssignment.length;
 
@@ -242,7 +256,7 @@ Player.prototype.drawBlocks = function(field) {
 		}
 	}
 
-	noStroke();
+	noStroke();*/
 };
 
 // moveTo advances a player towards their next breakpoint. It returns true if
@@ -257,7 +271,7 @@ Player.prototype.moveTo = function(x, y) {
 	if (y < 0) {
 		yDist = 0-this.y;
 	}
-	
+
 	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
 	var numMoves = hDist / this.speed;
 	if (numMoves < 1) {
@@ -336,7 +350,7 @@ Player.prototype.drawDefensiveMovement = function(field) {
 		y1 = field.getYardY(y1);
 		x2 = field.getYardX(x2);
 		y2 = field.getYardY(y2);
-		
+
 	}
 
 	// Draw arrow
@@ -467,7 +481,7 @@ Player.prototype.drawBlockingMovement = function(field, x1, y1, x2, y2) {
 };
 
 // drawBlockingMovementWithEnd draws a straight line from (x1, y1) to (x2, y2)
-// as a part of a blocking assignment. There is a perpendicular blocking line 
+// as a part of a blocking assignment. There is a perpendicular blocking line
 // drawn at the end.
 Player.prototype.drawBlockingMovementWithEnd = function(field, x1, y1, x2, y2) {
 	x1 = field.getTranslatedX(x1);
@@ -720,8 +734,8 @@ Player.prototype.drawStraightSealLeft = function(field, currentX, currentY) {
 	return new_coordinates;
 };
 
-// drawKickOutRight draws a kick out block to the right. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
+// drawKickOutRight draws a kick out block to the right. It returns a 1x2
+// array containing the offensive players new coordinates after completing
 // their block.
 Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
 	var dist = 1.5;
@@ -733,7 +747,7 @@ Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2, y2;
-	
+
 	x2 = currentX + xDiff;
 	y2 = currentY - yDiff;
 
@@ -780,13 +794,13 @@ Player.prototype.drawKickOutRight = function(field, currentX, currentY) {
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2); 
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
 
-// drawKickOutLeft draws a kick out block to the left. It returns a 1x2 
-// array containing the offensive players new coordinates after completing 
+// drawKickOutLeft draws a kick out block to the left. It returns a 1x2
+// array containing the offensive players new coordinates after completing
 // their block.
 Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	var dist = 1.5;
@@ -798,7 +812,7 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	var x1 = currentX;
 	var y1 = currentY;
 	var x2, y2;
-	
+
 	x2 = currentX - xDiff;
 	y2 = currentY - yDiff;
 
@@ -845,7 +859,7 @@ Player.prototype.drawKickOutLeft = function(field, currentX, currentY) {
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2); 
+	line(x1, y1, x2, y2);
 
 	return new_coordinates;
 };
@@ -877,7 +891,7 @@ Player.prototype.isMouseInside = function(field) {
 	return dist <= siz/2;
 };
 
-// pixelIsMouseInside returns true if the mouse coordinates are somewhere 
+// pixelIsMouseInside returns true if the mouse coordinates are somewhere
 // inside this player.
 Player.prototype.pixelIsMouseInside = function(field) {
 	var siz = this.siz;
@@ -972,7 +986,7 @@ Player.prototype.drawRouteCoordinates = function(field) {
 Player.prototype.drawBreakPoints = function(field) {
 	var x1 = field.getTranslatedX(this.startX);
 	var y1 = field.getTranslatedY(this.startY);
-	
+
 	if (this.breakPoints.length > 0) {
 		var x2 = field.getTranslatedX(this.breakPoints[0][0]);
 		var y2 = field.getTranslatedY(this.breakPoints[0][1]);
@@ -1125,7 +1139,7 @@ Player.prototype.runRoute = function(){
 	if(this.currentBreak < 0 || this.currentBreak >= this.breakPoints.length) {
 		return; //TODO - dono
 	}
-	
+
 	if(this.moveTo(this.breakPoints[this.currentBreak][0], this.breakPoints[this.currentBreak][1])) {
 		this.currentBreak++;
 	}
@@ -1135,7 +1149,7 @@ Player.prototype.runMotion = function(){
 	if(this.currentMotionBreak < 0 || this.currentMotionBreak >= this.motionCoords.length){
 		return; //TODO - dono
 	}
-	
+
 	if(this.moveTo(this.motionCoords[this.currentMotionBreak][0], this.motionCoords[this.currentMotionBreak][1])){
 		this.currentMotionBreak++;
 	}

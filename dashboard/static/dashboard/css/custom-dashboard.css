@@ -283,6 +283,12 @@ i#back-arrow {
 	position: absolute;
 }
 
+i.fa.fa-check.fa-lg {
+    left: 50px;
+    line-height: 1.3em;
+    position: absolute;
+}
+
 /*************************************************************************
 top options css
 *************************************************************************/

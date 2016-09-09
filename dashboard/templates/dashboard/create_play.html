@@ -50,7 +50,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
+					<button class="btn btn-primary sideview-button formation-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
 						{{ formation.name }}
 					</button>
 				{% endfor %}
@@ -293,7 +293,12 @@
 						if (currentPlayerSelected.eligible) {
 							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
 						} else {
-							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+							var blockPoint = new BlockType({
+								type: 0,
+								x: mouseYardX,
+								y: mouseYardY
+							})
+							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 						}
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
@@ -310,7 +315,13 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+				var blockPoint = new BlockType({
+					type: 1,
+					player: newPlayerSelected,
+					x: mouseYardX,
+					y: mouseYardY
+				})
+				currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 				return false;
 			}
 
@@ -362,35 +373,41 @@
 					}
 					return false;
 				}
-				
 			} else if (play.getSelected()[0] != null) {
 				var playerSelcted = play.getSelected()[0];
 				var playerSelctedIndex = play.getSelected()[1];
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						play.offensivePlayers[playerSelctedIndex].blockingAssignmentArray = [];
-						play.offensivePlayers[playerSelctedIndex].route = [];
+						if (playerSelcted.blockingAssignmentArray.length > 0) {
+							playerSelcted.blockingAssignmentArray.pop();
+						} else if(playerSelcted.route.length > 0) {
+							playerSelcted.route.pop();
+						}
 					} else if (playerSelcted.unit == "defense") {
-						play.defensivePlayers[playerSelctedIndex].defensiveMovement = [];
+						play.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
 					return false;
-				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray.push("Money Block");
-				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Right");
-				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Left");
-				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+				}else if(specialBlockKeys.indexOf(key) >= 0){
+					var prevX = playerSelcted.x;
+					var prevY = playerSelcted.y;
+					var blockSize = playerSelcted.blockingAssignmentArray.length;
+					if (blockSize > 0) {
+						prevX = playerSelcted.blockingAssignmentArray[blockSize - 1].x;
+						prevY = playerSelcted.blockingAssignmentArray[blockSize - 1].y;
+					}
+
+					var block = new BlockType({
+						type: 2 + specialBlockKeys.indexOf(key),
+						player: null,
+						prevX: prevX,
+						prevY: prevY
+					});
+
+					playerSelcted.blockingAssignmentArray.push(block);
 				}
 
-				return false;	
+				return false;
 			}
 		};
 
@@ -517,11 +534,15 @@
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
 			for (i in plays) {
-				if (play.formation === plays[i].formation && name === plays[i].name) {
+				if (play.formation === plays[i].formation && name === plays[i].name && scout_formation_name_selected === plays[i].scoutName) {
 					plays[i] = play.deepCopy();
+					play.scoutName = scout_formation_name_selected;
 					play.save(path, csrf_token);
 					play = new Play({});
 					play.fromFormation(formation);
+
+					play_name_selected = "";
+					showOffense();
 					return;
 				}
 			}
@@ -531,6 +552,7 @@
 			// its plays array and add a new button for it to the sidebar.
 			play.name = name;
 			play.team = teamID;
+			play.scoutName = scout_formation_name_selected;
 			play.save(path, csrf_token);
 			plays.push(play);
 
@@ -542,16 +564,26 @@
 			// Update the sidebar to include a new button for the play that
 			// was just saved.
 			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
-			// Create a button for the new play.
-			var new_play_button = document.createElement("button");
-			new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
-			new_play_button.setAttribute("name", name);
-			new_play_button.setAttribute("class", "btn btn-primary sideview-button");
-			new_play_button.textContent = name;
 
-			// Add the new button to the sideview button div.
-			sideview_buttons_div.appendChild(new_play_button);
+			// If there is no scout formation selected create a button for 
+			// the new play.
+			if (scout_formation_name_selected === "") {
+				var new_play_button = document.createElement("button");
+				new_play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+				new_play_button.setAttribute("name", name);
+				new_play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+				new_play_button.textContent = name;
+
+				// Add the new button to the sideview button div.
+				sideview_buttons_div.appendChild(new_play_button);
+			} else {
+				var check_mark = document.createElement("i");
+				check_mark.setAttribute("class", "fa fa-check fa-lg");
+				selected_sideview_button.appendChild(check_mark);
+			}
+
+			play_name_selected = "";
+			showOffense();
 			return;
 		});
 
@@ -562,13 +594,6 @@
 			// If selected is not undefined then send a delete request for
 			// the play that is currently selected.
 			if (selected != null) {
-				// Set the path and cross-site forgery token vars.
-				var path = "/plays/create";
-				var csrf_token = "{{ csrf_token }}";
-
-				// Delete the play from the backend.
-				play.delete(path, csrf_token);
-
 				// Remove the play from the play array. If this didn't
 				// happen and the user deleted a play and added one with the
 				// same name without refreshing the page, the new play would
@@ -576,17 +601,32 @@
 				// because a play with the same name would exist in the
 				// plays array.
 				for (var i = 0; i < plays.length; ++i) {
-					if (play.formation === plays[i].formation && play.name === plays[i].name) {
+					if (play.formation === plays[i].formation && play.name === plays[i].name && play.scoutName === plays[i].scoutName) {
+						// Set the path and cross-site forgery token vars.
+						var path = "/plays/create";
+						var csrf_token = "{{ csrf_token }}";
+
+						// Delete the play from the backend.
+						play.scoutName = scout_formation_name_selected;
+						play.delete(path, csrf_token);
+
 						plays.splice(i, 1);
 						break;
 					}
 				}
 
-				// Delete the button from the sidebar. After this step the
-				// play should be entirely removed from the backend and the
-				// frontend.
-				var sideview_buttons_div = document.getElementById("sideview-buttons");
-				sideview_buttons_div.removeChild(selected);
+				if (scout_formation_name_selected === "") {
+					// Delete the button from the sidebar. After this step the
+					// play should be entirely removed from the backend and the
+					// frontend.
+					var sideview_buttons_div = document.getElementById("sideview-buttons");
+					sideview_buttons_div.removeChild(selected);
+				} else {
+					var check_mark = selected.querySelector("i");
+					if (check_mark != null) {
+						selected.removeChild(check_mark);
+					}
+				}
 			}
 
 			// Update the top bar to display the Placeholder message.
@@ -605,6 +645,9 @@
 					play.fromFormation(formations[i]);
 				}
 			}
+
+			play_name_selected = "";
+			showOffense();
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -641,6 +684,15 @@
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
 
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
 			formation_name_selected = "";
 			play_name_selected = "";
 			scout_formation_name_selected = "";
@@ -651,7 +703,7 @@
 
 			for(i in formations) {
 				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
 				formation_button.setAttribute("name", formations[i].name);
 				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
 				formation_button.textContent = formations[i].name;
@@ -669,15 +721,6 @@
 		// sideview header div so that you can go back to formations.
 		function showPlaysInFormation(selected) {
 			var sideview_header = document.getElementById("sideview-header");
-
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// formation we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
 
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
@@ -701,20 +744,14 @@
 
 			sideview_header.appendChild(back_arrow);
 
-			var toggle_button = document.createElement("div");
-			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showScout()");
-			toggle_button.textContent = "D";
-			sideview_header.appendChild(toggle_button);
-
 			play.fromFormation(formation_selected);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
-				if (plays[i].formation === formation_name) {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
-					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
@@ -729,6 +766,13 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
+
+			var sideview_header = document.getElementById("sideview-header");
+			var toggle_button = document.getElementById("offense-defense-toggle");
+
+			if (toggle_button != null) {
+				sideview_header.removeChild(toggle_button);
+			}
 
 			play_name_selected = "";
 			scout_formation_name_selected = "";
@@ -759,7 +803,7 @@
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button play-button");
 			}
 
 			// If the old selected button is the same as the newly selected
@@ -767,16 +811,22 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to.
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success sideview-button");
+				new_selected.setAttribute("class", "btn btn-success sideview-button play-button");
+
+				toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showDefensiveLooks()");
+				toggle_button.textContent = "D";
+				sideview_header.appendChild(toggle_button);
 
 				var play_name = new_selected.getAttribute("name");
 				play_name_selected = play_name;
 
 				for (i in plays) {
-					if (play.formation === plays[i].formation && play_name === plays[i].name) {
+					if (play.formation === plays[i].formation && play_name === plays[i].name && plays[i].scoutName === "") {
 						play = plays[i].deepCopy();
 						break;
 					}
@@ -814,14 +864,22 @@
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
-			for(i in scout_formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
-				formation_button.setAttribute("name", scout_formations[i].name);
-				formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
-				formation_button.textContent = scout_formations[i].name;
+			for (i in scout_formations) {
+				var scout_formation_button = document.createElement("button");
+				scout_formation_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
+				scout_formation_button.setAttribute("name", scout_formations[i].name);
+				scout_formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
+				scout_formation_button.textContent = scout_formations[i].name;
 
-				sideview_buttons.appendChild(formation_button);
+				for (j in plays) {
+					if (plays[j].name === play.name && plays[j].scoutName === scout_formations[i].name) {
+						var check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						scout_formation_button.appendChild(check_mark);
+					}
+				}
+
+				sideview_buttons.appendChild(scout_formation_button);
 			}
 		};
 
@@ -839,7 +897,7 @@
 			if (old_selected != null) {
 				old_selected.removeAttribute("id");
 				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button scout-button");
 			}
 
 			// If the old selected button is the same as the newly selected
@@ -850,10 +908,17 @@
 				// id to 
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success sideview-button");
+				new_selected.setAttribute("class", "btn btn-success sideview-button scout-button");
 
 				var scout_formation_name = new_selected.getAttribute("name");
 				scout_formation_name_selected = scout_formation_name;
+
+				for (i in plays) {
+					if (plays[i].name === play.name && plays[i].scoutName === scout_formation_name) {
+						play = plays[i].deepCopy();
+						return;
+					}
+				}
 
 				for (i in scout_formations) {
 					if (scout_formation_name === scout_formations[i].name) {
@@ -867,20 +932,13 @@
 		};
 
 		function showOffense() {
+			scout_formation_name_selected = "";
+
 			// Show Plays in Formation
 			var sideview_header = document.getElementById("sideview-header");
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			$("#sideview-buttons").empty();
-
-			// Add a placeholder message to the top bar of the main view. If we
-			// are deseclecting a button then the placeholder will stay. If we
-			// are selecting a button it will get replaced with the name of the
-			// formation we selected.
-			removeHeaderPlaceholder();
-			removeHeaderError();
-			removeHeaderName();
-			addHeaderPlaceholder();
 
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
@@ -891,41 +949,36 @@
 
 			sideview_header.appendChild(back_arrow);
 
-			var toggle_button = document.createElement("div");
-			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showScout()");
-			toggle_button.textContent = "D";
-			sideview_header.appendChild(toggle_button);
-
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected) {
+				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
-					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
 				}
+
+				if (plays[i].name === play.name && plays[i].scoutName === "") {
+					play = plays[i].deepCopy();
+				}
 			}
 			
 			// Change selected
 			if (play_name_selected != "") {
-				var play = $("[name=\"" + play_name_selected + "\"]")[0];
-				play.removeAttribute("class");
-				play.setAttribute("id", "selected");
-				play.setAttribute("class", "btn btn-success sideview-button");
-			}
-		};
+				var play_selected_button = $("[name=\"" + play_name_selected + "\"]")[0];
+				play_selected_button.removeAttribute("class");
+				play_selected_button.setAttribute("id", "selected");
+				play_selected_button.setAttribute("class", "btn btn-success sideview-button play-button");
 
-		function showScout() {
-			showDefensiveLooks();
-
-			if (scout_formation_name_selected != "") {
-				var scout_formation = $("[name=\"" + scout_formation_name_selected + "\"]")[0];
-				addScoutFormationToPlay(scout_formation);
+				var toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showDefensiveLooks()");
+				toggle_button.textContent = "D";
+				sideview_header.appendChild(toggle_button);
 			}
 		};
 
