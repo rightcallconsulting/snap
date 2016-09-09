@@ -187,12 +187,12 @@ Player.prototype.pixelDraw = function(field) {
 Player.prototype.drawBlocks = function(field) {
 	var prevX = this.x;
 	var prevY = this.y;
-	for(var i = 0; i < this.blockingAssignmentArray.length; i++){
+	for (var i = 0; i < this.blockingAssignmentArray.length; i++) {
 		var blockPart = this.blockingAssignmentArray[i]
 		blockPart.draw(prevX, prevY, field)
 		prevX = blockPart.x
 		prevY = blockPart.y
-		if(blockPart.type === 1 && blockPart.player !== null){
+		if (blockPart.type === 1 && blockPart.player !== null) {
 			prevX = blockPart.player.x
 			prevY = blockPart.player.y - (blockPart.player.siz / 3)
 		}

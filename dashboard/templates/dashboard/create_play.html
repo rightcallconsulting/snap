@@ -293,7 +293,12 @@
 						if (currentPlayerSelected.eligible) {
 							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
 						} else {
-							currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+							var blockPoint = new BlockType({
+								type: 0,
+								x: mouseYardX,
+								y: mouseYardY
+							})
+							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 						}
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
@@ -310,7 +315,13 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+				var blockPoint = new BlockType({
+					type: 1,
+					player: newPlayerSelected,
+					x: mouseYardX,
+					y: mouseYardY
+				})
+				currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 				return false;
 			}
 
@@ -362,35 +373,43 @@
 					}
 					return false;
 				}
-				
 			} else if (play.getSelected()[0] != null) {
 				var playerSelcted = play.getSelected()[0];
 				var playerSelctedIndex = play.getSelected()[1];
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						play.offensivePlayers[playerSelctedIndex].blockingAssignmentArray = [];
-						play.offensivePlayers[playerSelctedIndex].route = [];
+						if (playerSelcted.blockingAssignmentArray.length > 0) {
+							playerSelcted.blockingAssignmentArray.pop();
+						} else if(playerSelcted.routeCoordinates.length > 0) {
+							playerSelcted.routeCoordinates.pop();
+						} else {
+							play.offensivePlayers.splice(playerSelctedIndex, 1);
+						}
 					} else if (playerSelcted.unit == "defense") {
-						play.defensivePlayers[playerSelctedIndex].defensiveMovement = [];
+						play.defensivePlayers.splice(playerSelctedIndex, 1);
 					}
 					return false;
-				} else if (key === "Q") {
-					playerSelcted.blockingAssignmentArray.push("Money Block");
-				} else if (key === "W") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Right");
-				} else if (key === "E") {
-					playerSelcted.blockingAssignmentArray.push("Down Block Left");
-				} else if (key === "R") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-				} else if (key === "T") {
-					playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-				} else if (key === "Y") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-				} else if (key === "U") {
-					playerSelcted.blockingAssignmentArray.push("Kick Out Left");
+				}else if(specialBlockKeys.indexOf(key) >= 0){
+					var prevX = playerSelcted.x;
+					var prevY = playerSelcted.y;
+					var blockSize = playerSelcted.blockingAssignmentArray.length;
+					if (blockSize > 0) {
+						prevX = playerSelcted.blockingAssignmentArray[blockSize - 1].x;
+						prevY = playerSelcted.blockingAssignmentArray[blockSize - 1].y;
+					}
+
+					var block = new BlockType({
+						type: 2 + specialBlockKeys.indexOf(key),
+						player: null,
+						prevX: prevX,
+						prevY: prevY
+					});
+
+					playerSelcted.blockingAssignmentArray.push(block);
 				}
 
-				return false;	
+				return false;
 			}
 		};
 
