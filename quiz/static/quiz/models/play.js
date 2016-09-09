@@ -193,7 +193,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "defensiveMovement", "route"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -445,7 +445,7 @@ function createPlayFromJson(playJsonDictionary) {
 			var playerToBlock = null;
 
 			for (var j = 0; j < defensivePlayersArray.length; ++j) {
-				if (primaryAssignment.x === defensivePlayersArray[j].x && primaryAssignment.y === defensivePlayersArray[j].y) {
+				if (primaryAssignment.player.x === defensivePlayersArray[j].x && primaryAssignment.player.y === defensivePlayersArray[j].y) {
 					playerToBlock = defensivePlayersArray[j];
 				}
 			}
