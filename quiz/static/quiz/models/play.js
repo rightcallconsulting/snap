@@ -442,16 +442,22 @@ function createPlayFromJson(playJsonDictionary) {
 	for (var i = 0; i < offensivePlayersArray.length; ++i) {
 		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+			var playerToBlock = null;
 
-			if (primaryAssignment.x != null) {
-				for (var k = 0; k < defensivePlayersArray.length; ++k) {
-					if (primaryAssignment.x === defensivePlayersArray[k].x && primaryAssignment.y === defensivePlayersArray[k].y) {
-						primaryAssignment = defensivePlayersArray[k];
-					}
+			for (var j = 0; j < defensivePlayersArray.length; ++j) {
+				if (primaryAssignment.x === defensivePlayersArray[j].x && primaryAssignment.y === defensivePlayersArray[j].y) {
+					playerToBlock = defensivePlayersArray[j];
 				}
 			}
 
-			offensivePlayersArray[i].blockingAssignmentArray.push(primaryAssignment);
+			var block = new BlockType ({
+				type: primaryAssignment.type,
+				player: playerToBlock,
+				x: primaryAssignment.x,
+				y: primaryAssignment.y
+			});
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(block);
 		}
 	}
 

@@ -16,17 +16,17 @@
 var BlockType = function(config) {
 	this.type = config.type || 0;
 	this.player = config.player || null;
-	if(config.x && config.y){
+	if (config.x && config.y) {
 			this.x = config.x
 			this.y = config.y
-	}else if(this.type === 1 && this.player !== null){
+	} else if (this.type === 1 && this.player !== null) {
 		this.x = this.player.x
 		this.y = this.player.y - (this.player.siz / 2)
-	}else if(config.prevX && config.prevY){
-		if(this.type === 2){
+	} else if(config.prevX && config.prevY) {
+		if (this.type === 2) {
 			this.x = config.prevX
 			this.y = config.prevY + 1.5
-		}else if(this.type === 3 || this.type === 4){
+		} else if(this.type === 3 || this.type === 4) {
 			var dist = 2;
 			var xDiff = (dist/2)*sqrt(2)
 			var yDiff = (dist/2)*sqrt(2)
@@ -35,18 +35,20 @@ var BlockType = function(config) {
 			}
 			this.x = config.prevX + xDiff
 			this.y = config.prevY + yDiff
-		}else if(this.type === 5 || this.type === 6){
+		} else if(this.type === 5 || this.type === 6) {
 			var dist = 3;
 			var xDiff = 0;
 			var yDiff = dist;
 			this.x = config.prevX + xDiff
 			this.y = config.prevY + yDiff
-		}else if(this.type === 7 || this.type === 8){
+		} else if(this.type === 7 || this.type === 8) {
 			var dist = 2.5;
 			var alpha = 55*(PI/180);
-			if(this.type === 8){
+			
+			if (this.type === 8) {
 				alpha = PI - alpha
 			}
+			
 			var xDiff = cos(alpha)*dist;
 			var yDiff = sin(alpha)*dist;
 			this.x = config.prevX + xDiff
