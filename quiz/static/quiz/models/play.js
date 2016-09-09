@@ -439,14 +439,14 @@ function createPlayFromJson(playJsonDictionary) {
 	offensiveLinemenArray.push(right_guard);
 	offensiveLinemenArray.push(right_tackle);
 
-	for (var i = 0; i < offensivePlayersArray.length; ++i) {
-		for (var j = 0; j < playJsonDictionary.offensivePlayers[i].blockingAssignmentArray.length ; ++j) {
+	for (i in offensivePlayersArray) {
+		for (j in playJsonDictionary.offensivePlayers[i].blockingAssignmentArray) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 			var playerToBlock = null;
 
-			for (var j = 0; j < defensivePlayersArray.length; ++j) {
-				if (primaryAssignment.player.x === defensivePlayersArray[j].x && primaryAssignment.player.y === defensivePlayersArray[j].y) {
-					playerToBlock = defensivePlayersArray[j];
+			for (k in defensivePlayersArray) {
+				if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
+					playerToBlock = defensivePlayersArray[k];
 				}
 			}
 

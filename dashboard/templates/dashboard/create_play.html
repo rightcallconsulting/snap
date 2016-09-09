@@ -762,17 +762,17 @@
 		};
 
 		function changeSelectedPlay(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
 			var sideview_header = document.getElementById("sideview-header");
 			var toggle_button = document.getElementById("offense-defense-toggle");
 
 			if (toggle_button != null) {
 				sideview_header.removeChild(toggle_button);
 			}
-
-			// The newly selected button is the one that is clicked on. The old
-			// selected button may not exist.
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
 
 			play_name_selected = "";
 			scout_formation_name_selected = "";
@@ -811,7 +811,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to.
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button play-button");
