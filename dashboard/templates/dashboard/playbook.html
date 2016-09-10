@@ -830,7 +830,7 @@
 
 			// Update the sideview header.
 			var sideview_header = document.getElementById("sideview-header");
-			sideview_header.textContent = play_name;
+			sideview_header.textContent = formation_name;
 
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
@@ -850,7 +850,7 @@
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					
 					if (plays[i].name === play_name) {
