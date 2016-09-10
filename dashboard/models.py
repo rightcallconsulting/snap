@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from quiz.models import Team, Player, Formation, Play, Position, Test, Group
 from django.contrib.admin import widgets
@@ -16,7 +17,7 @@ from datetime import datetime
 # of anything that is published. The deadline defaults to
 # 1 day.
 def deadline_time():
-	deadline = datetime.now() + timedelta(days=1)
+	deadline = datetime.now() + timezone(days=1)
 	return deadline
 
 class UserCreateForm(UserCreationForm):
