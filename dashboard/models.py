@@ -190,8 +190,3 @@ class Concept(models.Model):
 
 	def __str__(self):
 		return self.name
-
-	def dictionary_for_json_seed(self):
-		result_dictionary = model_to_dict(self)
-
-		return result_dictionary
