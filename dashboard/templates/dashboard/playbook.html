@@ -624,6 +624,7 @@
 				toggle_button.setAttribute("id", "offense-defense-toggle");
 				toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
 				toggle_button.textContent = "D";
+
 				sideview_header.appendChild(toggle_button);
 
 				var play_name = new_selected.getAttribute("name");
@@ -836,8 +837,13 @@
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
-			sideview_header.appendChild(back_arrow);
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+			toggle_button.textContent = "D";
 
+			sideview_header.appendChild(back_arrow);
+			sideview_header.appendChild(toggle_button);
 
 			// Update sideview buttons.
 			$("#sideview-buttons").empty();
