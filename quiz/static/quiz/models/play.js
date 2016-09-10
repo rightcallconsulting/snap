@@ -444,9 +444,11 @@ function createPlayFromJson(playJsonDictionary) {
 			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
 			var playerToBlock = null;
 
-			for (k in defensivePlayersArray) {
-				if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
-					playerToBlock = defensivePlayersArray[k];
+			if (primaryAssignment.type === 1) {
+				for (k in defensivePlayersArray) {
+					if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
+						playerToBlock = defensivePlayersArray[k];
+					}
 				}
 			}
 

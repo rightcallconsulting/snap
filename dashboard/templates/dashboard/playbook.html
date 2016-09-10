@@ -624,6 +624,7 @@
 				toggle_button.setAttribute("id", "offense-defense-toggle");
 				toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
 				toggle_button.textContent = "D";
+
 				sideview_header.appendChild(toggle_button);
 
 				var play_name = new_selected.getAttribute("name");
@@ -682,20 +683,27 @@
 		};
 
 		function changeSelectedPlayWithDefensiveLook(selected) {
+			var play_name = play.name;
+			var formation_name = play.formation;
+
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
 			var mainview_header = document.getElementById("header-box");
-
-			play_name = play.name;
-			play_formation = play.formation;
+			mainview_header.textContent = play_name;
 
 			// Create a new play to replace the one you just deselected on the 
 			// screen. Use the same formation that you were already using.
-			var formation = play.formation;
-			play = new Play({});
+			var formation = formation_name;
+			
+			for (i in plays) {
+				if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === "") {
+					play = plays[i].deepCopy();
+					break;
+				}
+			}
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -726,7 +734,7 @@
 				mainview_header.textContent = play_name + " vs " + scout_name;
 
 				for (i in plays) {
-					if (plays[i].formation === play_formation && plays[i].name === play_name && plays[i].scoutName === scout_name) {
+					if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === scout_name) {
 						play = plays[i].deepCopy();
 						break;
 					}
@@ -819,54 +827,54 @@
 		};
 
 		function showOffense() {
-			/*scout_formation_name_selected = "";
+			// Get the play and formation name.
+			var formation_name = play.formation;
+			var play_name = play.name;
 
-			// Show Plays in Formation
+			// Update the mainview header.
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = play_name;
+
+			// Update the sideview header.
 			var sideview_header = document.getElementById("sideview-header");
-			var sideview_buttons = document.getElementById("sideview-buttons");
-
-			$("#sideview-buttons").empty();
+			sideview_header.textContent = formation_name;
 
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
-			sideview_header.textContent = formation_name_selected;
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+			toggle_button.textContent = "D";
 
 			sideview_header.appendChild(back_arrow);
+			sideview_header.appendChild(toggle_button);
 
+			// Update sideview buttons.
+			$("#sideview-buttons").empty();
 			var sideview_buttons = document.getElementById("sideview-buttons");
-			
+
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
-					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					
+					if (plays[i].name === play_name) {
+						play = plays[i].deepCopy();
+						play_button.setAttribute("id", "selected");
+						play_button.setAttribute("class", "btn btn-success sideview-button play-button");
+					} else {
+						play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					}
+			
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
 				}
-
-				if (plays[i].name === play.name && plays[i].scoutName === "") {
-					play = plays[i].deepCopy();
-				}
 			}
-			
-			// Change selected
-			if (play_name_selected != "") {
-				var play_selected_button = $("[name=\"" + play_name_selected + "\"]")[0];
-				play_selected_button.removeAttribute("class");
-				play_selected_button.setAttribute("id", "selected");
-				play_selected_button.setAttribute("class", "btn btn-success sideview-button play-button");
-
-				var toggle_button = document.createElement("div");
-				toggle_button.setAttribute("id", "offense-defense-toggle");
-				toggle_button.setAttribute("onclick", "showDefensiveLooks()");
-				toggle_button.textContent = "D";
-				sideview_header.appendChild(toggle_button);
-			}*/
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
