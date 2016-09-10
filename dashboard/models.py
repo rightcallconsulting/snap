@@ -12,6 +12,13 @@ from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
 from datetime import datetime
 
+# This function returns a datetime object for the deadline
+# of anything that is published. The deadline defaults to
+# 1 day.
+def deadline_time():
+	deadline = datetime.now() + timedelta(days=1)
+	return deadline
+
 class UserCreateForm(UserCreationForm):
 	POSITIONS = (
 			("", ""),
@@ -187,6 +194,20 @@ class Concept(models.Model):
 	scout = models.BooleanField(default=False)
 
 	conceptJson = models.TextField(max_length=None, blank=True, null=True)
+
+	def __str__(self):
+		return self.name
+
+class Quiz(models.Model):
+	name = models.CharField(max_length=50, blank=True, null=True)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	unit = models.CharField(max_length=25, default="offense")
+	players = models.ManyToManyField(Player)
+	
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	deadline = models.DateTimeField(default=deadline_time, null=True, blank=True)
 
 	def __str__(self):
 		return self.name
