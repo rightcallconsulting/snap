@@ -683,20 +683,27 @@
 		};
 
 		function changeSelectedPlayWithDefensiveLook(selected) {
+			var play_name = play.name;
+			var formation_name = play.formation;
+
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
 			var mainview_header = document.getElementById("header-box");
-
-			play_name = play.name;
-			play_formation = play.formation;
+			mainview_header.textContent = play_name;
 
 			// Create a new play to replace the one you just deselected on the 
 			// screen. Use the same formation that you were already using.
-			var formation = play.formation;
-			play = new Play({});
+			var formation = formation_name;
+			
+			for (i in plays) {
+				if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === "") {
+					play = plays[i].deepCopy();
+					break;
+				}
+			}
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -727,7 +734,7 @@
 				mainview_header.textContent = play_name + " vs " + scout_name;
 
 				for (i in plays) {
-					if (plays[i].formation === play_formation && plays[i].name === play_name && plays[i].scoutName === scout_name) {
+					if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === scout_name) {
 						play = plays[i].deepCopy();
 						break;
 					}
