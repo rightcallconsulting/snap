@@ -39,12 +39,12 @@
 							</button>
 						</td>
 						<td>
-							<button id="add-play-button" name="button">
+							<button id="add-content-button" name="button">
 								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
 							</button>
 						</td>
 						<td>
-							<button id="remove-play-button" name="button">
+							<button id="remove-content-button" name="button">
 								<i class="fa fa-minus fa-lg mainview-button-icon" title="Remove content from quiz"></i>
 							</button>
 						</td>
@@ -161,6 +161,22 @@
 			quiz = new Quiz({});
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
+
+			{% for formation in quiz.formations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			{% endfor %}
+			
+			{% for play in quiz.plays %}
+			playJsonFromDatabase = '{{ play.playJson|safe }}';
+			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase)));
+			{% endfor %}
+			
+			{% for concept in quiz.concepts %}
+			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
+			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			{% endfor %}
+			
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -303,12 +319,11 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.delete(path, csrf_token);
-
 		});
 
-		$("#add-play-button").click(function(event) {});
+		$("#add-content-button").click(function(event) {});
 
-		$("#remove-play-button").click(function(event) {});
+		$("#remove-content-button").click(function(event) {});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;

@@ -79,17 +79,17 @@ Quiz.prototype.deepCopy = function() {
 /*     Non object functions      */
 /*********************************/
 
-function createFormationsinQuizFromJson(formationJsonDictionary) {
+Quiz.prototype.createFormationsFromJson = function(formationJsonDictionary) {
 	var formation = createFormationFromJson(formationJsonDictionary);
 	this.formations.push(formation);
 };
 
-function createPlaysinQuizFromJson(playJsonDictionary) {
+Quiz.prototype.createPlaysFromJson = function(playJsonDictionary) {
 	var play = createPlayFromJson(playJsonDictionary);
 	this.plays.push(formation);
 };
 
-function createConceptsinQuizFromJson(conceptJsonDictionary) {
+Quiz.prototype.createConceptsFromJson = function(conceptJsonDictionary) {
 	var concept = createConceptFromJson(conceptJsonDictionary);
 	this.concepts.push(formation);
 };
