@@ -222,6 +222,10 @@ div.interactive-header p {
 	margin: none;
 }
 
+i.fa.mainview-button-icon {
+    color: #9CCC65;
+}
+
 /*************************************************************************
 dyanmic sideview
 *************************************************************************/
@@ -323,6 +327,19 @@ div#create-defensive-look-button {
 	width: calc(100% - 600px);
 	text-align: center;
 	font-size: medium;
+}
+
+/*************************************************************************
+manage quiz
+*************************************************************************/
+
+#manage-quiz div#top-options {
+	padding-left: 20px;
+	text-align: left;
+}
+
+#manage-quiz #top-options-dropdown {
+	width: 500px;
 }
 
 /*************************************************************************

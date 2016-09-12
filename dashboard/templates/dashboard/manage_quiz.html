@@ -2,31 +2,60 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="padding-md">
-		<div class="main-content-area dash-col display-play-box col-md-7 full" id="display-play-box">
-			<div class="dash-header text-center">
-				<span>
-					<h4 id="play-image-header">Play</h4>
-				</span>
+	<div id="manage-quiz" class="manage-quiz">
+		<div id="top-options">
+			<select id="top-options-dropdown" onchange="changeSideview(this)">
+				<option value="offensive playbook">
+					Offensive Playbook
+				</option>
+				<option value="offensive concepts">
+					Offensive Concepts
+				</option>
+				<option value="defensive looks">
+					Defensive Looks
+				</option>
+			</select>
+		</div>
+
+		<div id="display-box" class="col-md-8 bordered-div">
+			<div id="header-box" class="static-header display-header">
+				{{ quiz.name }}
 			</div>
-			<div id="display-play-box-2">
+
+			<div id="quiz-box">
 			</div>
-			<div class="holds-play-buttons">
+
+			<div class="display-buttons">
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="play-button" name="button">
-								{% include "quiz/play_button.html" %}
+							<button id="save-button" name="button">
+								{% include "quiz/check_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="pause-button" name="button">
-								{% include "quiz/pause_button.html" %}
+							<button id="clear-button" name="button">
+								{% include "quiz/clear_button.html" %}
 							</button>
 						</td>
 						<td>
-							<button id="restart-button" name="button">
-								{% include "quiz/refresh_button.html" %}
+							<button id="add-play-button" name="button">
+								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
+							</button>
+						</td>
+						<td>
+							<button id="remove-play-button" name="button">
+								<i class="fa fa-minus fa-lg mainview-button-icon" title="Remove content from quiz"></i>
+							</button>
+						</td>
+						<td>
+							<button id="zoom-in-button" name="button">
+								{% include "quiz/zoom_in_button.html" %}
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button">
+								{% include "quiz/zoom_out_button.html" %}
 							</button>
 						</td>
 					</tr>
@@ -34,324 +63,730 @@
 			</div>
 		</div>
 
-		<div class = "stacked-col col-md-4">
-			{% if unit == "offense" %}
-				<div class="secondary-content-area top choose-offensive-formation-box thirds">
-					<div class="dash-header text-center">
-						<span>
-							<h4>Offensive Formations</h4>
-						</span>
-					</div>
-					<div class="scrollable-table">
-						<table class="formation-list two-column-table">
-							{% for formation in offensive_formations %}
-								{% if forloop.counter|add:"-1"|divisibleby:2 %}
-									<tr>
-								{% endif %}
-										<td>
-											<input class="bounceIn animation-delay5 login-link formation formation-button" id="{{formation.id}}" type="submit" value="{{ formation }}">
-										</td>
-								{% if forloop.counter|divisibleby:2 %}
-									</tr>
-								{% endif %}
-							{% endfor %}
-						</table>
-					</div>
-				</div>
-				
-				<div class="secondary-content-area change-plays-box thirds">
-					<div class="dash-header text-center">
-						<span>
-							<h4 id="change-plays-header">Change Plays</h4>
-						</span>
-					</div>
-					<form id="choose-play" class="" action="/quizzes/manage/{{ quiz.id }}" method="post"> 
-						{% csrf_token %}
-						<div class="panel-body show-plays" id="draw-plays">
-						</div><!-- /panel -->
-					</form>
-				</div>
-			{% else %}
-				<div class="col-lg-4 choose-defensive-formation-box thirds">
-					<div class="dash-header text-center">
-						<span><h4>Plays</h4></span>
-					</div>
-				
-					{% for formation in unique_defensive_formations %}
-						<input class="bounceIn animation-delay5 login-link formation-defense formation-button-defense" id="{{ formation.id }}" type="submit" value="{{ formation }}">
-					{% endfor %}
-				</div>
-
-				<div class="col-lg-4 change-plays-box thirds" id="draw-offensive-formations">
-					<div class="dash-header text-center">
-						<span>
-							<h4 id="change-plays-header">Offensive Looks:</h4>
-						</span>
-					</div>
-					<form id="choose-play-defense" class="" action="/quizzes/manage/{{ quiz.id }}" method="post"> 
-						{% csrf_token %}
-						<div class="panel-body show-plays-defense">
-						</div>
-					</form>
-				</div>
-			{% endif %}
-
-			{% if unit == "offense" %}
-				<div class="tertiary-content-area dash-col display-plays-in-test thirds">
-					<div class="dash-header text-center">
-						<span>
-							<h4>Plays in Test: {{ quiz.name }}</h4>
-						</span>
-					</div>
-					<div class="panel-body existing-plays">
-						{% for play in plays_in_quiz %}
-							<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
-						{% endfor %}
-					</div>
-				</div>
-			{% else %}
-				<div class="col-lg-4 dash-col display-plays-in-test thirds">
-					<div class="dash-header text-center">
-						<span>
-							<h4>Plays in Test: {{ quiz.name }}</h4>
-						</span>
-					</div>
-					{% for formation in unique_defensive_formations %}
-						<div class="col-lg-2 dash-col">
-							<div class="dash-header text-center">
-								<span><h4>{{ formation }}</h4></span>
-							</div>
-							<div class="panel-body existing-plays" id="formation-show-{{ formation.id }}">
-								{% for play in plays_in_quiz %}
-									{% if play.formation.id == formation.id %}
-										<input class='bounceIn play-remove play-remove-button' id='{{ play.id }}' type='submit' value='{{ play.name }}'>
-									{% endif %}
-								{% endfor %}
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-			{% endif %}
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header">
+				Formations
+			</div>
+			<div id="sideview-buttons">
+				{% for formation in formations %}
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
+						{{ formation.name }}
+					</button>
+				{% endfor %}
+			</div>
 		</div>
 
-		<div id="test-id" data-test-id="{{ quiz.id }}" style="display: none;"></div>
-		<div id="play-id-array" data-play-id-array="{{ play_id_array }}" style="display: none;"></div>
-		<div id="selected-formation" data-formation-id="0" style="display: none;"></div>
-	</div><!--/padding-md-->
+	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
+	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
+	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
 {% endblock %}
 
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
-		var playClicked;
-		var formationID;
-		var formationToDraw;
-		var offensivePlayToDraw;
-		var duplicateDefensiveFormations;
-		var playToDraw;
-		var removedPlaysFromFormation = [];
-		var testID = $('#test-id').data('test-id');
-		var playIDArray = $('#play-id-array').data('play-id-array');
-		var defensive_formation_id_array = {{defensive_formation_id_array|safe}}
+		var quiz;
+		var formations = [];
+		var plays = [];
+		var play;
+		var concepts = [];
+		var concept;
+		var scout_formations = [];
+		var scout_formation;
+		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
-		// For Offense:
-		$('.show-plays').on('mouseover', '.play', function() {
-			if(playToDraw) {
-				playToDraw.resetPlayers(defensePlay)
-				playToDraw.setAllRoutes();
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
+
+		function setup() {
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
+
+			// Create canvas and add it to the main view
+			var quiz_box_div = document.getElementById("quiz-box");
+			var myCanvas = createCanvas(width, height);
+			
+			field.height = height;
+			field.width = width;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
+			background(58, 135, 70);
+
+			myCanvas.parent("quiz-box");
+
+			// Create new Play, new Concept, and new Scout Formation.
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
+
+			// Load formations from Json passed from databse.
+			var formationJsonFromDatabase = "";
+
+			{% for formation in formations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			{% endfor %}
+			
+			// Load plays from Json passed from database.
+			var playJsonFromDatabase = "";
+
+			{% for play in plays %}
+			playJsonFromDatabase = '{{ play.playJson|safe }}';
+			plays.push(createPlayFromJson(JSON.parse(playJsonFromDatabase)));
+			{% endfor %}
+
+			// Load concepts from Json passed from database
+			var conceptJsonFromDatabase = "";
+
+			{% for concept in concepts %}
+			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
+			concepts.push(createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			{% endfor %}
+
+			// Load scout formations from Json passed from databse.
+			var scoutFormationJsonFromDatabase = "";
+
+			{% for scoutFormation in scoutFormations %}
+			scoutFormationJsonFromDatabase = '{{ scoutFormation.formationJson|safe }}';
+			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
+			{% endfor %}
+
+			// Create quiz and load it's content from Json.
+			quiz = new Quiz({});
+			quiz.name = '{{ quiz.name }}';
+			quiz.unit = '{{ quiz.unit }}';
+
+			window.onresize = function() {
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
+				var sideview = document.getElementById("sideview");
+				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
+
+				resizeCanvas(width, height);
+				field.height = height;
+				field.width = width;
+				
+				resizeMainViewObjects();
+			};
+
+			drawOpening();
+		};
+
+		function draw() {
+			// Limitations on where offensive players can be
+			var numberOfOffensivePlayers = play.offensivePlayers.length;
+			
+			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
+				var player = play.offensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = 0;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
 			}
-			playToDraw = plays.filter(function(play){return play.id === Number(this.id);}.bind(this))[0];
-			playToDraw.formation = formationToDraw;
-			$('#play-image-header').text(formationToDraw.name+ ": "+ this.value);
-			playScene = false;
-		})
 
-		$('.show-plays').on('click', '.play', function() {
-			$('#choose-play').data('button', this.name);
-			playClicked = $(this);
+			// Limitations on where defensive players can be
+			var numberOfDefensivePlayers = play.defensivePlayers.length;
+			
+			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
+				var player = play.defensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = -10;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
+			}
+
+			// Draw opening
+			drawOpening();
+		};
+
+		function drawOpening() {
+			field.drawBackground(play, height, width);
+
+			play.drawAssignments(field);
+			play.drawPlayers(field);
+
+			concept.drawAssignments(field);
+			concept.drawPlayers(field);
+
+			scout_formation.drawPlayers(field);
+
+			fill(176,176,176);
+		};
+
+		//*******************************************************************//
+		// p5.js Event Listeners                                             //
+		//*******************************************************************//
+		
+		function mousePressed() {};
+
+		function mouseDragged() {};
+
+		function mouseReleased() {};
+
+		function keyPressed() {};
+
+		function keyTyped() {};
+
+		//*******************************************************************//
+		// jQuery Event Listener Functions                                   //
+		//*******************************************************************//
+
+		$("#save-button").click(function(event) {
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
+
+			quiz.save(path, csrf_token);
 		});
 
-		$('#choose-play').on('submit', function(event){
-			event.preventDefault();
-			modifyPlayWithTest(playClicked);
+		$("#clear-button").click(function(event) {
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
+
+			quiz.delete(path, csrf_token);
+
 		});
 
-		$('.existing-plays').on('click', '.play-remove', function() {
-			modifyPlayWithTest($(this));
-			$(this).fadeOut();
-			$('.show-plays #'+this.id).removeClass('play-remove-button');
-			$('.show-plays #'+this.id).addClass('play-add-button');
-			playIDArray = _.without(playIDArray, Number(this.id))
+		$("#add-play-button").click(function(event) {});
+
+		$("#remove-play-button").click(function(event) {});
+
+		$("#zoom-in-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeMainViewObjects();
 		});
 
-		$("#play-button").click(function() {
-			playScene = true;
-		})
+		$("#zoom-out-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
 
-		$("#pause-button").click(function() {
-			playScene = false;
-		})
+			resizeMainViewObjects();
+		});
 
-		$("#restart-button").click(function() {
-			playScene = false;
-			playToDraw.resetPlayers(defensePlay);
-			playToDraw.setAllRoutes();
-		})
+		// changeSideview changes the sideview with the appropriate content
+		// from the playbook.
+		function changeSideview(selected) {
+			var sideview_content = selected.value;
 
-		$(".formation").click(function() {
-			var formationName = this.value;
-			var playArray = [];
-			formationID = Number(this.id);
-			formationToDraw = formations.filter(function(formation) {return formation.id === formationID;})[0];
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
 
-			$('#change-plays-header').text('Change Plays (' + this.value+')')
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
 
-			$.getJSON('/quiz/teams/1/plays', function(data4, jqXHR)	{
-				data4.forEach(function(play) {
-					if(play.fields.formation === formationID) {
-						var playObject = {
-							playName : play.fields.name,
-							ID : play.pk
-						}
-						playArray.push(playObject);
+			if (sideview_content === "offensive playbook") {
+				showFormations();
+			} else if (sideview_content === "offensive concepts") {
+				showConcepts();
+			} else if (sideview_content === "defensive looks") {
+				showDefensiveLooks();
+			}
+		};
+
+		// showFormations loads the formation buttons back into the sideview
+		// removes the back icon. It also adds all the formation buttons back.
+		function showFormations() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Formations";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in formations) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", formations[i].name);
+				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
+				formation_button.textContent = formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
+			}
+
+			play = new Play({});
+		};
+
+		// showConcepts updates the sideview to include all of the concepts in
+		// the playbook.
+		function showConcepts() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Concepts";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in concepts) {
+				var concept_button = document.createElement("button");
+				concept_button.setAttribute("class", "btn btn-primary sideview-button");
+				concept_button.setAttribute("name", concepts[i].name);
+				concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
+				concept_button.textContent = concepts[i].name;
+
+				sideview_buttons.appendChild(concept_button);
+			}
+		};
+
+		// showPlaysInFormation is called when a formation sideview button
+		// is pressed. It changes the sideview header text to the name of the
+		// formation selected. It also removes all the formation buttons and
+		// replaces them with play buttons. It adds clickable back icon to
+		// sideview header div so that you can go back to formations.
+		function showPlaysInFormation(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+
+			var formation_selected = selected;
+			var formation_name = formation_selected.getAttribute("name");
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation_name;
+
+			for (i in formations) {
+				if (formation_name === formations[i].name) {
+					formation_selected = formations[i].deepCopy();
+					break;
+				}
+			}
+
+			$("#sideview-buttons").empty();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showFormations()");
+
+			sideview_header.textContent = formation_name;
+
+			sideview_header.appendChild(back_arrow);
+
+			play.fromFormation(formation_selected);
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
+			
+			for (i in plays) {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button");
+					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+					play_button.textContent = plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
+			}
+		};
+
+		// showDefensiveLooks updates the sideview to include all of the defensive
+		// looks in the playbook.
+		function showDefensiveLooks() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Defensive Looks";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in scout_formations) {
+				var formation_button = document.createElement("button");
+				formation_button.setAttribute("class", "btn btn-primary sideview-button");
+				formation_button.setAttribute("name", scout_formations[i].name);
+				formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+				formation_button.textContent = scout_formations[i].name;
+
+				sideview_buttons.appendChild(formation_button);
+			}
+		};
+
+		function changeSelectedPlay(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			var sideview_header = document.getElementById("sideview-header");
+			var toggle_button = document.getElementById("offense-defense-toggle");
+
+			if (toggle_button != null) {
+				sideview_header.removeChild(toggle_button);
+			}
+
+			var play_formation = play.formation;
+
+			// Create a new play to replace the one you just deselected on the 
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
+			play = new Play({});
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation;
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i]);
+					break;
+				}
+			}
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to. 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+				toggle_button.textContent = "D";
+
+				sideview_header.appendChild(toggle_button);
+
+				var play_name = new_selected.getAttribute("name");
+
+				mainview_header.textContent = play_name;
+
+				for (i in plays) {
+					if (plays[i].formation === play_formation && plays[i].name === play_name && plays[i].scoutName === "") {
+						play = plays[i].deepCopy();
+						break;
 					}
-				})
+				}
 
-				displayPlays(playArray);
-			})
-			$('#play-image-header').text(formationToDraw.name+ ": ");
-		});
+				var header_text_content = play_name;
+				play_name = document.getElementById("play-name");
 
-		// AJAX for posting
-		function modifyPlayWithTest(playDomElement) {
-			var playID = playDomElement[0].id;
-			var manage_quiz_url = "/quizzes/manage/" + testID;
-			var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-			
-			if ( playDomElement.hasClass('play-add-button') ) {
-				addOrRemovePlay = "add";
-			} else if ( playDomElement.hasClass('play-remove-button') ) {
-				addOrRemovePlay = "remove";
-			}
-			
-			var jqxhr = $.post( 
-					manage_quiz_url, 
-					{ csrfmiddlewaretoken: csrf_token, play_id: playID, add_or_remove: addOrRemovePlay, defense: false }
-				).done(function() { 
-					console.log("Play successfully added to quiz"); 
-				}).fail(function() {
-					console.log("Error adding play to quiz");
-			});
-			
-			if( playDomElement.hasClass('play-add-button') ) {
-				playDomElement.addClass('play-remove-button');
-				playDomElement.removeClass('play-add-button');
-				playIDArray.push(Number(playDomElement[0].id));
-				$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-			} else if ( playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove') ) {
-				playDomElement.addClass('play-add-button');
-				playDomElement.removeClass('play-remove-button');
-				playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-				$('#'+playDomElement[0].id+'.play-remove').remove();
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
+
+				play_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(play_name);
 			}
 		};
 
-		function displayPlays(playArray) {
-			var drawPlays = document.getElementById('draw-plays');
-			var newHTML = "<div class=\"scrollable-table\"><table class=\"formation-list two-column-table\">";
+		// showDefensiveLooks updates the sideview to include all of the defensive
+		// looks in the playbook.
+		function showDefensiveLooksForPlay() {
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Defensive Looks";
 
-			for(var i = 0; i < playArray.length; i++) {
-				if(i % 2 === 0) {
-					newHTML += "<tr>";
-				}
-				newHTML += "<td>";
-				var play = playArray[i];
-				
-				if(playIDArray.includes(play.ID)) {
-					newHTML += "<input class='bounceIn play play-remove-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
-				} else {
-					newHTML += "<input class='bounceIn play play-add-button' id='"+ play.ID+"' type='submit' value='"+ play.playName+"'>";
-				}
-				
-				newHTML += "</td>";
-				
-				if(i % 2 === 1){
-					newHTML += "</tr>";
-				}
-			}
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showOffense()");
+			toggle_button.textContent = "O";
+			sideview_header.appendChild(toggle_button);
 
-			if(playArray.length % 2 === 1){
-				newHTML += "<td></td></tr>";
-			}
+			$("#sideview-buttons").empty();
 
-			newHTML += "</table></div>";
-			drawPlays.innerHTML = newHTML;
-		};
+			var sideview_buttons = document.getElementById("sideview-buttons");
 
-		// For Defense
-		$('.formation-button-defense').click(function() {
-			var offensiveFormationOptions = [];
+			for (i in scout_formations) {
+				for (j in plays) {
+					if (plays[j].name === play.name && plays[j].scoutName === scout_formations[i].name) {
+						var scout_formation_button = document.createElement("button");
+						scout_formation_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
+						scout_formation_button.setAttribute("name", scout_formations[i].name);
+						scout_formation_button.setAttribute("onclick", "changeSelectedPlayWithDefensiveLook(this)");
+						scout_formation_button.textContent = scout_formations[i].name;
 
-			$('.show-plays-defense').text('');
-			playToDraw = defensivePlays.filter(function(play){return play.id === Number(this.id);}.bind(this))[0]
-			duplicateDefensiveFormations = defensivePlays.filter(function(play){return play.playName === this.value;}.bind(this))
-			
-			var in_test = false;
-			
-			duplicateDefensiveFormations.forEach(function(defensiveFormation) {
-				offensiveFormations.forEach(function(offensiveFormation)  {
-					if(offensiveFormation.id == defensiveFormation.offensiveFormationID) {
-						offensiveFormationOptions.push(offensiveFormation);
-						defensive_formation_id_array.forEach(function(IDsArray){
-							if (IDsArray[0] == playToDraw.playName && IDsArray[1] == offensiveFormation.id) {
-								in_test = true;
-							}
-						})
-						if (in_test) {
-							$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-remove-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
-						} else {
-							$('.show-plays-defense').append('<input class="bounceIn login-link offensive-formation formation-button play-add-button" id="'+ offensiveFormation.id + '" type="submit" value="'+ offensiveFormation.playName +'">');
-						}
+						sideview_buttons.appendChild(scout_formation_button);
 					}
-				})
-			})
-
-			$('#play-image-header').text("Defense: " + this.value);
-		})
-
-		$('#choose-play-defense').on('submit', function(event) {
-			event.preventDefault();
-			modifyPlayWithTestDefense(playClicked);
-		});
-
-		function modifyPlayWithTestDefense(playDomElement) {
-			offensiveFormationID = playDomElement[0].id;
-			defensiveFormationID = playToDraw.id
-			if ( playDomElement.hasClass('play-add-button') ) {
-				addOrRemovePlay = "add"
-			} else if ( playDomElement.hasClass('play-remove-button') ) {
-				addOrRemovePlay = "remove"
-			}
-
-			$.post( "/quizzes/manage/"+ testID, { offensive_formation_id: offensiveFormationID, defensive_formation_id: defensiveFormationID, add_or_remove: addOrRemovePlay, defense: true });
-			
-			if( playDomElement.hasClass('play-add-button') ) {
-				playDomElement.addClass('play-remove-button');
-				playDomElement.removeClass('play-add-button');
-				playIDArray.push(Number(playDomElement[0].id));
-				$('#formation-show-'+formationID).append("<input class='bounceIn play play-remove play-remove-button' id='"+ playDomElement[0].id+"' type='submit' value='"+ playDomElement[0].value+"'>");
-			} else if( playDomElement.hasClass('play-remove-button') && !playDomElement.hasClass('play-remove') ) {
-				playDomElement.addClass('play-add-button');
-				playDomElement.removeClass('play-remove-button');
-				playIDArray = _.without(playIDArray, Number(playDomElement[0].id))
-				$('#'+playDomElement[0].id+'.play-remove').remove();
+				}
 			}
 		};
+
+		function changeSelectedPlayWithDefensiveLook(selected) {
+			var play_name = play.name;
+			var formation_name = play.formation;
+
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = play_name;
+
+			// Create a new play to replace the one you just deselected on the 
+			// screen. Use the same formation that you were already using.
+			var formation = formation_name;
+			
+			for (i in plays) {
+				if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === "") {
+					play = plays[i].deepCopy();
+					break;
+				}
+			}
+
+			for (i in formations) {
+				if (formation === formations[i].name) {
+					play.fromFormation(formations[i]);
+					break;
+				}
+			}
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to. 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var scout_name = new_selected.getAttribute("name");
+				mainview_header.textContent = play_name + " vs " + scout_name;
+
+				for (i in plays) {
+					if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === scout_name) {
+						play = plays[i].deepCopy();
+						break;
+					}
+				}
+			}
+		};
+
+		function changeSelectedConcept(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			concept = new Concept({});
+			
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var concept_name = new_selected.getAttribute("name");
+
+				mainview_header.textContent = concept_name;
+
+				for (i in concepts) {
+					if (concept_name === concepts[i].name) {
+						concept = concepts[i].deepCopy();
+						break;
+					}
+				}
+			}
+		};
+
+		function changeSelectedScoutFormation(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			scout_formation = new Formation({});
+			
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = '{{ quiz.name }}';
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button");
+
+				var scout_formation_name = new_selected.getAttribute("name");
+
+				mainview_header.textContent = scout_formation_name;
+
+				for (i in scout_formations) {
+					if (scout_formation_name === scout_formations[i].name) {
+						scout_formation = scout_formations[i].deepCopy();
+						break;
+					}
+				}
+			}
+		};
+
+		function showOffense() {
+			// Get the play and formation name.
+			var formation_name = play.formation;
+			var play_name = play.name;
+
+			// Update the mainview header.
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = play_name;
+
+			// Update the sideview header.
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = formation_name;
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showFormations()");
+
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+			toggle_button.textContent = "D";
+
+			sideview_header.appendChild(back_arrow);
+			sideview_header.appendChild(toggle_button);
+
+			// Update sideview buttons.
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			for (i in plays) {
+				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
+					var play_button = document.createElement("button");
+					
+					if (plays[i].name === play_name) {
+						play = plays[i].deepCopy();
+						play_button.setAttribute("id", "selected");
+						play_button.setAttribute("class", "btn btn-success sideview-button play-button");
+					} else {
+						play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					}
+			
+					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
+					play_button.textContent = plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
+			}
+		};
+
+		// resizeMainViewObjects resizes all of the buttons and bars in our
+		// main view. It is called when the user resizes their browser.
+		function resizeMainViewObjects() {};
 	</script>
-
-	{% if unit == "offense" %}
-		<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/edit_test.js' %}"></script>
-	{% else %}
-		<script language="javascript" type="text/javascript" src="{% static 'dashboard/js/show_defense_play.js' %}"></script>
-	{% endif %}
 {% endblock %}

@@ -13,7 +13,7 @@ import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -292,8 +292,6 @@ def analytics(request):
 		analytics = PlayerAnalytics.for_players(players)
 
 	return render(request, 'dashboard/show_player_list.html', {
-		# 'team': team,
-		# 'players': players,
 		'page_header': 'ANALYTICS',
 		'analytics': analytics,
 		'groups': groups,
@@ -615,23 +613,22 @@ def quizzes(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_quiz(request):
 	if request.method == 'POST':
-		# Get arguments for the quiz from the POST arguments and create
-		# a new quiz using these values
-		name = request.POST['name']
-		team = request.user.coach.team
-		author = request.user
-		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
-		quiz = Quiz(name=name, team=team, author=author)
+		quiz = Quiz()
+		quiz.name = request.POST['name']
+		quiz.team = request.user.coach.team
+		quiz.author = request.user
+		quiz.unit = "offense" # Need to change this
+		#quiz.deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
 		quiz.save()
 
 		# Loop through player ids and assign them to the quiz.
 		for player_id in request.POST.getlist('player'):
 			player = Player.objects.filter(pk=int(player_id))[0]
-			new_quiz.players.add(player)
-			new_quiz.save()
+			quiz.players.add(player)
+			quiz.save()
 
-		new_quiz.save()
-		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
+		quiz.save()
+		return HttpResponseRedirect(reverse('manage_quiz', args=[quiz.id]))
 	else:
 		team = request.user.coach.team
 		groups = PlayerGroup.objects.filter(team=team)
@@ -653,60 +650,30 @@ def create_quiz(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		add_or_remove = request.POST['add_or_remove']
-		if request.POST['defense'] == "false":
-			play_id = request.POST['play_id']
-			play = Play.objects.filter(id=play_id)[0]
-			if add_or_remove == "add":
-				play.tests.add(quiz)
-			else:
-				play.tests.remove(quiz)
-			play.save()
-		else:
-			defensive_formation_id = request.POST['defensive_formation_id']
-			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
-			if add_or_remove == "add":
-				quiz.formations.add(defensive_formation)
-			else:
-				quiz.formations.remove(defensive_formation)
-		quiz.save()
-		return HttpResponse('')
+		quiz = Quiz.objects.filter(name=request.POST['name'])[0];
+		if request.POST['save'] == "true":
+			quiz.save()
+			return HttpResponse('')
+		elif request.POST['delete'] == "true":
+			quiz.delete()
+			return HttpResponseRedirect(reverse('create_quiz'))
 	else:
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		unit = quiz.unit()
-		players = quiz.players
-		player = None # Gonna need to fix this
+		quiz = Quiz.objects.filter(id=quiz_id)[0]
 		team = quiz.team
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		unique_defensive_formations = []
-		play_id_array = []
-		plays_in_quiz = quiz.play_set.all()
-		for play in quiz.play_set.all():
-			play_id_array.append(play.id)
-		defensive_formation_id_array = []
-		defensive_formations_in_quiz = quiz.formations.all()
-		for formation in defensive_formations_in_quiz:
-			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
-		unique_defensive_formations_dict = {}
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
+		unit = quiz.unit
+
+		formations = Formation.objects.filter(team=team, scout=False)
+		scout_formations = Formation.objects.filter(team=team, scout=True)
+		plays = Play.objects.filter(team=team)
+		concepts = Concept.objects.filter(team=team)
+
 		return render(request, 'dashboard/manage_quiz.html', {
 			'quiz': quiz,
+			'scoutFormations': scout_formations,
 			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
-			'team': team,
-			'player': player,
-			'play_id_array': play_id_array,
-			'plays_in_quiz': plays_in_quiz,
-			'unit': unit,
-			'unique_defensive_formations': unique_defensive_formations,
-			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
-			'page_header': 'EDIT QUIZZES'
+			'plays': plays,
+			'concepts': concepts,
+			'page_header': 'MANAGE QUIZ'
 		})
 
 @login_required
