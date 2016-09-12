@@ -619,10 +619,10 @@ def create_quiz(request):
 		# a new quiz using these values
 		name = request.POST['name']
 		team = request.user.coach.team
-		type_of_quiz = request.POST['type_of_quiz']
+		author = request.user
 		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
-		new_quiz = Test(name=name, team=team, type_of_test=type_of_quiz, coach_who_created=request.user)
-		new_quiz.save()
+		quiz = Quiz(name=name, team=team, author=author)
+		quiz.save()
 
 		# Loop through player ids and assign them to the quiz.
 		for player_id in request.POST.getlist('player'):
@@ -645,8 +645,6 @@ def create_quiz(request):
 			analytics = None
 
 		return render(request, 'dashboard/create_quiz.html', {
-			'plays': plays,
-			'types_of_quizzes': Test.types_of_tests,
 			'groups': groups,
 			'players_in_group': players_in_group,
 			'page_header': 'CREATE QUIZ',
