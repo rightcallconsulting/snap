@@ -679,6 +679,7 @@ def manage_quiz(request, quiz_id):
 		concepts = Concept.objects.filter(team=team)
 
 		return render(request, 'dashboard/manage_quiz.html', {
+			'quiz': quiz,
 			'formations': formations,
 			'plays': plays,
 			'concepts': concepts,
