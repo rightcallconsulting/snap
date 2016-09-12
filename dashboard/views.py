@@ -673,40 +673,19 @@ def manage_quiz(request, quiz_id):
 		quiz.save()
 		return HttpResponse('')
 	else:
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		unit = quiz.unit()
-		players = quiz.players
-		player = None # Gonna need to fix this
+		quiz = Quiz.objects.filter(id=quiz_id)[0]
 		team = quiz.team
-		formations = team.formation_set.all()
-		offensive_formations = formations.filter(unit="offense")
-		defensive_formations = formations.filter(unit="defense")
-		unique_defensive_formations = []
-		play_id_array = []
-		plays_in_quiz = quiz.play_set.all()
-		for play in quiz.play_set.all():
-			play_id_array.append(play.id)
-		defensive_formation_id_array = []
-		defensive_formations_in_quiz = quiz.formations.all()
-		for formation in defensive_formations_in_quiz:
-			defensive_formation_id_array.append([formation.name, formation.offensiveFormationID])
-		unique_defensive_formations_dict = {}
-		for formation in defensive_formations:
-			unique_defensive_formations_dict[formation.name] = formation
-			unique_defensive_formations = unique_defensive_formations_dict.values()
-		return render(request, 'dashboard/manage_quiz.html', {
-			'quiz': quiz,
+		unit = quiz.unit
+
+		formations = Formation.objects.filter(team=team, unit=unit, scout=False)
+		plays = Play.objects.filter(team=team, unit=unit)
+		concepts = Concept.objects.filter(team=team, unit=unit)
+
+		return render(request, 'dashboard/playbook.html', {
 			'formations': formations,
-			'offensive_formations': offensive_formations,
-			'defensive_formations': defensive_formations,
-			'team': team,
-			'player': player,
-			'play_id_array': play_id_array,
-			'plays_in_quiz': plays_in_quiz,
-			'unit': unit,
-			'unique_defensive_formations': unique_defensive_formations,
-			'defensive_formation_id_array': json.dumps(defensive_formation_id_array),
-			'page_header': 'EDIT QUIZZES'
+			'plays': plays,
+			'concepts': concepts,
+			'page_header': 'MANAGE QUIZ'
 		})
 
 @login_required
