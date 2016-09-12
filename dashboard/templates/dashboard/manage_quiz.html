@@ -3,6 +3,20 @@
 
 {% block content %}
 	<div id="manage-quiz" class="manage-quiz">
+		<div id="top-options">
+			<select id="top-options-dropdown" onchange="changeSideview(this)">
+				<option value="offensive playbook">
+					Offensive Playbook
+				</option>
+				<option value="offensive concepts">
+					Offensive Concepts
+				</option>
+				<option value="defensive looks">
+					Defensive Looks
+				</option>
+			</select>
+		</div>
+
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
 				{{ quiz.name }}
@@ -266,11 +280,11 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		$("#play-button").click(function(event) {});
+		$("#save-button").click(function(event) {});
 
-		$("#pause-button").click(function(event) {});
+		$("#add-play-button").click(function(event) {});
 
-		$("#restart-button").click(function(event) {});
+		$("#remove-play-button").click(function(event) {});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
@@ -298,114 +312,24 @@
 			resizeMainViewObjects();
 		});
 
-		// changeSideviewAndTopOptions the sideview with the appropriate content
-		// from the playbook and updates the buttons on the top of the screen.
-		function changeSideviewAndTopOptions(selected) {
+		// changeSideview changes the sideview with the appropriate content
+		// from the playbook.
+		function changeSideview(selected) {
 			var sideview_content = selected.value;
-			var top_options = document.getElementById("top-options");
 
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
 
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			if (sideview_content === "offensive playbook") {
 				showFormations();
-
-				var create_concept_button = document.getElementById("create-concept-button");
-				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
-
-				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); } 
-				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
-
-
-				// Create and add ones we do need
-				var create_formation_button_image = document.createElement("img");
-				create_formation_button_image.setAttribute("class", "coach-action-icon");
-				create_formation_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
-
-				var create_formation_button_link = document.createElement("a");
-				create_formation_button_link.setAttribute("href", "/formations/create");
-				create_formation_button_link.textContent = "CREATE FORMATION";
-				create_formation_button_link.insertBefore(create_formation_button_image, create_formation_button_link.firstChild);
-
-				var create_formation_button = document.createElement("div");
-				create_formation_button.setAttribute("id", "create-formation-button");
-				create_formation_button.appendChild(create_formation_button_link);
-
-				top_options.appendChild(create_formation_button);
-
-				var create_play_button_image = document.createElement("img");
-				create_play_button_image.setAttribute("class", "coach-action-icon");
-				create_play_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
-
-				var create_play_button_link = document.createElement("a");
-				create_play_button_link.setAttribute("href", "/plays/create");
-				create_play_button_link.textContent = "CREATE PLAY";
-				create_play_button_link.insertBefore(create_play_button_image, create_play_button_link.firstChild);
-
-				var create_play_button = document.createElement("div");
-				create_play_button.setAttribute("id", "create-play-button");
-				create_play_button.appendChild(create_play_button_link);
-
-				top_options.appendChild(create_play_button);
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
-
-				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
-				var create_formation_button = document.getElementById("create-formation-button");
-				var create_play_button = document.getElementById("create-play-button");
-
-				// Remove top option buttons we don't need
-				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); } 
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); } 
-				if (create_play_button != null) { top_options.removeChild(create_play_button); }
-
-				// Create and add ones we do need
-				var create_concept_button_image = document.createElement("img");
-				create_concept_button_image.setAttribute("class", "coach-action-icon");
-				create_concept_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
-
-				var create_concept_button_link = document.createElement("a");
-				create_concept_button_link.setAttribute("href", "/concepts/create");
-				create_concept_button_link.textContent = "CREATE CONCEPT";
-				create_concept_button_link.insertBefore(create_concept_button_image, create_concept_button_link.firstChild);
-
-				var create_concept_button = document.createElement("div");
-				create_concept_button.setAttribute("id", "create-concept-button");
-				create_concept_button.appendChild(create_concept_button_link);
-
-				top_options.appendChild(create_concept_button);
 			} else if (sideview_content === "defensive looks") {
 				showDefensiveLooks();
-
-				var create_concept_button = document.getElementById("create-concept-button");
-				var create_formation_button = document.getElementById("create-formation-button");
-				var create_play_button = document.getElementById("create-play-button");
-
-				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); } 
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); } 
-				if (create_play_button != null) { top_options.removeChild(create_play_button); }
-
-				// Create and add ones we do need
-				var create_defensive_look_button_image = document.createElement("img");
-				create_defensive_look_button_image.setAttribute("class", "coach-action-icon");
-				create_defensive_look_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
-
-				var create_defensive_look_button_link = document.createElement("a");
-				create_defensive_look_button_link.setAttribute("href", "/formations/create/defensive_look");
-				create_defensive_look_button_link.textContent = "CREATE DEFENSIVE LOOK";
-				create_defensive_look_button_link.insertBefore(create_defensive_look_button_image, create_defensive_look_button_link.firstChild);
-
-				var create_defensive_look_button = document.createElement("div");
-				create_defensive_look_button.setAttribute("id", "create-defensive-look-button");
-				create_defensive_look_button.appendChild(create_defensive_look_button_link);
-
-				top_options.appendChild(create_defensive_look_button);
 			}
 		};
 
@@ -416,7 +340,7 @@
 			sideview_header.textContent = "Formations";
 
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			$("#sideview-buttons").empty();
 
@@ -442,7 +366,7 @@
 			sideview_header.textContent = "Concepts";
 
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			$("#sideview-buttons").empty();
 
@@ -515,7 +439,7 @@
 			sideview_header.textContent = "Defensive Looks";
 
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			$("#sideview-buttons").empty();
 
@@ -711,7 +635,7 @@
 			concept = new Concept({});
 			
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -753,7 +677,7 @@
 			scout_formation = new Formation({});
 			
 			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = "Playbook";
+			mainview_header.textContent = '{{ quiz.name }}';
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
