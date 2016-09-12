@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
                 ('unit', models.CharField(default='offense', max_length=25)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('deadline', models.DateTimeField(blank=True, default=dashboard.models.deadline_time, null=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('players', models.ManyToManyField(to='quiz.Player')),
                 ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quiz.Team')),

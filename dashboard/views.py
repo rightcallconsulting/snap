@@ -292,8 +292,6 @@ def analytics(request):
 		analytics = PlayerAnalytics.for_players(players)
 
 	return render(request, 'dashboard/show_player_list.html', {
-		# 'team': team,
-		# 'players': players,
 		'page_header': 'ANALYTICS',
 		'analytics': analytics,
 		'groups': groups,
@@ -615,23 +613,22 @@ def quizzes(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_quiz(request):
 	if request.method == 'POST':
-		# Get arguments for the quiz from the POST arguments and create
-		# a new quiz using these values
-		name = request.POST['name']
-		team = request.user.coach.team
-		author = request.user
-		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
 		quiz = Quiz()
+		quiz.name = request.POST['name']
+		quiz.team = request.user.coach.team
+		quiz.author = request.user
+		quiz.unit = "offense" # Need to change this
+		#quiz.deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
 		quiz.save()
 
 		# Loop through player ids and assign them to the quiz.
 		for player_id in request.POST.getlist('player'):
 			player = Player.objects.filter(pk=int(player_id))[0]
-			new_quiz.players.add(player)
-			new_quiz.save()
+			quiz.players.add(player)
+			quiz.save()
 
-		new_quiz.save()
-		return HttpResponseRedirect(reverse('manage_quiz', args=[new_quiz.id]))
+		quiz.save()
+		return HttpResponseRedirect(reverse('manage_quiz', args=[quiz.id]))
 	else:
 		team = request.user.coach.team
 		groups = PlayerGroup.objects.filter(team=team)

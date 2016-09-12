@@ -13,13 +13,6 @@ from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
 from datetime import datetime
 
-# This function returns a datetime object for the deadline
-# of anything that is published. The deadline defaults to
-# 1 day.
-def deadline_time():
-	deadline = datetime.now() + timezone(days=1)
-	return deadline
-
 class UserCreateForm(UserCreationForm):
 	POSITIONS = (
 			("", ""),
@@ -208,7 +201,6 @@ class Quiz(models.Model):
 	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	deadline = models.DateTimeField(default=deadline_time, null=True, blank=True)
 
 	def __str__(self):
 		return self.name
