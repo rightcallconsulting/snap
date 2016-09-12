@@ -13,7 +13,7 @@ import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -621,7 +621,7 @@ def create_quiz(request):
 		team = request.user.coach.team
 		author = request.user
 		#deadline = deadline=request.POST['deadline_0'] #TODO implement dealine functionality
-		quiz = Quiz(name=name, team=team, author=author)
+		quiz = Quiz()
 		quiz.save()
 
 		# Loop through player ids and assign them to the quiz.
@@ -681,7 +681,7 @@ def manage_quiz(request, quiz_id):
 		plays = Play.objects.filter(team=team, unit=unit)
 		concepts = Concept.objects.filter(team=team, unit=unit)
 
-		return render(request, 'dashboard/playbook.html', {
+		return render(request, 'dashboard/manage_quiz.html', {
 			'formations': formations,
 			'plays': plays,
 			'concepts': concepts,
