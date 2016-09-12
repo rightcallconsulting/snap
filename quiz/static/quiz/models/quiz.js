@@ -21,6 +21,8 @@ var Quiz = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+Quiz.prototype.push = function () {};
+
 // save handles everything that need to be done when the user pressed the save
 // button.
 Quiz.prototype.save = function (path, csrf_token) {

@@ -121,7 +121,8 @@
 
 			myCanvas.parent("quiz-box");
 
-			// Create new Play, new Concept, and new Scout Formation.
+			// Create new Formation, Play, Concept, and Scout Formation.
+			formation = new Formation({});
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
@@ -322,7 +323,11 @@
 			quiz.delete(path, csrf_token);
 		});
 
-		$("#add-content-button").click(function(event) {});
+		$("#add-content-button").click(function(event) {
+			if (play.name != "") {
+				quiz.push(play);
+			}
+		});
 
 		$("#remove-content-button").click(function(event) {});
 
@@ -355,11 +360,12 @@
 		// changeSideview changes the sideview with the appropriate content
 		// from the playbook.
 		function changeSideview(selected) {
-			var sideview_content = selected.value;
-
+			formation = new Formation({});
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
+
+			var sideview_content = selected.value;
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = '{{ quiz.name }}';
@@ -376,6 +382,11 @@
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
 		function showFormations() {
+			formation = new Formation({});
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
+
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
 
@@ -395,13 +406,16 @@
 
 				sideview_buttons.appendChild(formation_button);
 			}
-
-			play = new Play({});
 		};
 
 		// showConcepts updates the sideview to include all of the concepts in
 		// the playbook.
 		function showConcepts() {
+			formation = new Formation({});
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
+
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Concepts";
 
@@ -429,34 +443,33 @@
 		// replaces them with play buttons. It adds clickable back icon to
 		// sideview header div so that you can go back to formations.
 		function showPlaysInFormation(selected) {
-			var sideview_header = document.getElementById("sideview-header");
-
-			var formation_selected = selected;
-			var formation_name = formation_selected.getAttribute("name");
-
-			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = formation_name;
-
+			// Get the formation selected and update the play.
+			var formation_name = selected.getAttribute("name");
 			for (i in formations) {
 				if (formation_name === formations[i].name) {
-					formation_selected = formations[i].deepCopy();
+					formation = formations[i].deepCopy();
 					break;
 				}
 			}
 
-			$("#sideview-buttons").empty();
+			play.fromFormation(formation);
 
+			// Update the mainview header.
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation.name;
+
+			// Update the sideview header.
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
+			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = formation_name;
-
 			sideview_header.appendChild(back_arrow);
 
-			play.fromFormation(formation_selected);
-
+			// Empty and update the sideview buttons.
+			$("#sideview-buttons").empty();
 			var sideview_buttons = document.getElementById("sideview-buttons");
 			
 			for (i in plays) {
@@ -475,14 +488,21 @@
 		// showDefensiveLooks updates the sideview to include all of the defensive
 		// looks in the playbook.
 		function showDefensiveLooks() {
-			var sideview_header = document.getElementById("sideview-header");
-			sideview_header.textContent = "Defensive Looks";
+			formation = new Formation({});
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
 
+			// Update mainview header.
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = '{{ quiz.name }}';
 
-			$("#sideview-buttons").empty();
+			// Update sideview header.
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Defensive Looks";
 
+			// Empty and update the sideview buttons.
+			$("#sideview-buttons").empty();
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in scout_formations) {
@@ -497,11 +517,14 @@
 		};
 
 		function changeSelectedPlay(selected) {
-			// The newly selected button is the one that is clicked on. The old
-			// selected button may not exist.
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
+			// Update the play global var.
+			play.fromFormation(formation);
 
+			// Update mainview header.
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation.name;
+
+			// Update sideview header.
 			var sideview_header = document.getElementById("sideview-header");
 			var toggle_button = document.getElementById("offense-defense-toggle");
 
@@ -509,22 +532,10 @@
 				sideview_header.removeChild(toggle_button);
 			}
 
-			var play_formation = play.formation;
-
-			// Create a new play to replace the one you just deselected on the 
-			// screen. Use the same formation that you were already using.
-			var formation = play.formation;
-			play = new Play({});
-
-			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = formation;
-
-			for (i in formations) {
-				if (formation === formations[i].name) {
-					play.fromFormation(formations[i]);
-					break;
-				}
-			}
+			// Get the newly selected button (the one that was just clicked).
+			// Also, get the previouslt selected button which may be null.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -556,7 +567,7 @@
 				mainview_header.textContent = play_name;
 
 				for (i in plays) {
-					if (plays[i].formation === play_formation && plays[i].name === play_name && plays[i].scoutName === "") {
+					if (plays[i].formation === formation.name && plays[i].name === play_name && plays[i].scoutName === "") {
 						play = plays[i].deepCopy();
 						break;
 					}
@@ -608,7 +619,7 @@
 
 		function changeSelectedPlayWithDefensiveLook(selected) {
 			var play_name = play.name;
-			var formation_name = play.formation;
+			var formation_name = formation.name;
 
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
@@ -617,10 +628,6 @@
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = play_name;
-
-			// Create a new play to replace the one you just deselected on the 
-			// screen. Use the same formation that you were already using.
-			var formation = formation_name;
 			
 			for (i in plays) {
 				if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === "") {
@@ -630,7 +637,7 @@
 			}
 
 			for (i in formations) {
-				if (formation === formations[i].name) {
+				if (formation.name === formations[i].name) {
 					play.fromFormation(formations[i]);
 					break;
 				}
