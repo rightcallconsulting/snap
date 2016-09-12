@@ -120,6 +120,11 @@
 
 			myCanvas.parent("quiz-box");
 
+			// Create new Play, new Concept, and new Scout Formation.
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
+
 			// Load formations from Json passed from databse.
 			var formationJsonFromDatabase = "";
 
@@ -152,10 +157,8 @@
 			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Play, new Concept, and new Scout Formation
-			play = new Play({});
-			concept = new Concept({});
-			scout_formation = new Formation({});
+			// Create quiz and load it's content from Json.
+			quiz = new Quiz({});
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
