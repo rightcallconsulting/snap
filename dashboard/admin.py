@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Coach, PlayerGroup, Concept
+from .models import Coach, PlayerGroup, Concept, Quiz
 from quiz.models import Player
 
 # Define an inline admin descriptor for Coach model
@@ -26,8 +26,12 @@ class PlayerGroupAdmin(admin.ModelAdmin):
 class ConceptAdmin(admin.ModelAdmin):
 	fields = []
 
+class QuizAdmin(admin.ModelAdmin):
+	fields = []
+
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(PlayerGroup, PlayerGroupAdmin)
 admin.site.register(Concept, ConceptAdmin)
+admin.site.register(Quiz, QuizAdmin)

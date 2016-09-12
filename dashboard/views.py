@@ -674,9 +674,9 @@ def manage_quiz(request, quiz_id):
 		team = quiz.team
 		unit = quiz.unit
 
-		formations = Formation.objects.filter(team=team, unit=unit, scout=False)
-		plays = Play.objects.filter(team=team, unit=unit)
-		concepts = Concept.objects.filter(team=team, unit=unit)
+		formations = Formation.objects.filter(team=team, scout=False)
+		plays = Play.objects.filter(team=team)
+		concepts = Concept.objects.filter(team=team)
 
 		return render(request, 'dashboard/manage_quiz.html', {
 			'formations': formations,
