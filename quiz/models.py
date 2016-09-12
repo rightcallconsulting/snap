@@ -120,6 +120,7 @@ class Position(models.Model):
 	routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
 	runCoordinates = models.CharField(max_length=200, null=True, blank=True)
 	blockingCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	motionCoordinates = models.CharField(max_length=200, null=True, blank=True)
 	progressionRank = models.IntegerField(null=True, blank=True)
 	playerIndex = models.IntegerField(null=True, blank=True)
 	routeNum = models.IntegerField(null=True, blank=True)
@@ -154,6 +155,12 @@ class Position(models.Model):
 
 	def get_blocking_coordinates(self):
 		return json.loads(self.blockingCoordinates)
+
+	def set_motion_coordinates(self, coords):
+		self.motionCoordinates = json.dumps(coords)
+
+	def get_motion_coordinates(self):
+		return json.loads(self.motionCoordinates)
 
 	def set_run_coordinates(self, coords):
 		self.routeCoordinates = json.dumps(coords)

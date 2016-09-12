@@ -71,6 +71,7 @@
 		var offensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
+		var selectedPlayerStatus = 0; //0 - blocker, 1 - route, 2 - motion
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -302,14 +303,23 @@
 			} else if (newPlayerSelected === null) {
 				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
 					if (currentPlayerSelected.unit === "offense") {
-						//add new blocking assignment stuff instead
-						var blockPoint = new BlockType({
-							type: 0,
-							x: mouseYardX,
-							y: mouseYardY
-						})
-						currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
-						//currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+						if(selectedPlayerStatus === 0){
+							//player is a blocker
+							var blockPoint = new BlockType({
+								type: 0,
+								x: mouseYardX,
+								y: mouseYardY
+							})
+							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
+						}else if(selectedPlayerStatus === 1){
+							//player is running a route
+							currentPlayerSelected.routeCoordinates.push([mouseYardX, mouseYardY])
+						}else{
+							//player is in motion
+							currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY])
+						}
+
+
 					} else if (currentPlayerSelected.unit === "defense") {
 						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
@@ -429,13 +439,16 @@
 				var playerSelctedIndex = concept.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"]
+				var playerStatusKeys = ["B", "P", "M"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
-						if(playerSelcted.blockingAssignmentArray.length > 0){
+						if(selectedPlayerStatus === 0 && playerSelcted.blockingAssignmentArray.length > 0){
 							playerSelcted.blockingAssignmentArray.pop()
-						}/*else if(playerSelcted.routeCoordinates.length > 0){
+						}else if(selectedPlayerStatus === 1 && playerSelcted.routeCoordinates.length > 1){
 							playerSelcted.routeCoordinates.pop()
-						}*/else{
+						}else if(selectedPlayerStatus === 2 && playerSelcted.motionCoords.length > 0){
+							playerSelcted.motionCoords.pop()
+						}else{
 							concept.offensivePlayers.splice(playerSelctedIndex, 1);
 						}
 					} else if (playerSelcted.unit == "defense") {
@@ -456,21 +469,8 @@
 						prevX: prevX,
 						prevY: prevY
 					}))
-					/*if (key === "Q") {
-						playerSelcted.blockingAssignmentArray.push("Money Block");
-					} else if (key === "W") {
-						playerSelcted.blockingAssignmentArray.push("Down Block Right");
-					} else if (key === "E") {
-						playerSelcted.blockingAssignmentArray.push("Down Block Left");
-					} else if (key === "R") {
-						playerSelcted.blockingAssignmentArray.push("Straight Seal Right");
-					} else if (key === "T") {
-						playerSelcted.blockingAssignmentArray.push("Straight Seal Left");
-					} else if (key === "Y") {
-						playerSelcted.blockingAssignmentArray.push("Kick Out Right");
-					} else if (key === "U") {
-						playerSelcted.blockingAssignmentArray.push("Kick Out Left");
-					}*/
+				}else if(playerStatusKeys.indexOf(key) >= 0){
+					selectedPlayerStatus = playerStatusKeys.indexOf(key)
 				}
 
 				return false;
