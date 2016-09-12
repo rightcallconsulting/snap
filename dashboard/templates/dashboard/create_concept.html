@@ -313,7 +313,7 @@
 							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 						}else if(selectedPlayerStatus === 1){
 							//player is running a route
-							currentPlayerSelected.routeCoordinates.push([mouseYardX, mouseYardY])
+							currentPlayerSelected.route.push([mouseYardX, mouseYardY])
 						}else{
 							//player is in motion
 							currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY])
@@ -439,13 +439,13 @@
 				var playerSelctedIndex = concept.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"]
-				var playerStatusKeys = ["B", "P", "M"]
+				var playerStatusKeys = ["A", "S", "D"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelcted.unit == "offense") {
 						if(selectedPlayerStatus === 0 && playerSelcted.blockingAssignmentArray.length > 0){
 							playerSelcted.blockingAssignmentArray.pop()
-						}else if(selectedPlayerStatus === 1 && playerSelcted.routeCoordinates.length > 1){
-							playerSelcted.routeCoordinates.pop()
+						}else if(selectedPlayerStatus === 1 && playerSelcted.route.length > 1){
+							playerSelcted.route.pop()
 						}else if(selectedPlayerStatus === 2 && playerSelcted.motionCoords.length > 0){
 							playerSelcted.motionCoords.pop()
 						}else{

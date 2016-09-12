@@ -312,8 +312,14 @@ Player.prototype.moveTo = function(x, y) {
 Player.prototype.drawRoute = function(field) {
 	var x1 = this.x;
 	var y1 = this.y;
-	var x2 = this.x;
-	var y2 = this.y;
+	if(this.motionCoords.length > 0){
+		x1 = this.motionCoords[this.motionCoords.length - 1][0]
+		y1 = this.motionCoords[this.motionCoords.length - 1][1]
+	}
+	var x2 = x1;
+	var y2 = y1;
+
+
 
 	var red = color(255, 0, 0);
 	stroke(red);
