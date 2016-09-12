@@ -159,6 +159,8 @@
 
 			// Create quiz and load it's content from Json.
 			quiz = new Quiz({});
+			quiz.name = '{{ quiz.name }}';
+			quiz.unit = '{{ quiz.unit }}';
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -289,9 +291,19 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		$("#save-button").click(function(event) {});
+		$("#save-button").click(function(event) {
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
 
-		$("#clear-button").click(function(event) {});
+			quiz.save(path, csrf_token);
+		});
+
+		$("#clear-button").click(function(event) {
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
+
+			quiz.delete(path, csrf_token);
+		});
 
 		$("#add-play-button").click(function(event) {});
 
