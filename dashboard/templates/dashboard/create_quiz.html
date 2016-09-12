@@ -11,21 +11,6 @@
 				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Quiz Name" required>
 			</div>
 
-			<div class="form-group">			
-				<label for="type_form">Type:</label> 
-				<select id="quiz-type-select" name="type_of_quiz" class="unit-form form-sm" onchange="changeQuizType(this)">
-					<optgroup label="Type of Quiz">
-						{% for type in types_of_quizzes %}
-							<option value="{{ type }}" id="group-id">
-								&nbsp;&nbsp;&nbsp;{{ type }}
-							</option>
-						{% endfor %}
-					</optgroup>
-				</select>
-			</div>
-			
-			<hr>
-
 			<div class="form-group">
 				<label for="group_form">Group:</label> 
 				<select name="group" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
