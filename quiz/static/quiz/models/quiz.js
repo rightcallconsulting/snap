@@ -24,6 +24,8 @@ var Quiz = function(config) {
 // save handles everything that need to be done when the user pressed the save
 // button.
 Quiz.prototype.save = function (path, csrf_token) {
+	var quizName = this.name;
+
 	var jqxhr = $.post(
 			path,
 			{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: quizName}
@@ -36,9 +38,7 @@ Quiz.prototype.save = function (path, csrf_token) {
 
 // delete sends a delete request to Django for this play.
 Quiz.prototype.delete = function(path, csrf_token) {
-	var playName = this.name;
-	var scoutName = this.scoutName;
-	var formationName = this.formation;
+	var quizName = this.name;
 
 	var jqxhr = $.post(
 			path,

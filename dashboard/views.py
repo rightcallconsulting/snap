@@ -650,25 +650,13 @@ def create_quiz(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
-		quiz = Test.objects.filter(id=quiz_id)[0]
-		add_or_remove = request.POST['add_or_remove']
-		if request.POST['defense'] == "false":
-			play_id = request.POST['play_id']
-			play = Play.objects.filter(id=play_id)[0]
-			if add_or_remove == "add":
-				play.tests.add(quiz)
-			else:
-				play.tests.remove(quiz)
-			play.save()
-		else:
-			defensive_formation_id = request.POST['defensive_formation_id']
-			defensive_formation = Formation.objects.filter(id=defensive_formation_id)[0]
-			if add_or_remove == "add":
-				quiz.formations.add(defensive_formation)
-			else:
-				quiz.formations.remove(defensive_formation)
-		quiz.save()
-		return HttpResponse('')
+		quiz = Quiz.objects.filter(name=request.POST['name'])[0];
+		if request.POST['save'] == "true":
+			quiz.save()
+			return HttpResponse('')
+		elif request.POST['delete'] == "true":
+			quiz.delete()
+			return HttpResponseRedirect(reverse('create_quiz'))
 	else:
 		quiz = Quiz.objects.filter(id=quiz_id)[0]
 		team = quiz.team

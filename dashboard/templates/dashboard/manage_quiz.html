@@ -34,6 +34,11 @@
 							</button>
 						</td>
 						<td>
+							<button id="clear-button" name="button">
+								{% include "quiz/clear_button.html" %}
+							</button>
+						</td>
+						<td>
 							<button id="add-play-button" name="button">
 								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
 							</button>
@@ -79,6 +84,7 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var quiz;
 		var formations = [];
 		var plays = [];
 		var play;
@@ -281,6 +287,8 @@
 		//*******************************************************************//
 
 		$("#save-button").click(function(event) {});
+
+		$("#clear-button").click(function(event) {});
 
 		$("#add-play-button").click(function(event) {});
 
