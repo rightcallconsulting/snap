@@ -1,0 +1,743 @@
+
+//***************************************************************************//
+//																			 //
+// quiz.js - Right Call Consulting. All Rights Reserved. 2016		     	 //
+//																			 //
+//***************************************************************************//
+//																			 //
+// A quiz object contains all the formations, plays, and concepts in one     //
+// assigned quiz.                                                            //
+//																			 //
+//***************************************************************************//
+
+var Quiz = function(config) {
+	this.name = config.name || "";
+	this.unit = config.unit || "offense";
+
+};
+
+//***************************************************************************//
+//***************************************************************************//
+
+// drawPlayers draws all the players in a play.
+Play.prototype.drawPlayers = function (field) {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].draw(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].draw(field);
+	}
+};
+
+// drawAssignments draws the assignments of all of the players in a play.
+Play.prototype.drawAssignments = function (field) {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].drawBlocks(field);
+		this.offensivePlayers[i].drawRoute(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
+	}
+};
+
+// drawAssignmentsExceptBlocks draws the assignments except blocking
+// assignments of all of the players in a play.
+Play.prototype.drawAssignmentsExceptBlocks = function (field) {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].drawRoute(field);
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].drawDefensiveMovement(field);
+	}
+};
+
+// isValid checks the legality of a play.
+Play.prototype.isValid = function() {
+	// TODO: Implement
+	//
+	// IDEAS: More players in a play than can be in a play.
+	//		  Inelligable setups. Illegal actions.
+
+	if (this.offensivePlayers.length != 11) {
+		return false;
+	}
+
+	return true;
+};
+
+// getSelected iterates through all the players in a play and returns
+// the one player that is selected. If no one is selected it returns null.
+//
+// TODO: implement logic for selecting multiple players and return an array.
+Play.prototype.getSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		if (this.offensivePlayers[i].selected) {
+			return [this.offensivePlayers[i], i];
+		}
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		if (this.defensivePlayers[i].selected) {
+			return [this.defensivePlayers[i], i];
+		}
+	}
+
+	return [null, null];
+};
+
+// clearSelected iterates through all the players in a play and makes
+// them all unselected.
+Play.prototype.clearSelected = function() {
+	var numberOfOffensivePlayers = this.offensivePlayers.length;
+	var numberOfDefensivePlayers = this.defensivePlayers.length;
+
+	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+		this.offensivePlayers[i].setUnselected();
+	}
+
+	for(var i = 0; i < numberOfDefensivePlayers; i++) {
+		this.defensivePlayers[i].setUnselected();
+	}
+};
+
+// reset clears the current play and returns an empty screen.
+Play.prototype.reset = function() {
+	this.offensivePlayers = [];
+	this.quarterback = [];
+	this.offensiveLinemen = [];
+	this.eligibleReceivers = [];
+	this.defensivePlayers = [];
+};
+
+// mouseInPlayer iterates through all the offensive and defensive players
+// in a play. It returns the player that the mouse is inside of or
+// null if the mouse is not inside any player.
+Play.prototype.mouseInPlayer = function(field) {
+	for(var i = this.offensivePlayers.length-1; i >= 0; i--) {
+		var player = this.offensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	for(var i = this.defensivePlayers.length-1; i >= 0; i--) {
+		var player = this.defensivePlayers[i];
+		if (player.isMouseInside(field)) {
+			return player;
+		}
+	}
+
+	return null;
+};
+
+// save handles everything that need to be done when the user pressed the save
+// button. It checks the validity of the play and then saves it (if valid)
+Play.prototype.save = function (path, csrf_token) {
+	if (this.isValid()) {
+		var playJson = "";
+		var player;
+
+		for(var i = 0; i < this.offensivePlayers.length; i++) {
+			player = this.offensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		for(var i = 0; i < this.defensivePlayers.length; i++) {
+			player = this.defensivePlayers[i];
+			player.startX = player.x;
+			player.startY = player.y;
+		}
+
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route"]);
+		var playName = this.name;
+		var scoutName = this.scoutName;
+		var playUnit = this.unit;
+		var formationName = this.formation;
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: playName, scout_name: scoutName, unit: playUnit, formation: formationName, play: playJson}
+			).done(function() {
+				console.log("Play successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Play to Django to be saved");
+		});
+	} else {
+		this.feedbackMessage = "Invalid Play";
+	}
+};
+
+// delete sends a delete request to Django for this play.
+Play.prototype.delete = function(path, csrf_token) {
+	var playName = this.name;
+	var scoutName = this.scoutName;
+	var formationName = this.formation;
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName, scout_name: scoutName, formation: formationName}
+		).done(function() {
+			console.log("Play successfully sent to Django to be deleted");
+		}).fail(function() {
+			console.log("Error sending Play to Django to be deleted");
+	});
+};
+
+// deepCopy returns a new Play object that is exactly the same as this.
+Play.prototype.deepCopy = function() {
+	var result = new Play({
+		id: this.id,
+		name: this.name,
+		scoutName: this.scoutName,
+		team: this.team,
+		unit: this.unit,
+		formation: this.formation,
+		feedbackMessage: this.feedbackMessage
+	});
+
+	for (var i = 0; i < this.quarterback.length; ++i) {
+		result.quarterback.push(this.quarterback[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.defensivePlayers.length; ++i) {
+		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
+		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
+		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+	}
+
+	return result;
+};
+
+// fromFormation takes a formation object as an argument and creates a play
+// with the same players in the formation.
+Play.prototype.fromFormation = function(formation) {
+	var play_formation = formation.deepCopy();
+
+	this.unit = play_formation.unit;
+	this.formation = play_formation.name;
+
+	for (var i = 0; i < play_formation.quarterback.length; ++i) {
+		this.quarterback.push(play_formation.quarterback[i].deepCopy());
+	}
+
+	for (var i = 0; i < play_formation.offensivePlayers.length; ++i) {
+		this.offensivePlayers.push(play_formation.offensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < play_formation.defensivePlayers.length; ++i) {
+		this.defensivePlayers.push(play_formation.defensivePlayers[i].deepCopy());
+	}
+
+	for (var i = 0; i < play_formation.offensiveLinemen.length; ++i) {
+		this.offensiveLinemen.push(play_formation.offensiveLinemen[i].deepCopy());
+	}
+
+	for (var i = 0; i < play_formation.eligibleReceivers.length; ++i) {
+		this.eligibleReceivers.push(play_formation.eligibleReceivers[i].deepCopy());
+	}
+};
+
+// scoutFromFormation takes a cout formation object as an argument and adds the
+// defensive look to this play.
+Play.prototype.scoutFromFormation = function(formation) {
+	var scout_formation = formation.deepCopy();
+
+	this.defensivePlayers = [];
+
+	for (var i = 0; i < scout_formation.defensivePlayers.length; ++i) {
+		this.defensivePlayers.push(scout_formation.defensivePlayers[i].deepCopy());
+	}
+};
+
+// removeScoutFormation gets rid of the defensive look and player blocks from
+// and offensive play.
+Play.prototype.removeScoutFormation = function() {
+	this.defensivePlayers = [];
+
+	for (var i = 0; i < this.offensivePlayers.length; ++i) {
+		this.offensivePlayers[i].blockingAssignmentArray = [];
+	}
+};
+
+/*********************************/
+/*     Non object functions      */
+/*********************************/
+
+function createPlayFromJson(playJsonDictionary) {
+	var quarterback = [];
+	var offensivePlayersArray = [];
+	var defensivePlayersArray = [];
+	var offensiveLinemenArray = [];
+	var eligibleReceiversArray = [];
+
+	for (var i = 0; i < playJsonDictionary.offensivePlayers.length; ++i) {
+		var player = new Player({
+			x: playJsonDictionary.offensivePlayers[i].x,
+			y: playJsonDictionary.offensivePlayers[i].y,
+			startX: playJsonDictionary.offensivePlayers[i].startX,
+			startY: playJsonDictionary.offensivePlayers[i].startY,
+			num: playJsonDictionary.offensivePlayers[i].num,
+			pos: playJsonDictionary.offensivePlayers[i].pos,
+			red: playJsonDictionary.offensivePlayers[i].red,
+			green: playJsonDictionary.offensivePlayers[i].green,
+			blue: playJsonDictionary.offensivePlayers[i].blue,
+			unit: playJsonDictionary.offensivePlayers[i].unit,
+			eligible: playJsonDictionary.offensivePlayers[i].eligible,
+			siz: playJsonDictionary.offensivePlayers[i].siz
+		});
+
+		if (player.pos === "QB") {
+			quarterback.push(player);
+		}
+
+		if (player.eligible === true) {
+			eligibleReceiversArray.push(player);
+		}
+
+		if (playJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
+				var route = playJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
+			}
+		}
+
+		offensivePlayersArray.push(player);
+	}
+
+	for (var i = 0; i < playJsonDictionary.defensivePlayers.length; ++i) {
+		var player = new Player({
+			x: playJsonDictionary.defensivePlayers[i].x,
+			y: playJsonDictionary.defensivePlayers[i].y,
+			startX: playJsonDictionary.defensivePlayers[i].startX,
+			startY: playJsonDictionary.defensivePlayers[i].startY,
+			num: playJsonDictionary.defensivePlayers[i].num,
+			pos: playJsonDictionary.defensivePlayers[i].pos,
+			red: playJsonDictionary.defensivePlayers[i].red,
+			green: playJsonDictionary.defensivePlayers[i].green,
+			blue: playJsonDictionary.defensivePlayers[i].blue,
+			unit: playJsonDictionary.defensivePlayers[i].unit,
+			eligible: playJsonDictionary.defensivePlayers[i].eligible,
+			siz: playJsonDictionary.defensivePlayers[i].siz
+		});
+
+		if (playJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < playJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = playJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
+			}
+		}
+
+		defensivePlayersArray.push(player);
+	}
+
+	var left_tackle = new Player({});
+	var left_guard = new Player({});
+	var center = new Player({});
+	var right_guard = new Player({});
+	var right_tackle = new Player({});
+
+	for (i in offensivePlayersArray) {
+		player = offensivePlayersArray[i];
+
+		if (player.pos === "LT") {
+			left_tackle = player;
+		} else if (player.pos === "RT") {
+			right_tackle = player;
+		} else if (player.pos === "LG") {
+			left_guard = player;
+		} else if (player.pos === "RG") {
+			right_guard = player;
+		} else if (player.pos === "C") {
+			center = player;
+		} else if (player.pos === "T") {
+			if (left_tackle === null) {
+				player.pos = "LT";
+				left_tackle === player;
+			} else if (player.x < left_tackle.x) {
+				left_tackle.pos = "RT";
+				right_tackle = left_tackle;
+				player.pos = "LT";
+				left_tackle = player;
+			} else {
+				player.pos = "RT";
+				right_tackle === player;
+			}
+		} else if (player.pos === "G") {
+			if (left_guard === null) {
+				player.pos = "LG";
+				left_guard === player;
+			} else if (player.x < left_guard.x) {
+				left_guard.pos = "RG";
+				right_guard = left_guard;
+				player.pos = "LG";
+				left_guard = player;
+			} else {
+				player.pos = "RG";
+				right_guard === player;
+			}
+		}
+	}
+
+	offensiveLinemenArray.push(left_tackle);
+	offensiveLinemenArray.push(left_guard);
+	offensiveLinemenArray.push(center);
+	offensiveLinemenArray.push(right_guard);
+	offensiveLinemenArray.push(right_tackle);
+
+	for (i in offensivePlayersArray) {
+		for (j in playJsonDictionary.offensivePlayers[i].blockingAssignmentArray) {
+			var primaryAssignment = playJsonDictionary.offensivePlayers[i].blockingAssignmentArray[j];
+			var playerToBlock = null;
+
+			if (primaryAssignment.type === 1) {
+				for (k in defensivePlayersArray) {
+					if (primaryAssignment.player.x === defensivePlayersArray[k].x && primaryAssignment.player.y === defensivePlayersArray[k].y) {
+						playerToBlock = defensivePlayersArray[k];
+					}
+				}
+			}
+
+			var block = new BlockType ({
+				type: primaryAssignment.type,
+				player: playerToBlock,
+				x: primaryAssignment.x,
+				y: primaryAssignment.y
+			});
+
+			offensivePlayersArray[i].blockingAssignmentArray.push(block);
+		}
+	}
+
+	var scoutName = "";
+	if (playJsonDictionary.scoutName != null) {
+		scoutName = playJsonDictionary.scoutName;
+	}
+
+	var result = new Play({
+		name: playJsonDictionary.name,
+		scoutName: scoutName,
+		team: playJsonDictionary.team,
+		unit: playJsonDictionary.unit,
+		formation: playJsonDictionary.formation,
+		offensivePlayers: offensivePlayersArray,
+		defensivePlayers: defensivePlayersArray,
+		quarterback: quarterback,
+		offensiveLinemen: offensiveLinemenArray,
+		eligibleReceivers: eligibleReceiversArray
+	});
+
+	return result;
+};
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************/
+
+Play.prototype.getPlayerFromPosition = function(pos){
+  var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
+  if(players.length === 0){
+    return null;
+  }
+  return players[0];
+};
+
+//POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
+Play.prototype.getPassStrength = function(){
+  var centerX = this.oline[2].x;
+  var count = 0;
+  this.eligibleReceivers.forEach(function(wr){
+    if(wr.x > centerX){
+      count++;
+    }else{
+      count--;
+    }
+  })
+  return count;
+};
+
+Play.prototype.isValidPlay = function(){
+  if(!this.formation.isValidPlay()){
+    return false;
+  }
+  return true;
+};
+
+
+Play.prototype.resetPlayers = function(defensivePlay){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].resetToStart();
+      this.offensivePlayers[i].showRoute = false;
+      this.offensivePlayers[i].showPreviousRoute = false;
+      this.offensivePlayers[i].showPreviousRouteGuess = false;
+  }
+  for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
+      defensivePlay.defensivePlayers[i].resetToStart();
+  }
+  if(this.runPlay !== null){
+    this.runPlay.hasExchanged = false;
+  }
+};
+
+Play.getCurrentBlockingAssignment = function(){
+
+};
+
+Play.prototype.setAllRoutes = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.oline[2]);
+  }
+};
+
+Play.prototype.drawAllPlayers = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].draw(field);
+  }
+};
+
+Play.prototype.drawAllRoutes = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].drawRoute(field);
+  }
+};
+
+Play.prototype.drawRunAssignments = function(field){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var player = this.offensivePlayers[i];
+    if(player.runAssignment){
+        player.runAssignment.draw(player, field);
+    }
+  }
+};
+
+Play.prototype.drawRunPlay = function(field){
+  if(this.runPlay){
+    this.runPlay.draw(field);
+  }
+};
+
+Play.prototype.clearProgression = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+      var p = this.eligibleReceivers[i];
+      if(p.rank > 0){
+          p.unselect();
+      }
+      p.showRoute = false;
+  }
+};
+
+Play.prototype.checkProgression = function(){
+  var isCorrect = true;
+  this.eligibleReceivers.forEach(function(player){
+    if(player.rank !== player.progressionRank){
+      isCorrect = false;
+    }
+  })
+  if (isCorrect){
+    this.test.score++;
+    this.test.advanceToNextPlay(this.test.correctAnswerMessage, this.test.pk);
+  }else{
+    this.test.scoreboard.feedbackMessage = "Wrong Answer";
+    this.test.incorrectGuesses++;
+  }
+  $.post( "/quiz/players/"+this.test.playerID+"/tests/"+this.test.id+"/update", {
+    test: JSON.stringify(_.omit(this.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
+    play_id: this.id
+  })
+  this.test.newTest = false;
+  return isCorrect;
+};
+
+Play.prototype.clearRouteDrawings = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    var p = this.eligibleReceivers[i];
+    p.routeCoordinates = [[p.startX, p.startY]];
+    p.routeNodes = [];
+    p.showPreviousRoute = false;
+    p.showPreviousRouteGuess = false;
+  }
+};
+
+Play.prototype.clearPreviousRouteDisplays = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    var p = this.eligibleReceivers[i];
+    p.showPreviousRoute = false;
+    p.showPreviousRouteGuess = false;
+  }
+};
+
+Play.prototype.findSelectedWR = function(){
+  var selectedWR = this.eligibleReceivers.filter(function(wr) {
+    return wr.clicked === true;
+  })[0];
+  return selectedWR;
+};
+
+Play.prototype.clearSelectedReceivers = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    this.eligibleReceivers[i].clicked = false;
+  }
+};
+
+Play.prototype.mouseInReceiverOrNode = function(){
+  for(var i = 0; i < this.eligibleReceivers.length; i++){
+    var p = this.eligibleReceivers[i];
+    if (p.isMouseInside(field)){
+      var receiverClicked = p;
+    }
+    for(var j = 0; j < p.routeNodes.length; j++){
+      var n = p.routeNodes[j];
+      if (n.isMouseInside(field)){
+        var selectedNode = n;
+      }
+    }
+  }
+  return [receiverClicked, selectedNode];
+};
+
+Play.prototype.playerBeingTested = function(){
+  var playerBeingTested = this.offensivePlayers.filter(function(player){
+    return player.isBeingTested === true;
+  })[0];
+  return playerBeingTested;
+};
+
+Play.prototype.clearSelection = function(test, play) {
+  if (test.showBigPlayers) {
+    if (this.bigPlayer !== null && this.bigPlayer.clicked) {
+      this.bigPlayer.unselect();
+    } else if (this.bigDefender !== null && this.bigDefender.clicked) {
+      this.bigDefender.unselect();
+    }
+  } else {
+    for (var i = 0; i < play.defensivePlayers.length; i++) {
+      var p = play.defensivePlayers[i];
+      if (p.clicked) {
+        p.unselect();
+      }
+    }
+    for (var i = 0; i < this.offensivePlayers.length; i++) {
+      var p = this.offensivePlayers[i];
+      if (p.clicked) {
+        p.unselect();
+      }
+    }
+  }
+};
+
+Play.prototype.saveToDB = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+    var assignment = this.offensivePlayers[i].blockingAssignmentObject;
+    if(assignment){
+      //assignment.convertBlockedPlayersToIDs();
+      this.offensivePlayers[i].blockingCoordinates = assignment.convertToCoordinates();
+    }
+  }
+  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'blockingCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
+  $.post( "teams/broncos/plays/new", { play: playJSON});
+};
+
+Play.prototype.populatePositions = function(){
+  var oline = this.positions.filter(function(player) {
+    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
+  });
+  oline.forEach(function(player){this.oline.push(player)}.bind(this));
+  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
+  this.qb = qb
+  var receiverPositions = ["A", "B", "F", "X", "Y", "Z", "H"]
+  var eligibleReceivers = this.positions.filter(function(player) {
+    return receiverPositions.indexOf(player.pos) >= 0;
+  });
+  this.eligibleReceivers = eligibleReceivers;
+  this.offensivePlayers = this.positions;
+};
+
+Play.prototype.addPositionsFromID = function(positionArray){
+  positionArray.forEach(function(position){
+    if(this.positionIDs.includes(position.id)){
+      this.positions.push(position);
+    }
+  }.bind(this))
+}
+
+
+var createPlayFromJSONSeed = function(jsonPlay){
+  var play = new Play({});
+  play.id = jsonPlay.pk;
+  play.playName = jsonPlay.name;
+  play.name = jsonPlay.name;
+  play.positions = jsonPlay.positions;
+  play.teamID = jsonPlay.team;
+  play.formation = jsonPlay.formation;
+  play.created_at = jsonPlay.created_at;
+  play.updated_at = jsonPlay.updated_at;
+  return play;
+};
+
+var createPlayFromJSON = function(jsonPlay){
+  var play = new Play({});
+  play.id = jsonPlay.pk;
+  play.playName = jsonPlay.fields.name;
+  play.name = jsonPlay.fields.name;
+  play.teamID = jsonPlay.fields.team;
+  play.formation = jsonPlay.fields.formation;
+  play.positionIDs = jsonPlay.fields.positions;
+  play.created_at = jsonPlay.fields.created_at;
+  play.updated_at = jsonPlay.fields.updated_at;
+  return play;
+};
+
+Play.prototype.drawBlockingAssignments = function(){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignment){
+      strokeWeight(1);
+      stroke(100);
+      line(player.x,player.y, player.blockingAssignment.x, player.blockingAssignment.y);
+    }
+  })
+};
+
+Play.prototype.drawBlockingAssignmentObjects = function(){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignmentObject){
+      player.blockingAssignmentObject.draw(player, field);
+    }
+  })
+};
+
+Play.prototype.updateBlockingAssignmentForDefense = function(defensivePlayers){
+  this.offensivePlayers.forEach(function(player){
+    if(player.blockingAssignmentObject && player.blockingCoordinates){
+        player.blockingAssignmentObject.setForDefense(defensivePlayers, player.blockingCoordinates)
+    }
+  })
+}
