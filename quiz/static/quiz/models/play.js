@@ -193,7 +193,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route", "motionCoords"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -355,6 +355,13 @@ function createPlayFromJson(playJsonDictionary) {
 			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
 				var route = playJsonDictionary.offensivePlayers[i].route[j];
 				player.route.push([route[0], route[1]]);
+			}
+		}
+
+		if (playJsonDictionary.offensivePlayers[i].motionCoords != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].motionCoords.length; ++j) {
+				var motion = playJsonDictionary.offensivePlayers[i].motionCoords[j];
+				player.motionCoords.push([motion[0], motion[1]]);
 			}
 		}
 

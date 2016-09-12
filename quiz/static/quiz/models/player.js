@@ -151,6 +151,7 @@ Player.prototype.draw = function(field) {
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
+		this.drawMotion(field);//eventually move?
 	} else if (this.unit === "defense") {
 		noStroke();
 		fill(this.red, this.green, this.blue);
@@ -160,6 +161,22 @@ Player.prototype.draw = function(field) {
 		fill(0,0,0);
 	}
 };
+
+Player.prototype.drawMotion = function(field){
+	var x1 = field.getTranslatedX(this.x);
+	var y1 = field.getTranslatedY(this.y);
+	for(var i = 0; i < this.motionCoords.length; i++){
+		var x2 = field.getTranslatedX(this.motionCoords[i][0])
+		var y2 = field.getTranslatedY(this.motionCoords[i][1])
+
+		stroke(0, 0, 0)
+		dottedLine(x1, y1, x2, y2);
+		noStroke()
+
+		x1 = x2
+		y1 = y2
+	}
+}
 
 // pixelDraw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
@@ -187,6 +204,10 @@ Player.prototype.pixelDraw = function(field) {
 Player.prototype.drawBlocks = function(field) {
 	var prevX = this.x;
 	var prevY = this.y;
+	if(this.motionCoords.length > 0){
+		prevX = this.motionCoords[this.motionCoords.length - 1][0]
+		prevY = this.motionCoords[this.motionCoords.length - 1][1]
+	}
 	for (var i = 0; i < this.blockingAssignmentArray.length; i++) {
 		var blockPart = this.blockingAssignmentArray[i]
 		blockPart.draw(prevX, prevY, field)
@@ -291,8 +312,14 @@ Player.prototype.moveTo = function(x, y) {
 Player.prototype.drawRoute = function(field) {
 	var x1 = this.x;
 	var y1 = this.y;
-	var x2 = this.x;
-	var y2 = this.y;
+	if(this.motionCoords.length > 0){
+		x1 = this.motionCoords[this.motionCoords.length - 1][0]
+		y1 = this.motionCoords[this.motionCoords.length - 1][1]
+	}
+	var x2 = x1;
+	var y2 = y1;
+
+
 
 	var red = color(255, 0, 0);
 	stroke(red);
@@ -380,6 +407,10 @@ Player.prototype.deepCopy = function() {
 		unit: this.unit,
 		name: this.name
 	});
+
+	for (var i = 0; i < this.motionCoords.length; ++i) {
+		result.motionCoords.push([this.motionCoords[i][0], this.motionCoords[i][1]])
+	}
 
 	for (var i = 0; i < this.route.length; ++i) {
 		result.route.push([this.route[i][0], this.route[i][1]])
@@ -1494,6 +1525,7 @@ var createPlayerFromJSONSeed = function(jsonPosition){
 	player.blockingAssignmentPlayerIndex = jsonPosition.blockingAssignmentPlayerIndex
 	player.runCoordinates = JSON.parse(jsonPosition.runCoordinates);
   player.blockingCoordinates = JSON.parse(jsonPosition.blockingCoordinates);
+	player.motionCoords = jsonPosition.motionCoords;
 	player.pos = jsonPosition.name;
 	player.num = jsonPosition.name;
 	player.routeCoordinates = [[player.startX, player.startY]]
@@ -1525,6 +1557,7 @@ var createPlayerFromJSON = function(jsonPosition){
   player.blockingAssignmentUnitIndex = jsonPosition.fields.blockingAssignmentUnitIndex
   player.blockingAssignmentPlayerIndex = jsonPosition.fields.blockingAssignmentPlayerIndex
   player.runCoordinates = JSON.parse(jsonPosition.fields.runCoordinates);
+	player.motionCoords = jsonPosition.motionCoords;
   player.pos = jsonPosition.fields.name;
   player.num = jsonPosition.fields.name;
   player.routeCoordinates = [[player.startX, player.startY]]
