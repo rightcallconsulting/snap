@@ -1,0 +1,267 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div id="take-quiz" class="take-quiz">
+		<div id="display-box" class="col-md-8 bordered-div">
+			<div id="header-box" class="static-header display-header">
+				{{ quiz.name }}
+			</div>
+
+			<div id="quiz-box">
+			</div>
+
+			<div class="display-buttons">
+				<table class="button-table">
+					<tr>
+						<td>
+							<button id="add-content-button" name="button">
+								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div id="sideview" class="col-md-3">
+			<div id="sideview-header"></div>
+			<div id="sideview-buttons"></div>
+		</div>
+
+	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
+	<div id="team-id" team-id="{{team.id}}" style="display: none;"></div>
+	<div id="player-id" player-id="{{player.id}}" style="display: none;"></div>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
+	<script type="text/javascript">
+		var quiz;
+		var formations = [];
+		var formation;
+		var plays = [];
+		var play;
+		var concepts = [];
+		var concept;
+		var scout_formations = [];
+		var scout_formation;
+		var teamID = document.getElementById("team-id").getAttribute("team-id");
+
+		//*******************************************************************//
+		// p5.js Animation Functions                                         //
+		//*******************************************************************//
+
+		function setup() {
+			var display_box = document.getElementById("display-box");
+			var display_box_header = display_box.querySelector(".display-header");
+			var display_box_footer = display_box.querySelector(".display-buttons");
+			var sideview = document.getElementById("sideview");
+			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+			
+			// 4px is the combined size of the borders on either side. What is a better way to do this?
+			var width = display_box.offsetWidth - 4; 
+
+			// Create canvas and add it to the main view
+			var quiz_box_div = document.getElementById("quiz-box");
+			var myCanvas = createCanvas(width, height);
+
+			field.height = height;
+			field.width = width;
+			field.heightInYards = 35;
+			field.ballYardLine = 65;
+			background(58, 135, 70);
+
+			myCanvas.parent("quiz-box");
+
+			// Create new Formation, Play, Concept, and Scout Formation.
+			formation = new Formation({});
+			play = new Play({});
+			concept = new Concept({});
+			scout_formation = new Formation({});
+
+			// Create quiz and load it's content from Json.
+			quiz = new Quiz({});
+			quiz.name = '{{ quiz.name }}';
+			quiz.unit = '{{ quiz.unit }}';
+
+			var formationJsonFromDatabase = "";
+			{% for formation in quizFormations %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
+			{% endfor %}
+			
+			var playJsonFromDatabase = "";
+			{% for play in quizPlays %}
+			playJsonFromDatabase = '{{ play.playJson|safe }}';
+			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
+			{% endfor %}
+			
+			var conceptJsonFromDatabase = "";
+			{% for concept in quizConcepts %}
+			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
+			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
+			{% endfor %}
+
+			window.onresize = function() {
+				var display_box = document.getElementById("display-box");
+				var display_box_header = display_box.querySelector(".display-header");
+				var display_box_footer = display_box.querySelector(".display-buttons");
+				var sideview = document.getElementById("sideview");
+				var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
+				var width = display_box.offsetWidth - 4;
+
+				resizeCanvas(width, height);
+				field.height = height;
+				field.width = width;
+				
+				resizeMainViewObjects();
+			};
+
+			drawOpening();
+		};
+
+		function draw() {
+			// Limitations on where offensive players can be
+			var numberOfOffensivePlayers = play.offensivePlayers.length;
+			
+			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
+				var player = play.offensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = 0;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
+			}
+
+			// Limitations on where defensive players can be
+			var numberOfDefensivePlayers = play.defensivePlayers.length;
+			
+			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
+				var player = play.defensivePlayers[i];
+				var playerXPixel = field.getTranslatedX(player.x);
+				var playerYPixel = field.getTranslatedY(player.y);
+				var playerXYard = player.x;
+				var playerYYard = player.y;
+
+				// Keep the players within the screen
+				if (playerXPixel < 0) {
+					player.x = field.getYardX(0);
+				} else if (playerXPixel > field.width) {
+					player.x = field.getYardX(field.width);
+				}
+
+				if (playerYPixel < 0) {
+					player.y = player.getYardY(0);
+				} else if (playerYPixel > field.height) {
+					player.y = player.getYardY(field.height)
+				}
+
+				// Keep the players on the field
+				if (playerXYard < 0) {
+					player.x = 0;
+				} else if (playerXYard > 53.33) {
+					player.x = 53.33;
+				}
+
+				if (playerYYard < -10) {
+					player.y = -10;
+				} else if (playerYYard > 110) {
+					player.y = 110;
+				}
+			}
+
+			// Draw opening
+			drawOpening();
+		};
+
+		function drawOpening() {
+			field.drawBackground(play, height, width);
+
+			play.drawAssignments(field);
+			play.drawPlayers(field);
+
+			concept.drawAssignments(field);
+			concept.drawPlayers(field);
+
+			scout_formation.drawPlayers(field);
+
+			fill(176,176,176);
+		};
+
+		//*******************************************************************//
+		// p5.js Event Listeners                                             //
+		//*******************************************************************//
+		
+		function mousePressed() {};
+
+		function mouseDragged() {};
+
+		function mouseReleased() {};
+
+		function keyPressed() {};
+
+		function keyTyped() {};
+
+		//*******************************************************************//
+		// jQuery Event Listener Functions                                   //
+		//*******************************************************************//
+
+		$("#add-content-button").click(function(event) {});
+
+		$("#zoom-in-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 25) {
+				field.heightInYards -= 5;
+			} else {
+				field.heightInYards = 20;
+			}
+
+			resizeMainViewObjects();
+		});
+
+		$("#zoom-out-button").click(function(event) {
+			var heightInYards = field.heightInYards;
+			var widthInYards = field.heightInYards * field.width / field.height;
+			
+			if(heightInYards > 50) {
+				field.heightInYards = 55;
+			} else {
+				field.heightInYards += 5;
+			}
+
+			resizeMainViewObjects();
+		});
+
+		// resizeMainViewObjects resizes all of the buttons and bars in our
+		// main view. It is called when the user resizes their browser.
+		function resizeMainViewObjects() {};
+	</script>
+{% endblock %}

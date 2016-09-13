@@ -197,79 +197,6 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def quiz_analytics(request, quiz_id):
-	coach = request.user.coach
-	quiz = Test.objects.filter(pk=quiz_id)[0]
-	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
-	quiz_results = quiz.quizresult_set.all()
-	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
-	data_source = ModelDataSource(quiz_result_queryset,
-								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
-	chart = gchart.ColumnChart(data_source, options=
-		{
-			'title': "Quiz Results",
-			'isStacked': 'true',
-			'width': 700,
-			'xaxis':
-			{
-				'label': "categories",
-				'side': 'top'
-			},
-			'legend': {'position': 'bottom'},
-			'series':
-			{
-				'0': {'targetAxisIndex':'0', 'axis': 'score'},
-				'1':{'targetAxisIndex':'0', 'axis': 'score'},
-				'2':{'targetAxisIndex':'0', 'axis': 'score'},
-				'3':{'targetAxisIndex':'1', 'type': 'line'},
-
-			},
-			'axes':
-			{
-				'x':
-				{
-					'discrete': 'string',
-				},
-			  	'y':
-			  	{
-					'score': {'label': '# of Quesitons'},
-					'Time Taken': {'label': 'Time Taken'}
-				}
-			}
-		}
-	)
-	missed_play_data =  formatted_list_for_graphos_missed_plays
-	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
-		{
-			'title': "Missed Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'height': 300,
-			'legend': {'position': 'bottom'}
-		}
-	)
-
-	skipped_play_data =  test.get_skipped_play_chart(5)
-	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
-		{
-			'title': "Skipped Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'legend': {'position': 'bottom'}
-		}
-	)
-	quiz_results_length = len(quiz_results)
-	return render_to_response('dashboard/analytics.html',{
-		'test': quiz,
-		'test_results': quiz_results,
-		'chart': chart,
-		'missed_play_chart': missed_play_chart,
-		'skipped_play_chart': skipped_play_chart,
-		'test_results_length': quiz_results_length,
-		'page_header': 'ANALYTICS',
-	})
-
 @login_required
 def analytics(request):
 	if request.user.myuser.is_a_player:
@@ -709,10 +636,96 @@ def manage_quiz(request, quiz_id):
 			'page_header': 'MANAGE QUIZ'
 		})
 
-@login_required
-def my_quizzes(request):
-	player = request.user.player
-	return render(request, 'dashboard/my_quizzes.html')
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def take_quiz(request, quiz_id):
+	if request.method == 'POST':
+		return HttpResponse('')
+	else:
+		quiz = Quiz.objects.filter(id=quiz_id)[0]
+		quiz_formations = quiz.formations.all()
+		quiz_plays = quiz.plays.all()
+		quiz_concepts = quiz.concepts.all()
+
+		return render(request, 'dashboard/take_quiz.html', {
+			'quiz': quiz,
+			'quizFormations': quiz_formations,
+			'quizPlays': quiz_plays,
+			'quizConcepts': quiz_concepts,
+			'page_header': 'TAKE QUIZ'
+		})
+
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def quiz_analytics(request, quiz_id):
+	coach = request.user.coach
+	quiz = Test.objects.filter(pk=quiz_id)[0]
+	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
+	quiz_results = quiz.quizresult_set.all()
+	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
+	data_source = ModelDataSource(quiz_result_queryset,
+								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
+	chart = gchart.ColumnChart(data_source, options=
+		{
+			'title': "Quiz Results",
+			'isStacked': 'true',
+			'width': 700,
+			'xaxis':
+			{
+				'label': "categories",
+				'side': 'top'
+			},
+			'legend': {'position': 'bottom'},
+			'series':
+			{
+				'0': {'targetAxisIndex':'0', 'axis': 'score'},
+				'1':{'targetAxisIndex':'0', 'axis': 'score'},
+				'2':{'targetAxisIndex':'0', 'axis': 'score'},
+				'3':{'targetAxisIndex':'1', 'type': 'line'},
+
+			},
+			'axes':
+			{
+				'x':
+				{
+					'discrete': 'string',
+				},
+			  	'y':
+			  	{
+					'score': {'label': '# of Quesitons'},
+					'Time Taken': {'label': 'Time Taken'}
+				}
+			}
+		}
+	)
+	missed_play_data =  formatted_list_for_graphos_missed_plays
+	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
+		{
+			'title': "Missed Plays",
+			'isStacked': 'true',
+			'width': 700,
+			'height': 300,
+			'legend': {'position': 'bottom'}
+		}
+	)
+
+	skipped_play_data =  test.get_skipped_play_chart(5)
+	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
+		{
+			'title': "Skipped Plays",
+			'isStacked': 'true',
+			'width': 700,
+			'legend': {'position': 'bottom'}
+		}
+	)
+	quiz_results_length = len(quiz_results)
+	return render_to_response('dashboard/analytics.html',{
+		'test': quiz,
+		'test_results': quiz_results,
+		'chart': chart,
+		'missed_play_chart': missed_play_chart,
+		'skipped_play_chart': skipped_play_chart,
+		'test_results_length': quiz_results_length,
+		'page_header': 'ANALYTICS',
+	})
 
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)

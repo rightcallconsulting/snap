@@ -41,8 +41,8 @@ urlpatterns = [
 	url(r'^quizzes$', views.quizzes, name='quizzes'),
 	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
 	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
-	url(r'^quizzes/analytics/(?P<test_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
-	url(r'^my_quizzes$', views.my_quizzes, name='my_quizzes'),
+	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
+	url(r'^quizzes/analytics/(?P<quiz_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
 
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
