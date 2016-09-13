@@ -13,7 +13,7 @@
 var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
-	this.prompt = config.prompt || ""
+	this.prompt = config.prompt || "";
 	this.result = config.result || 2;
 };
 
@@ -24,15 +24,54 @@ var Question = function(config) {
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
 Question.prototype.buildQuestionAndAnswer = function(player_position) {
-	if (this.answer instanceof Formation) {
+	if (this.question instanceof Formation) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+				this.answer = player.deepCopy();
+				this.question.offensivePlayers.splice(i, 1);
+			}
+		}
 
-		this.prompt = "Place the missing player";
-	} else if (this.answer instanceof Play) {
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers.splice(i, 1);
+		}
 
-		this.prompt = "Draw the assignment of the selected player";
-	} else if (this.answer instanceof Concept) {
+		this.prompt = "Place the missing " + this.answer.pos;
+	} else if (this.question instanceof Play) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+				this.answer = player.deepCopy();
+				player.setSelected();
+			}
+		}
 
-		this.prompt = "Draw the assignment of the selected player";		
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers[randomPlayerIndex].setSelected();
+		}
+
+		this.prompt = "Draw the assignment of the selected " + this.answer.pos;
+	} else if (this.question instanceof Concept) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+				this.answer = player.deepCopy();
+				player.setSelected();
+			}
+		}
+
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers[randomPlayerIndex].setSelected();
+		}
+
+		this.prompt = "Draw the assignment of the selected " + this.answer.pos;		
 	}
 };
 
@@ -55,7 +94,7 @@ Question.prototype.save = function(path, csrf_token) {};
 Question.prototype.deepCopy = function() {
 	var deepCopy = new Question ({ result: this.result });
 	deepCopy.question = this.question.deepCopy();
-	//deepCopy.answer = this.answer.deepCopy();
+	deepCopy.answer = this.answer.deepCopy();
 
 	return deepCopy;
 };
