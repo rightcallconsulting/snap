@@ -28,14 +28,14 @@
 
 	<body>
 		{% include "dashboard/includes/theme_setting.html" %}
-		
+
 		<div id="wrapper" class="preload">
 			{% include "dashboard/includes/sidebar.html" %}
-			
+
 			<div class="small-sidebar-container" id="main-container">
 				{% include "dashboard/includes/navbar.html" %}
 				{% include "dashboard/includes/grey_container.html" %}
-				
+
 				<div class="quiz">
 					<div class="main-content-area display-box" id="display-box">
 						<div class="dash-header text-center" id="header-box">
@@ -134,7 +134,7 @@
 									<td id="multiple-choice-answer-cell" class="hidden">
 										{% block multipleChoiceAnswers %}
 											<div id="correct-answer-index">0</div>
-											
+
 											<table class="multiple-choice-answers">
 												<tr>
 													<td id="mc-answer-1">
@@ -152,7 +152,7 @@
 													</td>
 												</tr>
 											</table>
-											
+
 											<button id="skip-button">
 												<span>Skip
 													<h3 id="skip-button-skips"></h3>
@@ -210,7 +210,7 @@
 													}
 
 													var answer = document.getElementById("mc-button-"+index);
-													if(test && !test.over && answer && answer.classList.contains('clicked')) {
+													/*if(test && !test.over && answer && answer.classList.contains('clicked')) {
 														if(test.showDemo) {
 															clearMultipleChoiceAnswers();
 															demoDoubleClick = true;
@@ -221,6 +221,13 @@
 													} else if(test && !test.over && answer && !answer.classList.contains('disabled')) {
 														clearMultipleChoiceAnswers();
 														answer.classList.add('clicked')
+													}*/
+													if(test && !test.over && answer){
+														if(test.showDemo){
+															demoDoubleClick = true;
+														}else{
+															checkMultipleChoiceAnswer(index)
+														}
 													}
 													return true;
 												};
