@@ -182,11 +182,19 @@ Quiz.prototype.shuffle = function() {
 
 // checkCurrentQuestion checks the attempt on the current question and compares
 // it to the correct answer. It posts a question attempt based on the result.
-Quiz.prototype.checkCurrentQuestion = function(attempt) {};
+Quiz.prototype.checkCurrentQuestion = function(attempt) {
+	if (!this.isEmpty) {
+		this.questions[this.currentQuestionIndex].check(attempt);
+	}
+};
 
 // skipCurrentQuestion skips the question the player is currently attempting.
 // It posts a question attempt.
-Quiz.prototype.skipCurrentQuestion = function() {};
+Quiz.prototype.skipCurrentQuestion = function() {
+	if (!this.isEmpty) {
+		this.questions[this.currentQuestionIndex].skip();
+	}
+};
 
 // nextQuestion increments this currentQuestionIndex.
 Quiz.prototype.nextQuestion = function() {
