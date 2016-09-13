@@ -92,7 +92,7 @@ test:
 # Heroku commands
 ###############################################################################
 
-migration-heroku:
+migrations-heroku:
 	heroku run python manage.py makemigrations 
 	heroku run python manage.py migrate
 

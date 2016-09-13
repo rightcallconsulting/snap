@@ -198,6 +198,10 @@ class Quiz(models.Model):
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	unit = models.CharField(max_length=25, default="offense")
 	players = models.ManyToManyField(Player)
+
+	formations = models.ManyToManyField(Formation)
+	plays = models.ManyToManyField(Play)
+	concepts = models.ManyToManyField(Concept)
 	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)

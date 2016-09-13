@@ -658,6 +658,7 @@ def manage_quiz(request, quiz_id):
 			quiz.save()
 
 			quiz_data = json.loads(request.POST['quiz'])
+			print quiz_data
 
 			# I'm here
 
