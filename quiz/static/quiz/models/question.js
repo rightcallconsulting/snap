@@ -10,17 +10,19 @@
 //																			 //
 //***************************************************************************//
 
-var Question = function (config) {
+var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
-	this.player = config.player || null;
-	this.reult = config.result || 2;
+	this.result = config.result || 2;
 };
 
 //***************************************************************************//
 //***************************************************************************//
 
-Question.prototype.buildQuestionFromAnswer = function (player_position) {
+// buildQuestionAndAnswer creates an appropriate creates a question and answer
+// based on the current content in the question variable and the positons of
+// the player who is attempting the question.
+Question.prototype.buildQuestionFromAnswer = function(player_position) {
 	if (this.answer instanceof Formation) {
 
 	} else if (this.answer instanceof Play) {
@@ -30,10 +32,17 @@ Question.prototype.buildQuestionFromAnswer = function (player_position) {
 	}
 };
 
-Question.prototype.draw = function () {
+// draw displays this question.
+Question.prototype.draw = function() {
 	this.question.drawPlayers();
 };
 
-Question.prototype.check = function () {};
+// check compares the attempt with the answer and determines the result. It
+// posts an attempted question to the database.
+Question.prototype.check = function(attempt) {};
 
-Question.prototype.save = function (path, csrf_token) {};
+// skip posts an attempted question to the database.
+Question.prototype.check = function(attempt) {};
+
+// save is used to post an attempted question.
+Question.prototype.save = function(path, csrf_token) {};

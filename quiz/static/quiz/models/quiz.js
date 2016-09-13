@@ -125,17 +125,32 @@ Quiz.prototype.delete = function (path, csrf_token) {
 // Take Quiz                                                         //
 //*******************************************************************//
 
+// draw displays the current question.
 Quiz.prototype.draw = function() {};
 
-Quiz.prototype.buildQuestions = function() {};
+// buildQuestions creates the question array. It takes in the postions of the
+// player taking the quiz as a string and then builds an array of questions
+// based on the formations, plays, and concepts in the quiz. It shuffles the
+// array once it is populated.
+Quiz.prototype.buildQuestions = function(player_position) {};
 
-Quiz.prototype.submit = function() {};
+// shuffle rarranges the questions in the array in a random order.
+Quiz.prototype.shuffle = function() {};
 
-Quiz.prototype.checkQuestion = function() {};
+// checkCurrentQuestion checks the attempt on the current question and compares
+// it to the correct answer. It posts a question attempt based on the result.
+Quiz.prototype.checkCurrentQuestion = function(attempt) {};
 
-Quiz.prototype.skipQuestion = function() {};
+// skipCurrentQuestion skips the question the player is currently attempting.
+// It posts a question attempt.
+Quiz.prototype.skipCurrentQuestion = function() {};
 
+// nextQuestion increments this currentQuestionIndex.
 Quiz.prototype.nextQuestion = function() {};
+
+// submit shows the player their results on the quiz and then navigates back to
+// the players dashboard.
+Quiz.prototype.submit = function() {};
 
 //*******************************************************************//
 // General Quiz methods                                              //
