@@ -185,6 +185,7 @@ Quiz.prototype.shuffle = function() {
 Quiz.prototype.checkCurrentQuestion = function(attempt) {
 	if (!this.isEmpty) {
 		this.questions[this.currentQuestionIndex].check(attempt);
+		this.nextQuestion();
 	}
 };
 
@@ -193,12 +194,20 @@ Quiz.prototype.checkCurrentQuestion = function(attempt) {
 Quiz.prototype.skipCurrentQuestion = function() {
 	if (!this.isEmpty) {
 		this.questions[this.currentQuestionIndex].skip();
+		this.nextQuestion();
 	}
 };
 
-// nextQuestion increments this currentQuestionIndex.
+// nextQuestion increments this currentQuestionIndex unless it is at the end of
+// the array in which case it sets the index back to 0;
 Quiz.prototype.nextQuestion = function() {
-	this.currentQuestionIndex++;
+	if (!this.isEmpty) {
+		if (this.currentQuestionIndex != (this.questions.length-1)) {
+			this.currentQuestionIndex++;
+		} else {
+			this.currentQuestionIndex = 0;
+		}
+	}
 };
 
 // submit shows the player their results on the quiz and then navigates back to
