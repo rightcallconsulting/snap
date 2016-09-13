@@ -636,7 +636,7 @@ def manage_quiz(request, quiz_id):
 			'page_header': 'MANAGE QUIZ'
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
 	if request.method == 'POST':
 		return HttpResponse('')

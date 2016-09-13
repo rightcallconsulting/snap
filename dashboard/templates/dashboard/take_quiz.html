@@ -19,6 +19,16 @@
 								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
 							</button>
 						</td>
+						<td>
+							<button id="zoom-in-button" name="button">
+								<i class="fa fa-search-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
+							</button>
+						</td>
+						<td>
+							<button id="zoom-out-button" name="button">
+								<i class="fa fa-search-minus fa-lg mainview-button-icon" title="Add content to quiz"></i>
+							</button>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -38,15 +48,7 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var quiz;
-		var formations = [];
-		var formation;
-		var plays = [];
-		var play;
-		var concepts = [];
-		var concept;
-		var scout_formations = [];
-		var scout_formation;
-		var teamID = document.getElementById("team-id").getAttribute("team-id");
+		var questions = [];
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -73,12 +75,6 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
-
-			// Create new Formation, Play, Concept, and Scout Formation.
-			formation = new Formation({});
-			play = new Play({});
-			concept = new Concept({});
-			scout_formation = new Formation({});
 
 			// Create quiz and load it's content from Json.
 			quiz = new Quiz({});
