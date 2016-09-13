@@ -267,6 +267,8 @@ Play.prototype.deepCopy = function() {
 // fromFormation takes a formation object as an argument and creates a play
 // with the same players in the formation.
 Play.prototype.fromFormation = function(formation) {
+	this.play = new Play({});
+
 	var play_formation = formation.deepCopy();
 
 	this.unit = play_formation.unit;

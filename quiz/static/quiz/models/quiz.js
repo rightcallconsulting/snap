@@ -21,14 +21,74 @@ var Quiz = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+// push determines the type of the input and pushes it to the correct array
+// in this instance of quiz.
+Quiz.prototype.push = function (input) {
+	input = input.deepCopy();
+
+	if (input instanceof Formation) {
+		for (i in this.formations) {
+			if (input.name === this.formations[i].name) {
+				return;
+			}			
+		}
+
+		this.formations.push(input);
+	} else if (input instanceof Play) {
+		for (i in this.plays) {
+			if (input.name === this.plays[i].name && input.scoutName === this.plays[i].scoutName) {
+				return;
+			}
+		}
+
+		this.plays.push(input);
+	} else if (input instanceof Concept) {
+		for (i in this.concepts) {
+			if (input.name === this.concepts[i].name) {
+				return;
+			}			
+		}
+
+		this.concepts.push(input);
+	}
+};
+
+// remove determines the types of the input and splices it from the correct
+// array in this instance of quiz.
+Quiz.prototype.remove = function (input) {
+	input = input.deepCopy();
+
+	if (input instanceof Formation) {
+		for (i in this.formations) {
+			if (input.name === this.formations[i].name) {
+				this.formations.splice(i, 1);
+			}			
+		}
+	} else if (input instanceof Play) {
+		for (i in this.plays) {
+			if (input.name === this.plays[i].name && input.scoutName === this.plays[i].scoutName) {
+				this.plays.splice(i, 1);
+			}
+		}
+	} else if (input instanceof Concept) {
+		for (i in this.concepts) {
+			if (input.name === this.concepts[i].name) {
+				this.concepts.splice(i, 1);
+			}			
+		}
+	}
+};
+
 // save handles everything that need to be done when the user pressed the save
 // button.
 Quiz.prototype.save = function (path, csrf_token) {
 	var quizName = this.name;
 
+	var quiz = JSON.stringify(this, ["formations", "plays", "concepts", "name", "scoutName"]);
+
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: quizName}
+			{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: quizName, quiz: quiz}
 		).done(function() {
 			console.log("Quiz successfully sent to Django to be saved");
 		}).fail(function() {
@@ -79,17 +139,17 @@ Quiz.prototype.deepCopy = function() {
 /*     Non object functions      */
 /*********************************/
 
-function createFormationsinQuizFromJson(formationJsonDictionary) {
+Quiz.prototype.createFormationsFromJson = function(formationJsonDictionary) {
 	var formation = createFormationFromJson(formationJsonDictionary);
 	this.formations.push(formation);
 };
 
-function createPlaysinQuizFromJson(playJsonDictionary) {
+Quiz.prototype.createPlaysFromJson = function(playJsonDictionary) {
 	var play = createPlayFromJson(playJsonDictionary);
 	this.plays.push(formation);
 };
 
-function createConceptsinQuizFromJson(conceptJsonDictionary) {
+Quiz.prototype.createConceptsFromJson = function(conceptJsonDictionary) {
 	var concept = createConceptFromJson(conceptJsonDictionary);
 	this.concepts.push(formation);
 };
