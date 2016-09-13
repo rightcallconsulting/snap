@@ -146,11 +146,17 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		$("#submit-quiz-button").click(function(event) {});
+		$("#submit-quiz-button").click(function(event) {
+			quiz.submit();
+		});
 
-		$("#check-answer-button").click(function(event) {});
+		$("#check-answer-button").click(function(event) {
+			quiz.checkCurrentQuestion();
+		});
 
-		$("#skip-question-button").click(function(event) {});
+		$("#skip-question-button").click(function(event) {
+			quiz.skipCurrentQuestion();
+		});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
