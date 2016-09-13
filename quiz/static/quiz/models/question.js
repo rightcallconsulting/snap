@@ -13,6 +13,7 @@
 var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
+	this.prompt = config.prompt || ""
 	this.result = config.result || 2;
 };
 
@@ -25,16 +26,19 @@ var Question = function(config) {
 Question.prototype.buildQuestionAndAnswer = function(player_position) {
 	if (this.answer instanceof Formation) {
 
+		this.prompt = "Place the missing player";
 	} else if (this.answer instanceof Play) {
 
+		this.prompt = "Draw the assignment of the selected player";
 	} else if (this.answer instanceof Concept) {
-		
+
+		this.prompt = "Draw the assignment of the selected player";		
 	}
 };
 
 // draw displays this question.
-Question.prototype.draw = function() {
-	this.question.drawPlayers();
+Question.prototype.draw = function(field) {
+	this.question.drawPlayers(field);
 };
 
 // check compares the attempt with the answer and determines the result. It
@@ -51,7 +55,7 @@ Question.prototype.save = function(path, csrf_token) {};
 Question.prototype.deepCopy = function() {
 	var deepCopy = new Question ({ result: this.result });
 	deepCopy.question = this.question.deepCopy();
-	deepCopy.answer = this.answer.deepCopy();
+	//deepCopy.answer = this.answer.deepCopy();
 
 	return deepCopy;
 };

@@ -99,6 +99,8 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
+			quiz.buildQuestions("QB");
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -124,6 +126,7 @@
 
 		function drawOpening() {
 			field.drawBackground(quiz, height, width);
+			quiz.draw(field);
 
 			fill(176,176,176);
 		};
@@ -151,10 +154,14 @@
 		});
 
 		$("#check-answer-button").click(function(event) {
+			var question_index = quiz.getCurrentQuestionIndex();
+
 			quiz.checkCurrentQuestion();
 		});
 
 		$("#skip-question-button").click(function(event) {
+			var question_index = quiz.getCurrentQuestionIndex();
+
 			quiz.skipCurrentQuestion();
 		});
 

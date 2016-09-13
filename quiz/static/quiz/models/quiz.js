@@ -126,9 +126,9 @@ Quiz.prototype.delete = function (path, csrf_token) {
 //*******************************************************************//
 
 // draw displays the current question.
-Quiz.prototype.draw = function() {
-	if (!this.isEmpty) {
-		this.questions[this.currentQuestionIndex].draw();
+Quiz.prototype.draw = function(field) {
+	if (!this.isEmpty()) {
+		this.questions[this.currentQuestionIndex].draw(field);
 	}
 };
 
@@ -158,6 +158,7 @@ Quiz.prototype.buildQuestions = function(player_position) {
 	}
 
 	this.shuffle();
+	this.currentQuestionIndex = 0;
 };
 
 // shuffle rearranges the questions in the array in a random order. It is and
@@ -170,7 +171,7 @@ Quiz.prototype.shuffle = function() {
 	// While the current index is not 0 (there is nothing left to shuffle).
 	while (currentQuestionIndex != 0) {
 		// Pick a remaining question index at random.
-		randomQuestionIndex = Math.floor(Math.random() * currentIndex);
+		randomQuestionIndex = Math.floor(Math.random() * currentQuestionIndex);
 		currentQuestionIndex -= 1;
 
 		// Swap it with the current element.
@@ -183,7 +184,7 @@ Quiz.prototype.shuffle = function() {
 // checkCurrentQuestion checks the attempt on the current question and compares
 // it to the correct answer. It posts a question attempt based on the result.
 Quiz.prototype.checkCurrentQuestion = function(attempt) {
-	if (!this.isEmpty) {
+	if (!this.isEmpty()) {
 		this.questions[this.currentQuestionIndex].check(attempt);
 		this.nextQuestion();
 	}
@@ -192,22 +193,27 @@ Quiz.prototype.checkCurrentQuestion = function(attempt) {
 // skipCurrentQuestion skips the question the player is currently attempting.
 // It posts a question attempt.
 Quiz.prototype.skipCurrentQuestion = function() {
-	if (!this.isEmpty) {
+	if (!this.isEmpty()) {
 		this.questions[this.currentQuestionIndex].skip();
 		this.nextQuestion();
 	}
 };
 
 // nextQuestion increments this currentQuestionIndex unless it is at the end of
-// the array in which case it sets the index back to 0;
+// the array in which case it sets the index back to 0
 Quiz.prototype.nextQuestion = function() {
-	if (!this.isEmpty) {
+	if (!this.isEmpty()) {
 		if (this.currentQuestionIndex != (this.questions.length-1)) {
 			this.currentQuestionIndex++;
 		} else {
 			this.currentQuestionIndex = 0;
 		}
 	}
+};
+
+// getCurrentQuestionIndex returns the index of the current question.
+Quiz.prototype.getCurrentQuestionIndex = function() {
+	return this.currentQuestionIndex;
 };
 
 // submit shows the player their results on the quiz and then navigates back to
