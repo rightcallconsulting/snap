@@ -17,7 +17,8 @@ var Quiz = function(config) {
 	this.plays = config.plays || [];
 	this.concepts = config.concepts || [];
 
-	this.questions = config.question || [];
+	this.questions = config.questions || [];
+	this.currentQuestionIndex = config.currentQuestionIndex || null;
 };
 
 //***************************************************************************//
@@ -124,9 +125,17 @@ Quiz.prototype.delete = function (path, csrf_token) {
 // Take Quiz                                                         //
 //*******************************************************************//
 
-Quiz.prototype.build = function() {};
+Quiz.prototype.draw = function() {};
 
-Quiz.prototype.deepCopy = function() {};
+Quiz.prototype.buildQuestions = function() {};
+
+Quiz.prototype.submit = function() {};
+
+Quiz.prototype.checkQuestion = function() {};
+
+Quiz.prototype.skipQuestion = function() {};
+
+Quiz.prototype.nextQuestion = function() {};
 
 //*******************************************************************//
 // General Quiz methods                                              //
