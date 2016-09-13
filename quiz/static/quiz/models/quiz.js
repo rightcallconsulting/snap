@@ -16,10 +16,16 @@ var Quiz = function(config) {
 	this.formations = config.formations || [];
 	this.plays = config.plays || [];
 	this.concepts = config.concepts || [];
+
+	this.questions = config.question || [];
 };
 
 //***************************************************************************//
 //***************************************************************************//
+
+//*******************************************************************//
+// Create Quiz                                                       //
+//*******************************************************************//
 
 // push determines the type of the input and pushes it to the correct array
 // in this instance of quiz.
@@ -97,7 +103,7 @@ Quiz.prototype.save = function (path, csrf_token) {
 };
 
 // delete sends a delete request to Django for this play.
-Quiz.prototype.delete = function(path, csrf_token) {
+Quiz.prototype.delete = function (path, csrf_token) {
 	var quizName = this.name;
 
 	var jqxhr = $.post(
@@ -112,6 +118,19 @@ Quiz.prototype.delete = function(path, csrf_token) {
 			console.log("Error sending Quiz to Django to be deleted");
 	});
 };
+
+
+//*******************************************************************//
+// Take Quiz                                                         //
+//*******************************************************************//
+
+Quiz.prototype.build = function() {};
+
+Quiz.prototype.deepCopy = function() {};
+
+//*******************************************************************//
+// General Quiz methods                                              //
+//*******************************************************************//
 
 // deepCopy returns a new Play object that is exactly the same as this.
 Quiz.prototype.deepCopy = function() {
