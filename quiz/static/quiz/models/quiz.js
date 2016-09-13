@@ -84,9 +84,11 @@ Quiz.prototype.remove = function (input) {
 Quiz.prototype.save = function (path, csrf_token) {
 	var quizName = this.name;
 
+	var quiz = JSON.stringify(this, ["formations", "plays", "concepts", "name", "scoutName"]);
+
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: quizName}
+			{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: quizName, quiz: quiz}
 		).done(function() {
 			console.log("Quiz successfully sent to Django to be saved");
 		}).fail(function() {

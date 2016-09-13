@@ -652,7 +652,15 @@ def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
 		quiz = Quiz.objects.filter(name=request.POST['name'])[0];
 		if request.POST['save'] == "true":
+			quiz.formations.clear()
+			quiz.plays.clear()
+			quiz.concepts.clear()
 			quiz.save()
+
+			quiz_data = json.loads(request.POST['quiz'])
+
+			# I'm here
+
 			return HttpResponse('')
 		elif request.POST['delete'] == "true":
 			quiz.delete()
