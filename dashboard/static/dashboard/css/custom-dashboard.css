@@ -226,6 +226,18 @@ i.fa.mainview-button-icon {
     color: #9CCC65;
 }
 
+.mainview-buttons {
+	width: 100%;
+	height: 50px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.mainview-buttons button {
+	background: none;
+	border: none;
+}
+
 /*************************************************************************
 dyanmic sideview
 *************************************************************************/

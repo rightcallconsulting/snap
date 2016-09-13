@@ -11,21 +11,22 @@
 			<div id="quiz-box">
 			</div>
 
-			<div class="display-buttons">
-				<table class="button-table">
-					<tr>
-						<td>
-							<button id="zoom-in-button" name="button">
-								<i class="fa fa-search-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
-							</button>
-						</td>
-						<td>
-							<button id="zoom-out-button" name="button">
-								<i class="fa fa-search-minus fa-lg mainview-button-icon" title="Add content to quiz"></i>
-							</button>
-						</td>
-					</tr>
-				</table>
+			<div class="mainview-buttons">
+				<button id="check-answer-button" name="button">
+					<i class="fa fa-check fa-lg mainview-button-icon" title="Check answer"></i>
+				</button>
+
+				<button id="skip-question-button" name="button">
+					<i class="fa fa-step-forward fa-lg mainview-button-icon" title="Skip question"></i>
+				</button>
+		
+				<button id="zoom-in-button" name="button">
+					<i class="fa fa-search-plus fa-lg mainview-button-icon" title="Zoom in"></i>
+				</button>
+		
+				<button id="zoom-out-button" name="button">
+					<i class="fa fa-search-minus fa-lg mainview-button-icon" title="Zoom out"></i>
+				</button>
 			</div>
 		</div>
 
@@ -52,7 +53,7 @@
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
-			var display_box_footer = display_box.querySelector(".display-buttons");
+			var display_box_footer = display_box.querySelector(".mainview-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
