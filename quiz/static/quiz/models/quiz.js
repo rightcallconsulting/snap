@@ -211,6 +211,11 @@ Quiz.prototype.nextQuestion = function() {
 	}
 };
 
+// getCurrentAnswer returns a deep copy of the current questions answer.
+Quiz.prototype.getCurrentAnswer = function() {
+	return this.questions[this.currentQuestionIndex].getAnswer();
+};
+
 // getCurrentQuestionIndex returns the index of the current question.
 Quiz.prototype.getCurrentQuestionIndex = function() {
 	return this.currentQuestionIndex;

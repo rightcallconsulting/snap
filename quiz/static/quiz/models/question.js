@@ -90,6 +90,12 @@ Question.prototype.skip = function() {};
 // save is used to post an attempted question.
 Question.prototype.save = function(path, csrf_token) {};
 
+// getAnswer returns a deepCopy of the answer so that the quiz view can draw
+// the right type of player for a formation question.
+Question.prototype.getAnswer = function() {
+	return this.answer.deepCopy();
+};
+
 // deepCopy returns a deep copy of the instance of Question that called it.
 Question.prototype.deepCopy = function() {
 	var deepCopy = new Question ({ result: this.result });
