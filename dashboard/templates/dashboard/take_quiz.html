@@ -15,11 +15,6 @@
 				<table class="button-table">
 					<tr>
 						<td>
-							<button id="add-content-button" name="button">
-								<i class="fa fa-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
-							</button>
-						</td>
-						<td>
 							<button id="zoom-in-button" name="button">
 								<i class="fa fa-search-plus fa-lg mainview-button-icon" title="Add content to quiz"></i>
 							</button>
@@ -118,94 +113,12 @@
 		};
 
 		function draw() {
-			// Limitations on where offensive players can be
-			var numberOfOffensivePlayers = play.offensivePlayers.length;
-			
-			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
-				var player = play.offensivePlayers[i];
-				var playerXPixel = field.getTranslatedX(player.x);
-				var playerYPixel = field.getTranslatedY(player.y);
-				var playerXYard = player.x;
-				var playerYYard = player.y;
-
-				// Keep the players within the screen
-				if (playerXPixel < 0) {
-					player.x = field.getYardX(0);
-				} else if (playerXPixel > field.width) {
-					player.x = field.getYardX(field.width);
-				}
-
-				if (playerYPixel < 0) {
-					player.y = player.getYardY(0);
-				} else if (playerYPixel > field.height) {
-					player.y = player.getYardY(field.height)
-				}
-
-				// Keep the players on the field
-				if (playerXYard < 0) {
-					player.x = 0;
-				} else if (playerXYard > 53.33) {
-					player.x = 53.33;
-				}
-
-				if (playerYYard < -10) {
-					player.y = 0;
-				} else if (playerYYard > 110) {
-					player.y = 110;
-				}
-			}
-
-			// Limitations on where defensive players can be
-			var numberOfDefensivePlayers = play.defensivePlayers.length;
-			
-			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
-				var player = play.defensivePlayers[i];
-				var playerXPixel = field.getTranslatedX(player.x);
-				var playerYPixel = field.getTranslatedY(player.y);
-				var playerXYard = player.x;
-				var playerYYard = player.y;
-
-				// Keep the players within the screen
-				if (playerXPixel < 0) {
-					player.x = field.getYardX(0);
-				} else if (playerXPixel > field.width) {
-					player.x = field.getYardX(field.width);
-				}
-
-				if (playerYPixel < 0) {
-					player.y = player.getYardY(0);
-				} else if (playerYPixel > field.height) {
-					player.y = player.getYardY(field.height)
-				}
-
-				// Keep the players on the field
-				if (playerXYard < 0) {
-					player.x = 0;
-				} else if (playerXYard > 53.33) {
-					player.x = 53.33;
-				}
-
-				if (playerYYard < -10) {
-					player.y = -10;
-				} else if (playerYYard > 110) {
-					player.y = 110;
-				}
-			}
-
 			// Draw opening
 			drawOpening();
 		};
 
 		function drawOpening() {
-			field.drawBackground(play, height, width);
-
-			play.drawAssignments(field);
-			play.drawPlayers(field);
-
-			concept.drawAssignments(field);
-			concept.drawPlayers(field);
-
-			scout_formation.drawPlayers(field);
+			field.drawBackground(quiz, height, width);
 
 			fill(176,176,176);
 		};
@@ -227,8 +140,6 @@
 		//*******************************************************************//
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
-
-		$("#add-content-button").click(function(event) {});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
