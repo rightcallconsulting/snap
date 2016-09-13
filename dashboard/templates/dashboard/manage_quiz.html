@@ -306,6 +306,19 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.save(path, csrf_token);
+
+			// Add checkmark to button if it doesn't already has one.
+			var selected = document.getElementById("selected");
+
+			if (selected != null) {
+				var check_mark = selected.querySelector("i");
+
+				if (check_mark === null) {
+					check_mark = document.createElement("i");
+					check_mark.setAttribute("class", "fa fa-check fa-lg");
+					selected.appendChild(check_mark);
+				}
+			}
 		});
 
 		$("#clear-button").click(function(event) {
@@ -313,6 +326,17 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.delete(path, csrf_token);
+
+			// Remove checkmark from button if it already has one.
+			var selected = document.getElementById("selected");
+
+			if (selected != null) {
+				var check_mark = selected.querySelector("i");
+
+				if (check_mark != null) {
+					selected.removeChild(check_mark);
+				}
+			}
 		});
 
 		$("#add-content-button").click(function(event) {
