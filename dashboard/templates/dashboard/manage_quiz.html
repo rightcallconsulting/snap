@@ -332,7 +332,7 @@
 
 				if (check_mark === null) {
 					check_mark = document.createElement("i");
-					check_mark.setAttribute("class", "fa fa-check fa-lg");
+					check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 					selected.appendChild(check_mark);
 				}
 			}
@@ -435,7 +435,7 @@
 				for (j in quiz.formations) {
 					if (quiz.formations[j].name === formations[i].name) {
 						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 						formation_button.appendChild(check_mark);
 					}
 				}
@@ -472,7 +472,7 @@
 				for (j in quiz.concepts) {
 					if (quiz.concepts[j].name === concepts[i].name) {
 						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 						concept_button.appendChild(check_mark);
 					}
 				}
@@ -527,7 +527,7 @@
 					for (j in quiz.plays) {
 						if (quiz.plays[j].name === plays[i].name && quiz.plays[j].scoutName === plays[i].scoutName) {
 							var check_mark = document.createElement("i");
-							check_mark.setAttribute("class", "fa fa-check fa-lg");
+							check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 							play_button.appendChild(check_mark);
 						}
 					}
@@ -635,7 +635,7 @@
 						for (k in quiz.plays) {
 							if (quiz.plays[k].name === plays[j].name && quiz.plays[k].scoutName === plays[j].scoutName) {
 								var check_mark = document.createElement("i");
-								check_mark.setAttribute("class", "fa fa-check fa-lg");
+								check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 								scout_formation_button.appendChild(check_mark);
 							}
 						}
@@ -835,7 +835,7 @@
 					for (j in quiz.plays) {
 						if (quiz.plays[j].name === plays[i].name && quiz.plays[j].scoutName === plays[i].scoutName) {
 							var check_mark = document.createElement("i");
-							check_mark.setAttribute("class", "fa fa-check fa-lg");
+							check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 							play_button.appendChild(check_mark);
 						}
 					}

@@ -586,7 +586,7 @@
 				sideview_buttons_div.appendChild(new_play_button);
 			} else {
 				var check_mark = document.createElement("i");
-				check_mark.setAttribute("class", "fa fa-check fa-lg");
+				check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 				selected_sideview_button.appendChild(check_mark);
 			}
 
@@ -882,7 +882,7 @@
 				for (j in plays) {
 					if (plays[j].name === play.name && plays[j].scoutName === scout_formations[i].name) {
 						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 						scout_formation_button.appendChild(check_mark);
 					}
 				}

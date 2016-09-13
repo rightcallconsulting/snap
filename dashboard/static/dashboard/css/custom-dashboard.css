@@ -231,6 +231,7 @@ i.fa.mainview-button-icon {
 	height: 50px;
 	display: flex;
 	justify-content: space-between;
+	padding: 0 70px 0 70px;
 }
 
 .mainview-buttons button {
@@ -299,7 +300,7 @@ i#back-arrow {
 	position: absolute;
 }
 
-i.fa.fa-check.fa-lg {
+i.fa.fa-lg.sideview-button-checkmark {
     left: 50px;
     line-height: 1.3em;
     position: absolute;
