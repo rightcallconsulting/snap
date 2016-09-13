@@ -21,7 +21,45 @@ var Quiz = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
-Quiz.prototype.push = function () {};
+// push determines the type of the input and pushes it to the correct array
+// in this instance of quiz.
+Quiz.prototype.push = function (input) {
+	input = input.deepCopy();
+
+	if (input instanceof Formation) {
+		this.formations.push(input);
+	} else if (input instanceof Play) {
+		this.plays.push(input);
+	} else if (input instanceof Concept) {
+		this.concepts.push(input);
+	}
+};
+
+// remove determines the types of the input and splices it from the correct
+// array in this instance of quiz.
+Quiz.prototype.remove = function (input) {
+	input = input.deepCopy();
+
+	if (input instanceof Formation) {
+		for (i in formations) {
+			if (input.name === formations[i].name) {
+				formations.splice(i, 1);
+			}			
+		}
+	} else if (input instanceof Play) {
+		for (i in plays) {
+			if (input.name === plays[i].name) {
+				plays.splice(i, 1);
+			}
+		}
+	} else if (input instanceof Concept) {
+		for (i in concepts) {
+			if (input.name === concepts[i].name) {
+				concepts.splice(i, 1);
+			}			
+		}
+	}
+};
 
 // save handles everything that need to be done when the user pressed the save
 // button.
