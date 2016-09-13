@@ -42,7 +42,7 @@ Question.prototype.draw = function() {
 Question.prototype.check = function(attempt) {};
 
 // skip posts an attempted question to the database.
-Question.prototype.check = function(attempt) {};
+Question.prototype.skip = function(attempt) {};
 
 // save is used to post an attempted question.
 Question.prototype.save = function(path, csrf_token) {};

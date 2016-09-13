@@ -126,13 +126,33 @@ Quiz.prototype.delete = function (path, csrf_token) {
 //*******************************************************************//
 
 // draw displays the current question.
-Quiz.prototype.draw = function() {};
+Quiz.prototype.draw = function() {
+	if (!this.isEmpty) {
+		this.questions[this.currentQuestionIndex].draw();
+	}
+};
 
 // buildQuestions creates the question array. It takes in the postions of the
 // player taking the quiz as a string and then builds an array of questions
 // based on the formations, plays, and concepts in the quiz. It shuffles the
 // array once it is populated.
-Quiz.prototype.buildQuestions = function(player_position) {};
+Quiz.prototype.buildQuestions = function(player_position) {
+	
+
+	for (i in this.formations) {
+		this.questions.push(this.formations[i]);
+	}
+
+	for (i in this.plays) {
+		this.questions.push(this.plays[i]);
+	}
+
+	for (i in this.concepts) {
+		this.questions.push(this.concepts[i]);
+	}
+
+	this.shuffle();
+};
 
 // shuffle rarranges the questions in the array in a random order.
 Quiz.prototype.shuffle = function() {};
@@ -146,7 +166,9 @@ Quiz.prototype.checkCurrentQuestion = function(attempt) {};
 Quiz.prototype.skipCurrentQuestion = function() {};
 
 // nextQuestion increments this currentQuestionIndex.
-Quiz.prototype.nextQuestion = function() {};
+Quiz.prototype.nextQuestion = function() {
+	this.currentQuestionIndex++;
+};
 
 // submit shows the player their results on the quiz and then navigates back to
 // the players dashboard.
@@ -155,6 +177,11 @@ Quiz.prototype.submit = function() {};
 //*******************************************************************//
 // General Quiz methods                                              //
 //*******************************************************************//
+
+// isEmpty returns true if their are no questions in the array.
+Quiz.prototype.isEmpty = function() {
+	return this.questions.length === 0;
+};
 
 // deepCopy returns a new Play object that is exactly the same as this.
 Quiz.prototype.deepCopy = function() {
