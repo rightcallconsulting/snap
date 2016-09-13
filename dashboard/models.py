@@ -206,6 +206,10 @@ class Quiz(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	class Meta:
+		verbose_name = "Quiz"
+		verbose_name_plural = "Quizzes"
+
 	def __str__(self):
 		return self.name
 
@@ -220,3 +224,10 @@ class QuestionAttempted(models.Model):
 	concept = models.ForeignKey(Concept, blank=True)
 
 	result = models.IntegerField() # 0 = correct, 1 = incorrect, 2 = skipped
+
+	class Meta:
+		verbose_name = "Question Attempted"
+		verbose_name_plural = "Questions Attempted"
+
+	def __str__(self):
+		return self.player.first_name + " " + self.player.last_name + " on " + self.quiz.name
