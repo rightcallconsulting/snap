@@ -333,7 +333,15 @@
 			}
 		});
 
-		$("#remove-content-button").click(function(event) {});
+		$("#remove-content-button").click(function(event) {
+			if (play.name != "") {
+				quiz.remove(play);
+			} else if (concept.name != "") {
+				quiz.remove(concept);
+			} else if (formation.name != "") {
+				quiz.remove(formation);
+			}
+		});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;

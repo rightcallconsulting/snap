@@ -27,10 +27,28 @@ Quiz.prototype.push = function (input) {
 	input = input.deepCopy();
 
 	if (input instanceof Formation) {
+		for (i in this.formations) {
+			if (input.name === this.formations[i].name) {
+				return;
+			}			
+		}
+
 		this.formations.push(input);
 	} else if (input instanceof Play) {
+		for (i in this.plays) {
+			if (input.name === this.plays[i].name && input.scoutName === this.plays[i].scoutName) {
+				return;
+			}
+		}
+
 		this.plays.push(input);
 	} else if (input instanceof Concept) {
+		for (i in this.concepts) {
+			if (input.name === this.concepts[i].name) {
+				return;
+			}			
+		}
+
 		this.concepts.push(input);
 	}
 };
@@ -41,21 +59,21 @@ Quiz.prototype.remove = function (input) {
 	input = input.deepCopy();
 
 	if (input instanceof Formation) {
-		for (i in formations) {
-			if (input.name === formations[i].name) {
-				formations.splice(i, 1);
+		for (i in this.formations) {
+			if (input.name === this.formations[i].name) {
+				this.formations.splice(i, 1);
 			}			
 		}
 	} else if (input instanceof Play) {
-		for (i in plays) {
-			if (input.name === plays[i].name) {
-				plays.splice(i, 1);
+		for (i in this.plays) {
+			if (input.name === this.plays[i].name && input.scoutName === this.plays[i].scoutName) {
+				this.plays.splice(i, 1);
 			}
 		}
 	} else if (input instanceof Concept) {
-		for (i in concepts) {
-			if (input.name === concepts[i].name) {
-				concepts.splice(i, 1);
+		for (i in this.concepts) {
+			if (input.name === this.concepts[i].name) {
+				this.concepts.splice(i, 1);
 			}			
 		}
 	}
