@@ -151,7 +151,6 @@ Player.prototype.draw = function(field) {
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
-		this.drawMotion(field);//eventually move?
 	} else if (this.unit === "defense") {
 		noStroke();
 		fill(this.red, this.green, this.blue);

@@ -70,6 +70,7 @@ Play.prototype.drawAssignments = function (field) {
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
 		this.offensivePlayers[i].drawBlocks(field);
 		this.offensivePlayers[i].drawRoute(field);
+		this.offensivePlayers[i].drawMotion(field);
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
