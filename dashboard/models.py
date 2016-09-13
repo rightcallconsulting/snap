@@ -199,9 +199,9 @@ class Quiz(models.Model):
 	unit = models.CharField(max_length=25, default="offense")
 	players = models.ManyToManyField(Player)
 
-	formations = models.ManyToManyField(Formation)
-	plays = models.ManyToManyField(Play)
-	concepts = models.ManyToManyField(Concept)
+	formations = models.ManyToManyField(Formation, blank=True)
+	plays = models.ManyToManyField(Play, blank=True)
+	concepts = models.ManyToManyField(Concept, blank=True)
 	
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
