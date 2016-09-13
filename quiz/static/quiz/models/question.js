@@ -22,7 +22,7 @@ var Question = function(config) {
 // buildQuestionAndAnswer creates an appropriate creates a question and answer
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
-Question.prototype.buildQuestionFromAnswer = function(player_position) {
+Question.prototype.buildQuestionAndAnswer = function(player_position) {
 	if (this.answer instanceof Formation) {
 
 	} else if (this.answer instanceof Play) {
@@ -42,7 +42,10 @@ Question.prototype.draw = function() {
 Question.prototype.check = function(attempt) {};
 
 // skip posts an attempted question to the database.
-Question.prototype.skip = function(attempt) {};
+Question.prototype.skip = function() {};
 
 // save is used to post an attempted question.
 Question.prototype.save = function(path, csrf_token) {};
+
+// deepCopy returns a deep copy of the instance of Question that called it.
+Question.prototype.deepCopy = function() {};

@@ -137,25 +137,48 @@ Quiz.prototype.draw = function() {
 // based on the formations, plays, and concepts in the quiz. It shuffles the
 // array once it is populated.
 Quiz.prototype.buildQuestions = function(player_position) {
-	
+	var question;
 
 	for (i in this.formations) {
-		this.questions.push(this.formations[i]);
+		question = new Question({ question: this.formations[i].deepCopy() });
+		question.buildQuestionAndAnswer(player_position);
+		this.questions.push(question);
 	}
 
 	for (i in this.plays) {
-		this.questions.push(this.plays[i]);
+		question = new Question({ question: this.plays[i].deepCopy() });
+		question.buildQuestionAndAnswer(player_position);
+		this.questions.push(question);
 	}
 
 	for (i in this.concepts) {
-		this.questions.push(this.concepts[i]);
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		question.buildQuestionAndAnswer(player_position);
+		this.questions.push(question);
 	}
 
 	this.shuffle();
 };
 
-// shuffle rarranges the questions in the array in a random order.
-Quiz.prototype.shuffle = function() {};
+// shuffle rearranges the questions in the array in a random order. It is and
+// implementation of the Fisher-Yates Shuffle.
+Quiz.prototype.shuffle = function() {
+	var currentQuestionIndex = this.questions.length;
+	var temporaryQuestion;
+	var randomQuestionIndex;
+
+	// While the current index is not 0 (there is nothing left to shuffle).
+	while (currentQuestionIndex != 0) {
+		// Pick a remaining question index at random.
+		randomQuestionIndex = Math.floor(Math.random() * currentIndex);
+		currentQuestionIndex -= 1;
+
+		// Swap it with the current element.
+		temporaryQuestion = this.questions[currentQuestionIndex].deepCopy();
+		this.questions[currentQuestionIndex] = this.questions[randomQuestionIndex].deepCopy();
+		this.questions[randomQuestionIndex] = temporaryQuestion.deepCopy();
+	}
+};
 
 // checkCurrentQuestion checks the attempt on the current question and compares
 // it to the correct answer. It posts a question attempt based on the result.
