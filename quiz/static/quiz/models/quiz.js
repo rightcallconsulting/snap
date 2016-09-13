@@ -135,21 +135,17 @@ Quiz.prototype.deepCopy = function() {
 	return result;
 };
 
-/*********************************/
-/*     Non object functions      */
-/*********************************/
-
-Quiz.prototype.createFormationsFromJson = function(formationJsonDictionary) {
+Quiz.prototype.createFormationFromJson = function(formationJsonDictionary) {
 	var formation = createFormationFromJson(formationJsonDictionary);
 	this.formations.push(formation);
 };
 
-Quiz.prototype.createPlaysFromJson = function(playJsonDictionary) {
+Quiz.prototype.createPlayFromJson = function(playJsonDictionary) {
 	var play = createPlayFromJson(playJsonDictionary);
-	this.plays.push(formation);
+	this.plays.push(play);
 };
 
-Quiz.prototype.createConceptsFromJson = function(conceptJsonDictionary) {
+Quiz.prototype.createConceptFromJson = function(conceptJsonDictionary) {
 	var concept = createConceptFromJson(conceptJsonDictionary);
-	this.concepts.push(formation);
+	this.concepts.push(concept);
 };

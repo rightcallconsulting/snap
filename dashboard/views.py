@@ -650,7 +650,8 @@ def create_quiz(request):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_quiz(request, quiz_id):
 	if request.method == 'POST':
-		quiz = Quiz.objects.filter(name=request.POST['name'])[0];
+		team = request.user.coach.team
+		quiz = Quiz.objects.filter(name=request.POST['name'])[0]
 		if request.POST['save'] == "true":
 			quiz.formations.clear()
 			quiz.plays.clear()
@@ -658,9 +659,25 @@ def manage_quiz(request, quiz_id):
 			quiz.save()
 
 			quiz_data = json.loads(request.POST['quiz'])
-			print quiz_data
+			
+			formations_data = quiz_data["formations"]
+			for formation_data in formations_data:
+				formation = Formation.objects.filter(team=team, scout=False, name=formation_data["name"])[0]
+				quiz.formations.add(formation)
+				quiz.save()
 
-			# I'm here
+			plays_data = quiz_data["plays"]
+			print plays_data
+			for play_data in plays_data:
+				play = Play.objects.filter(team=team, scout=False, name=play_data["name"], scoutName=play_data["scoutName"])[0]
+				quiz.plays.add(play)
+				quiz.save()
+
+			concepts_data = quiz_data["concepts"]
+			for concept_data in concepts_data:
+				concept = Concept.objects.filter(team=team, scout=False, name=concept_data["name"])[0]
+				quiz.concepts.add(concept)
+				quiz.save()
 
 			return HttpResponse('')
 		elif request.POST['delete'] == "true":
@@ -676,8 +693,15 @@ def manage_quiz(request, quiz_id):
 		plays = Play.objects.filter(team=team)
 		concepts = Concept.objects.filter(team=team)
 
+		quiz_formations = quiz.formations.all()
+		quiz_plays = quiz.plays.all()
+		quiz_concepts = quiz.concepts.all()
+
 		return render(request, 'dashboard/manage_quiz.html', {
 			'quiz': quiz,
+			'quizFormations': quiz_formations,
+			'quizPlays': quiz_plays,
+			'quizConcepts': quiz_concepts,
 			'scoutFormations': scout_formations,
 			'formations': formations,
 			'plays': plays,

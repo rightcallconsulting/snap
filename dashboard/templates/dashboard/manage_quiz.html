@@ -64,13 +64,7 @@
 			<div id="sideview-header">
 				Formations
 			</div>
-			<div id="sideview-buttons">
-				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
-						{{ formation.name }}
-					</button>
-				{% endfor %}
-			</div>
+			<div id="sideview-buttons"></div>
 		</div>
 
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
@@ -109,7 +103,7 @@
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
-			
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -161,21 +155,22 @@
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 
-			{% for formation in quiz.formations %}
+			{% for formation in quizFormations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
-			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
 			{% endfor %}
 			
-			{% for play in quiz.plays %}
+			{% for play in quizPlays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
-			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase)));
+			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
 			{% endfor %}
 			
-			{% for concept in quiz.concepts %}
+			{% for concept in quizConcepts %}
 			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
-			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase)));
+			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
-			
+
+			showFormations();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -413,6 +408,14 @@
 				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
 				formation_button.textContent = formations[i].name;
 
+				for (j in quiz.formations) {
+					if (quiz.formations[j].name === formations[i].name) {
+						var check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						formation_button.appendChild(check_mark);
+					}
+				}
+
 				sideview_buttons.appendChild(formation_button);
 			}
 		};
@@ -441,6 +444,14 @@
 				concept_button.setAttribute("name", concepts[i].name);
 				concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
 				concept_button.textContent = concepts[i].name;
+
+				for (j in quiz.concepts) {
+					if (quiz.concepts[j].name === concepts[i].name) {
+						var check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg");
+						concept_button.appendChild(check_mark);
+					}
+				}
 
 				sideview_buttons.appendChild(concept_button);
 			}
@@ -489,39 +500,16 @@
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
 
+					for (j in quiz.plays) {
+						if (quiz.plays[j].name === plays[i].name && quiz.plays[j].scoutName === plays[i].scoutName) {
+							var check_mark = document.createElement("i");
+							check_mark.setAttribute("class", "fa fa-check fa-lg");
+							play_button.appendChild(check_mark);
+						}
+					}
+
 					sideview_buttons.appendChild(play_button);
 				}
-			}
-		};
-
-		// showDefensiveLooks updates the sideview to include all of the defensive
-		// looks in the playbook.
-		function showDefensiveLooks() {
-			formation = new Formation({});
-			play = new Play({});
-			concept = new Concept({});
-			scout_formation = new Formation({});
-
-			// Update mainview header.
-			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = '{{ quiz.name }}';
-
-			// Update sideview header.
-			var sideview_header = document.getElementById("sideview-header");
-			sideview_header.textContent = "Defensive Looks";
-
-			// Empty and update the sideview buttons.
-			$("#sideview-buttons").empty();
-			var sideview_buttons = document.getElementById("sideview-buttons")
-
-			for(i in scout_formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
-				formation_button.setAttribute("name", scout_formations[i].name);
-				formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
-				formation_button.textContent = scout_formations[i].name;
-
-				sideview_buttons.appendChild(formation_button);
 			}
 		};
 
@@ -619,6 +607,14 @@
 						scout_formation_button.setAttribute("name", scout_formations[i].name);
 						scout_formation_button.setAttribute("onclick", "changeSelectedPlayWithDefensiveLook(this)");
 						scout_formation_button.textContent = scout_formations[i].name;
+
+						for (k in quiz.plays) {
+							if (quiz.plays[k].name === plays[j].name && quiz.plays[k].scoutName === plays[j].scoutName) {
+								var check_mark = document.createElement("i");
+								check_mark.setAttribute("class", "fa fa-check fa-lg");
+								scout_formation_button.appendChild(check_mark);
+							}
+						}
 
 						sideview_buttons.appendChild(scout_formation_button);
 					}
@@ -811,6 +807,14 @@
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;
+
+					for (j in quiz.plays) {
+						if (quiz.plays[j].name === plays[i].name && quiz.plays[j].scoutName === plays[i].scoutName) {
+							var check_mark = document.createElement("i");
+							check_mark.setAttribute("class", "fa fa-check fa-lg");
+							play_button.appendChild(check_mark);
+						}
+					}
 
 					sideview_buttons.appendChild(play_button);
 				}
