@@ -48,4 +48,10 @@ Question.prototype.skip = function() {};
 Question.prototype.save = function(path, csrf_token) {};
 
 // deepCopy returns a deep copy of the instance of Question that called it.
-Question.prototype.deepCopy = function() {};
+Question.prototype.deepCopy = function() {
+	var deepCopy = new Question ({ result: this.result });
+	deepCopy.question = this.question.deepCopy();
+	deepCopy.answer = this.answer.deepCopy();
+
+	return deepCopy;
+};
