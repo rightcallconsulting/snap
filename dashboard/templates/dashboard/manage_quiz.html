@@ -306,6 +306,23 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.save(path, csrf_token);
+		});
+
+		$("#clear-button").click(function(event) {
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
+
+			quiz.delete(path, csrf_token);
+		});
+
+		$("#add-content-button").click(function(event) {
+			if (play.name != "") {
+				quiz.push(play);
+			} else if (concept.name != "") {
+				quiz.push(concept);
+			} else if (formation.name != "") {
+				quiz.push(formation);
+			}
 
 			// Add checkmark to button if it doesn't already has one.
 			var selected = document.getElementById("selected");
@@ -321,11 +338,14 @@
 			}
 		});
 
-		$("#clear-button").click(function(event) {
-			var path = window.location.pathname;
-			var csrf_token = "{{ csrf_token }}";
-
-			quiz.delete(path, csrf_token);
+		$("#remove-content-button").click(function(event) {
+			if (play.name != "") {
+				quiz.remove(play);
+			} else if (concept.name != "") {
+				quiz.remove(concept);
+			} else if (formation.name != "") {
+				quiz.remove(formation);
+			}
 
 			// Remove checkmark from button if it already has one.
 			var selected = document.getElementById("selected");
@@ -336,26 +356,6 @@
 				if (check_mark != null) {
 					selected.removeChild(check_mark);
 				}
-			}
-		});
-
-		$("#add-content-button").click(function(event) {
-			if (play.name != "") {
-				quiz.push(play);
-			} else if (concept.name != "") {
-				quiz.push(concept);
-			} else if (formation.name != "") {
-				quiz.push(formation);
-			}
-		});
-
-		$("#remove-content-button").click(function(event) {
-			if (play.name != "") {
-				quiz.remove(play);
-			} else if (concept.name != "") {
-				quiz.remove(concept);
-			} else if (formation.name != "") {
-				quiz.remove(formation);
 			}
 		});
 
