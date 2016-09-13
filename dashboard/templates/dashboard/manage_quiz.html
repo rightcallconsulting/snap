@@ -326,6 +326,10 @@
 		$("#add-content-button").click(function(event) {
 			if (play.name != "") {
 				quiz.push(play);
+			} else if (concept.name != "") {
+				quiz.push(concept);
+			} else if (formation.name != "") {
+				quiz.push(formation);
 			}
 		});
 
