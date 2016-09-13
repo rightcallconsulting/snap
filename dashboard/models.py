@@ -208,3 +208,15 @@ class Quiz(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class QuestionAttempted(models.Model):
+	player = models.ForeignKey(Player, on_delete=models.CASCADE)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True)
+	time = models.DateTimeField(auto_now_add=True)
+
+	quiz = models.ForeignKey(Quiz)
+	formation = models.ForeignKey(Formation, blank=True)
+	play = models.ForeignKey(Play, blank=True)
+	concept = models.ForeignKey(Concept, blank=True)
+
+	result = models.IntegerField() # 0 = correct, 1 = incorrect, 2 = skipped
