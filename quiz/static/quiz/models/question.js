@@ -159,12 +159,13 @@ Question.prototype.save = function(path, csrf_token) {
 	} else if (this.question instanceof Play) {
 		var type = "play";
 		var name = this.question.name;
+		var formationName = this.question.formation
 		var scoutName = this.question.scoutName;
 		var score = this.score;
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, type: type, name: name, scoutName:scoutName, score: score}
+				{csrfmiddlewaretoken: csrf_token, type: type, name: name, formationName: formationName, scoutName:scoutName, score: score}
 			).done(function() {
 				console.log("Question Attempt successfully sent to Django to be saved");
 			}).fail(function() {
