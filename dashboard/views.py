@@ -642,12 +642,12 @@ def take_quiz(request, quiz_id):
 		questionAttempt = QuestionAttempted()
 		player = request.user.player
 		question_type = request.POST['type']
-		print question_type
+		#print question_type
 		score = request.POST['score']
-		print score
+		#print score
 		name = request.POST['name']
-		print name
-		
+		#print name
+
 		return HttpResponse('')
 	else:
 		quiz = Quiz.objects.filter(id=quiz_id)[0]

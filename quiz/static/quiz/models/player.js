@@ -421,12 +421,17 @@ Player.prototype.deepCopy = function() {
 	}
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
-		var blockingAssignment = this.blockingAssignmentArray[i];
-		if (blockingAssignment instanceof Player) {
-			deepCopy.blockingAssignmentArray.push(blockingAssignment.deepCopy());
-		} else {
-			deepCopy.blockingAssignmentArray.push(blockingAssignment);
+		var blockingAssignment = new BlockType ({
+			type: this.blockingAssignmentArray[i].type,
+			x: this.blockingAssignmentArray[i].x,
+			y: this.blockingAssignmentArray[i].y
+		});
+
+		if (blockingAssignment.type === 1) {
+			blockingAssignment.player = this.blockingAssignmentArray[i].player.deepCopy();
 		}
+		
+		deepCopy.blockingAssignmentArray.push(blockingAssignment);
 	}
 
 	return deepCopy;

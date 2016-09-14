@@ -110,8 +110,9 @@ Question.prototype.check = function(attempt) {
 			}
 
 			if (this.score != 0) {
-				for (i in attempt.blockingAssingmentArray) {
-					var dist = sqrt(pow(attempt.blockingAssingmentArray[i].x - this.answer.blockingAssingmentArray[i].x, 2) + pow(attempt.blockingAssingmentArray[i].y - this.answer.blockingAssingmentArray[i].y, 2));
+				var size_of_blocking_array = attempt.blockingAssignmentArray.length;
+				for (i in attempt.blockingAssignmentArray) {
+					var dist = sqrt(pow(attempt.blockingAssignmentArray[i].x - this.answer.blockingAssignmentArray[i].x, 2) + pow(attempt.blockingAssignmentArray[i].y - this.answer.blockingAssignmentArray[i].y, 2));
 
 					if (dist < 2) {
 						this.score = 1;
