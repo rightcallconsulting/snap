@@ -214,7 +214,7 @@ Formation.prototype.delete = function(path, csrf_token) {
 
 // deepCopy returns a new Concept object that is exactly the same as this.
 Formation.prototype.deepCopy = function() {
-	var result = new Formation({
+	var deepCopy = new Formation({
 		id: this.id,
 		name: this.name,
 		team: this.team,
@@ -223,26 +223,26 @@ Formation.prototype.deepCopy = function() {
 	});
 
 	for (var i = 0; i < this.quarterback.length; ++i) {
-		result.quarterback.push(this.quarterback[i].deepCopy());
+		deepCopy.quarterback.push(this.quarterback[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.offensivePlayers.length; ++i) {
-		result.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
+		deepCopy.offensivePlayers.push(this.offensivePlayers[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.defensivePlayers.length; ++i) {
-		result.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
+		deepCopy.defensivePlayers.push(this.defensivePlayers[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.offensiveLinemen.length; ++i) {
-		result.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
+		deepCopy.offensiveLinemen.push(this.offensiveLinemen[i].deepCopy());
 	}
 
 	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
-		result.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
+		deepCopy.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
 	}
 
-	return result;
+	return deepCopy;
 };
 
 /*********************************/

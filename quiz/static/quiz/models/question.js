@@ -55,7 +55,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 			this.question.offensivePlayers[randomPlayerIndex].setSelected();
 		}
 
-		this.prompt = "Draw the assignment of the selected " + this.answer.pos;
+		this.prompt = "Draw the assignment for the " + this.answer.pos;
 	} else if (this.question instanceof Concept) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
@@ -71,7 +71,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 			this.question.offensivePlayers[randomPlayerIndex].setSelected();
 		}
 
-		this.prompt = "Draw the assignment of the selected " + this.answer.pos;		
+		this.prompt = "Draw the assignment for the " + this.answer.pos;		
 	}
 };
 
@@ -126,7 +126,11 @@ Question.prototype.getAnswer = function() {
 
 // deepCopy returns a deep copy of the instance of Question that called it.
 Question.prototype.deepCopy = function() {
-	var deepCopy = new Question ({ score: this.score });
+	var deepCopy = new Question ({ 
+		score: this.score,
+		prompt: this.prompt
+	});
+
 	deepCopy.question = this.question.deepCopy();
 	deepCopy.answer = this.answer.deepCopy();
 

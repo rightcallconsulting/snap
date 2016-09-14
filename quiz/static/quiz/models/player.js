@@ -391,7 +391,7 @@ Player.prototype.drawDefensiveMovement = function(field) {
 
 // deepCopy returns a new Player object that is exactly the same as this.
 Player.prototype.deepCopy = function() {
-	var result = new Player({
+	var deepCopy = new Player({
 		x: this.x,
 		y: this.y,
 		startX: this.startX,
@@ -409,27 +409,27 @@ Player.prototype.deepCopy = function() {
 	});
 
 	for (var i = 0; i < this.motionCoords.length; ++i) {
-		result.motionCoords.push([this.motionCoords[i][0], this.motionCoords[i][1]])
+		deepCopy.motionCoords.push([this.motionCoords[i][0], this.motionCoords[i][1]])
 	}
 
 	for (var i = 0; i < this.route.length; ++i) {
-		result.route.push([this.route[i][0], this.route[i][1]])
+		deepCopy.route.push([this.route[i][0], this.route[i][1]])
 	}
 
 	for (var i = 0; i < this.defensiveMovement.length; ++i) {
-		result.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
+		deepCopy.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
 	}
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
 		var blockingAssignment = this.blockingAssignmentArray[i];
 		if (blockingAssignment instanceof Player) {
-			result.blockingAssignmentArray.push(blockingAssignment.deepCopy());
+			deepCopy.blockingAssignmentArray.push(blockingAssignment.deepCopy());
 		} else {
-			result.blockingAssignmentArray.push(blockingAssignment);
+			deepCopy.blockingAssignmentArray.push(blockingAssignment);
 		}
 	}
 
-	return result;
+	return deepCopy;
 };
 
 // drawBlockOnPlayer draws a block from a specific starting point to a
