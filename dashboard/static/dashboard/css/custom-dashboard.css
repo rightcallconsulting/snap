@@ -332,6 +332,14 @@ button.sideview-question-button.correct {
 	color: white;
 }
 
+button.sideview-question-button.incorrect.selected {
+	background: #fb6752;
+}
+
+button.sideview-question-button.correct.selected {
+	background: #4ac598;
+}
+
 /*************************************************************************
 top options css
 *************************************************************************/

@@ -197,33 +197,6 @@ def todo(request):
 			'groups_seed': serializers.serialize("json", groups)
 		})
 
-@login_required
-def analytics(request):
-	if request.user.myuser.is_a_player:
-		analytics = PlayerAnalytics.for_single_player(request.user.player)
-		groups = []
-	else:
-		# If the user is a coach, the default analytics player set is a their
-		# entire team, but they can use request.GET params to specify the pk of
-		# one of their PlayerGroups or individual Players
-		if 'player' in request.GET:
-			player = Player.objects.get(pk=request.GET['player'])
-			players = [player]
-		elif 'playergroup' in request.GET:
-			group = PlayerGroup.objects.get(pk=request.GET['playergroup'])
-			players = group.players.all()
-		else:
-			players = request.user.coach.team.player_set.all()
-
-		groups = PlayerGroup.objects.all()
-		analytics = PlayerAnalytics.for_players(players)
-
-	return render(request, 'dashboard/show_player_list.html', {
-		'page_header': 'ANALYTICS',
-		'analytics': analytics,
-		'groups': groups,
-	})
-
 # Playbook
 @login_required
 def playbook(request, unit="offense"):
@@ -687,77 +660,11 @@ def take_quiz(request, quiz_id):
 			'page_header': quiz.name.upper()
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
-def quiz_analytics(request, quiz_id):
-	coach = request.user.coach
-	quiz = Test.objects.filter(pk=quiz_id)[0]
-	formatted_list_for_graphos_missed_plays = quiz.get_missed_play_chart(5)
-	quiz_results = quiz.quizresult_set.all()
-	quiz_result_queryset = quiz_results.reverse()[:5][::-1]
-	data_source = ModelDataSource(quiz_result_queryset,
-								  fields=['string_id', 'score', 'skips', 'incorrect_guesses', 'time_taken'])
-	chart = gchart.ColumnChart(data_source, options=
-		{
-			'title': "Quiz Results",
-			'isStacked': 'true',
-			'width': 700,
-			'xaxis':
-			{
-				'label': "categories",
-				'side': 'top'
-			},
-			'legend': {'position': 'bottom'},
-			'series':
-			{
-				'0': {'targetAxisIndex':'0', 'axis': 'score'},
-				'1':{'targetAxisIndex':'0', 'axis': 'score'},
-				'2':{'targetAxisIndex':'0', 'axis': 'score'},
-				'3':{'targetAxisIndex':'1', 'type': 'line'},
-
-			},
-			'axes':
-			{
-				'x':
-				{
-					'discrete': 'string',
-				},
-			  	'y':
-			  	{
-					'score': {'label': '# of Quesitons'},
-					'Time Taken': {'label': 'Time Taken'}
-				}
-			}
-		}
-	)
-	missed_play_data =  formatted_list_for_graphos_missed_plays
-	missed_play_chart = gchart.ColumnChart(SimpleDataSource(data=missed_play_data), options=
-		{
-			'title': "Missed Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'height': 300,
-			'legend': {'position': 'bottom'}
-		}
-	)
-
-	skipped_play_data =  test.get_skipped_play_chart(5)
-	skipped_play_chart = gchart.ColumnChart(SimpleDataSource(data=skipped_play_data), options=
-		{
-			'title': "Skipped Plays",
-			'isStacked': 'true',
-			'width': 700,
-			'legend': {'position': 'bottom'}
-		}
-	)
-	quiz_results_length = len(quiz_results)
-	return render_to_response('dashboard/analytics.html',{
-		'test': quiz,
-		'test_results': quiz_results,
-		'chart': chart,
-		'missed_play_chart': missed_play_chart,
-		'skipped_play_chart': skipped_play_chart,
-		'test_results_length': quiz_results_length,
-		'page_header': 'ANALYTICS',
+# Analytics
+@login_required
+def analytics(request):
+	return render(request, 'dashboard/analytics.html', {
+		'page_header': 'ANALYTICS'
 	})
 
 # JSON requests

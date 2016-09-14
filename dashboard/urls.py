@@ -16,7 +16,6 @@ urlpatterns = [
 	url(r'^change_password$', views.change_password, name='change_password'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 	url(r'^todo$', views.todo, name='todo'),
-	url(r'^analytics$', views.analytics, name='analytics'),
 
 	# Playbook
 	url(r'^playbook$', views.playbook, name='playbook'),
@@ -42,7 +41,9 @@ urlpatterns = [
 	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
 	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
 	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
-	url(r'^quizzes/analytics/(?P<quiz_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
+
+	# Analytics
+	url(r'^analytics$', views.analytics, name='analytics'),
 
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
