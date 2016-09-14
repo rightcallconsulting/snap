@@ -192,8 +192,11 @@ Quiz.prototype.shuffle = function() {
 // it to the correct answer. It posts a question attempt based on the result.
 Quiz.prototype.checkCurrentQuestion = function(attempt, path, csrf_token) {
 	if (!this.isEmpty()) {
-		this.questions[this.currentQuestionIndex].check(attempt);
-		this.questions[this.currentQuestionIndex].save(path, csrf_token);
+		if (this.questions[this.currentQuestionIndex].score === null) {
+			this.questions[this.currentQuestionIndex].check(attempt);
+			this.questions[this.currentQuestionIndex].save(path, csrf_token);
+		}
+
 		this.nextQuestion();
 	}
 };
@@ -202,8 +205,11 @@ Quiz.prototype.checkCurrentQuestion = function(attempt, path, csrf_token) {
 // It posts a question attempt.
 Quiz.prototype.skipCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
-		this.questions[this.currentQuestionIndex].skip();
-		this.questions[this.currentQuestionIndex].save(path, csrf_token);
+		if (this.questions[this.currentQuestionIndex].score === null) {
+			this.questions[this.currentQuestionIndex].skip();
+			this.questions[this.currentQuestionIndex].save(path, csrf_token);
+		}
+
 		this.nextQuestion();
 	}
 };
