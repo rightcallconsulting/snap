@@ -277,6 +277,10 @@ div#sideview-buttons {
 	padding-left: 6px;
 }
 
+div#sideview-buttons.no-padding {
+	padding: 0;
+}
+
 button.sideview-button {
 	height: 50px;
 	width: 100%;
