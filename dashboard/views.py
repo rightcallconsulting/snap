@@ -13,7 +13,7 @@ import simplejson
 
 # from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -639,6 +639,15 @@ def manage_quiz(request, quiz_id):
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
 	if request.method == 'POST':
+		questionAttempt = QuestionAttempted()
+		player = request.user.player
+		question_type = request.POST['type']
+		print question_type
+		score = request.POST['score']
+		print score
+		name = request.POST['name']
+		print name
+		
 		return HttpResponse('')
 	else:
 		quiz = Quiz.objects.filter(id=quiz_id)[0]
