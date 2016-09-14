@@ -134,6 +134,10 @@ Question.prototype.check = function(attempt) {
 					}
 				}
 			}
+
+			if (this.score === null) {
+				this.score = 1;
+			}
 		}
 	}
 };
