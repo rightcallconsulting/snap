@@ -312,17 +312,25 @@ i.fa.fa-lg.sideview-button-checkmark {
 
 button.sideview-question-button {
 	width: 25%;
-	padding: 10% 0 10% 0;
+	padding: 8% 0 8% 0;
 	background: white;
 	border-style: none;
 	font-size: x-large;
 }
 
-button.sideview-question-button.selected {}
+button.sideview-question-button.selected {
+	background: gainsboro;
+}
 
-button.sideview-question-button.incorrect {}
+button.sideview-question-button.incorrect {
+	background: red;
+	color: white;
+}
 
-button.sideview-question-button.correct {}
+button.sideview-question-button.correct {
+	background: green;
+	color: white;
+}
 
 /*************************************************************************
 top options css
