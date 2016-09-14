@@ -201,7 +201,44 @@
 			return false;
 		};
 
-		function keyPressed() {};
+		function keyPressed() {
+			if (quiz.getSelected()[0] != null) {
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+
+				if (keyCode == BACKSPACE || keyCode == DELETE) {
+					if (attempt.unit == "offense") {
+						if (attempt.blockingAssignmentArray.length > 0) {
+							attempt.blockingAssignmentArray.pop();
+						} else if(attempt.route.length > 0) {
+							attempt.route.pop();
+						} else if(attempt.motionCoords.length > 0){
+							attempt.motionCoords.pop()
+						}
+					} 
+
+					return false;
+				}else if(specialBlockKeys.indexOf(key) >= 0){
+					var prevX = attempt.x;
+					var prevY = attempt.y;
+					var blockSize = attempt.blockingAssignmentArray.length;
+					if (blockSize > 0) {
+						prevX = attempt.blockingAssignmentArray[blockSize - 1].x;
+						prevY = attempt.blockingAssignmentArray[blockSize - 1].y;
+					}
+
+					var block = new BlockType({
+						type: 2 + specialBlockKeys.indexOf(key),
+						player: null,
+						prevX: prevX,
+						prevY: prevY
+					});
+
+					attempt.blockingAssignmentArray.push(block);
+				}
+			}
+
+			return false;
+		};
 
 		function keyTyped() {};
 
