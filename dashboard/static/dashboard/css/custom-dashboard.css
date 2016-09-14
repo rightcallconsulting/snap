@@ -223,7 +223,7 @@ div.interactive-header p {
 }
 
 i.fa.mainview-button-icon {
-    color: #9CCC65;
+	color: #9CCC65;
 }
 
 .mainview-buttons {
@@ -291,11 +291,11 @@ button.sideview-button {
 }
 
 div#offense-defense-toggle {
-    right: 7px;
-    display: inline-block;
-    position: absolute;
-    font-size: x-large;
-    font-weight: bold;
+	right: 7px;
+	display: inline-block;
+	position: absolute;
+	font-size: x-large;
+	font-weight: bold;
 }
 
 i#back-arrow {
@@ -305,10 +305,24 @@ i#back-arrow {
 }
 
 i.fa.fa-lg.sideview-button-checkmark {
-    left: 50px;
-    line-height: 1.3em;
-    position: absolute;
+	left: 50px;
+	line-height: 1.3em;
+	position: absolute;
 }
+
+button.sideview-question-button {
+	width: 25%;
+	padding: 10% 0 10% 0;
+	background: white;
+	border-style: none;
+	font-size: x-large;
+}
+
+button.sideview-question-button.selected {}
+
+button.sideview-question-button.incorrect {}
+
+button.sideview-question-button.correct {}
 
 /*************************************************************************
 top options css

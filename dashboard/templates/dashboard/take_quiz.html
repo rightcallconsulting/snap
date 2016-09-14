@@ -316,7 +316,8 @@
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = quiz.getCurrentQuestionName();
 
-			// Update sideview buttons.
+			// Remove and update sideview buttons.
+			$("#sideview-buttons").empty();
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in quiz.questions) {
@@ -324,12 +325,20 @@
 				var question_number = int(i)+1;
 
 				var sideview_question_button = document.createElement("button");
-				sideview_question_button.setAttribute("question-index", question_index.toString());
-
 				sideview_question_button.setAttribute("class", "sideview-question-button");
+				sideview_question_button.setAttribute("question-index", question_index.toString());
+				
+				if (quiz.questions[i].score === 1) {
+					sideview_question_button.className += " correct";
+				} else if (quiz.questions[i].score === 0) {
+					sideview_question_button.className += " incorrect";
+				}
+
+				if (int(i) === quiz.getCurrentQuestionIndex()) {
+					sideview_question_button.className += " selected";
+				}
 				
 				sideview_question_button.textContent = question_number.toString();
-
 				sideview_buttons.appendChild(sideview_question_button);
 			}
 		};
