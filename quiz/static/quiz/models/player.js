@@ -213,8 +213,15 @@ Player.prototype.drawBlocks = function(field) {
 		prevX = blockPart.x
 		prevY = blockPart.y
 		if (blockPart.type === 1 && blockPart.player !== null) {
-			prevX = blockPart.player.x
-			prevY = blockPart.player.y - (blockPart.player.siz / 3)
+			var defensiveMovement = blockPart.player.defensiveMovement
+			var defensiveMovementLength = defensiveMovement.length
+			if(defensiveMovementLength > 0){
+				prevX = defensiveMovement[defensiveMovementLength-1][0]
+				prevY = defensiveMovement[defensiveMovementLength-1][1]
+			}else{
+				prevX = blockPart.player.x
+				prevY = blockPart.player.y - (blockPart.player.siz / 3)
+			}
 		}
 	}
 
@@ -430,7 +437,7 @@ Player.prototype.deepCopy = function() {
 		if (blockingAssignment.type === 1) {
 			blockingAssignment.player = this.blockingAssignmentArray[i].player.deepCopy();
 		}
-		
+
 		deepCopy.blockingAssignmentArray.push(blockingAssignment);
 	}
 

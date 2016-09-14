@@ -16,7 +16,7 @@
 var BlockType = function(config) {
 	this.type = config.type || 0;
 	this.player = config.player || null;
-	
+
 	if (config.x && config.y) {
 			this.x = config.x
 			this.y = config.y
@@ -45,11 +45,11 @@ var BlockType = function(config) {
 		} else if(this.type === 7 || this.type === 8) {
 			var dist = 2.5;
 			var alpha = 55*(PI/180);
-			
+
 			if (this.type === 8) {
 				alpha = PI - alpha
 			}
-			
+
 			var xDiff = cos(alpha)*dist;
 			var yDiff = sin(alpha)*dist;
 			this.x = config.prevX + xDiff
@@ -72,8 +72,15 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var x2 = field.getTranslatedX(this.x)
 	var y2 = field.getTranslatedY(this.y)
 	if(this.type === 1 && this.player){
-		x2 = field.getTranslatedX(this.player.x)
-		y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
+		var defensiveMovement = this.player.defensiveMovement
+		var defensiveMovementLength = defensiveMovement.length
+		if(defensiveMovementLength > 0){
+			x2 = field.getTranslatedX(defensiveMovement[defensiveMovementLength-1][0])
+			y2 = field.getTranslatedY(defensiveMovement[defensiveMovementLength-1][1])
+		}else{
+			x2 = field.getTranslatedX(this.player.x)
+			y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
+		}
 	}else if(this.type === 7 || this.type === 8){
 		xMid = (x1+x2)/2
 		yMid = field.getTranslatedY(this.y - 1)
