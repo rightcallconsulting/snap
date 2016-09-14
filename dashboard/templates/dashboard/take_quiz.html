@@ -254,9 +254,10 @@
 		});
 
 		$("#check-answer-button").click(function(event) {
-			var question_index = quiz.getCurrentQuestionIndex();
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
 
-			quiz.checkCurrentQuestion(attempt);
+			quiz.checkCurrentQuestion(attempt, path, csrf_token);
 
 			attempt = quiz.getSelected()[0];
 			if (attempt != null) {
@@ -270,9 +271,10 @@
 		});
 
 		$("#skip-question-button").click(function(event) {
-			var question_index = quiz.getCurrentQuestionIndex();
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
 
-			quiz.skipCurrentQuestion();
+			quiz.skipCurrentQuestion(path, csrf_token);
 
 			attempt = quiz.getSelected()[0];
 			if (attempt != null) {

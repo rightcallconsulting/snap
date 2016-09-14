@@ -142,7 +142,18 @@ Question.prototype.check = function(attempt) {
 Question.prototype.skip = function() {};
 
 // save is used to post an attempted question.
-Question.prototype.save = function(path, csrf_token) {};
+Question.prototype.save = function(path, csrf_token) {
+	var question = JSON.stringify(this, ["question", "name", "scoutName", "score"]);
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, question: question}
+		).done(function() {
+			console.log("Question Attempt successfully sent to Django to be saved");
+		}).fail(function() {
+			console.log("Error sending Question Attempt to Django to be saved");
+	});
+};
 
 // getSelected returns the selected player in this question if it is of type
 // Play or Concept, or else it returns null.
