@@ -6,7 +6,7 @@
 //***************************************************************************//
 //																			 //
 // A question object represents one question in an assigned quiz. It         //
-// contains information about the question, answer, and the result.          //
+// contains information about the question, answer, and the score.           //
 //																			 //
 //***************************************************************************//
 
@@ -14,7 +14,7 @@ var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
 	this.prompt = config.prompt || "";
-	this.result = config.result || 2;
+	this.score = config.score || null;
 };
 
 //***************************************************************************//
@@ -80,9 +80,21 @@ Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
 };
 
-// check compares the attempt with the answer and determines the result. It
+// check compares the attempt with the answer and determines the score. It
 // posts an attempted question to the database.
-Question.prototype.check = function(attempt) {};
+Question.prototype.check = function(attempt) {
+	if (attempt != null) {
+		if (this.question instanceof Formation) {
+			var dist = sqrt(pow(attempt.x - this.answer.x, 2) + pow(attempt.y - this.answer.y, 2));
+
+			if (dist < 1) {
+				this.score = 1;
+			} else {
+				this.score = 0;
+			}
+		} else {}
+	}
+};
 
 // skip posts an attempted question to the database.
 Question.prototype.skip = function() {};
@@ -114,7 +126,7 @@ Question.prototype.getAnswer = function() {
 
 // deepCopy returns a deep copy of the instance of Question that called it.
 Question.prototype.deepCopy = function() {
-	var deepCopy = new Question ({ result: this.result });
+	var deepCopy = new Question ({ score: this.score });
 	deepCopy.question = this.question.deepCopy();
 	deepCopy.answer = this.answer.deepCopy();
 

@@ -223,7 +223,7 @@ class QuestionAttempted(models.Model):
 	play = models.ForeignKey(Play, blank=True)
 	concept = models.ForeignKey(Concept, blank=True)
 
-	result = models.IntegerField() # 0 = correct, 1 = incorrect, 2 = skipped
+	result = models.IntegerField() # 0 = incorrect, 1 = correct, null = skipped
 
 	class Meta:
 		verbose_name = "Question Attempted"

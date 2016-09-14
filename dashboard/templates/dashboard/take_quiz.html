@@ -162,6 +162,7 @@
 				
 				if (playerSelected === null) {
 					attempt = quiz.getCurrentAnswer().deepCopy();
+					attempt.setSelected();
 					attempt.x = mouseYardX;
 					attempt.y = mouseYardY;
 				} else if (playerSelected.eligible) {
