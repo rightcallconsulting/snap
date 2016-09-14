@@ -109,6 +109,8 @@
 				attempt.defensiveMovement = [];
 			}
 
+			updateMainviewAndSideview();
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -263,6 +265,8 @@
 				attempt.route = [];
 				attempt.defensiveMovement = [];
 			}
+
+			updateMainviewAndSideview();
 		});
 
 		$("#skip-question-button").click(function(event) {
@@ -277,6 +281,8 @@
 				attempt.route = [];
 				attempt.defensiveMovement = [];
 			}
+
+			updateMainviewAndSideview();
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -305,7 +311,10 @@
 			resizeMainViewObjects();
 		});
 
-		function updateMainviewAndSideview() {};
+		function updateMainviewAndSideview() {
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = quiz.getCurrentQuestionName();
+		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

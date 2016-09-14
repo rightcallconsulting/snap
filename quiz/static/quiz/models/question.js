@@ -20,6 +20,11 @@ var Question = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+// draw displays this question.
+Question.prototype.draw = function(field) {
+	this.question.drawPlayers(field);
+};
+
 // buildQuestionAndAnswer creates an appropriate creates a question and answer
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
@@ -75,9 +80,9 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 	}
 };
 
-// draw displays this question.
-Question.prototype.draw = function(field) {
-	this.question.drawPlayers(field);
+// getName returns the name of the Question
+Question.prototype.getName = function() {
+	return this.question.name;
 };
 
 // check compares the attempt with the answer and determines the score. It
@@ -96,7 +101,7 @@ Question.prototype.check = function(attempt) {
 			for (i in attempt.motionCoords) {
 				var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
 
-				if (dist < 3) {
+				if (dist < 2) {
 					this.score = 1;
 				} else {
 					this.score = 0;
@@ -105,8 +110,19 @@ Question.prototype.check = function(attempt) {
 			}
 
 			if (this.score != 0) {
-				for (i in attempt.blockingAssingmentArray) {}
+				for (i in attempt.blockingAssingmentArray) {
+					var dist = sqrt(pow(attempt.blockingAssingmentArray[i].x - this.answer.blockingAssingmentArray[i].x, 2) + pow(attempt.blockingAssingmentArray[i].y - this.answer.blockingAssingmentArray[i].y, 2));
 
+					if (dist < 2) {
+						this.score = 1;
+					} else {
+						this.score = 0;
+						break;
+					}
+				}
+			}
+
+			if (this.score != 0) {
 				for (i in attempt.route) {
 					var dist = sqrt(pow(attempt.route[i][0] - this.answer.route[i][0], 2) + pow(attempt.route[i][1] - this.answer.route[i][1], 2));
 

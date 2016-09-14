@@ -651,7 +651,7 @@ def take_quiz(request, quiz_id):
 			'quizFormations': quiz_formations,
 			'quizPlays': quiz_plays,
 			'quizConcepts': quiz_concepts,
-			'page_header': 'TAKE QUIZ'
+			'page_header': quiz.name.upper()
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)

@@ -161,6 +161,13 @@ Quiz.prototype.buildQuestions = function(player_position) {
 	this.currentQuestionIndex = 0;
 };
 
+// getCurrentQuestionName returns the names of the question.
+Quiz.prototype.getCurrentQuestionName = function(attempt) {
+	if (!this.isEmpty()) {
+		return this.questions[this.currentQuestionIndex].getName();
+	}
+};
+
 // shuffle rearranges the questions in the array in a random order. It is and
 // implementation of the Fisher-Yates Shuffle.
 Quiz.prototype.shuffle = function() {
