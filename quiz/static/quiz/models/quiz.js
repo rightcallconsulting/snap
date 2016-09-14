@@ -211,6 +211,18 @@ Quiz.prototype.nextQuestion = function() {
 	}
 };
 
+// getSelected returns the selected player in this question if it is of type
+// Play or Concept, or else it returns null.
+Quiz.prototype.getSelected = function() {
+	return this.questions[this.currentQuestionIndex].getSelected();
+};
+
+// mouseInPlayer returns the player that the mouse is in or null for this
+// quiz.
+Quiz.prototype.mouseInPlayer = function(field) {
+	return this.questions[this.currentQuestionIndex].mouseInPlayer(field);
+};
+
 // getCurrentAnswer returns a deep copy of the current questions answer.
 Quiz.prototype.getCurrentAnswer = function() {
 	return this.questions[this.currentQuestionIndex].getAnswer();

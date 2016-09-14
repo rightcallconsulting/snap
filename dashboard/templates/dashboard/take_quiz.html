@@ -101,6 +101,14 @@
 
 			quiz.buildQuestions("X");
 
+			attempt = quiz.getSelected()[0];
+			if (attempt != null) {
+				attempt.motionCords = [];
+				attempt.blockingAssignmentArray = [];
+				attempt.route = [];
+				attempt.defensiveMovement = [];
+			}
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -128,6 +136,12 @@
 			field.drawBackground(quiz, height, width);
 			quiz.draw(field);
 
+			if (attempt != null) {
+				attempt.drawBlocks(field);
+				attempt.drawRoute(field);
+				attempt.draw(field);
+			}
+
 			fill(176,176,176);
 		};
 
@@ -139,7 +153,53 @@
 
 		function mouseDragged() {};
 
-		function mouseReleased() {};
+		function mouseReleased() {
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				var playerSelected = quiz.getSelected()[0];
+				var playerClicked = quiz.mouseInPlayer(field);
+				var mouseYardX = field.getYardX(mouseX);
+				var mouseYardY = field.getYardY(mouseY);
+				
+				if (playerSelected === null) {
+					attempt = quiz.getCurrentAnswer().deepCopy();
+					attempt.x = mouseYardX;
+					attempt.y = mouseYardY;
+				} else if (playerSelected.eligible) {
+					if (attempt.unit === "offense") {
+						attempt.route.push([mouseYardX, mouseYardY]);
+					}
+				
+					return false;
+				} else if (playerClicked === null) {
+					if (attempt.unit === "offense") {
+						var blockPoint = new BlockType({
+							type: 0,
+							x: mouseYardX,
+							y: mouseYardY
+						});
+
+						attempt.blockingAssignmentArray.push(blockPoint)
+					} else if (attempt.unit === "defense") {
+						attempt.defensiveMovement.push([mouseYardX, mouseYardY]);
+					}
+
+					return false;
+				} else if (playerSelected.unit === "offense") {
+					var blockPoint = new BlockType({
+						type: 1,
+						player: playerClicked,
+						x: mouseYardX,
+						y: mouseYardY
+					});
+
+					attempt.blockingAssignmentArray.push(blockPoint);
+					return false;
+				}
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
 
 		function keyPressed() {};
 
@@ -156,13 +216,29 @@
 		$("#check-answer-button").click(function(event) {
 			var question_index = quiz.getCurrentQuestionIndex();
 
-			quiz.checkCurrentQuestion();
+			quiz.checkCurrentQuestion(attempt);
+
+			attempt = quiz.getSelected()[0];
+			if (attempt != null) {
+				attempt.motionCords = [];
+				attempt.blockingAssignmentArray = [];
+				attempt.route = [];
+				attempt.defensiveMovement = [];
+			}
 		});
 
 		$("#skip-question-button").click(function(event) {
 			var question_index = quiz.getCurrentQuestionIndex();
 
 			quiz.skipCurrentQuestion();
+
+			attempt = quiz.getSelected()[0];
+			if (attempt != null) {
+				attempt.motionCords = [];
+				attempt.blockingAssignmentArray = [];
+				attempt.route = [];
+				attempt.defensiveMovement = [];
+			}
 		});
 
 		$("#zoom-in-button").click(function(event) {

@@ -90,6 +90,22 @@ Question.prototype.skip = function() {};
 // save is used to post an attempted question.
 Question.prototype.save = function(path, csrf_token) {};
 
+// getSelected returns the selected player in this question if it is of type
+// Play or Concept, or else it returns null.
+Question.prototype.getSelected = function() {
+	if (this.question instanceof Formation) {
+		return [null, null];
+	} else {
+		return this.question.getSelected();
+	}
+};
+
+// mouseInPlayer returns the player that the mouse is in or null for this
+// question.
+Question.prototype.mouseInPlayer = function(field) {
+	return this.question.mouseInPlayer(field);
+};
+
 // getAnswer returns a deepCopy of the answer so that the quiz view can draw
 // the right type of player for a formation question.
 Question.prototype.getAnswer = function() {

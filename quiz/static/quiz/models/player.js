@@ -24,6 +24,7 @@ var Player = function(config) {
 	this.eligible = config.eligible || false;
 
 	// Player assignments - these should be converted into object types later on
+	this.motionCoords = config.motionCoords || [];
 	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
 	this.route = config.route || [];
 	this.defensiveMovement = config.defensiveMovement || [];
@@ -68,7 +69,6 @@ var Player = function(config) {
 	this.zoneYPoint = config.zoneYPoint || null;
 	this.gapXPoint = config.gapXPoint || null;
 	this.gapYPoint = config.gapYPoint || null;
-	this.motionCoords = config.motionCoords || []; // assume (x, y)
 	this.currentMotionBreak = config.currentMotionBreak || 0;
 	this.zoneAssignment = config.zoneAssignment || 0;
 	this.optionAssignment = config.optionAssignment || [];
@@ -161,22 +161,6 @@ Player.prototype.draw = function(field) {
 	}
 };
 
-Player.prototype.drawMotion = function(field){
-	var x1 = field.getTranslatedX(this.x);
-	var y1 = field.getTranslatedY(this.y);
-	for(var i = 0; i < this.motionCoords.length; i++){
-		var x2 = field.getTranslatedX(this.motionCoords[i][0])
-		var y2 = field.getTranslatedY(this.motionCoords[i][1])
-
-		stroke(0, 0, 0)
-		dottedLine(x1, y1, x2, y2);
-		noStroke()
-
-		x1 = x2
-		y1 = y2
-	}
-}
-
 // pixelDraw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
 Player.prototype.pixelDraw = function(field) {
@@ -195,6 +179,22 @@ Player.prototype.pixelDraw = function(field) {
 		textAlign(CENTER, CENTER);
 		text(this.pos, this.x, this.y);
 		fill(0,0,0);
+	}
+};
+
+Player.prototype.drawMotion = function(field){
+	var x1 = field.getTranslatedX(this.x);
+	var y1 = field.getTranslatedY(this.y);
+	for (var i = 0; i < this.motionCoords.length; i++) {
+		var x2 = field.getTranslatedX(this.motionCoords[i][0])
+		var y2 = field.getTranslatedY(this.motionCoords[i][1])
+
+		stroke(0, 0, 0)
+		dottedLine(x1, y1, x2, y2);
+		noStroke()
+
+		x1 = x2
+		y1 = y2
 	}
 };
 
@@ -279,33 +279,6 @@ Player.prototype.drawBlocks = function(field) {
 	noStroke();*/
 };
 
-// moveTo advances a player towards their next breakpoint. It returns true if
-// the player is at their final point and false if they are not.
-Player.prototype.moveTo = function(x, y) {
-	var xDist = (x-this.x);
-	if (x < 0) {
-		xDist = 0-this.x;
-	}
-
-	var yDist = (y-this.y);
-	if (y < 0) {
-		yDist = 0-this.y;
-	}
-
-	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
-	var numMoves = hDist / this.speed;
-	if (numMoves < 1) {
-		return true;
-	}
-
-	var xRate = xDist / numMoves;
-	var yRate = yDist / numMoves;
-
-	this.x += xRate;
-	this.y += yRate;
-	return false;
-};
-
 // drawRoute itereates through a players landmarks and draws their route
 // with an arrow at the end.
 Player.prototype.drawRoute = function(field) {
@@ -348,6 +321,33 @@ Player.prototype.drawRoute = function(field) {
 	arrow(x2, y2, alpha, deltaX);
 
 	noStroke();
+};
+
+// moveTo advances a player towards their next breakpoint. It returns true if
+// the player is at their final point and false if they are not.
+Player.prototype.moveTo = function(x, y) {
+	var xDist = (x-this.x);
+	if (x < 0) {
+		xDist = 0-this.x;
+	}
+
+	var yDist = (y-this.y);
+	if (y < 0) {
+		yDist = 0-this.y;
+	}
+
+	var hDist = Math.sqrt(xDist*xDist+yDist*yDist);
+	var numMoves = hDist / this.speed;
+	if (numMoves < 1) {
+		return true;
+	}
+
+	var xRate = xDist / numMoves;
+	var yRate = yDist / numMoves;
+
+	this.x += xRate;
+	this.y += yRate;
+	return false;
 };
 
 // drawDefensiveMovement iterates through the players defensive movements
@@ -401,6 +401,7 @@ Player.prototype.deepCopy = function() {
 		blue: this.blue,
 		green: this.green,
 		eligible: this.eligible,
+		selected: this.selected,
 		pos: this.pos,
 		num: this.num,
 		unit: this.unit,
