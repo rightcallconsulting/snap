@@ -215,7 +215,6 @@ Player.prototype.drawBlocks = function(field) {
 		if (blockPart.type === 1 && blockPart.player !== null) {
 			var defensiveMovement = blockPart.player.defensiveMovement
 			var defensiveMovementLength = defensiveMovement.length
-			debugger;
 			if(defensiveMovementLength > 0){
 				prevX = defensiveMovement[defensiveMovementLength-1][0]
 				prevY = defensiveMovement[defensiveMovementLength-1][1]
