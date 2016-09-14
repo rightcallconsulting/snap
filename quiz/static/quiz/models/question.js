@@ -143,16 +143,48 @@ Question.prototype.skip = function() {};
 
 // save is used to post an attempted question.
 Question.prototype.save = function(path, csrf_token) {
-	var question = JSON.stringify(this, ["question", "name", "scoutName", "score"]);
+	if (this.question instanceof Formation) {
+		var type = "formation";
+		var name = this.question.name;
+		var score = this.score;
 
-	var jqxhr = $.post(
-			path,
-			{csrfmiddlewaretoken: csrf_token, question: question}
-		).done(function() {
-			console.log("Question Attempt successfully sent to Django to be saved");
-		}).fail(function() {
-			console.log("Error sending Question Attempt to Django to be saved");
-	});
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, type: type, name: name, score: score}
+			).done(function() {
+				console.log("Question Attempt successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Question Attempt to Django to be saved");
+		});
+	} else if (this.question instanceof Play) {
+		var type = "play";
+		var name = this.question.name;
+		var scoutName = this.question.scoutName;
+		var score = this.score;
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, type: type, name: name, scoutName:scoutName, score: score}
+			).done(function() {
+				console.log("Question Attempt successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Question Attempt to Django to be saved");
+		});
+	} else if (this.question instanceof Concept) {
+		var type = "concept";
+		var name = this.question.name;
+		var score = this.score;
+
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, type: type, name: name, score: score}
+			).done(function() {
+				console.log("Question Attempt successfully sent to Django to be saved");
+			}).fail(function() {
+				console.log("Error sending Question Attempt to Django to be saved");
+		});
+	}
+	
 };
 
 // getSelected returns the selected player in this question if it is of type
