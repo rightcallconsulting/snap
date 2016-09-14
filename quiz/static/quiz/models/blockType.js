@@ -16,6 +16,7 @@
 var BlockType = function(config) {
 	this.type = config.type || 0;
 	this.player = config.player || null;
+	
 	if (config.x && config.y) {
 			this.x = config.x
 			this.y = config.y

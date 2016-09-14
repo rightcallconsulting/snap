@@ -92,7 +92,33 @@ Question.prototype.check = function(attempt) {
 			} else {
 				this.score = 0;
 			}
-		} else {}
+		} else {
+			for (i in attempt.motionCoords) {
+				var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
+
+				if (dist < 3) {
+					this.score = 1;
+				} else {
+					this.score = 0;
+					break;
+				}
+			}
+
+			if (this.score != 0) {
+				for (i in attempt.blockingAssingmentArray) {}
+
+				for (i in attempt.route) {
+					var dist = sqrt(pow(attempt.route[i][0] - this.answer.route[i][0], 2) + pow(attempt.route[i][1] - this.answer.route[i][1], 2));
+
+					if (dist < 3) {
+						this.score = 1;
+					} else {
+						this.score = 0;
+						break;
+					}
+				}
+			}
+		}
 	}
 };
 
