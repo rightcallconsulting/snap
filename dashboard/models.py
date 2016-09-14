@@ -218,10 +218,10 @@ class QuestionAttempted(models.Model):
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 	quiz = models.ForeignKey(Quiz)
-	
-	formation = models.ForeignKey(Formation, blank=True)
-	play = models.ForeignKey(Play, blank=True)
-	concept = models.ForeignKey(Concept, blank=True)
+
+	formation = models.ForeignKey(Formation, blank=True, null=True)
+	play = models.ForeignKey(Play, blank=True, null=True)
+	concept = models.ForeignKey(Concept, blank=True, null=True)
 
 	score = models.IntegerField(null=True) # 0 = incorrect, 1 = correct, null = skipped
 

@@ -643,33 +643,34 @@ def take_quiz(request, quiz_id):
 		quiz = Quiz.objects.filter(id=quiz_id)[0]
 		player = request.user.player
 		question_type = request.POST['type']
-		print question_type
 		score = request.POST['score']
-		print score
 		name = request.POST['name']
-		print name
 
 		questionAttempt = QuestionAttempted()
 		questionAttempt.player = player
 		questionAttempt.team = team
 		questionAttempt.quiz = quiz
+		questionAttempt.save()
 
 		if question_type == "formation":
 			formation = Formation.objects.filter(team=team, name=name)[0]
 			questionAttempt.formation = formation
+			questionAttempt.save()
 		elif question_type == "play":
 			formation_name = request.POST['formationName']
 			scout_name = request.POST['scoutName']
-			formation = Formation.objects.filter(team=team, scout=False, name=name)[0]
+			formation = Formation.objects.filter(team=team, scout=False, name=formation_name)[0]
 			play = Play.objects.filter(team=team, formation=formation, scoutName=scout_name, name=name)[0]
 			questionAttempt.play = play
+			questionAttempt.save()
 		elif question_type == "concept":
 			concept = Concept.objects.filter(team=team, name=name)[0]
 			questionAttempt.concept = concept
+			questionAttempt.save()
 
-		questionAttempt.score = score
-
-		print questionAttempt
+		if type(score) is int:
+			questionAttempt.score = score
+			questionAttempt.save()
 
 		return HttpResponse('')
 	else:
