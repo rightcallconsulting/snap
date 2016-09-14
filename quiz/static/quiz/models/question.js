@@ -110,7 +110,6 @@ Question.prototype.check = function(attempt) {
 			}
 
 			if (this.score != 0) {
-				var size_of_blocking_array = attempt.blockingAssignmentArray.length;
 				for (i in attempt.blockingAssignmentArray) {
 					var dist = sqrt(pow(attempt.blockingAssignmentArray[i].x - this.answer.blockingAssignmentArray[i].x, 2) + pow(attempt.blockingAssignmentArray[i].y - this.answer.blockingAssignmentArray[i].y, 2));
 
