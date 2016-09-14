@@ -640,24 +640,36 @@ def manage_quiz(request, quiz_id):
 def take_quiz(request, quiz_id):
 	if request.method == 'POST':
 		team = request.user.player.team
-		questionAttempt = QuestionAttempted()
+		quiz = Quiz.objects.filter(id=quiz_id)[0]
 		player = request.user.player
 		question_type = request.POST['type']
-		#print question_type
+		print question_type
 		score = request.POST['score']
-		#print score
+		print score
 		name = request.POST['name']
-		#print name
+		print name
+
+		questionAttempt = QuestionAttempted()
+		questionAttempt.player = player
+		questionAttempt.team = team
+		questionAttempt.quiz = quiz
 
 		if question_type == "formation":
-			formation = Formation.objects.filter(team=team, name=name)
+			formation = Formation.objects.filter(team=team, name=name)[0]
+			questionAttempt.formation = formation
 		elif question_type == "play":
 			formation_name = request.POST['formationName']
 			scout_name = request.POST['scoutName']
-			formation = Formation.objects.filter(team=team, scout=False, name=name)
-			scout_formation = Formation.objects.filter(team=team, scout=True, name=name)
+			formation = Formation.objects.filter(team=team, scout=False, name=name)[0]
+			play = Play.objects.filter(team=team, formation=formation, scoutName=scout_name, name=name)[0]
+			questionAttempt.play = play
 		elif question_type == "concept":
-			concept = Concept.objects.filter(team=team, name=name)
+			concept = Concept.objects.filter(team=team, name=name)[0]
+			questionAttempt.concept = concept
+
+		questionAttempt.score = score
+
+		print questionAttempt
 
 		return HttpResponse('')
 	else:
