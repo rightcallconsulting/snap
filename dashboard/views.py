@@ -639,6 +639,7 @@ def manage_quiz(request, quiz_id):
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
 	if request.method == 'POST':
+		team = request.user.player.team
 		questionAttempt = QuestionAttempted()
 		player = request.user.player
 		question_type = request.POST['type']
@@ -647,6 +648,16 @@ def take_quiz(request, quiz_id):
 		#print score
 		name = request.POST['name']
 		#print name
+
+		if question_type == "formation":
+			formation = Formation.objects.filter(team=team, name=name)
+		elif question_type == "play":
+			formation_name = request.POST['formationName']
+			scout_name = request.POST['scoutName']
+			formation = Formation.objects.filter(team=team, scout=False, name=name)
+			scout_formation = Formation.objects.filter(team=team, scout=True, name=name)
+		elif question_type == "concept":
+			concept = Concept.objects.filter(team=team, name=name)
 
 		return HttpResponse('')
 	else:
