@@ -6,11 +6,11 @@
 		<table class="analytics-table">
 			<thead>
 				<tr>
-					<th>Play</th>
-					<th>Scout Formation</th>
-					<th>% Correct</th>
-					<th>% Wrong</th>
-					<th>% Skipped</th>
+					<th>PLAY</th>
+					<th>SCOUT FORMATION</th>
+					<th>CORRECT</th>
+					<th>WRONG</th>
+					<th>SKIPPED</th>
 				</tr>
 			</thead>
 			{% for play_analytics in plays_analytics %}
@@ -18,9 +18,9 @@
 					<tr>
 						<td>{{ play_analytics.0 }}</td>
 						<td>{{ play_analytics.1 }}</td>
-						<td>{{ play_analytics.2 }}</td>
-						<td>{{ play_analytics.3 }}</td>
-						<td>{{ play_analytics.4 }}</td>
+						<td>{{ play_analytics.2|floatformat }} %</td>
+						<td>{{ play_analytics.3|floatformat }} %</td>
+						<td>{{ play_analytics.4|floatformat }} %</td>
 					</tr>
 				</tbody>
 			{% endfor %}
