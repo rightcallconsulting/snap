@@ -641,8 +641,8 @@ def take_quiz(request, quiz_id):
 			questionAttempt.concept = concept
 			questionAttempt.save()
 
-		if type(score) is int:
-			questionAttempt.score = score
+		if score:
+			questionAttempt.score = int(score)
 			questionAttempt.save()
 
 		return HttpResponse('')
@@ -682,20 +682,15 @@ def plays_analytics(request):
 		else:
 			play_analytics.append("None")
 
-		number_correct = QuestionAttempted.objects.filter(play=play, score=1).count()
-		number_incorrect = QuestionAttempted.objects.filter(play=play, score=0).count()
-		number_skipped = QuestionAttempted.objects.filter(play=play, score=None).count()
+		number_correct = float(QuestionAttempted.objects.filter(play=play, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(play=play, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(play=play, score=None).count())
 
-		number_of_attempts = number_correct + number_incorrect + number_skipped
+		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		print number_correct
-		print number_incorrect
-		print number_skipped
-		print number_of_attempts
-
-		percentage_correct = number_correct/number_of_attempts 
-		percentage_incorrect = number_incorrect/number_of_attempts
-		percentage_skipped = number_skipped/number_of_attempts
+		percentage_correct = (number_correct/number_of_attempts)*100 
+		percentage_incorrect = (number_incorrect/number_of_attempts)*100
+		percentage_skipped = (number_skipped/number_of_attempts)*100
 
 		play_analytics.append(percentage_correct)
 		play_analytics.append(percentage_incorrect)
