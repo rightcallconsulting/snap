@@ -44,6 +44,7 @@ urlpatterns = [
 
 	# Analytics
 	url(r'^analytics$', views.analytics, name='analytics'),
+	url(r'^analytics/plays$', views.plays_analytics, name='plays_analytics'),
 
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),

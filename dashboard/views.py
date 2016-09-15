@@ -667,6 +667,23 @@ def analytics(request):
 		'page_header': 'ANALYTICS'
 	})
 
+@login_required
+def plays_analytics(request):
+	plays_analytics = []
+	plays = Play.objects.filter(team=team)
+	for play in plays:
+		play_analytics = []
+		play_analytics.append(play.name)
+		
+		if play.scoutName != "":
+			play_analytics.append(play.scoutName)
+		else:
+			play_analytics.append("None")
+
+	return render(request, 'dashboard/plays_analytics.html', {
+		'page_header': 'PLAYS ANALYTICS'
+	})
+
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):

@@ -392,6 +392,7 @@ manage quiz
 /*************************************************************************
 coach homepage
 *************************************************************************/
+
 .coach-button-container {
 	display: flex;
 	justify-content: space-between;
@@ -527,6 +528,23 @@ player homepage
 	background-color: #9ccc65;
 	padding: 8px;
 }
+
+/*************************************************************************
+analytics
+*************************************************************************/
+
+table.analytics-table {
+	width: 100%;
+	text-align: center;
+}
+
+table.analytics-table th {
+	text-align: center;
+}
+
+/*************************************************************************
+other
+*************************************************************************/
 
 .coach-home .action-boxes, 
 .playbook .action-boxes, 
