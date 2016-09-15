@@ -671,6 +671,7 @@ def analytics(request):
 def plays_analytics(request):
 	plays_analytics = []
 	plays = Play.objects.filter(team=team)
+	
 	for play in plays:
 		play_analytics = []
 		play_analytics.append(play.name)
@@ -680,7 +681,24 @@ def plays_analytics(request):
 		else:
 			play_analytics.append("None")
 
+		number_correct = QuestionAttempted.objects.filter(play=play, result=1)
+		number_incorrect = QuestionAttempted.objects.filter(play=play, result=0)
+		number_skipped = QuestionAttempted.objects.filter(play=play, result=None)
+
+		number_of_attempts = number_correct + number_incorrect + number_skipped
+
+		percentage_correct = number_correct/number_of_attempts 
+		percentage_incorrect = number_incorrect/number_of_attempts
+		percentage_skipped = number_skipped/number_of_attempts
+
+		play_analytics.append(percentage_correct)
+		play_analytics.append(percentage_incorrect)
+		play_analytics.append(percentage_skipped)
+
+		plays_analytics.append(play_analytics)	
+
 	return render(request, 'dashboard/plays_analytics.html', {
+		'plays_analytics': plays_analytics,
 		'page_header': 'PLAYS ANALYTICS'
 	})
 
