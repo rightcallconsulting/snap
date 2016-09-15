@@ -43,7 +43,7 @@
 				</table>
 			</div>
 		</div>
-		
+
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
 				Existing Formations
@@ -68,6 +68,7 @@
 	<script type="text/javascript">
 		var formations = [];
 		var formation;
+		var dummyOffense;
 		var defensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
@@ -76,21 +77,24 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
-		
+
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
 			var display_box_footer = display_box.querySelector(".display-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
+
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
+			var width = display_box.offsetWidth - 4;
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
-			
+
+			var f = new Formation({});
+			dummyOffense = f.createDummyFormation();
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -98,7 +102,7 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
-			
+
 			// Load formations from Json passed from database
 			var formationJsonFromDatabase = "";
 
@@ -127,7 +131,7 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				
+
 				resizeMainViewObjects();
 			};
 
@@ -137,7 +141,7 @@
 		function draw() {
 			// Limitations on where offensive players can be
 			var numberOfOffensivePlayers = formation.offensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
 				var player = formation.offensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -179,13 +183,13 @@
 				} else {
 					if (player.y > field.ballYardLine - 1) {
 						player.y = field.ballYardLine;
-					} 
+					}
 				}
 			}
 
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = formation.defensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
 				var player = formation.defensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -230,8 +234,9 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			formation.drawPlayers(field);
+			dummyOffense.drawPlayers(field);
 			defensivePlayerBar.draw(field);
-			
+
 			fill(0, 0, 0);
 			textSize(20);
 			text(formation.feedbackMessage, 330, 20);
@@ -287,17 +292,17 @@
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
-			// If no one is currently selected and no one is clicked on do 
-			// nothing. Else if no one is currently selected and someone is 
+			// If no one is currently selected and no one is clicked on do
+			// nothing. Else if no one is currently selected and someone is
 			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then do 
-			// nothing. Else if the currently selected player is the same as 
-			// the newly selected player then clear all selections and return. 
-			// Else two seperate players are assigned to those variables and 
+			// is currently selected and empty field is clicked on then do
+			// nothing. Else if the currently selected player is the same as
+			// the newly selected player then clear all selections and return.
+			// Else two seperate players are assigned to those variables and
 			// handle accordingly.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
-				// Do nothing	
+				// Do nothing
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
 				return false;
@@ -321,12 +326,12 @@
 			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToFormation = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
+					num: newPlayerSelected.num,
+					pos: newPlayerSelected.pos,
 					x: Field.WIDTH / 2,
 					y: field.ballYardLine + field.pixelsToYards(30),
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
+					red: newPlayerSelected.red,
+					green: newPlayerSelected.green,
 					blue: newPlayerSelected.blue,
 					unit: newPlayerSelected.unit
 				});
@@ -397,7 +402,7 @@
 					return false;
 				}
 
-				return false;	
+				return false;
 			}
 		};
 
@@ -497,7 +502,7 @@
 			// Deselect the currently selected sidebar because that formation is
 			// going to dissappear from the screen.
 			var selected_sideview_button = document.getElementById("selected");
-			
+
 			if (selected_sideview_button != null) {
 				selected_sideview_button.removeAttribute("id");
 				selected_sideview_button.removeAttribute("class");
@@ -531,14 +536,14 @@
 			formation.save(path, csrf_token);
 			formations.push(formation);
 
-			// Create a new formation to replace the one you just saved on the 
+			// Create a new formation to replace the one you just saved on the
 			// screen.
 			formation = new Formation({});
 
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
 			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
+
 			// Create a button for the new formation.
 			var new_formation_button = document.createElement("button");
 			new_formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
@@ -599,7 +604,7 @@
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
@@ -612,7 +617,7 @@
 		$("#zoom-out-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
@@ -629,7 +634,7 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
-			
+
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
 			// are selecting a button it will get replaced with the name of the
@@ -655,7 +660,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -693,7 +698,7 @@
 			var header_box = document.getElementById("header-box");
 			var placeholder_message = document.getElementById("placeholder-message");
 			$("#header-box").removeClass("placeholder");
-			
+
 			if (placeholder_message != null) {
 				header_box.removeChild(placeholder_message);
 			}
@@ -703,7 +708,7 @@
 			var header_box = document.getElementById("header-box");
 			var error_message = document.getElementById("error-message");
 			$("#header-box").removeClass("error");
-			
+
 			if (error_message != null) {
 				header_box.removeChild(error_message);
 			}
@@ -771,13 +776,13 @@
 			textSize(20);
 
 			text(mouseXString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(mouseYString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(widthString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(heightString, textX, textY);
 
@@ -787,7 +792,7 @@
 		function createDefensivePlayerOptions() {
 			var players = [];
 			var player;
-				
+
 			player = new Player ({
 				num: "DL", pos: "DL",
 				red: 0, green: 0, blue: 0,
@@ -811,7 +816,7 @@
 				siz: 2
 			});
 			players.push(player);
-			
+
 			player = new Player ({
 				num: "T", pos: "T",
 				red: 0, green: 0, blue: 0,
