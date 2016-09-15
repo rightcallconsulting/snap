@@ -24,6 +24,7 @@ from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
 from dashboard.utils import PlayerAnalytics
+from operator import itemgetter
 
 @login_required
 def homepage(request):
@@ -697,6 +698,9 @@ def plays_analytics(request):
 		play_analytics.append(percentage_skipped)
 
 		plays_analytics.append(play_analytics)	
+
+	# Sort the list of play analytics in decending order by percent wrong
+	plays_analytics.sort(key=lambda x: 100.0 - x[3])
 
 	return render(request, 'dashboard/plays_analytics.html', {
 		'plays_analytics': plays_analytics,
