@@ -667,11 +667,12 @@ def analytics(request):
 		'page_header': 'ANALYTICS'
 	})
 
-@login_required
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def plays_analytics(request):
 	plays_analytics = []
+	team = request.user.coach.team
 	plays = Play.objects.filter(team=team)
-	
+
 	for play in plays:
 		play_analytics = []
 		play_analytics.append(play.name)
@@ -681,11 +682,16 @@ def plays_analytics(request):
 		else:
 			play_analytics.append("None")
 
-		number_correct = QuestionAttempted.objects.filter(play=play, result=1)
-		number_incorrect = QuestionAttempted.objects.filter(play=play, result=0)
-		number_skipped = QuestionAttempted.objects.filter(play=play, result=None)
+		number_correct = QuestionAttempted.objects.filter(play=play, score=1).count()
+		number_incorrect = QuestionAttempted.objects.filter(play=play, score=0).count()
+		number_skipped = QuestionAttempted.objects.filter(play=play, score=None).count()
 
 		number_of_attempts = number_correct + number_incorrect + number_skipped
+
+		print number_correct
+		print number_incorrect
+		print number_skipped
+		print number_of_attempts
 
 		percentage_correct = number_correct/number_of_attempts 
 		percentage_incorrect = number_incorrect/number_of_attempts
