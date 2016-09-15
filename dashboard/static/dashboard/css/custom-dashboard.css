@@ -537,14 +537,22 @@ table.analytics-table {
 	width: 90%;
 	text-align: center;
 	margin: 0 auto;
+	font-size: small;
 }
 
 table.analytics-table th {
 	height: 50px;
 	text-align: center;
-	background: #ddd;
-    margin: 0;
-    border: 2px solid #33691e;
+	/*background: #ddd;*/
+	margin: 0;
+	border: 2px solid #33691e;
+}
+
+table.analytics-table td {
+	height: 50px;
+	text-align: center;
+	margin: 0;
+	border: 1px dotted #33691e;
 }
 
 /*************************************************************************
