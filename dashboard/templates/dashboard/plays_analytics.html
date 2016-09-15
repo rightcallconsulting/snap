@@ -9,7 +9,7 @@
 					<th>PLAY</th>
 					<th>SCOUT FORMATION</th>
 					<th>CORRECT</th>
-					<th>WRONG</th>
+					<th>INCORRECT</th>
 					<th>SKIPPED</th>
 				</tr>
 			</thead>
@@ -18,9 +18,9 @@
 					<tr>
 						<td>{{ play_analytics.0 }}</td>
 						<td>{{ play_analytics.1 }}</td>
-						<td>{{ play_analytics.2|floatformat }} %</td>
-						<td>{{ play_analytics.3|floatformat }} %</td>
-						<td>{{ play_analytics.4|floatformat }} %</td>
+						<td class="correct {{ play_analytics.2|floatformat:0 }}">{{ play_analytics.2|floatformat }} %</td>
+						<td class="incorrect {{ play_analytics.3|floatformat:0 }}">{{ play_analytics.3|floatformat }} %</td>
+						<td class="skipped {{ play_analytics.4|floatformat:0 }}">{{ play_analytics.4|floatformat }} %</td>
 					</tr>
 				</tbody>
 			{% endfor %}

@@ -552,7 +552,10 @@ table.analytics-table td {
 	height: 50px;
 	text-align: center;
 	margin: 0;
-	border: 1px dotted #33691e;
+	border-top: none;
+	border-right: 1px dashed #33691e;
+	border-bottom: 1px solid #33691e;
+	border-left: 1px dashed #33691e;
 }
 
 /*************************************************************************
