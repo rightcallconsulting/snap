@@ -322,22 +322,22 @@ button.sideview-question-button.selected {
 	background: #ddd;
 }
 
-button.sideview-question-button.incorrect {
-	background: #fc8675;
-	color: white;
-}
-
 button.sideview-question-button.correct {
 	background: #65cea7;
 	color: white;
 }
 
-button.sideview-question-button.incorrect.selected {
-	background: #fb6752;
+button.sideview-question-button.incorrect {
+	background: #fc8675;
+	color: white;
 }
 
 button.sideview-question-button.correct.selected {
 	background: #4ac598;
+}
+
+button.sideview-question-button.incorrect.selected {
+	background: #fb6752;
 }
 
 /*************************************************************************
