@@ -706,6 +706,41 @@ def plays_analytics(request):
 		'page_header': 'PLAYS ANALYTICS'
 	})
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def players_analytics(request):
+	players_analytics = []
+	team = request.user.coach.team
+	players = Player.objects.filter(team=team)
+
+	for player in players:
+		player_analytics = []
+		player_analytics.append(player.first_name)
+		player_analytics.append(player.last_name)
+
+		number_correct = float(QuestionAttempted.objects.filter(player=player, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(player=player, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(player=player, score=None).count())
+
+		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+		percentage_correct = (number_correct/number_of_attempts)*100 
+		percentage_incorrect = (number_incorrect/number_of_attempts)*100
+		percentage_skipped = (number_skipped/number_of_attempts)*100
+
+		player_analytics.append(percentage_correct)
+		player_analytics.append(percentage_incorrect)
+		player_analytics.append(percentage_skipped)
+
+		players_analytics.append(plaery_analytics)	
+
+	# Sort the list of play analytics in decending order by percent wrong
+	players_analytics.sort(key=lambda x: 100.0 - x[3])
+
+	return render(request, 'dashboard/players_analytics.html', {
+		'players_analytics': players_analytics,
+		'page_header': 'PLAYERS ANALYTICS'
+	})
+
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):
