@@ -510,9 +510,39 @@ def delete_group(request):
 def quizzes(request):
 	team = request.user.coach.team
 	quizzes = Quiz.objects.filter(team=team)
+	quizzes_table = []
+
+	for quiz in quizzes:
+		quiz_information = []
+		quiz_information.append(quiz.name)
+		quiz_information.append(quiz.players.count())
+
+		number_correct = float(QuestionAttempted.objects.filter(quiz=quiz, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(quiz=quiz, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(quiz=quiz, score=None).count())
+
+		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+		quiz_information.append(number_correct + number_incorrect) # this doesn't totally work
+
+		if number_of_attempts > 0:
+			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_incorrect = (number_incorrect/number_of_attempts)*100
+			percentage_skipped = (number_skipped/number_of_attempts)*100
+
+			quiz_information.append(percentage_correct)
+			quiz_information.append(percentage_incorrect)
+			quiz_information.append(percentage_skipped)
+		else:
+			quiz_information.append(0.0)
+			quiz_information.append(0.0)
+			quiz_information.append(0.0)
+
+		quizzes_table.append(quiz_information)
+
 	return render(request, 'dashboard/quizzes.html', {
 			'quizzes': quizzes,
-			'page_header': 'CREATE QUIZ',
+			'page_header': 'QUIZZES',
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
