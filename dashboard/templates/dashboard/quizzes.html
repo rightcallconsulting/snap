@@ -18,13 +18,13 @@
 			<tbody id="quizzes-body">
 				{% for quiz in quizzes %}
 					<tr>
-						<td>{{ quiz.name }}</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>View {{ quiz.name }} analytics</td>
-						<td>Edit {{ quiz.name }} quiz</td>
+						<td>{{ quiz.0 }}</td>
+						<td>{{ quiz.1 }}/{{ quiz.2 }}</td>
+						<td>{{ quiz.3|floatformat }} %</td>
+						<td>{{ quiz.4|floatformat }} %</td>
+						<td>{{ quiz.5|floatformat }} %</td>
+						<td>View {{ quiz.0 }} analytics</td>
+						<td>Edit {{ quiz.0 }}</td>
 					</tr>
 				{% endfor %}
 			</tbody>

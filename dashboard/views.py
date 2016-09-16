@@ -515,7 +515,6 @@ def quizzes(request):
 	for quiz in quizzes:
 		quiz_information = []
 		quiz_information.append(quiz.name)
-		quiz_information.append(quiz.players.count())
 
 		number_correct = float(QuestionAttempted.objects.filter(quiz=quiz, score=1).count())
 		number_incorrect = float(QuestionAttempted.objects.filter(quiz=quiz, score=0).count())
@@ -523,7 +522,8 @@ def quizzes(request):
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		quiz_information.append(number_correct + number_incorrect) # this doesn't totally work
+		quiz_information.append(int(number_correct + number_incorrect)) # this doesn't totally work
+		quiz_information.append(quiz.players.count())
 
 		if number_of_attempts > 0:
 			percentage_correct = (number_correct/number_of_attempts)*100 
@@ -541,7 +541,7 @@ def quizzes(request):
 		quizzes_table.append(quiz_information)
 
 	return render(request, 'dashboard/quizzes.html', {
-			'quizzes': quizzes,
+			'quizzes': quizzes_table,
 			'page_header': 'QUIZZES',
 		})
 
