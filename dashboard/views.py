@@ -538,6 +538,8 @@ def quizzes(request):
 			quiz_information.append(0.0)
 			quiz_information.append(0.0)
 
+		quiz_information.append(str(quiz.id))
+
 		quizzes_table.append(quiz_information)
 
 	return render(request, 'dashboard/quizzes.html', {
