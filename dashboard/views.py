@@ -692,15 +692,16 @@ def plays_analytics(request):
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		percentage_correct = (number_correct/number_of_attempts)*100 
-		percentage_incorrect = (number_incorrect/number_of_attempts)*100
-		percentage_skipped = (number_skipped/number_of_attempts)*100
+		if number_of_attempts > 0:
+			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_incorrect = (number_incorrect/number_of_attempts)*100
+			percentage_skipped = (number_skipped/number_of_attempts)*100
 
-		play_analytics.append(percentage_correct)
-		play_analytics.append(percentage_incorrect)
-		play_analytics.append(percentage_skipped)
+			play_analytics.append(percentage_correct)
+			play_analytics.append(percentage_incorrect)
+			play_analytics.append(percentage_skipped)
 
-		plays_analytics.append(play_analytics)	
+			plays_analytics.append(play_analytics)	
 
 	# Sort the list of play analytics in decending order by percent wrong
 	plays_analytics.sort(key=lambda x: 100.0 - x[3])
