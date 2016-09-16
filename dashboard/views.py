@@ -506,9 +506,14 @@ def delete_group(request):
 		return HttpResponse('')
 
 # Quizzes
+@user_passes_test(lambda u: not u.myuser.is_a_player)
 def quizzes(request):
-	quizzes = Test.objects.all()
-	return HttpResponse(serializers.serialize("json", quizzes))
+	team = request.user.coach.team
+	quizzes = Quiz.objects.filter(team=team)
+	return render(request, 'dashboard/quizzes.html', {
+			'quizzes': quizzes,
+			'page_header': 'CREATE QUIZ',
+		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_quiz(request):
