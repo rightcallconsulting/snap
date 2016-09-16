@@ -26,7 +26,40 @@
 			var table_body = document.getElementById("analytics-body");
 			var table_row = null;
 			var table_cell = null;
+			
 			{% for play_analytics in plays_analytics %}
+			table_row = document.createElement("tr");
+
+			table_cell = document.createElement("td");
+			table_cell.textContent = "{{ play_analytics.0 }}";
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			table_cell.textContent = "{{ play_analytics.1 }}";
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			var percentage = float({{ play_analytics.2|floatformat:0 }})/100.0;
+			table_cell.style.background = "rgba(101, 206, 167, " + percentage.toString() + ")";
+			table_cell.textContent = "{{ play_analytics.2|floatformat }} %";
+			table_cell.setAttribute("class", "correct");
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			var percentage = float({{ play_analytics.3|floatformat:0 }})/100.0;
+			table_cell.style.background = "rgba(252, 134, 117," + percentage.toString() + ")";
+			table_cell.textContent = "{{ play_analytics.3|floatformat }} %";
+			table_cell.setAttribute("class", "incorrect");
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			var percentage = float({{ play_analytics.4|floatformat:0 }})/100.0;
+			table_cell.style.background = "rgba(243, 206, 133," + percentage.toString() + ")";
+			table_cell.textContent = "{{ play_analytics.4|floatformat }} %";
+			table_cell.setAttribute("class", "skipped");
+			table_row.appendChild(table_cell);
+
+			table_body.appendChild(table_row);
 			{% endfor %}
 
 			/*<tr>

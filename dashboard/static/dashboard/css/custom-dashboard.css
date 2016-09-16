@@ -533,14 +533,14 @@ player homepage
 analytics
 *************************************************************************/
 
-table.analytics-table {
+.analytics table {
 	width: 90%;
 	text-align: center;
 	margin: 0 auto;
 	font-size: small;
 }
 
-table.analytics-table th {
+.analytics table th {
 	height: 50px;
 	text-align: center;
 	/*background: #ddd;*/
@@ -548,7 +548,7 @@ table.analytics-table th {
 	border: 2px solid #33691e;
 }
 
-table.analytics-table td {
+.analytics table td {
 	height: 50px;
 	text-align: center;
 	margin: 0;
@@ -1708,4 +1708,19 @@ div.concept-table button {
 
 #grey-container {
 	padding: 12px;
+}
+
+td.correct.percent-100 {
+	background-color: rgba(101, 206, 167, 0.05);
+	color: #33691E;
+}
+
+td.incorrect.percent-100 {
+	background-color: rgba(252, 134, 117, 1.00);
+	color: #33691E;
+}
+
+td.skipped.percent-100 {
+	background-color: rgba(243, 206, 133, 1.00);
+	color: #33691E;
 }
