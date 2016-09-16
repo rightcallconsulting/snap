@@ -43,7 +43,7 @@ urlpatterns = [
 	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
 
 	# Analytics
-	url(r'^analytics$', views.analytics, name='analytics'),
+	url(r'^analytics$', views.plays_analytics, name='plays_analytics'), # this will direct to the play analyitics until I implement an analytics page
 	url(r'^analytics/plays$', views.plays_analytics, name='plays_analytics'),
 
 	# JSON requests
