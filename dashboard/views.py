@@ -713,6 +713,7 @@ def players_analytics(request):
 	players = Player.objects.filter(team=team)
 
 	for player in players:
+		print player
 		player_analytics = []
 		player_analytics.append(player.first_name)
 		player_analytics.append(player.last_name)
@@ -723,15 +724,16 @@ def players_analytics(request):
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		percentage_correct = (number_correct/number_of_attempts)*100 
-		percentage_incorrect = (number_incorrect/number_of_attempts)*100
-		percentage_skipped = (number_skipped/number_of_attempts)*100
+		if number_of_attempts > 0:
+			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_incorrect = (number_incorrect/number_of_attempts)*100
+			percentage_skipped = (number_skipped/number_of_attempts)*100
 
-		player_analytics.append(percentage_correct)
-		player_analytics.append(percentage_incorrect)
-		player_analytics.append(percentage_skipped)
+			player_analytics.append(percentage_correct)
+			player_analytics.append(percentage_incorrect)
+			player_analytics.append(percentage_skipped)
 
-		players_analytics.append(player_analytics)	
+			players_analytics.append(player_analytics)	
 
 	# Sort the list of play analytics in decending order by percent wrong
 	players_analytics.sort(key=lambda x: 100.0 - x[3])
