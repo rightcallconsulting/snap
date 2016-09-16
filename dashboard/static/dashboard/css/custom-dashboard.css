@@ -570,11 +570,17 @@ quizzes tables
 	table-layout: fixed;
 }
 
+.quizzes table thead {
+	height: 50px;
+	text-align: center;
+	margin: 0;
+	background: #d0d3d5;
+}
+
 .quizzes table th {
 	height: 50px;
 	text-align: center;
 	margin: 0;
-	border: 2px solid #33691e;
 }
 
 .quizzes table td {
@@ -585,6 +591,11 @@ quizzes tables
 	border-right: 1px dashed #33691e;
 	border-bottom: 1px solid #33691e;
 	border-left: 1px dashed #33691e;
+}
+
+.quizzes table a {
+	font-weight: bold;
+	color: #33691e;
 }
 
 /*************************************************************************
