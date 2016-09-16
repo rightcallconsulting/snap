@@ -731,7 +731,7 @@ def players_analytics(request):
 		player_analytics.append(percentage_incorrect)
 		player_analytics.append(percentage_skipped)
 
-		players_analytics.append(plaery_analytics)	
+		players_analytics.append(player_analytics)	
 
 	# Sort the list of play analytics in decending order by percent wrong
 	players_analytics.sort(key=lambda x: 100.0 - x[3])
