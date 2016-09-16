@@ -538,17 +538,46 @@ analytics
 	text-align: center;
 	margin: 0 auto;
 	font-size: small;
+	table-layout: fixed;
 }
 
 .analytics table th {
 	height: 50px;
 	text-align: center;
-	/*background: #ddd;*/
 	margin: 0;
 	border: 2px solid #33691e;
 }
 
 .analytics table td {
+	height: 50px;
+	text-align: center;
+	margin: 0;
+	border-top: none;
+	border-right: 1px dashed #33691e;
+	border-bottom: 1px solid #33691e;
+	border-left: 1px dashed #33691e;
+}
+
+/*************************************************************************
+quizzes tables
+*************************************************************************/
+
+.quizzes table {
+	width: 90%;
+	text-align: center;
+	margin: 0 auto;
+	font-size: small;
+	table-layout: fixed;
+}
+
+.quizzes table th {
+	height: 50px;
+	text-align: center;
+	margin: 0;
+	border: 2px solid #33691e;
+}
+
+.quizzes table td {
 	height: 50px;
 	text-align: center;
 	margin: 0;
