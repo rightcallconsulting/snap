@@ -11,9 +11,22 @@
 					<th>CORECT</th>
 					<th>INCORRECT</th>
 					<th>SKIPPED</th>
+					<th>ANALYTICS</th>
+					<th>EDIT</th>
 				</tr>
 			</thead>
 			<tbody id="quizzes-body">
+				{% for quiz in quizzes %}
+					<tr>
+						<td>{{ quiz.name }}</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>View {{ quiz.name }} analytics</td>
+						<td>Edit {{ quiz.name }} quiz</td>
+					</tr>
+				{% endfor %}
 			</tbody>
 		</table>
 	</div>

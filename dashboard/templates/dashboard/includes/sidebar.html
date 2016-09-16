@@ -30,20 +30,29 @@
 					</a>
 				</li>
 
-				<li class="openable open">
-					<a href="/todo">
-						<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
-						<br>
-						<span class="menu-text">
-							{% if request.user.myuser.is_a_player %}
+				{% if request.user.myuser.is_a_player %}
+					<li class="openable open">
+						<a href="/todo">
+							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
+							<br>
+							<span class="menu-text">
 								TO DO
-							{% else %}
+							</span>
+							<span class="menu-hover"></span>
+						</a>
+					</li>
+				{% else %}
+					<li class="openable open">
+						<a href="/quizzes">
+							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
+							<br>
+							<span class="menu-text">
 								QUIZZES
-							{% endif %}
-						</span>
-						<span class="menu-hover"></span>
-					</a>
-				</li>
+							</span>
+							<span class="menu-hover"></span>
+						</a>
+					</li>
+				{% endif %}
 
 				{% if not request.user.myuser.is_a_player %}
 					<li>
