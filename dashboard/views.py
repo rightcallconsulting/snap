@@ -572,7 +572,6 @@ def manage_quiz(request, quiz_id):
 				quiz.save()
 
 			plays_data = quiz_data["plays"]
-			print plays_data
 			for play_data in plays_data:
 				play = Play.objects.filter(team=team, scout=False, name=play_data["name"], scoutName=play_data["scoutName"])[0]
 				quiz.plays.add(play)
@@ -718,7 +717,6 @@ def players_analytics(request):
 	players = Player.objects.filter(team=team)
 
 	for player in players:
-		print player
 		player_analytics = []
 		player_analytics.append(player.first_name + " ")
 		player_analytics.append(player.last_name)
