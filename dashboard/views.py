@@ -715,7 +715,7 @@ def players_analytics(request):
 	for player in players:
 		print player
 		player_analytics = []
-		player_analytics.append(player.first_name)
+		player_analytics.append(player.first_name + " ")
 		player_analytics.append(player.last_name)
 
 		number_correct = float(QuestionAttempted.objects.filter(player=player, score=1).count())
