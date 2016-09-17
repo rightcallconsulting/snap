@@ -570,32 +570,41 @@ quizzes tables
 	table-layout: fixed;
 }
 
-.quizzes table thead {
-	height: 50px;
-	text-align: center;
-	margin: 0;
-	background: #d0d3d5;
-}
-
 .quizzes table th {
 	height: 50px;
+	background: #666;
+	color: white;
 	text-align: center;
 	margin: 0;
+}
+
+
+.quizzes table tr:nth-child(odd) {
+	background: #ccc;
+}
+
+.quizzes table tr:nth-child(even) {
+	background: #eee;
 }
 
 .quizzes table td {
 	height: 50px;
+	color: black;
 	text-align: center;
 	margin: 0;
-	border-top: none;
-	border-right: 1px dashed #33691e;
-	border-bottom: 1px solid #33691e;
-	border-left: 1px dashed #33691e;
 }
 
-.quizzes table a {
+.quizzes table a,
+.quizzes table a:link,
+.quizzes table a:active {
 	font-weight: bold;
 	color: #33691e;
+}
+
+.quizzes table a:hover,
+.quizzes table a:active {
+	font-weight: bold;
+	color: #9CCC65;
 }
 
 /*************************************************************************
