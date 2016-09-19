@@ -45,49 +45,77 @@ def homepage(request):
 			'page_header': 'DASHBOARD'
 		})
 	else:
-		'''
-		plays_analytics = []
+		recent_results = []
 		team = request.user.coach.team
-		plays = Play.objects.filter(team=team)
+		time_range = [timezone.now()-timedelta(days=5), timezone.now()]
 
-		for play in plays:
-			play_analytics = []
-			play_analytics.append(play.name)
-			
-			if play.scoutName != "":
-				play_analytics.append(play.scoutName)
-			else:
-				play_analytics.append("None")
+		formations = Formation.objects.filter(team=team)
 
-			number_correct = float(QuestionAttempted.objects.filter(play=play, score=1).count())
-			number_incorrect = float(QuestionAttempted.objects.filter(play=play, score=0).count())
-			number_skipped = float(QuestionAttempted.objects.filter(play=play, score=None).count())
+		for formation in formations:
+			result = []
+			result.append(formation.name)
+
+			result.append("formation")
+
+			number_correct = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, formation=formation, play=None, score=1).count())
+			number_incorrect = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, formation=formation, play=None, score=0).count())
+			number_skipped = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, formation=formation, play=None, score=None).count())
+
+			print number_correct
 
 			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 			if number_of_attempts > 0:
-				percentage_correct = (number_correct/number_of_attempts)*100 
 				percentage_incorrect = (number_incorrect/number_of_attempts)*100
-				percentage_skipped = (number_skipped/number_of_attempts)*100
-
-				play_analytics.append(percentage_correct)
-				play_analytics.append(percentage_incorrect)
-				play_analytics.append(percentage_skipped)
-
-				plays_analytics.append(play_analytics)	
-
-		# Sort the list of play analytics in decending order by percent wrong
-		plays_analytics.sort(key=lambda x: 100.0 - x[3])
-		'''
-		results_array = []
-		team = request.user.coach.team
+				result.append(percentage_incorrect)
+				recent_results.append(result)
 
 		plays = Play.objects.filter(team=team)
 
 		for play in plays:
-			questions_in_last_3_days = QuestionAttempted.objects.filter(team=team, time__range=[timezone.now() - timedelta(days=3), timezone.now()])
+			result = []
+			result.append(play.name)
+
+			result.append("play")
+
+			number_correct = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, play__name=play.name, score=1).count())
+			number_incorrect = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, play__name=play.name, score=0).count())
+			number_skipped = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, play__name=play.name, score=None).count())
+
+			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+			if number_of_attempts > 0:
+				percentage_incorrect = (number_incorrect/number_of_attempts)*100
+				result.append(percentage_incorrect)
+				if result not in recent_results:
+					recent_results.append(result)
+
+		concepts = Concept.objects.filter(team=team)
+
+		for concept in concepts:
+			result = []
+			result.append(concept.name)
+
+			result.append("concept")
+
+			number_correct = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, concept=concept, score=1).count())
+			number_incorrect = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, concept=concept, score=0).count())
+			number_skipped = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, concept=concept, score=None).count())
+
+			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+			if number_of_attempts > 0:
+				percentage_incorrect = (number_incorrect/number_of_attempts)*100
+				result.append(percentage_incorrect)
+				recent_results.append(result)
+
+		# Sort the list of results in decending order by percent wrong
+		recent_results.sort(key=lambda x: 100.0 - x[2])
+		if len(recent_results) > 8:
+			recent_results = recent_results[0:7]
 
 		return render(request, 'dashboard/coach_homepage.html', {
+			"recent_results": recent_results,
 			'page_header': 'DASHBOARD'
 		})
 

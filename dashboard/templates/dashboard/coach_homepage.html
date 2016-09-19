@@ -41,7 +41,32 @@
 
 		<div class="col-md-5 sideboxes">
 			<div class="col-md-12 quizzes">
-				<div class="header">QUIZZES</div>
+				<table>
+					<thead>
+						<tr>
+							<th colspan="4"><div class="header">QUIZZES</div></th>
+						</tr>
+						<tr>
+							<th>QUIZ</th>
+							<th>SUBMISSIONS</th>
+							<th>ANALYTICS</th>
+							<th>EDIT</th>
+						</tr>
+					</thead>
+					<tbody id="quizzes-body">
+						<!--{% for quiz in quizzes %}
+							<tr>
+								<td>{{ quiz.0 }}</td>
+								<td>{{ quiz.1 }}/{{ quiz.2 }}</td>
+								<td>{{ quiz.3|floatformat }} %</td>
+								<td>{{ quiz.4|floatformat }} %</td>
+								<td>{{ quiz.5|floatformat }} %</td>
+								<td><a href="/analytics/quiz/{{ quiz.6 }}" >{{ quiz.0 }} Results</a></td>
+								<td><a href="/quizzes/manage/{{ quiz.6 }}" >Edit {{ quiz.0 }}</a></td>
+							</tr>
+						{% endfor %}-->
+					</tbody>
+				</table>
 			</div>
 			<div class="col-md-12 newsfeed">
 				<div class="header">NEWSFEED</div>
@@ -52,4 +77,32 @@
 {% endblock %}
 
 {% block javascript %}
+	<script type="text/javascript">
+		function setup() {
+			var table_body = document.getElementById("analytics-body");
+			var table_row = null;
+			var table_cell = null;
+			
+			{% for result in recent_results %}
+			table_row = document.createElement("tr");
+
+			table_cell = document.createElement("td");
+			table_cell.textContent = "{{ result.0 }}";
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			table_cell.textContent = "{{ result.1 }}";
+			table_row.appendChild(table_cell);
+
+			table_cell = document.createElement("td");
+			var percentage = float({{ result.2 }})/100.0;
+			table_cell.style.background = "rgba(252, 134, 117, " + percentage.toString() + ")";
+			table_cell.textContent = "{{ result.2|floatformat }} %";
+			table_cell.setAttribute("class", "incorrect");
+			table_row.appendChild(table_cell);
+
+			table_body.appendChild(table_row);
+			{% endfor %}
+		}
+	</script>
 {% endblock %}
