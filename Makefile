@@ -73,6 +73,15 @@ load-stanford:
 	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local
 	python manage.py runserver --settings=quiz_master.settings.local 
 
+# Dump data into rcc_seed.json
+rcc-seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/rcc_seed.json --settings=quiz_master.settings.local
+
+# Load stanford seed file into database
+load-rcc:
+	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local
+	python manage.py runserver --settings=quiz_master.settings.local 
+
 ###############################################################################
 # Django/python development commands 
 ###############################################################################
