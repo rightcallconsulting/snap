@@ -1,0 +1,55 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+{% load app_filters %}
+
+{% block content %}
+	<div class="coach-homepage">
+		<div class="coach-button-container col-md-12">
+			<a id="create-formation-link" href="/formations/create">
+				<p>CREATE<br>FORMATION</p>
+			</a>
+			<a id="create-play-link" href="/plays/create">
+				<p>CREATE<br>PLAY</p>
+			</a>
+			<a id="create-concept-link" href="/concepts/create">
+				<p>CREATE<br>CONCEPT</p>
+			</a>
+			<a id="create-quiz-link" href="/quizzes/create">
+				<p>CREATE<br>QUIZ</p>
+			</a>
+			<a id="groups-link" href="/groups/create">
+				<p>CREATE<br>GROUP</p>
+			</a>
+		</div>
+
+		<div class="col-md-7 analytics">
+			<table>
+				<thead>
+					<tr>
+						<th colspan="3"><div class="header">RECENT RESULTS</div></th>
+					</tr>
+					<tr>
+						<th>CONTENT</th>
+						<th>TYPE</th>
+						<th>INCORRECT</th>
+					</tr>
+				</thead>
+				<tbody id="analytics-body">
+				</tbody>
+			</table>
+		</div>
+
+		<div class="col-md-5 sideboxes">
+			<div class="col-md-12 quizzes">
+				<div class="header">QUIZZES</div>
+			</div>
+			<div class="col-md-12 newsfeed">
+				<div class="header">NEWSFEED</div>
+			</div>
+		</div>
+
+	</div><!--/coach-home-->
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

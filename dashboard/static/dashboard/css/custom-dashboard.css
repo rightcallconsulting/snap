@@ -191,6 +191,21 @@ top navbar and sidebar css
 interactive and static mainview
 *************************************************************************/
 
+div.header {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background-color: #33691e;
+	color: white;
+	font-size: large;
+	font-weight: normal;
+	text-align: center;
+}
+
+div.header.placeholder {
+	color: silver;
+}
+
 div.interactive-header,
 div.static-header {
 	width: 100%;
@@ -377,159 +392,6 @@ div#create-defensive-look-button {
 }
 
 /*************************************************************************
-manage quiz
-*************************************************************************/
-
-#manage-quiz div#top-options {
-	padding-left: 20px;
-	text-align: left;
-}
-
-#manage-quiz #top-options-dropdown {
-	width: 500px;
-}
-
-/*************************************************************************
-coach homepage
-*************************************************************************/
-
-.coach-button-container {
-	display: flex;
-	justify-content: space-between;
-	padding: 0px 50px 0px 50px;
-	margin: 10px 0px 30px 0px;
-}
-
-.coach-button-container a {
-	height: 100px;
-	width: 125px;
-	display: table;
-}
-
-.coach-button-container a p {
-	display: table-cell;
-	font-size: 18px;
-	color: white;
-	font-weight: bold;
-	text-align: center;
-	vertical-align: middle;
-}
-
-.coach-button-container a#create-formation-link {
-	background-color: rgb(87, 138, 53);
-	background-image: url("/static/dashboard/images/create-formation-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.coach-button-container a#create-concept-link {
-	background-color: rgb(66, 165, 245);
-	background-image: url("/static/dashboard/images/create-concept-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.coach-button-container a#create-play-link {
-	background-color: rgb(22, 150, 136);
-	background-image: url("/static/dashboard/images/create-play-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.coach-button-container a#create-quiz-link {
-	background-color: rgb(253, 151, 39);
-	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.coach-button-container a#groups-link {
-	background-color: rgb(97, 125, 138);
-	background-image: url("/static/dashboard/images/groups-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.coach-button-container a#analytics-link {
-	background-color: rgb(72, 167, 242);
-	background-image: url("/static/dashboard/images/analytics-action-box.png");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-.homepage-quiz-table {
-	width: 100%;
-}
-
-.homepage-quiz-table th {
-	height: 30px;
-	background-color: #d0d3d5;
-	color: #000000;
-	font-size: 16px;
-	text-align: center;
-}
-
-.homepage-quiz-table tr {
-	height: 30px;
-	font-size: 14px;
-	color: #000000;
-	border: 2px solid #c5e1a5;
-}
-
-.homepage-quiz-table td {
-	vertical-align: middle;
-	text-align: center;
-	padding-top: 25px;
-	padding-bottom: 25px;
-}
-
-.homepage-quiz-table .button {
-	background-color: #9ccc65;
-	padding: 8px;
-}
-
-/*************************************************************************
-player homepage
-*************************************************************************/
-
-.homepage-todo-table {
-	width: 100%;
-}
-
-.homepage-todo-table th {
-	height: 30px;
-	background-color: #d0d3d5;
-	color: #000000;
-	font-size: 16px;
-	text-align: center;
-}
-
-.homepage-todo-table tr {
-	height: 30px;
-	font-size: 14px;
-	color: #000000;
-	border: 2px solid #c5e1a5;
-}
-
-.homepage-todo-table td {
-	vertical-align: middle;
-	text-align: center;
-	padding-top: 25px;
-	padding-bottom: 25px;
-}
-
-.homepage-todo-table .button {
-	background-color: #9ccc65;
-	padding: 8px;
-}
-
-/*************************************************************************
 analytics
 *************************************************************************/
 
@@ -608,10 +470,154 @@ quizzes tables
 }
 
 /*************************************************************************
+coach homepage
+*************************************************************************/
+
+.coach-button-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 0px 50px 0px 50px;
+	margin: 10px 0px 30px 0px;
+}
+
+.coach-button-container a {
+	height: 100px;
+	width: 125px;
+	display: table;
+}
+
+.coach-button-container a p {
+	display: table-cell;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.coach-button-container a#create-formation-link {
+	background-color: rgb(87, 138, 53);
+	background-image: url("/static/dashboard/images/create-formation-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#create-concept-link {
+	background-color: rgb(66, 165, 245);
+	background-image: url("/static/dashboard/images/create-concept-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#create-play-link {
+	background-color: rgb(22, 150, 136);
+	background-image: url("/static/dashboard/images/create-play-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#create-quiz-link {
+	background-color: rgb(253, 151, 39);
+	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#groups-link {
+	background-color: rgb(97, 125, 138);
+	background-image: url("/static/dashboard/images/groups-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-button-container a#analytics-link {
+	background-color: rgb(72, 167, 242);
+	background-image: url("/static/dashboard/images/analytics-action-box.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.coach-homepage .analytics table {
+	width: 100%;
+}
+
+.coach-homepage .analytics table thead {
+	width: 100%;
+}
+
+.coach-homepage .analytics table th {
+	border-top: none;
+}
+
+.coach-homepage .analytics table td {
+	height: 50px;
+	text-align: center;
+	margin: 0;
+	border-top: none;
+	border-right: 1px dashed #33691e;
+	border-bottom: 1px solid #33691e;
+	border-left: 1px dashed #33691e;
+}
+
+/*************************************************************************
+player homepage
+*************************************************************************/
+
+.homepage-todo-table {
+	width: 100%;
+}
+
+.homepage-todo-table th {
+	height: 30px;
+	background-color: #d0d3d5;
+	color: #000000;
+	font-size: 16px;
+	text-align: center;
+}
+
+.homepage-todo-table tr {
+	height: 30px;
+	font-size: 14px;
+	color: #000000;
+	border: 2px solid #c5e1a5;
+}
+
+.homepage-todo-table td {
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+.homepage-todo-table .button {
+	background-color: #9ccc65;
+	padding: 8px;
+}
+
+/*************************************************************************
+manage quiz
+*************************************************************************/
+
+#manage-quiz div#top-options {
+	padding-left: 20px;
+	text-align: left;
+}
+
+#manage-quiz #top-options-dropdown {
+	width: 500px;
+}
+
+/*************************************************************************
 other
 *************************************************************************/
 
-.coach-home .action-boxes, 
+.coach-homepage .action-boxes, 
 .playbook .action-boxes, 
 .all-groups .action-boxes .create-groups {
 	margin-left: 3.5%;
@@ -633,7 +639,7 @@ other
 	margin-bottom: 0px;
 }
 
-.coach-home .main-content-area, .playbook .main-content-area {
+.coach-homepage .main-content-area, .playbook .main-content-area {
 	margin-left: 3.5%;
 	width: 55%;
 	height: 500px;
@@ -642,18 +648,18 @@ other
 	float: left;
 }
 
-.coach-home .main-content-area .dash-col {
+.coach-homepage .main-content-area .dash-col {
 	border: none;
 }
 
-.coach-home .stacked-col {
+.coach-homepage .stacked-col {
 	width: 35%;
 	height: 95%;
 	display: inline-block;
 	float: left;
 }
 
-.coach-home .stacked-col {
+.coach-homepage .stacked-col {
 	width: 35%;
 	height: 95%;
 	display: inline-block;
@@ -692,7 +698,7 @@ other
 	float: left;
 }
 
-.coach-home .secondary-content-area, 
+.coach-homepage .secondary-content-area, 
 .playbook .secondary-content-area, 
 .edit-test .secondary-content-area {
 	width: 100%;
@@ -704,7 +710,7 @@ other
 	padding: 0px;
 }
 
-.coach-home .top, 
+.coach-homepage .top, 
 .playbook .top {
 	margin-bottom: 20px;
 }
@@ -890,7 +896,7 @@ other
 	margin-bottom:10px;
 }
 
-.coach-home .dash-col {
+.coach-homepage .dash-col {
 	min-height: 200px;
 }
 
@@ -953,10 +959,6 @@ other
 .donut-wrapper {
   clear: both;
   width: 90%;
-}
-
-.coach-home-col {
-  height: 90%;
 }
 
 .coach-action-row{
@@ -1287,8 +1289,8 @@ input.edit-profile {
 
 }
 
-.coach-home .alerts-list td{
-  border: none;
+.coach-homepage .alerts-list td{
+	border: none;
 }
 
 .alerts-list{
@@ -1683,20 +1685,6 @@ select#id_player {
 #create-concept,
 #playbook {
 	padding: 20px;
-}
-
-div.header {
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	background-color: #33691e;
-	color: white;
-	font-size: large;
-	text-align: center;
-}
-
-div.header.placeholder {
-	color: silver;
 }
 
 div.choose-existing-formation,

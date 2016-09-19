@@ -35,7 +35,7 @@ def homepage(request):
 		uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
 		in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
 		analytics = PlayerAnalytics(players)
-		return render(request, 'dashboard/homepage.html', {
+		return render(request, 'dashboard/player_homepage.html', {
 			'completed_tests': completed_tests,
 			'uncompleted_tests': uncompleted_tests,
 			'in_progress_tests': in_progress_tests,
@@ -45,25 +45,8 @@ def homepage(request):
 			'page_header': 'DASHBOARD'
 		})
 	else:
-		uncompleted_tests = Test.objects.filter(coach_who_created=request.user)
-		groups = PlayerGroup.objects.filter(team=request.user.coach.team)
-		if len(groups) > 0:
-			first_group = groups[0]
-			players = first_group.players.all()
-			analytics = PlayerAnalytics(players)
-			alarms = analytics.get_play_alarms()
-		else:
-			players = []
-			analytics = None
-			alarms = {}
-		return render(request, 'dashboard/coachhome.html', {
-			'uncompleted_tests': uncompleted_tests,
-			'groups': groups,
-			'players': players,
-			'analytics': analytics,
-			'alarms': alarms,
-			'page_header': 'DASHBOARD',
-			'MEDIA_ROOT': '/media/'
+		return render(request, 'dashboard/coach_homepage.html', {
+			'page_header': 'DASHBOARD'
 		})
 
 def register(request):
@@ -781,7 +764,42 @@ def players_analytics(request):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def quiz_analytics(request, quiz_id):
+	plays_analytics = []
+	team = request.user.coach.team
+	plays = Play.objects.filter(team=team)
+	quiz = Quiz.objects.filter(id=quiz_id)
+
+	for play in plays:
+		play_analytics = []
+		play_analytics.append(play.name)
+		
+		if play.scoutName != "":
+			play_analytics.append(play.scoutName)
+		else:
+			play_analytics.append("None")
+
+		number_correct = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=None).count())
+
+		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+		if number_of_attempts > 0:
+			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_incorrect = (number_incorrect/number_of_attempts)*100
+			percentage_skipped = (number_skipped/number_of_attempts)*100
+
+			play_analytics.append(percentage_correct)
+			play_analytics.append(percentage_incorrect)
+			play_analytics.append(percentage_skipped)
+
+			plays_analytics.append(play_analytics)	
+
+	# Sort the list of play analytics in decending order by percent wrong
+	plays_analytics.sort(key=lambda x: 100.0 - x[3])
+
 	return render(request, 'dashboard/quiz_analytics.html', {
+		'plays_analytics': plays_analytics,
 		'page_header': 'QUIZ ANALYTICS'
 	})
 
