@@ -45,6 +45,48 @@ def homepage(request):
 			'page_header': 'DASHBOARD'
 		})
 	else:
+		'''
+		plays_analytics = []
+		team = request.user.coach.team
+		plays = Play.objects.filter(team=team)
+
+		for play in plays:
+			play_analytics = []
+			play_analytics.append(play.name)
+			
+			if play.scoutName != "":
+				play_analytics.append(play.scoutName)
+			else:
+				play_analytics.append("None")
+
+			number_correct = float(QuestionAttempted.objects.filter(play=play, score=1).count())
+			number_incorrect = float(QuestionAttempted.objects.filter(play=play, score=0).count())
+			number_skipped = float(QuestionAttempted.objects.filter(play=play, score=None).count())
+
+			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+			if number_of_attempts > 0:
+				percentage_correct = (number_correct/number_of_attempts)*100 
+				percentage_incorrect = (number_incorrect/number_of_attempts)*100
+				percentage_skipped = (number_skipped/number_of_attempts)*100
+
+				play_analytics.append(percentage_correct)
+				play_analytics.append(percentage_incorrect)
+				play_analytics.append(percentage_skipped)
+
+				plays_analytics.append(play_analytics)	
+
+		# Sort the list of play analytics in decending order by percent wrong
+		plays_analytics.sort(key=lambda x: 100.0 - x[3])
+		'''
+		results_array = []
+		team = request.user.coach.team
+
+		plays = Play.objects.filter(team=team)
+
+		for play in plays:
+			questions_in_last_3_days = QuestionAttempted.objects.filter(team=team, time__range=[timezone.now() - timedelta(days=3), timezone.now()])
+
 		return render(request, 'dashboard/coach_homepage.html', {
 			'page_header': 'DASHBOARD'
 		})
@@ -701,9 +743,9 @@ def plays_analytics(request):
 		else:
 			play_analytics.append("None")
 
-		number_correct = float(QuestionAttempted.objects.filter(play=play, score=1).count())
-		number_incorrect = float(QuestionAttempted.objects.filter(play=play, score=0).count())
-		number_skipped = float(QuestionAttempted.objects.filter(play=play, score=None).count())
+		number_correct = float(QuestionAttempted.objects.filter(team=team, play=play, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, play=play, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, play=play, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
@@ -737,9 +779,9 @@ def players_analytics(request):
 		player_analytics.append(player.first_name + " ")
 		player_analytics.append(player.last_name)
 
-		number_correct = float(QuestionAttempted.objects.filter(player=player, score=1).count())
-		number_incorrect = float(QuestionAttempted.objects.filter(player=player, score=0).count())
-		number_skipped = float(QuestionAttempted.objects.filter(player=player, score=None).count())
+		number_correct = float(QuestionAttempted.objects.filter(team=team, player=player, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, player=player, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, player=player, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
@@ -778,9 +820,9 @@ def quiz_analytics(request, quiz_id):
 		else:
 			play_analytics.append("None")
 
-		number_correct = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=1).count())
-		number_incorrect = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=0).count())
-		number_skipped = float(QuestionAttempted.objects.filter(quiz=quiz, play=play, score=None).count())
+		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, play=play, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, play=play, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, play=play, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 

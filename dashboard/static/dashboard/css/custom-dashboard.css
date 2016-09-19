@@ -442,7 +442,7 @@ quizzes tables
 
 
 .quizzes table tr:nth-child(odd) {
-	background: #ccc;
+	background: #ddd;
 }
 
 .quizzes table tr:nth-child(even) {
