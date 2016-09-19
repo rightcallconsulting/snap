@@ -11,36 +11,26 @@
 			<div id="quiz-box">
 			</div>
 
-			<div class="display-buttons">
-				<table class="button-table">
-					<tr>
-						<td>
-							<button id="save-button" name="button">
-								{% include "quiz/check_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="clear-button" name="button">
-								{% include "quiz/clear_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="zoom-in-button" name="button">
-								{% include "quiz/zoom_in_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="zoom-out-button" name="button">
-								{% include "quiz/zoom_out_button.html" %}
-							</button>
-						</td>
-						<td>
-							<button id="full-screen-button" name="button">
-								{% include "quiz/full_screen_button.html" %}
-							</button>
-						</td>
-					</tr>
-				</table>
+			<div class="mainview-buttons">
+				<button id="save-button" name="button">
+					<i class="fa fa-check fa-2x mainview-button-icon" title="Save Concept"></i>
+				</button>
+
+				<button id="delete-button" name="button">
+					<i class="fa fa-trash-o fa-2x mainview-button-icon" title="Delete Concept"></i>
+				</button>
+		
+				<button id="zoom-in-button" name="button">
+					<i class="fa fa-search-plus fa-2x mainview-button-icon" title="Zoom in"></i>
+				</button>
+		
+				<button id="zoom-out-button" name="button">
+					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
+				</button>
+
+				<button id="full-screen-button" name="button">
+					<i class="fa fa-arrows-alt fa-2x mainview-button-icon" title="Full screen"></i>
+				</button>
 			</div>
 		</div>
 		
@@ -80,7 +70,7 @@
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
-			var display_box_footer = display_box.querySelector(".display-buttons");
+			var display_box_footer = display_box.querySelector(".mainview-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
@@ -575,7 +565,7 @@
 			return;
 		});
 
-		$("#clear-button").click(function(event) {
+		$("#delete-button").click(function(event) {
 			// Get the currently selected sideview button.
 			var selected = document.getElementById("selected");
 
