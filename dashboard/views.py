@@ -779,6 +779,12 @@ def players_analytics(request):
 		'page_header': 'PLAYERS ANALYTICS'
 	})
 
+@user_passes_test(lambda u: not u.myuser.is_a_player)
+def quiz_analytics(request, quiz_id):
+	return render(request, 'dashboard/quiz_analytics.html', {
+		'page_header': 'QUIZ ANALYTICS'
+	})
+
 # JSON requests
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_json(request, team_id):

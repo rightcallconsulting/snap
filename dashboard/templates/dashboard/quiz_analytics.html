@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div id="quiz-analytics" class="analytics">
+		<table class="analytics-table">
+			<thead>
+				<tr>
+					<th>PLAY</th>
+					<th>CORRECT</th>
+					<th>INCORRECT</th>
+					<th>SKIPPED</th>
+				</tr>
+			</thead>
+			<tbody id="analytics-body">
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script type="text/javascript"></script>
+{% endblock %}
