@@ -54,23 +54,22 @@
 						</tr>
 					</thead>
 					<tbody id="quizzes-body">
-						<!--{% for quiz in quizzes %}
+						{% for quiz in quizzes %}
 							<tr>
 								<td>{{ quiz.0 }}</td>
 								<td>{{ quiz.1 }}/{{ quiz.2 }}</td>
-								<td>{{ quiz.3|floatformat }} %</td>
-								<td>{{ quiz.4|floatformat }} %</td>
-								<td>{{ quiz.5|floatformat }} %</td>
-								<td><a href="/analytics/quiz/{{ quiz.6 }}" >{{ quiz.0 }} Results</a></td>
-								<td><a href="/quizzes/manage/{{ quiz.6 }}" >Edit {{ quiz.0 }}</a></td>
+								<td><a href="/analytics/quiz/{{ quiz.3 }}" >{{ quiz.0 }} Results</a></td>
+								<td><a href="/quizzes/manage/{{ quiz.3 }}" >Edit {{ quiz.0 }}</a></td>
 							</tr>
-						{% endfor %}-->
+						{% endfor %}
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-12 newsfeed">
+			<!--<div class="col-md-12 newsfeed">
 				<div class="header">NEWSFEED</div>
-			</div>
+				<div class="newsfeed-body">
+				</div>
+			</div>-->
 		</div>
 
 	</div><!--/coach-home-->

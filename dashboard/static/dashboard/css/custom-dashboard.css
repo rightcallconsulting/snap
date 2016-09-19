@@ -36,6 +36,10 @@ div.fullscreen {
 	border-style: hidden;
 }
 
+body {
+	background: white;
+}
+
 /*************************************************************************
 top navbar and sidebar css
 *************************************************************************/
@@ -543,26 +547,20 @@ coach homepage
 	background-position: center center;
 }
 
+div.sideboxes>div {
+	margin: 0 0 20px 0;
+}
+
+div.sideboxes div.newsfeed-body {
+	border: 1px solid #33691e;
+}
+
 .coach-homepage .analytics table {
 	width: 100%;
 }
 
-.coach-homepage .analytics table thead {
+.coach-homepage .quizzes table {
 	width: 100%;
-}
-
-.coach-homepage .analytics table th {
-	border-top: none;
-}
-
-.coach-homepage .analytics table td {
-	height: 50px;
-	text-align: center;
-	margin: 0;
-	border-top: none;
-	border-right: 1px dashed #33691e;
-	border-bottom: 1px solid #33691e;
-	border-left: 1px dashed #33691e;
 }
 
 /*************************************************************************

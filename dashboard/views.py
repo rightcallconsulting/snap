@@ -61,8 +61,6 @@ def homepage(request):
 			number_incorrect = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, formation=formation, play=None, score=0).count())
 			number_skipped = float(QuestionAttempted.objects.filter(team=team, time__range=time_range, formation=formation, play=None, score=None).count())
 
-			print number_correct
-
 			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 			if number_of_attempts > 0:
@@ -114,8 +112,29 @@ def homepage(request):
 		if len(recent_results) > 8:
 			recent_results = recent_results[0:7]
 
+		quizzes = Quiz.objects.filter(team=team)[:7]
+		quizzes_table = []
+
+		for quiz in quizzes:
+			quiz_information = []
+			quiz_information.append(quiz.name)
+
+			number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=1).count())
+			number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=0).count())
+			number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=None).count())
+
+			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+			quiz_information.append(int(number_correct + number_incorrect)) # this totally doesn't work
+			quiz_information.append(quiz.players.count())
+
+			quiz_information.append(str(quiz.id))
+
+			quizzes_table.append(quiz_information)
+
 		return render(request, 'dashboard/coach_homepage.html', {
-			"recent_results": recent_results,
+			'recent_results': recent_results,
+			'quizzes': quizzes_table,
 			'page_header': 'DASHBOARD'
 		})
 
@@ -569,9 +588,9 @@ def quizzes(request):
 		quiz_information = []
 		quiz_information.append(quiz.name)
 
-		number_correct = float(QuestionAttempted.objects.filter(quiz=quiz, score=1).count())
-		number_incorrect = float(QuestionAttempted.objects.filter(quiz=quiz, score=0).count())
-		number_skipped = float(QuestionAttempted.objects.filter(quiz=quiz, score=None).count())
+		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
