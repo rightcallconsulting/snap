@@ -582,6 +582,14 @@ player homepage
 	margin: 0 0 10px 0;
 }
 
+.player-homepage ul li.playbook {
+	list-style-image: url("/static/dashboard/images/create-play-action-box.png"); 
+}
+
+.player-homepage ul li.quiz {
+	list-style-image: url("/static/dashboard/images/create-play-action-box.png");
+}
+
 .player-homepage ul li a,
 .player-homepage ul li a:link,
 .player-homepage ul li a:active {
