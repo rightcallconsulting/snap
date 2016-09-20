@@ -777,9 +777,22 @@ def take_quiz(request, quiz_id):
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
+def submit_quiz(request):
+	if request.method == 'POST':
+		team = request.user.player.team
+		name = request.POST['name']
+		quiz = Quiz.objects.filter(team=team, name=name)[0]
+		
+		player = request.user.player
+		quiz.submissions.add(player)
+		quiz.save()
+
+		return HttpResponse('')
+
+@user_passes_test(lambda u: u.myuser.is_a_player)
 def custom_quizzes(request, unit="offense"):
 	player = request.user.player
-	order = ['Random', 'Difficulty', ]
+	order = ['Random', 'Difficulty']
 	return render(request, 'dashboard/playerbook.html', {
 		'page_header': 'CUSTOM QUIZZES',
 		'player': player,
