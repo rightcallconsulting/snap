@@ -197,7 +197,8 @@ class Quiz(models.Model):
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	unit = models.CharField(max_length=25, default="offense")
-	players = models.ManyToManyField(Player)
+	players = models.ManyToManyField(Player, related_name="players")
+	submissions = models.ManyToManyField(Player, blank=True, related_name="submissions")
 
 	formations = models.ManyToManyField(Formation, blank=True)
 	plays = models.ManyToManyField(Play, blank=True)
