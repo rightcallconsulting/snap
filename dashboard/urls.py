@@ -41,7 +41,7 @@ urlpatterns = [
 	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
 	url(r'^quizzes/todo$', views.quizzes_todo, name='quizzes_todo'),
 	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
-	url(r'^quizzes/submit', views.submit_quiz, name='submit_quiz'),
+	url(r'^quizzes/submit$', views.submit_quiz, name='submit_quiz'),
 	url(r'^quizzes/custom$', views.custom_quizzes, name='custom_quizzes'),
 
 	# Analytics
