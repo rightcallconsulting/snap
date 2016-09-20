@@ -268,11 +268,13 @@ def playbook(request, unit="offense"):
 # Formations
 @login_required
 def create_formation(request):
+	coach = request.user.coach
+	team = coach.team
 	if request.method == "POST":
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			formationJson = request.POST['formation']
-			formation = Formation.objects.filter(scout=False, name=name)
+			formation = Formation.objects.filter(team=team, scout=False, name=name)
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
@@ -286,12 +288,10 @@ def create_formation(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(scout=False, name=name)
+			formation = Formation.objects.filter(team=team, scout=False, name=name)
 			formation.delete()
 		return HttpResponse('')
 	else:
-		coach = request.user.coach
-		team = coach.team
 		formations = Formation.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
@@ -300,11 +300,13 @@ def create_formation(request):
 		})
 
 def create_defensive_look(request):
+	coach = request.user.coach
+	team = coach.team
 	if request.method == "POST":
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			formationJson = request.POST['formation']
-			formation = Formation.objects.filter(scout=True, name=name)
+			formation = Formation.objects.filter(team=team, scout=True, name=name)
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
@@ -318,12 +320,10 @@ def create_defensive_look(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(scout=True, name=name)
+			formation = Formation.objects.filter(team=team, scout=True, name=name)
 			formation.delete()
 		return HttpResponse('')
 	else:
-		coach = request.user.coach
-		team = coach.team
 		formations = Formation.objects.filter(team=team, scout=True)
 		return render(request, 'dashboard/create_defensive_look.html', {
 			'team': team,
@@ -333,14 +333,16 @@ def create_defensive_look(request):
 
 # Plays
 def create_play(request):
+	coach = request.user.coach
+	team = coach.team
 	if request.method == "POST":
 		name = request.POST['name']
 		scout_name = request.POST['scout_name']
 		formation_name = request.POST['formation']
-		formation = Formation.objects.filter(scout=False, name=formation_name)[0]
+		formation = Formation.objects.filter(team=team, scout=False, name=formation_name)[0]
 		if request.POST['save'] == "true":
 			playJson = request.POST['play']
-			play = Play.objects.filter(scout=False, formation=formation, name=name, scoutName=scout_name)
+			play = Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)
 			if play.count() == 1:
 				play = play[0]
 				play.playJson = playJson
@@ -352,16 +354,14 @@ def create_play(request):
 				play.team = request.user.coach.team
 				play.unit = request.POST['unit']
 				play.scout = False
-				play.formation = Formation.objects.filter(name=formation_name)[0]
+				play.formation = Formation.objects.filter(team=team, name=formation_name)[0]
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":
-			play = Play.objects.filter(scout=False, formation=formation, name=name, scoutName=scout_name)
+			play = Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)
 			play.delete()
 		return HttpResponse('')
 	else:
-		coach = request.user.coach
-		team = coach.team
 		formations = Formation.objects.filter(team=team, scout=False)
 		scout_formations = Formation.objects.filter(team=team, scout=True)
 		plays = Play.objects.filter(team=team, scout=False)
@@ -376,11 +376,13 @@ def create_play(request):
 # Concepts
 @login_required
 def create_concept(request):
+	coach = request.user.coach
+	team = coach.team
 	if request.method == "POST":
 		name = request.POST['name']
 		if request.POST['save'] == "true":
 			conceptJson = request.POST['concept']
-			concept = Concept.objects.filter(scout=False, name=name)
+			concept = Concept.objects.filter(team=team, scout=False, name=name)
 			if concept.count() == 1:
 				concept = concept[0]
 				concept.conceptJson = conceptJson
@@ -394,12 +396,10 @@ def create_concept(request):
 				concept.conceptJson = conceptJson
 				concept.save()
 		elif request.POST['delete'] == "true":
-			concept = Concept.objects.filter(scout=False, name=name)
+			concept = Concept.objects.filter(team=team, scout=False, name=name)
 			concept.delete()
 		return HttpResponse('')
 	else:
-		coach = request.user.coach
-		team = coach.team
 		concepts = Concept.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
@@ -430,6 +430,7 @@ def groups(request):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_group(request):
+	team = request.user.coach.team
 	if request.method == "POST":
 		new_player_group = PlayerGroup()
 		new_player_group.name = request.POST['name']
@@ -437,7 +438,7 @@ def create_group(request):
 		new_player_group.save()
 
 		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
+			player = Player.objects.filter(team=team, pk=int(player_id))[0]
 			new_player_group.players.add(player)
 
 		new_player_group.save()
@@ -445,7 +446,7 @@ def create_group(request):
 		return HttpResponseRedirect(reverse('groups'))
 	else:
 		form = PlayerGroupForm()
-		players = Player.objects.filter(team=request.user.coach.team)
+		players = Player.objects.filter(team=team)
 		return render(request, 'dashboard/create_group.html', {
 			'form': form,
 			'players': players,
@@ -454,9 +455,10 @@ def create_group(request):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_groups(request):
+	team = request.user.coach.team
 	if request.method == "POST":
 		group_id = int(request.POST['group'])
-		group = PlayerGroup.objects.filter(pk=group_id)[0]
+		group = PlayerGroup.objects.filter(team=team, pk=group_id)[0]
 
 		# Lists to contain the primary keys to be operated on including duplicates.
 		add_pks = [0]
@@ -495,10 +497,10 @@ def manage_groups(request):
 			# to the group. If the diff is negative 1 then remove the player. If it
 			# is 0, do nothing. Otherwise, return an error for an invalid operation.
 			if diff == 1:
-				group.players.add(Player.objects.filter(pk=(pk+1))[0])
+				group.players.add(Player.objects.filter(team=team, pk=(pk+1))[0])
 				group.save()
 			elif diff == -1:
-				group.players.remove(Player.objects.filter(pk=(pk+1))[0])
+				group.players.remove(Player.objects.filter(team=team, pk=(pk+1))[0])
 				group.save()
 			elif diff == 0:
 				group.save()
@@ -507,7 +509,6 @@ def manage_groups(request):
 
 		return HttpResponseRedirect(reverse('groups'))
 	else:
-		team = request.user.coach.team
 		groups = PlayerGroup.objects.filter(team=team)
 		all_players_on_team = Player.objects.filter(team=team)
 		players_not_in_group = []
@@ -539,9 +540,10 @@ def manage_groups(request):
 		})
 
 def delete_group(request):
+	team = request.user.coach.team
 	if request.method == 'POST':
 		group_id = request.POST['group_id']
-		group = PlayerGroup.objects.filter(id=group_id)[0]
+		group = PlayerGroup.objects.filter(team=team, id=group_id)[0]
 		group.delete()
 		return HttpResponse('')
 
@@ -589,6 +591,7 @@ def assigned_quizzes(request):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def create_quiz(request):
+	team = request.user.coach.team
 	if request.method == 'POST':
 		quiz = Quiz()
 		quiz.name = request.POST['name']
@@ -600,14 +603,13 @@ def create_quiz(request):
 
 		# Loop through player ids and assign them to the quiz.
 		for player_id in request.POST.getlist('player'):
-			player = Player.objects.filter(pk=int(player_id))[0]
+			player = Player.objects.filter(team=team, pk=int(player_id))[0]
 			quiz.players.add(player)
 			quiz.save()
 
 		quiz.save()
 		return HttpResponseRedirect(reverse('manage_quiz', args=[quiz.id]))
 	else:
-		team = request.user.coach.team
 		groups = PlayerGroup.objects.filter(team=team)
 		plays = request.user.coach.team.play_set.all()
 
@@ -626,9 +628,9 @@ def create_quiz(request):
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def manage_quiz(request, quiz_id):
+	team = request.user.coach.team
 	if request.method == 'POST':
-		team = request.user.coach.team
-		quiz = Quiz.objects.filter(name=request.POST['name'])[0]
+		quiz = Quiz.objects.filter(team=team, name=request.POST['name'])[0]
 		if request.POST['save'] == "true":
 			quiz.formations.clear()
 			quiz.plays.clear()
@@ -660,8 +662,7 @@ def manage_quiz(request, quiz_id):
 			quiz.delete()
 			return HttpResponseRedirect(reverse('create_quiz'))
 	else:
-		quiz = Quiz.objects.filter(id=quiz_id)[0]
-		team = quiz.team
+		quiz = Quiz.objects.filter(team=team, id=quiz_id)[0]
 		unit = quiz.unit
 
 		formations = Formation.objects.filter(team=team, scout=False)
@@ -731,9 +732,9 @@ def quizzes_todo(request):
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
+	team = request.user.player.team
 	if request.method == 'POST':
-		team = request.user.player.team
-		quiz = Quiz.objects.filter(id=quiz_id)[0]
+		quiz = Quiz.objects.filter(team=team, id=quiz_id)[0]
 		player = request.user.player
 		question_type = request.POST['type']
 		score = request.POST['score']
@@ -767,7 +768,7 @@ def take_quiz(request, quiz_id):
 
 		return HttpResponse('')
 	else:
-		quiz = Quiz.objects.filter(id=quiz_id)[0]
+		quiz = Quiz.objects.filter(team=team, id=quiz_id)[0]
 		quiz_formations = quiz.formations.all()
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
@@ -782,8 +783,8 @@ def take_quiz(request, quiz_id):
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def submit_quiz(request):
+	team = request.user.player.team
 	if request.method == 'POST':
-		team = request.user.player.team
 		name = request.POST['name']
 		quiz = Quiz.objects.filter(team=team, name=name)[0]
 		
@@ -891,7 +892,7 @@ def quiz_analytics(request, quiz_id):
 	plays_analytics = []
 	team = request.user.coach.team
 	plays = Play.objects.filter(team=team)
-	quiz = Quiz.objects.filter(id=quiz_id)
+	quiz = Quiz.objects.filter(team=team, id=quiz_id)
 
 	for play in plays:
 		play_analytics = []
@@ -937,7 +938,7 @@ def players_on_team_json(request, team_id):
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def players_on_team_but_not_in_group_json(request, group_id, team_id):
 	team = Team.objects.filter(id=team_id)[0]
-	group = PlayerGroup.objects.filter(id=group_id)[0]
+	group = PlayerGroup.objects.filter(team=team, id=group_id)[0]
 	players_on_team = Player.objects.filter(team=team)
 	players_in_group = group.players.all()
 	players_not_in_group = list(players_on_team)
