@@ -21,7 +21,11 @@
 						<tr>
 							<td>{{ quiz.0 }}</td>
 							<td>{{ quiz.1 }}</td>
+							{% if quiz.1 %}
+							<td><a href="/quizzes/take/{{ quiz.2 }}" >Retake {{ quiz.0 }}</a></td>
+							{% else %}
 							<td><a href="/quizzes/take/{{ quiz.2 }}" >Take {{ quiz.0 }}</a></td>
+							{% endif %}
 						</tr>
 					{% endfor %}
 				</tbody>
