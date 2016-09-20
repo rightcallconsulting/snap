@@ -31,12 +31,15 @@
 		<div class="col-md-5 newsfeed">
 			<div class="header">NEWSFEED</div>
 			<div class="newsfeed-body">
-				<ul>
-					<!--{% for news in newsfeed %}
-						<li class="{{ news.0 }}">
-						</li>
-					{% endfor %}-->
-				</ul>
+				{% if newsfeed|length %}
+					<ul>
+						{% for news in newsfeed %}
+							<li class="{{ news.0 }}">
+								A new {{ news.1 }} <a>{{ news.2 }}</a> was {{ news.3 }}
+							</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
 			</div>
 		</div>
 	</div>

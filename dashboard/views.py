@@ -57,6 +57,7 @@ def homepage(request):
 			news_item.append("playbook")
 			news_item.append("formation")
 			news_item.append(formation.name)
+			news_item.append("created")
 			news_item.append(formation.created_at)
 			newsfeed.append(news_item)
 
@@ -67,8 +68,13 @@ def homepage(request):
 			news_item.append("playbook")
 			news_item.append("play")
 			news_item.append(play.name)
+			if play.scoutName == "":
+				news_item.append("created")
+			else:
+				newstext = "created for scout formation " + play.scoutName
+				news_item.append(newstext)
+
 			news_item.append(play.created_at)
-			news_item.append(play.scoutName)
 			newsfeed.append(news_item)
 
 		concepts = Concept.objects.filter(team=team)
@@ -78,6 +84,7 @@ def homepage(request):
 			news_item.append("playbook")
 			news_item.append("concept")
 			news_item.append(concept.name)
+			news_item.append("created")
 			news_item.append(concept.created_at)
 			newsfeed.append(news_item)
 
@@ -88,10 +95,11 @@ def homepage(request):
 			news_item.append("quiz")
 			news_item.append("quiz")
 			news_item.append(quiz.name)
+			news_item.append("assigned to you")
 			news_item.append(quiz.created_at)
 			newsfeed.append(news_item)
 
-		newsfeed.sort(key=lambda x: x[3])
+		newsfeed.sort(key=lambda x: x[4], reverse=True)
 		if len(newsfeed) > 20:
 			newsfeed = newsfeed[0:19]
 
