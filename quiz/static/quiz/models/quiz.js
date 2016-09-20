@@ -250,7 +250,19 @@ Quiz.prototype.getCurrentQuestionIndex = function() {
 
 // submit shows the player their results on the quiz and then navigates back to
 // the players dashboard.
-Quiz.prototype.submit = function() {};
+Quiz.prototype.submit = function(csrf_token) {
+	var path = "/quizzes/submit"
+	var quizName = this.name;
+
+	var jqxhr = $.post(
+			path,
+			{csrfmiddlewaretoken: csrf_token, name: quizName}
+		).done(function() {
+			console.log("Quiz successfully submitted");
+		}).fail(function() {
+			console.log("Error submitting quiz");
+	});
+};
 
 //*******************************************************************//
 // General Quiz methods                                              //

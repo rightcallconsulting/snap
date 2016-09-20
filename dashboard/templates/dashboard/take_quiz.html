@@ -250,7 +250,9 @@
 		//*******************************************************************//
 
 		$("#submit-quiz-button").click(function(event) {
-			quiz.submit();
+			var csrf_token = "{{ csrf_token }}";
+			quiz.submit(csrf_token);
+			//window.location.replace("/quizzes/todo");
 		});
 
 		$("#check-answer-button").click(function(event) {

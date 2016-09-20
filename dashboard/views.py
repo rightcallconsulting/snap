@@ -125,7 +125,7 @@ def homepage(request):
 
 			number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-			quiz_information.append(int(number_correct + number_incorrect)) # this totally doesn't work
+			quiz_information.append(quiz.submissions.count())
 			quiz_information.append(quiz.players.count())
 
 			quiz_information.append(str(quiz.id))
@@ -562,7 +562,7 @@ def assigned_quizzes(request):
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		quiz_information.append(int(number_correct + number_incorrect)) # this doesn't totally work
+		quiz_information.append(quiz.submissions.count())
 		quiz_information.append(quiz.players.count())
 
 		if number_of_attempts > 0:
@@ -687,21 +687,25 @@ def manage_quiz(request, quiz_id):
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def quizzes_todo(request):
-	team = request.user.player.team
-	quizzes = Quiz.objects.filter(team=team, players__in=[request.user.player])
+	player = request.user.player
+	team = player.team
+	quizzes = Quiz.objects.filter(team=team, players__in=[player])
 	quizzes_table = []
 
 	for quiz in quizzes:
 		quiz_information = []
 		quiz_information.append(quiz.name)
 
-		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=1).count())
-		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=0).count())
-		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=None).count())
+		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
-		quiz_information.append(0) # Times taken needs to be fixed by adding a submissions var to quiz model
+		if player in quiz.submissions.all():
+			quiz_information.append(True)
+		else:
+			quiz_information.append(False)
 
 		if number_of_attempts > 0:
 			percentage_correct = (number_correct/number_of_attempts)*100 
