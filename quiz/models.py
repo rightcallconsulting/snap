@@ -109,6 +109,9 @@ class Formation(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	class Meta:
+		ordering = ["-created_at"]
+
 	def __str__(self):
 		return self.name
 
@@ -299,6 +302,9 @@ class Play(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ["-created_at"]
 
 	def __str__(self):
 		display_name = self.name + " from " + self.formation.name
