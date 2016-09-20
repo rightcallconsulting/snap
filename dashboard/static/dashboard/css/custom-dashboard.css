@@ -575,19 +575,11 @@ player homepage
 }
 
 .player-homepage ul {
-	list-style: square outside;
+	list-style: circle outside;
 }
 
 .player-homepage ul li {
 	margin: 0 0 10px 0;
-}
-
-.player-homepage ul li.playbook {
-	list-style-image: url("/static/dashboard/images/create-play-action-box.png"); 
-}
-
-.player-homepage ul li.quiz {
-	list-style-image: url("/static/dashboard/images/create-play-action-box.png");
 }
 
 .player-homepage ul li a,
