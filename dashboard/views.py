@@ -46,9 +46,54 @@ def homepage(request):
 			quizzes_table.append(quiz_information)
 
 		if len(quizzes_table) > 4:
-			quizzes_table = quizzes_table[:3]
+			quizzes_table = quizzes_table[0:3]
 
 		newsfeed = []
+
+		formations = Formation.objects.filter(team=team)
+
+		for formation in formations:
+			news_item = []
+			news_item.append("playbook")
+			news_item.append("formation")
+			news_item.append(formation.name)
+			news_item.append(formation.created_at)
+			newsfeed.append(news_item)
+
+		plays = Play.objects.filter(team=team)
+
+		for play in plays:
+			news_item = []
+			news_item.append("playbook")
+			news_item.append("play")
+			news_item.append(play.name)
+			news_item.append(play.created_at)
+			news_item.append(play.scoutName)
+			newsfeed.append(news_item)
+
+		concepts = Concept.objects.filter(team=team)
+
+		for concept in concepts:
+			news_item = []
+			news_item.append("playbook")
+			news_item.append("concept")
+			news_item.append(concept.name)
+			news_item.append(concept.created_at)
+			newsfeed.append(news_item)
+
+		quizzes = Quiz.objects.filter(team=team, players__in=[player])
+
+		for quiz in quizzes:
+			news_item = []
+			news_item.append("quiz")
+			news_item.append("quiz")
+			news_item.append(quiz.name)
+			news_item.append(quiz.created_at)
+			newsfeed.append(news_item)
+
+		newsfeed.sort(key=lambda x: x[3])
+		if len(newsfeed) > 20:
+			newsfeed = newsfeed[0:19]
 
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
@@ -119,7 +164,7 @@ def homepage(request):
 				recent_results.append(result)
 
 		# Sort the list of results in decending order by percent wrong
-		recent_results.sort(key=lambda x: 100.0 - x[2])
+		recent_results.sort(key=lambda x: -x[2])
 		if len(recent_results) > 8:
 			recent_results = recent_results[0:7]
 
@@ -854,7 +899,7 @@ def plays_analytics(request):
 			plays_analytics.append(play_analytics)	
 
 	# Sort the list of play analytics in decending order by percent wrong
-	plays_analytics.sort(key=lambda x: 100.0 - x[3])
+	plays_analytics.sort(key=lambda x: -x[3])
 
 	return render(request, 'dashboard/plays_analytics.html', {
 		'plays_analytics': plays_analytics,

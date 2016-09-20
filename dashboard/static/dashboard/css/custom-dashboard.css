@@ -551,10 +551,6 @@ div.sideboxes>div {
 	margin: 0 0 20px 0;
 }
 
-div.sideboxes div.newsfeed-body {
-	border: 1px solid #33691e;
-}
-
 .coach-homepage .analytics table {
 	width: 100%;
 }
@@ -567,35 +563,8 @@ div.sideboxes div.newsfeed-body {
 player homepage
 *************************************************************************/
 
-.homepage-todo-table {
-	width: 100%;
-}
-
-.homepage-todo-table th {
-	height: 30px;
-	background-color: #d0d3d5;
-	color: #000000;
-	font-size: 16px;
-	text-align: center;
-}
-
-.homepage-todo-table tr {
-	height: 30px;
-	font-size: 14px;
-	color: #000000;
-	border: 2px solid #c5e1a5;
-}
-
-.homepage-todo-table td {
-	vertical-align: middle;
-	text-align: center;
-	padding-top: 25px;
-	padding-bottom: 25px;
-}
-
-.homepage-todo-table .button {
-	background-color: #9ccc65;
-	padding: 8px;
+div.newsfeed div.newsfeed-body {
+	border: 1px solid #33691e;
 }
 
 /*************************************************************************
