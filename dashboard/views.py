@@ -59,6 +59,7 @@ def homepage(request):
 			news_item.append(formation.name)
 			news_item.append("created")
 			news_item.append(formation.created_at)
+			news_item.append("/playbook")
 			newsfeed.append(news_item)
 
 		plays = Play.objects.filter(team=team)
@@ -75,6 +76,7 @@ def homepage(request):
 				news_item.append(newstext)
 
 			news_item.append(play.created_at)
+			news_item.append("/playbook")
 			newsfeed.append(news_item)
 
 		concepts = Concept.objects.filter(team=team)
@@ -86,6 +88,7 @@ def homepage(request):
 			news_item.append(concept.name)
 			news_item.append("created")
 			news_item.append(concept.created_at)
+			news_item.append("/playbook")
 			newsfeed.append(news_item)
 
 		quizzes = Quiz.objects.filter(team=team, players__in=[player])
@@ -97,6 +100,7 @@ def homepage(request):
 			news_item.append(quiz.name)
 			news_item.append("assigned to you")
 			news_item.append(quiz.created_at)
+			news_item.append("/quizzes/take/" + str(quiz.id))
 			newsfeed.append(news_item)
 
 		newsfeed.sort(key=lambda x: x[4], reverse=True)

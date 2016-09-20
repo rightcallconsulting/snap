@@ -35,7 +35,7 @@
 					<ul>
 						{% for news in newsfeed %}
 							<li class="{{ news.0 }}">
-								A new {{ news.1 }} <a>{{ news.2 }}</a> was {{ news.3 }}
+								A new {{ news.1 }} <a href="{{ news.5 }}">{{ news.2 }}</a> was {{ news.3 }}
 							</li>
 						{% endfor %}
 					</ul>
