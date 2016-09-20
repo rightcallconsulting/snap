@@ -29,19 +29,30 @@ from dashboard.utils import PlayerAnalytics
 def homepage(request):
 	if request.user.myuser.is_a_player:
 		player = request.user.player
-		players = [player]
-		all_tests = player.test_set.all()
-		completed_tests = all_tests.filter(completed=True).order_by('-created_at')
-		uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
-		in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
-		analytics = PlayerAnalytics(players)
+		team = player.team
+		quizzes = Quiz.objects.filter(team=team, players__in=[player])
+		quizzes_table = []
+
+		for quiz in quizzes:
+			quiz_information = []
+			quiz_information.append(quiz.name)
+
+			if player in quiz.submissions.all():
+				quiz_information.append(True)
+			else:
+				quiz_information.append(False)
+
+			quiz_information.append(str(quiz.id))
+			quizzes_table.append(quiz_information)
+
+		if len(quizzes_table) > 4:
+			quizzes_table = quizzes_table[:3]
+
+		newsfeed = []
+
 		return render(request, 'dashboard/player_homepage.html', {
-			'completed_tests': completed_tests,
-			'uncompleted_tests': uncompleted_tests,
-			'in_progress_tests': in_progress_tests,
-			'current_time': timezone.now(),
-			'new_time_threshold': timezone.now() + timedelta(days=3),
-			'analytics': analytics,
+			'newsfeed': newsfeed,
+			'quizzes': quizzes_table,
 			'page_header': 'DASHBOARD'
 		})
 	else:
@@ -697,16 +708,16 @@ def quizzes_todo(request):
 		quiz_information = []
 		quiz_information.append(quiz.name)
 
+		if player in quiz.submissions.all():
+			quiz_information.append(True)
+		else:
+			quiz_information.append(False)
+
 		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=1).count())
 		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=0).count())
 		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, player=player, score=None).count())
 
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
-
-		if player in quiz.submissions.all():
-			quiz_information.append(True)
-		else:
-			quiz_information.append(False)
 
 		if number_of_attempts > 0:
 			percentage_correct = (number_correct/number_of_attempts)*100 
@@ -722,7 +733,6 @@ def quizzes_todo(request):
 			quiz_information.append(0.0)
 
 		quiz_information.append(str(quiz.id))
-
 		quizzes_table.append(quiz_information)
 
 	return render(request, 'dashboard/todo.html', {

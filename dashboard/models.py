@@ -184,10 +184,12 @@ class Concept(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	unit = models.CharField(max_length=25, default="offense", blank=True, null=True)
-
 	scout = models.BooleanField(default=False)
 
 	conceptJson = models.TextField(max_length=None, blank=True, null=True)
+
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.name

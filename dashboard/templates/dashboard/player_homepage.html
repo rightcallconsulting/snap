@@ -4,7 +4,7 @@
 
 {% block content %}
 	<div class="player-homepage">
-		<div class="col-md-7 analytics">
+		<div class="col-md-7 quizzes">
 			<table>
 				<thead>
 					<tr>
@@ -12,15 +12,27 @@
 					</tr>
 					<tr>
 						<th>QUIZ</th>
-						<th>TYPE</th>
-						<th>INCORRECT</th>
+						<th>SUBMITTED</th>
+						<th>TAKE</th>
 					</tr>
 				</thead>
-				<tbody id="analytics-body">
+				<tbody id="quizzes-body">
+					{% for quiz in quizzes %}
+						<tr>
+							<td>{{ quiz.0 }}</td>
+							<td>{{ quiz.1 }}</td>
+							<td><a href="/quizzes/take/{{ quiz.2 }}" >Take {{ quiz.0 }}</a></td>
+						</tr>
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
 
+		<div class="col-md-5 quizzes">
+			<div class="header">NEWSFEED</div>
+			<div class="newsfeed-body">
+			</div>
+		</div>
 	</div>
 {% endblock %}
 
