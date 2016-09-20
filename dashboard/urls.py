@@ -15,7 +15,6 @@ urlpatterns = [
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
 	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
-	url(r'^todo$', views.todo, name='todo'),
 
 	# Playbook
 	url(r'^playbook$', views.playbook, name='playbook'),
@@ -37,10 +36,12 @@ urlpatterns = [
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
 	# Quizzes
-	url(r'^quizzes$', views.quizzes, name='quizzes'),
+	url(r'^quizzes/assigned$', views.assigned_quizzes, name='assigned_quizzes'),
 	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
 	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
+	url(r'^quizzes/todo$', views.quizzes_todo, name='quizzes_todo'),
 	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
+	url(r'^quizzes/custom$', views.custom_quizzes, name='custom_quizzes'),
 
 	# Analytics
 	url(r'^analytics$', views.plays_analytics, name='plays_analytics'), # this will direct to the play analyitics until I implement an analytics page

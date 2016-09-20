@@ -28,19 +28,21 @@
 				{% endif %}
 			</select>
 
-			<div id="create-formation-button">
-				<a href="/formations/create">
-					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
-					CREATE FORMATION
-				</a>
-			</div>
+			{% if user_is_a_coach %}
+				<div id="create-formation-button">
+					<a href="/formations/create">
+						<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+						CREATE FORMATION
+					</a>
+				</div>
 
-			<div id="create-play-button">
-				<a href="/plays/create">
-					<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
-					CREATE PLAY
-				</a>
-			</div>
+				<div id="create-play-button">
+					<a href="/plays/create">
+						<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+						CREATE PLAY
+					</a>
+				</div>
+			{% endif %}
 		</div>
 		
 		<div id="display-box" class="col-md-8 bordered-div">
@@ -344,6 +346,7 @@
 			if (sideview_content === "offensive playbook") {
 				showFormations();
 
+				{% if user_is_a_coach %}
 				var create_concept_button = document.getElementById("create-concept-button");
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
 
@@ -382,9 +385,11 @@
 				create_play_button.appendChild(create_play_button_link);
 
 				top_options.appendChild(create_play_button);
+				{% endif %}
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
 
+				{% if user_is_a_coach %}
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
 				var create_formation_button = document.getElementById("create-formation-button");
 				var create_play_button = document.getElementById("create-play-button");
@@ -409,9 +414,11 @@
 				create_concept_button.appendChild(create_concept_button_link);
 
 				top_options.appendChild(create_concept_button);
+				{% endif %}
 			} else if (sideview_content === "defensive looks") {
 				showDefensiveLooks();
 
+				{% if user_is_a_coach %}
 				var create_concept_button = document.getElementById("create-concept-button");
 				var create_formation_button = document.getElementById("create-formation-button");
 				var create_play_button = document.getElementById("create-play-button");
@@ -436,6 +443,7 @@
 				create_defensive_look_button.appendChild(create_defensive_look_button_link);
 
 				top_options.appendChild(create_defensive_look_button);
+				{% endif %}
 			}
 		};
 

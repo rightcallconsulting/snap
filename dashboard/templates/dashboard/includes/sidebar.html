@@ -32,7 +32,7 @@
 
 				{% if request.user.myuser.is_a_player %}
 					<li class="openable open">
-						<a href="/todo">
+						<a href="/quizzes/todo">
 							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
 							<br>
 							<span class="menu-text">
@@ -43,7 +43,7 @@
 					</li>
 				{% else %}
 					<li class="openable open">
-						<a href="/quizzes">
+						<a href="/quizzes/assigned">
 							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
 							<br>
 							<span class="menu-text">
@@ -61,6 +61,17 @@
 							<br>
 							<span class="menu-text">
 								GROUPS
+							</span>
+							<span class="menu-hover"></span>
+						</a>
+					</li>
+				{% else %}
+					<li class="openable open">
+						<a href="/quizzes/custom">
+							<img class="menu-icon" src="{% static 'dashboard/images/quiz-icon.png' %}" alt="">
+							<br>
+							<span class="menu-text">
+								QUIZZES
 							</span>
 							<span class="menu-hover"></span>
 						</a>

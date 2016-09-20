@@ -240,62 +240,30 @@ def change_password(request):
 			'page_header': 'EDIT PROFILE'
 		})
 
-@login_required
-def todo(request):
-	if request.user.myuser.is_a_player:
-		player = request.user.player
-		all_tests = player.test_set.all()
-		completed_tests = all_tests.filter(completed=True).order_by('-created_at')
-		uncompleted_tests = all_tests.filter(completed=False).order_by('-created_at')
-		in_progress_tests = all_tests.filter(in_progress=True).order_by('-created_at')
-		return render(request, 'dashboard/todo.html', {
-			'completed_tests': completed_tests,
-			'uncompleted_tests': uncompleted_tests,
-			'in_progress_tests': in_progress_tests,
-			'current_time': timezone.now(),
-			'new_time_threshold': timezone.now() + timedelta(days=3),
-			'page_header': 'TO DO'
-		})
-	else:
-		coach = request.user.coach
-		tests_assigned = Test.objects.filter(coach_who_created=request.user)
-		groups = PlayerGroup.objects.all()
-		return render(request, 'dashboard/todo.html', {
-			'uncompleted_tests': tests_assigned,
-			'current_time': timezone.now(),
-			'new_time_threshold': timezone.now() + timedelta(days=3),
-			'page_header': 'ASSIGNED QUIZZES',
-			'groups': groups,
-			'groups_seed': serializers.serialize("json", groups)
-		})
-
 # Playbook
 @login_required
 def playbook(request, unit="offense"):
 	if request.user.myuser.is_a_player:
-		player = request.user.player
-		order = ['Random', 'Difficulty', ]
-		return render(request, 'dashboard/playerbook.html', {
-			'page_header': 'PLAYBOOK',
-			'player': player,
-			'quiz_order_options': order,
-		})
+		user_is_a_coach = False
+		team = request.user.player.team
 	else:
+		user_is_a_coach = True
 		team = request.user.coach.team
 
-		formations = Formation.objects.filter(team=team, scout=False)
-		scout_formations = Formation.objects.filter(team=team, scout=True)
-		plays = Play.objects.filter(team=team)
-		concepts = Concept.objects.filter(team=team)
+	formations = Formation.objects.filter(team=team, scout=False)
+	scout_formations = Formation.objects.filter(team=team, scout=True)
+	plays = Play.objects.filter(team=team)
+	concepts = Concept.objects.filter(team=team)
 
-		return render(request, 'dashboard/playbook.html', {
-			'unit': unit,
-			'formations': formations,
-			'scoutFormations': scout_formations,
-			'plays': plays,
-			'concepts': concepts,
-			'page_header': 'PLAYBOOK'
-		})
+	return render(request, 'dashboard/playbook.html', {
+		'user_is_a_coach': user_is_a_coach,
+		'unit': unit,
+		'formations': formations,
+		'scoutFormations': scout_formations,
+		'plays': plays,
+		'concepts': concepts,
+		'page_header': 'PLAYBOOK'
+	})
 
 # Formations
 @login_required
@@ -579,7 +547,7 @@ def delete_group(request):
 
 # Quizzes
 @user_passes_test(lambda u: not u.myuser.is_a_player)
-def quizzes(request):
+def assigned_quizzes(request):
 	team = request.user.coach.team
 	quizzes = Quiz.objects.filter(team=team)
 	quizzes_table = []
@@ -718,6 +686,46 @@ def manage_quiz(request, quiz_id):
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
+def quizzes_todo(request):
+	team = request.user.player.team
+	quizzes = Quiz.objects.filter(team=team, players__in=[request.user.player])
+	quizzes_table = []
+
+	for quiz in quizzes:
+		quiz_information = []
+		quiz_information.append(quiz.name)
+
+		number_correct = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=1).count())
+		number_incorrect = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=0).count())
+		number_skipped = float(QuestionAttempted.objects.filter(team=team, quiz=quiz, score=None).count())
+
+		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
+
+		quiz_information.append(0) # Times taken needs to be fixed by adding a submissions var to quiz model
+
+		if number_of_attempts > 0:
+			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_incorrect = (number_incorrect/number_of_attempts)*100
+			percentage_skipped = (number_skipped/number_of_attempts)*100
+
+			quiz_information.append(percentage_correct)
+			quiz_information.append(percentage_incorrect)
+			quiz_information.append(percentage_skipped)
+		else:
+			quiz_information.append(0.0)
+			quiz_information.append(0.0)
+			quiz_information.append(0.0)
+
+		quiz_information.append(str(quiz.id))
+
+		quizzes_table.append(quiz_information)
+
+	return render(request, 'dashboard/todo.html', {
+			'quizzes': quizzes_table,
+			'page_header': 'TODO',
+		})
+
+@user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
 	if request.method == 'POST':
 		team = request.user.player.team
@@ -767,6 +775,16 @@ def take_quiz(request, quiz_id):
 			'quizConcepts': quiz_concepts,
 			'page_header': quiz.name.upper()
 		})
+
+@user_passes_test(lambda u: u.myuser.is_a_player)
+def custom_quizzes(request, unit="offense"):
+	player = request.user.player
+	order = ['Random', 'Difficulty', ]
+	return render(request, 'dashboard/playerbook.html', {
+		'page_header': 'CUSTOM QUIZZES',
+		'player': player,
+		'quiz_order_options': order,
+	})
 
 # Analytics
 @login_required
