@@ -19,7 +19,11 @@
 				{% for quiz in quizzes %}
 					<tr>
 						<td>{{ quiz.0 }}</td>
-						<td>{{ quiz.1 }}</td>
+						{% if quiz.1 %}
+						<td><i class="fa fa-check fa-lg"></i></td>
+						{% else %}
+						<td><i class="fa fa-close fa-lg"></i></td>
+						{% endif %}
 						<td>{{ quiz.2|floatformat }} %</td>
 						<td>{{ quiz.3|floatformat }} %</td>
 						<td>{{ quiz.4|floatformat }} %</td>
