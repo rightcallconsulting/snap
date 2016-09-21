@@ -11,7 +11,6 @@ from django.conf import settings
 import json
 import simplejson
 
-# from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
 from IPython import embed
