@@ -609,6 +609,58 @@ manage quiz
 }
 
 /*************************************************************************
+inputs
+*************************************************************************/
+
+.create-groups input[type="text"], 
+.all-groups input[type="text"], 
+.manage-groups input[type="text"],
+.create-quiz input[type="text"] {
+	width: 60%;
+	line-height: 2em;
+}
+
+.edit-profile input[type="text"],
+.edit-profile input[type="password"] {
+	width: 60%;
+	line-height: 2.5em;
+}
+
+.create-groups input[type="submit"], 
+.all-groups input[type="submit"], 
+.manage-groups input[type="submit"],
+.create-quiz input[type="submit"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+.edit-profile input[type="submit"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+.create-groups input[type="button"], 
+.all-groups input[type="button"], 
+.manage-groups input[type="button"],
+.create-quiz input[type="button"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+.edit-profile input[type="button"] {
+	margin-left: 3%;
+	margin-bottom: 2%;
+	width: auto;
+}
+
+input[type="text"]#abbreviation {
+	width: 100px;
+}
+
+/*************************************************************************
 other
 *************************************************************************/
 
@@ -728,50 +780,6 @@ other
 	width: 60%;
 	margin-left: 2%;
 	margin-bottom: 2%;
-}
-
-.create-groups input[type="text"], 
-.all-groups input[type="text"], 
-.manage-groups input[type="text"],
-.create-quiz input[type="text"] {
-	width: 60%;
-	line-height: 2em;
-}
-
-.edit-profile input[type="text"],
-.edit-profile input[type="password"] {
-	width: 60%;
-	line-height: 2.5em;
-}
-
-.create-groups input[type="submit"], 
-.all-groups input[type="submit"], 
-.manage-groups input[type="submit"],
-.create-quiz input[type="submit"] {
-	margin-left: 3%;
-	margin-bottom: 2%;
-	width: auto;
-}
-
-.edit-profile input[type="submit"] {
-	margin-left: 3%;
-	margin-bottom: 2%;
-	width: auto;
-}
-
-.create-groups input[type="button"], 
-.all-groups input[type="button"], 
-.manage-groups input[type="button"],
-.create-quiz input[type="button"] {
-	margin-left: 3%;
-	margin-bottom: 2%;
-	width: auto;
-}
-
-.edit-profile input[type="button"] {
-	margin-left: 3%;
-	margin-bottom: 2%;
-	width: auto;
 }
 
 .create-groups form, 
