@@ -19,11 +19,11 @@
 				<button id="delete-button" name="button">
 					<i class="fa fa-trash-o fa-2x mainview-button-icon" title="Delete Concept"></i>
 				</button>
-		
+
 				<button id="zoom-in-button" name="button">
 					<i class="fa fa-search-plus fa-2x mainview-button-icon" title="Zoom in"></i>
 				</button>
-		
+
 				<button id="zoom-out-button" name="button">
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
@@ -425,35 +425,39 @@
 				}
 
 			} else if (concept.getSelected()[0] != null) {
-				var playerSelcted = concept.getSelected()[0];
-				var playerSelctedIndex = concept.getSelected()[1];
+				var playerSelected = concept.getSelected()[0];
+				var playerSelectedIndex = concept.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"]
 				var playerStatusKeys = ["A", "S", "D"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelcted.unit == "offense") {
-						if(selectedPlayerStatus === 0 && playerSelcted.blockingAssignmentArray.length > 0){
-							playerSelcted.blockingAssignmentArray.pop()
-						}else if(selectedPlayerStatus === 1 && playerSelcted.route.length > 1){
-							playerSelcted.route.pop()
-						}else if(selectedPlayerStatus === 2 && playerSelcted.motionCoords.length > 0){
-							playerSelcted.motionCoords.pop()
+					if (playerSelected.unit == "offense") {
+						if(selectedPlayerStatus === 0 && playerSelected.blockingAssignmentArray.length > 0){
+							playerSelected.blockingAssignmentArray.pop()
+						}else if(selectedPlayerStatus === 1 && playerSelected.route.length > 1){
+							playerSelected.route.pop()
+						}else if(selectedPlayerStatus === 2 && playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop()
 						}else{
-							concept.offensivePlayers.splice(playerSelctedIndex, 1);
+							concept.offensivePlayers.splice(playerSelectedIndex, 1);
 						}
-					} else if (playerSelcted.unit == "defense") {
-						concept.defensivePlayers.splice(playerSelctedIndex, 1);
+					} else if (playerSelected.unit == "defense") {
+						if(playerSelected.defensiveMovement.length > 0){
+							playerSelected.defensiveMovement.pop()
+						}else{
+							concept.defensivePlayers.splice(playerSelectedIndex, 1);
+						}
 					}
 					return false;
 				}else if(specialBlockKeys.indexOf(key) >= 0){
-					var prevX = playerSelcted.x
-					var prevY = playerSelcted.y
-					var blockSize = playerSelcted.blockingAssignmentArray.length
+					var prevX = playerSelected.x
+					var prevY = playerSelected.y
+					var blockSize = playerSelected.blockingAssignmentArray.length
 					if(blockSize > 0){
-						prevX = playerSelcted.blockingAssignmentArray[blockSize - 1].x
-						prevY = playerSelcted.blockingAssignmentArray[blockSize - 1].y
+						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x
+						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y
 					}
-					playerSelcted.blockingAssignmentArray.push(new BlockType({
+					playerSelected.blockingAssignmentArray.push(new BlockType({
 						type: 2 + specialBlockKeys.indexOf(key),
 						player: null,
 						prevX: prevX,
