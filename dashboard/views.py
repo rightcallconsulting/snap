@@ -513,10 +513,8 @@ def create_group(request):
 
 		return HttpResponseRedirect(reverse('groups'))
 	else:
-		form = PlayerGroupForm()
 		players = Player.objects.filter(team=team)
 		return render(request, 'dashboard/create_group.html', {
-			'form': form,
 			'players': players,
 			'page_header': 'CREATE GROUP',
 		})

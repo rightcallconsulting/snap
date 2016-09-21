@@ -87,6 +87,9 @@ class PlayerGroup(models.Model):
 		verbose_name="Player Group"
 		verbose_name_plural="Player Groups"
 
+	def __str__(self):
+		return self.name
+
 class DeletePlayerFromGroupForm(forms.Form):
 	groupID = forms.CharField(max_length=10)
 	playerID = forms.CharField(max_length=10)
