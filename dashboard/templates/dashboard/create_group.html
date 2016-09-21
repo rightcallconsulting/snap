@@ -8,7 +8,20 @@
 
 			<div class="form-group">
 				<label for="group-name">Name:</label> 
-				<input type="text" name="name" id="group-name" class="unit-form form-sm bounceIn animation-delay2" placeholder="Group Name" required>
+				<input type="text" name="name" id="group-name" class="unit-form form-sm" placeholder="Group Name" required>
+			</div>
+
+			<div class="checkbox">
+				<label class="label-checkbox">
+					<input type="checkbox" name="position-group" onclick="positionGroup()">
+					<span class="custom-checkbox info"></span>
+					Position Group<br>
+				</label>
+			</div>
+
+			<div id="abbreviation-div" class="form-group" hidden="true">
+				<label for="group-name">Abbreviation:</label> 
+				<input type="text" name="abbreviation" id="abbreviation" class="unit-form form-sm" placeholder="QB" maxlength="3">
 			</div>
 
 			<div class="row group-home">
@@ -75,6 +88,17 @@
 				if (inputs[i].type == 'checkbox' && inputs[i] != header_checkbox) {
 					inputs[i].checked = setTo;
 				}
+			}
+		};
+
+		var positionGroup = function() {
+			var abbreviation_div = document.getElementById("abbreviation-div");
+			var hidden = abbreviation_div.getAttribute("hidden");
+
+			if (hidden == "true") {
+				abbreviation_div.removeAttribute("hidden");
+			} else {
+				abbreviation_div.setAttribute("hidden", "true");
 			}
 		};
 	</script>
