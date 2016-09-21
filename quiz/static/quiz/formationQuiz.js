@@ -139,7 +139,7 @@ function createMultipleChoiceAnswers(correctAnswer, numOptions) {
 		var label = availableNames[i];
 		if(multipleChoiceAnswers.length === correctIndex) {
 			label = correctAnswer;
-		} else if(label === correctAnswer) { 
+		} else if(label === correctAnswer) {
 			i++;
 			label = availableNames[i];
 		}
@@ -180,7 +180,7 @@ function drawDemoScreen() {
 	field.drawBackground(null, height, width);
 	var timeElapsed = millis() - test.demoStartTime;
 	var formation = test.getCurrentFormation();
-	
+
 	if(formation) {
 		formation.drawAllPlayers(field);
 		var x1 = field.getTranslatedX(exitDemo.x);
@@ -200,17 +200,6 @@ function drawDemoScreen() {
 		strokeWeight(1);
 		noStroke();
 
-		var x = field.getTranslatedX(49);
-		var y = field.getTranslatedY(85);
-		var x2 = field.getTranslatedX(66);
-		var y2 = field.getTranslatedY(85);
-		stroke(255,238,88);
-		fill(255,238,88);
-		strokeWeight(2);
-		line(x, y, x2, y2);
-		strokeWeight(1);
-		triangle(x2, y2, x2 - 20, y2 + 20, x2 - 20, y2 - 20);
-
 		var clicked = false;
 		for(var i = 1; i <= multipleChoiceAnswers.length; i++) {
 			var answer = document.getElementById("mc-button-"+i);
@@ -221,12 +210,10 @@ function drawDemoScreen() {
 
 		textSize(24);
 		textAlign(CENTER);
-		if(demoDoubleClick) {
-			text("Demo Complete!\nClick anywhere to exit.", x - 20, y - 115);
-		} else if(clicked) {
-			text("Click again to check answer.", x - 20, y - 115);
+		if(clicked) {
+			text("Demo Complete!\nClick anywhere to exit.", width / 2, y2);
 		} else {
-			text("Select the correct play by \ndouble clicking button.", x - 20, y - 115);
+			text("Select the correct play by clicking the \n corresponding button on the right.", width / 2, y2);
 		}
 	}
 };
