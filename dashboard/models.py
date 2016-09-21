@@ -75,11 +75,22 @@ class myUser(models.Model):
 	avatar_image  = models.ImageField(blank=True, null=True, upload_to='profile')
 
 class PlayerGroup(models.Model):
+	POSITIONS = [
+			["QB", "Quarterback"],
+			["SK", "Skill Position"],
+			["OL", "Offensive Lineman"],
+			["DL", "Defensive Lineman"],
+			["LB", "Linebacker"],
+			["DB", "Defensive Back"],
+			["SP", "Specialist"],
+		]
+
 	name = models.CharField(max_length=30, blank=True, null=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 	players = models.ManyToManyField(Player)
 
 	position_group = models.BooleanField(default=False)
+	position_type = models.CharField(choices=POSITIONS, max_length=20, default="Skill Position")
 	abbreviation = models.CharField(max_length=3, blank=True, null=True)
 
 	class Meta:
