@@ -80,7 +80,6 @@ class PlayerGroup(models.Model):
 	players = models.ManyToManyField(Player)
 
 	position_group = models.BooleanField(default=False)
-	display_in_creation_mode = models.BooleanField(default=False)
 	abbreviation = models.CharField(max_length=3, blank=True, null=True)
 
 	class Meta:
