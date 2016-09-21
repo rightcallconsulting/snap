@@ -18,8 +18,8 @@ def deadline_time():
 
 class Team(models.Model):
 	name = models.CharField(max_length=100)
-	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
-	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.name

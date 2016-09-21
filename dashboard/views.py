@@ -11,7 +11,6 @@ from django.conf import settings
 import json
 import simplejson
 
-# from chartit import DataPool, Chart
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
 from IPython import embed
@@ -513,10 +512,8 @@ def create_group(request):
 
 		return HttpResponseRedirect(reverse('groups'))
 	else:
-		form = PlayerGroupForm()
 		players = Player.objects.filter(team=team)
 		return render(request, 'dashboard/create_group.html', {
-			'form': form,
 			'players': players,
 			'page_header': 'CREATE GROUP',
 		})

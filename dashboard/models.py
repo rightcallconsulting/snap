@@ -79,28 +79,16 @@ class PlayerGroup(models.Model):
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 	players = models.ManyToManyField(Player)
 
+	position_group = models.BooleanField(default=False)
+	display_in_creation_mode = models.BooleanField(default=False)
+	abbreviation = models.CharField(max_length=3, blank=True, null=True)
+
 	class Meta:
 		verbose_name="Player Group"
 		verbose_name_plural="Player Groups"
-		ordering = ['pk']
 
 	def __str__(self):
 		return self.name
-
-	def build_dict_for_json_seed(self):
-		jsonPlayers = []
-		for player in self.players.all():
-			jsonPlayers.append(player.dict_for_json())
-		return {
-			'name': self.name,
-			'players': jsonPlayers,
-			'id': self.pk
-		}
-
-	def duplicate_and_assign_test_to_all_players(self, test_id, coach):
-		players = self.players.all()
-		for player in players:
-			player.duplicate_and_assign_test(test_id, coach)
 
 class DeletePlayerFromGroupForm(forms.Form):
 	groupID = forms.CharField(max_length=10)
