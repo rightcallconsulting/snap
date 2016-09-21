@@ -198,6 +198,12 @@ Player.prototype.drawMotion = function(field){
 	}
 };
 
+Player.prototype.drawAssignments = function(field){
+	this.drawBlocks(field);
+	this.drawRoute(field);
+	this.drawMotion(field);
+	this.drawDefensiveMovement(field);
+}
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke() before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
@@ -360,6 +366,9 @@ Player.prototype.moveTo = function(x, y) {
 // drawDefensiveMovement iterates through the players defensive movements
 // and draws a dotted line to the plave on the field they should be
 Player.prototype.drawDefensiveMovement = function(field) {
+	if(this.defensiveMovement.length === 0){
+		return;
+	}
 	var x1 = this.x;
 	var y1 = this.y;
 	var x2 = this.x;
