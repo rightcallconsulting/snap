@@ -506,6 +506,7 @@ def create_group(request):
 
 		if 'position-group' in request.POST.keys():
 			group.position_group = True
+			group.position_type = request.POST['position-type']
 			group.abbreviation = request.POST['abbreviation']
 
 			if len(group.abbreviation) > 3:
@@ -525,8 +526,11 @@ def create_group(request):
 		return HttpResponseRedirect(reverse('groups'))
 	else:
 		players = Player.objects.filter(team=team)
+		groups = PlayerGroup()
+		groups = groups.POSITIONS
 		return render(request, 'dashboard/create_group.html', {
 			'players': players,
+			'groups': groups,
 			'page_header': 'CREATE GROUP',
 		})
 

@@ -19,6 +19,14 @@
 				</label>
 			</div>
 
+			<select name="position-type" class="unit-form form-sm" id="position-type" hidden="true">
+				<optgroup label="Position Type">
+					{% for group in groups %}
+						<option value="{{ group.1 }}" id="group-id">{{ group.1 }}</option>
+					{% endfor %}
+				</optgroup>
+			</select>
+
 			<div id="abbreviation-div" class="form-group" hidden="true">
 				<label for="group-name">Abbreviation:</label> 
 				<input type="text" name="abbreviation" id="abbreviation" class="unit-form form-sm" placeholder="e.g. QB" maxlength="3">
@@ -93,12 +101,15 @@
 
 		var positionGroup = function() {
 			var abbreviation_div = document.getElementById("abbreviation-div");
+			var position_type = document.getElementById("position-type");
 			var hidden = abbreviation_div.getAttribute("hidden");
 
 			if (hidden == "true") {
 				abbreviation_div.removeAttribute("hidden");
+				position_type.removeAttribute("hidden");
 			} else {
 				abbreviation_div.setAttribute("hidden", "true");
+				position_type.setAttribute("hidden", "true");
 			}
 		};
 	</script>
