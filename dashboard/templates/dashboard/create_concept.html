@@ -881,22 +881,22 @@
 			} 
 
 			for (i in positions) {			
-				if (positions[i][0] == "Skill Position") {
+				if (positions[i][0] == "Offensive Lineman") {
 					player = new Player ({
 						pos: positions[i][1],
-						red: 255, green: 0, blue: 0,
-						siz: 2, eligible: true
+						red: 143, green: 29, blue: 29,
+						siz: 2
 					});
 					players.push(player);
 				}
 			}
 
 			for (i in positions) {			
-				if (positions[i][0] == "Offensive Lineman") {
+				if (positions[i][0] == "Skill Position") {
 					player = new Player ({
 						pos: positions[i][1],
-						red: 143, green: 29, blue: 29,
-						siz: 2
+						red: 255, green: 0, blue: 0,
+						siz: 2, eligible: true
 					});
 					players.push(player);
 				}
