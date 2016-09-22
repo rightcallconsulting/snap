@@ -23,13 +23,17 @@
 				<button id="skip-question-button" name="button">
 					<i class="fa fa-step-forward fa-2x mainview-button-icon" title="Skip question"></i>
 				</button>
-		
+
 				<button id="zoom-in-button" name="button">
 					<i class="fa fa-search-plus fa-2x mainview-button-icon" title="Zoom in"></i>
 				</button>
-		
+
 				<button id="zoom-out-button" name="button">
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
+				</button>
+
+				<button id="question-mark-button" name="button">
+					<i class="fa fa-question fa-2x mainview-button-icon" title="Demo"></i>
 				</button>
 			</div>
 		</div>
@@ -60,9 +64,9 @@
 			var display_box_footer = display_box.querySelector(".mainview-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
+
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
+			var width = display_box.offsetWidth - 4;
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
@@ -86,13 +90,13 @@
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
 			{% endfor %}
-			
+
 			var playJsonFromDatabase = "";
 			{% for play in quizPlays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
 			{% endfor %}
-			
+
 			var conceptJsonFromDatabase = "";
 			{% for concept in quizConcepts %}
 			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
@@ -122,7 +126,7 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				
+
 				resizeMainViewObjects();
 			};
 
@@ -150,7 +154,7 @@
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
-		
+
 		function mousePressed() {};
 
 		function mouseDragged() {};
@@ -161,7 +165,7 @@
 				var playerClicked = quiz.mouseInPlayer(field);
 				var mouseYardX = field.getYardX(mouseX);
 				var mouseYardY = field.getYardY(mouseY);
-				
+
 				if (playerSelected === null) {
 					attempt = quiz.getCurrentAnswer().deepCopy();
 					attempt.setSelected();
@@ -171,7 +175,7 @@
 					if (attempt.unit === "offense") {
 						attempt.route.push([mouseYardX, mouseYardY]);
 					}
-				
+
 					return false;
 				} else if (playerClicked === null) {
 					if (attempt.unit === "offense") {
@@ -217,7 +221,7 @@
 						} else if(attempt.motionCoords.length > 0){
 							attempt.motionCoords.pop()
 						}
-					} 
+					}
 
 					return false;
 				}else if(specialBlockKeys.indexOf(key) >= 0){
@@ -292,7 +296,7 @@
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
@@ -305,7 +309,7 @@
 		$("#zoom-out-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
@@ -313,6 +317,13 @@
 			}
 
 			resizeMainViewObjects();
+		});
+
+		$("#question-mark-button").click(function(event) {
+			var question = quiz.questions[quiz.currentQuestionIndex]
+			if(question){
+				question.startTime = 0;
+			}
 		});
 
 		function updateMainviewAndSideview() {
@@ -331,7 +342,7 @@
 				var sideview_question_button = document.createElement("button");
 				sideview_question_button.setAttribute("class", "sideview-question-button");
 				sideview_question_button.setAttribute("question-index", question_index.toString());
-				
+
 				if (quiz.questions[i].score === 1) {
 					sideview_question_button.className += " correct";
 				} else if (quiz.questions[i].score === 0) {
@@ -341,7 +352,7 @@
 				if (int(i) === quiz.getCurrentQuestionIndex()) {
 					sideview_question_button.className += " selected";
 				}
-				
+
 				sideview_question_button.textContent = question_number.toString();
 				sideview_buttons.appendChild(sideview_question_button);
 			}

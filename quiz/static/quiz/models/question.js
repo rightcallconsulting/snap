@@ -15,6 +15,7 @@ var Question = function(config) {
 	this.answer = config.answer || null;
 	this.prompt = config.prompt || "";
 	this.score = config.score || null;
+	this.startTime = config.startTime || 0;
 };
 
 //***************************************************************************//
@@ -23,6 +24,16 @@ var Question = function(config) {
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
+	if(millis() - this.startTime < 2000){
+			this.drawPrompt(field);
+	}
+};
+
+Question.prototype.drawPrompt = function(field) {
+		textSize(20)
+		var x = field.getTranslatedX(Field.WIDTH / 2)
+		var y = 30
+		text(this.prompt, x, y)
 };
 
 // buildQuestionAndAnswer creates an appropriate creates a question and answer
@@ -76,7 +87,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 			this.question.offensivePlayers[randomPlayerIndex].setSelected();
 		}
 
-		this.prompt = "Draw the assignment for the " + this.answer.pos;		
+		this.prompt = "Draw the assignment for the " + this.answer.pos;
 	}
 };
 
@@ -189,7 +200,7 @@ Question.prototype.save = function(path, csrf_token) {
 				console.log("Error sending Question Attempt to Django to be saved");
 		});
 	}
-	
+
 };
 
 // getSelected returns the selected player in this question if it is of type
@@ -216,7 +227,7 @@ Question.prototype.getAnswer = function() {
 
 // deepCopy returns a deep copy of the instance of Question that called it.
 Question.prototype.deepCopy = function() {
-	var deepCopy = new Question ({ 
+	var deepCopy = new Question ({
 		score: this.score,
 		prompt: this.prompt
 	});

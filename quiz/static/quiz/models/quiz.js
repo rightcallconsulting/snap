@@ -37,7 +37,7 @@ Quiz.prototype.push = function (input) {
 		for (i in this.formations) {
 			if (input.name === this.formations[i].name) {
 				return;
-			}			
+			}
 		}
 
 		this.formations.push(input);
@@ -53,7 +53,7 @@ Quiz.prototype.push = function (input) {
 		for (i in this.concepts) {
 			if (input.name === this.concepts[i].name) {
 				return;
-			}			
+			}
 		}
 
 		this.concepts.push(input);
@@ -69,7 +69,7 @@ Quiz.prototype.remove = function (input) {
 		for (i in this.formations) {
 			if (input.name === this.formations[i].name) {
 				this.formations.splice(i, 1);
-			}			
+			}
 		}
 	} else if (input instanceof Play) {
 		for (i in this.plays) {
@@ -81,7 +81,7 @@ Quiz.prototype.remove = function (input) {
 		for (i in this.concepts) {
 			if (input.name === this.concepts[i].name) {
 				this.concepts.splice(i, 1);
-			}			
+			}
 		}
 	}
 };
@@ -128,9 +128,20 @@ Quiz.prototype.delete = function (path, csrf_token) {
 // draw displays the current question.
 Quiz.prototype.draw = function(field) {
 	if (!this.isEmpty()) {
-		this.questions[this.currentQuestionIndex].draw(field);
+		var question = this.questions[this.currentQuestionIndex];
+		if(question.startTime === 0){
+			this.clearQuestionStartTimes()
+			question.startTime = millis();
+		}
+		question.draw(field);
 	}
 };
+
+Quiz.prototype.clearQuestionStartTimes = function(){
+	for(var i = 0; i < this.questions.length; i++){
+		this.questions[i].startTime = 0;
+	}
+}
 
 // buildQuestions creates the question array. It takes in the postions of the
 // player taking the quiz as a string and then builds an array of questions
