@@ -71,17 +71,18 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var y1 = field.getTranslatedY(prevY)
 	var x2 = field.getTranslatedX(this.x)
 	var y2 = field.getTranslatedY(this.y)
-	if(this.type === 1 && this.player){
+	
+	if (this.type === 1 && this.player) {
 		var defensiveMovement = this.player.defensiveMovement
 		var defensiveMovementLength = defensiveMovement.length
-		if(defensiveMovementLength > 0){
+		if (defensiveMovementLength > 0) {
 			x2 = field.getTranslatedX(defensiveMovement[defensiveMovementLength-1][0])
 			y2 = field.getTranslatedY(defensiveMovement[defensiveMovementLength-1][1])
-		}else{
+		} else {
 			x2 = field.getTranslatedX(this.player.x)
 			y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
 		}
-	}else if(this.type === 7 || this.type === 8){
+	} else if (this.type === 7 || this.type === 8) {
 		xMid = (x1+x2)/2
 		yMid = field.getTranslatedY(this.y - 1)
 		line(x1, y1, xMid, yMid)
@@ -99,13 +100,14 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var lengthOfPerpLine = 1.5;
 	xDiff = lengthOfPerpLine/2;
 	yDiff = 0;
-	if(this.type === 5 || this.type === 6){
+
+	if (this.type === 5 || this.type === 6) {
 		xDiff = (lengthOfPerpLine/4)*sqrt(2);
 		yDiff = (lengthOfPerpLine/4)*sqrt(2);
-	}else if(this.type === 7 || this.type === 8){
+	} else if (this.type === 7 || this.type === 8) {
 		xDiff = (lengthOfPerpLine/4)*sqrt(2);
 		yDiff = (lengthOfPerpLine/4)*sqrt(2);
-		if(this.type === 7){
+		if (this.type === 7) {
 			xDiff *= -1
 		}
 	}
@@ -120,7 +122,7 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
 
-	if(this.type > 0 && this.type < 9){
+	if (this.type > 0 && this.type < 9) {
 		line(x1, y1, x2, y2);
 	}
 
