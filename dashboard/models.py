@@ -87,7 +87,7 @@ class PlayerGroup(models.Model):
 
 	name = models.CharField(max_length=30, blank=True, null=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
-	players = models.ManyToManyField(Player)
+	players = models.ManyToManyField(Player, blank=True)
 
 	position_group = models.BooleanField(default=False)
 	position_type = models.CharField(choices=POSITIONS, max_length=20, default="Skill Position")
