@@ -3,14 +3,14 @@ $(document).ready(function(){
     var c = {};
     var groups = [];
 
-    $("#players-table-wrapper tr").draggable({
+    /*$("#players-table-wrapper tr").draggable({
             helper: "clone",
             start: function(event, ui) {
                 c.tr = this;
                 c.helper = ui.helper;
                 //debugger;
             }
-    });
+    });*/
 
     var resetPlayersTable = function(){
       $("#players-table-wrapper tr").draggable({
@@ -24,7 +24,7 @@ $(document).ready(function(){
     };
 
 
-    $("#group-table-wrapper").droppable({
+    /*$("#group-table-wrapper").droppable({
         drop: function(event, ui) {
           var currentGroupID = document.getElementById('current-group-id').innerHTML;
           var currentPlayerID = c.tr.id;
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 
         }
-    });
+    });*/
 
     $("input.offensive-formation-button").hover(function(){
       $(this).css("background-color", "yellow"); debugger;
