@@ -801,9 +801,39 @@
 		
 		function createOffensivePlayerOptions() {
 			var players = [];
+			var positions= []
 			var player;
+
+			{% for position in positions %}
+			positions.push(["{{ position.position_type }}", "{{ position.abbreviation }}"]);
+			{% endfor %}
+
+			for (i in positions) {
+				if (positions[i][0] == "Quarterback") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 212, green: 130, blue: 130,
+						siz: 2, eligible: true
+					});
+					players.push(player);
+				} else if (positions[i][0] == "Skill Position") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 255, green: 0, blue: 0,
+						siz: 2, eligible: true
+					});
+					players.push(player);
+				} else if (positions[i][0] == "Offensive Lineman") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 143, green: 29, blue: 29,
+						siz: 2
+					});
+					players.push(player);
+				}
+			}
 				
-			player = new Player ({
+			/*player = new Player ({
 				num: "QB", pos: "QB",
 				red: 212, green: 130, blue: 130,
 				siz: 2, eligible: true
@@ -871,7 +901,7 @@
 				red: 255, green: 0, blue: 0,
 				siz: 2, eligible: true
 			});
-			players.push(player);
+			players.push(player);*/
 
 			return players;
 		};
