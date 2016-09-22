@@ -176,8 +176,8 @@ def homepage(request):
 
 		# Sort the list of results in decending order by percent wrong
 		recent_results.sort(key=lambda x: -x[2])
-		if len(recent_results) > 8:
-			recent_results = recent_results[0:8]
+		if len(recent_results) > 7:
+			recent_results = recent_results[0:7]
 
 		quizzes = Quiz.objects.filter(team=team)[:7]
 		quizzes_table = []

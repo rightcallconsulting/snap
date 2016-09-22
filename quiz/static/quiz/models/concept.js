@@ -158,7 +158,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "motionCoords"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route", "motionCoords"]);
 
 		var jqxhr = $.post(
 				path,
@@ -247,6 +247,13 @@ function createConceptFromJson(conceptJsonDictionary) {
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
 			motionCoords: conceptJsonDictionary.offensivePlayers[i].motionCoords
 		});
+
+		if (conceptJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].route.length; ++j) {
+				var route = conceptJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
+			}
+		}
 
 		if (player.pos === "QB") {
 			quarterback.push(player);
