@@ -15,7 +15,8 @@ var Question = function(config) {
 	this.answer = config.answer || null;
 	this.prompt = config.prompt || "";
 	this.score = config.score || null;
-	this.startTime = config.startTime || 0;
+	this.startTime = 0;
+	this.feedbackStartTime = 0;
 };
 
 //***************************************************************************//
@@ -28,6 +29,13 @@ Question.prototype.draw = function(field) {
 			this.drawPrompt(field);
 	}
 };
+
+Question.prototype.drawFeedbackScreen = function(field){
+	if(this.answer !== null){
+		this.answer.draw(field);
+		this.answer.drawAssignments(field);
+	}
+}
 
 Question.prototype.drawPrompt = function(field) {
 		textSize(20)
@@ -44,8 +52,10 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
 			if (player.pos === player_position) {
-				this.answer = player.deepCopy();
-				this.question.offensivePlayers.splice(i, 1);
+				if(this.question.offensivePlayers.length === 11){
+					this.answer = player.deepCopy();
+					this.question.offensivePlayers.splice(i, 1);
+				}
 			}
 		}
 
@@ -116,6 +126,7 @@ Question.prototype.check = function(attempt) {
 					this.score = 1;
 				} else {
 					this.score = 0;
+					this.feedbackStartTime = millis();
 					break;
 				}
 			}
@@ -128,6 +139,7 @@ Question.prototype.check = function(attempt) {
 						this.score = 1;
 					} else {
 						this.score = 0;
+						this.feedbackStartTime = millis();
 						break;
 					}
 				}
@@ -141,6 +153,7 @@ Question.prototype.check = function(attempt) {
 						this.score = 1;
 					} else {
 						this.score = 0;
+						this.feedbackStartTime = millis();
 						break;
 					}
 				}
