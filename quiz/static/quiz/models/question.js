@@ -31,7 +31,10 @@ Question.prototype.draw = function(field) {
 };
 
 Question.prototype.drawFeedbackScreen = function(field){
-
+	if(this.answer !== null){
+		this.answer.draw(field);
+		this.answer.drawAssignments(field);
+	}
 }
 
 Question.prototype.drawPrompt = function(field) {
