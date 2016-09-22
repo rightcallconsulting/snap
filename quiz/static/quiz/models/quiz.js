@@ -16,6 +16,7 @@ var Quiz = function(config) {
 	this.formations = config.formations || [];
 	this.plays = config.plays || [];
 	this.concepts = config.concepts || [];
+	this.attempt = config.attempt || null;
 
 	this.questions = config.questions || [];
 	this.currentQuestionIndex = config.currentQuestionIndex || null;
@@ -134,6 +135,18 @@ Quiz.prototype.draw = function(field) {
 			question.startTime = millis();
 		}
 		question.draw(field);
+		if(this.attempt !== null){
+			this.attempt.draw(field);
+			this.attempt.drawAssignments(field);
+		}
+		if(question.feedbackStartTime > 0){
+			if(millis() - question.feedbackStartTime < 2000){
+					question.drawFeedbackScreen(field);
+			}else{
+					question.feedbackStartTime = 0;
+					this.nextQuestion();
+			}
+		}
 	}
 };
 
@@ -201,14 +214,17 @@ Quiz.prototype.shuffle = function() {
 
 // checkCurrentQuestion checks the attempt on the current question and compares
 // it to the correct answer. It posts a question attempt based on the result.
-Quiz.prototype.checkCurrentQuestion = function(attempt, path, csrf_token) {
+Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
 		if (this.questions[this.currentQuestionIndex].score === null) {
-			this.questions[this.currentQuestionIndex].check(attempt);
+			this.questions[this.currentQuestionIndex].check(this.attempt);
 			this.questions[this.currentQuestionIndex].save(path, csrf_token);
+			if (this.questions[this.currentQuestionIndex].score === 1) {
+				this.nextQuestion();
+			}else{
+				this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
+			}
 		}
-
-		this.nextQuestion();
 	}
 };
 
@@ -233,6 +249,13 @@ Quiz.prototype.nextQuestion = function() {
 			this.currentQuestionIndex++;
 		} else {
 			this.currentQuestionIndex = 0;
+		}
+		this.attempt = this.getSelected()[0];
+		if (this.attempt != null) {
+			this.attempt.motionCords = [];
+			this.attempt.blockingAssignmentArray = [];
+			this.attempt.route = [];
+			this.attempt.defensiveMovement = [];
 		}
 	}
 };

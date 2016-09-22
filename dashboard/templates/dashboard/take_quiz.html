@@ -105,12 +105,12 @@
 
 			quiz.buildQuestions("X");
 
-			attempt = quiz.getSelected()[0];
-			if (attempt != null) {
-				attempt.motionCords = [];
-				attempt.blockingAssignmentArray = [];
-				attempt.route = [];
-				attempt.defensiveMovement = [];
+			quiz.attempt = quiz.getSelected()[0];
+			if (quiz.attempt != null) {
+				quiz.attempt.motionCords = [];
+				quiz.attempt.blockingAssignmentArray = [];
+				quiz.attempt.route = [];
+				quiz.attempt.defensiveMovement = [];
 			}
 
 			updateMainviewAndSideview();
@@ -142,12 +142,6 @@
 			field.drawBackground(quiz, height, width);
 			quiz.draw(field);
 
-			if (attempt != null) {
-				attempt.drawBlocks(field);
-				attempt.drawRoute(field);
-				attempt.draw(field);
-			}
-
 			fill(176,176,176);
 		};
 
@@ -167,27 +161,27 @@
 				var mouseYardY = field.getYardY(mouseY);
 
 				if (playerSelected === null) {
-					attempt = quiz.getCurrentAnswer().deepCopy();
-					attempt.setSelected();
-					attempt.x = mouseYardX;
-					attempt.y = mouseYardY;
+					quiz.attempt = quiz.getCurrentAnswer().deepCopy();
+					quiz.attempt.setSelected();
+					quiz.attempt.x = mouseYardX;
+					quiz.attempt.y = mouseYardY;
 				} else if (playerSelected.eligible) {
-					if (attempt.unit === "offense") {
-						attempt.route.push([mouseYardX, mouseYardY]);
+					if (quiz.attempt.unit === "offense") {
+						quiz.attempt.route.push([mouseYardX, mouseYardY]);
 					}
 
 					return false;
 				} else if (playerClicked === null) {
-					if (attempt.unit === "offense") {
+					if (quiz.attempt.unit === "offense") {
 						var blockPoint = new BlockType({
 							type: 0,
 							x: mouseYardX,
 							y: mouseYardY
 						});
 
-						attempt.blockingAssignmentArray.push(blockPoint)
-					} else if (attempt.unit === "defense") {
-						attempt.defensiveMovement.push([mouseYardX, mouseYardY]);
+						quiz.attempt.blockingAssignmentArray.push(blockPoint)
+					} else if (quiz.attempt.unit === "defense") {
+						quiz.attempt.defensiveMovement.push([mouseYardX, mouseYardY]);
 					}
 
 					return false;
@@ -199,7 +193,7 @@
 						y: mouseYardY
 					});
 
-					attempt.blockingAssignmentArray.push(blockPoint);
+					quiz.attempt.blockingAssignmentArray.push(blockPoint);
 					return false;
 				}
 			}
@@ -213,24 +207,24 @@
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (attempt.unit == "offense") {
-						if (attempt.blockingAssignmentArray.length > 0) {
-							attempt.blockingAssignmentArray.pop();
-						} else if(attempt.route.length > 0) {
-							attempt.route.pop();
-						} else if(attempt.motionCoords.length > 0){
-							attempt.motionCoords.pop()
+					if (quiz.attempt.unit == "offense") {
+						if (quiz.attempt.blockingAssignmentArray.length > 0) {
+							quiz.attempt.blockingAssignmentArray.pop();
+						} else if(quiz.attempt.route.length > 0) {
+							quiz.attempt.route.pop();
+						} else if(quiz.attempt.motionCoords.length > 0){
+							quiz.attempt.motionCoords.pop()
 						}
 					}
 
 					return false;
 				}else if(specialBlockKeys.indexOf(key) >= 0){
-					var prevX = attempt.x;
-					var prevY = attempt.y;
-					var blockSize = attempt.blockingAssignmentArray.length;
+					var prevX = quiz.attempt.x;
+					var prevY = quiz.attempt.y;
+					var blockSize = quiz.attempt.blockingAssignmentArray.length;
 					if (blockSize > 0) {
-						prevX = attempt.blockingAssignmentArray[blockSize - 1].x;
-						prevY = attempt.blockingAssignmentArray[blockSize - 1].y;
+						prevX = quiz.attempt.blockingAssignmentArray[blockSize - 1].x;
+						prevY = quiz.attempt.blockingAssignmentArray[blockSize - 1].y;
 					}
 
 					var block = new BlockType({
@@ -240,7 +234,7 @@
 						prevY: prevY
 					});
 
-					attempt.blockingAssignmentArray.push(block);
+					quiz.attempt.blockingAssignmentArray.push(block);
 				}
 			}
 
@@ -263,15 +257,7 @@
 			var path = window.location.pathname;
 			var csrf_token = "{{ csrf_token }}";
 
-			quiz.checkCurrentQuestion(attempt, path, csrf_token);
-
-			attempt = quiz.getSelected()[0];
-			if (attempt != null) {
-				attempt.motionCords = [];
-				attempt.blockingAssignmentArray = [];
-				attempt.route = [];
-				attempt.defensiveMovement = [];
-			}
+			quiz.checkCurrentQuestion(path, csrf_token);
 
 			updateMainviewAndSideview();
 		});
@@ -281,14 +267,6 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.skipCurrentQuestion(path, csrf_token);
-
-			attempt = quiz.getSelected()[0];
-			if (attempt != null) {
-				attempt.motionCords = [];
-				attempt.blockingAssignmentArray = [];
-				attempt.route = [];
-				attempt.defensiveMovement = [];
-			}
 
 			updateMainviewAndSideview();
 		});
