@@ -140,9 +140,20 @@
 
 		function drawOpening() {
 			field.drawBackground(quiz, height, width);
-			quiz.draw(field);
 
-			fill(176,176,176);
+			var question = quiz.getCurrentQuestion();
+			if(question !== null){
+				if(question.feedbackStartTime > 0 && millis() - question.feedbackStartTime > 2000){
+					question.feedbackStartTime = 0;
+					quiz.nextQuestion();
+					updateMainviewAndSideview();
+				}
+				quiz.draw(field);
+				fill(176,176,176);
+			}
+
+
+
 		};
 
 		//*******************************************************************//

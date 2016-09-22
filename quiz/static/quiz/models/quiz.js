@@ -135,16 +135,12 @@ Quiz.prototype.draw = function(field) {
 			question.startTime = millis();
 		}
 		question.draw(field);
-		if(this.attempt !== null){
-			this.attempt.draw(field);
-			this.attempt.drawAssignments(field);
-		}
 		if(question.feedbackStartTime > 0){
-			if(millis() - question.feedbackStartTime < 2000){
-					question.drawFeedbackScreen(field);
-			}else{
-					question.feedbackStartTime = 0;
-					this.nextQuestion();
+			question.drawFeedbackScreen(field);
+		}else{
+			if(this.attempt !== null){
+				this.attempt.draw(field);
+				this.attempt.drawAssignments(field);
 			}
 		}
 	}
@@ -216,14 +212,12 @@ Quiz.prototype.shuffle = function() {
 // it to the correct answer. It posts a question attempt based on the result.
 Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
-		if (this.questions[this.currentQuestionIndex].score === null) {
-			this.questions[this.currentQuestionIndex].check(this.attempt);
-			this.questions[this.currentQuestionIndex].save(path, csrf_token);
-			if (this.questions[this.currentQuestionIndex].score === 1) {
-				this.nextQuestion();
-			}else{
-				this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
-			}
+		this.questions[this.currentQuestionIndex].check(this.attempt);
+		this.questions[this.currentQuestionIndex].save(path, csrf_token);
+		if (this.questions[this.currentQuestionIndex].score === 1) {
+			this.nextQuestion();
+		}else{
+			this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
 		}
 	}
 };
@@ -276,6 +270,10 @@ Quiz.prototype.mouseInPlayer = function(field) {
 Quiz.prototype.getCurrentAnswer = function() {
 	return this.questions[this.currentQuestionIndex].getAnswer();
 };
+
+Quiz.prototype.getCurrentQuestion = function(){
+	return this.questions[this.currentQuestionIndex]
+}
 
 // getCurrentQuestionIndex returns the index of the current question.
 Quiz.prototype.getCurrentQuestionIndex = function() {
