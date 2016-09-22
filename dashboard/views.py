@@ -360,9 +360,11 @@ def create_formation(request):
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, scout=False)
+		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
 			'formations': formations,
+			'positions': positions,
 			'page_header': 'CREATE FORMATION',
 		})
 

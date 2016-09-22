@@ -20,7 +20,8 @@
 			</div>
 
 			<select name="position-type" class="unit-form form-sm" id="position-type" hidden="true">
-				<optgroup label="Position Type">
+				<option id="option-label" disabled="disabled" selected="selected">Position Type</option>
+				<optgroup>
 					{% for group in groups %}
 						<option value="{{ group.1 }}" id="group-id">{{ group.1 }}</option>
 					{% endfor %}

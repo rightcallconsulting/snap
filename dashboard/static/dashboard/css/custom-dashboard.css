@@ -660,8 +660,12 @@ input[type="text"]#abbreviation {
 	width: 100px;
 }
 
-select#position-type{
+select#position-type {
 	width: 200px;
+}
+
+select#position-type #option-label {
+	color: #fff;
 }
 
 /*************************************************************************
