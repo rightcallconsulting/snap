@@ -801,164 +801,45 @@
 		
 		function createOffensivePlayerOptions() {
 			var players = [];
+			var positions= []
 			var player;
-				
-			player = new Player ({
-				num: "QB", pos: "QB",
-				red: 212, green: 130, blue: 130,
-				siz: 2, eligible: true
-			});
-			players.push(player);
 
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+			{% for position in positions %}
+			positions.push(["{{ position.position_type }}", "{{ position.abbreviation }}"]);
+			{% endfor %}
 
-			player = new Player ({
-				num: "G", pos: "G",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+			for (i in positions) {
+				if (positions[i][0] == "Quarterback") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 212, green: 130, blue: 130,
+						siz: 2, eligible: true
+					});
+					players.push(player);
+				}
+			} 
 
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
+			for (i in positions) {			
+				if (positions[i][0] == "Skill Position") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 255, green: 0, blue: 0,
+						siz: 2, eligible: true
+					});
+					players.push(player);
+				}
+			}
 
-			player = new Player ({
-				num: "H", pos: "H",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "F", pos: "F",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "A", pos: "A",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Y", pos: "Y",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "X", pos: "X",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Z", pos: "Z",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			return players;
-		};
-
-		function createDefensivePlayerOptions() {
-			var players = [];
-			var player;
-				
-			player = new Player ({
-				num: "E", pos: "E",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "N", pos: "N",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-			
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "M", pos: "M",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "S", pos: "S",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "W", pos: "W",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "B", pos: "B",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "FS", pos: "FS",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "SS", pos: "SS",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			for (i in positions) {			
+				if (positions[i][0] == "Offensive Lineman") {
+					player = new Player ({
+						pos: positions[i][1],
+						red: 143, green: 29, blue: 29,
+						siz: 2
+					});
+					players.push(player);
+				}
+			}
 
 			return players;
 		};

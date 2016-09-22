@@ -45,7 +45,7 @@ def homepage(request):
 			quizzes_table.append(quiz_information)
 
 		if len(quizzes_table) > 4:
-			quizzes_table = quizzes_table[0:3]
+			quizzes_table = quizzes_table[0:4]
 
 		newsfeed = []
 
@@ -104,7 +104,7 @@ def homepage(request):
 
 		newsfeed.sort(key=lambda x: x[4], reverse=True)
 		if len(newsfeed) > 20:
-			newsfeed = newsfeed[0:19]
+			newsfeed = newsfeed[0:20]
 
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
@@ -177,7 +177,7 @@ def homepage(request):
 		# Sort the list of results in decending order by percent wrong
 		recent_results.sort(key=lambda x: -x[2])
 		if len(recent_results) > 8:
-			recent_results = recent_results[0:7]
+			recent_results = recent_results[0:8]
 
 		quizzes = Quiz.objects.filter(team=team)[:7]
 		quizzes_table = []
@@ -360,9 +360,11 @@ def create_formation(request):
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, scout=False)
+		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_formation.html', {
 			'team': team,
 			'formations': formations,
+			'positions': positions,
 			'page_header': 'CREATE FORMATION',
 		})
 
@@ -468,9 +470,11 @@ def create_concept(request):
 		return HttpResponse('')
 	else:
 		concepts = Concept.objects.filter(team=team, scout=False)
+		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
+			'positions': positions,
 			'page_header': 'CREATE CONCEPT',
 		})
 
@@ -499,22 +503,38 @@ def groups(request):
 def create_group(request):
 	team = request.user.coach.team
 	if request.method == "POST":
-		new_player_group = PlayerGroup()
-		new_player_group.name = request.POST['name']
-		new_player_group.team = request.user.coach.team
-		new_player_group.save()
+		group = PlayerGroup()
+		group.name = request.POST['name']
+		group.team = request.user.coach.team
+		group.save()
+
+		if 'position-group' in request.POST.keys():
+			group.position_group = True
+			group.position_type = request.POST['position-type']
+			group.abbreviation = request.POST['abbreviation']
+
+			if len(group.abbreviation) > 3:
+				group.abbreviation = group.abbreviation[0:3]
+				group.save()
+			elif len(group.abbreviation) == 0:
+				group.abbreviation = group.name[0:1]
+				group.save()
 
 		for player_id in request.POST.getlist('player'):
 			player = Player.objects.filter(team=team, pk=int(player_id))[0]
-			new_player_group.players.add(player)
+			group.players.add(player)
+			group.save()
 
-		new_player_group.save()
+		group.save()
 
 		return HttpResponseRedirect(reverse('groups'))
 	else:
 		players = Player.objects.filter(team=team)
+		groups = PlayerGroup()
+		groups = groups.POSITIONS
 		return render(request, 'dashboard/create_group.html', {
 			'players': players,
+			'groups': groups,
 			'page_header': 'CREATE GROUP',
 		})
 
