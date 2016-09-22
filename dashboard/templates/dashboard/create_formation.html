@@ -816,14 +816,22 @@
 						siz: 2, eligible: true
 					});
 					players.push(player);
-				} else if (positions[i][0] == "Skill Position") {
+				}
+			} 
+
+			for (i in positions) {			
+				if (positions[i][0] == "Skill Position") {
 					player = new Player ({
 						pos: positions[i][1],
 						red: 255, green: 0, blue: 0,
 						siz: 2, eligible: true
 					});
 					players.push(player);
-				} else if (positions[i][0] == "Offensive Lineman") {
+				}
+			}
+
+			for (i in positions) {			
+				if (positions[i][0] == "Offensive Lineman") {
 					player = new Player ({
 						pos: positions[i][1],
 						red: 143, green: 29, blue: 29,
@@ -832,76 +840,6 @@
 					players.push(player);
 				}
 			}
-				
-			/*player = new Player ({
-				num: "QB", pos: "QB",
-				red: 212, green: 130, blue: 130,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "G", pos: "G",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 143, green: 29, blue: 29,
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "H", pos: "H",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "F", pos: "F",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "A", pos: "A",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Y", pos: "Y",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "X", pos: "X",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "Z", pos: "Z",
-				red: 255, green: 0, blue: 0,
-				siz: 2, eligible: true
-			});
-			players.push(player);*/
 
 			return players;
 		};
