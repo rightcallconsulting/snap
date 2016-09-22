@@ -470,9 +470,11 @@ def create_concept(request):
 		return HttpResponse('')
 	else:
 		concepts = Concept.objects.filter(team=team, scout=False)
+		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_concept.html', {
 			'team': team,
 			'concepts': concepts,
+			'positions': positions,
 			'page_header': 'CREATE CONCEPT',
 		})
 
