@@ -156,27 +156,26 @@ Quiz.prototype.clearQuestionStartTimes = function(){
 // player taking the quiz as a string and then builds an array of questions
 // based on the formations, plays, and concepts in the quiz. It shuffles the
 // array once it is populated.
-Quiz.prototype.buildQuestions = function(player_position) {
+Quiz.prototype.buildQuestions = function(player_positions) {
 	var question;
 
 	for (i in this.formations) {
 		question = new Question({ question: this.formations[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_position);
+		question.buildQuestionAndAnswer(player_positions);
 		this.questions.push(question);
 	}
 
 	for (i in this.plays) {
 		question = new Question({ question: this.plays[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_position);
+		question.buildQuestionAndAnswer(player_positions);
 		this.questions.push(question);
 	}
 
 	for (i in this.concepts) {
 		question = new Question({ question: this.concepts[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_position);
+		question.buildQuestionAndAnswer(player_positions);
 		this.questions.push(question);
 	}
-
 	this.shuffle();
 	this.currentQuestionIndex = 0;
 };

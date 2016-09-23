@@ -863,7 +863,7 @@ def take_quiz(request, quiz_id):
 			'quizFormations': quiz_formations,
 			'quizPlays': quiz_plays,
 			'quizConcepts': quiz_concepts,
-			'positionGroups': position_groups,
+			'position_groups': position_groups,
 			'page_header': quiz.name.upper()
 		})
 

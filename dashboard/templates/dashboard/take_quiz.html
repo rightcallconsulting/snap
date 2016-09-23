@@ -85,6 +85,14 @@
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 
+			var positionGroups = [];
+			{% for group in position_groups %}
+				var abbreviation = '{{group.abbreviation|safe}}';
+				if(abbreviation !== null){
+					positionGroups.push(abbreviation)
+				}
+			{% endfor %}
+
 			var formationJsonFromDatabase = "";
 			{% for formation in quizFormations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
@@ -103,7 +111,7 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			quiz.buildQuestions("X");
+			quiz.buildQuestions(positionGroups);
 
 			quiz.attempt = quiz.getSelected()[0];
 			if (quiz.attempt != null) {
