@@ -30,22 +30,21 @@ ALLOWED_HOSTS = ['*']
 
 # Application installed in my project
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'formation',
-    'quiz.apps.QuizConfig',
-    'dashboard.apps.DashboardConfig',
-    'debug_toolbar',
-    'storages',
-    'datetimewidget',
-    'bootstrap3_datetime',
-    'graphos',
-    'avatar',
-    # 'chartit',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'formation',
+	'quiz.apps.QuizConfig',
+	'dashboard.apps.DashboardConfig',
+	'debug_toolbar',
+	'storages',
+	'datetimewidget',
+	'bootstrap3_datetime',
+	'graphos',
+	# 'chartit',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
