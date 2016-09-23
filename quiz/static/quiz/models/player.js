@@ -209,26 +209,33 @@ Player.prototype.drawAssignments = function(field){
 Player.prototype.drawBlocks = function(field) {
 	var prevX = this.x;
 	var prevY = this.y;
-	if(this.motionCoords.length > 0){
+
+	if (this.motionCoords.length > 0) {
 		prevX = this.motionCoords[this.motionCoords.length - 1][0]
 		prevY = this.motionCoords[this.motionCoords.length - 1][1]
 	}
+
+	var blockPart;
 	for (var i = 0; i < this.blockingAssignmentArray.length; i++) {
-		var blockPart = this.blockingAssignmentArray[i]
+		blockPart = this.blockingAssignmentArray[i]
 		blockPart.draw(prevX, prevY, field)
 		prevX = blockPart.x
 		prevY = blockPart.y
 		if (blockPart.type === 1 && blockPart.player !== null) {
 			var defensiveMovement = blockPart.player.defensiveMovement
 			var defensiveMovementLength = defensiveMovement.length
-			if(defensiveMovementLength > 0){
+			if (defensiveMovementLength > 0) {
 				prevX = defensiveMovement[defensiveMovementLength-1][0]
 				prevY = defensiveMovement[defensiveMovementLength-1][1]
-			}else{
+			} else {
 				prevX = blockPart.player.x
 				prevY = blockPart.player.y - (blockPart.player.siz / 3)
 			}
 		}
+	}
+
+	if (blockPart != null && !this.selected && blockPart.type === 0) {
+		var yes;
 	}
 
 	/*
