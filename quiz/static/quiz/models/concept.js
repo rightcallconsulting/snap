@@ -58,6 +58,22 @@ Concept.prototype.drawAssignments = function (field) {
 	}
 };
 
+Concept.prototype.getPlayerFromPosition = function(position){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		var player = this.offensivePlayers[i];
+		if(player.position === position){
+			return player;
+		}
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var player = this.defensivePlayers[i];
+		if(player.position === position){
+			return player;
+		}
+	}
+	return null;
+}
+
 
 // isValid checks the legality of a concept.
 Concept.prototype.isValid = function() {

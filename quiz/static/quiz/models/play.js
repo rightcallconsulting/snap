@@ -503,11 +503,13 @@ function createPlayFromJson(playJsonDictionary) {
 /*******************************************************************************************************************************************/
 
 Play.prototype.getPlayerFromPosition = function(pos){
-  var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
-  if(players.length === 0){
-    return null;
-  }
-  return players[0];
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+		var player = this.offensivePlayers[i];
+		if(player.pos === pos){
+			return player
+		}
+		return NULL;
+	}
 };
 
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN

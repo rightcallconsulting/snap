@@ -44,21 +44,35 @@ Question.prototype.drawPrompt = function(field) {
 		text(this.prompt, x, y)
 };
 
+//returns the position being tested for this question
+//goes through the players' positions in priority order first
+//if none exist in the question, it then picks a random player's position
+Question.prototype.getTestedPosition = function(player_positions){
+	for(var i = 0; i < player_positions.length; i++){
+		var position = player_positions[i];
+		if(this.question.getPlayerFromPosition(position) !== null){
+			return position;
+		}
+	}
+	return this.question.offensivePlayers[0].position
+}
+
 // buildQuestionAndAnswer creates an appropriate creates a question and answer
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
-Question.prototype.buildQuestionAndAnswer = function(player_position) {
+Question.prototype.buildQuestionAndAnswer = function(player_positions) {
+	var player_position = this.getTestedPosition(player_positions);
 	if (this.question instanceof Formation) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
 			if (player.pos === player_position) {
-				if(this.question.offensivePlayers.length === 11){
 					this.answer = player.deepCopy();
 					this.question.offensivePlayers.splice(i, 1);
-				}
+					break;
 			}
 		}
 
+		//shouldn't ever happen now
 		if (this.answer === null) {
 			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
 			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
@@ -72,6 +86,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 			if (player.pos === player_position) {
 				this.answer = player.deepCopy();
 				player.setSelected();
+				break;
 			}
 		}
 
@@ -88,6 +103,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_position) {
 			if (player.pos === player_position) {
 				this.answer = player.deepCopy();
 				player.setSelected();
+				break;
 			}
 		}
 
@@ -132,7 +148,6 @@ Question.prototype.checkAssignments = function(attempt){
 		if(this.checkRoute(attempt) && this.checkMotion(attempt) && this.checkBlockingAssignment(attempt)){
 			return true;
 		}
-		debugger;
 		return false;
 }
 

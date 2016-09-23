@@ -653,7 +653,7 @@ def assigned_quizzes(request):
 		quiz_information.append(quiz.players.count())
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -723,7 +723,7 @@ def manage_quiz(request, quiz_id):
 			quiz.save()
 
 			quiz_data = json.loads(request.POST['quiz'])
-			
+
 			formations_data = quiz_data["formations"]
 			for formation_data in formations_data:
 				formation = Formation.objects.filter(team=team, scout=False, name=formation_data["name"])[0]
@@ -794,7 +794,7 @@ def quizzes_todo(request):
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -817,9 +817,9 @@ def quizzes_todo(request):
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def take_quiz(request, quiz_id):
 	team = request.user.player.team
+	player = request.user.player
 	if request.method == 'POST':
 		quiz = Quiz.objects.filter(team=team, id=quiz_id)[0]
-		player = request.user.player
 		question_type = request.POST['type']
 		score = request.POST['score']
 		name = request.POST['name']
@@ -856,12 +856,14 @@ def take_quiz(request, quiz_id):
 		quiz_formations = quiz.formations.all()
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
+		position_groups = PlayerGroup.objects.filter(team=team,position_group=True,players__in=[player])#position_group=True)
 
 		return render(request, 'dashboard/take_quiz.html', {
 			'quiz': quiz,
 			'quizFormations': quiz_formations,
 			'quizPlays': quiz_plays,
 			'quizConcepts': quiz_concepts,
+			'position_groups': position_groups,
 			'page_header': quiz.name.upper()
 		})
 
@@ -871,7 +873,7 @@ def submit_quiz(request):
 	if request.method == 'POST':
 		name = request.POST['name']
 		quiz = Quiz.objects.filter(team=team, name=name)[0]
-		
+
 		player = request.user.player
 		quiz.submissions.add(player)
 		quiz.save()
@@ -904,7 +906,7 @@ def plays_analytics(request):
 	for play in plays:
 		play_analytics = []
 		play_analytics.append(play.name)
-		
+
 		if play.scoutName != "":
 			play_analytics.append(play.scoutName)
 		else:
@@ -917,7 +919,7 @@ def plays_analytics(request):
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -925,7 +927,7 @@ def plays_analytics(request):
 			play_analytics.append(percentage_incorrect)
 			play_analytics.append(percentage_skipped)
 
-			plays_analytics.append(play_analytics)	
+			plays_analytics.append(play_analytics)
 
 	# Sort the list of play analytics in decending order by percent wrong
 	plays_analytics.sort(key=lambda x: x[3], reverse=True)
@@ -939,14 +941,14 @@ def plays_analytics(request):
 def player_analytics(request):
 	player = request.user.player
 	team = player.team
-	
+
 	plays = Play.objects.filter(team=team)
 	plays_analytics = []
 
 	for play in plays:
 		play_analytics = []
 		play_analytics.append(play.name)
-		
+
 		if play.scoutName != "":
 			play_analytics.append(play.scoutName)
 		else:
@@ -959,7 +961,7 @@ def player_analytics(request):
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -967,7 +969,7 @@ def player_analytics(request):
 			play_analytics.append(percentage_incorrect)
 			play_analytics.append(percentage_skipped)
 
-			plays_analytics.append(play_analytics)	
+			plays_analytics.append(play_analytics)
 
 	# Sort the list of play analytics in decending order by percent wrong
 	plays_analytics.sort(key=lambda x: x[3], reverse=True)
@@ -995,7 +997,7 @@ def players_analytics(request):
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -1003,7 +1005,7 @@ def players_analytics(request):
 			player_analytics.append(percentage_incorrect)
 			player_analytics.append(percentage_skipped)
 
-			players_analytics.append(player_analytics)	
+			players_analytics.append(player_analytics)
 
 	# Sort the list of play analytics in decending order by percent wrong
 	players_analytics.sort(key=lambda x: x[3], reverse=True)
@@ -1023,7 +1025,7 @@ def quiz_analytics(request, quiz_id):
 	for play in plays:
 		play_analytics = []
 		play_analytics.append(play.name)
-		
+
 		if play.scoutName != "":
 			play_analytics.append(play.scoutName)
 		else:
@@ -1036,7 +1038,7 @@ def quiz_analytics(request, quiz_id):
 		number_of_attempts = float(number_correct + number_incorrect + number_skipped)
 
 		if number_of_attempts > 0:
-			percentage_correct = (number_correct/number_of_attempts)*100 
+			percentage_correct = (number_correct/number_of_attempts)*100
 			percentage_incorrect = (number_incorrect/number_of_attempts)*100
 			percentage_skipped = (number_skipped/number_of_attempts)*100
 
@@ -1044,7 +1046,7 @@ def quiz_analytics(request, quiz_id):
 			play_analytics.append(percentage_incorrect)
 			play_analytics.append(percentage_skipped)
 
-			plays_analytics.append(play_analytics)	
+			plays_analytics.append(play_analytics)
 
 	# Sort the list of play analytics in decending order by percent wrong
 	plays_analytics.sort(key=lambda x: x[3], reverse=True)
