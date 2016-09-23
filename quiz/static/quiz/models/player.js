@@ -221,6 +221,7 @@ Player.prototype.drawBlocks = function(field) {
 		blockPart.draw(prevX, prevY, field)
 		prevX = blockPart.x
 		prevY = blockPart.y
+		
 		if (blockPart.type === 1 && blockPart.player !== null) {
 			var defensiveMovement = blockPart.player.defensiveMovement
 			var defensiveMovementLength = defensiveMovement.length
@@ -235,7 +236,22 @@ Player.prototype.drawBlocks = function(field) {
 	}
 
 	if (blockPart != null && !this.selected && blockPart.type === 0) {
-		var yes;
+		var black = color(0, 0, 0);
+		stroke(black);
+
+		var lengthOfPerpLine = 1.5;
+		var x1 = blockPart.x + lengthOfPerpLine/2;
+		var y1 = blockPart.y;
+		var x2 = blockPart.x - lengthOfPerpLine/2;
+		var y2 = blockPart.y;
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
+
+		noStroke();
 	}
 
 	/*
