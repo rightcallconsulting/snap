@@ -508,7 +508,7 @@ Play.prototype.getPlayerFromPosition = function(pos){
 		if(player.pos === pos){
 			return player
 		}
-		return NULL;
+		return null;
 	}
 };
 
