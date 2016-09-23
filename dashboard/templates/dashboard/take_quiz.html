@@ -178,7 +178,16 @@
 					quiz.attempt.y = mouseYardY;
 				} else if (playerSelected.eligible) {
 					if (quiz.attempt.unit === "offense") {
-						quiz.attempt.route.push([mouseYardX, mouseYardY]);
+						if(quiz.getCurrentQuestion().answer !== null && quiz.getCurrentQuestion().answer.route.length > 0){
+								quiz.attempt.route.push([mouseYardX, mouseYardY]);
+						}else{
+							quiz.attempt.blockingAssignmentArray.push(new BlockType({
+								type: 0,
+								x: mouseYardX,
+								y: mouseYardY
+							}))
+						}
+
 					}
 
 					return false;

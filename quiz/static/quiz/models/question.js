@@ -109,7 +109,7 @@ Question.prototype.getName = function() {
 // check compares the attempt with the answer and determines the score. It
 // posts an attempted question to the database.
 Question.prototype.check = function(attempt) {
-	if (attempt != null) {
+	if (attempt !== null) {
 		if (this.question instanceof Formation) {
 			var dist = sqrt(pow(attempt.x - this.answer.x, 2) + pow(attempt.y - this.answer.y, 2));
 
@@ -119,52 +119,79 @@ Question.prototype.check = function(attempt) {
 				this.score = 0;
 			}
 		} else {
-			for (i in attempt.motionCoords) {
-				var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
-
-				if (dist < 2) {
-					this.score = 1;
-				} else {
-					this.score = 0;
-					this.feedbackStartTime = millis();
-					break;
-				}
-			}
-
-			if (this.score != 0) {
-				for (i in attempt.blockingAssignmentArray) {
-					var dist = sqrt(pow(attempt.blockingAssignmentArray[i].x - this.answer.blockingAssignmentArray[i].x, 2) + pow(attempt.blockingAssignmentArray[i].y - this.answer.blockingAssignmentArray[i].y, 2));
-
-					if (dist < 2) {
-						this.score = 1;
-					} else {
-						this.score = 0;
-						this.feedbackStartTime = millis();
-						break;
-					}
-				}
-			}
-
-			if (this.score != 0) {
-				for (i in attempt.route) {
-					var dist = sqrt(pow(attempt.route[i][0] - this.answer.route[i][0], 2) + pow(attempt.route[i][1] - this.answer.route[i][1], 2));
-
-					if (dist < 3) {
-						this.score = 1;
-					} else {
-						this.score = 0;
-						this.feedbackStartTime = millis();
-						break;
-					}
-				}
-			}
-
-			if (this.score === null) {
+			if(this.checkAssignments(attempt)){
 				this.score = 1;
+			}else{
+				this.score = 0;
 			}
 		}
 	}
 };
+
+Question.prototype.checkAssignments = function(attempt){
+		if(this.checkRoute(attempt) && this.checkMotion(attempt) && this.checkBlockingAssignment(attempt)){
+			return true;
+		}
+		debugger;
+		return false;
+}
+
+Question.prototype.checkRoute = function(attempt){
+	if(this.answer.route === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.route.length !== this.answer.route.length){
+		return false;
+	}
+	for (i in attempt.route) {
+		var dist = sqrt(pow(attempt.route[i][0] - this.answer.route[i][0], 2) + pow(attempt.route[i][1] - this.answer.route[i][1], 2));
+		if (dist > 3) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkBlockingAssignment = function(attempt){
+	if(this.answer.blockingAssignmentArray === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.blockingAssignmentArray.length !== this.answer.blockingAssignmentArray.length){
+		return false;
+	}
+	for (i in attempt.blockingAssignmentArray) {
+		var dist = sqrt(pow(attempt.blockingAssignmentArray[i].x - this.answer.blockingAssignmentArray[i].x, 2) + pow(attempt.blockingAssignmentArray[i].y - this.answer.blockingAssignmentArray[i].y, 2));
+		if (dist > 2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkMotion = function(attempt){
+	if(this.answer.motionCoords === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.motionCoords.length !== this.answer.motionCoords.length){
+		return false;
+	}
+	for (i in attempt.motionCoords) {
+		var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
+		if (dist > 2) {
+			return false;
+		}
+	}
+	return true;
+}
 
 // skip posts an attempted question to the database.
 Question.prototype.skip = function() {};
