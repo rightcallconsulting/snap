@@ -181,11 +181,18 @@
 						if(quiz.getCurrentQuestion().answer !== null && quiz.getCurrentQuestion().answer.route.length > 0){
 								quiz.attempt.route.push([mouseYardX, mouseYardY]);
 						}else{
-							quiz.attempt.blockingAssignmentArray.push(new BlockType({
+							var newAssignment = new BlockType({
 								type: 0,
 								x: mouseYardX,
 								y: mouseYardY
-							}))
+							});
+
+							if(playerClicked !== null){
+								newAssignment.type = 1;
+								newAssignment.player = playerClicked;
+							}
+							quiz.attempt.blockingAssignmentArray.push(newAssignment)
+
 						}
 
 					}
