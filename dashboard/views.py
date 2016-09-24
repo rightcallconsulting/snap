@@ -856,7 +856,7 @@ def take_quiz(request, quiz_id):
 		quiz_formations = quiz.formations.all()
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
-		position_groups = PlayerGroup.objects.filter(team=team,position_group=True,players__in=[player])#position_group=True)
+		position_groups = PlayerGroup.objects.filter(team=team,position_group=True,players__in=[player])
 
 		return render(request, 'dashboard/take_quiz.html', {
 			'quiz': quiz,

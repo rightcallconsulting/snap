@@ -508,8 +508,8 @@ Play.prototype.getPlayerFromPosition = function(pos){
 		if(player.pos === pos){
 			return player
 		}
-		return null;
 	}
+	return null;
 };
 
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN

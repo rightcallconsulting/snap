@@ -111,6 +111,7 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
+			debugger;
 			quiz.buildQuestions(positionGroups);
 
 			quiz.attempt = quiz.getSelected()[0];
