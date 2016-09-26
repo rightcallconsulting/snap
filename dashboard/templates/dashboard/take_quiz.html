@@ -286,7 +286,8 @@
 		$("#submit-quiz-button").click(function(event) {
 			var csrf_token = "{{ csrf_token }}";
 			quiz.submit(csrf_token);
-			//window.location.replace("/quizzes/todo");
+
+			window.location.replace("/quizzes/todo");
 		});
 
 		$("#check-answer-button").click(function(event) {
