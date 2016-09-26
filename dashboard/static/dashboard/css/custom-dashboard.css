@@ -192,6 +192,21 @@ top navbar and sidebar css
 }
 
 /*************************************************************************
+help box
+*************************************************************************/
+
+div#help-box {
+    width: 100%;
+    background: #eeeeee;
+    color: red;
+    margin: 0 0 20px 0;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 4px;
+    font-size: medium;
+}
+
+/*************************************************************************
 interactive and static mainview
 *************************************************************************/
 
@@ -400,7 +415,7 @@ div.action-boxes a i.fa {
 }
 
 div.action-boxes a:hover i.fa {
-	color: #7cb34a;
+	color: #7cb34a ;
 }
 
 /*************************************************************************
