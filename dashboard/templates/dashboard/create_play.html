@@ -36,9 +36,9 @@
 					<i class="fa fa-arrows-alt fa-2x mainview-button-icon" title="Full screen"></i>
 				</button>
 
-				<!--<button id="help-button" name="button">
+				<button id="help-button" name="button">
 					<i class="fa fa-question-circle-o fa-2x mainview-button-icon" title="Help"></i>
-				</button>-->
+				</button>
 			</div>
 		</div>
 
@@ -685,6 +685,17 @@
 		});
 
 		$("#full-screen-button").click(function(event) {});
+
+		$("#help-button").click(function(event) {
+			var help_box = document.getElementById("help-box");
+			var hidden = help_box.getAttribute("hidden");
+
+			if (hidden === null) {
+				help_box.setAttribute("hidden", "true");
+			} else {
+				help_box.removeAttribute("hidden");
+			}
+		});
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
