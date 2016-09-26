@@ -612,6 +612,14 @@ manage quiz
 take quiz
 *************************************************************************/
 
+div#question-prompt {
+	width: 100%;
+	text-align: center;
+	font-size: large;
+	margin: 0 0 20px 0;
+	border: none;
+	padding: 0;
+}
 
 /*************************************************************************
 inputs
