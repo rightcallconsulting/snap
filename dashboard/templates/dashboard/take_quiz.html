@@ -3,6 +3,7 @@
 
 {% block content %}
 	<div id="take-quiz" class="take-quiz">
+		<div id="question-prompt"></div>
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
 				{{ quiz.name }}
@@ -111,7 +112,6 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			debugger;
 			quiz.buildQuestions(positionGroups);
 
 			quiz.attempt = quiz.getSelected()[0];
@@ -334,7 +334,7 @@
 		});
 
 		$("#question-mark-button").click(function(event) {
-			var question = quiz.questions[quiz.currentQuestionIndex]
+			var question = quiz.questions[quiz.currentQuestionIndex];
 			if(question){
 				question.startTime = 0;
 			}
@@ -370,6 +370,9 @@
 				sideview_question_button.textContent = question_number.toString();
 				sideview_buttons.appendChild(sideview_question_button);
 			}
+
+			var question_prompt = document.getElementById("question-prompt");
+			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
