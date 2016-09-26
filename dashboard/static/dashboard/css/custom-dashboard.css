@@ -726,7 +726,7 @@ custom quizzes
 	overflow-y: hidden;
 }
 
-.playerbook-action-table {
+.custom-quizzes-action-table {
 	table-layout: fixed;
 	width: 100%;
 	height: 100%;
@@ -734,7 +734,7 @@ custom quizzes
 	border-spacing: 20px;
 }
 
-.playerbook-action-table td {
+.custom-quizzes-action-table td {
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 5px;
