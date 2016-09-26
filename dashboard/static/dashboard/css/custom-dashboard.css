@@ -84,7 +84,7 @@ top navbar and sidebar css
 	padding-bottom: 2vh;
 }
 
-.full-sidebar .dash-header-logo {
+.full-sidebar .sidebar-logo {
 	height: 16vh;
 	display: block;
 	width: auto;
@@ -150,7 +150,7 @@ top navbar and sidebar css
 	padding-bottom: 5vh;
 }
 
-.small-sidebar .dash-header-logo {
+.small-sidebar .sidebar-logo {
 	height: 10vh;
 	display: block;
 	width: auto;

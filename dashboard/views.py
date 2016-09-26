@@ -109,6 +109,7 @@ def homepage(request):
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
 			'quizzes': quizzes_table,
+			'team': team,
 			'page_header': 'DASHBOARD'
 		})
 	else:
@@ -202,6 +203,7 @@ def homepage(request):
 		return render(request, 'dashboard/coach_homepage.html', {
 			'recent_results': recent_results,
 			'quizzes': quizzes_table,
+			'team': team,
 			'page_header': 'DASHBOARD'
 		})
 
@@ -283,6 +285,7 @@ def edit_profile(request):
 			'last_name': last_name,
 			'username': username,
 			'email': email,
+			'team': team,
 			'page_header': 'EDIT PROFILE'
 		})
 
@@ -304,6 +307,7 @@ def change_password(request):
 			return HttpResponseRedirect("/change_password")
 	else:
 		return render(request, 'dashboard/change_password.html', {
+			'team': team,
 			'page_header': 'EDIT PROFILE'
 		})
 
@@ -329,6 +333,7 @@ def playbook(request, unit="offense"):
 		'scoutFormations': scout_formations,
 		'plays': plays,
 		'concepts': concepts,
+		'team': team,
 		'page_header': 'PLAYBOOK'
 	})
 
@@ -365,7 +370,8 @@ def create_formation(request):
 			'team': team,
 			'formations': formations,
 			'positions': positions,
-			'page_header': 'CREATE FORMATION',
+			'team': team,
+			'page_header': 'CREATE FORMATION'
 		})
 
 def create_defensive_look(request):
@@ -395,9 +401,9 @@ def create_defensive_look(request):
 	else:
 		formations = Formation.objects.filter(team=team, scout=True)
 		return render(request, 'dashboard/create_defensive_look.html', {
-			'team': team,
 			'formations': formations,
-			'page_header': 'CREATE DEFENSIVE LOOK',
+			'team': team,
+			'page_header': 'CREATE DEFENSIVE LOOK'
 		})
 
 # Plays
@@ -435,11 +441,11 @@ def create_play(request):
 		scout_formations = Formation.objects.filter(team=team, scout=True)
 		plays = Play.objects.filter(team=team, scout=False)
 		return render(request, 'dashboard/create_play.html', {
-			'team': team,
 			'formations': formations,
 			'scoutFormations': scout_formations,
 			'plays': plays,
-			'page_header': 'CREATE PLAY',
+			'team': team,
+			'page_header': 'CREATE PLAY'
 		})
 
 # Concepts
@@ -472,10 +478,10 @@ def create_concept(request):
 		concepts = Concept.objects.filter(team=team, scout=False)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_concept.html', {
-			'team': team,
 			'concepts': concepts,
 			'positions': positions,
-			'page_header': 'CREATE CONCEPT',
+			'team': team,
+			'page_header': 'CREATE CONCEPT'
 		})
 
 # Groups
@@ -492,11 +498,11 @@ def groups(request):
 		analytics = None
 
 	return render(request, 'dashboard/groups.html', {
-		'team': team,
 		'groups': groups,
 		'players_in_group': players_in_group,
 		'analytics': analytics,
-		'page_header': 'GROUPS',
+		'team': team,
+		'page_header': 'GROUPS'
 	})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -535,7 +541,8 @@ def create_group(request):
 		return render(request, 'dashboard/create_group.html', {
 			'players': players,
 			'groups': groups,
-			'page_header': 'CREATE GROUP',
+			'team': team,
+			'page_header': 'CREATE GROUP'
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -621,7 +628,8 @@ def manage_groups(request):
 			'groups': groups,
 			'players_in_group': players_in_group,
 			'players_not_in_group': players_not_in_group,
-			'page_header': 'MANAGE GROUPS',
+			'team': team,
+			'page_header': 'MANAGE GROUPS'
 		})
 
 def delete_group(request):
@@ -671,7 +679,8 @@ def assigned_quizzes(request):
 
 	return render(request, 'dashboard/quizzes.html', {
 			'quizzes': quizzes_table,
-			'page_header': 'QUIZZES',
+			'team': team,
+			'page_header': 'QUIZZES'
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -708,7 +717,8 @@ def create_quiz(request):
 		return render(request, 'dashboard/create_quiz.html', {
 			'groups': groups,
 			'players_in_group': players_in_group,
-			'page_header': 'CREATE QUIZ',
+			'team': team,
+			'page_header': 'CREATE QUIZ'
 		})
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
@@ -768,6 +778,7 @@ def manage_quiz(request, quiz_id):
 			'formations': formations,
 			'plays': plays,
 			'concepts': concepts,
+			'team': team,
 			'page_header': 'MANAGE QUIZ'
 		})
 
@@ -811,7 +822,8 @@ def quizzes_todo(request):
 
 	return render(request, 'dashboard/todo.html', {
 			'quizzes': quizzes_table,
-			'page_header': 'TODO',
+			'team': team,
+			'page_header': 'TODO'
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
@@ -864,6 +876,7 @@ def take_quiz(request, quiz_id):
 			'quizPlays': quiz_plays,
 			'quizConcepts': quiz_concepts,
 			'position_groups': position_groups,
+			'team': team,
 			'page_header': quiz.name.upper()
 		})
 
@@ -883,17 +896,20 @@ def submit_quiz(request):
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def custom_quizzes(request, unit="offense"):
 	player = request.user.player
+	team = player.team
 	order = ['Random', 'Difficulty']
 	return render(request, 'dashboard/playerbook.html', {
-		'page_header': 'CUSTOM QUIZZES',
 		'player': player,
 		'quiz_order_options': order,
+		'team': team,
+		'page_header': 'CUSTOM QUIZZES'
 	})
 
 # Analytics
 @login_required
 def analytics(request):
 	return render(request, 'dashboard/analytics.html', {
+		'team': team,
 		'page_header': 'ANALYTICS'
 	})
 
@@ -934,6 +950,7 @@ def plays_analytics(request):
 
 	return render(request, 'dashboard/plays_analytics.html', {
 		'plays_analytics': plays_analytics,
+		'team': team,
 		'page_header': 'PLAYS ANALYTICS'
 	})
 
@@ -976,6 +993,7 @@ def player_analytics(request):
 
 	return render(request, 'dashboard/plays_analytics.html', {
 		'plays_analytics': plays_analytics,
+		'team': team,
 		'page_header': player.first_name.upper() + " " + player.last_name.upper()
 	})
 
@@ -1012,6 +1030,7 @@ def players_analytics(request):
 
 	return render(request, 'dashboard/players_analytics.html', {
 		'players_analytics': players_analytics,
+		'team': team,
 		'page_header': 'PLAYERS ANALYTICS'
 	})
 
@@ -1053,6 +1072,7 @@ def quiz_analytics(request, quiz_id):
 
 	return render(request, 'dashboard/quiz_analytics.html', {
 		'plays_analytics': plays_analytics,
+		'team': team,
 		'page_header': 'QUIZ ANALYTICS'
 	})
 

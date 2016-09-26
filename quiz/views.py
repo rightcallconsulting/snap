@@ -24,8 +24,9 @@ def index(request):
 
 def formation_identification_quiz(request):
 	if (request.method == 'GET'):
+		team = request.user.player.team
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_formations = Formation.objects.filter(team=request.user.player.team, scout=False)
+		all_formations = Formation.objects.filter(team=team, scout=False)
 		number_of_formations = all_formations.count()
 		formation_names = []
 		formations_json = []
@@ -50,13 +51,15 @@ def formation_identification_quiz(request):
 		return render(request, 'quiz/formation_identification_quiz.html', {
 			'formationsJson': formations_json,
 			'formationNames': formation_names,
+            'team': team,
 			'page_header': 'FORMATION ID QUIZ'
 		})
 
 def play_identification_quiz(request):
 	if (request.method == 'GET'):
+		team = request.user.player.team
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_plays = Play.objects.filter(team=request.user.player.team, scout=False)
+		all_plays = Play.objects.filter(team=team, scout=False)
 		number_of_plays = all_plays.count()
 		play_names = []
 		plays_json = []
@@ -81,13 +84,15 @@ def play_identification_quiz(request):
 		return render(request, 'quiz/play_identification_quiz.html', {
 			'playsJson': plays_json,
 			'playNames': play_names,
+            'team': team,
 			'page_header': 'PLAY ID QUIZ'
 		})
 
 def concept_identification_quiz(request):
 	if (request.method == 'GET'):
+		team = request.user.player.team
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_concepts = Concept.objects.filter(team=request.user.player.team, scout=False)
+		all_concepts = Concept.objects.filter(team=team, scout=False)
 		number_of_concepts = all_concepts.count()
 		concept_names = []
 		concepts_json = []
@@ -112,13 +117,15 @@ def concept_identification_quiz(request):
 		return render(request, 'quiz/concept_identification_quiz.html', {
 			'conceptsJson': concepts_json,
 			'conceptNames': concept_names,
+            'team': team,
 			'page_header': 'CONCEPT ID QUIZ'
 		})
 
 def formation_alignment_quiz(request):
 	if (request.method == 'GET'):
+		team = request.user.player.team
 		number_of_questions = int(request.GET.get('num_qs'))
-		all_formations = Formation.objects.filter(team=request.user.player.team, scout=False)
+		all_formations = Formation.objects.filter(team=team, scout=False)
 		number_of_formations = all_formations.count()
 		formation_names = []
 		formations_json = []
@@ -146,17 +153,19 @@ def formation_alignment_quiz(request):
 			'userJson': json.dumps(user_json),
 			'formationsJson': formations_json,
 			'formationNames': formation_names,
+            'team': team,
 			'page_header': 'FORMATION ALIGNMENT QUIZ'
 		})
 
 def blocking_quiz(request):
-    if (request.method == 'GET'):
-        number_of_questions = int(request.GET.get('num_qs'))
-        all_plays = Play.objects.filter(team=request.user.player.team, scout=False)
-        number_of_plays = all_plays.count()
-        play_names = []
-        plays_json = []
-        seeds = []
+	if (request.method == 'GET'):
+		team = request.user.player.team
+		number_of_questions = int(request.GET.get('num_qs'))
+		all_plays = Play.objects.filter(team=team, scout=False)
+		number_of_plays = all_plays.count()
+		play_names = []
+		plays_json = []
+		seeds = []
 
         for play in all_plays:
             play_names.append(play.name)
@@ -177,6 +186,7 @@ def blocking_quiz(request):
         return render(request, 'quiz/blocking_quiz.html', {
             'playsJson': plays_json,
             'playNames': play_names,
+            'team': team,
             'page_header': 'BLOCKING QUIZ'
         })
 
