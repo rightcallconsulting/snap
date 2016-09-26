@@ -12,7 +12,9 @@
 				
 				<td class="middle">
 					<a href="/">
+						{% if team.banner_image %}
 						<img src="{{ team.banner_image.url }}" />
+						{% endif %}
 					</a>
 				</td><!--/middle-->
 

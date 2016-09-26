@@ -2,7 +2,11 @@
 
 <aside class="fixed skin-6 small-sidebar" id="main-sidebar">
 	<div class="sidebar-header">
-		<a href="/"><img src="{{ team.sidebar_image.url }}" class="sidebar-logo" /></a>
+		<a href="/">
+			{% if team.sidebar_image %}
+			<img src="{{ team.sidebar_image.url }}" class="sidebar-logo" />
+			{% endif %}
+		</a>
 	</div>
 
 	<div class="sidebar-selection-menu">
