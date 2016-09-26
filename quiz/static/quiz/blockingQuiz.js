@@ -323,6 +323,7 @@ function mouseClicked() {
 	if (bigReset.isMouseInside(field) && test.over) {
 		test.plays = shuffle(originalPlayList.slice());
 		test.restartQuiz();
+		changeAnswerPlayer();
 		return true;
 	} else if (resetMissed.isMouseInside(field) && test.over) {
 		var newPlays = test.missedPlays.concat(test.skippedPlays);
@@ -331,6 +332,7 @@ function mouseClicked() {
 		}
 		test.plays = shuffle(newPlays);
 		test.restartQuiz();
+		changeAnswerPlayer();
 		return true;
 	} else if (nextQuiz.isMouseInside(field) && test.over) {
 		//Advance to next quiz or exit to dashboard
