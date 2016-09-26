@@ -27,7 +27,7 @@ Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
 	
 	if (millis() - this.startTime < 2000) {
-			this.drawPrompt(field);
+		//this.drawPrompt(field);
 	}
 };
 
