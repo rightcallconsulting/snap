@@ -22,7 +22,9 @@ class Team(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	sidebar_image = models.ImageField(blank=True, null=True)
-
+	banner_image = models.ImageField(blank=True, null=True)
+	midfield_art = models.ImageField(blank=True, null=True)
+	endzone_art = models.ImageField(blank=True, null=True)
 
 	def __str__(self):
 		return self.name
