@@ -565,6 +565,12 @@ Play.prototype.drawAllPlayers = function(field){
   }
 };
 
+Play.prototype.drawDefensivePlayers = function(field){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+      this.defensivePlayers[i].draw(field);
+  }
+}
+
 Play.prototype.drawAllRoutes = function(field){
   for(var i = 0; i < this.offensivePlayers.length; i++){
       this.offensivePlayers[i].drawRoute(field);

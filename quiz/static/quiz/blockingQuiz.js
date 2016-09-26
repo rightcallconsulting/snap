@@ -415,6 +415,7 @@ function drawOpening() {
 	field.drawBackground(null, height, width);
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
+	test.getCurrentPlay().drawDefensivePlayers(field);
 
 	if (original_player.blockingAssignmentArray.length === answer_player.blockingAssignmentArray.length) {
 		answer_player.setUnselected();
