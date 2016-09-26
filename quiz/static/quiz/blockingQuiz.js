@@ -10,6 +10,7 @@ var exitDemo = null;
 var demoDoubleClick = false;
 var answer_player = null;
 var original_player = null;
+var feedbackScreenStartTime = 0;
 
 function setup() {
 	var box = document.getElementById('display-box');
@@ -74,7 +75,7 @@ function setup() {
 		test = new PlayTest({
 			formations: [],
 			scoreboard: scoreboard,
-			displayName: false
+			displayName: true
 		});
 
 		var plays = [];
@@ -235,6 +236,9 @@ function exitDemoScreen() {
 };
 
 function checkAnswer() {
+	if(feedbackScreenStartTime > 0){
+		return;
+	}
 	var wrong_answer = false;
 
 	if (original_player.blockingAssignmentArray.length != answer_player.blockingAssignmentArray.length) {
@@ -256,12 +260,20 @@ function checkAnswer() {
 	test.registerAnswer(!wrong_answer)
 	if(wrong_answer){
 		answer_player.blockingAssignmentArray = [];
-		//SHOW FEEDBACK SCREEN!!!!
+		feedbackScreenStartTime = millis();
 	}else{
 		changeAnswerPlayer();
 	}
 
 };
+
+function endFeedbackScreen(){
+	feedbackScreenStartTime = 0
+	test.advanceToNextPlay("")
+	if(!test.over){
+		changeAnswerPlayer();
+	}
+}
 
 function skipQuestion() {
 	test.skipQuestion();
@@ -284,6 +296,9 @@ function changeAnswerPlayer() {
 };
 
 function mouseReleased() {
+	if(test.feedbackScreenStartTime > 0){
+		return false;
+	}
 	// Handle clicks on players in the Play
 	var currentPlayerSelected = answer_player;
 	var newPlayerSelected = test.getCurrentPlay().mouseInPlayer(field);
@@ -318,6 +333,10 @@ function mouseReleased() {
 function mouseClicked() {
 	if (mouseX > 0 && mouseY > 0 && mouseX < field.width && mouseY < field.height) {
 		test.scoreboard.feedbackMessage = "";
+	}
+
+	if(test.feedbackScreenStartTime > 0){
+		return false;
 	}
 
 	if (bigReset.isMouseInside(field) && test.over) {
@@ -395,21 +414,10 @@ function draw() {
 		nextQuiz.draw(field);
 		resetMissed.draw(field);
 	} else {
-		if (test.feedbackScreenStartTime) {
-			var timeElapsed = millis() - test.feedbackScreenStartTime;
-			if(timeElapsed > 1000) {
-				clearMultipleChoiceAnswers();
-				test.feedbackScreenStartTime = 0;
-				test.advanceToNextPlay("");
-			} else {
-				drawOpening(field);
-			}
+		if(test.getCurrentPlay().inProgress) {
+			drawScene(field);
 		} else {
-			if(test.getCurrentPlay().inProgress) {
-				drawScene(field);
-			} else {
-				drawOpening(field);
-			}
+			drawOpening(field);
 		}
 	}
 };
@@ -424,8 +432,18 @@ function drawOpening() {
 		answer_player.setUnselected();
 	}
 
-	answer_player.drawBlocks(field);
+	if(feedbackScreenStartTime > 0){
+		original_player.drawBlocks(field);
+		original_player.draw(field);
+		if(millis() - feedbackScreenStartTime > 1500){
+			endFeedbackScreen();
+		}
+	}else{
+		answer_player.drawBlocks(field);
 
-	answer_player.setSelected();
-	answer_player.draw(field);
+		answer_player.setSelected();
+		answer_player.draw(field);
+	}
+
+
 };
