@@ -238,7 +238,6 @@ function checkAnswer() {
 	var wrong_answer = false;
 
 	if (original_player.blockingAssignmentArray.length != answer_player.blockingAssignmentArray.length) {
-		test.advanceToNextPlay("Incorrect");
 		wrong_answer = true;
 	} else {
 		for (i in original_player.blockingAssignmentArray) {
@@ -252,14 +251,16 @@ function checkAnswer() {
 				break;
 			}
 		}
-
-		if (!wrong_answer) {
-			test.score += 1;
-			test.advanceToNextPlay("Correct");
-		}
 	}
 
-	changeAnswerPlayer();
+	test.registerAnswer(!wrong_answer)
+	if(wrong_answer){
+		answer_player.blockingAssignmentArray = [];
+		//SHOW FEEDBACK SCREEN!!!!
+	}else{
+		changeAnswerPlayer();
+	}
+
 };
 
 function skipQuestion() {
