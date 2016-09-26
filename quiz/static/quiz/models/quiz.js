@@ -113,9 +113,6 @@ Quiz.prototype.delete = function (path, csrf_token) {
 			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: quizName}
 		).done(function() {
 			console.log("Quiz successfully sent to Django to be deleted");
-			var create_url = "/quizzes/create";
-
-			window.location.replace("/quizzes/create");
 		}).fail(function() {
 			console.log("Error sending Quiz to Django to be deleted");
 	});

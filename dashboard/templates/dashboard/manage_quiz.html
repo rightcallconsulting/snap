@@ -303,6 +303,9 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.delete(path, csrf_token);
+
+			var create_url = "/quizzes/create";
+			window.location.replace("/quizzes/create");
 		});
 
 		$("#add-content-button").click(function(event) {
