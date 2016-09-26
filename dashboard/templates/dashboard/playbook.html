@@ -31,14 +31,20 @@
 			{% if user_is_a_coach %}
 				<div id="create-formation-button">
 					<a href="/formations/create">
-						<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-plus fa-stack-1x"></i>
+						</span>
 						CREATE FORMATION
 					</a>
 				</div>
 
 				<div id="create-play-button">
 					<a href="/plays/create">
-						<img class="coach-action-icon" src="{% static 'dashboard/images/plus-icon-dark.png' %}">
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle-thin fa-stack-2x"></i>
+							<i class="fa fa-plus fa-stack-1x"></i>
+						</span>
 						CREATE PLAY
 					</a>
 				</div>

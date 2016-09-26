@@ -394,6 +394,14 @@ div#top-options {
 	color: #555555;
 }
 
+div#top-options a i.fa {
+	color: #33691e;
+}
+
+div#top-options a:hover i.fa {
+	color: #7cb34a ;
+}
+
 div#create-formation-button,
 div#create-play-button {
 	display: inline-block;
