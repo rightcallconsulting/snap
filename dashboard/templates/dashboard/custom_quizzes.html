@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="padding-lg playerbook">
+	<div class="custom-quizzes">
 		<div class="row dash-row">
 			<div class="dash-col">
 				<div class="dash-header text-center">
@@ -166,44 +166,6 @@
 					</div>
 				</div>
 			</div> <!--/quizOptionsModal-->
-
-			<div class="col-lg-4 dash-col recently-taken">
-				<div class="dash-header text-center">
-					<span><h4>RECENTLY TAKEN</h4></span>
-				</div>
-				<div class="col-lg-6">
-					<div class="panel-stat3 bg-danger">
-						<h2 class="m-top-none" id="userCount">
-							362
-						</h2>
-						<h5>Registered users</h5>
-						<i class="fa fa-arrow-circle-o-up fa-lg"></i>
-						<span class="m-left-xs">5% Higher</span>
-						<div class="stat-icon">
-							<i class="fa fa-user fa-3x"></i>
-						</div>
-						<div class="loading-overlay">
-							<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="panel-stat3 bg-info">
-						<h2 class="m-top-none">
-							<span id="serverloadCount">15</span>%
-						</h2>
-						<h5>Server Load</h5>
-						<i class="fa fa-arrow-circle-o-up fa-lg"></i>
-						<span class="m-left-xs">1% Higher</span>
-						<div class="stat-icon">
-							<i class="fa fa-hdd-o fa-3x"></i>
-						</div>
-						<div class="loading-overlay">
-							<i class="loading-icon fa fa-refresh fa-spin fa-lg"></i>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div><!--/dash-row-->
 	</div><!--/padding-md-->
 {% endblock %}
