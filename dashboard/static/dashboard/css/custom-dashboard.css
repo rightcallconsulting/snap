@@ -1727,7 +1727,7 @@ select#id_player {
 #create-play,
 #create-concept,
 #playbook {
-	padding: 20px;
+	padding: 0 0 20px 0;
 }
 
 div.choose-existing-formation,
