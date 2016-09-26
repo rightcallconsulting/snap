@@ -3,6 +3,7 @@
 
 {% block content %}
 	<div id="take-quiz" class="take-quiz">
+		<div id="question-prompt"></div>
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
 				{{ quiz.name }}
@@ -32,9 +33,9 @@
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
 
-				<button id="question-mark-button" name="button">
-					<i class="fa fa-question fa-2x mainview-button-icon" title="Demo"></i>
-				</button>
+				<!--<button id="help-button" name="button">
+					<i class="fa fa-question-circle-o fa-2x mainview-button-icon" title="Help"></i>
+				</button>-->
 			</div>
 		</div>
 
@@ -111,7 +112,6 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			debugger;
 			quiz.buildQuestions(positionGroups);
 
 			quiz.attempt = quiz.getSelected()[0];
@@ -286,7 +286,8 @@
 		$("#submit-quiz-button").click(function(event) {
 			var csrf_token = "{{ csrf_token }}";
 			quiz.submit(csrf_token);
-			//window.location.replace("/quizzes/todo");
+
+			window.location.replace("/quizzes/todo");
 		});
 
 		$("#check-answer-button").click(function(event) {
@@ -311,7 +312,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 
-			if(heightInYards > 25) {
+			if (heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
 				field.heightInYards = 20;
@@ -324,7 +325,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 
-			if(heightInYards > 50) {
+			if (heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
 				field.heightInYards += 5;
@@ -333,9 +334,9 @@
 			resizeMainViewObjects();
 		});
 
-		$("#question-mark-button").click(function(event) {
-			var question = quiz.questions[quiz.currentQuestionIndex]
-			if(question){
+		$("#help-button").click(function(event) {
+			var question = quiz.questions[quiz.currentQuestionIndex];
+			if (question) {
 				question.startTime = 0;
 			}
 		});
@@ -370,6 +371,9 @@
 				sideview_question_button.textContent = question_number.toString();
 				sideview_buttons.appendChild(sideview_question_button);
 			}
+
+			var question_prompt = document.getElementById("question-prompt");
+			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our

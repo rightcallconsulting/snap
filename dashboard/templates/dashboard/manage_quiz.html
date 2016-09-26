@@ -303,6 +303,8 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.delete(path, csrf_token);
+
+			window.location.replace("/quizzes/create");
 		});
 
 		$("#add-content-button").click(function(event) {
@@ -353,7 +355,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 			
-			if(heightInYards > 25) {
+			if (heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
 				field.heightInYards = 20;
@@ -366,7 +368,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 			
-			if(heightInYards > 50) {
+			if (heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
 				field.heightInYards += 5;

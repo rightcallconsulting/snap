@@ -12,7 +12,9 @@
 				
 				<td class="middle">
 					<a href="/">
-						<img src="{% static 'dashboard/images/team-banner.png' %}" alt="Stanford">
+						{% if team.banner_image %}
+						<img src="{{ team.banner_image.url }}" alt="Stanford" />
+						{% endif %}
 					</a>
 				</td><!--/middle-->
 

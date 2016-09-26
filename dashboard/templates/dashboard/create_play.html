@@ -31,6 +31,10 @@
 				<button id="full-screen-button" name="button">
 					<i class="fa fa-arrows-alt fa-2x mainview-button-icon" title="Full screen"></i>
 				</button>
+
+				<!--<button id="help-button" name="button">
+					<i class="fa fa-question-circle-o fa-2x mainview-button-icon" title="Help"></i>
+				</button>-->
 			</div>
 		</div>
 
@@ -654,7 +658,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 
-			if(heightInYards > 25) {
+			if (heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
 				field.heightInYards = 20;
@@ -667,7 +671,7 @@
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
 
-			if(heightInYards > 50) {
+			if (heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
 				field.heightInYards += 5;
