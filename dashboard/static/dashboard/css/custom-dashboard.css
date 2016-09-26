@@ -1786,10 +1786,6 @@ div.concept-table button {
 	height: 20px;
 }
 
-#grey-container {
-	padding: 12px;
-}
-
 td.correct.percent-100 {
 	background-color: rgba(101, 206, 167, 0.05);
 	color: #33691E;
