@@ -704,6 +704,10 @@ select#position-type {
 custom quizzes
 *************************************************************************/
 
+#custom-quizzes {
+	padding: 0 40px 0 40px;
+}
+
 .custom-quizzes .dash-col{
 	height: 600px;
 	margin-bottom:10px;
