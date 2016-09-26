@@ -36,7 +36,7 @@ function setup() {
 
 	multipleChoiceAnswers = [];
 	var buttonWidth = field.heightInYards * field.width / field.height / 6;
-	
+
 	bigReset = new Button({
 		x: field.getYardX(width*0.25) - buttonWidth / 2,
 		y: field.getYardY(height*0.8),
@@ -242,50 +242,14 @@ function checkAnswer() {
 		wrong_answer = true;
 	} else {
 		for (i in original_player.blockingAssignmentArray) {
-			if (original_player.blockingAssignmentArray[i] instanceof Player && answer_player.blockingAssignmentArray[i] instanceof Player) {
-				if (original_player.blockingAssignmentArray[i] != answer_player.blockingAssignmentArray[i]) {
-					test.advanceToNextPlay("Incorrect");
-					wrong_answer = true;
-					break;
-				}
-			} else if (original_player.blockingAssignmentArray[i] === "Money Block" && answer_player.blockingAssignmentArray[i] != "Money Block") {
-				test.advanceToNextPlay("Incorrect");
+			var blockPart = original_player.blockingAssignmentArray[i]
+			var guessPart = answer_player.blockingAssignmentArray[i]
+			var xDiff = blockPart.x - guessPart.x
+			var yDiff = blockPart.y - guessPart.y
+			var diff = sqrt(xDiff * xDiff + yDiff*yDiff)
+			if(diff > 2){
 				wrong_answer = true;
 				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Down Block Right" && answer_player.blockingAssignmentArray[i] != "Down Block Right") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Down Block Left" && answer_player.blockingAssignmentArray[i] != "Down Block Left") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Straight Seal Right" && answer_player.blockingAssignmentArray[i] != "Straight Seal Right") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Straight Seal Left" && answer_player.blockingAssignmentArray[i] != "Straight Seal Left") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Kick Out Right" && answer_player.blockingAssignmentArray[i] != "Kick Out Right") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else if (original_player.blockingAssignmentArray[i] === "Kick Out Left" && answer_player.blockingAssignmentArray[i] != "Kick Out Left") {
-				test.advanceToNextPlay("Incorrect");
-				wrong_answer = true;
-				break;
-			} else {
-				if (answer_player.blockingAssignmentArray[i].x < (original_player.blockingAssignmentArray[i].x - 1) || answer_player.blockingAssignmentArray[i].x > (original_player.blockingAssignmentArray[i].x + 1)) {
-					test.advanceToNextPlay("Incorrect");
-					wrong_answer = true;
-					break;
-				} else if (answer_player.blockingAssignmentArray[i].y < (original_player.blockingAssignmentArray[i].y - 1) || answer_player.blockingAssignmentArray[i].y > (original_player.blockingAssignmentArray[i].y + 1)) {
-					test.advanceToNextPlay("Incorrect");
-					wrong_answer = true;
-					break;
-				}
 			}
 		}
 
@@ -327,12 +291,22 @@ function mouseReleased() {
 
 	if (newPlayerSelected === null || newPlayerSelected.unit === "offense") {
 		if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-			currentPlayerSelected.blockingAssignmentArray.push([mouseYardX, mouseYardY]);
+			var blockPart = new BlockType({
+				x: mouseYardX,
+				y: mouseYardY
+			})
+			currentPlayerSelected.blockingAssignmentArray.push(blockPart);
 		}
-		
+
 		return false;
 	} else if (newPlayerSelected.unit === "defense") {
-		currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
+		var blockPart = new BlockType({
+			x: mouseYardX,
+			y: mouseYardY,
+			player: newPlayerSelected,
+			type: 1
+		})
+		currentPlayerSelected.blockingAssignmentArray.push(blockPart);
 		return false;
 	}
 
@@ -376,9 +350,11 @@ function mouseClicked() {
 function keyPressed() {
 	var playerSelcted = answer_player;
 	if (keyCode == BACKSPACE || keyCode == DELETE) {
-		playerSelcted.blockingAssignmentArray = [];
+		if(playerSelcted.blockingAssignmentArray.length > 0){
+			playerSelcted.blockingAssignmentArray.pop();
+		}
 		return false;
-	} else if (key === "Q") {
+	}/* else if (key === "Q") {
 		playerSelcted.blockingAssignmentArray.push("Money Block");
 	} else if (key === "W") {
 		playerSelcted.blockingAssignmentArray.push("Down Block Right");
@@ -392,26 +368,15 @@ function keyPressed() {
 		playerSelcted.blockingAssignmentArray.push("Kick Out Right");
 	} else if (key === "U") {
 		playerSelcted.blockingAssignmentArray.push("Kick Out Left");
-	}
+	}*/
 
-	return false;	
+	return true;
 };
 
 function keyTyped() {
 	if(test.over) {
 		if(key === 'r') {
 			test.restartQuiz();
-		}
-	} else {
-		var offset = key.charCodeAt(0) - "1".charCodeAt(0);
-		if (offset >= 0 && offset < multipleChoiceAnswers.length) {
-			var answer = multipleChoiceAnswers[offset];
-			if (answer.clicked) {
-				checkAnswer(answer);
-			} else {
-				clearMultipleChoiceAnswers();
-				answer.changeClickStatus();
-			}
 		}
 	}
 };
@@ -450,6 +415,7 @@ function drawOpening() {
 	field.drawBackground(null, height, width);
 	test.getCurrentPlay().drawAssignmentsExceptBlocks(field);
 	test.getCurrentPlay().drawAllPlayers(field);
+	test.getCurrentPlay().drawDefensivePlayers(field);
 
 	if (original_player.blockingAssignmentArray.length === answer_player.blockingAssignmentArray.length) {
 		answer_player.setUnselected();

@@ -71,7 +71,7 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var y1 = field.getTranslatedY(prevY)
 	var x2 = field.getTranslatedX(this.x)
 	var y2 = field.getTranslatedY(this.y)
-	
+
 	if (this.type === 1 && this.player) {
 		var defensiveMovement = this.player.defensiveMovement
 		var defensiveMovementLength = defensiveMovement.length
