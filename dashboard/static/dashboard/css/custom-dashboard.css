@@ -395,6 +395,14 @@ div#create-defensive-look-button {
 	font-size: medium;
 }
 
+div.action-boxes a i.fa {
+	color: #33691e;
+}
+
+div.action-boxes a:hover i.fa {
+	color: #7cb34a;
+}
+
 /*************************************************************************
 analytics
 *************************************************************************/
