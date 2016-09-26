@@ -898,7 +898,7 @@ def custom_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	order = ['Random', 'Difficulty']
-	return render(request, 'dashboard/playerbook.html', {
+	return render(request, 'dashboard/custom_quizzes.html', {
 		'player': player,
 		'quiz_order_options': order,
 		'team': team,
