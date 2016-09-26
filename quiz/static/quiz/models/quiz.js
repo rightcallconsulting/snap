@@ -130,15 +130,16 @@ Quiz.prototype.delete = function (path, csrf_token) {
 Quiz.prototype.draw = function(field) {
 	if (!this.isEmpty()) {
 		var question = this.questions[this.currentQuestionIndex];
-		if(question.startTime === 0){
+		if (question.startTime === 0) {
 			this.clearQuestionStartTimes()
 			question.startTime = millis();
 		}
+
 		question.draw(field);
-		if(question.feedbackStartTime > 0){
+		if (question.feedbackStartTime > 0) {
 			question.drawFeedbackScreen(field);
-		}else{
-			if(this.attempt !== null){
+		} else {
+			if (this.attempt !== null) {
 				this.attempt.draw(field);
 				this.attempt.drawAssignments(field);
 			}

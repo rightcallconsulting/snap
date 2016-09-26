@@ -25,23 +25,24 @@ var Question = function(config) {
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
-	if(millis() - this.startTime < 2000){
+	
+	if (millis() - this.startTime < 2000) {
 			this.drawPrompt(field);
 	}
 };
 
 Question.prototype.drawFeedbackScreen = function(field){
-	if(this.answer !== null){
+	if (this.answer !== null) {
 		this.answer.draw(field);
 		this.answer.drawAssignments(field);
 	}
-}
+};
 
 Question.prototype.drawPrompt = function(field) {
-		textSize(20)
-		var x = field.getTranslatedX(Field.WIDTH / 2)
-		var y = 30
-		text(this.prompt, x, y)
+		textSize(20);
+		var x = field.getTranslatedX(Field.WIDTH / 2);
+		var y = 30;
+		text(this.prompt, x, y);
 };
 
 //returns the position being tested for this question
@@ -50,12 +51,12 @@ Question.prototype.drawPrompt = function(field) {
 Question.prototype.getTestedPosition = function(player_positions){
 	for(var i = 0; i < player_positions.length; i++){
 		var position = player_positions[i];
-		if(this.question.getPlayerFromPosition(position) !== null){
+		if (this.question.getPlayerFromPosition(position) !== null) {
 			return position;
 		}
 	}
-	return this.question.offensivePlayers[0].position
-}
+	return this.question.offensivePlayers[0].position;
+};
 
 // buildQuestionAndAnswer creates an appropriate creates a question and answer
 // based on the current content in the question variable and the positons of
