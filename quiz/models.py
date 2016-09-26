@@ -21,22 +21,11 @@ class Team(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	sidebar_image = models.ImageField(blank=True, null=True)
+
+
 	def __str__(self):
 		return self.name
-
-	def formations(self):
-		positions = []
-		for formation in self.formation_set.all():
-			for position in formation.position_set.all():
-				positions.append(position)
-		return positions
-
-	def play_positions(self):
-		positions = []
-		for play in self.play_set.all():
-			for position in play.positions.all():
-				positions.append(position)
-		return positions
 
 class Player(models.Model):
 	YEAR_CHOICES = (
