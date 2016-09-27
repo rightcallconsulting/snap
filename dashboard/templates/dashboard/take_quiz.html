@@ -318,27 +318,38 @@
 
 		function keyPressed() {
 			if (quiz.getSelected()[0] != null) {
+				var playerSelected = play.getSelected()[0];
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+				var playerStatusKeys = ["A", "S", "D", "F", "G"];
 
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (quiz.attempt.unit == "offense") {
-						if (quiz.attempt.blockingAssignmentArray.length > 0) {
-							quiz.attempt.blockingAssignmentArray.pop();
-						} else if(quiz.attempt.route.length > 0) {
-							quiz.attempt.route.pop();
-						} else if(quiz.attempt.motionCoords.length > 0){
-							quiz.attempt.motionCoords.pop()
+					if (playerSelected.unit == "offense") {
+						if (playerSelected.dropback.length > 0) {
+							playerSelected.dropback.pop();
+						} else if(playerSelected.run.length > 0) {
+							playerSelected.run.pop();
+						} else if(playerSelected.route.length > 0) {
+							playerSelected.route.pop();
+						} else if (playerSelected.blockingAssignmentArray.length > 0) {
+							playerSelected.blockingAssignmentArray.pop();
+						} else if (playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop();
+						}
+					} else if (playerSelected.unit == "defense") {
+						if (playerSelected.defensiveMovement.length > 0) {
+							playerSelected.defensiveMovement.pop();
 						}
 					}
 
 					return false;
-				}else if(specialBlockKeys.indexOf(key) >= 0){
-					var prevX = quiz.attempt.x;
-					var prevY = quiz.attempt.y;
-					var blockSize = quiz.attempt.blockingAssignmentArray.length;
+				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+					var prevX = playerSelected.x;
+					var prevY = playerSelected.y;
+					var blockSize = playerSelected.blockingAssignmentArray.length;
+					
 					if (blockSize > 0) {
-						prevX = quiz.attempt.blockingAssignmentArray[blockSize - 1].x;
-						prevY = quiz.attempt.blockingAssignmentArray[blockSize - 1].y;
+						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
 					}
 
 					var block = new BlockType({
@@ -348,11 +359,23 @@
 						prevY: prevY
 					});
 
-					quiz.attempt.blockingAssignmentArray.push(block);
+					playerSelected.blockingAssignmentArray.push(block);
+
+					return false;
+				} else if (playerStatusKeys.indexOf(key) >= 0) {
+					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+						for (i in buttons) {
+							if (i != playerStatusKeys.indexOf(key)) {
+								buttons[i].setUnclicked();
+							} else {
+								buttons[i].click();
+							}
+						}
+					}
+
+					return false;
 				}
 			}
-
-			return false;
 		};
 
 		function keyTyped() {};
