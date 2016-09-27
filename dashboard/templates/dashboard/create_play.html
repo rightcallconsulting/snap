@@ -255,36 +255,37 @@
 			var player = play.getSelected()[0];
 			
 			if (player != null) {
-				if (player.pos === "QB") {
+				buttons[0].display = false;
+				buttons[1].display = false;
+				buttons[2].display = false;
+				buttons[3].display = false;
+				buttons[4].display = false;
+
+				if (player.dropback.length > 0) {
+					buttons[0].display = true;
+					buttons[0].setClicked();
+				} else if (player.run.length > 0) {
+					buttons[2].display = true;
+					buttons[2].setClicked();
+				} else if (player.route.length > 0) {
+					buttons[3].display = true;
+					buttons[3].setClicked();
+				} else if (player.blockingAssignmentArray.length > 0) {
+					buttons[4].display = true;
+					buttons[4].setClicked();
+				} else if (player.pos === "QB") {
 					buttons[0].display = true;
 					buttons[1].display = true;
 					buttons[2].display = true;
 					buttons[3].display = true;
 					buttons[4].display = true;
-
-					if (player.hasAssignments() === true) {
-						buttons[1].display = false;
-					}
 				} else if (player.eligible === true) {
-					buttons[0].display = false;
 					buttons[1].display = true;
 					buttons[2].display = true;
 					buttons[3].display = true;
 					buttons[4].display = true;
-
-					if (player.hasAssignments() === true) {
-						buttons[1].display = false;
-					}
 				} else if (player.eligible === false) {
-					buttons[0].display = false;
-					buttons[1].display = false;
-					buttons[2].display = false;
-					buttons[3].display = false;
 					buttons[4].display = true;
-
-					if (player.hasAssignments() === true) {
-						buttons[1].display = false;
-					}
 				}
 			} else {
 				for (i in buttons) {
@@ -328,16 +329,6 @@
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
-
-		function mousePressed() {
-			// return false to prevent default behavior
-			return false;
-		};
-
-		function mouseDragged() {
-			// return false to prevent default behavior
-			return false;
-		};
 
 		function mouseReleased() {
 			// If a button is displayed and clicked then call it's click
@@ -480,6 +471,7 @@
 				var playerSelected = play.getSelected()[0];
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				var playerStatusKeys = ["A", "S", "D", "F", "G"];
+
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
 						if (playerSelected.dropback.length > 0) {
@@ -498,6 +490,7 @@
 							playerSelected.defensiveMovement.pop()
 						}
 					}
+
 					return false;
 				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
 					var prevX = playerSelected.x;
@@ -517,6 +510,8 @@
 					});
 
 					playerSelected.blockingAssignmentArray.push(block);
+
+					return false;
 				} else if (playerStatusKeys.indexOf(key) >= 0) {
 					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
 						for (i in buttons) {
