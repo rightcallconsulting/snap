@@ -536,7 +536,7 @@ coach homepage
 
 .coach-button-container a#create-formation-link {
 	background-color: rgb(87, 138, 53);
-	background-image: url("/static/dashboard/images/create-formation-action-box.png");
+	/*background-image: url("/static/dashboard/images/create-formation-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -544,7 +544,7 @@ coach homepage
 
 .coach-button-container a#create-concept-link {
 	background-color: rgb(66, 165, 245);
-	background-image: url("/static/dashboard/images/create-concept-action-box.png");
+	/*background-image: url("/static/dashboard/images/create-concept-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -552,7 +552,7 @@ coach homepage
 
 .coach-button-container a#create-play-link {
 	background-color: rgb(22, 150, 136);
-	background-image: url("/static/dashboard/images/create-play-action-box.png");
+	/*background-image: url("/static/dashboard/images/create-play-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -560,7 +560,7 @@ coach homepage
 
 .coach-button-container a#create-quiz-link {
 	background-color: rgb(253, 151, 39);
-	background-image: url("/static/dashboard/images/create-quiz-action-box.png");
+	/*background-image: url("/static/dashboard/images/create-quiz-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -568,7 +568,7 @@ coach homepage
 
 .coach-button-container a#groups-link {
 	background-color: rgb(97, 125, 138);
-	background-image: url("/static/dashboard/images/groups-action-box.png");
+	/*background-image: url("/static/dashboard/images/groups-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -576,7 +576,7 @@ coach homepage
 
 .coach-button-container a#analytics-link {
 	background-color: rgb(72, 167, 242);
-	background-image: url("/static/dashboard/images/analytics-action-box.png");
+	/*background-image: url("/static/dashboard/images/analytics-action-box.png");*/
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
