@@ -395,7 +395,7 @@
 				return false;
 			} else if (buttons[4].clicked === true) {
 				var block;
-				if (newPlayerSelected != null) {
+				if (newPlayerSelected != null && newPlayerSelected.unit === "defense") {
 					block = new BlockType({
 						type: 1,
 						player: newPlayerSelected,
