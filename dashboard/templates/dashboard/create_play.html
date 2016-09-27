@@ -413,48 +413,12 @@
 
 			// If no one is currently selected and no one is clicked on do
 			// nothing. Else if no one is currently selected and someone is
-			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then draw
-			// appropriate assignment based on players unit return. Else if
-			// the currently selected player is the same as the newly selected
-			// player then clear all selections and return. Else two seperate
-			// players are assigned to those variables and handle accordingly.
+			// clicked on, then select that player and return.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
 				// No one is selected and no one is clicked on.
 				// Do nothing
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
-				return false;
-			} else if (newPlayerSelected === null) {
-				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-					if (currentPlayerSelected.unit === "offense") {
-						if (currentPlayerSelected.eligible && selectedPlayerStatus === 1) {
-							currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
-						} else if(selectedPlayerStatus === 0) {
-							var blockPoint = new BlockType({
-								type: 0,
-								x: mouseYardX,
-								y: mouseYardY
-							})
-							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
-						}else if(selectedPlayerStatus === 2){
-							currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY])
-						}
-					} else if (currentPlayerSelected.unit === "defense") {
-						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
-					}
-				} else {
-					play.clearSelected();
-				}
-				return false;
-			} else if (currentPlayerSelected.unit === "offense") {
-				var blockPoint = new BlockType({
-					type: 1,
-					player: newPlayerSelected,
-					x: mouseYardX,
-					y: mouseYardY
-				})
-				currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 				return false;
 			}
 
