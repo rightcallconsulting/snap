@@ -192,7 +192,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route", "motionCoords"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -350,17 +350,31 @@ function createPlayFromJson(playJsonDictionary) {
 			eligibleReceiversArray.push(player);
 		}
 
-		if (playJsonDictionary.offensivePlayers[i].route != null) {
-			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
-				var route = playJsonDictionary.offensivePlayers[i].route[j];
-				player.route.push([route[0], route[1]]);
-			}
-		}
-
 		if (playJsonDictionary.offensivePlayers[i].motionCoords != null) {
 			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].motionCoords.length; ++j) {
 				var motion = playJsonDictionary.offensivePlayers[i].motionCoords[j];
 				player.motionCoords.push([motion[0], motion[1]]);
+			}
+		}
+
+		if (playJsonDictionary.offensivePlayers[i].dropback != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].dropback.length; ++j) {
+				var drop = playJsonDictionary.offensivePlayers[i].dropback[j];
+				player.dropback.push([drop[0], drop[1]]);
+			}
+		}
+
+		if (playJsonDictionary.offensivePlayers[i].run != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].run.length; ++j) {
+				var run = playJsonDictionary.offensivePlayers[i].run[j];
+				player.run.push([run[0], run[1]]);
+			}
+		}
+
+		if (playJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
+				var route = playJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
 			}
 		}
 

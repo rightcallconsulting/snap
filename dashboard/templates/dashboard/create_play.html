@@ -362,20 +362,20 @@
 			var mouseYardY = field.getYardY(mouseY);
 
 			if (currentPlayerSelected != null && newPlayerSelected != null) {
-				if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+				if (newPlayerSelected === currentPlayerSelected) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					play.clearSelected();
+					return false;
+				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
 					for (i in buttons) {
 						buttons[i].setUnclicked();
 					}
 
 					play.clearSelected();
 					newPlayerSelected.click();
-					return false;
-				} else if (newPlayerSelected === currentPlayerSelected) {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-					}
-
-					play.clearSelected();
 					return false;
 				}
 			}
@@ -446,13 +446,6 @@
 				} else {
 					play.clearSelected();
 				}
-				return false;
-			} else if (newPlayerSelected === currentPlayerSelected) {
-				play.clearSelected();
-				return false;
-			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-				play.clearSelected();
-				newPlayerSelected.click();
 				return false;
 			} else if (currentPlayerSelected.unit === "offense") {
 				var blockPoint = new BlockType({
