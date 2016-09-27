@@ -1,17 +1,14 @@
 var Button = function(config) {
     this.x = config.x || 0;
-    this.y = config.y || 360;
+    this.y = config.y || 0;
     this.width = config.width || 4;
     this.height = config.height || 3;
     this.label = config.label || "";
+
     this.clicked = config.clicked || false;
     this.fill = config.fill || color(255, 255, 255);
-    this.displayButton = config.displayButton || false;
-    this.player = config.player || null;
-    this.test = config.test || null;
+    this.display = config.display || false;
 };
-
-// Prototype Methods
 
 Button.prototype.draw = function(field) {
     fill(this.fill);

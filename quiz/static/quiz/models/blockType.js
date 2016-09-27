@@ -5,7 +5,7 @@
 //																			 //
 //***************************************************************************//
 //																			 //
-// A block type represents some offensive players (for now) block.            //
+// A block type represents some offensive players (for now) block.           //
 //																			 //
 //***************************************************************************//
 
