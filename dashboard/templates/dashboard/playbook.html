@@ -361,14 +361,21 @@
 				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
 
 				// Create and add ones we do need
-				var create_formation_button_image = document.createElement("img");
-				create_formation_button_image.setAttribute("class", "coach-action-icon");
-				create_formation_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
+				var create_formation_icon_2x = document.createElement("i");
+				create_formation_icon_2x.setAttribute("class", "fa fa-circle-thin fa-stack-2x");
+
+				var create_formation_icon_1x = document.createElement("i");
+				create_formation_icon_1x.setAttribute("class", "fa fa-plus fa-stack-1x");
+
+				var create_formation_icon_span = document.createElement("span");
+				create_formation_icon_span.setAttribute("class", "fa-stack fa-lg");
+				create_formation_icon_span.appendChild(create_formation_icon_2x);
+				create_formation_icon_span.appendChild(create_formation_icon_1x);
 
 				var create_formation_button_link = document.createElement("a");
 				create_formation_button_link.setAttribute("href", "/formations/create");
 				create_formation_button_link.textContent = "CREATE FORMATION";
-				create_formation_button_link.insertBefore(create_formation_button_image, create_formation_button_link.firstChild);
+				create_formation_button_link.insertBefore(create_formation_icon_span, create_formation_button_link.firstChild);
 
 				var create_formation_button = document.createElement("div");
 				create_formation_button.setAttribute("id", "create-formation-button");
@@ -376,14 +383,21 @@
 
 				top_options.appendChild(create_formation_button);
 
-				var create_play_button_image = document.createElement("img");
-				create_play_button_image.setAttribute("class", "coach-action-icon");
-				create_play_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
+				var create_play_icon_2x = document.createElement("i");
+				create_play_icon_2x.setAttribute("class", "fa fa-circle-thin fa-stack-2x");
+
+				var create_play_icon_1x = document.createElement("i");
+				create_play_icon_1x.setAttribute("class", "fa fa-plus fa-stack-1x");
+
+				var create_play_icon_span = document.createElement("span");
+				create_play_icon_span.setAttribute("class", "fa-stack fa-lg");
+				create_play_icon_span.appendChild(create_play_icon_2x);
+				create_play_icon_span.appendChild(create_play_icon_1x);
 
 				var create_play_button_link = document.createElement("a");
 				create_play_button_link.setAttribute("href", "/plays/create");
 				create_play_button_link.textContent = "CREATE PLAY";
-				create_play_button_link.insertBefore(create_play_button_image, create_play_button_link.firstChild);
+				create_play_button_link.insertBefore(create_play_icon_span, create_play_button_link.firstChild);
 
 				var create_play_button = document.createElement("div");
 				create_play_button.setAttribute("id", "create-play-button");
@@ -405,14 +419,21 @@
 				if (create_play_button != null) { top_options.removeChild(create_play_button); }
 
 				// Create and add ones we do need
-				var create_concept_button_image = document.createElement("img");
-				create_concept_button_image.setAttribute("class", "coach-action-icon");
-				create_concept_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
+				var create_concept_icon_2x = document.createElement("i");
+				create_concept_icon_2x.setAttribute("class", "fa fa-circle-thin fa-stack-2x");
+
+				var create_concept_icon_1x = document.createElement("i");
+				create_concept_icon_1x.setAttribute("class", "fa fa-plus fa-stack-1x");
+
+				var create_concept_icon_span = document.createElement("span");
+				create_concept_icon_span.setAttribute("class", "fa-stack fa-lg");
+				create_concept_icon_span.appendChild(create_concept_icon_2x);
+				create_concept_icon_span.appendChild(create_concept_icon_1x);
 
 				var create_concept_button_link = document.createElement("a");
 				create_concept_button_link.setAttribute("href", "/concepts/create");
 				create_concept_button_link.textContent = "CREATE CONCEPT";
-				create_concept_button_link.insertBefore(create_concept_button_image, create_concept_button_link.firstChild);
+				create_concept_button_link.insertBefore(create_concept_icon_span, create_concept_button_link.firstChild);
 
 				var create_concept_button = document.createElement("div");
 				create_concept_button.setAttribute("id", "create-concept-button");
@@ -434,14 +455,21 @@
 				if (create_play_button != null) { top_options.removeChild(create_play_button); }
 
 				// Create and add ones we do need
-				var create_defensive_look_button_image = document.createElement("img");
-				create_defensive_look_button_image.setAttribute("class", "coach-action-icon");
-				create_defensive_look_button_image.setAttribute("src", "{% static 'dashboard/images/plus-icon-dark.png' %}");
+				var create_defensive_look_icon_2x = document.createElement("i");
+				create_defensive_look_icon_2x.setAttribute("class", "fa fa-circle-thin fa-stack-2x");
+
+				var create_defensive_look_icon_1x = document.createElement("i");
+				create_defensive_look_icon_1x.setAttribute("class", "fa fa-plus fa-stack-1x");
+
+				var create_defensive_look_icon_span = document.createElement("span");
+				create_defensive_look_icon_span.setAttribute("class", "fa-stack fa-lg");
+				create_defensive_look_icon_span.appendChild(create_defensive_look_icon_2x);
+				create_defensive_look_icon_span.appendChild(create_defensive_look_icon_1x);
 
 				var create_defensive_look_button_link = document.createElement("a");
 				create_defensive_look_button_link.setAttribute("href", "/formations/create/defensive_look");
 				create_defensive_look_button_link.textContent = "CREATE DEFENSIVE LOOK";
-				create_defensive_look_button_link.insertBefore(create_defensive_look_button_image, create_defensive_look_button_link.firstChild);
+				create_defensive_look_button_link.insertBefore(create_defensive_look_icon_span, create_defensive_look_button_link.firstChild);
 
 				var create_defensive_look_button = document.createElement("div");
 				create_defensive_look_button.setAttribute("id", "create-defensive-look-button");
