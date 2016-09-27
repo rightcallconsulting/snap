@@ -66,7 +66,7 @@
 	<script type="text/javascript">
 		var formations = [];
 		var formation;
-		var dummyOffense;
+		var dummy_offense;
 		var defensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
@@ -90,8 +90,8 @@
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
 
-			var f = new Formation({});
-			dummyOffense = f.createDummyFormation();
+			var dummy_formation = new Formation({});
+			dummy_offense = dummy_formation.createDummyFormation();
 
 			field.height = height;
 			field.width = width;
@@ -232,7 +232,7 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			formation.drawPlayers(field);
-			dummyOffense.drawPlayers(field);
+			dummy_offense.drawPlayers(field);
 			defensivePlayerBar.draw(field);
 
 			fill(0, 0, 0);
