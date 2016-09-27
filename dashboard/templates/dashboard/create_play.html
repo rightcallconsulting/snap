@@ -130,7 +130,21 @@
 			// Create new Play
 			play = new Play({});
 
-			// Create buttons for adding
+			// Create buttons for selecting type
+			var button = new Button ({ this.label: "Dropback" });
+			buttons.push(button);
+			
+			button = new Button ({ this.label: "Motion" });
+			buttons.push(button);
+			
+			button = new Button ({ this.label: "Run" });
+			buttons.push(button);
+			
+			button = new Button ({ this.label: "Route" });
+			buttons.push(button);
+			
+			button = new Button ({ this.label: "Block" });
+			buttons.push(button);
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
