@@ -362,15 +362,19 @@
 			var mouseYardY = field.getYardY(mouseY);
 
 			// If the buttons are selected add the appropriate assignments
-			if (buttons[0].clicked = true) {
-				currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);				
-			} else if (buttons[0].clicked = true) {
+			if (buttons[0].clicked === true) {
+				currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
+				return false;				
+			} else if (buttons[1].clicked === true) {
 				currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
-			} else if (buttons[0].clicked = true) {
+				return false;
+			} else if (buttons[2].clicked === true) {
 				currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
-			} else if (buttons[0].clicked = true) {
+				return false;
+			} else if (buttons[3].clicked === true) {
 				currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
-			} else if (buttons[0].clicked = true) {
+				return false;
+			} else if (buttons[4].clicked === true) {
 				
 				//currentPlayerSelected..push([mouseYardX, mouseYardY]);
 			}
@@ -484,12 +488,16 @@
 				var playerStatusKeys = ["A", "S", "D"];
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
-						if (playerSelected.blockingAssignmentArray.length > 0) {
-							playerSelected.blockingAssignmentArray.pop();
+						 if(playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop()
+						} else if (playerSelected.dropback.length > 0) {
+							playerSelected.dropback.pop();
+						} else if(playerSelected.run.length > 0) {
+							playerSelected.run.pop();
 						} else if(playerSelected.route.length > 0) {
 							playerSelected.route.pop();
-						} else if(playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop()
+						} else if (playerSelected.blockingAssignmentArray.length > 0) {
+							playerSelected.blockingAssignmentArray.pop();
 						}
 					} else if (playerSelected.unit == "defense") {
 						if(playerSelected.defensiveMovement.length > 0){

@@ -202,30 +202,160 @@ Player.prototype.pixelDraw = function(field) {
 	}
 };
 
+// drawAssignments draws all of a players assignments.
+Player.prototype.drawAssignments = function(field){
+	this.drawMotion(field);
+	this.drawDropback(field);
+	this.drawRun(field);
+	this.drawRoute(field);
+	this.drawBlocks(field);
+
+	this.drawDefensiveMovement(field);
+};
+
+// drawMotion iterates through a players presnap motion landmarks and draws
+// their motion in a dotted line.
 Player.prototype.drawMotion = function(field){
 	var x1 = field.getTranslatedX(this.x);
 	var y1 = field.getTranslatedY(this.y);
 	for (var i = 0; i < this.motionCoords.length; i++) {
-		var x2 = field.getTranslatedX(this.motionCoords[i][0])
-		var y2 = field.getTranslatedY(this.motionCoords[i][1])
+		var x2 = field.getTranslatedX(this.motionCoords[i][0]);
+		var y2 = field.getTranslatedY(this.motionCoords[i][1]);
 
-		stroke(0, 0, 0)
+		stroke(50, 50, 50);
 		dottedLine(x1, y1, x2, y2);
-		noStroke()
+		noStroke();
 
-		x1 = x2
-		y1 = y2
+		x1 = x2;
+		y1 = y2;
 	}
 };
 
-Player.prototype.drawAssignments = function(field){
-	this.drawBlocks(field);
-	this.drawRoute(field);
-	this.drawMotion(field);
-	this.drawDefensiveMovement(field);
-}
+// drawDropback iterates through a quarterbacks landmarks and draws their 
+// dropback.
+Player.prototype.drawDropback = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+
+	if (this.motionCoords.length > 0) {
+		x1 = this.motionCoords[this.motionCoords.length - 1][0]
+		y1 = this.motionCoords[this.motionCoords.length - 1][1]
+	}
+
+	var x2 = x1;
+	var y2 = y1;
+
+	var yellow = color(255, 255, 0);
+	stroke(yellow);
+
+	for (var i = 0; i < this.dropback.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.dropback[i][0];
+		y2 = this.dropback[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+	}
+};
+
+// drawRun iterates through a players landmarks and draws their run
+// with an arrow at the end.
+Player.prototype.drawRun = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+
+	if (this.motionCoords.length > 0) {
+		x1 = this.motionCoords[this.motionCoords.length - 1][0]
+		y1 = this.motionCoords[this.motionCoords.length - 1][1]
+	}
+
+	var x2 = x1;
+	var y2 = y1;
+
+	var blue = color(0, 0, 255);
+	stroke(blue);
+
+	for (var i = 0; i < this.run.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.run[i][0];
+		y2 = this.run[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+	}
+
+	// Draw arrow
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+
+	arrow(x2, y2, alpha, deltaX);
+
+	noStroke();
+};
+
+// drawRoute iterates through a players landmarks and draws their route
+// with an arrow at the end.
+Player.prototype.drawRoute = function(field) {
+	var x1 = this.x;
+	var y1 = this.y;
+
+	if (this.motionCoords.length > 0) {
+		x1 = this.motionCoords[this.motionCoords.length - 1][0]
+		y1 = this.motionCoords[this.motionCoords.length - 1][1]
+	}
+
+	var x2 = x1;
+	var y2 = y1;
+
+	var red = color(255, 0, 0);
+	stroke(red);
+
+	for (var i = 0; i < this.route.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.route[i][0];
+		y2 = this.route[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+	}
+
+	// Draw arrow
+	var deltaX = x2 - x1;
+	var deltaY = y2 - y1;
+	var alpha = atan(deltaY/deltaX);
+
+	arrow(x2, y2, alpha, deltaX);
+
+	noStroke();
+};
+
 // drawAllBlocks iterates through the players blocking assignments and draws
-// all of them. It calls noStroke() before it exits, but has no return value.
+// all of them. It calls noStroke before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
 	var prevX = this.x;
 	var prevY = this.y;
@@ -273,110 +403,6 @@ Player.prototype.drawBlocks = function(field) {
 
 		noStroke();
 	}
-
-	/*
-	var blockingAssignment = this.blockingAssignmentArray;
-	var blockingAssignmentLength = blockingAssignment.length;
-
-	var currentX = this.x;
-	var currentY = this.y;
-
-	var black = color(0, 0, 0);
-	stroke(black);
-
-	var new_coordinates;
-
-	for (var i = 0; i < blockingAssignmentLength; i++) {
-		if (blockingAssignment[i] != null) {
-			if (blockingAssignment[i] instanceof Player) {
-				new_coordinates = this.drawBlockOnPlayer(field, currentX, currentY, blockingAssignment[i]);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Money Block") {
-				new_coordinates = this.drawMoneyBlock(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Down Block Right") {
-				new_coordinates = this.drawDownBlockRight(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Down Block Left") {
-				new_coordinates = this.drawDownBlockLeft(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Straight Seal Right") {
-				new_coordinates = this.drawStraightSealRight(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Straight Seal Left") {
-				new_coordinates = this.drawStraightSealLeft(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Kick Out Right") {
-				new_coordinates = this.drawKickOutRight(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else if (blockingAssignment[i] === "Kick Out Left") {
-				new_coordinates = this.drawKickOutLeft(field, currentX, currentY);
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			} else {
-				if (!this.selected && i === blockingAssignmentLength-1) {
-					new_coordinates = this.drawBlockingMovementWithEnd(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
-				} else {
-					new_coordinates = this.drawBlockingMovement(field, currentX, currentY, blockingAssignment[i][0], blockingAssignment[i][1]);
-				}
-				currentX = new_coordinates[0];
-				currentY = new_coordinates[1];
-			}
-		}
-	}
-
-	noStroke();*/
-};
-
-// drawRoute itereates through a players landmarks and draws their route
-// with an arrow at the end.
-Player.prototype.drawRoute = function(field) {
-	var x1 = this.x;
-	var y1 = this.y;
-	if(this.motionCoords.length > 0){
-		x1 = this.motionCoords[this.motionCoords.length - 1][0]
-		y1 = this.motionCoords[this.motionCoords.length - 1][1]
-	}
-	var x2 = x1;
-	var y2 = y1;
-
-
-
-	var red = color(255, 0, 0);
-	stroke(red);
-
-	for (var i = 0; i < this.route.length; i++) {
-		x1 = x2;
-		y1 = y2;
-		x2 = this.route[i][0];
-		y2 = this.route[i][1];
-
-		x1 = field.getTranslatedX(x1);
-		y1 = field.getTranslatedY(y1);
-		x2 = field.getTranslatedX(x2);
-		y2 = field.getTranslatedY(y2);
-		line(x1, y1, x2, y2);
-		x1 = field.getYardX(x1);
-		y1 = field.getYardY(y1);
-		x2 = field.getYardX(x2);
-		y2 = field.getYardY(y2);
-	}
-
-	// Draw arrow
-	var deltaX = x2 - x1;
-	var deltaY = y2 - y1;
-	var alpha = atan(deltaY/deltaX);
-
-	arrow(x2, y2, alpha, deltaX);
-
-	noStroke();
 };
 
 // moveTo advances a player towards their next breakpoint. It returns true if
@@ -467,16 +493,20 @@ Player.prototype.deepCopy = function() {
 		name: this.name
 	});
 
+	for (var i = 0; i < this.dropback.length; ++i) {
+		deepCopy.dropback.push([this.dropback[i][0], this.dropback[i][1]]);
+	}
+
 	for (var i = 0; i < this.motionCoords.length; ++i) {
-		deepCopy.motionCoords.push([this.motionCoords[i][0], this.motionCoords[i][1]])
+		deepCopy.motionCoords.push([this.motionCoords[i][0], this.motionCoords[i][1]]);
+	}
+
+	for (var i = 0; i < this.run.length; ++i) {
+		deepCopy.run.push([this.run[i][0], this.run[i][1]]);
 	}
 
 	for (var i = 0; i < this.route.length; ++i) {
-		deepCopy.route.push([this.route[i][0], this.route[i][1]])
-	}
-
-	for (var i = 0; i < this.defensiveMovement.length; ++i) {
-		deepCopy.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]])
+		deepCopy.route.push([this.route[i][0], this.route[i][1]]);
 	}
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {
@@ -491,6 +521,10 @@ Player.prototype.deepCopy = function() {
 		}
 
 		deepCopy.blockingAssignmentArray.push(blockingAssignment);
+	}
+
+	for (var i = 0; i < this.defensiveMovement.length; ++i) {
+		deepCopy.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]]);
 	}
 
 	return deepCopy;

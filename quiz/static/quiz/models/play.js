@@ -68,13 +68,11 @@ Play.prototype.drawAssignments = function (field) {
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
 	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].drawBlocks(field);
-		this.offensivePlayers[i].drawRoute(field);
-		this.offensivePlayers[i].drawMotion(field);
+		this.offensivePlayers[i].drawAssignments(field);
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].drawDefensiveMovement(field);
+		this.defensivePlayers[i].drawAssignments(field);
 	}
 };
 
