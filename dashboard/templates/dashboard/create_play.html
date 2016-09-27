@@ -1071,14 +1071,14 @@
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
-			sideview_header.textContent = formation_name_selected;
+			sideview_header.textContent = play.formation;
 
 			sideview_header.appendChild(back_arrow);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
+				if (plays[i].formation === play.formation && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
@@ -1086,10 +1086,10 @@
 					play_button.textContent = plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
-				}
 
-				if (plays[i].name === play.name && plays[i].scoutName === "") {
-					play = plays[i].deepCopy();
+					if (plays[i].name === play.name) {
+						play = plays[i].deepCopy();
+					}
 				}
 			}
 

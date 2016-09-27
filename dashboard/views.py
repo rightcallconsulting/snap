@@ -441,8 +441,11 @@ def create_play(request):
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":
-			play = Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)
-			play.delete()
+			if scout_name == "":
+				Play.objects.filter(team=team, scout=False, formation=formation, name=name).delete()
+			else:
+				Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name).delete()
+
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, scout=False)
