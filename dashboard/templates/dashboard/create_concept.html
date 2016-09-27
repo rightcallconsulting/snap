@@ -561,22 +561,36 @@
 					}
 
 					return false;
-				} else if (specialBlockKeys.indexOf(key) >= 0) {
-					var prevX = playerSelected.x
-					var prevY = playerSelected.y
-					var blockSize = playerSelected.blockingAssignmentArray.length
-					if(blockSize > 0){
-						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x
-						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y
+				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+					var prevX = playerSelected.x;
+					var prevY = playerSelected.y;
+					var blockSize = playerSelected.blockingAssignmentArray.length;
+					
+					if (blockSize > 0) {
+						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
 					}
-					playerSelected.blockingAssignmentArray.push(new BlockType({
+
+					var block = new BlockType({
 						type: 2 + specialBlockKeys.indexOf(key),
 						player: null,
 						prevX: prevX,
 						prevY: prevY
-					}))
-				}else if(playerStatusKeys.indexOf(key) >= 0){
-					selectedPlayerStatus = playerStatusKeys.indexOf(key)
+					});
+
+					playerSelected.blockingAssignmentArray.push(block);
+
+					return false;
+				} else if (playerStatusKeys.indexOf(key) >= 0) {
+					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+						for (i in buttons) {
+							if (i != playerStatusKeys.indexOf(key)) {
+								buttons[i].setUnclicked();
+							} else {
+								buttons[i].click();
+							}
+						}
+					}
 				}
 
 				return false;
