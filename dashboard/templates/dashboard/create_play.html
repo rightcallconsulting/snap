@@ -367,6 +367,15 @@
 
 					play.clearSelected();
 					newPlayerSelected.click();
+
+					if (newPlayerSelected.pos === "QB") {
+						buttons[0].setClicked();
+					} else if (newPlayerSelected.eligible) {
+						buttons[3].setClicked();
+					} else if (!newPlayerSelected.eligible) {
+						buttons[4].setClicked();
+					}
+
 					return false;
 				}
 			}
@@ -416,7 +425,20 @@
 				play.clearSelected();
 				return false;
 			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+				}
+
 				newPlayerSelected.click();
+
+				if (newPlayerSelected.pos === "QB") {
+					buttons[0].setClicked();
+				} else if (newPlayerSelected.eligible) {
+					buttons[3].setClicked();
+				} else if (!newPlayerSelected.eligible) {
+					buttons[4].setClicked();
+				}
+
 				return false;
 			}
 		};
@@ -998,7 +1020,7 @@
 				scout_formation_button.textContent = scout_formations[i].name;
 
 				for (j in plays) {
-					if (plays[j].name === play.name && plays[j].scoutName === scout_formations[i].name) {
+					if (plays[j].name === play.name && plays[j].formation === play.formation && plays[j].scoutName === scout_formations[i].name) {
 						var check_mark = document.createElement("i");
 						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 						scout_formation_button.appendChild(check_mark);
@@ -1040,9 +1062,9 @@
 				scout_formation_name_selected = scout_formation_name;
 
 				for (i in plays) {
-					if (plays[i].name === play.name && plays[i].scoutName === scout_formation_name) {
+					if (plays[i].name === play.name && plays[i].formation === play.formation && plays[i].scoutName === scout_formation_name) {
 						play = plays[i].deepCopy();
-						return;
+						break;
 					}
 				}
 
@@ -1071,14 +1093,14 @@
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
-			sideview_header.textContent = formation_name_selected;
+			sideview_header.textContent = play.formation;
 
 			sideview_header.appendChild(back_arrow);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in plays) {
-				if (plays[i].formation === formation_name_selected && plays[i].scoutName === "") {
+				if (plays[i].formation === play.formation && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", plays[i].name);
@@ -1086,10 +1108,10 @@
 					play_button.textContent = plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
-				}
 
-				if (plays[i].name === play.name && plays[i].scoutName === "") {
-					play = plays[i].deepCopy();
+					if (plays[i].name === play.name) {
+						play = plays[i].deepCopy();
+					}
 				}
 			}
 

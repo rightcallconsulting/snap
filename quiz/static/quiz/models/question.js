@@ -22,6 +22,66 @@ var Question = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+// buildQuestionAndAnswer creates an appropriate creates a question and answer
+// based on the current content in the question variable and the positons of
+// the player who is attempting the question.
+Question.prototype.buildQuestionAndAnswer = function(player_positions) {
+	var player_position = this.getTestedPosition(player_positions);
+	if (this.question instanceof Formation) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+					this.answer = player.deepCopy();
+					this.question.offensivePlayers.splice(i, 1);
+					break;
+			}
+		}
+
+		//shouldn't ever happen now
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers.splice(i, 1);
+		}
+
+		this.prompt = "Place the missing " + this.answer.pos + " in the formation";
+	} else if (this.question instanceof Play) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+				this.answer = player.deepCopy();
+				player.setSelected();
+				break;
+			}
+		}
+
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers[randomPlayerIndex].setSelected();
+		}
+
+		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this play";
+	} else if (this.question instanceof Concept) {
+		for (i in this.question.offensivePlayers) {
+			var player = this.question.offensivePlayers[i];
+			if (player.pos === player_position) {
+				this.answer = player.deepCopy();
+				player.setSelected();
+				break;
+			}
+		}
+
+		if (this.answer === null) {
+			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
+			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
+			this.question.offensivePlayers[randomPlayerIndex].setSelected();
+		}
+
+		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this concept";
+	}
+};
+
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
@@ -29,6 +89,11 @@ Question.prototype.draw = function(field) {
 	if (millis() - this.startTime < 2000) {
 		//this.drawPrompt(field);
 	}
+};
+
+// getName returns the name of the Question
+Question.prototype.getName = function() {
+	return this.question.name;
 };
 
 Question.prototype.drawFeedbackScreen = function(field){
@@ -56,71 +121,6 @@ Question.prototype.getTestedPosition = function(player_positions){
 		}
 	}
 	return this.question.offensivePlayers[0].position;
-};
-
-// buildQuestionAndAnswer creates an appropriate creates a question and answer
-// based on the current content in the question variable and the positons of
-// the player who is attempting the question.
-Question.prototype.buildQuestionAndAnswer = function(player_positions) {
-	var player_position = this.getTestedPosition(player_positions);
-	if (this.question instanceof Formation) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-					this.answer = player.deepCopy();
-					this.question.offensivePlayers.splice(i, 1);
-					break;
-			}
-		}
-
-		//shouldn't ever happen now
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers.splice(i, 1);
-		}
-
-		this.prompt = "Place the missing " + this.answer.pos;
-	} else if (this.question instanceof Play) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-				this.answer = player.deepCopy();
-				player.setSelected();
-				break;
-			}
-		}
-
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers[randomPlayerIndex].setSelected();
-		}
-
-		this.prompt = "Draw the assignment for the " + this.answer.pos;
-	} else if (this.question instanceof Concept) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-				this.answer = player.deepCopy();
-				player.setSelected();
-				break;
-			}
-		}
-
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers[randomPlayerIndex].setSelected();
-		}
-
-		this.prompt = "Draw the assignment for the " + this.answer.pos;
-	}
-};
-
-// getName returns the name of the Question
-Question.prototype.getName = function() {
-	return this.question.name;
 };
 
 // check compares the attempt with the answer and determines the score. It

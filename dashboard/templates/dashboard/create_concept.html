@@ -392,6 +392,15 @@
 
 					concept.clearSelected();
 					newPlayerSelected.click();
+
+					if (newPlayerSelected.pos === "QB") {
+						buttons[0].setClicked();
+					} else if (newPlayerSelected.eligible) {
+						buttons[3].setClicked();
+					} else if (!newPlayerSelected.eligible) {
+						buttons[4].setClicked();
+					}
+
 					return false;
 				}
 			}
@@ -441,7 +450,20 @@
 				concept.clearSelected();
 				return false;
 			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+				}
+
 				newPlayerSelected.click();
+
+				if (newPlayerSelected.pos === "QB") {
+					buttons[0].setClicked();
+				} else if (newPlayerSelected.eligible) {
+					buttons[3].setClicked();
+				} else if (!newPlayerSelected.eligible) {
+					buttons[4].setClicked();
+				}
+				
 				return false;
 			}
 
