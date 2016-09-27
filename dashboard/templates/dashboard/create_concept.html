@@ -429,62 +429,19 @@
 				}
 			}
 
-			// If no one is currently selected and no one is clicked on do
-			// nothing. Else if no one is currently selected and someone is
-			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then draw
-			// appropriate assignment based on players unit return. Else if
-			// the currently selected player is the same as the newly selected
-			// player then clear all selections and return. Else two seperate
-			// players are assigned to those variables and handle accordingly.
-			if (currentPlayerSelected === null && newPlayerSelected === null) {
-				// No one is selected and no one is clicked on.
-				// Do nothing
+			// If someone is currently selected and no one is clicked on 
+			// unselect all buttons and players. Else if no one is currently 
+			// selected and someone is clicked on, then select that player and 
+			// return.
+			if (currentPlayerSelected != null && newPlayerSelected === null) {
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+				}
+
+				play.clearSelected();
+				return false;
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
-				return false;
-			} else if (newPlayerSelected === null) {
-				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < field.height - offensivePlayerBar.height) {
-					if (currentPlayerSelected.unit === "offense") {
-						if(selectedPlayerStatus === 0){
-							//player is a blocker
-							var blockPoint = new BlockType({
-								type: 0,
-								x: mouseYardX,
-								y: mouseYardY
-							})
-							currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
-						}else if(selectedPlayerStatus === 1){
-							//player is running a route
-							currentPlayerSelected.route.push([mouseYardX, mouseYardY])
-						}else{
-							//player is in motion
-							currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY])
-						}
-
-
-					} else if (currentPlayerSelected.unit === "defense") {
-						currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
-					}
-				} else {
-					concept.clearSelected();
-				}
-				return false;
-			} else if (newPlayerSelected === currentPlayerSelected) {
-				concept.clearSelected();
-				return false;
-			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-				concept.clearSelected();
-				newPlayerSelected.click();
-				return false;
-			} else if (currentPlayerSelected.unit === "offense") {
-				var blockPoint = new BlockType({
-					type: 1,
-					player: newPlayerSelected,
-					x: mouseYardX,
-					y: mouseYardY
-				})
-				currentPlayerSelected.blockingAssignmentArray.push(blockPoint)
 				return false;
 			}
 
@@ -527,9 +484,6 @@
 
 				return false;
 			}
-
-			// return false to prevent default behavior
-			return false;
 		};
 
 		function keyPressed() {
