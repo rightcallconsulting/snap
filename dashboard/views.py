@@ -276,6 +276,10 @@ def edit_profile(request):
 				player.save()'''
 		return HttpResponseRedirect("/edit_profile")
 	else:
+		if request.user.myuser.is_a_player:	
+			team = request.user.player.team
+		else:
+			team = request.user.coach.team
 		first_name = request.user.first_name
 		last_name = request.user.last_name
 		username = request.user.username
@@ -306,6 +310,10 @@ def change_password(request):
 		else:
 			return HttpResponseRedirect("/change_password")
 	else:
+		if request.user.myuser.is_a_player:	
+			team = request.user.player.team
+		else:
+			team = request.user.coach.team
 		return render(request, 'dashboard/change_password.html', {
 			'team': team,
 			'page_header': 'EDIT PROFILE'
