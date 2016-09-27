@@ -73,6 +73,7 @@
 		var formation_name_selected = "";
 		var play_name_selected = "";
 		var scout_formation_name_selected = "";
+		var buttons = [];
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 		var selectedPlayerStatus = 0; //0 - blocker, 1 - route, 2 - motion
 
@@ -128,6 +129,8 @@
 
 			// Create new Play
 			play = new Play({});
+
+			// Create buttons for adding
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -240,7 +243,7 @@
 		function drawOpening() {
 			field.drawBackground(play, height, width);
 
-			drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			play.drawAssignments(field);
 			play.drawPlayers(field);
