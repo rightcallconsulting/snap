@@ -172,7 +172,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "blockingAssignmentArray", "type", "player", "defensiveMovement", "route", "motionCoords"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement"]);
 
 		var jqxhr = $.post(
 				path,
@@ -262,19 +262,40 @@ function createConceptFromJson(conceptJsonDictionary) {
 			motionCoords: conceptJsonDictionary.offensivePlayers[i].motionCoords
 		});
 
-		if (conceptJsonDictionary.offensivePlayers[i].route != null) {
-			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].route.length; ++j) {
-				var route = conceptJsonDictionary.offensivePlayers[i].route[j];
-				player.route.push([route[0], route[1]]);
-			}
-		}
-
 		if (player.pos === "QB") {
 			quarterback.push(player);
 		}
 
 		if (player.eligible === true) {
 			eligibleReceiversArray.push(player);
+		}
+
+		if (conceptJsonDictionary.offensivePlayers[i].motionCoords != null) {
+			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].motionCoords.length; ++j) {
+				var motion = conceptJsonDictionary.offensivePlayers[i].motionCoords[j];
+				player.motionCoords.push([motion[0], motion[1]]);
+			}
+		}
+
+		if (conceptJsonDictionary.offensivePlayers[i].dropback != null) {
+			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].dropback.length; ++j) {
+				var drop = conceptJsonDictionary.offensivePlayers[i].dropback[j];
+				player.dropback.push([drop[0], drop[1]]);
+			}
+		}
+
+		if (conceptJsonDictionary.offensivePlayers[i].run != null) {
+			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].run.length; ++j) {
+				var run = conceptJsonDictionary.offensivePlayers[i].run[j];
+				player.run.push([run[0], run[1]]);
+			}
+		}
+
+		if (conceptJsonDictionary.offensivePlayers[i].route != null) {
+			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].route.length; ++j) {
+				var route = conceptJsonDictionary.offensivePlayers[i].route[j];
+				player.route.push([route[0], route[1]]);
+			}
 		}
 
 		offensivePlayersArray.push(player);
