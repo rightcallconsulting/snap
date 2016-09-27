@@ -195,8 +195,12 @@ top navbar and sidebar css
 help box
 *************************************************************************/
 
+#manage-quiz {
+	padding: 0 10px 0 20px;
+}
+
 div#help-box {
-    width: 100%;
+    width: 98%;
     background: #eeeeee;
     color: red;
     margin: 0 0 20px 0;
