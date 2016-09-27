@@ -308,7 +308,7 @@
 			var x = 20;
 			var y = 20;
 
-			/*for (i in buttons) {
+			for (i in buttons) {
 				if (buttons[i].display === true) {
 					buttons[i].x = x;
 					buttons[i].y = y;
@@ -317,7 +317,7 @@
 
 					x += buttons[i].width*1.25;
 				}
-			}*/
+			}
 
 			fill(0, 0, 0);
 			textSize(20);
@@ -360,6 +360,20 @@
 			var newPlayerSelected = play.mouseInPlayer(field);
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
+
+			// If the buttons are selected add the appropriate assignments
+			if (buttons[0].clicked = true) {
+				currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);				
+			} else if (buttons[0].clicked = true) {
+				currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
+			} else if (buttons[0].clicked = true) {
+				currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
+			} else if (buttons[0].clicked = true) {
+				currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
+			} else if (buttons[0].clicked = true) {
+				
+				//currentPlayerSelected..push([mouseYardX, mouseYardY]);
+			}
 
 			// If no one is currently selected and no one is clicked on do
 			// nothing. Else if no one is currently selected and someone is

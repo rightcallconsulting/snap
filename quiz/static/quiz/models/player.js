@@ -16,6 +16,7 @@ var Player = function(config) {
 	this.y = config.y || height/2;
 	this.startX = this.x;
 	this.startY = this.y;
+	this.pos = config.pos || "X";
 	this.siz = config.siz || 2;
 	this.red = config.red || 0;
 	this.blue = config.blue || 0;
@@ -24,16 +25,17 @@ var Player = function(config) {
 	this.eligible = config.eligible || false;
 
 	// Player assignments - these should be converted into object types later on
+	this.dropback = config.dropback || [];
 	this.motionCoords = config.motionCoords || [];
-	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
+	this.run = config.run || [];
 	this.route = config.route || [];
+	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
 	this.defensiveMovement = config.defensiveMovement || [];
 
 	// Older stuff
 	this.clicked = config.clicked || false;
 	this.fill = config.fill || color(0, 0, 0);
 	this.stroke = config.stroke || noStroke();
-	this.pos = config.pos || "X";
 	this.num = config.num || 0;
 	this.rank = config.rank || 0;
 	this.unit = config.unit || "offense";
