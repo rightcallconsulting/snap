@@ -137,8 +137,8 @@ Quiz.prototype.draw = function(field) {
 			question.drawFeedbackScreen(field);
 		} else {
 			if (this.attempt !== null) {
-				this.attempt.draw(field);
 				this.attempt.drawAssignments(field);
+				this.attempt.draw(field);
 			}
 		}
 	}
@@ -241,11 +241,15 @@ Quiz.prototype.nextQuestion = function() {
 		} else {
 			this.currentQuestionIndex = 0;
 		}
+
 		this.attempt = this.getSelected()[0];
 		if (this.attempt != null) {
+			this.attempt.dropback = [];
 			this.attempt.motionCords = [];
-			this.attempt.blockingAssignmentArray = [];
+			this.attempt.run = [];
 			this.attempt.route = [];
+			this.attempt.blockingAssignmentArray = [];
+
 			this.attempt.defensiveMovement = [];
 		}
 	}
