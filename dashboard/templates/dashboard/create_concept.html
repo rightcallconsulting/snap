@@ -534,29 +534,34 @@
 			} else if (concept.getSelected()[0] != null) {
 				var playerSelected = concept.getSelected()[0];
 				var playerSelectedIndex = concept.getSelected()[1];
-				var what_kind_of_dog_is_this = key;
-				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"]
-				var playerStatusKeys = ["A", "S", "D"]
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+				var playerStatusKeys = ["A", "S", "D", "F", "G"];
+
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
-						if(selectedPlayerStatus === 0 && playerSelected.blockingAssignmentArray.length > 0){
-							playerSelected.blockingAssignmentArray.pop()
-						}else if(selectedPlayerStatus === 1 && playerSelected.route.length > 1){
-							playerSelected.route.pop()
-						}else if(selectedPlayerStatus === 2 && playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop()
-						}else{
+						if (playerSelected.dropback.length > 0) {
+							playerSelected.dropback.pop();
+						} else if(playerSelected.run.length > 0) {
+							playerSelected.run.pop();
+						} else if(playerSelected.route.length > 0) {
+							playerSelected.route.pop();
+						} else if (playerSelected.blockingAssignmentArray.length > 0) {
+							playerSelected.blockingAssignmentArray.pop();
+						} else if (playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop();
+						} else {
 							concept.offensivePlayers.splice(playerSelectedIndex, 1);
 						}
 					} else if (playerSelected.unit == "defense") {
-						if(playerSelected.defensiveMovement.length > 0){
-							playerSelected.defensiveMovement.pop()
-						}else{
+						if (playerSelected.defensiveMovement.length > 0) {
+							playerSelected.defensiveMovement.pop();
+						} else {
 							concept.defensivePlayers.splice(playerSelectedIndex, 1);
 						}
 					}
+
 					return false;
-				}else if(specialBlockKeys.indexOf(key) >= 0){
+				} else if (specialBlockKeys.indexOf(key) >= 0) {
 					var prevX = playerSelected.x
 					var prevY = playerSelected.y
 					var blockSize = playerSelected.blockingAssignmentArray.length
