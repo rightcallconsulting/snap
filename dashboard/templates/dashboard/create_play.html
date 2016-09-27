@@ -478,14 +478,11 @@
 				}
 			} else if (play.getSelected()[0] != null) {
 				var playerSelected = play.getSelected()[0];
-				//var playerSelectedIndex = play.getSelected()[1];
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				var playerStatusKeys = ["A", "S", "D", "F", "G"];
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
-						 if(playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop()
-						} else if (playerSelected.dropback.length > 0) {
+						if (playerSelected.dropback.length > 0) {
 							playerSelected.dropback.pop();
 						} else if(playerSelected.run.length > 0) {
 							playerSelected.run.pop();
@@ -493,14 +490,16 @@
 							playerSelected.route.pop();
 						} else if (playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
+						} else if (playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop()
 						}
 					} else if (playerSelected.unit == "defense") {
 						if(playerSelected.defensiveMovement.length > 0){
-							playerSelected.defensiveMovement.pop() //remove eventually?
+							playerSelected.defensiveMovement.pop()
 						}
 					}
 					return false;
-				} else if(buttons[4].clicked === true && specialBlockKeys.indexOf(key) >= 0) {
+				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;
