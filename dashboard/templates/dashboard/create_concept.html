@@ -67,6 +67,7 @@
 	<script type="text/javascript">
 		var concepts = [];
 		var concept;
+		var buttons = [];
 		var defensivePlayerBar;
 		var offensivePlayerBar;
 		var playerBeingDragged;
@@ -122,6 +123,21 @@
 			});
 			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
 			offensivePlayerBar.init(field);
+
+			// Create buttons for selecting type of assignment
+			var button = new Button ({ label: "Dropback (A)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Motion (S)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Run (D)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Route (F)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Block (G)" });
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
