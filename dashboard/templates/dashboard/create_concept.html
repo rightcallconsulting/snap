@@ -138,6 +138,7 @@
 			buttons.push(button);
 
 			button = new Button ({ label: "Block (G)" });
+			buttons.push(button);
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -243,6 +244,50 @@
 				}
 			}
 
+			// Determine which buttons should be displayed based on which, if
+			// any buttons should be displayed.
+			var player = concept.getSelected()[0];
+			
+			if (player != null && player.unit === "offense") {
+				buttons[0].display = false;
+				buttons[1].display = false;
+				buttons[2].display = false;
+				buttons[3].display = false;
+				buttons[4].display = false;
+
+				if (player.dropback.length > 0) {
+					buttons[0].display = true;
+					buttons[0].setClicked();
+				} else if (player.run.length > 0) {
+					buttons[2].display = true;
+					buttons[2].setClicked();
+				} else if (player.route.length > 0) {
+					buttons[3].display = true;
+					buttons[3].setClicked();
+				} else if (player.blockingAssignmentArray.length > 0) {
+					buttons[4].display = true;
+					buttons[4].setClicked();
+				} else if (player.pos === "QB") {
+					buttons[0].display = true;
+					buttons[1].display = true;
+					buttons[2].display = true;
+					buttons[3].display = true;
+					buttons[4].display = true;
+				} else if (player.eligible === true) {
+					buttons[1].display = true;
+					buttons[2].display = true;
+					buttons[3].display = true;
+					buttons[4].display = true;
+				} else if (player.eligible === false) {
+					buttons[4].display = true;
+				}
+			} else {
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+					buttons[i].display = false;
+				}
+			}
+
 			// Draw opening
 			drawOpening();
 		};
@@ -256,6 +301,20 @@
 			concept.drawPlayers(field);
 			defensivePlayerBar.draw(field);
 			offensivePlayerBar.draw(field);
+
+			var x = 10;
+			var y = 45;
+
+			for (i in buttons) {
+				if (buttons[i].display === true) {
+					buttons[i].x = x;
+					buttons[i].y = y;
+
+					buttons[i].draw(field);
+
+					x += buttons[i].width*1.25;
+				}
+			}
 
 			fill(0, 0, 0);
 			textSize(20);
@@ -290,10 +349,26 @@
 		};
 
 		function mouseReleased() {
+			// If the mouse is being dragged don't do any of the click actions.
 			if (mouseBeingDragged === true) {
 				mouseBeingDragged = false;
 				playerBeingDragged = null;
 				return false;
+			}
+
+			// If a button is displayed and clicked then call it's click
+			// function and return.
+			for (i in buttons) {
+				if (buttons[i].isMouseInside(field)) {
+					for (j in buttons) {
+						if (j != i) {
+							buttons[j].setUnclicked();
+						}
+					}
+
+					buttons[i].click();
+					return false;
+				}
 			}
 
 			// Handle clicks on players in the Concept
