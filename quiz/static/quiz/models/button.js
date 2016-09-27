@@ -12,8 +12,8 @@
 var Button = function(config) {
 	this.x = config.x || 20;
 	this.y = config.y || 20;
-	this.width = config.width || 75;
-	this.height = config.height || 30;
+	this.width = config.width || 80;
+	this.height = config.height || 35;
 	this.label = config.label || "";
 
 	this.fill = config.fill || color(255, 255, 255);

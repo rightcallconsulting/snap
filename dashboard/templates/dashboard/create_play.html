@@ -134,16 +134,16 @@
 			var button = new Button ({ label: "Dropback (A)" });
 			buttons.push(button);
 
-			button = new Button ({ label: "Motion (W)" });
+			button = new Button ({ label: "Motion (S)" });
 			buttons.push(button);
 
-			button = new Button ({ label: "Run (S)" });
+			button = new Button ({ label: "Run (D)" });
 			buttons.push(button);
 
-			button = new Button ({ label: "Route (D)" });
+			button = new Button ({ label: "Route (F)" });
 			buttons.push(button);
 
-			button = new Button ({ label: "Block (E)" });
+			button = new Button ({ label: "Block (G)" });
 			buttons.push(button);
 
 			window.onresize = function() {
@@ -411,12 +411,18 @@
 				currentPlayerSelected.blockingAssignmentArray.push(block);
 			}
 
-			// If no one is currently selected and no one is clicked on do
-			// nothing. Else if no one is currently selected and someone is
-			// clicked on, then select that player and return.
+			// If no one is currently selected and no one is clicked on 
+			// unselect all buttons and players. Else if no one is currently 
+			// selected and someone is clicked on, then select that player and 
+			// return.
 			if (currentPlayerSelected === null && newPlayerSelected === null) {
-				// No one is selected and no one is clicked on.
-				// Do nothing
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+				}
+
+				play.clearSelected();
+				
+				return false;
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
 				return false;
@@ -474,7 +480,7 @@
 				var playerSelected = play.getSelected()[0];
 				//var playerSelectedIndex = play.getSelected()[1];
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
-				var playerStatusKeys = ["A", "S", "D"];
+				var playerStatusKeys = ["A", "S", "D", "F", "G"];
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
 						 if(playerSelected.motionCoords.length > 0){
@@ -498,6 +504,7 @@
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;
+					
 					if (blockSize > 0) {
 						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
 						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
@@ -511,8 +518,16 @@
 					});
 
 					playerSelected.blockingAssignmentArray.push(block);
-				}else if(playerStatusKeys.indexOf(key) >= 0){
-					selectedPlayerStatus = playerStatusKeys.indexOf(key)
+				} else if (playerStatusKeys.indexOf(key) >= 0) {
+					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+						for (i in buttons) {
+							if (i != playerStatusKeys.indexOf(key)) {
+								buttons[i].setUnclicked();
+							} else {
+								buttons[i].click();
+							}
+						}
+					}
 				}
 
 				return false;
