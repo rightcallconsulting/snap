@@ -144,6 +144,7 @@
 			buttons.push(button);
 
 			updateMainviewAndSideview();
+			setButtonClicked();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -408,6 +409,7 @@
 			}
 
 			updateMainviewAndSideview();
+			setButtonClicked();
 		});
 
 		$("#skip-question-button").click(function(event) {
@@ -422,6 +424,7 @@
 			}
 
 			updateMainviewAndSideview();
+			setButtonClicked();
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -494,6 +497,23 @@
 
 			var question_prompt = document.getElementById("question-prompt");
 			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
+		};
+
+		// setButtonClicked is responsible for presetting the most conveinent
+		// assignment type when questions change.
+		function setButtonClicked() {
+			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
+				var player = quiz.attempt;
+
+				if (player.pos === "QB") {
+					buttons[0].setClicked();
+				} else if (player.eligible) {
+					buttons[3].setClicked();
+				} else if (!player.eligible) {
+					buttons[4].setClicked();
+				}
+			}
+
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
