@@ -415,7 +415,7 @@
 
 				play.clearSelected();
 				return false;
-			} else if (currentPlayerSelected === null) {
+			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
 				newPlayerSelected.click();
 				return false;
 			}

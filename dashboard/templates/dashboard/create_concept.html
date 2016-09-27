@@ -383,14 +383,14 @@
 						buttons[i].setUnclicked();
 					}
 
-					play.clearSelected();
+					concept.clearSelected();
 					return false;
 				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
 					for (i in buttons) {
 						buttons[i].setUnclicked();
 					}
 
-					play.clearSelected();
+					concept.clearSelected();
 					newPlayerSelected.click();
 					return false;
 				}
@@ -438,9 +438,9 @@
 					buttons[i].setUnclicked();
 				}
 
-				play.clearSelected();
+				concept.clearSelected();
 				return false;
-			} else if (currentPlayerSelected === null) {
+			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
 				newPlayerSelected.click();
 				return false;
 			}
