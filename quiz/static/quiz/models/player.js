@@ -136,6 +136,24 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.blue = blue;
 };
 
+// hasAssignments returns true is the player has a block, route, run, or
+// dropback.
+Player.prototype.hasAssignments = function() {
+	if (this.blockingAssignmentArray.length != 0) {
+		return true;
+	}
+
+	if (this.route.length != 0) {
+		return true;
+	}
+
+	if (this.defensiveMovement.length != 0) {
+		return true;
+	}
+
+	return false;
+};
+
 // draw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
 Player.prototype.draw = function(field) {

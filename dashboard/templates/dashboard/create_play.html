@@ -131,19 +131,19 @@
 			play = new Play({});
 
 			// Create buttons for selecting type
-			var button = new Button ({ this.label: "Dropback" });
+			var button = new Button ({ label: "Dropback" });
 			buttons.push(button);
-			
-			button = new Button ({ this.label: "Motion" });
+
+			button = new Button ({ label: "Motion" });
 			buttons.push(button);
-			
-			button = new Button ({ this.label: "Run" });
+
+			button = new Button ({ label: "Run" });
 			buttons.push(button);
-			
-			button = new Button ({ this.label: "Route" });
+
+			button = new Button ({ label: "Route" });
 			buttons.push(button);
-			
-			button = new Button ({ this.label: "Block" });
+
+			button = new Button ({ label: "Block" });
 			buttons.push(button);
 
 			window.onresize = function() {
@@ -250,6 +250,49 @@
 				}
 			}
 
+			// Determine which buttons should be displayed based on which, if
+			// any buttons should be displayed.
+			var player = play.getSelected()[0];
+			
+			if (player != null) {
+				if (player.pos === "QB") {
+					buttons[0].display = true;
+					buttons[1].display = true;
+					buttons[2].display = true;
+					buttons[3].display = true;
+					buttons[4].display = true;
+
+					if (player.hasAssignments() === true) {
+						buttons[1].display = false;
+					}
+				} else if (player.eligible === true) {
+					buttons[0].display = false;
+					buttons[1].display = true;
+					buttons[2].display = true;
+					buttons[3].display = true;
+					buttons[4].display = true;
+
+					if (player.hasAssignments() === true) {
+						buttons[1].display = false;
+					}
+				} else if (player.eligible === false) {
+					buttons[0].display = false;
+					buttons[1].display = false;
+					buttons[2].display = false;
+					buttons[3].display = false;
+					buttons[4].display = true;
+
+					if (player.hasAssignments() === true) {
+						buttons[1].display = false;
+					}
+				}
+			} else {
+				for (i in buttons) {
+					buttons[i].setUnclicked();
+					buttons[i].display = false;
+				}
+			}
+
 			// Draw opening
 			drawOpening();
 		};
@@ -262,6 +305,20 @@
 			play.drawAssignments(field);
 			play.drawPlayers(field);
 
+			var x = 20;
+			var y = 20;
+
+			for (i in buttons) {
+				if (buttons[i].display === true) {
+					buttons[i].x = x;
+					buttons[i].y = y;
+
+					buttons[i].draw(field);
+
+					x += buttons[i].width*1.25;
+				}
+			}
+
 			fill(0, 0, 0);
 			textSize(20);
 			text(play.feedbackMessage, 330, 20);
@@ -273,18 +330,31 @@
 		//*******************************************************************//
 
 		function mousePressed() {
-
 			// return false to prevent default behavior
 			return false;
 		};
 
 		function mouseDragged() {
-
 			// return false to prevent default behavior
 			return false;
 		};
 
 		function mouseReleased() {
+			// If a button is displayed and clicked then call it's click
+			// function and return.
+			for (i in buttons) {
+				if (buttons[i].isMouseInside(field)) {
+					for (j in buttons) {
+						if (j != i) {
+							buttons[j].setUnclicked();
+						}
+					}
+
+					buttons[i].click();
+					return false;
+				}
+			}
+
 			// Handle clicks on players in the Play
 			var currentPlayerSelected = play.getSelected()[0];
 			var newPlayerSelected = play.mouseInPlayer(field);

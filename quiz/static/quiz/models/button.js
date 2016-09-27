@@ -10,10 +10,10 @@
 //***************************************************************************//
 
 var Button = function(config) {
-	this.x = config.x || 75;
-	this.y = config.y || 25;
-	this.width = config.width || 100;
-	this.height = config.height || 50;
+	this.x = config.x || 20;
+	this.y = config.y || 20;
+	this.width = config.width || 75;
+	this.height = config.height || 30;
 	this.label = config.label || "";
 
 	this.fill = config.fill || color(255, 255, 255);
@@ -25,6 +25,8 @@ var Button = function(config) {
 //***************************************************************************//
 
 Button.prototype.draw = function(field) {
+	stroke(color(0, 0, 0));
+	strokeWeight(1);
 	fill(this.fill);
 	var x = this.x;
 	var y = this.y;
@@ -33,6 +35,7 @@ Button.prototype.draw = function(field) {
 
 	rect(x, y, width, height);
 
+	noStroke();
 	fill(0, 0, 0);
 	textSize(12);
 	textAlign(CENTER, CENTER);
@@ -56,12 +59,21 @@ Button.prototype.isMouseInside = function(field) {
 		mouseY < (y + height);
 };
 
+Button.prototype.setClicked = function() {
+	this.fill = color(176, 176, 176);
+	this.clicked = true;
+};
+
+Button.prototype.setUnclicked = function() {
+	this.fill = color(255, 255, 255);
+	this.clicked = false;
+};
+
 Button.prototype.click = function() {
 	if (this.clicked) {
-		this.fill = color(255, 255, 255);
-		this.clicked = false;
+		this.setUnclicked();
 	} else {
-		this.fill = color(176, 176, 176);
-		this.clicked = true;
+		this.setClicked();
 	}
 };
+
