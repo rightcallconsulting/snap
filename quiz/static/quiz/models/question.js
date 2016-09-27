@@ -44,7 +44,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 			this.question.offensivePlayers.splice(i, 1);
 		}
 
-		this.prompt = "Place the missing " + this.answer.pos;
+		this.prompt = "Place the missing " + this.answer.pos + " in the formation";
 	} else if (this.question instanceof Play) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
@@ -61,7 +61,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 			this.question.offensivePlayers[randomPlayerIndex].setSelected();
 		}
 
-		this.prompt = "Draw the assignment for the " + this.answer.pos;
+		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this play";
 	} else if (this.question instanceof Concept) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
@@ -78,7 +78,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 			this.question.offensivePlayers[randomPlayerIndex].setSelected();
 		}
 
-		this.prompt = "Draw the assignment for the " + this.answer.pos;
+		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this concept";
 	}
 };
 
