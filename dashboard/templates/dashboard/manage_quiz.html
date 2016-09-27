@@ -304,6 +304,8 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.save(path, csrf_token);
+
+			window.location.replace("/quizzes/assigned");
 		});
 
 		$("#delete-button").click(function(event) {
