@@ -53,7 +53,7 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var quiz;
-		var attempt;
+		var buttons = [];
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -122,6 +122,22 @@
 				quiz.attempt.defensiveMovement = [];
 			}
 
+			// Create buttons for selecting type of assignment
+			var button = new Button ({ label: "Dropback (A)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Motion (S)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Run (D)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Route (F)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Block (G)" });
+			buttons.push(button);
+
 			updateMainviewAndSideview();
 
 			window.onresize = function() {
@@ -143,6 +159,60 @@
 		};
 
 		function draw() {
+			buttons[0].display = false;
+			buttons[1].display = false;
+			buttons[2].display = false;
+			buttons[3].display = false;
+			buttons[4].display = false;
+
+			var this_question = quiz.getCurrentQuestion();
+
+			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
+				// Determine which buttons should be displayed based on which, if
+				// any buttons should be displayed.
+				var player = quiz.attempt;
+				
+				if (player != null) {
+					if (player.dropback.length > 0) {
+						buttons[0].display = true;
+						buttons[0].setClicked();
+					} else if (player.run.length > 0) {
+						buttons[2].display = true;
+						buttons[2].setClicked();
+					} else if (player.route.length > 0) {
+						buttons[3].display = true;
+						buttons[3].setClicked();
+					} else if (player.blockingAssignmentArray.length > 0) {
+						buttons[4].display = true;
+						buttons[4].setClicked();
+					} else if (player.pos === "QB") {
+						buttons[0].display = true;
+						buttons[1].display = true;
+						buttons[2].display = true;
+						buttons[3].display = true;
+						buttons[4].display = true;
+					} else if (player.eligible === true) {
+						buttons[1].display = true;
+						buttons[2].display = true;
+						buttons[3].display = true;
+						buttons[4].display = true;
+					} else if (player.eligible === false) {
+						buttons[4].display = true;
+					}
+				} else {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+						buttons[i].display = false;
+					}
+				}
+			} else {
+				buttons[0].display = false;
+				buttons[1].display = false;
+				buttons[2].display = false;
+				buttons[3].display = false;
+				buttons[4].display = false;
+			}
+
 			// Draw opening
 			drawOpening();
 		};
@@ -161,8 +231,19 @@
 				fill(176,176,176);
 			}
 
+			var x = 10;
+			var y = 10;
 
+			for (i in buttons) {
+				if (buttons[i].display === true) {
+					buttons[i].x = x;
+					buttons[i].y = y;
 
+					buttons[i].draw(field);
+
+					x += buttons[i].width*1.25;
+				}
+			}
 		};
 
 		//*******************************************************************//
@@ -174,6 +255,21 @@
 		function mouseDragged() {};
 
 		function mouseReleased() {
+			// If a button is displayed and clicked then call it's click
+			// function and return.
+			for (i in buttons) {
+				if (buttons[i].isMouseInside(field)) {
+					for (j in buttons) {
+						if (j != i) {
+							buttons[j].setUnclicked();
+						}
+					}
+
+					buttons[i].click();
+					return false;
+				}
+			}
+
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 				var playerSelected = quiz.getSelected()[0];
 				var playerClicked = quiz.mouseInPlayer(field);
@@ -185,52 +281,34 @@
 					quiz.attempt.setSelected();
 					quiz.attempt.x = mouseYardX;
 					quiz.attempt.y = mouseYardY;
-				} else if (playerSelected.eligible) {
-					if (quiz.attempt.unit === "offense") {
-						if(quiz.getCurrentQuestion().answer !== null && quiz.getCurrentQuestion().answer.route.length > 0){
-								quiz.attempt.route.push([mouseYardX, mouseYardY]);
-						}else{
-							var newAssignment = new BlockType({
-								type: 0,
-								x: mouseYardX,
-								y: mouseYardY
-							});
-
-							if(playerClicked !== null){
-								newAssignment.type = 1;
-								newAssignment.player = playerClicked;
-							}
-							quiz.attempt.blockingAssignmentArray.push(newAssignment)
-
-						}
-
-					}
-
+				} else if (buttons[0].clicked === true) {
+					playerSelected.dropback.push([mouseYardX, mouseYardY]);
+					return false;				
+				} else if (buttons[1].clicked === true) {
+					playerSelected.motionCoords.push([mouseYardX, mouseYardY]);
 					return false;
-				} else if (playerClicked === null) {
-					if (quiz.attempt.unit === "offense") {
-						var blockPoint = new BlockType({
-							type: 0,
-							x: mouseYardX,
-							y: mouseYardY
+				} else if (buttons[2].clicked === true) {
+					playerSelected.run.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[3].clicked === true) {
+					playerSelected.route.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[4].clicked === true) {
+					var block;
+					if (playerClicked != null && playerClicked.unit === "defense") {
+						block = new BlockType({
+							type: 1,
+							player: playerClicked,
+							x: mouseYardX, y: mouseYardY
 						});
-
-						quiz.attempt.blockingAssignmentArray.push(blockPoint)
-					} else if (quiz.attempt.unit === "defense") {
-						quiz.attempt.defensiveMovement.push([mouseYardX, mouseYardY]);
+					} else {
+						block = new BlockType({
+							type: 0,
+							x: mouseYardX, y: mouseYardY
+						});
 					}
 
-					return false;
-				} else if (playerSelected.unit === "offense") {
-					var blockPoint = new BlockType({
-						type: 1,
-						player: playerClicked,
-						x: mouseYardX,
-						y: mouseYardY
-					});
-
-					quiz.attempt.blockingAssignmentArray.push(blockPoint);
-					return false;
+					playerSelected.blockingAssignmentArray.push(block);
 				}
 			}
 
@@ -296,6 +374,11 @@
 
 			quiz.checkCurrentQuestion(path, csrf_token);
 
+			for (i in buttons) {
+				buttons[i].display = false;
+				buttons[i].setUnclicked();
+			}
+
 			updateMainviewAndSideview();
 		});
 
@@ -304,6 +387,11 @@
 			var csrf_token = "{{ csrf_token }}";
 
 			quiz.skipCurrentQuestion(path, csrf_token);
+
+			for (i in buttons) {
+				buttons[i].display = false;
+				buttons[i].setUnclicked();
+			}
 
 			updateMainviewAndSideview();
 		});
