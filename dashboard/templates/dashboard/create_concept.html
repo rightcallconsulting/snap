@@ -377,6 +377,58 @@
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
+			if (currentPlayerSelected != null && newPlayerSelected != null) {
+				if (newPlayerSelected === currentPlayerSelected) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					play.clearSelected();
+					return false;
+				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					play.clearSelected();
+					newPlayerSelected.click();
+					return false;
+				}
+			}
+
+			// If the buttons are selected add the appropriate assignments
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				if (buttons[0].clicked === true) {
+					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
+					return false;				
+				} else if (buttons[1].clicked === true) {
+					currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[2].clicked === true) {
+					currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[3].clicked === true) {
+					currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[4].clicked === true) {
+					var block;
+					if (newPlayerSelected != null && newPlayerSelected.unit === "defense") {
+						block = new BlockType({
+							type: 1,
+							player: newPlayerSelected,
+							x: mouseYardX, y: mouseYardY
+						});
+					} else {
+						block = new BlockType({
+							type: 0,
+							x: mouseYardX, y: mouseYardY
+						});
+					}
+
+					currentPlayerSelected.blockingAssignmentArray.push(block);
+				}
+			}
+
 			// If no one is currently selected and no one is clicked on do
 			// nothing. Else if no one is currently selected and someone is
 			// clicked on, then select that player and return. Else if someone
