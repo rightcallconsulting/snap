@@ -259,7 +259,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 			unit: conceptJsonDictionary.offensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
-			motionCoords: conceptJsonDictionary.offensivePlayers[i].motionCoords
 		});
 
 		if (player.pos === "QB") {
