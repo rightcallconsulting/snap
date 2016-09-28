@@ -284,7 +284,7 @@ class Test(models.Model):
 
 class Play(models.Model):
 	name = models.CharField(max_length=100)
-	scoutName = models.CharField(max_length=100, default="")
+	scoutName = models.CharField(max_length=100, default="", blank=True, null=False)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
 	scout = models.BooleanField(default=False)
