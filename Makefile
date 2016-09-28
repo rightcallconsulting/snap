@@ -79,7 +79,7 @@ rcc-seed:
 
 # Load stanford seed file into database
 load-rcc:
-	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local
+	python manage.py loaddata rcc_seed.json --settings=quiz_master.settings.local
 	python manage.py runserver --settings=quiz_master.settings.local 
 
 ###############################################################################
