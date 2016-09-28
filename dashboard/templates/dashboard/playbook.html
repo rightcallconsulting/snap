@@ -110,6 +110,7 @@
 		var concept;
 		var scout_formations = [];
 		var scout_formation;
+		var dummy_offense;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -170,10 +171,11 @@
 			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Play, new Concept, and new Scout Formation
+			// Create new Play, new Concept, new Scout Formation, and new Dummy Offense 
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
+			dummy_offense = new Formation({});
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -282,6 +284,7 @@
 			concept.drawPlayers(field);
 
 			scout_formation.drawPlayers(field);
+			dummy_offense.drawPlayers(field);
 
 			fill(176,176,176);
 		};
@@ -352,6 +355,8 @@
 			if (sideview_content === "offensive playbook") {
 				showFormations();
 
+				dummy_offense = new Formation({});
+
 				{% if user_is_a_coach %}
 				var create_concept_button = document.getElementById("create-concept-button");
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
@@ -408,6 +413,8 @@
 			} else if (sideview_content === "offensive concepts") {
 				showConcepts();
 
+				dummy_offense = new Formation({});
+
 				{% if user_is_a_coach %}
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
 				var create_formation_button = document.getElementById("create-formation-button");
@@ -443,6 +450,9 @@
 				{% endif %}
 			} else if (sideview_content === "defensive looks") {
 				showDefensiveLooks();
+
+				var dummy_formation = new Formation({});
+				dummy_offense = dummy_formation.createDummyFormation();
 
 				{% if user_is_a_coach %}
 				var create_concept_button = document.getElementById("create-concept-button");
@@ -700,7 +710,7 @@
 
 			for (i in scout_formations) {
 				for (j in plays) {
-					if (plays[j].name === play.name && plays[j].scoutName === scout_formations[i].name) {
+					if (plays[j].name === play.name && plays[j].formation === play.formation && plays[j].scoutName === scout_formations[i].name) {
 						var scout_formation_button = document.createElement("button");
 						scout_formation_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
 						scout_formation_button.setAttribute("name", scout_formations[i].name);
