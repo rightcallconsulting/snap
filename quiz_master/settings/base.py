@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import os.path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 LOGIN_URL = '/login'
 
@@ -25,18 +25,16 @@ LOGIN_URL = '/login'
 SECRET_KEY = 'fgz^7hqp3hohi64gm)v$rvg54@po=pznce*$j$db9h1drp4m9i'
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = []
 
 # Application installed in my project
 INSTALLED_APPS = (
-	'django.contrib.admin',
+    'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	'formation',
 	'quiz.apps.QuizConfig',
 	'dashboard.apps.DashboardConfig',
 	'debug_toolbar',
@@ -44,7 +42,6 @@ INSTALLED_APPS = (
 	'datetimewidget',
 	'bootstrap3_datetime',
 	'graphos',
-	# 'chartit',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -71,11 +68,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media'
             ],
         },
     },
@@ -111,20 +110,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
-
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static asset configuration
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
 
 # Password settings
 # https://github.com/dstufft/django-passwords
