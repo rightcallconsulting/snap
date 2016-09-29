@@ -247,7 +247,7 @@
 			// Determine which buttons should be displayed based on which, if
 			// any buttons should be displayed.
 			var player = concept.getSelected()[0];
-			
+
 			if (player != null && player.unit === "offense") {
 				buttons[0].display = false;
 				buttons[1].display = false;
@@ -406,10 +406,10 @@
 			}
 
 			// If the buttons are selected add the appropriate assignments
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height && currentPlayerSelected) {
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
-					return false;				
+					return false;
 				} else if (buttons[1].clicked === true) {
 					currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
 					return false;
@@ -435,12 +435,14 @@
 					}
 
 					currentPlayerSelected.blockingAssignmentArray.push(block);
+				}else if(currentPlayerSelected.unit === "defense"){
+					currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
 				}
 			}
 
-			// If someone is currently selected and no one is clicked on 
-			// unselect all buttons and players. Else if no one is currently 
-			// selected and someone is clicked on, then select that player and 
+			// If someone is currently selected and no one is clicked on
+			// unselect all buttons and players. Else if no one is currently
+			// selected and someone is clicked on, then select that player and
 			// return.
 			if (currentPlayerSelected != null && newPlayerSelected === null) {
 				for (i in buttons) {
@@ -463,7 +465,7 @@
 				} else if (!newPlayerSelected.eligible) {
 					buttons[4].setClicked();
 				}
-				
+
 				return false;
 			}
 
@@ -587,7 +589,7 @@
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;
-					
+
 					if (blockSize > 0) {
 						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
 						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
@@ -1037,9 +1039,9 @@
 					});
 					players.push(player);
 				}
-			} 
+			}
 
-			for (i in positions) {			
+			for (i in positions) {
 				if (positions[i][0] == "Offensive Lineman") {
 					player = new Player ({
 						pos: positions[i][1],
@@ -1050,7 +1052,7 @@
 				}
 			}
 
-			for (i in positions) {			
+			for (i in positions) {
 				if (positions[i][0] == "Skill Position") {
 					player = new Player ({
 						pos: positions[i][1],
