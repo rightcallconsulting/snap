@@ -76,4 +76,3 @@ Button.prototype.click = function() {
 		this.setClicked();
 	}
 };
-

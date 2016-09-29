@@ -68,7 +68,7 @@ function setup() {
 
 	if(json_seed){
 		var scoreboard = new Scoreboard({});
-		
+
 		test = new FormationTest({
 			formations: [],
 			scoreboard: scoreboard,
@@ -110,19 +110,28 @@ function setup() {
 	}
 };
 
-function resizeJSButtons(){
-	var buttonWidth = field.heightInYards * field.width / field.height / 6;
-	bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
-	bigReset.y = field.getYardY(height*0.8);
+function drawRestartButtons(field){
+  bigReset.display = true;
+  resetMissed.display = true;
+  nextQuiz.display = true;
+  bigReset.draw(field);
+  resetMissed.draw(field);
+  nextQuiz.draw(field);
+}
+
+function resizeJSButtons() {
+	var buttonWidth = field.yardsToPixels(field.heightInYards * field.width / field.height / 6);
+	bigReset.x =  field.getTranslatedX(field.getYardX(width*0.25)) - buttonWidth/2;
+	bigReset.y = height*0.8;
 	bigReset.width = buttonWidth;
 
-	resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+	resetMissed.x =  bigReset.x + bigReset.width*1.5;
 	resetMissed.y = bigReset.y;
 	resetMissed.width = bigReset.width;
 
-	nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
-	nextQuiz.y = bigReset.y;
-	nextQuiz.width = bigReset.width;
+	nextQuiz.x =  resetMissed.x + resetMissed.width*1.5;
+	nextQuiz.y = resetMissed.y;
+	nextQuiz.width = resetMissed.width;
 
 	exitDemo.x =  field.getYardX(width*0.1);
 	exitDemo.y = field.getYardY(height*0.1);
@@ -196,7 +205,7 @@ function drawDemoScreen(){
 	var answer = answers[test.questionNum];
 	var timeElapsed = millis() - test.demoStartTime;
 	var formation = test.getCurrentFormation();
-	
+
 	if (formation) {
 		formation.drawAllPlayers(field);
 		var x1 = field.getTranslatedX(exitDemo.x);
@@ -276,26 +285,26 @@ mouseClicked = function() {
 		return true;
 	} else if (resetMissed.isMouseInside(field) && test.over) {
 		var newFormations = test.missedFormations.concat(test.skippedFormations);
-		
+
 		if(newFormations.length < 1){
 			newFormations = originalFormationList.slice();
 		}
-		
+
 		test.formations = shuffle(newFormations);
 		test.restartQuiz();
 		return true;
 	} else if (nextQuiz.isMouseInside(field) && test.over) {
 		//Advance to next quiz or exit to dashboard
-		window.location.href = "/playbook";
+		window.location.href = "/quizzes/custom";
 	} else if (test.showDemo && exitDemo.isMouseInside(field) && currentPlayerTested || demoDoubleClick) {
 		exitDemoScreen();
 	} else {
 		var y = field.getYardY(mouseY);
-		
+
 		if(y > field.ballYardLine - 1) {
 			y = field.ballYardLine - 1;
 		}
-		
+
 		if(currentPlayerTested) {
 			if(currentPlayerTested.isMouseInside(field)) {
 				if(test.showDemo) {
@@ -333,9 +342,7 @@ function draw() {
 		background(93, 148, 81);
 		noStroke();
 		test.drawQuizSummary();
-		bigReset.draw(field);
-		resetMissed.draw(field);
-		nextQuiz.draw(field);
+		drawRestartButtons(field);
 	} else {
 		if(test.showDemo) {
 			drawDemoScreen();

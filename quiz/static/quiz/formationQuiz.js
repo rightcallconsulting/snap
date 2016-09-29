@@ -65,6 +65,8 @@ function setup() {
 		fill: color(255, 255, 255)
 	});
 
+	resizeJSButtons();
+
 	if(json_seed) {
 		var scoreboard = new Scoreboard({});
 		test = new FormationTest({
@@ -91,19 +93,28 @@ function setup() {
 	}
 };
 
+function drawRestartButtons(field){
+  bigReset.display = true;
+  resetMissed.display = true;
+  nextQuiz.display = true;
+  bigReset.draw(field);
+  resetMissed.draw(field);
+  nextQuiz.draw(field);
+}
+
 function resizeJSButtons() {
-	var buttonWidth = field.heightInYards * field.width / field.height / 6;
-	bigReset.x =  field.getYardX(width*0.25) - buttonWidth/2;
-	bigReset.y = field.getYardY(height*0.8);
+	var buttonWidth = field.yardsToPixels(field.heightInYards * field.width / field.height / 6);
+	bigReset.x =  field.getTranslatedX(field.getYardX(width*0.25)) - buttonWidth/2;
+	bigReset.y = height*0.8;
 	bigReset.width = buttonWidth;
 
-	resetMissed.x =  field.getYardX(width*0.5) - buttonWidth/2;
+	resetMissed.x =  bigReset.x + bigReset.width*1.5;
 	resetMissed.y = bigReset.y;
 	resetMissed.width = bigReset.width;
 
-	nextQuiz.x =  field.getYardX(width*0.75) - buttonWidth/2;
-	nextQuiz.y = bigReset.y;
-	nextQuiz.width = bigReset.width;
+	nextQuiz.x =  resetMissed.x + resetMissed.width*1.5;
+	nextQuiz.y = resetMissed.y;
+	nextQuiz.width = resetMissed.width;
 
 	exitDemo.x =  field.getYardX(width*0.1);
 	exitDemo.y = field.getYardY(height*0.1);
@@ -252,7 +263,7 @@ mouseClicked = function() {
 		return true;
 	} else if(nextQuiz.isMouseInside(field) && test.over) {
 		//Advance to next quiz or exit to dashboard
-		window.location.href = "/playbook";
+		window.location.href = "/quizzes/custom";
 	} else if(test.showDemo && exitDemo.isMouseInside(field) || demoDoubleClick) {
 		exitDemoScreen();
 	} else {
@@ -296,9 +307,7 @@ function draw() {
 		background(93, 148, 81);
 		noStroke();
 		test.drawQuizSummary();
-		bigReset.draw(field);
-		resetMissed.draw(field);
-		nextQuiz.draw(field);
+		drawRestartButtons(field);
 	} else if(test.feedbackScreenStartTime) {
 		var timeElapsed = millis() - test.feedbackScreenStartTime;
 		if(timeElapsed < 2000){
