@@ -91,12 +91,12 @@
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 
-			var positionGroups = [];
-			{% for group in position_groups %}
-				var abbreviation = '{{group.abbreviation|safe}}';
-				if(abbreviation !== null){
-					positionGroups.push(abbreviation)
-				}
+			var position_groups = [];
+			{% for group in positionGroups %}
+			var player_position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
+			if (player_position[0] !== null) {
+				position_groups.push(player_position)
+			}
 			{% endfor %}
 
 			var formationJsonFromDatabase = "";
@@ -117,7 +117,8 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			quiz.buildQuestions(positionGroups);
+			
+			quiz.buildQuestions(position_groups);
 
 			quiz.attempt = quiz.getSelected()[0];
 			if (quiz.attempt != null) {
