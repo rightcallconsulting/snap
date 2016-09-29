@@ -1,0 +1,65 @@
+{% load staticfiles %}
+
+*body.login {
+	background: #141414;
+}
+
+#header {
+	background: #7cb34a;
+	color: #fff;
+}
+
+a:link, a:visited {
+	color: #33691e;
+}
+
+a:hover {
+	color: #7cb34a;
+}
+
+div.breadcrumbs a:focus, div.breadcrumbs a:hover {
+	color: #7cb34a;
+}
+
+#user-tools a:focus, #user-tools a:hover {
+	border-bottom-color: #333;
+	color: #333;
+}
+
+.object-tools a:hover, .object-tools a:hover {
+	background: #33691e;
+	color: #fff;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+	background: #33691e;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+	background: #7cb34a;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+	background: #7cb34a;
+}
+
+.button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+	background: #33691e;
+}
+
+.login #container {
+	border: none;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+	color: #fff;
+}
+
+.module h2, .module caption, .inline-group h2 {
+	background: #33691e;
+}
+
+div.breadcrumbs {
+	background: #33691e;
+	color: #7cb34a;
+}

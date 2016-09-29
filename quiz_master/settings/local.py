@@ -1,4 +1,5 @@
 from quiz_master.settings.base import *
+import dj_database_url
 
 DEBUG = True
 

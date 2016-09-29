@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from .models import Coach, PlayerGroup, Concept, Quiz, QuestionAttempted
 from quiz.models import Player
 
-admin.site.site_header = "Right Call Consulting administration"
-admin.site.site_title = "Snap site admin"
+admin.site.site_header = "Right Call Consulting"
+admin.site.site_title = "Snap site"
 
 # Define an inline admin descriptor for Coach model
 # which acts a bit like a singleton
