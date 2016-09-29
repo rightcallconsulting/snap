@@ -50,7 +50,7 @@
 				</div>
 			{% endif %}
 		</div>
-		
+
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
 				Playbook
@@ -71,11 +71,11 @@
 				<button id="restart-button" name="button">
 					<i class="fa fa-refresh fa-2x mainview-button-icon" title="Restart"></i>
 				</button>
-		
+
 				<button id="zoom-in-button" name="button">
 					<i class="fa fa-search-plus fa-2x mainview-button-icon" title="Zoom in"></i>
 				</button>
-		
+
 				<button id="zoom-out-button" name="button">
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
@@ -103,6 +103,7 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var playButtonClicked = false;
 		var formations = [];
 		var plays = [];
 		var play;
@@ -123,14 +124,14 @@
 			var display_box_footer = display_box.querySelector(".mainview-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
+
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
+			var width = display_box.offsetWidth - 4;
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
-			
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -146,7 +147,7 @@
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
 			{% endfor %}
-			
+
 			// Load plays from Json passed from database.
 			var playJsonFromDatabase = "";
 
@@ -171,7 +172,7 @@
 			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
 			{% endfor %}
 
-			// Create new Play, new Concept, new Scout Formation, and new Dummy Offense 
+			// Create new Play, new Concept, new Scout Formation, and new Dummy Offense
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
@@ -188,7 +189,7 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				
+
 				resizeMainViewObjects();
 			};
 
@@ -198,7 +199,7 @@
 		function draw() {
 			// Limitations on where offensive players can be
 			var numberOfOffensivePlayers = play.offensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
 				var player = play.offensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -235,7 +236,7 @@
 
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = play.defensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
 				var player = play.defensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -277,14 +278,22 @@
 		function drawOpening() {
 			field.drawBackground(play, height, width);
 
-			play.drawAssignments(field);
-			play.drawPlayers(field);
 
-			concept.drawAssignments(field);
+			play.drawPlayers(field);
 			concept.drawPlayers(field);
 
 			scout_formation.drawPlayers(field);
 			dummy_offense.drawPlayers(field);
+
+			if(playButtonClicked){
+				if(concept.runConcept() && play.runPlay()){
+					playButtonClicked = false;
+					//concept.resetConcept();
+				}
+			}else{
+				play.drawAssignments(field);
+				concept.drawAssignments(field);
+			}
 
 			fill(176,176,176);
 		};
@@ -292,7 +301,7 @@
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
-		
+
 		function mousePressed() {};
 
 		function mouseDragged() {};
@@ -307,16 +316,24 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		$("#play-button").click(function(event) {});
+		$("#play-button").click(function(event) {
+			playButtonClicked = !playButtonClicked;
+		});
 
-		$("#pause-button").click(function(event) {});
+		$("#pause-button").click(function(event) {
+			playButtonClicked = !playButtonClicked;
+		});
 
-		$("#restart-button").click(function(event) {});
+		$("#restart-button").click(function(event) {
+			concept.resetConcept();
+			play.resetPlay();
+			playButtonClicked = false;
+		});
 
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
@@ -329,7 +346,7 @@
 		$("#zoom-out-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if(heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
@@ -362,7 +379,7 @@
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
 
 				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); } 
+				if (create_concept_button != null) { top_options.removeChild(create_concept_button); }
 				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
 
 				// Create and add ones we do need
@@ -421,8 +438,8 @@
 				var create_play_button = document.getElementById("create-play-button");
 
 				// Remove top option buttons we don't need
-				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); } 
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); } 
+				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
+				if (create_formation_button != null) { top_options.removeChild(create_formation_button); }
 				if (create_play_button != null) { top_options.removeChild(create_play_button); }
 
 				// Create and add ones we do need
@@ -460,8 +477,8 @@
 				var create_play_button = document.getElementById("create-play-button");
 
 				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); } 
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); } 
+				if (create_concept_button != null) { top_options.removeChild(create_concept_button); }
+				if (create_formation_button != null) { top_options.removeChild(create_formation_button); }
 				if (create_play_button != null) { top_options.removeChild(create_play_button); }
 
 				// Create and add ones we do need
@@ -575,7 +592,7 @@
 			play.fromFormation(formation_selected);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
-			
+
 			for (i in plays) {
 				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
@@ -628,7 +645,7 @@
 
 			var play_formation = play.formation;
 
-			// Create a new play to replace the one you just deselected on the 
+			// Create a new play to replace the one you just deselected on the
 			// screen. Use the same formation that you were already using.
 			var formation = play.formation;
 			play = new Play({});
@@ -656,7 +673,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to. 
+				// id to.
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -735,10 +752,10 @@
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = play_name;
 
-			// Create a new play to replace the one you just deselected on the 
+			// Create a new play to replace the one you just deselected on the
 			// screen. Use the same formation that you were already using.
 			var formation = formation_name;
-			
+
 			for (i in plays) {
 				if (plays[i].formation === formation_name && plays[i].name === play_name && plays[i].scoutName === "") {
 					play = plays[i].deepCopy();
@@ -766,7 +783,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to. 
+				// id to.
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -790,7 +807,7 @@
 			var old_selected = document.getElementById("selected");
 
 			concept = new Concept({});
-			
+
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
 
@@ -807,7 +824,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -832,7 +849,7 @@
 			var old_selected = document.getElementById("selected");
 
 			scout_formation = new Formation({});
-			
+
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
 
@@ -849,7 +866,7 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
@@ -900,7 +917,7 @@
 			for (i in plays) {
 				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
-					
+
 					if (plays[i].name === play_name) {
 						play = plays[i].deepCopy();
 						play_button.setAttribute("id", "selected");
@@ -908,7 +925,7 @@
 					} else {
 						play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					}
-			
+
 					play_button.setAttribute("name", plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
 					play_button.textContent = plays[i].name;

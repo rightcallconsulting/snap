@@ -32,6 +32,9 @@ var Player = function(config) {
 	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
 	this.defensiveMovement = config.defensiveMovement || [];
 
+	// Player movement - Sam is trying stuff here
+	this.movementIndex = config.movementIndex || 0;
+
 	// Older stuff
 	this.clicked = config.clicked || false;
 	this.fill = config.fill || color(0, 0, 0);
@@ -231,7 +234,7 @@ Player.prototype.drawMotion = function(field){
 	}
 };
 
-// drawDropback iterates through a quarterbacks landmarks and draws their 
+// drawDropback iterates through a quarterbacks landmarks and draws their
 // dropback.
 Player.prototype.drawDropback = function(field) {
 	var x1 = this.x;
@@ -371,7 +374,7 @@ Player.prototype.drawBlocks = function(field) {
 		blockPart.draw(prevX, prevY, field)
 		prevX = blockPart.x
 		prevY = blockPart.y
-		
+
 		if (blockPart.type === 1 && blockPart.player !== null) {
 			var defensiveMovement = blockPart.player.defensiveMovement
 			var defensiveMovementLength = defensiveMovement.length
@@ -404,6 +407,63 @@ Player.prototype.drawBlocks = function(field) {
 		noStroke();
 	}
 };
+
+Player.prototype.runPreSnap = function(){
+	if(this.movementIndex < this.motionCoords.length){
+		var dest = this.motionCoords[this.movementIndex];
+		if(this.moveTo(dest[0], dest[1])){
+			this.movementIndex++;
+		}
+		return false;
+	}
+	return true;
+}
+
+Player.prototype.runPostSnap = function(){
+	if(this.movementIndex < this.blockingAssignmentArray.length){
+		var dest = this.blockingAssignmentArray[this.movementIndex];
+		var destX = dest.x;
+		var destY = dest.y;
+		if(dest.type === 1 && dest.player !== null){
+			destX = dest.player.x;
+			destY = dest.player.y;
+			var defensiveMovementLength = dest.player.defensiveMovement.length;
+			if(defensiveMovementLength > 0){
+				destX = dest.player.defensiveMovement[defensiveMovementLength-1][0]
+				destY = dest.player.defensiveMovement[defensiveMovementLength-1][1]
+			}
+		}
+		if(this.moveTo(destX, destY)){
+			this.movementIndex++;
+		}
+		return false;
+	}if(this.movementIndex < this.route.length){
+		var dest = this.route[this.movementIndex];
+		if(this.moveTo(dest[0], dest[1])){
+			this.movementIndex++;
+		}
+		return false;
+	}if(this.movementIndex < this.dropback.length){
+		var dest = this.dropback[this.movementIndex];
+		if(this.moveTo(dest[0], dest[1])){
+			this.movementIndex++;
+		}
+		return false;
+	}if(this.movementIndex < this.run.length){
+		var dest = this.run[this.movementIndex];
+		if(this.moveTo(dest[0], dest[1])){
+			this.movementIndex++;
+		}
+		return false;
+	}if(this.movementIndex < this.defensiveMovement.length){
+		var dest = this.defensiveMovement[this.movementIndex];
+		if(this.moveTo(dest[0], dest[1])){
+			this.movementIndex++;
+		}
+		return false;
+	}
+	return true;
+}
 
 // moveTo advances a player towards their next breakpoint. It returns true if
 // the player is at their final point and false if they are not.

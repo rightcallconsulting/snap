@@ -22,6 +22,7 @@ var Concept = function(config) {
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.feedbackMessage = config.feedbackMessage || [];
+	this.movementIndex = config.movementIndex || 0; //0 is pre-snap, 1 is post-snap
 };
 
 //***************************************************************************//
@@ -29,21 +30,20 @@ var Concept = function(config) {
 
 // drawPlayers draws all the players in a concept.
 Concept.prototype.drawPlayers = function (field) {
-	var numberOfOffensivePlayers = this.offensivePlayers.length;
-	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
-	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].drawAssignments(field);
-		this.defensivePlayers[i].draw(field);
-	}
-
-	for(var i = 0; i < numberOfOffensivePlayers; i++) {
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
 		this.offensivePlayers[i].draw(field);
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++) {
+		this.defensivePlayers[i].draw(field);
 	}
 };
 
 // drawAssignments
 Concept.prototype.drawAssignments = function (field) {
+	if(this.movementIndex > 0){
+		return;
+	}
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -55,6 +55,99 @@ Concept.prototype.drawAssignments = function (field) {
 		this.defensivePlayers[i].drawDefensiveMovement(field);
 	}
 };
+
+Concept.prototype.updateBlocksForDefense = function(){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		var blocker = this.offensivePlayers[i];
+		for(var j = 0; j < blocker.blockingAssignmentArray.length; j++){
+			var assignment = blocker.blockingAssignmentArray[j]
+			if(assignment.type === 1 && assignment.player !== null){
+				for(var k = 0; k < this.defensivePlayers.length; k++){
+					var defender = this.defensivePlayers[k];
+					if(defender.pos === assignment.player.pos && defender.x === assignment.player.x && defender.y === assignment.player.y){
+						var newAssignment = new BlockType({
+							x: assignment.x,
+							y: assignment.y,
+							player: defender,
+							type: 1
+						})
+						this.offensivePlayers[i].blockingAssignmentArray[j] = newAssignment;
+					}
+				}
+			}
+		}
+	}
+}
+
+Concept.prototype.runConcept = function(){
+		if(this.movementIndex === 0){
+			if(this.runPreSnap()){
+				this.movementIndex++;
+				this.resetPlayerMovementIndices();
+			}
+			return false;
+		}
+		if(this.movementIndex === 1){
+			if(this.runPostSnap()){
+				return true;
+			}
+		}
+}
+
+Concept.prototype.runPreSnap = function(){
+	var isFinished = true;
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		if(!this.offensivePlayers[i].runPreSnap()){
+			isFinished = false;
+		}
+	}
+	//no defense pre-snap for now, but this should be written anyway
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		if(!this.defensivePlayers[i].runPreSnap()){
+			isFinished = false;
+		}
+	}
+
+	return isFinished
+}
+
+Concept.prototype.runPostSnap = function(){
+	var isFinished = true;
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		if(!this.offensivePlayers[i].runPostSnap()){
+			isFinished = false;
+		}
+	}
+	//no defense pre-snap for now, but this should be written anyway
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		if(!this.defensivePlayers[i].runPostSnap()){
+			isFinished = false;
+		}
+	}
+	return isFinished
+}
+
+Concept.prototype.resetPlayerMovementIndices = function(){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		this.offensivePlayers[i].movementIndex = 0;
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		this.defensivePlayers[i].movementIndex = 0;
+	}
+}
+
+Concept.prototype.resetConcept = function(){
+	this.movementIndex = 0;
+	this.resetPlayerMovementIndices();
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		this.offensivePlayers[i].x = this.offensivePlayers[i].startX;
+		this.offensivePlayers[i].y = this.offensivePlayers[i].startY;
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		this.defensivePlayers[i].x = this.defensivePlayers[i].startX;
+		this.defensivePlayers[i].y = this.defensivePlayers[i].startY;
+	}
+}
 
 Concept.prototype.getPlayerFromPosition = function(position){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
@@ -381,7 +474,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		offensiveLinemen: offensiveLinemenArray,
 		eligibleReceivers: eligibleReceiversArray
 	});
-
+	result.updateBlocksForDefense();
 	return result;
 };
 

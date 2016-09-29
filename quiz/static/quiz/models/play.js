@@ -23,6 +23,7 @@ var Play = function(config) {
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
+	this.movementIndex = config.movementIndex || 0;
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";
@@ -38,7 +39,7 @@ var Play = function(config) {
     this.teamID = config.teamID || null;
     this.positions = config.positions || [];
     this.positionIDs = config.positionIDs || [];
-    this.runPlay = config.runPlay || null;
+    //this.runPlay = config.runPlay || null;
     this.updated_at = config.updated_at || null;
     this.created_at = config.created_at || null;
     this.defensiveFormationID = config.defensiveFormationID || 0;
@@ -64,6 +65,9 @@ Play.prototype.drawPlayers = function (field) {
 
 // drawAssignments draws the assignments of all of the players in a play.
 Play.prototype.drawAssignments = function (field) {
+	if(this.movementIndex > 0){
+		return;
+	}
 	var numberOfOffensivePlayers = this.offensivePlayers.length;
 	var numberOfDefensivePlayers = this.defensivePlayers.length;
 
@@ -90,6 +94,76 @@ Play.prototype.drawAssignmentsExceptBlocks = function (field) {
 		this.defensivePlayers[i].drawDefensiveMovement(field);
 	}
 };
+
+Play.prototype.runPlay = function(){
+		if(this.movementIndex === 0){
+			if(this.runPreSnap()){
+				this.movementIndex++;
+				this.resetPlayerMovementIndices();
+			}
+			return false;
+		}
+		if(this.movementIndex === 1){
+			if(this.runPostSnap()){
+				return true;
+			}
+		}
+}
+
+Play.prototype.runPreSnap = function(){
+	var isFinished = true;
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		if(!this.offensivePlayers[i].runPreSnap()){
+			isFinished = false;
+		}
+	}
+	//no defense pre-snap for now, but this should be written anyway
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		if(!this.defensivePlayers[i].runPreSnap()){
+			isFinished = false;
+		}
+	}
+
+	return isFinished
+}
+
+Play.prototype.runPostSnap = function(){
+	var isFinished = true;
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		if(!this.offensivePlayers[i].runPostSnap()){
+			isFinished = false;
+		}
+	}
+	//no defense pre-snap for now, but this should be written anyway
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		if(!this.defensivePlayers[i].runPostSnap()){
+			isFinished = false;
+		}
+	}
+	return isFinished
+}
+
+Play.prototype.resetPlayerMovementIndices = function(){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		this.offensivePlayers[i].movementIndex = 0;
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		this.defensivePlayers[i].movementIndex = 0;
+	}
+}
+
+Play.prototype.resetPlay = function(){
+	this.movementIndex = 0;
+	this.resetPlayerMovementIndices();
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		this.offensivePlayers[i].x = this.offensivePlayers[i].startX;
+		this.offensivePlayers[i].y = this.offensivePlayers[i].startY;
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		this.defensivePlayers[i].x = this.defensivePlayers[i].startX;
+		this.defensivePlayers[i].y = this.defensivePlayers[i].startY;
+	}
+}
 
 // isValid checks the legality of a play.
 Play.prototype.isValid = function() {
@@ -556,9 +630,6 @@ Play.prototype.resetPlayers = function(defensivePlay){
   for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
       defensivePlay.defensivePlayers[i].resetToStart();
   }
-  if(this.runPlay !== null){
-    this.runPlay.hasExchanged = false;
-  }
 };
 
 Play.getCurrentBlockingAssignment = function(){
@@ -599,9 +670,7 @@ Play.prototype.drawRunAssignments = function(field){
 };
 
 Play.prototype.drawRunPlay = function(field){
-  if(this.runPlay){
-    this.runPlay.draw(field);
-  }
+
 };
 
 Play.prototype.clearProgression = function(){
