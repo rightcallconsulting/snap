@@ -26,7 +26,7 @@ var Question = function(config) {
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
 Question.prototype.buildQuestionAndAnswer = function(player_positions) {
-	var player_position = this.getTestedPosition(player_positions);
+	var player_position = this.getTestedPosition(player_positions[0]);
 	if (this.question instanceof Formation) {
 		for (i in this.question.offensivePlayers) {
 			var player = this.question.offensivePlayers[i];
