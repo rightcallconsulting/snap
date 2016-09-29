@@ -278,22 +278,21 @@
 		function drawOpening() {
 			field.drawBackground(play, height, width);
 
+			if (playButtonClicked) {
+				if (concept.runConcept() && play.runPlay()) {
+					playButtonClicked = false;
+					//concept.resetConcept();
+				}
+			} else {
+				play.drawAssignments(field);
+				concept.drawAssignments(field);
+			}
 
 			play.drawPlayers(field);
 			concept.drawPlayers(field);
 
 			scout_formation.drawPlayers(field);
 			dummy_offense.drawPlayers(field);
-
-			if(playButtonClicked){
-				if(concept.runConcept() && play.runPlay()){
-					playButtonClicked = false;
-					//concept.resetConcept();
-				}
-			}else{
-				play.drawAssignments(field);
-				concept.drawAssignments(field);
-			}
 
 			fill(176,176,176);
 		};
