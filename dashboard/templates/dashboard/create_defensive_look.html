@@ -231,7 +231,9 @@
 
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
+			formation.drawAssignments(field);
 			formation.drawPlayers(field);
+
 			dummy_offense.drawPlayers(field);
 			defensivePlayerBar.draw(field);
 
@@ -305,7 +307,7 @@
 				newPlayerSelected.click();
 				return false;
 			} else if (newPlayerSelected === null) {
-				formation.clearSelected();
+				currentPlayerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
 				return false;
 			} else if (newPlayerSelected === currentPlayerSelected) {
 				formation.clearSelected();
