@@ -516,17 +516,21 @@
 		// assignment type when questions change.
 		function setButtonClicked() {
 			for (var i = 0; i < buttons.length; i++){
-				buttons[i].clicked = false;
+				buttons[i].setUnclicked();
 				buttons[i].display = false;
 			}
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				var player = quiz.attempt;
 
-				if (player.pos === "QB") {
+				if (player.motionCoords.length > 0) {
 					buttons[0].setClicked();
-				} else if (player.eligible) {
+				} else if (player.dropback.length > 0) {
+					buttons[1].setClicked();
+				} else if (player.run.length > 0) {
+					buttons[2].setClicked();
+				} else if (player.route.length > 0) {
 					buttons[3].setClicked();
-				} else if (!player.eligible) {
+				} else if (player.blockingAssignmentArray.length > 0) {
 					buttons[4].setClicked();
 				}
 			}
