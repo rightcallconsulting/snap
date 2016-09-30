@@ -519,8 +519,9 @@
 				buttons[i].setUnclicked();
 				buttons[i].display = false;
 			}
+
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
-				var player = quiz.attempt;
+				var player = quiz.getCurrentQuestion().answer;
 
 				if (player.motionCoords.length > 0) {
 					buttons[0].setClicked();

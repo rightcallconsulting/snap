@@ -177,10 +177,72 @@ Question.prototype.check = function(attempt) {
 };
 
 Question.prototype.checkAssignments = function(attempt){
-		if(this.checkRoute(attempt) && this.checkMotion(attempt) && this.checkBlockingAssignment(attempt)){
+		if (this.checkDropback(attempt) && this.checkMotion(attempt) && this.checkRun(attempt) && this.checkRoute(attempt) && this.checkBlockingAssignment(attempt)) {
 			return true;
 		}
+
 		return false;
+}
+
+Question.prototype.checkDropback = function(attempt){
+	if(this.answer.dropback === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.dropback.length !== this.answer.dropback.length){
+		return false;
+	}
+	for (i in attempt.route) {
+		var dist = sqrt(pow(attempt.dropback[i][0] - this.answer.dropback[i][0], 2) + pow(attempt.dropback[i][1] - this.answer.dropback[i][1], 2));
+		if (dist > 3) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkMotion = function(attempt){
+	if(this.answer.motionCoords === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.motionCoords.length !== this.answer.motionCoords.length){
+		return false;
+	}
+	for (i in attempt.motionCoords) {
+		var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
+		if (dist > 2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkRun = function(attempt){
+	if(this.answer.run === null){
+		return true;
+	}
+
+	if(attempt === null) {
+		return false;
+	}
+
+	if (attempt.run.length !== this.answer.run.length) {
+		return false;
+	}
+
+	for (i in attempt.route) {
+		var dist = sqrt(pow(attempt.run[i][0] - this.answer.run[i][0], 2) + pow(attempt.run[i][1] - this.answer.run[i][1], 2));
+		
+		if (dist > 3) {
+			return false;
+		}
+	}
+	return true;
 }
 
 Question.prototype.checkRoute = function(attempt){
@@ -214,25 +276,6 @@ Question.prototype.checkBlockingAssignment = function(attempt){
 	}
 	for (i in attempt.blockingAssignmentArray) {
 		var dist = sqrt(pow(attempt.blockingAssignmentArray[i].x - this.answer.blockingAssignmentArray[i].x, 2) + pow(attempt.blockingAssignmentArray[i].y - this.answer.blockingAssignmentArray[i].y, 2));
-		if (dist > 2) {
-			return false;
-		}
-	}
-	return true;
-}
-
-Question.prototype.checkMotion = function(attempt){
-	if(this.answer.motionCoords === null){
-		return true;
-	}
-	if(attempt === null){
-		return false;
-	}
-	if(attempt.motionCoords.length !== this.answer.motionCoords.length){
-		return false;
-	}
-	for (i in attempt.motionCoords) {
-		var dist = sqrt(pow(attempt.motionCoords[i][0] - this.answer.motionCoords[i][0], 2) + pow(attempt.motionCoords[i][1] - this.answer.motionCoords[i][1], 2));
 		if (dist > 2) {
 			return false;
 		}
