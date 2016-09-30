@@ -39,6 +39,12 @@ var Formation = function(config){
 //***************************************************************************//
 //***************************************************************************//
 
+Formation.prototype.drawAssignments = function(field){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		this.defensivePlayers[i].drawAssignments(field);
+	}
+}
+
 // createOffensiveLineAndQuarterback
 Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 	var olPositions = ["LT", "LG", "C", "RG", "RT"];

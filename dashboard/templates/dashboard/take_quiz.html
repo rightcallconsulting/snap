@@ -117,7 +117,7 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			
+
 			quiz.buildQuestions(position_groups);
 
 			quiz.attempt = quiz.getSelected()[0];
@@ -172,13 +172,19 @@
 			buttons[3].display = false;
 			buttons[4].display = false;
 
+			if(quiz.over){
+				quiz.drawQuizSummary(field);
+				//draw restart buttons
+				return;
+			}
+
 			var this_question = quiz.getCurrentQuestion();
 
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				// Determine which buttons should be displayed based on which, if
 				// any buttons should be displayed.
 				var player = quiz.attempt;
-				
+
 				if (player != null) {
 					if (player.dropback.length > 0) {
 						buttons[0].display = true;
@@ -233,6 +239,7 @@
 					question.feedbackStartTime = 0;
 					quiz.nextQuestion();
 					updateMainviewAndSideview();
+					setButtonClicked();
 				}
 				quiz.draw(field);
 				fill(176,176,176);
@@ -290,7 +297,7 @@
 					quiz.attempt.y = mouseYardY;
 				} else if (buttons[0].clicked === true) {
 					playerSelected.dropback.push([mouseYardX, mouseYardY]);
-					return false;				
+					return false;
 				} else if (buttons[1].clicked === true) {
 					playerSelected.motionCoords.push([mouseYardX, mouseYardY]);
 					return false;
@@ -324,6 +331,14 @@
 		};
 
 		function keyPressed() {
+			if(quiz.over){
+				if (key === "r" || key === "R"){
+					quiz.restartQuiz(false);
+					updateMainviewAndSideview();
+					setButtonClicked();
+				}
+				return false;
+			}
 			if (quiz.getSelected()[0] != null) {
 				var playerSelected = quiz.attempt;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
@@ -353,7 +368,7 @@
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;
-					
+
 					if (blockSize > 0) {
 						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
 						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
@@ -503,6 +518,10 @@
 		// setButtonClicked is responsible for presetting the most conveinent
 		// assignment type when questions change.
 		function setButtonClicked() {
+			for (var i = 0; i < buttons.length; i++){
+				buttons[i].clicked = false;
+				buttons[i].display = false;
+			}
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				var player = quiz.attempt;
 
