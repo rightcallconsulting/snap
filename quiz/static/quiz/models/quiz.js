@@ -23,6 +23,7 @@ var Quiz = function(config) {
 	this.over = false;
 
 	this.results = config.results || []; //array of Int results - 0 is wrong, 1 is right, 2 is skipped
+	this.restartButtons = config.restartButtons || [];
 };
 
 //***************************************************************************//
@@ -189,13 +190,74 @@ Quiz.prototype.drawQuizSummary = function(field){
   text(resultString, width/2, height/2-50);
   textSize(20);
   text(guessesString, width/2, height/2+10);
-	text(skipString, width/2, height/2+70);
+	//text(skipString, width/2, height/2+70);
   //text(timeString, width/2, height/2+70);
+
+	if(this.restartButtons.length === 0){
+		this.setRestartButtons(field);
+	}
+
+	this.drawRestartButtons(field);
+
+}
+
+Quiz.prototype.setRestartButtons = function(field){
+	this.restartButtons = [];
+	var buttonWidth = field.yardsToPixels(field.heightInYards * field.width / field.height / 6);
+
+	var bigReset = new Button({
+    x: field.getTranslatedX(field.getYardX(width*0.25)) - buttonWidth/2,
+    y: height*0.8,
+    width: buttonWidth,
+    label: "Retake All",
+		display: true
+  })
+
+
+  var resetMissed = new Button({
+    x: bigReset.x + bigReset.width*1.5,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Retake Missed",
+		display: true
+  })
+
+  var nextQuiz = new Button({
+    x: resetMissed.x + resetMissed.width*1.5,
+    y: bigReset.y,
+    width: bigReset.width,
+    label: "Exit",
+		display: true
+  })
+
+	this.restartButtons.push(bigReset)
+	this.restartButtons.push(resetMissed)
+	this.restartButtons.push(nextQuiz)
+}
+
+Quiz.prototype.drawRestartButtons = function(field){
+	for(var i = 0; i < this.restartButtons.length; i++){
+		this.restartButtons[i].draw(field);
+	}
+}
+
+Quiz.prototype.getClickedRestartButton = function(field){
+	for(var i = 0; i < this.restartButtons.length; i++){
+		var button = this.restartButtons[i];
+		if(button.isMouseInside(field)){
+			return button;
+		}
+	}
+	return null;
 }
 
 Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
+	if(missedQuestionsOnly === true){
+		//Filter for missed & skipped only
+	}
 	this.over = false;
 	this.results = [];
+	this.restartButtons = [];
 	this.currentQuestionIndex = 0;
 	this.attempt = null;
 	this.setAttempt();

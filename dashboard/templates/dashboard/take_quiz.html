@@ -267,6 +267,23 @@
 		function mouseDragged() {};
 
 		function mouseReleased() {
+
+			if(quiz.over){
+				var clickedButton = quiz.getClickedRestartButton(field)
+				if(clickedButton !== null){
+					var clickedLabel = clickedButton.label;
+					if(clickedLabel === "Retake All"){
+						quiz.restartQuiz(false);
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Retake Missed"){
+						quiz.restartQuiz(true);
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Exit"){
+						window.location.href = "/";
+					}
+				}
+				return false;
+			}
 			// If a button is displayed and clicked then call it's click
 			// function and return.
 			for (i in buttons) {
