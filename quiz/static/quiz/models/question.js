@@ -31,7 +31,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 		if (this.question instanceof Formation) {
 			if (positions[i][1] === "Quarterback") {
 				for (j in this.question.offensivePlayers) {
-					if (this.question.offensivePlayers[j].eligible === true) {
+					if (this.question.offensivePlayers[j].eligible === true && this.question.offensivePlayers[j].pos != "QB") {
 						this.answer = this.question.offensivePlayers[j].deepCopy();
 						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
 						this.question.offensivePlayers.splice(j, 1);
@@ -53,11 +53,22 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 		} else if (this.question instanceof Play) {
 			if (positions[i][1] === "Quarterback") {
 				for (j in this.question.offensivePlayers) {
-					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
-						this.question.offensivePlayers[j].setSelected();
-						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
-						return 0;
+					if (this.question.offensivePlayers[j].pos === positions[i][0]) {
+						if (this.question.offensivePlayers[j].hasAssignment() === true) {
+							this.question.offensivePlayers[j].setSelected();
+							this.answer = this.question.offensivePlayers[j].deepCopy();
+							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+							return 0;
+						} else {
+							for (k in this.question.offensivePlayers) {
+								if (this.question.offensivePlayers[k].eligible === true && this.question.offensivePlayers[k].hasAssignment() === true) {
+									this.question.offensivePlayers[k].setSelected();
+									this.answer = this.question.offensivePlayers[k].deepCopy();
+									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.name;
+									return 0;
+								}
+							}
+						}
 					}
 				}
 			} else if (positions[i][1] === "Skill Position") {
@@ -82,10 +93,22 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 		} else if (this.question instanceof Concept) {
 			if (positions[i][1] === "Quarterback") {
 				for (j in this.question.offensivePlayers) {
-					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
-						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
-						return 0;
+					if (this.question.offensivePlayers[j].pos === positions[i][0]) {
+						if (this.question.offensivePlayers[j].hasAssignment() === true) {
+							this.question.offensivePlayers[j].setSelected();
+							this.answer = this.question.offensivePlayers[j].deepCopy();
+							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+							return 0;
+						} else {
+							for (k in this.question.offensivePlayers) {
+								if (this.question.offensivePlayers[k].eligible === true && this.question.offensivePlayers[k].hasAssignment() === true) {
+									this.question.offensivePlayers[k].setSelected();
+									this.answer = this.question.offensivePlayers[k].deepCopy();
+									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.name;
+									return 0;
+								}
+							}
+						}
 					}
 				}
 			} else if (positions[i][1] === "Skill Position") {
