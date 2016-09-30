@@ -278,8 +278,11 @@
 					}else if(clickedLabel === "Retake Missed"){
 						quiz.restartQuiz(true);
 						updateMainviewAndSideview()
-					}else if(clickedLabel === "Exit"){
-						window.location.href = "/";
+					}else if(clickedLabel === "Submit Quiz"){
+						var csrf_token = "{{ csrf_token }}";
+						quiz.submit(csrf_token);
+
+						window.location.replace("/quizzes/todo");
 					}
 				}
 				return false;

@@ -222,17 +222,17 @@ Quiz.prototype.setRestartButtons = function(field){
 		display: true
   })
 
-  var nextQuiz = new Button({
+  var submitQuiz = new Button({
     x: resetMissed.x + resetMissed.width*1.5,
     y: bigReset.y,
     width: bigReset.width,
-    label: "Exit",
+    label: "Submit Quiz",
 		display: true
   })
 
 	this.restartButtons.push(bigReset)
 	this.restartButtons.push(resetMissed)
-	this.restartButtons.push(nextQuiz)
+	this.restartButtons.push(submitQuiz)
 }
 
 Quiz.prototype.drawRestartButtons = function(field){
