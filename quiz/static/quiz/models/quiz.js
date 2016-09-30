@@ -128,6 +128,7 @@ Quiz.prototype.delete = function (path, csrf_token) {
 Quiz.prototype.draw = function(field) {
 	if (!this.isEmpty()) {
 		var question = this.questions[this.currentQuestionIndex];
+		
 		if (question.startTime === 0) {
 			this.clearQuestionStartTimes()
 			question.startTime = millis();

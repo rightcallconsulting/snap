@@ -129,8 +129,8 @@ Question.prototype.getName = function() {
 
 Question.prototype.drawFeedbackScreen = function(field){
 	if (this.answer !== null) {
-		this.answer.draw(field);
 		this.answer.drawAssignments(field);
+		this.answer.draw(field);
 	}
 };
 
@@ -194,7 +194,7 @@ Question.prototype.checkDropback = function(attempt){
 	if(attempt.dropback.length !== this.answer.dropback.length){
 		return false;
 	}
-	for (i in attempt.route) {
+	for (i in attempt.dropback) {
 		var dist = sqrt(pow(attempt.dropback[i][0] - this.answer.dropback[i][0], 2) + pow(attempt.dropback[i][1] - this.answer.dropback[i][1], 2));
 		if (dist > 3) {
 			return false;
@@ -235,7 +235,7 @@ Question.prototype.checkRun = function(attempt){
 		return false;
 	}
 
-	for (i in attempt.route) {
+	for (i in attempt.run) {
 		var dist = sqrt(pow(attempt.run[i][0] - this.answer.run[i][0], 2) + pow(attempt.run[i][1] - this.answer.run[i][1], 2));
 		
 		if (dist > 3) {
