@@ -230,7 +230,7 @@
 			field.drawBackground(quiz, height, width);
 
 			var question = quiz.getCurrentQuestion();
-			
+
 			if (question !== null) {
 				if(question.feedbackStartTime > 0 && millis() - question.feedbackStartTime > 2000){
 					question.feedbackStartTime = 0;
@@ -413,6 +413,9 @@
 		});
 
 		$("#check-answer-button").click(function(event) {
+			if(quiz === null || quiz.over){
+				return false;
+			}
 			var path = window.location.pathname;
 			var csrf_token = "{{ csrf_token }}";
 
@@ -428,6 +431,9 @@
 		});
 
 		$("#skip-question-button").click(function(event) {
+			if(quiz === null || quiz.over){
+				return false;
+			}
 			var path = window.location.pathname;
 			var csrf_token = "{{ csrf_token }}";
 

@@ -21,6 +21,8 @@ var Quiz = function(config) {
 	this.questions = config.questions || [];
 	this.currentQuestionIndex = config.currentQuestionIndex || null;
 	this.over = false;
+
+	this.results = config.results || []; //array of Int results - 0 is wrong, 1 is right, 2 is skipped
 };
 
 //***************************************************************************//
@@ -128,7 +130,7 @@ Quiz.prototype.delete = function (path, csrf_token) {
 Quiz.prototype.draw = function(field) {
 	if (!this.isEmpty()) {
 		var question = this.questions[this.currentQuestionIndex];
-		
+
 		if (question.startTime === 0) {
 			this.clearQuestionStartTimes()
 			question.startTime = millis();
@@ -159,23 +161,41 @@ Quiz.prototype.drawQuizSummary = function(field){
 
 	var score = 0.0;
 	var incorrectGuesses = 0;
+	var skips = 0;
+
+	for(var i = 0; i < this.results.length; i++){
+		if(this.results[i] === 0){
+			incorrectGuesses++;
+		}else if(this.results[i] === 1){
+			score += 1.0;
+		}else if(this.results[i] === 2){
+			skips++;
+		}
+	}
 
   var resultString = "You scored " + (score).toFixed(2) + " out of " + this.questions.length;
   var guessesString = "You had " + incorrectGuesses.toFixed(0) + " incorrect guess";
   if(incorrectGuesses !== 1){
     guessesString += "es";
   }
+	var skipString = "You skipped " + skips.toFixed(0) + " question";
+	if(skips !== 1){
+		skipString += "s";
+	}
+
   /*var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";*/
   textAlign(CENTER);
   textSize(24);
   text(resultString, width/2, height/2-50);
   textSize(20);
   text(guessesString, width/2, height/2+10);
+	text(skipString, width/2, height/2+70);
   //text(timeString, width/2, height/2+70);
 }
 
 Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	this.over = false;
+	this.results = [];
 	this.currentQuestionIndex = 0;
 	this.attempt = null;
 	this.setAttempt();
@@ -206,7 +226,7 @@ Quiz.prototype.buildQuestions = function(player_positions) {
 	for (i in this.plays) {
 		question = new Question({ question: this.plays[i].deepCopy() });
 		var result = question.buildQuestionAndAnswer(player_positions);
-		
+
 		if (result === 0) {
 			this.questions.push(question);
 		}
@@ -215,7 +235,7 @@ Quiz.prototype.buildQuestions = function(player_positions) {
 	for (i in this.concepts) {
 		question = new Question({ question: this.concepts[i].deepCopy() });
 		var result = question.buildQuestionAndAnswer(player_positions);
-		
+
 		if (result === 0) {
 			this.questions.push(question);
 		}
@@ -258,8 +278,10 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 		this.questions[this.currentQuestionIndex].check(this.attempt);
 		this.questions[this.currentQuestionIndex].save(path, csrf_token);
 		if (this.questions[this.currentQuestionIndex].score === 1) {
+			this.results.push(1)
 			this.nextQuestion();
 		}else{
+			this.results.push(0);
 			this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
 		}
 	}
@@ -270,6 +292,7 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 Quiz.prototype.skipCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
 		if (this.questions[this.currentQuestionIndex].score === null) {
+			this.results.push(2);
 			this.questions[this.currentQuestionIndex].skip();
 			this.questions[this.currentQuestionIndex].save(path, csrf_token);
 		}
