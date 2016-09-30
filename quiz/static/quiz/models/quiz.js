@@ -20,6 +20,7 @@ var Quiz = function(config) {
 
 	this.questions = config.questions || [];
 	this.currentQuestionIndex = config.currentQuestionIndex || null;
+	this.over = false;
 };
 
 //***************************************************************************//
@@ -144,6 +145,41 @@ Quiz.prototype.draw = function(field) {
 	}
 };
 
+Quiz.prototype.drawQuizSummary = function(field){
+	background(93, 148, 81);
+	/*var elapsedSeconds = (this.endTime - this.startTime)/1000;
+  if(elapsedSeconds > this.cutOff * this.plays.length * this.questionsPerPlay){
+    elapsedSeconds = this.cutOff * this.plays.length * this.questionsPerPlay;
+  }
+  var timeDeduction = (elapsedSeconds - 10 * this.plays.length * this.questionsPerPlay)*0.01;
+  if(timeDeduction < 0.0){
+    timeDeduction = 0.0;
+  }*/
+
+	var score = 0.0;
+	var incorrectGuesses = 0;
+
+  var resultString = "You scored " + (score).toFixed(2) + " out of " + this.questions.length;
+  var guessesString = "You had " + incorrectGuesses.toFixed(0) + " incorrect guess";
+  if(incorrectGuesses !== 1){
+    guessesString += "es";
+  }
+  /*var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";*/
+  textAlign(CENTER);
+  textSize(24);
+  text(resultString, width/2, height/2-50);
+  textSize(20);
+  text(guessesString, width/2, height/2+10);
+  //text(timeString, width/2, height/2+70);
+}
+
+Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
+	this.over = false;
+	this.currentQuestionIndex = 0;
+	this.attempt = null;
+	this.setAttempt();
+}
+
 Quiz.prototype.clearQuestionStartTimes = function(){
 	for(var i = 0; i < this.questions.length; i++){
 		this.questions[i].startTime = 0;
@@ -238,22 +274,28 @@ Quiz.prototype.nextQuestion = function() {
 	if (!this.isEmpty()) {
 		if (this.currentQuestionIndex != (this.questions.length-1)) {
 			this.currentQuestionIndex++;
+			this.setAttempt();
 		} else {
-			this.currentQuestionIndex = 0;
+			this.over = true;
+			//this.currentQuestionIndex = 0;
+			return false;
 		}
 
-		this.attempt = this.getSelected()[0];
-		if (this.attempt != null) {
-			this.attempt.dropback = [];
-			this.attempt.motionCords = [];
-			this.attempt.run = [];
-			this.attempt.route = [];
-			this.attempt.blockingAssignmentArray = [];
-
-			this.attempt.defensiveMovement = [];
-		}
 	}
 };
+
+Quiz.prototype.setAttempt = function(){
+	this.attempt = this.getSelected()[0];
+	if (this.attempt != null) {
+		this.attempt.dropback = [];
+		this.attempt.motionCords = [];
+		this.attempt.run = [];
+		this.attempt.route = [];
+		this.attempt.blockingAssignmentArray = [];
+
+		this.attempt.defensiveMovement = [];
+	}
+}
 
 // getSelected returns the selected player in this question if it is of type
 // Play or Concept, or else it returns null.
