@@ -26,60 +26,91 @@ var Question = function(config) {
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
 Question.prototype.buildQuestionAndAnswer = function(player_positions) {
-	var player_position = this.getTestedPosition(player_positions[0]);
-	if (this.question instanceof Formation) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-					this.answer = player.deepCopy();
-					this.question.offensivePlayers.splice(i, 1);
-					break;
+	var positions = shuffle(player_positions);
+	for (i in positions) {
+		if (this.question instanceof Formation) {
+			if (positions[i][1] === "Quarterback") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].eligible === true) {
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.question.offensivePlayers.splice(j, 1);
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Skill Position") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0]) {
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.question.offensivePlayers.splice(j, 1);
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Offensive Lineman") {
+				return 1;
+			}
+		} else if (this.question instanceof Play) {
+			if (positions[i][1] === "Quarterback") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.question.offensivePlayers[j].setSelected();
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Skill Position") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.question.offensivePlayers[j].setSelected();
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Offensive Lineman") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.question.offensivePlayers[j].setSelected();
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
+			}
+		} else if (this.question instanceof Concept) {
+			if (positions[i][1] === "Quarterback") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Skill Position") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.question.offensivePlayers[j].setSelected();
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Offensive Lineman") {
+				for (j in this.question.offensivePlayers) {
+					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
+						this.question.offensivePlayers[j].setSelected();
+						this.answer = this.question.offensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						return 0;
+					}
+				}
 			}
 		}
-
-		//shouldn't ever happen now
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers.splice(i, 1);
-		}
-
-		this.prompt = "Place the missing " + this.answer.pos + " in the formation";
-	} else if (this.question instanceof Play) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-				this.answer = player.deepCopy();
-				player.setSelected();
-				break;
-			}
-		}
-
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers[randomPlayerIndex].setSelected();
-		}
-
-		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this play";
-	} else if (this.question instanceof Concept) {
-		for (i in this.question.offensivePlayers) {
-			var player = this.question.offensivePlayers[i];
-			if (player.pos === player_position) {
-				this.answer = player.deepCopy();
-				player.setSelected();
-				break;
-			}
-		}
-
-		if (this.answer === null) {
-			var randomPlayerIndex = Math.floor(Math.random()*this.question.offensivePlayers.length);
-			this.answer = this.question.offensivePlayers[randomPlayerIndex].deepCopy();
-			this.question.offensivePlayers[randomPlayerIndex].setSelected();
-		}
-
-		this.prompt = "Draw the assignment for the " + this.answer.pos + " for this concept";
 	}
+
+	return 1;
 };
 
 // draw displays this question.
@@ -292,4 +323,30 @@ Question.prototype.deepCopy = function() {
 	deepCopy.answer = this.answer.deepCopy();
 
 	return deepCopy;
+};
+
+function shuffle_positions(array) {
+	var result = [];
+
+	for (i in array) {
+		result.push(array[i][0], array[i][1]);
+	}
+
+	var currentPositionIndex = array.length;
+	var temporaryPosition;
+	var randomPositionIndex;
+
+	// While the current index is not 0 (there is nothing left to shuffle).
+	while (currentPositionIndex != 0) {
+		// Pick a remaining question index at random.
+		randomPositionIndex = Math.floor(Math.random() * currentPositionIndex);
+		currentPositionIndex -= 1;
+
+		// Swap it with the current element.
+		temporaryPosition = result[currentQuestionIndex];
+		result[currentQuestionIndex] = result[randomPositionIndex];
+		result[randomQuestionIndex] = temporaryPosition;
+	}
+
+	return result;
 };

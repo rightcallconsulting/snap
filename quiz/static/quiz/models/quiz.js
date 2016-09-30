@@ -159,20 +159,29 @@ Quiz.prototype.buildQuestions = function(player_positions) {
 
 	for (i in this.formations) {
 		question = new Question({ question: this.formations[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_positions);
-		this.questions.push(question);
+		var result = question.buildQuestionAndAnswer(player_positions);
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
 	}
 
 	for (i in this.plays) {
 		question = new Question({ question: this.plays[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_positions);
-		this.questions.push(question);
+		var result = question.buildQuestionAndAnswer(player_positions);
+		
+		if (result === 0) {
+			this.questions.push(question);
+		}
 	}
 
 	for (i in this.concepts) {
 		question = new Question({ question: this.concepts[i].deepCopy() });
-		question.buildQuestionAndAnswer(player_positions);
-		this.questions.push(question);
+		var result = question.buildQuestionAndAnswer(player_positions);
+		
+		if (result === 0) {
+			this.questions.push(question);
+		}
 	}
 	this.shuffle();
 	this.currentQuestionIndex = 0;

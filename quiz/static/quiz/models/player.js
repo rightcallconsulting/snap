@@ -143,12 +143,24 @@ Player.prototype.setFill = function(red, green, blue) {
 
 // hasAssignments returns true is the player has a block, route, run, or
 // dropback.
-Player.prototype.hasAssignments = function() {
-	if (this.blockingAssignmentArray.length != 0) {
+Player.prototype.hasAssignment = function() {
+	if (this.dropback.length != 0) {
+		return true;
+	}
+
+	if (this.motionCoords.length != 0) {
+		return true;
+	}
+
+	if (this.run.length != 0) {
 		return true;
 	}
 
 	if (this.route.length != 0) {
+		return true;
+	}
+
+	if (this.blockingAssignmentArray.length != 0) {
 		return true;
 	}
 
