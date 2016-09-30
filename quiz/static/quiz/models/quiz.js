@@ -443,7 +443,7 @@ Quiz.prototype.isEmpty = function() {
 	return this.questions.length === 0;
 };
 
-// deepCopy returns a new Play object that is exactly the same as this.
+// deepCopy returns a new Quiz object that is exactly the same as this.
 Quiz.prototype.deepCopy = function() {
 	var result = new Quiz({
 		name: this.name,
