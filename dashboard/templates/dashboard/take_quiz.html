@@ -273,10 +273,10 @@
 				if(clickedButton !== null){
 					var clickedLabel = clickedButton.label;
 					if(clickedLabel === "Retake All"){
-						quiz.restartQuiz(false);
+						quiz = quiz.restartQuiz(false);
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Retake Missed"){
-						quiz.restartQuiz(true);
+						quiz = quiz.restartQuiz(true);
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Submit Quiz"){
 						var csrf_token = "{{ csrf_token }}";
@@ -352,7 +352,7 @@
 		function keyPressed() {
 			if(quiz.over){
 				if (key === "r" || key === "R"){
-					quiz.restartQuiz(false);
+					quiz = quiz.restartQuiz(false);
 					updateMainviewAndSideview();
 					setButtonClicked();
 				}

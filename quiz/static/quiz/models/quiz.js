@@ -260,7 +260,9 @@ Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	this.restartButtons = [];
 	this.currentQuestionIndex = 0;
 	this.attempt = null;
-	this.setAttempt();
+	var newQuiz = this.deepCopy();
+	newQuiz.setAttempt();
+	return newQuiz;
 }
 
 Quiz.prototype.clearQuestionStartTimes = function(){
@@ -460,6 +462,10 @@ Quiz.prototype.deepCopy = function() {
 
 	for (i in this.concepts) {
 		result.concepts.push(this.concepts[i].deepCopy());
+	}
+
+	for (i in this.questions){
+		result.questions.push(this.questions[i].deepCopy());
 	}
 
 	return result;
