@@ -275,12 +275,10 @@
 					var clickedLabel = clickedButton.label;
 					if(clickedLabel === "Retake All"){
 						quiz = quiz.restartQuiz(false);
-						//quiz.buildQuestions(position_groups);
 						quiz.setAttempt();
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Retake Missed"){
 						quiz = quiz.restartQuiz(true);
-						//quiz.buildQuestions(position_groups);
 						quiz.setAttempt();
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Submit Quiz"){
@@ -358,7 +356,8 @@
 			if(quiz.over){
 				if (key === "r" || key === "R"){
 					quiz = quiz.restartQuiz(false);
-					updateMainviewAndSideview();
+					quiz.setAttempt();
+					updateMainviewAndSideview()
 					setButtonClicked();
 				}
 				return false;
