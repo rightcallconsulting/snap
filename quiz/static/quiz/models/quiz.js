@@ -253,7 +253,15 @@ Quiz.prototype.getClickedRestartButton = function(field){
 
 Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	if(missedQuestionsOnly === true){
-		//Filter for missed & skipped only
+		var newQuestions = [];
+		for(var i = 0; i < this.questions.length; i++){
+			if(this.questions[i].score !== 1){
+				newQuestions.push(this.questions[i]);
+			}
+		}
+		if(newQuestions.length > 0){
+			this.questions = newQuestions;
+		}
 	}
 	this.over = false;
 	this.results = [];
