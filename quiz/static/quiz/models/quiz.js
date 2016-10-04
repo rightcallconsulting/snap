@@ -261,8 +261,15 @@ Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	this.currentQuestionIndex = 0;
 	this.attempt = null;
 	var newQuiz = this.deepCopy();
-	newQuiz.setAttempt();
+	newQuiz.currentQuestionIndex = 0;
+	newQuiz.clearQuestionScores();
 	return newQuiz;
+}
+
+Quiz.prototype.clearQuestionScores = function(){
+	for(var i = 0; i < this.questions.length; i++){
+		this.questions[i].score = null;
+	}
 }
 
 Quiz.prototype.clearQuestionStartTimes = function(){

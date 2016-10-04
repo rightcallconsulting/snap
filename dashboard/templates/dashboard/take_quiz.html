@@ -59,6 +59,7 @@
 	<script type="text/javascript">
 		var quiz;
 		var buttons = [];
+		var position_groups = [];
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -91,7 +92,7 @@
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 
-			var position_groups = [];
+			position_groups = [];
 			{% for group in positionGroups %}
 			var player_position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
 			if (player_position[0] !== null) {
@@ -274,9 +275,13 @@
 					var clickedLabel = clickedButton.label;
 					if(clickedLabel === "Retake All"){
 						quiz = quiz.restartQuiz(false);
+						//quiz.buildQuestions(position_groups);
+						quiz.setAttempt();
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Retake Missed"){
 						quiz = quiz.restartQuiz(true);
+						//quiz.buildQuestions(position_groups);
+						quiz.setAttempt();
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Submit Quiz"){
 						var csrf_token = "{{ csrf_token }}";
