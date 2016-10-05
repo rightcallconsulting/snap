@@ -916,6 +916,27 @@ def custom_quizzes(request, unit="offense"):
 		'page_header': 'CUSTOM QUIZZES'
 	})
 
+@user_passes_test(lambda u: u.myuser.is_a_player)
+def identification_quizzes(request, unit="offense"):
+	player = request.user.player
+	team = player.team
+	return render(request, 'dashboard/identification_quiz.html', {
+		'player': player,
+		'team': team,
+		'page_header': 'IDENTIFICATION QUIZZES'
+	})
+
+@user_passes_test(lambda u: u.myuser.is_a_player)
+def assignment_quizzes(request, unit="offense"):
+	player = request.user.player
+	team = player.team
+	return render(request, 'dashboard/assignment_quiz.html', {
+		'player': player,
+		'team': team,
+		'page_header': 'ASSIGNMENT QUIZZES'
+	})
+
+
 # Analytics
 @login_required
 def analytics(request):
