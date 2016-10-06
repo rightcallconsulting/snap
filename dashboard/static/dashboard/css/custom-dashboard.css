@@ -713,6 +713,11 @@ div.take-quiz-form p.current-number {
 	font-weight: bold;
 }
 
+div.take-quiz-form .unit-form {
+	width: 80%;
+	margin: 0;
+}
+
 div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
     margin: 10px;
 }
