@@ -675,14 +675,16 @@ custom quizzes
 *************************************************************************/
 
 div#custom-quizzes {
-	text-align: center;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 50px 0 50px;
 }
 
 div.take-quiz-form {
-	display: inline-block;
-	width: 30%;
+	float: left;
+	text-align: left;
+	width: 31%;
 	height: 80vh;
-	margin: 10px;
 	border: 1px solid #7cb34a;
 	border-radius: 10px;
 	padding: 0;
