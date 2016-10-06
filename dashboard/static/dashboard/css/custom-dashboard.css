@@ -683,6 +683,7 @@ div#custom-quizzes {
 div.take-quiz-form {
 	float: left;
 	text-align: left;
+	font-size: medium;
 	width: 31%;
 	height: 80vh;
 	border: 1px solid #7cb34a;
@@ -699,6 +700,17 @@ div.take-quiz-form>form>div {
 	margin: 10px;
 	border: none;
 	padding: 0;
+}
+
+div.take-quiz-form i.fa.fa-chevron-left,
+div.take-quiz-form i.fa.fa-chevron-right {
+	color: #7cb34a;
+}
+
+div.take-quiz-form p.current-number {
+	display: inline;
+	font-size: large;
+	font-weight: bold;
 }
 
 div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
