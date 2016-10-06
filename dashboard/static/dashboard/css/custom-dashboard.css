@@ -718,6 +718,11 @@ div.take-quiz-form .unit-form {
 	margin: 0;
 }
 
+div.take-quiz-form .unit-form.position {
+	width: 20%;
+	margin: 0;
+}
+
 div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
     margin: 10px;
 }
