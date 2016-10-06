@@ -682,12 +682,18 @@ div#formation-quiz,
 div#play-quiz,
 div#concept-quiz {
 	display: inline-block;
-    width: 30%;
-    height: 80vh;
-    margin: 10px;
-    border: 1px solid #7cb34a;
-    border-radius: 10px;
-    padding: 0;
+	width: 30%;
+	height: 80vh;
+	margin: 10px;
+	border: 1px solid #7cb34a;
+	border-radius: 10px;
+	padding: 0;
+}
+
+div#formation-quiz div.header,
+div#play-quiz div.header,
+div#concept-quiz div.header {
+	border-radius: 9px 9px 0 0;
 }
 
 /*************************************************************************
