@@ -3,20 +3,90 @@
 
 {% block content %}
 	<div id="custom-quizzes" class="custom-quizzes">
-		<div id="formation-quiz">
+		<div id="formation-quiz" class="take-quiz-form">
 			<div class="header">
 				FORMATION QUIZ
 			</div>
+
+			<form action="/quizzes/custom/formation" method="post">
+				<div class="number-of-questions">
+					Number of Questions: 
+				</div>
+
+				<div class="order-of-questions">
+					Order:
+				</div>
+
+				<div class="type-of-questions">
+					Type:
+				</div>
+
+				<br hidden="true">
+
+				<div class="position" hidden="true">
+					Position: 
+				</div>
+
+				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
+			</form>
 		</div>
-		<div id="play-quiz">
+
+		<div id="play-quiz" class="take-quiz-form">
 			<div class="header">
 				PLAY QUIZ
 			</div>
+			<form action="/quizzes/custom/play" method="post">
+				<div class="number-of-questions">
+					Number of Questions: 
+				</div>
+
+				<div class="order-of-questions">
+					Order:
+				</div>
+
+				<div class="type-of-questions">
+					Type:
+				</div>
+
+				<br hidden="true">
+
+				<div class="position" hidden="true">
+					Position: 
+				</div>
+
+				<div class="position" hidden="true">
+					Type of Assignment: 
+				</div>
+
+				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
+			</form>
 		</div>
-		<div id="concept-quiz">
+
+		<div id="concept-quiz" class="take-quiz-form">
 			<div class="header">
 				CONCEPT QUIZ
 			</div>
+			<form action="/quizzes/custom/concept" method="post">
+				<div class="number-of-questions">
+					Number of Questions: 
+				</div>
+
+				<div class="order-of-questions">
+					Order:
+				</div>
+
+				<div class="type-of-questions">
+					Type:
+				</div>
+
+				<br hidden="true">
+
+				<div class="position" hidden="true">
+					Position: 
+				</div>
+
+				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
+			</form>
 		</div>
 	</div>	
 {% endblock %}

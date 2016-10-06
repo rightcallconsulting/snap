@@ -678,9 +678,7 @@ div#custom-quizzes {
 	text-align: center;
 }
 
-div#formation-quiz,
-div#play-quiz,
-div#concept-quiz {
+div.take-quiz-form {
 	display: inline-block;
 	width: 30%;
 	height: 80vh;
@@ -690,10 +688,19 @@ div#concept-quiz {
 	padding: 0;
 }
 
-div#formation-quiz div.header,
-div#play-quiz div.header,
-div#concept-quiz div.header {
+div.take-quiz-form div.header {
+	margin: 0 0 10px 0;
 	border-radius: 9px 9px 0 0;
+}
+
+div.take-quiz-form>form>div {
+	margin: 10px;
+	border: none;
+	padding: 0;
+}
+
+div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
+    margin: 10px;
 }
 
 /*************************************************************************
