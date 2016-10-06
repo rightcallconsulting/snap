@@ -6,7 +6,8 @@
 		<div id="question-prompt"></div>
 
 		<div id="help-box" hidden="true">
-			<strong>Help:</strong> For formation questions place the missing player by clicking on the place on the field that they belong. For plays and concepts use the buttons to choose the appropriate assignment type and draw the assignment by clicking on the field to drop landmarks. Check your answer by clicking the check mark. Skip questions with the skip button. When you are done with your quiz attempt click the submit button.
+		{% block help %}
+		{% endblock %}
 		</div>
 
 		<div id="display-box" class="col-md-8 bordered-div">
@@ -177,8 +178,6 @@
 				//draw restart buttons
 				return;
 			}
-
-			var this_question = quiz.getCurrentQuestion();
 
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				// Determine which buttons should be displayed based on which, if

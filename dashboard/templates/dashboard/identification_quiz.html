@@ -6,7 +6,8 @@
 		<div id="question-prompt"></div>
 
 		<div id="help-box" hidden="true">
-			<strong>Help:</strong> For formation questions place the missing player by clicking on the place on the field that they belong. For plays and concepts use the buttons to choose the appropriate assignment type and draw the assignment by clicking on the field to drop landmarks. Check your answer by clicking the check mark. Skip questions with the skip button. When you are done with your quiz attempt click the submit button.
+		{% block help %}
+		{% endblock %}
 		</div>
 
 		<div id="display-box" class="col-md-8 bordered-div">
@@ -178,50 +179,6 @@
 				return;
 			}
 
-			var this_question = quiz.getCurrentQuestion();
-
-			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
-				// Determine which buttons should be displayed based on which, if
-				// any buttons should be displayed.
-				var player = quiz.attempt;
-
-				if (player != null) {
-					if (player.dropback.length > 0) {
-						buttons[0].display = true;
-					} else if (player.run.length > 0) {
-						buttons[2].display = true;
-					} else if (player.route.length > 0) {
-						buttons[3].display = true;
-					} else if (player.blockingAssignmentArray.length > 0) {
-						buttons[4].display = true;
-					} else if (player.pos === "QB") {
-						buttons[0].display = true;
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === true) {
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === false) {
-						buttons[4].display = true;
-					}
-				} else {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-						buttons[i].display = false;
-					}
-				}
-			} else {
-				buttons[0].display = false;
-				buttons[1].display = false;
-				buttons[2].display = false;
-				buttons[3].display = false;
-				buttons[4].display = false;
-			}
-
 			// Draw opening
 			drawOpening();
 		};
@@ -242,20 +199,6 @@
 				quiz.draw(field);
 				fill(176,176,176);
 			}
-
-			var x = 10;
-			var y = 10;
-
-			for (i in buttons) {
-				if (buttons[i].display === true) {
-					buttons[i].x = x;
-					buttons[i].y = y;
-
-					buttons[i].draw(field);
-
-					x += buttons[i].width*1.25;
-				}
-			}
 		};
 
 		//*******************************************************************//
@@ -266,138 +209,9 @@
 
 		function mouseDragged() {};
 
-		function mouseReleased() {
-			// If a button is displayed and clicked then call it's click
-			// function and return.
-			for (i in buttons) {
-				if (buttons[i].isMouseInside(field)) {
-					for (j in buttons) {
-						if (j != i) {
-							buttons[j].setUnclicked();
-						}
-					}
+		function mouseReleased() {};
 
-					buttons[i].click();
-					return false;
-				}
-			}
-
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				var playerSelected = quiz.getSelected()[0];
-				var playerClicked = quiz.mouseInPlayer(field);
-				var mouseYardX = field.getYardX(mouseX);
-				var mouseYardY = field.getYardY(mouseY);
-
-				if (playerSelected === null) {
-					quiz.attempt = quiz.getCurrentAnswer().deepCopy();
-					quiz.attempt.setSelected();
-					quiz.attempt.x = mouseYardX;
-					quiz.attempt.y = mouseYardY;
-				} else if (buttons[0].clicked === true) {
-					playerSelected.dropback.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[1].clicked === true) {
-					playerSelected.motionCoords.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[2].clicked === true) {
-					playerSelected.run.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[3].clicked === true) {
-					playerSelected.route.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[4].clicked === true) {
-					var block;
-					if (playerClicked != null && playerClicked.unit === "defense") {
-						block = new BlockType({
-							type: 1,
-							player: playerClicked,
-							x: mouseYardX, y: mouseYardY
-						});
-					} else {
-						block = new BlockType({
-							type: 0,
-							x: mouseYardX, y: mouseYardY
-						});
-					}
-
-					playerSelected.blockingAssignmentArray.push(block);
-					return false;
-				}
-			}
-
-			// return false to prevent default behavior
-			return false;
-		};
-
-		function keyPressed() {
-			if(quiz.over){
-				if (key === "r" || key === "R"){
-					quiz.restartQuiz(false);
-					updateMainviewAndSideview();
-					setButtonClicked();
-				}
-				return false;
-			}
-			if (quiz.getSelected()[0] != null) {
-				var playerSelected = quiz.attempt;
-				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
-				var playerStatusKeys = ["A", "S", "D", "F", "G"];
-
-				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelected.unit == "offense") {
-						if (playerSelected.dropback.length > 0) {
-							playerSelected.dropback.pop();
-						} else if(playerSelected.run.length > 0) {
-							playerSelected.run.pop();
-						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
-						} else if (playerSelected.blockingAssignmentArray.length > 0) {
-							playerSelected.blockingAssignmentArray.pop();
-						} else if (playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop();
-						}
-					} else if (playerSelected.unit == "defense") {
-						if (playerSelected.defensiveMovement.length > 0) {
-							playerSelected.defensiveMovement.pop();
-						}
-					}
-
-					return false;
-				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
-					var prevX = playerSelected.x;
-					var prevY = playerSelected.y;
-					var blockSize = playerSelected.blockingAssignmentArray.length;
-
-					if (blockSize > 0) {
-						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
-						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
-					}
-
-					var block = new BlockType({
-						type: 2 + specialBlockKeys.indexOf(key),
-						player: null,
-						prevX: prevX,
-						prevY: prevY
-					});
-
-					playerSelected.blockingAssignmentArray.push(block);
-
-					return false;
-				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
-						for (i in buttons) {
-							if (i != playerStatusKeys.indexOf(key)) {
-								buttons[i].setUnclicked();
-							} else {
-								buttons[i].click();
-							}
-						}
-					}
-
-					return false;
-				}
-			}
-		};
+		function keyPressed() {};
 
 		function keyTyped() {};
 
