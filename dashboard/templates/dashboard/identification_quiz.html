@@ -88,7 +88,9 @@
 			myCanvas.parent("quiz-box");
 
 			// Create quiz and load it's content from Json.
-			quiz = new Quiz({});
+			{% block quiz %}
+			//quiz = new Quiz({});
+			{% endblock %}
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 
@@ -129,24 +131,7 @@
 				quiz.attempt.defensiveMovement = [];
 			}
 
-			// Create buttons for selecting type of assignment
-			var button = new Button ({ label: "Dropback (A)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Motion (S)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Run (D)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Route (F)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Block (G)" });
-			buttons.push(button);
-
 			updateMainviewAndSideview();
-			setButtonClicked();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -167,15 +152,8 @@
 		};
 
 		function draw() {
-			buttons[0].display = false;
-			buttons[1].display = false;
-			buttons[2].display = false;
-			buttons[3].display = false;
-			buttons[4].display = false;
-
 			if(quiz.over){
 				quiz.drawQuizSummary(field);
-				//draw restart buttons
 				return;
 			}
 
@@ -193,7 +171,6 @@
 					question.feedbackStartTime = 0;
 					quiz.nextQuestion();
 					updateMainviewAndSideview();
-					setButtonClicked();
 				}
 
 				quiz.draw(field);
@@ -232,13 +209,7 @@
 
 			quiz.checkCurrentQuestion(path, csrf_token);
 
-			for (i in buttons) {
-				buttons[i].display = false;
-				buttons[i].setUnclicked();
-			}
-
 			updateMainviewAndSideview();
-			setButtonClicked();
 		});
 
 		$("#skip-question-button").click(function(event) {
@@ -247,13 +218,7 @@
 
 			quiz.skipCurrentQuestion(path, csrf_token);
 
-			for (i in buttons) {
-				buttons[i].display = false;
-				buttons[i].setUnclicked();
-			}
-
 			updateMainviewAndSideview();
-			setButtonClicked();
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -326,32 +291,6 @@
 
 			var question_prompt = document.getElementById("question-prompt");
 			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
-		};
-
-		// setButtonClicked is responsible for presetting the most conveinent
-		// assignment type when questions change.
-		function setButtonClicked() {
-			for (var i = 0; i < buttons.length; i++){
-				buttons[i].setUnclicked();
-				buttons[i].display = false;
-			}
-
-			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
-				var player = quiz.getCurrentQuestion().answer;
-
-				if (player.motionCoords.length > 0) {
-					buttons[0].setClicked();
-				} else if (player.dropback.length > 0) {
-					buttons[1].setClicked();
-				} else if (player.run.length > 0) {
-					buttons[2].setClicked();
-				} else if (player.route.length > 0) {
-					buttons[3].setClicked();
-				} else if (player.blockingAssignmentArray.length > 0) {
-					buttons[4].setClicked();
-				}
-			}
-
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
