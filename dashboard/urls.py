@@ -44,8 +44,9 @@ urlpatterns = [
 	url(r'^quizzes/submit$', views.submit_quiz, name='submit_quiz'),
 	url(r'^quizzes/custom$', views.custom_quizzes, name='custom_quizzes'),
 
-	url(r'^quizzes/custom/identification$', views.identification_quizzes, name='identification_quizzes'),
-	url(r'^quizzes/custom/assignment$', views.assignment_quizzes, name='assignment_quizzes'),
+	url(r'^quizzes/custom/formation$', views.formation_quizzes, name='formation_quizzes'),
+	url(r'^quizzes/custom/play$', views.play_quizzes, name='play_quizzes'),
+	url(r'^quizzes/custom/concept$', views.concept_quizzes, name='concept_quizzes'),
 
 	# Analytics
 	url(r'^analytics$', views.plays_analytics, name='plays_analytics'), # this will direct to the play analyitics until I implement an analytics page

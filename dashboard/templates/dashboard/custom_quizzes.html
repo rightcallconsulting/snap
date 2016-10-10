@@ -9,6 +9,8 @@
 			</div>
 
 			<form action="/quizzes/custom/formation" method="post">
+				{% csrf_token %}
+
 				<div class="number-of-questions">
 					Number of Questions: 
 					<i class="fa fa-chevron-left"></i>
@@ -57,7 +59,10 @@
 			<div class="header">
 				PLAY QUIZ
 			</div>
+
 			<form action="/quizzes/custom/play" method="post">
+				{% csrf_token %}
+
 				<div class="number-of-questions">
 					Number of Questions:
 					<i class="fa fa-chevron-left"></i>
@@ -120,7 +125,10 @@
 			<div class="header">
 				CONCEPT QUIZ
 			</div>
+
 			<form action="/quizzes/custom/concept" method="post">
+				{% csrf_token %}
+				
 				<div class="number-of-questions">
 					Number of Questions:
 					<i class="fa fa-chevron-left"></i>

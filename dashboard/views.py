@@ -917,25 +917,61 @@ def custom_quizzes(request, unit="offense"):
 	})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
-def identification_quizzes(request, unit="offense"):
+def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	return render(request, 'dashboard/identification_quiz.html', {
-		'player': player,
-		'team': team,
-		'page_header': 'IDENTIFICATION QUIZZES'
-	})
+	type_of_quiz = request.POST['type']
+
+	if type_of_quiz == "identification":
+		return render(request, 'dashboard/formation_identification_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'FORMATION QUIZ'
+		})
+	elif type_of_quiz == "alignment":
+		return render(request, 'dashboard/formation_alignment_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'FORMATION QUIZ'
+		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
-def assignment_quizzes(request, unit="offense"):
+def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	return render(request, 'dashboard/assignment_quiz.html', {
-		'player': player,
-		'team': team,
-		'page_header': 'ASSIGNMENT QUIZZES'
-	})
+	type_of_quiz = request.POST['type']
+	
+	if type_of_quiz == "identification":
+		return render(request, 'dashboard/play_identification_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'PLAY QUIZ'
+		})
+	elif type_of_quiz == "assignment":
+		return render(request, 'dashboard/play_assignment_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'PLAY QUIZ'
+		})
 
+@user_passes_test(lambda u: u.myuser.is_a_player)
+def concept_quizzes(request, unit="offense"):
+	player = request.user.player
+	team = player.team
+	type_of_quiz = request.POST['type']
+	
+	if type_of_quiz == "identification":
+		return render(request, 'dashboard/concept_identification_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'CONCEPT QUIZ'
+		})
+	elif type_of_quiz == "assignment":
+		return render(request, 'dashboard/concept_assignment_quiz.html', {
+			'player': player,
+			'team': team,
+			'page_header': 'CONCEPT QUIZ'
+		})
 
 # Analytics
 @login_required
