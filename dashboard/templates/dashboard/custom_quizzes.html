@@ -29,7 +29,7 @@
 
 				<div class="type-of-questions">
 					Type:
-					<select name="type" class="unit-form form-sm">
+					<select name="type" class="unit-form form-sm" onchange="updateForm(this)">
 						<optgroup>
 							<option value="identification">Identification</option>
 							<option value="alignment">Alignment</option>
@@ -41,7 +41,7 @@
 
 				<div class="position" hidden="true">
 					Position:
-					<select name="type" class="unit-form form-sm position">
+					<select name="position" class="unit-form form-sm position">
 						<optgroup>
 							<option value="qb">QB</option>
 							<option value="x">X</option>
@@ -78,7 +78,7 @@
 
 				<div class="type-of-questions">
 					Type:
-					<select name="type" class="unit-form form-sm">
+					<select name="type" class="unit-form form-sm" onchange="updateForm(this)">
 						<optgroup>
 							<option value="identification">Identification</option>
 							<option value="assignment">Assignment</option>
@@ -90,7 +90,7 @@
 
 				<div class="position" hidden="true">
 					Position: 
-					<select name="type" class="unit-form form-sm position">
+					<select name="position" class="unit-form form-sm position">
 						<optgroup>
 							<option value="qb">QB</option>
 							<option value="x">X</option>
@@ -99,7 +99,17 @@
 				</div>
 
 				<div class="type-of-assignment" hidden="true">
-					Type of Assignment: 
+					Type of Assignment:
+					<select name="type-of-assignment" class="unit-form form-sm type-of-assignment">
+						<optgroup>
+							<option value="dropback">DROPBACK</option>
+							<option value="progression">QB PROGRESSION</option>
+							<option value="motion">MOTION</option>
+							<option value="run">RUN</option>
+							<option value="route">ROUTE</option>
+							<option value="blocks">BLOCKS</option>
+						</optgroup>
+					</select>
 				</div>
 
 				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
@@ -131,7 +141,7 @@
 
 				<div class="type-of-questions">
 					Type:
-					<select name="type" class="unit-form form-sm">
+					<select name="type" class="unit-form form-sm" onchange="updateForm(this)">
 						<optgroup>
 							<option value="identification">Identification</option>
 							<option value="assignment">Assignment</option>
@@ -143,7 +153,7 @@
 
 				<div class="position" hidden="true">
 					Position: 
-					<select name="type" class="unit-form form-sm position">
+					<select name="position" class="unit-form form-sm position">
 						<optgroup>
 							<option value="qb">QB</option>
 							<option value="x">X</option>
@@ -183,5 +193,35 @@
 			
 			current_number.textContent = number_of_questions.toString();
 		});
+
+		function updateForm(selected) {
+			var form = selected.parentElement.parentElement;
+
+			var hr = form.querySelector("hr");
+			var position = form.querySelector(".position");
+			var type_of_assignment = form.querySelector(".type-of-assignment");
+
+			var value = selected.value;
+
+			if (value === "alignment" || value === "assignment") {
+				hr.removeAttribute("hidden");
+				position.removeAttribute("hidden");
+
+				if (type_of_assignment != null) {
+					type_of_assignment.removeAttribute("hidden");
+				}
+			} else if (value === "identification") {
+				hr.removeAttribute("hidden");
+				hr.setAttribute("hidden", "true");
+
+				position.removeAttribute("hidden");
+				position.setAttribute("hidden", "true");
+
+				if (type_of_assignment != null) {
+					type_of_assignment.removeAttribute("hidden");
+					type_of_assignment.setAttribute("hidden", "true");
+				}
+			}
+		}
 	</script>
 {% endblock %}
