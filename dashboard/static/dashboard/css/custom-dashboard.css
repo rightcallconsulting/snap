@@ -714,16 +714,12 @@ div.take-quiz-form p.current-number {
 }
 
 div.take-quiz-form .unit-form {
-	width: 80%;
+	width: 100%;
 	margin: 0;
 }
 
 div.take-quiz-form .unit-form.position {
 	width: 20%;
-}
-
-div.take-quiz-form .unit-form.type-of-assignment {
-	width: 50%;
 }
 
 div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
