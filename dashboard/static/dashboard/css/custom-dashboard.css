@@ -300,7 +300,28 @@ div#sideview {
 	padding: 0;
 }
 
-div#sideview-header {
+div#sideview.no-border {
+	border: none;
+}
+
+div#questions-sideview {
+	height: 49%;
+	border: #777;
+	border-style: solid;
+	border-width: 2px;
+	margin: 0 0 2% 0;
+}
+
+div#choices-sideview {
+	height: 49%;
+	border: #777;
+	border-style: solid;
+	border-width: 2px;
+}
+
+div#sideview-header,
+div#questions-header,
+div#choices-header {
 	height: 50px;
 	line-height: 50px;
 	width: 100%;
