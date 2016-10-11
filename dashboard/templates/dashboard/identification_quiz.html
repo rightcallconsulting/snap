@@ -12,7 +12,7 @@
 
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
-				{{ quiz.name }}
+				Identification Quiz
 			</div>
 
 			<div id="quiz-box">
@@ -306,22 +306,32 @@
 			}
 
 			$("#choices-buttons").empty();
-			var number_of_choices = 0;
+			var choice_names = [];
 			var choices_buttons = document.getElementById("choices-buttons");
-			for (i in choices) {
+			for (var i = 0; i < choices.length; ++i) {
+				var create_button = 1;
 				if (choices[i] != quiz.getCurrentQuestionName()) {
-					// Create a button for this choice.
-					var new_choice_button = document.createElement("button");
-					new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
-					new_choice_button.setAttribute("name", choices[i]);
-					new_choice_button.setAttribute("class", "btn btn-primary choice-button");
-					new_choice_button.textContent = choices[i];
+					// If a button with this name already exists continue to the next iteration of the loop
+					for (j in choice_names) {
+						if (choice_names[j] === choices[i]) {
+							create_button = 0;
+						}
+					} 
 
-					choices_buttons.appendChild(new_choice_button);
-					number_of_choices += 1;
+					if (create_button === 1) {
+						// Create a button for this choice.
+						var new_choice_button = document.createElement("button");
+						new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
+						new_choice_button.setAttribute("name", choices[i]);
+						new_choice_button.setAttribute("class", "btn btn-primary choice-button");
+						new_choice_button.textContent = choices[i];
+
+						choices_buttons.appendChild(new_choice_button);
+						choice_names.push(choices[i]);
+					}
 				}
 
-				if (number_of_choices === 9) {
+				if (choice_names.length === 9) {
 					break;
 				}
 			}
@@ -333,12 +343,16 @@
 			new_choice_button.textContent = quiz.getCurrentQuestionName();
 
 			var number_of_choice_buttons = choices_buttons.childElementCount;
-			var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons));
-			for (var i = 0; i < number_of_choice_buttons; ++i) {
+			var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons+1));
+			for (var i = 0; i <= number_of_choice_buttons; ++i) {
 				if (i === index_to_insert_answer) {
 					choices_buttons.insertBefore(new_choice_button, choices_buttons.childNodes[i]);
 					break;
 				}
+			}
+
+			if (index_to_insert_answer > number_of_choice_buttons) {
+				choices_buttons.appendChild(new_choice_button);
 			}
 
 			var question_prompt = document.getElementById("question-prompt");

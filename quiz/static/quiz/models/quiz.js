@@ -363,7 +363,7 @@ Quiz.prototype.buildIdentificationQuestions = function() {
 };
 
 // getCurrentQuestionName returns the names of the question.
-Quiz.prototype.getCurrentQuestionName = function(attempt) {
+Quiz.prototype.getCurrentQuestionName = function() {
 	if (!this.isEmpty()) {
 		return this.questions[this.currentQuestionIndex].getName();
 	}

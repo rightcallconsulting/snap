@@ -971,12 +971,14 @@ def concept_quizzes(request, unit="offense"):
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
+			'concepts': concepts,
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "assignment":
 		return render(request, 'dashboard/concept_assignment_quiz.html', {
 			'player': player,
 			'team': team,
+			'concepts': concepts,
 			'page_header': 'CONCEPT QUIZ'
 		})
 
