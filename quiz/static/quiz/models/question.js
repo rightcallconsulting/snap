@@ -198,7 +198,7 @@ Question.prototype.getTestedPosition = function(player_positions){
 Question.prototype.check = function(attempt) {
 	if (attempt !== null) {
 		if (typeof attempt === "string") {
-			if (this.attempt === this.answer) {
+			if (attempt === this.answer) {
 				this.score = 1;
 			} else {
 				this.score = 0;
