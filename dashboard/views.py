@@ -935,7 +935,7 @@ def formation_quizzes(request, unit="offense"):
 		print position
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
 		print position_groups
-		return render(request, 'dashboard/formation_alignment_quiz.html', {
+		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,
@@ -960,7 +960,7 @@ def play_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
-		return render(request, 'dashboard/play_assignment_quiz.html', {
+		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'plays': plays,
@@ -985,7 +985,7 @@ def concept_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
-		return render(request, 'dashboard/concept_assignment_quiz.html', {
+		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'concepts': concepts,
