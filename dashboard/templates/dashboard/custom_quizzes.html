@@ -8,14 +8,15 @@
 				FORMATION QUIZ
 			</div>
 
-			<form action="/quizzes/custom/formation" method="post">
-				{% csrf_token %}
+			<form action="/quizzes/custom/formation" method="get">
+				
 
 				<div class="number-of-questions">
 					Number of Questions: 
 					<i class="fa fa-chevron-left"></i>
 					<p class="current-number"> 5 </p>
 					<i class="fa fa-chevron-right"></i> 
+					<input class="current_number" name="number_of_questions" value="5" hidden>
 				</div>
 
 				<div class="order-of-questions">
@@ -23,8 +24,6 @@
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
 							<option value="random">Random</option>
-							<option value="missed">Most Missed</option>
-							<option value="recent">Most Recent</option>
 						</optgroup>
 					</select>
 				</div>
@@ -45,8 +44,9 @@
 					Position:
 					<select name="position" class="unit-form form-sm position">
 						<optgroup>
-							<option value="qb">QB</option>
-							<option value="x">X</option>
+							{% for group in position_groups %}
+							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							{% endfor %}
 						</optgroup>
 					</select>
 				</div>
@@ -60,14 +60,13 @@
 				PLAY QUIZ
 			</div>
 
-			<form action="/quizzes/custom/play" method="post">
-				{% csrf_token %}
-
+			<form action="/quizzes/custom/play" method="get">
 				<div class="number-of-questions">
 					Number of Questions:
 					<i class="fa fa-chevron-left"></i>
 					<p class="current-number"> 5 </p>
-					<i class="fa fa-chevron-right"></i> 
+					<i class="fa fa-chevron-right"></i>
+					<input class="current_number" name="number_of_questions" value="5" hidden>
 				</div>
 
 				<div class="order-of-questions">
@@ -75,8 +74,6 @@
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
 							<option value="random">Random</option>
-							<option value="missed">Most Missed</option>
-							<option value="recent">Most Recent</option>
 						</optgroup>
 					</select>
 				</div>
@@ -97,13 +94,14 @@
 					Position: 
 					<select name="position" class="unit-form form-sm position">
 						<optgroup>
-							<option value="qb">QB</option>
-							<option value="x">X</option>
+							{% for group in position_groups %}
+							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							{% endfor %}
 						</optgroup>
 					</select>
 				</div>
 
-				<div class="type-of-assignment" hidden="true">
+				<!--<div class="type-of-assignment" hidden="true">
 					Type of Assignment:
 					<select name="type-of-assignment" class="unit-form form-sm type-of-assignment">
 						<optgroup>
@@ -115,7 +113,7 @@
 							<option value="blocks">Block</option>
 						</optgroup>
 					</select>
-				</div>
+				</div>-->
 
 				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
 			</form>
@@ -126,14 +124,13 @@
 				CONCEPT QUIZ
 			</div>
 
-			<form action="/quizzes/custom/concept" method="post">
-				{% csrf_token %}
-
+			<form action="/quizzes/custom/concept" method="get">
 				<div class="number-of-questions">
 					Number of Questions:
 					<i class="fa fa-chevron-left"></i>
 					<p class="current-number"> 5 </p>
-					<i class="fa fa-chevron-right"></i>  
+					<i class="fa fa-chevron-right"></i>
+					<input class="current_number" name="number_of_questions" value="5" hidden>
 				</div>
 
 				<div class="order-of-questions">
@@ -141,8 +138,6 @@
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
 							<option value="random">Random</option>
-							<option value="missed">Most Missed</option>
-							<option value="recent">Most Recent</option>
 						</optgroup>
 					</select>
 				</div>
@@ -163,8 +158,9 @@
 					Position: 
 					<select name="position" class="unit-form form-sm position">
 						<optgroup>
-							<option value="qb">QB</option>
-							<option value="x">X</option>
+							{% for group in position_groups %}
+							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							{% endfor %}
 						</optgroup>
 					</select>
 				</div>
@@ -181,24 +177,28 @@
 		$("i.fa-chevron-left").click(function(event) {
 			var arrow_parent = $(this).parent()[0];
 			var current_number = arrow_parent.querySelector("p.current-number");
+			var current_input_number = arrow_parent.querySelector("input.current_number");
 
 			var number_of_questions = parseInt(current_number.textContent);
 			if (number_of_questions > 1) {
 				number_of_questions -= 1;	
 			}
-			
+
+			current_input_number.setAttribute("value", number_of_questions);
 			current_number.textContent = number_of_questions.toString();	
 		});
 
 		$("i.fa-chevron-right").click(function(event) {
 			var arrow_parent = $(this).parent()[0];
 			var current_number = arrow_parent.querySelector("p.current-number");
+			var current_input_number = arrow_parent.querySelector("input.current_number");
 
 			var number_of_questions = parseInt(current_number.textContent);
 			if (number_of_questions < 20) {
 				number_of_questions += 1;	
 			}
-			
+
+			current_input_number.setAttribute("value", number_of_questions);
 			current_number.textContent = number_of_questions.toString();
 		});
 

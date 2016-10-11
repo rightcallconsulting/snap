@@ -879,7 +879,7 @@ def take_quiz(request, quiz_id):
 		quiz_formations = quiz.formations.all()
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
-		position_groups = PlayerGroup.objects.filter(team=team,position_group=True,players__in=[player])
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 		return render(request, 'dashboard/take_quiz.html', {
 			'quiz': quiz,
@@ -908,10 +908,10 @@ def submit_quiz(request):
 def custom_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	order = ['Random', 'Difficulty']
+	position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 	return render(request, 'dashboard/custom_quizzes.html', {
 		'player': player,
-		'quiz_order_options': order,
+		'position_groups': position_groups,
 		'team': team,
 		'page_header': 'CUSTOM QUIZZES'
 	})
@@ -920,7 +920,7 @@ def custom_quizzes(request, unit="offense"):
 def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	type_of_quiz = request.POST['type']
+	type_of_quiz = request.GET['type']
 	formations = Formation.objects.filter(team=team, scout=False)
 
 	if type_of_quiz == "identification":
@@ -931,10 +931,15 @@ def formation_quizzes(request, unit="offense"):
 			'page_header': 'FORMATION QUIZ'
 		})
 	elif type_of_quiz == "alignment":
+		position = request.GET['position'].upper()
+		print position
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+		print position_groups
 		return render(request, 'dashboard/formation_alignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,
+			'position_groups': position_groups,
 			'page_header': 'FORMATION QUIZ'
 		})
 
@@ -942,7 +947,7 @@ def formation_quizzes(request, unit="offense"):
 def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	type_of_quiz = request.POST['type']
+	type_of_quiz = request.GET['type']
 	plays = Play.objects.filter(team=team, scout=False)
 	
 	if type_of_quiz == "identification":
@@ -953,10 +958,13 @@ def play_quizzes(request, unit="offense"):
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "assignment":
+		position = request.GET['position'].upper()
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
 		return render(request, 'dashboard/play_assignment_quiz.html', {
 			'player': player,
 			'team': team,
-			'concepts': concepts,
+			'plays': plays,
+			'position_groups': position_groups,
 			'page_header': 'PLAY QUIZ'
 		})
 
@@ -964,7 +972,7 @@ def play_quizzes(request, unit="offense"):
 def concept_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	type_of_quiz = request.POST['type']
+	type_of_quiz = request.GET['type']
 	concepts = Concept.objects.filter(team=team)
 	
 	if type_of_quiz == "identification":
@@ -975,10 +983,13 @@ def concept_quizzes(request, unit="offense"):
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "assignment":
+		position = request.GET['position'].upper()
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
 		return render(request, 'dashboard/concept_assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'concepts': concepts,
+			'position_groups': position_groups,
 			'page_header': 'CONCEPT QUIZ'
 		})
 

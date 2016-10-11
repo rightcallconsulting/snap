@@ -93,7 +93,7 @@
 			quiz.unit = '{{ quiz.unit }}';
 
 			var position_groups = [];
-			{% for group in positionGroups %}
+			{% for group in position_groups %}
 			var player_position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
 			if (player_position[0] !== null) {
 				position_groups.push(player_position)
@@ -101,19 +101,19 @@
 			{% endfor %}
 
 			var formationJsonFromDatabase = "";
-			{% for formation in quizFormations %}
+			{% for formation in formations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
 			{% endfor %}
 
 			var playJsonFromDatabase = "";
-			{% for play in quizPlays %}
+			{% for play in plays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
 			{% endfor %}
 
 			var conceptJsonFromDatabase = "";
-			{% for concept in quizConcepts %}
+			{% for concept in concepts %}
 			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
