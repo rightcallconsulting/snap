@@ -400,7 +400,11 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 			this.nextQuestion();
 		} else {
 			this.results.push(0);
-			this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
+			if (typeof this.attempt === "string") {
+				this.nextQuestion();
+			} else {
+				this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
+			}
 		}
 	}
 };

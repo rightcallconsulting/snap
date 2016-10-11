@@ -921,10 +921,10 @@ def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.POST['type']
-	formations = Formation.objects.filter(team=team, unit="offense")
+	formations = Formation.objects.filter(team=team, scout=False)
 
 	if type_of_quiz == "identification":
-		return render(request, 'dashboard/formation_identification_quiz.html', {
+		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,
@@ -943,17 +943,20 @@ def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.POST['type']
+	plays = Play.objects.filter(team=team, scout=False)
 	
 	if type_of_quiz == "identification":
-		return render(request, 'dashboard/play_identification_quiz.html', {
+		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
+			'plays': plays,
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "assignment":
 		return render(request, 'dashboard/play_assignment_quiz.html', {
 			'player': player,
 			'team': team,
+			'concepts': concepts,
 			'page_header': 'PLAY QUIZ'
 		})
 
@@ -962,9 +965,10 @@ def concept_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.POST['type']
+	concepts = Concept.objects.filter(team=team)
 	
 	if type_of_quiz == "identification":
-		return render(request, 'dashboard/concept_identification_quiz.html', {
+		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'page_header': 'CONCEPT QUIZ'

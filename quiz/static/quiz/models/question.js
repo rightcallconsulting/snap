@@ -161,6 +161,19 @@ Question.prototype.draw = function(field) {
 	}
 };
 
+// drawIdentification displays this question and the assignments.
+Question.prototype.drawIdentification = function(field) {
+	if (this.question instanceof Play || this.question instanceof Concept) {
+		this.question.drawAssignments(field);
+	}
+
+	this.question.drawPlayers(field);
+	
+	if (millis() - this.startTime < 2000) {
+		//this.drawPrompt(field);
+	}
+};
+
 // getName returns the name of the Question
 Question.prototype.getName = function() {
 	return this.question.name;
