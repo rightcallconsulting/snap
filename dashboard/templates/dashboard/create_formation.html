@@ -264,9 +264,6 @@
 
 		function mousePressed() {
 			playerBeingDragged = formation.mouseInPlayer(field);
-
-			// return false to prevent default behavior
-			return false;
 		};
 
 		function mouseDragged() {
@@ -355,9 +352,6 @@
 
 				return false;
 			}
-
-			// return false to prevent default behavior
-			return false;
 		};
 
 		function keyPressed() {
@@ -570,7 +564,6 @@
 
 			// Add the new button to the sideview button div.
 			sideview_buttons_div.appendChild(new_formation_button);
-			return;
 		});
 
 		$("#delete-button").click(function(event) {
