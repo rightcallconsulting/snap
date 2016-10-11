@@ -120,6 +120,11 @@
 
 
 			quiz.buildIdentificationQuestions();
+
+			if (quiz.isEmpty()) {
+				window.location.replace("/quizzes/custom");
+			}
+
 			choices = shuffle_choices(choices);
 
 			quiz.attempt = quiz.getSelected()[0];
@@ -189,7 +194,7 @@
 			var csrf_token = "{{ csrf_token }}";
 			quiz.submit(csrf_token);
 
-			window.location.replace("/quizzes/todo");
+			window.location.replace("/quizzes/custom");
 		});
 
 		$("#check-answer-button").click(function(event) {

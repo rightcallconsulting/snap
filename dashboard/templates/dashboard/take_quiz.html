@@ -121,6 +121,10 @@
 
 			quiz.buildQuestions(position_groups);
 
+			if (quiz.isEmpty()) {
+				window.location.replace("/quizzes/todo");
+			}
+
 			quiz.attempt = quiz.getSelected()[0];
 			if (quiz.attempt != null) {
 				quiz.attempt.motionCords = [];

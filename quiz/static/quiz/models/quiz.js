@@ -455,27 +455,37 @@ Quiz.prototype.setAttempt = function(){
 // getSelected returns the selected player in this question if it is of type
 // Play or Concept, or else it returns null.
 Quiz.prototype.getSelected = function() {
-	return this.questions[this.currentQuestionIndex].getSelected();
+	if (!this.isEmpty()) {
+		return this.questions[this.currentQuestionIndex].getSelected();
+	}
 };
 
 // mouseInPlayer returns the player that the mouse is in or null for this
 // quiz.
 Quiz.prototype.mouseInPlayer = function(field) {
-	return this.questions[this.currentQuestionIndex].mouseInPlayer(field);
+	if (!this.isEmpty()) {
+		return this.questions[this.currentQuestionIndex].mouseInPlayer(field);
+	}
 };
 
 // getCurrentAnswer returns a deep copy of the current questions answer.
 Quiz.prototype.getCurrentAnswer = function() {
-	return this.questions[this.currentQuestionIndex].getAnswer();
+	if (!this.isEmpty()) {
+		return this.questions[this.currentQuestionIndex].getAnswer();
+	}
 };
 
 Quiz.prototype.getCurrentQuestion = function(){
-	return this.questions[this.currentQuestionIndex]
+	if (!this.isEmpty()) {
+		return this.questions[this.currentQuestionIndex];
+	}
 }
 
 // getCurrentQuestionIndex returns the index of the current question.
 Quiz.prototype.getCurrentQuestionIndex = function() {
-	return this.currentQuestionIndex;
+	if (!this.isEmpty()) {
+		return this.currentQuestionIndex;
+	}
 };
 
 // submit shows the player their results on the quiz and then navigates back to
