@@ -26,7 +26,7 @@ var Question = function(config) {
 // based on the current content in the question variable and the positons of
 // the player who is attempting the question.
 Question.prototype.buildQuestionAndAnswer = function(player_positions) {
-	var positions = shuffle(player_positions);
+	var positions = shuffle_positions(player_positions);
 	for (i in positions) {
 		if (this.question instanceof Formation) {
 			if (positions[i][1] === "Quarterback") {
@@ -136,6 +136,22 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 	return 1;
 };
 
+// buildIdentificationQuestionAndAnswer creates an appropriate creates a 
+// question and answer based on the current content in the question variable.
+Question.prototype.buildIdentificationQuestionAndAnswer = function() {
+	this.answer = this.question.name;
+
+	if (this.question instanceof Formation) {
+		this.prompt = "Choose the name of this Formation";
+	} else if (this.question instanceof Play) {
+		this.prompt = "Choose the name of this Play";
+	} else if (this.question instanceof Concept) {
+		this.prompt = "Choose the name of this Concept";
+	}
+
+	return 0;
+};
+
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
@@ -181,7 +197,13 @@ Question.prototype.getTestedPosition = function(player_positions){
 // posts an attempted question to the database.
 Question.prototype.check = function(attempt) {
 	if (attempt !== null) {
-		if (this.question instanceof Formation) {
+		if (typeof attempt === "string") {
+			if (this.attempt === this.answer) {
+				this.score = 1;
+			} else {
+				this.score = 0;
+			}
+		} else if (this.question instanceof Formation) {
 			var dist = sqrt(pow(attempt.x - this.answer.x, 2) + pow(attempt.y - this.answer.y, 2));
 
 			if (dist < 1) {
@@ -189,7 +211,7 @@ Question.prototype.check = function(attempt) {
 			} else {
 				this.score = 0;
 			}
-		} else {
+		} else if (this.question instanceof Play || this.question instanceof Concept) {
 			if(this.checkAssignments(attempt)){
 				this.score = 1;
 			}else{
@@ -386,7 +408,12 @@ Question.prototype.deepCopy = function() {
 	});
 
 	deepCopy.question = this.question.deepCopy();
-	deepCopy.answer = this.answer.deepCopy();
+	
+	if (typeof this.answer === "string") {
+		deepCopy.answer = this.answer;
+	} else {
+		deepCopy.answer = this.answer.deepCopy();
+	}
 
 	return deepCopy;
 };
@@ -395,7 +422,7 @@ function shuffle_positions(array) {
 	var result = [];
 
 	for (i in array) {
-		result.push(array[i][0], array[i][1]);
+		result.push([array[i][0], array[i][1]]);
 	}
 
 	var currentPositionIndex = array.length;
@@ -409,9 +436,9 @@ function shuffle_positions(array) {
 		currentPositionIndex -= 1;
 
 		// Swap it with the current element.
-		temporaryPosition = result[currentQuestionIndex];
-		result[currentQuestionIndex] = result[randomPositionIndex];
-		result[randomQuestionIndex] = temporaryPosition;
+		temporaryPosition = result[currentPositionIndex];
+		result[currentPositionIndex] = result[randomPositionIndex];
+		result[randomPositionIndex] = temporaryPosition;
 	}
 
 	return result;

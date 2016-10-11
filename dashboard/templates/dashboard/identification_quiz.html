@@ -66,7 +66,7 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var quiz;
-		var buttons = [];
+		var choices = [];
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -94,41 +94,34 @@
 
 			myCanvas.parent("quiz-box");
 
-			// Create quiz and load it's content from Json.
-			{% block quiz %}
-			//quiz = new Quiz({});
-			{% endblock %}
-			quiz.name = '{{ quiz.name }}';
-			quiz.unit = '{{ quiz.unit }}';
-
-			var position_groups = [];
-			{% for group in positionGroups %}
-			var player_position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
-			if (player_position[0] !== null) {
-				position_groups.push(player_position)
-			}
-			{% endfor %}
+			quiz = new Quiz({});
+			quiz.name = "Identification Quiz";
+			quiz.unit = "{{ quiz.unit }}";
 
 			var formationJsonFromDatabase = "";
-			{% for formation in quizFormations %}
+			{% for formation in formations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
+			choices.push("{{ formation.name|safe }}")
 			{% endfor %}
 
 			var playJsonFromDatabase = "";
-			{% for play in quizPlays %}
+			{% for play in plays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
+			choices.push("{{ play.name|safe }}")
 			{% endfor %}
 
 			var conceptJsonFromDatabase = "";
-			{% for concept in quizConcepts %}
+			{% for concept in concepts %}
 			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
+			choices.push("{{ concept.name|safe }}")
 			{% endfor %}
 
 
-			quiz.buildQuestions(position_groups);
+			quiz.buildIdentificationQuestions();
+			choices = shuffle_choices(choices);
 
 			quiz.attempt = quiz.getSelected()[0];
 			if (quiz.attempt != null) {
@@ -159,7 +152,7 @@
 		};
 
 		function draw() {
-			if(quiz.over){
+			if (quiz.over) {
 				quiz.drawQuizSummary(field);
 				return;
 			}
@@ -172,17 +165,7 @@
 			field.drawBackground(quiz, height, width);
 
 			var question = quiz.getCurrentQuestion();
-			
-			if (question !== null) {
-				if(question.feedbackStartTime > 0 && millis() - question.feedbackStartTime > 2000){
-					question.feedbackStartTime = 0;
-					quiz.nextQuestion();
-					updateMainviewAndSideview();
-				}
-
-				quiz.draw(field);
-				fill(176,176,176);
-			}
+			question.draw(field);
 		};
 
 		//*******************************************************************//
@@ -216,6 +199,7 @@
 
 			quiz.checkCurrentQuestion(path, csrf_token);
 
+			choices = shuffle_choices(choices);
 			updateMainviewAndSideview();
 		});
 
@@ -225,6 +209,7 @@
 
 			quiz.skipCurrentQuestion(path, csrf_token);
 
+			choices = shuffle_choices(choices);
 			updateMainviewAndSideview();
 		});
 
@@ -265,14 +250,38 @@
 			}
 		});
 
-		function updateMainviewAndSideview() {
-			// Update mainview header.
-			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = quiz.getCurrentQuestionName();
+		function changeSelectedChoice(selected) {
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+			
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary choice-button");
+			}
 
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to 
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success choice-button");
+
+				quiz.attempt = new_selected.textContent;
+			}
+		};
+
+		function updateMainviewAndSideview() {
 			// Remove and update sideview buttons.
-			$("#sideview-buttons").empty();
-			var sideview_buttons = document.getElementById("sideview-buttons");
+			$("#questions-buttons").empty();
+			var questions_buttons = document.getElementById("questions-buttons");
 
 			for (i in quiz.questions) {
 				var question_index = int(i);
@@ -293,7 +302,43 @@
 				}
 
 				sideview_question_button.textContent = question_number.toString();
-				sideview_buttons.appendChild(sideview_question_button);
+				questions_buttons.appendChild(sideview_question_button);
+			}
+
+			$("#choices-buttons").empty();
+			var number_of_choices = 0;
+			var choices_buttons = document.getElementById("choices-buttons");
+			for (i in choices) {
+				if (choices[i] != quiz.getCurrentQuestionName()) {
+					// Create a button for this choice.
+					var new_choice_button = document.createElement("button");
+					new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
+					new_choice_button.setAttribute("name", choices[i]);
+					new_choice_button.setAttribute("class", "btn btn-primary choice-button");
+					new_choice_button.textContent = choices[i];
+
+					choices_buttons.appendChild(new_choice_button);
+					number_of_choices += 1;
+				}
+
+				if (number_of_choices === 9) {
+					break;
+				}
+			}
+
+			var new_choice_button = document.createElement("button");
+			new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
+			new_choice_button.setAttribute("name", quiz.getCurrentQuestionName());
+			new_choice_button.setAttribute("class", "btn btn-primary choice-button");
+			new_choice_button.textContent = quiz.getCurrentQuestionName();
+
+			var number_of_choice_buttons = choices_buttons.childElementCount;
+			var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons));
+			for (var i = 0; i < number_of_choice_buttons; ++i) {
+				if (i === index_to_insert_answer) {
+					choices_buttons.insertBefore(new_choice_button, choices_buttons.childNodes[i]);
+					break;
+				}
 			}
 
 			var question_prompt = document.getElementById("question-prompt");
@@ -303,5 +348,31 @@
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
 		function resizeMainViewObjects() {};
+
+		function shuffle_choices(array) {
+			var result = [];
+
+			for (i in array) {
+				result.push(array[i]);
+			}
+
+			var currentChoiceIndex = array.length;
+			var temporaryChoice;
+			var randomChoiceIndex;
+
+			// While the current index is not 0 (there is nothing left to shuffle).
+			while (currentChoiceIndex != 0) {
+				// Pick a remaining question index at random.
+				randomChoiceIndex = Math.floor(Math.random() * currentChoiceIndex);
+				currentChoiceIndex -= 1;
+
+				// Swap it with the current element.
+				temporaryChoice = result[currentChoiceIndex];
+				result[currentChoiceIndex] = result[randomChoiceIndex];
+				result[randomChoiceIndex] = temporaryChoice;
+			}
+
+			return result;
+		};
 	</script>
 {% endblock %}

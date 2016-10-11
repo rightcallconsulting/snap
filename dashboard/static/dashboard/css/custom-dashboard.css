@@ -334,16 +334,28 @@ div#choices-header {
 	font-size: large;
 }
 
-div#sideview-buttons {
-	height: calc(100% - 50px);
+div#sideview-buttons,
+div#choices-buttons {
+	height: calc(100% - 52px);
 	width: 100%;
 	overflow: scroll;
 	margin: 0;
 	border-width: 0;
-	padding-top: 6px;
-	padding-right: 6px;
-	padding-bottom: 0;
-	padding-left: 6px;
+	padding: 6px 6px 0 6px;
+}
+
+div#questions-buttons {
+	height: calc(100% - 52px);
+	width: 100%;
+	overflow: scroll;
+	margin: 0;
+	border: none;
+	padding: 0;
+}
+
+div#choices-buttons {
+	text-align: center;
+	padding: 0;
 }
 
 div#sideview-buttons.no-padding {
@@ -357,6 +369,10 @@ button.sideview-button {
 	margin-left: auto;
 	margin-bottom: 6px;
 	margin-right: auto;
+}
+
+button.choice-button {
+	margin: 5px 2px 0 2px;
 }
 
 div#offense-defense-toggle {
@@ -509,7 +525,6 @@ quizzes tables
 	text-align: center;
 	margin: 0;
 }
-
 
 .quizzes table tr:nth-child(odd) {
 	background: #ddd;

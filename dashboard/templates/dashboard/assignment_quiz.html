@@ -88,9 +88,7 @@
 			myCanvas.parent("quiz-box");
 
 			// Create quiz and load it's content from Json.
-			{% block quiz %}
-			//quiz = new Quiz({});
-			{% endblock %}
+			quiz = new Quiz({});
 			quiz.name = '{{ quiz.name }}';
 			quiz.unit = '{{ quiz.unit }}';
 

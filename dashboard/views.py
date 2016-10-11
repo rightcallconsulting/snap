@@ -921,17 +921,20 @@ def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.POST['type']
+	formations = Formation.objects.filter(team=team, unit="offense")
 
 	if type_of_quiz == "identification":
 		return render(request, 'dashboard/formation_identification_quiz.html', {
 			'player': player,
 			'team': team,
+			'formations': formations,
 			'page_header': 'FORMATION QUIZ'
 		})
 	elif type_of_quiz == "alignment":
 		return render(request, 'dashboard/formation_alignment_quiz.html', {
 			'player': player,
 			'team': team,
+			'formations': formations,
 			'page_header': 'FORMATION QUIZ'
 		})
 

@@ -175,72 +175,71 @@ Quiz.prototype.drawQuizSummary = function(field){
 		}
 	}
 
-  var resultString = "You scored " + (score).toFixed(2) + " out of " + this.questions.length;
-  var guessesString = "You had " + incorrectGuesses.toFixed(0) + " incorrect guess";
-  if(incorrectGuesses !== 1){
-    guessesString += "es";
-  }
+	var resultString = "You scored " + (score).toFixed(2) + " out of " + this.questions.length;
+	var guessesString = "You had " + incorrectGuesses.toFixed(0) + " incorrect guess";
+	if (incorrectGuesses !== 1) {
+		guessesString += "es";
+	}
+	
 	var skipString = "You skipped " + skips.toFixed(0) + " question";
-	if(skips !== 1){
+	if(skips !== 1) {
 		skipString += "s";
 	}
 
-  /*var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";*/
-  textAlign(CENTER);
-  textSize(24);
-  text(resultString, width/2, height/2-50);
-  textSize(20);
-  text(guessesString, width/2, height/2+10);
+	/*var timeString = "You took " + elapsedSeconds.toFixed(0) + " seconds";*/
+	textAlign(CENTER);
+	textSize(24);
+	text(resultString, width/2, height/2-50);
+	textSize(20);
+	text(guessesString, width/2, height/2+10);
 	//text(skipString, width/2, height/2+70);
-  //text(timeString, width/2, height/2+70);
+	//text(timeString, width/2, height/2+70);
 
-	if(this.restartButtons.length === 0){
+	if (this.restartButtons.length === 0) {
 		this.setRestartButtons(field);
 	}
 
 	this.drawRestartButtons(field);
+};
 
-}
-
-Quiz.prototype.setRestartButtons = function(field){
+Quiz.prototype.setRestartButtons = function(field) {
 	this.restartButtons = [];
 	var buttonWidth = field.yardsToPixels(field.heightInYards * field.width / field.height / 6);
 
 	var bigReset = new Button({
-    x: field.getTranslatedX(field.getYardX(width*0.25)) - buttonWidth/2,
-    y: height*0.8,
-    width: buttonWidth,
-    label: "Retake All",
+		x: field.getTranslatedX(field.getYardX(width*0.25)) - buttonWidth/2,
+		y: height*0.8,
+		width: buttonWidth,
+		label: "Retake All",
 		display: true
-  })
+	});
 
-
-  var resetMissed = new Button({
-    x: bigReset.x + bigReset.width*1.5,
-    y: bigReset.y,
-    width: bigReset.width,
-    label: "Retake Missed",
+	var resetMissed = new Button({
+		x: bigReset.x + bigReset.width*1.5,
+		y: bigReset.y,
+		width: bigReset.width,
+		label: "Retake Missed",
 		display: true
-  })
+	});
 
-  var submitQuiz = new Button({
-    x: resetMissed.x + resetMissed.width*1.5,
-    y: bigReset.y,
-    width: bigReset.width,
-    label: "Submit Quiz",
+	var submitQuiz = new Button({
+		x: resetMissed.x + resetMissed.width*1.5,
+		y: bigReset.y,
+		width: bigReset.width,
+		label: "Submit Quiz",
 		display: true
-  })
+	});
 
 	this.restartButtons.push(bigReset)
 	this.restartButtons.push(resetMissed)
 	this.restartButtons.push(submitQuiz)
-}
+};
 
 Quiz.prototype.drawRestartButtons = function(field){
 	for(var i = 0; i < this.restartButtons.length; i++){
 		this.restartButtons[i].draw(field);
 	}
-}
+};
 
 Quiz.prototype.getClickedRestartButton = function(field){
 	for(var i = 0; i < this.restartButtons.length; i++){
@@ -250,7 +249,7 @@ Quiz.prototype.getClickedRestartButton = function(field){
 		}
 	}
 	return null;
-}
+};
 
 Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	if(missedQuestionsOnly === true){
@@ -264,6 +263,7 @@ Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 			this.questions = newQuestions;
 		}
 	}
+
 	this.over = false;
 	this.results = [];
 	this.restartButtons = [];
@@ -320,6 +320,44 @@ Quiz.prototype.buildQuestions = function(player_positions) {
 			this.questions.push(question);
 		}
 	}
+
+	this.shuffle();
+	this.currentQuestionIndex = 0;
+};
+
+// buildIdentificationQuestions creates the question array. It iterates through
+// the formations, plays, or concepts and creates questions whose answers are
+// the name of that formation, play, or concept.
+Quiz.prototype.buildIdentificationQuestions = function() {
+	var question;
+
+	for (i in this.formations) {
+		question = new Question({ question: this.formations[i].deepCopy() });
+		var result = question.buildIdentificationQuestionAndAnswer();
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
+	for (i in this.plays) {
+		question = new Question({ question: this.plays[i].deepCopy() });
+		var result = question.buildIdentificationQuestionAndAnswer();
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
+	for (i in this.concepts) {
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		var result = question.buildIdentificationQuestionAndAnswer();
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
 	this.shuffle();
 	this.currentQuestionIndex = 0;
 };
@@ -360,7 +398,7 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 		if (this.questions[this.currentQuestionIndex].score === 1) {
 			this.results.push(1)
 			this.nextQuestion();
-		}else{
+		} else {
 			this.results.push(0);
 			this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
 		}
