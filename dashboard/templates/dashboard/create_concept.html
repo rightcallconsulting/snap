@@ -428,8 +428,10 @@
 					}
 
 					currentPlayerSelected.blockingAssignmentArray.push(block);
+					return false;
 				}else if(currentPlayerSelected.unit === "defense"){
 					currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
+					return false;
 				}
 			}
 
