@@ -399,7 +399,7 @@
 			}
 
 			// If the buttons are selected add the appropriate assignments
-			if (mouseX > 0 && mouseX < field.width && mouseY > 35 && mouseY < (field.height - 35) && currentPlayerSelected) {
+			if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < (field.height - offensivePlayerBar.height) && currentPlayerSelected) {
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;
