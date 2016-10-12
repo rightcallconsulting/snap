@@ -291,7 +291,7 @@
 		function drawOpening() {
 			field.drawBackground(concept, height, width);
 
-			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+			drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			concept.drawAssignments(field);
 			concept.drawPlayers(field);
@@ -399,7 +399,7 @@
 			}
 
 			// If the buttons are selected add the appropriate assignments
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height && currentPlayerSelected) {
+			if (mouseX > 0 && mouseX < field.width && mouseY > 35 && mouseY < (field.height - 35) && currentPlayerSelected) {
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;
