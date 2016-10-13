@@ -233,7 +233,7 @@
 			field.drawBackground(quiz, height, width);
 
 			var question = quiz.getCurrentQuestion();
-			
+
 			if (question !== null) {
 				if(question.feedbackStartTime > 0 && millis() - question.feedbackStartTime > 2000){
 					question.feedbackStartTime = 0;
@@ -270,6 +270,28 @@
 		function mouseDragged() {};
 
 		function mouseReleased() {
+			if(quiz.over){
+				var clickedButton = quiz.getClickedRestartButton(field)
+				if(clickedButton !== null){
+					var clickedLabel = clickedButton.label;
+					if(clickedLabel === "Retake All"){
+						quiz = quiz.restartQuiz(false);
+						quiz.setAttempt();
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Retake Missed"){
+						quiz = quiz.restartQuiz(true);
+						quiz.setAttempt();
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Submit Quiz"){
+						//var csrf_token = "{{ csrf_token }}";
+						//quiz.submit(csrf_token);
+
+						window.location.replace("/quizzes/custom");
+					}
+				}
+				return false;
+			}
+
 			// If a button is displayed and clicked then call it's click
 			// function and return.
 			for (i in buttons) {
