@@ -267,7 +267,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -310,6 +310,7 @@ Play.prototype.deepCopy = function() {
 		scoutName: this.scoutName,
 		team: this.team,
 		unit: this.unit,
+		notes: this.notes,
 		formation: this.formation,
 		feedbackMessage: this.feedbackMessage
 	});
@@ -570,6 +571,7 @@ function createPlayFromJson(playJsonDictionary) {
 		scoutName: scoutName,
 		team: playJsonDictionary.team,
 		unit: playJsonDictionary.unit,
+		notes: playJsonDictionary.notes,
 		formation: playJsonDictionary.formation,
 		offensivePlayers: offensivePlayersArray,
 		defensivePlayers: defensivePlayersArray,
