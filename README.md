@@ -1,6 +1,15 @@
 # Snap
 Our Snap product's webapp code
 
+<h3>Snap Development Tips</h3>
+<h4>Javascript models</h4>
+<ul>
+	<li>When adding memeber variables to formation, play, concept, or player JS models make
+	sure to implement the functionality for the new var in the deepCopy and 
+	createFromJson functions to prevent losing that information. Also include the new
+	var in the stringify function to send it to the database.</li>
+</ul>
+
 <h3>Right Call Consulting Style Guide</h3>
 <h4>General</h4>
 <h5>Indenting</h5>
