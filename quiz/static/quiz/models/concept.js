@@ -266,7 +266,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes"]);
 
 		var jqxhr = $.post(
 				path,
@@ -302,7 +302,8 @@ Concept.prototype.deepCopy = function() {
 		name: this.name,
 		team: this.team,
 		unit: this.unit,
-		feedbackMessage: this.feedbackMessage
+		feedbackMessage: this.feedbackMessage,
+		notes: this.notes
 	});
 
 	for (var i = 0; i < this.quarterback.length; ++i) {
@@ -473,7 +474,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 		defensivePlayers: defensivePlayersArray,
 		quarterback: quarterback,
 		offensiveLinemen: offensiveLinemenArray,
-		eligibleReceivers: eligibleReceiversArray
+		eligibleReceivers: eligibleReceiversArray,
+		notes: conceptJsonDictionary.notes
 	});
 	result.updateBlocksForDefense();
 	return result;
