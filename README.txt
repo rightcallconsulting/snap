@@ -1,6 +1,13 @@
 # Snap
 Our Snap product's webapp code
 
+Snap Development Tips
+-Javascript models
+---When adding memeber variables to formation, play, concept, or player JS models make
+	sure to implement the functionality for the new var in the deepCopy and 
+	createFromJson functions to prevent losing that information. Also include the new
+	var in the stringify function to send it to the database.
+
 Right Call Consulting Style Guide
 
 -General
@@ -21,5 +28,5 @@ Right Call Consulting Style Guide
 	behavior.
 
 ---JQuery
-----Always use the .done() .fail() .always() (especially .fail()) callbacks when you can. It will make your debugging life and that of your 
-	friend's much less stressful
+----Always use the .done() .fail() .always() (especially .fail()) callbacks when you can. 
+	It will make your debugging life and that of your friend's much less stressful.
