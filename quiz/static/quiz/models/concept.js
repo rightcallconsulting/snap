@@ -354,6 +354,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			unit: conceptJsonDictionary.offensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
+			notes: conceptJsonDictionary.offensivePlayers[i].notes,
+			call: conceptJsonDictionary.offensivePlayers[i].call
 		});
 
 		if (player.pos === "QB") {
@@ -408,7 +410,9 @@ function createConceptFromJson(conceptJsonDictionary) {
 			blue: conceptJsonDictionary.defensivePlayers[i].blue,
 			unit: conceptJsonDictionary.defensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
-			siz: conceptJsonDictionary.defensivePlayers[i].siz
+			siz: conceptJsonDictionary.defensivePlayers[i].siz,
+			notes: conceptJsonDictionary.defensivePlayers[i].notes,
+			call: conceptJsonDictionary.defensivePlayers[i].call
 		});
 
 		if (conceptJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
@@ -435,7 +439,9 @@ function createConceptFromJson(conceptJsonDictionary) {
 				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
 				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
 				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
-				siz: conceptJsonDictionary.offensiveLinemen[i].siz
+				siz: conceptJsonDictionary.offensiveLinemen[i].siz,
+				notes: conceptJsonDictionary.offensiveLinemen[i].notes,
+				call: conceptJsonDictionary.offensiveLinemen[i].call
 			});
 
 			offensiveLinemenArray.push(player);

@@ -566,7 +566,9 @@ Player.prototype.deepCopy = function() {
 		pos: this.pos,
 		num: this.num,
 		unit: this.unit,
-		name: this.name
+		name: this.name,
+		notes: this.notes,
+		call: this.call
 	});
 
 	for (var i = 0; i < this.dropback.length; ++i) {

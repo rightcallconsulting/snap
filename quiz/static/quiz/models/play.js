@@ -415,7 +415,9 @@ function createPlayFromJson(playJsonDictionary) {
 			blue: playJsonDictionary.offensivePlayers[i].blue,
 			unit: playJsonDictionary.offensivePlayers[i].unit,
 			eligible: playJsonDictionary.offensivePlayers[i].eligible,
-			siz: playJsonDictionary.offensivePlayers[i].siz
+			siz: playJsonDictionary.offensivePlayers[i].siz,
+			notes: conceptJsonDictionary.offensivePlayers[i].notes,
+			call: conceptJsonDictionary.offensivePlayers[i].call
 		});
 
 		if (player.pos === "QB") {
@@ -470,7 +472,9 @@ function createPlayFromJson(playJsonDictionary) {
 			blue: playJsonDictionary.defensivePlayers[i].blue,
 			unit: playJsonDictionary.defensivePlayers[i].unit,
 			eligible: playJsonDictionary.defensivePlayers[i].eligible,
-			siz: playJsonDictionary.defensivePlayers[i].siz
+			siz: playJsonDictionary.defensivePlayers[i].siz,
+			notes: conceptJsonDictionary.defensivePlayers[i].notes,
+			call: conceptJsonDictionary.defensivePlayers[i].call
 		});
 
 		if (playJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
