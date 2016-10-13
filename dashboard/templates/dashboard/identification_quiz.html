@@ -180,9 +180,41 @@
 
 		function mouseDragged() {};
 
-		function mouseReleased() {};
+		function mouseReleased() {
+			if(quiz.over){
+				var clickedButton = quiz.getClickedRestartButton(field)
+				if(clickedButton !== null){
+					var clickedLabel = clickedButton.label;
+					if(clickedLabel === "Retake All"){
+						quiz = quiz.restartQuiz(false);
+						quiz.setAttempt();
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Retake Missed"){
+						quiz = quiz.restartQuiz(true);
+						quiz.setAttempt();
+						updateMainviewAndSideview()
+					}else if(clickedLabel === "Submit Quiz"){
+						//var csrf_token = "{{ csrf_token }}";
+						//quiz.submit(csrf_token);
 
-		function keyPressed() {};
+						window.location.replace("/quizzes/custom");
+					}
+				}
+				return false;
+			}
+		};
+
+		function keyPressed() {
+			if(quiz.over){
+				if (key === "r" || key === "R"){
+					quiz = quiz.restartQuiz(false);
+					quiz.setAttempt();
+					updateMainviewAndSideview()
+					setButtonClicked();
+				}
+				return false;
+			}
+		};
 
 		function keyTyped() {};
 
@@ -259,7 +291,7 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
-			
+
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
 			if (old_selected != null) {
@@ -273,7 +305,7 @@
 			// selected button.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success choice-button");
@@ -320,7 +352,7 @@
 						if (choice_names[j] === choices[i]) {
 							create_button = 0;
 						}
-					} 
+					}
 
 					if (create_button === 1) {
 						// Create a button for this choice.
