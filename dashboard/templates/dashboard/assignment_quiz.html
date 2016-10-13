@@ -525,10 +525,8 @@
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				var player = quiz.getCurrentQuestion().answer;
 
-				if (player.motionCoords.length > 0) {
+				if (player.dropback.length > 0) {
 					buttons[0].setClicked();
-				} else if (player.dropback.length > 0) {
-					buttons[1].setClicked();
 				} else if (player.run.length > 0) {
 					buttons[2].setClicked();
 				} else if (player.route.length > 0) {
