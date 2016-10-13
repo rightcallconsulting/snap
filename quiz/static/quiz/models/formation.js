@@ -190,7 +190,7 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var formationName = this.name;
 		var formationUnit = this.unit;
-		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz"]);
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes"]);
 
 		var jqxhr = $.post(
 				path,
@@ -226,7 +226,8 @@ Formation.prototype.deepCopy = function() {
 		name: this.name,
 		team: this.team,
 		unit: this.unit,
-		feedbackMessage: this.feedbackMessage
+		feedbackMessage: this.feedbackMessage,
+		notes: this.notes
 	});
 
 	for (var i = 0; i < this.quarterback.length; ++i) {
@@ -367,6 +368,7 @@ function createFormationFromJson(formationJsonDictionary) {
 		name: formationJsonDictionary.name,
 		team: formationJsonDictionary.team,
 		unit: formationJsonDictionary.unit,
+		notes: formationJsonDictionary.notes,
 		offensivePlayers: offensivePlayersArray,
 		defensivePlayers: defensivePlayersArray,
 		quarterback: quarterback,
