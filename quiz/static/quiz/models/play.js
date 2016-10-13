@@ -24,6 +24,7 @@ var Play = function(config) {
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.feedbackMessage = config.feedbackMessage || "";
 	this.movementIndex = config.movementIndex || 0;
+	this.notes = config.notes || [];
 
 	this.qb = config.qb || [];
     this.playName = config.playName || "";

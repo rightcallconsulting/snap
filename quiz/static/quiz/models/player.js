@@ -32,6 +32,10 @@ var Player = function(config) {
 	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
 	this.defensiveMovement = config.defensiveMovement || [];
 
+	// Player notes and calls - strings used to add extra description to players assignments
+	this.notes = config.notes || [];
+	this.call = config.call || "";
+
 	// Player movement - Sam is trying stuff here
 	this.movementIndex = config.movementIndex || 0;
 

@@ -22,7 +22,8 @@ var Concept = function(config) {
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.feedbackMessage = config.feedbackMessage || [];
-	this.movementIndex = config.movementIndex || 0; //0 is pre-snap, 1 is post-snap
+	this.movementIndex = config.movementIndex || 0;
+	this.notes = config.notes || [];
 };
 
 //***************************************************************************//

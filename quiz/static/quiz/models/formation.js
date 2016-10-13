@@ -18,6 +18,7 @@ var Formation = function(config){
 	this.quarterback = config.quarterback || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
+	this.notes = config.notes || [];
 
 	this.qb = config.qb || [];
 	this.playName = config.playName || "";
