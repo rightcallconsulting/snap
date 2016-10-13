@@ -276,7 +276,7 @@ def edit_profile(request):
 				player.save()'''
 		return HttpResponseRedirect("/edit_profile")
 	else:
-		if request.user.myuser.is_a_player:	
+		if request.user.myuser.is_a_player:
 			team = request.user.player.team
 		else:
 			team = request.user.coach.team
@@ -310,7 +310,7 @@ def change_password(request):
 		else:
 			return HttpResponseRedirect("/change_password")
 	else:
-		if request.user.myuser.is_a_player:	
+		if request.user.myuser.is_a_player:
 			team = request.user.player.team
 		else:
 			team = request.user.coach.team
@@ -921,9 +921,15 @@ def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.GET['type']
+	number_of_questions = int(request.GET['number_of_questions'])
+	order_of_questions = str(request.GET['order'])
 	formations = Formation.objects.filter(team=team, scout=False)
 
+	### SORT THE FORMATIONS BY WHICHEVER METHOD IS SELECTED ###
+	### END SORT ###
+
 	if type_of_quiz == "identification":
+		formations = formations[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -932,9 +938,18 @@ def formation_quizzes(request, unit="offense"):
 		})
 	elif type_of_quiz == "alignment":
 		position = request.GET['position'].upper()
-		print position
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
-		print position_groups
+		filtered_formations = []
+		for formation in formations:
+			formation_dict = json.loads(formation.formationJson)
+			offensive_players = formation_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_formations.append(formation)
+
+		formations = filtered_formations[0:number_of_questions]
+
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
@@ -948,9 +963,15 @@ def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.GET['type']
+	number_of_questions = int(request.GET['number_of_questions'])
+	order_of_questions = str(request.GET['order'])
 	plays = Play.objects.filter(team=team, scout=False)
-	
+
+	### SORT THE PLAYS BY WHICHEVER METHOD IS SELECTED ###
+	### END SORT ###
+
 	if type_of_quiz == "identification":
+		plays = plays[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -960,6 +981,22 @@ def play_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+
+		filtered_plays = []
+		for play in plays:
+			play_dict = json.loads(play.playJson)
+			offensive_players = play_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					#do additional filtering for type of assignment here eventually
+					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
+						filtered_plays.append(play)
+					elif player_dict['route'] and len(player_dict['route']) > 0:
+						filtered_plays.append(play)
+
+		plays = filtered_plays[0:number_of_questions]
+
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
@@ -973,9 +1010,15 @@ def concept_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
 	type_of_quiz = request.GET['type']
+	number_of_questions = int(request.GET['number_of_questions'])
+	order_of_questions = str(request.GET['order'])
 	concepts = Concept.objects.filter(team=team)
-	
+
+	### SORT THE CONCEPTS BY WHICHEVER METHOD IS SELECTED ###
+	### END SORT ###
+
 	if type_of_quiz == "identification":
+		concepts = concepts[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -985,6 +1028,20 @@ def concept_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+		filtered_concepts = []
+		for concept in concepts:
+			concept_dict = json.loads(concept.conceptJson)
+			offensive_players = concept_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					#do additional filtering for type of assignment here eventually
+					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
+						filtered_concepts.append(concept)
+					elif player_dict['route'] and len(player_dict['route']) > 0:
+						filtered_concepts.append(concept)
+
+		concepts = filtered_concepts[0:number_of_questions]
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
