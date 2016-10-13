@@ -989,7 +989,9 @@ def play_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					#do additional filtering for type of assignment here eventually
+					
+					### Do additional filtering for type of assignment here eventually ###
+
 					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
 						filtered_plays.append(play)
 					elif player_dict['route'] and len(player_dict['route']) > 0:
@@ -1035,7 +1037,9 @@ def concept_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					#do additional filtering for type of assignment here eventually
+					
+					### Do additional filtering for type of assignment here eventually ###
+					
 					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
 						filtered_concepts.append(concept)
 					elif player_dict['route'] and len(player_dict['route']) > 0:
