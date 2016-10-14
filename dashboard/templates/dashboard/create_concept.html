@@ -9,6 +9,13 @@
 			Select a player in the concept by clicking on them and then add assignments using the mouse and keyboard. Change the type of assignment by clicking the top buttons or using the 'A' key for quarterback dropbacks, the 'S' key for pre-snap motion, the 'D' key for runs, the 'F' key for routes, and the 'G' key for blocking assignments. All assignments can be created by selecting that button and then clicking anywhere on the field. If blocks are selected you can also click on a defensive player to specify that player as an assignment. Additionally, the 'Q', 'W', 'E', 'R', 'T', 'Y', and 'U' keys are shortcuts for adding different predefined blocks.
 		</div>
 
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
+			<div><button id="add-call-button" class="btn btn-success">Add Call</button></div>
+		</div>
+
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Concept Name</p>
@@ -964,6 +971,39 @@
 			error_message.setAttribute("id", "error-message");
 			error_message.textContent = "Invalid Concept Name";
 			header_box.appendChild(error_message);
+		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		function hideCallsInput() {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "none";
+			add_call_button.style.display = "none";
+		};
+
+		function unhideCallsInput(button_text) {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "initial";
+			add_call_button.style.display = "initial";
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+			add_call_button.textContent = "Add Call for " + button_text;
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our

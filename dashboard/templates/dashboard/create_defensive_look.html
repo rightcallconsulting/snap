@@ -7,6 +7,11 @@
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
 		</div>
 
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+		</div>
+
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Formation Name</p>
@@ -758,6 +763,20 @@
 			error_message.setAttribute("id", "error-message");
 			error_message.textContent = "Invalid Formation Name";
 			header_box.appendChild(error_message);
+		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our

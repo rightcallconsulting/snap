@@ -766,7 +766,7 @@ div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
 notes and calls
 *************************************************************************/
 
-div#notes-and-calls div {
+div#notes-and-calls-input div {
 	float: left;
 }
 
@@ -1844,7 +1844,7 @@ select#id_player {
 #create-play,
 #create-concept,
 #playbook {
-	padding: 0 0 20px 0;
+	padding: 0;
 }
 
 div.choose-existing-formation,

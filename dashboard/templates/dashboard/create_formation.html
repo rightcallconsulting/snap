@@ -7,11 +7,9 @@
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
 		</div>
 
-		<div id="notes-and-calls" class="col-md-12">
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
 			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
 			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
-			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
-			<div><button id="add-call-button" class="btn btn-success">Add Call</button></div>
 		</div>
 
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">
@@ -86,7 +84,7 @@
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
 			
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 4; 
+			var width = display_box.offsetWidth - 5; 
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
@@ -567,6 +565,8 @@
 
 			// Add the new button to the sideview button div.
 			sideview_buttons_div.appendChild(new_formation_button);
+
+			hideNotesAndCallsInput();
 		});
 
 		$("#delete-button").click(function(event) {
@@ -602,6 +602,8 @@
 				var sideview_buttons_div = document.getElementById("sideview-buttons");
 				sideview_buttons_div.removeChild(selected);
 			}
+
+			hideNotesAndCallsInput();
 
 			// Update the top bar to display the Placeholder message.
 			removeHeaderPlaceholder();
@@ -658,6 +660,9 @@
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 			
+			// Hide the notes input.
+			hideNotesAndCallsInput();
+
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
 			// are selecting a button it will get replaced with the name of the
@@ -684,11 +689,14 @@
 			// selected button and the main view area.
 			if (old_selected != new_selected) {
 				// Change the color of the newly selected button and set it's
-				// id to 
+				// id to selected.
 				new_selected.removeAttribute("class");
 				new_selected.setAttribute("id", "selected");
 				new_selected.setAttribute("class", "btn btn-success sideview-button");
 
+				// Get the name of the selected formation and iterate through
+				// the existing formations to find the correct object to set
+				// as the current formation.
 				var formation_name = new_selected.getAttribute("name");
 
 				for (var i = 0; i < formations.length; ++i) {
@@ -698,6 +706,10 @@
 					}
 				}
 
+				// Add the notes and calls input back.
+				unhideNotesAndCallsInput(formation_name);
+
+				// Update the header of the mainview to be the formation name.
 				var header_text_content = formation_name;
 				formation_name = document.getElementById("formation-name");
 
@@ -774,6 +786,34 @@
 			error_message.textContent = "Invalid Formation Name";
 			header_box.appendChild(error_message);
 		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		$("#add-note-button").click(function(event) {
+			var note = document.getElementById("note");
+
+			var path = "/formations/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (note.value != "" && formation != null) {
+				formation.notes.push(note.value);
+				formation.save(path, csrf_token);
+			}
+
+			note.value = "";
+		});
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

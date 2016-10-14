@@ -9,6 +9,13 @@
 			Select a current play from the list of existing plays to edit it or use it as a starting point for a new play. Click the 'D' on the top of the sideview to see your scout defensive formations and implement specific versions of the selected play against a defensive look. If you save a play with the same name as a current play that play will be overwritten, otherwise a new play will be saved. To delete a current play select it from the list of existing plays and click on the trash can without changing the play's name.
 		</div>
 
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
+			<div><button id="add-call-button" class="btn btn-success">Set Call</button></div>
+		</div>
+
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Play Name</p>
@@ -323,6 +330,16 @@
 		//*******************************************************************//
 
 		function mouseReleased() {
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				hideCallsInput();
+				hideNotesAndCallsInput();
+			}
+
+			var button_selected = document.getElementById("selected");
+			if (button_selected != null) {
+				unhideNotesAndCallsInput(play.name);
+			}
+
 			// If a button is displayed and clicked then call it's click
 			// function and return.
 			for (i in buttons) {
@@ -359,6 +376,8 @@
 
 					play.clearSelected();
 					newPlayerSelected.click();
+					unhideNotesAndCallsInput(newPlayerSelected.pos);
+					unhideCallsInput(newPlayerSelected.pos);
 
 					if (newPlayerSelected.pos === "QB") {
 						buttons[0].setClicked();
@@ -423,6 +442,8 @@
 				}
 
 				newPlayerSelected.click();
+				unhideNotesAndCallsInput(newPlayerSelected.pos);
+				unhideCallsInput(newPlayerSelected.pos);
 
 				if (newPlayerSelected.pos === "QB") {
 					buttons[0].setClicked();
@@ -916,6 +937,10 @@
 			play_name_selected = "";
 			scout_formation_name_selected = "";
 
+			// Hide notes and calls inputs.
+			hideCallsInput();
+			hideNotesAndCallsInput();
+
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
 			// are selecting a button it will get replaced with the name of the
@@ -970,6 +995,9 @@
 						break;
 					}
 				}
+
+				// Show notes and calls inputs.
+				unhideNotesAndCallsInput(play_name);
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -1181,6 +1209,79 @@
 			error_message.textContent = "Invalid Play Name";
 			header_box.appendChild(error_message);
 		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		function hideCallsInput() {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "none";
+			add_call_button.style.display = "none";
+		};
+
+		function unhideCallsInput(button_text) {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "initial";
+			add_call_button.style.display = "initial";
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+			add_call_button.textContent = "Set Call for " + button_text;
+		};
+
+		$("#add-note-button").click(function(event) {
+			var note = document.getElementById("note");
+
+			var path = "/plays/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (note.value != "" && play != null) {
+				if (play.getSelected()[0] != null) {
+					player.notes.push(note.value);
+				} else {
+					play.notes.push(note.value);
+				}
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					play.save(path, csrf_token);
+				}
+			}
+
+			note.value = "";
+		});
+
+		$("#add-call-button").click(function(event) {
+			var call = document.getElementById("call");
+
+			var path = "/plays/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (call.value != "" && play != null && play.getSelected()[0] != null) {
+				play.getSelected()[0].call = call.value;
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					play.save(path, csrf_token);
+				}
+			}
+
+			call.value = "";
+		});
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
