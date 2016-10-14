@@ -766,6 +766,13 @@ div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
 inputs
 *************************************************************************/
 
+.snap-input {
+    color: #555555;
+    margin: 0;
+    border: 3px solid #7cb34a;
+    padding: 0;
+}
+
 .create-groups input[type="text"], 
 .all-groups input[type="text"], 
 .manage-groups input[type="text"],
