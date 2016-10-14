@@ -965,6 +965,7 @@ def play_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
+
 	plays = Play.objects.filter(team=team, scout=False)
 
 	### SORT THE PLAYS BY WHICHEVER METHOD IS SELECTED ###
@@ -981,6 +982,7 @@ def play_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+		type_of_assignment = str(request.GET['type-of-assignment'])
 
 		filtered_plays = []
 		for play in plays:
@@ -989,12 +991,11 @@ def play_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					
-					### Do additional filtering for type of assignment here eventually ###
 
-					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
+					### Do additional filtering for type of assignment here eventually ###
+					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_plays.append(play)
-					elif player_dict['route'] and len(player_dict['route']) > 0:
+					elif player_dict['route'] and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_plays.append(play)
 
 		plays = filtered_plays[0:number_of_questions]
@@ -1037,9 +1038,9 @@ def concept_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					
+
 					### Do additional filtering for type of assignment here eventually ###
-					
+
 					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
 						filtered_concepts.append(concept)
 					elif player_dict['route'] and len(player_dict['route']) > 0:
