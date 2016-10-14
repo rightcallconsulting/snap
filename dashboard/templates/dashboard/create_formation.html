@@ -2,16 +2,16 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div id="create-formation" class="create-formation padding-md">
+	<div id="create-formation" class="create-formation">
 		<div id="help-box" hidden="true">
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12">
-			<textarea id="note" class="snap-input snap-textarea" rows="4" cols="35"></textarea>
-			<button id="add-note-button" class="btn btn-success">Add Note</button>
-			<input id="call" class="snap-input snap-text" type="text" maxlength="50">
-			<button id="add-call-button" class="btn btn-success">Add Call</button>
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
+			<div><button id="add-call-button" class="btn btn-success">Add Call</button></div>
 		</div>
 
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">

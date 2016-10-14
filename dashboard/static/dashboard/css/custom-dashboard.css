@@ -763,6 +763,28 @@ div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
 }
 
 /*************************************************************************
+notes and calls
+*************************************************************************/
+
+div#notes-and-calls div {
+	float: left;
+}
+
+textarea#note {
+	margin-right: 10px;
+}
+
+button#add-note-button {
+	margin-right: 30px;
+}
+
+input#call {
+	margin-right: 10px;
+}
+
+button#add-call-button {}
+
+/*************************************************************************
 inputs
 *************************************************************************/
 
@@ -771,6 +793,14 @@ inputs
     margin: 0;
     border: 3px solid #7cb34a;
     padding: 0;
+}
+
+.snap-text {
+	height: 30px;
+}
+
+.snap-textarea {
+	border-radius: 5px;
 }
 
 .create-groups input[type="text"], 
