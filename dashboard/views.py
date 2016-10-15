@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 import json
 import simplejson
+from random import shuffle
 
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
@@ -923,9 +924,16 @@ def formation_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
-	formations = Formation.objects.filter(team=team, scout=False)
+	formations = list(Formation.objects.filter(team=team, scout=False))
 
 	### SORT THE FORMATIONS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(formations)
+	elif order_of_questions == "recent":
+		formations.sort(key=lambda formation: formation.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		formations.sort(key=lambda formation: formation.created_at, reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -966,9 +974,16 @@ def play_quizzes(request, unit="offense"):
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
 
-	plays = Play.objects.filter(team=team, scout=False)
+	plays = list(Play.objects.filter(team=team, scout=False))
 
 	### SORT THE PLAYS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(plays)
+	elif order_of_questions == "recent":
+		plays.sort(key=lambda play: play.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		plays.sort(key=lambda play: play.player_percent_correct(player), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -1015,9 +1030,16 @@ def concept_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
-	concepts = Concept.objects.filter(team=team)
+	concepts = list(Concept.objects.filter(team=team))
 
 	### SORT THE CONCEPTS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(concepts)
+	elif order_of_questions == "recent":
+		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
