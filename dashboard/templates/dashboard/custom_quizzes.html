@@ -225,10 +225,9 @@
 		function positionChanged(selected){
 			if(selected.id === "play-assignment-positions"){
 				resetAssignmentOptions("PLAYS");
-			}else{
+			}else if(selected.id === "concept-assignment-positions"){
 				resetAssignmentOptions("CONCEPTS");
 			}
-
 		}
 
 		function resetAssignmentOptions(sectionToReset){
