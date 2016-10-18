@@ -56,7 +56,10 @@
 			</div>
 		</div>
 
-		<div id="notes-and-calls" class="col-md-12">
+		<div id="formation-notes" class="col-md-4">
+			<h3 id="formation-notes-header">Notes for Formation</h3>
+			<ul id="formation-notes-list">
+			</ul>
 		</div>
 
 	</div><!--/create-formation-->
@@ -803,6 +806,21 @@
 			var add_note_button = document.getElementById("add-note-button");
 
 			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		// updateFormationNotes emptys the list of formation notes and updates
+		// them with the notes for the new formation.
+		function updateFormationNotes() {
+			var formation_notes = document.getElementById("formation-notes");
+			formation_notes.setAttribute("hidden", "true");
+			if (formation_note != null && formation != null && formation.notes != []) {
+				for (i in formation.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = formation.notes[i];
+				}
+
+				formation_notes.removeAttribute("hidden");
+			}
 		};
 
 		$("#add-note-button").click(function(event) {
