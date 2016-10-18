@@ -682,9 +682,12 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			// Create a new formation to replace whatever was already on screen.
+			// Create a new formation to replace whatever was already on screen
+			// and update the notes list.
 			formation = new Formation({});
 			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+
+			updateFormationNotes();
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
