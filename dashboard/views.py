@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 import json
 import simplejson
+from random import shuffle
 
 from quiz.models import Player, Team, Play, Formation, Test, TestResult
 from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
@@ -923,9 +924,16 @@ def formation_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
-	formations = Formation.objects.filter(team=team, scout=False)
+	formations = list(Formation.objects.filter(team=team, scout=False))
 
 	### SORT THE FORMATIONS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(formations)
+	elif order_of_questions == "recent":
+		formations.sort(key=lambda formation: formation.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		formations.sort(key=lambda formation: formation.created_at, reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -965,9 +973,17 @@ def play_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
-	plays = Play.objects.filter(team=team, scout=False)
+
+	plays = list(Play.objects.filter(team=team, scout=False))
 
 	### SORT THE PLAYS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(plays)
+	elif order_of_questions == "recent":
+		plays.sort(key=lambda play: play.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		plays.sort(key=lambda play: play.player_percent_correct(player), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -981,6 +997,7 @@ def play_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+		type_of_assignment = str(request.GET['type-of-assignment'])
 
 		filtered_plays = []
 		for play in plays:
@@ -989,12 +1006,11 @@ def play_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					
-					### Do additional filtering for type of assignment here eventually ###
 
-					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
+					### Do additional filtering for type of assignment here eventually ###
+					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_plays.append(play)
-					elif player_dict['route'] and len(player_dict['route']) > 0:
+					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_plays.append(play)
 
 		plays = filtered_plays[0:number_of_questions]
@@ -1014,9 +1030,16 @@ def concept_quizzes(request, unit="offense"):
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])
-	concepts = Concept.objects.filter(team=team)
+	concepts = list(Concept.objects.filter(team=team))
 
 	### SORT THE CONCEPTS BY WHICHEVER METHOD IS SELECTED ###
+	if order_of_questions == "random":
+		shuffle(concepts)
+	elif order_of_questions == "recent":
+		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
+	elif order_of_questions == "missed":
+		#sort is more complicated, so for now we do recent order
+		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -1030,6 +1053,7 @@ def concept_quizzes(request, unit="offense"):
 	elif type_of_quiz == "assignment":
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
+		type_of_assignment = str(request.GET['type-of-assignment'])
 		filtered_concepts = []
 		for concept in concepts:
 			concept_dict = json.loads(concept.conceptJson)
@@ -1037,12 +1061,12 @@ def concept_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-					
+
 					### Do additional filtering for type of assignment here eventually ###
-					
-					if player_dict['blockingAssignmentArray'] and len(player_dict['blockingAssignmentArray']) > 0:
+
+					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_concepts.append(concept)
-					elif player_dict['route'] and len(player_dict['route']) > 0:
+					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_concepts.append(concept)
 
 		concepts = filtered_concepts[0:number_of_questions]

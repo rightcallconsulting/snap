@@ -9,13 +9,13 @@
 			</div>
 
 			<form action="/quizzes/custom/formation" method="get">
-				
+
 
 				<div class="number-of-questions">
-					Number of Questions: 
+					Number of Questions:
 					<i class="fa fa-chevron-left"></i>
 					<p class="current-number"> 5 </p>
-					<i class="fa fa-chevron-right"></i> 
+					<i class="fa fa-chevron-right"></i>
 					<input class="current_number" name="number_of_questions" value="5" hidden>
 				</div>
 
@@ -23,6 +23,8 @@
 					Order:
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
+							<option value="recent">Recently Created</option>
+							<option value="missed">Most Missed</option>
 							<option value="random">Random</option>
 						</optgroup>
 					</select>
@@ -42,10 +44,10 @@
 
 				<div class="position" hidden="true">
 					Position:
-					<select name="position" class="unit-form form-sm position">
+					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)">
 						<optgroup>
 							{% for group in position_groups %}
-							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
 					</select>
@@ -73,6 +75,8 @@
 					Order:
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
+							<option value="recent">Recently Created</option>
+							<option value="missed">Most Missed</option>
 							<option value="random">Random</option>
 						</optgroup>
 					</select>
@@ -91,11 +95,11 @@
 				<hr hidden="true">
 
 				<div class="position" hidden="true">
-					Position: 
-					<select name="position" class="unit-form form-sm position">
+					Position:
+					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)" id="play-assignment-positions">
 						<optgroup>
 							{% for group in position_groups %}
-							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
 					</select>
@@ -103,7 +107,7 @@
 
 				<div class="type-of-assignment" hidden="true">
 					Type of Assignment:
-					<select name="type-of-assignment" class="unit-form form-sm type-of-assignment">
+					<select name="type-of-assignment" class="unit-form form-sm type-of-assignment" id="play-assignment-options">
 						<optgroup>
 							<option value="all">All</option>
 							<!--<option value="dropback">Dropback</option>
@@ -138,6 +142,8 @@
 					Order:
 					<select name="order" class="unit-form form-sm">
 						<optgroup>
+							<option value="recent">Recently Created</option>
+							<option value="missed">Most Missed</option>
 							<option value="random">Random</option>
 						</optgroup>
 					</select>
@@ -156,20 +162,33 @@
 				<hr hidden="true">
 
 				<div class="position" hidden="true">
-					Position: 
-					<select name="position" class="unit-form form-sm position">
+					Position:
+					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)" id="concept-assignment-positions">
 						<optgroup>
 							{% for group in position_groups %}
-							<option value="{{ group.abbreviation|safe }}">{{ group.abbreviation|safe }}</option>
+							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
 					</select>
 				</div>
-
+				<div class="type-of-assignment" hidden="true">
+					Type of Assignment:
+					<select name="type-of-assignment" class="unit-form form-sm type-of-assignment" id="concept-assignment-options">
+						<optgroup>
+							<option value="all">All</option>
+							<!--<option value="dropback">Dropback</option>
+							<option value="progression">Progression</option>
+							<option value="motion">Motion</option>
+							<option value="run">Run</option>
+							<option value="route">Route</option>
+							<option value="blocks">Block</option>-->
+						</optgroup>
+					</select>
+				</div>
 				<input class="btn btn-success btn-lg pull-right" type="submit" value="Take">
 			</form>
 		</div>
-	</div>	
+	</div>
 {% endblock %}
 
 {% block javascript %}
@@ -182,11 +201,11 @@
 
 			var number_of_questions = parseInt(current_number.textContent);
 			if (number_of_questions > 1) {
-				number_of_questions -= 1;	
+				number_of_questions -= 1;
 			}
 
 			current_input_number.setAttribute("value", number_of_questions);
-			current_number.textContent = number_of_questions.toString();	
+			current_number.textContent = number_of_questions.toString();
 		});
 
 		$("i.fa-chevron-right").click(function(event) {
@@ -196,12 +215,55 @@
 
 			var number_of_questions = parseInt(current_number.textContent);
 			if (number_of_questions < 20) {
-				number_of_questions += 1;	
+				number_of_questions += 1;
 			}
 
 			current_input_number.setAttribute("value", number_of_questions);
 			current_number.textContent = number_of_questions.toString();
 		});
+
+		function positionChanged(selected){
+			if(selected.id === "play-assignment-positions"){
+				resetAssignmentOptions("PLAYS");
+			}else if(selected.id === "concept-assignment-positions"){
+				resetAssignmentOptions("CONCEPTS");
+			}
+		}
+
+		function resetAssignmentOptions(sectionToReset){
+			var position_dropdowns = [document.getElementById('play-assignment-positions'), document.getElementById('concept-assignment-positions')]
+			var assignment_dropdowns = [document.getElementById('play-assignment-options'), document.getElementById('concept-assignment-options')]
+			if(sectionToReset === "PLAYS"){
+				position_dropdowns = position_dropdowns.slice(0, 1)
+				assignment_dropdowns = assignment_dropdowns.slice(0, 1)
+			}else if(sectionToReset === "CONCEPTS"){
+				position_dropdowns = position_dropdowns.slice(1)
+				assignment_dropdowns = assignment_dropdowns.slice(1)
+			}
+
+			for(var i = 0; i < position_dropdowns.length; i++){
+				var dropdown = position_dropdowns[i];
+				var position_group_type = dropdown.selectedOptions[0].dataset.type;
+				var assignment_type_options = ["All"]
+				if(position_group_type === "Skill Position"){
+					assignment_type_options.push("Blocks");
+					assignment_type_options.push("Routes");
+				}else if(position_group_type === "Offensive Lineman"){
+					assignment_type_options.push("Blocks");
+				}else{
+
+				}
+				setAssignmentOptions(assignment_dropdowns[i], assignment_type_options);
+			}
+		}
+
+		function setAssignmentOptions(dropdown, options){
+			dropdown.innerHTML = "";
+			for(var i = 0; i < options.length; i++){
+				var option_label = options[i];
+				dropdown.appendChild(new Option(option_label, option_label.toLowerCase()));
+			}
+		}
 
 		function updateForm(selected) {
 			var form = selected.parentElement.parentElement;
@@ -232,5 +294,7 @@
 				}
 			}
 		}
+
+		resetAssignmentOptions("ALL");
 	</script>
 {% endblock %}

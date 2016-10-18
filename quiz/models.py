@@ -9,6 +9,8 @@ import code
 import copy
 import json
 
+
+
 # This function returns a datetime object for the deadline
 # of anything that is published. The deadline defaults to
 # 1 day.
@@ -296,6 +298,15 @@ class Play(models.Model):
 
 	class Meta:
 		ordering = ["-created_at"]
+
+	def player_percent_correct(self, player):
+		results = QuestionAttempted.objects.filter(team=self.team, player=player)
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		for result in results:
+			score += result.score
+		return 100.0 * score / len(results)
 
 	def __str__(self):
 		display_name = self.name + " from " + self.formation.name
