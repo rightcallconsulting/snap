@@ -820,10 +820,12 @@
 		function updateFormationNotes() {
 			var formation_notes = document.getElementById("formation-notes");
 			formation_notes.setAttribute("hidden", "true");
+			var formation_notes_list = document.getElementById("formation-notes-list");
 			if (formation_notes != null && formation != null && formation.notes.length > 0) {
 				for (i in formation.notes) {
 					var list_item = document.createElement("li");
 					list_item.textContent = formation.notes[i];
+					formation_notes_list.appendChild(list_item);
 				}
 
 				formation_notes.removeAttribute("hidden");
