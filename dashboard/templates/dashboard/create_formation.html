@@ -114,8 +114,11 @@
 			{% endfor %}
 
 			// Create new Formation and add offensive linemen and quarterback
+			// and updates the formation notes.
 			formation = new Formation({});
 			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+
+			updateFormationNotes();
 
 			// Create player bar
 			offensivePlayerBar = new PlayerBar({
@@ -813,7 +816,7 @@
 		function updateFormationNotes() {
 			var formation_notes = document.getElementById("formation-notes");
 			formation_notes.setAttribute("hidden", "true");
-			if (formation_note != null && formation != null && formation.notes != []) {
+			if (formation_notes != null && formation != null && formation.notes.length > 0) {
 				for (i in formation.notes) {
 					var list_item = document.createElement("li");
 					list_item.textContent = formation.notes[i];
