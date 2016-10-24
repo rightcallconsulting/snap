@@ -12,6 +12,7 @@ from django.forms.models import model_to_dict
 from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
 from datetime import datetime
+from IPython import embed
 
 class UserCreateForm(UserCreationForm):
 	POSITIONS = (
@@ -194,6 +195,21 @@ class Concept(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(concept=self,player=player))
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		skips = 0
+		for result in results:
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
 
 class Quiz(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)

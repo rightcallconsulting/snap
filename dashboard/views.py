@@ -1039,7 +1039,7 @@ def concept_quizzes(request, unit="offense"):
 		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
+		concepts.sort(key=lambda concept: concept.get_average_score_for_players([player]), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
