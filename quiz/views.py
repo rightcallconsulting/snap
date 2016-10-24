@@ -12,8 +12,8 @@ import random
 from IPython import embed
 from operator import attrgetter
 
-from .models import Player, Team, Play, Formation, Test, Position, TestResult
-from dashboard.models import Concept
+from .models import Player, Team
+from dashboard.models import Concept, Position, Formation, Play
 from .utils import QuizOrders
 from dashboard.utils import PlayerAnalytics
 

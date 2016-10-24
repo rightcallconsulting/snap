@@ -12,8 +12,8 @@ import json
 import simplejson
 from random import shuffle
 
-from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
+from quiz.models import Player, Team
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -504,7 +504,7 @@ def groups(request):
 
 	if len(groups) > 0:
 		players_in_group = groups[0].players.all()
-		analytics = PlayerAnalytics(players_in_group)
+		analytics = None #PlayerAnalytics(players_in_group)
 	else:
 		players_in_group = []
 		analytics = None
