@@ -821,6 +821,11 @@
 			var formation_notes = document.getElementById("formation-notes");
 			formation_notes.setAttribute("hidden", "true");
 			var formation_notes_list = document.getElementById("formation-notes-list");
+
+			while (formation_notes_list.firstChild) {
+				formation_notes_list.removeChild(formation_notes_list.firstChild);
+			}
+
 			if (formation_notes != null && formation != null && formation.notes.length > 0) {
 				for (i in formation.notes) {
 					var list_item = document.createElement("li");
