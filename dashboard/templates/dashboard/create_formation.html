@@ -56,7 +56,7 @@
 			</div>
 		</div>
 
-		<div id="formation-notes" class="col-md-4">
+		<div id="formation-notes" class="col-md-4" hidden="true">
 			<h3 id="formation-notes-header">Notes for Formation</h3>
 			<ul id="formation-notes-list">
 			</ul>
@@ -856,7 +856,7 @@
 				if (selected) {
 					formation.save(path, csrf_token);
 				}
-				
+
 				updateFormationNotes();
 			}
 
