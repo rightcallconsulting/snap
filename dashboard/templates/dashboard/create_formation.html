@@ -395,17 +395,20 @@
 					if (formation_name != null) {
 						if(string_length > 0) {
 							formation_name.textContent = formation_name.textContent.slice(0, string_length-1);
+							unhideNotesAndCallsInput(formation_name.textContent);
 						}
 					}
 					return false;
 				} else if (keyCode == 32) {
 					if (formation_name != null && string_length < 100) {
 						formation_name.textContent += ' ';
+						unhideNotesAndCallsInput(formation_name.textContent);
 					}
 					return false;
 				} else if (keyCode == 189) {
 					if (formation_name != null && string_length < 100) {
 						formation_name.textContent += '-';
+						unhideNotesAndCallsInput(formation_name.textContent);
 					}
 					return false;
 				}
@@ -450,6 +453,8 @@
 							formation_name.textContent += key;
 						}
 					}
+
+					unhideNotesAndCallsInput(formation_name.textContent);
 
 					// return false to prevent default behavior
 					return false;
