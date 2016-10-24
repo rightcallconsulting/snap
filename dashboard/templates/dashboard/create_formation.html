@@ -848,9 +848,16 @@
 			var path = "/formations/create";
 			var csrf_token = "{{ csrf_token }}";
 
+			var selected = document.getElementById("selected");
+
 			if (note.value != "" && formation != null) {
 				formation.notes.push(note.value);
-				formation.save(path, csrf_token);
+
+				if (selected) {
+					formation.save(path, csrf_token);
+				}
+				
+				updateFormationNotes();
 			}
 
 			note.value = "";
