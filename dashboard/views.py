@@ -23,7 +23,6 @@ import simplejson
 from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
-from dashboard.utils import PlayerAnalytics
 
 @login_required
 def homepage(request):
@@ -721,7 +720,7 @@ def create_quiz(request):
 
 		if len(groups) > 0:
 			players_in_group = groups[0].players.all()
-			analytics = PlayerAnalytics(players_in_group)
+			analytics = None #PlayerAnalytics(players_in_group)
 		else:
 			players_in_group = []
 			analytics = None
