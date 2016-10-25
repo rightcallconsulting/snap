@@ -198,6 +198,21 @@ class Formation(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(formation=self,player=player))
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		skips = 0
+		for result in results:
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
+
 class Play(models.Model):
 	name = models.CharField(max_length=100)
 	scoutName = models.CharField(max_length=100, default="", blank=True, null=False)
@@ -213,14 +228,20 @@ class Play(models.Model):
 	class Meta:
 		ordering = ["-created_at"]
 
-	def player_percent_correct(self, player):
-		results = QuestionAttempted.objects.filter(team=self.team, player=player)
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(play=self,player=player))
 		if len(results) == 0:
 			return 0.0
 		score = 0
+		skips = 0
 		for result in results:
-			score += result.score
-		return 100.0 * score / len(results)
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
 
 	def __str__(self):
 		display_name = self.name + " from " + self.formation.name

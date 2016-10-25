@@ -932,7 +932,7 @@ def formation_quizzes(request, unit="offense"):
 		formations.sort(key=lambda formation: formation.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		formations.sort(key=lambda formation: formation.created_at, reverse=True)
+		formations.sort(key=lambda formation: formation.get_average_score_for_players([player]), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -982,7 +982,7 @@ def play_quizzes(request, unit="offense"):
 		plays.sort(key=lambda play: play.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		plays.sort(key=lambda play: play.player_percent_correct(player), reverse=True)
+		plays.sort(key=lambda play: play.get_average_score_for_players([player]), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
@@ -1038,7 +1038,7 @@ def concept_quizzes(request, unit="offense"):
 		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		concepts.sort(key=lambda concept: concept.get_average_score_for_players([player]), reverse=True)
+		concepts.sort(key=lambda concept: concept.get_average_score_for_players([player]), reverse=False)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
