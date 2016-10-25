@@ -1263,11 +1263,35 @@
 			add_call_button.textContent = "Set Call for " + button_text;
 		};
 
+		// updatePlayNotesAndCalls emptys the list of formation notes and updates
+		// them with the notes for the new formation.
+		function updatePlayNotesAndCalls() {
+			var play_notes = document.getElementById("play-notes");
+			play_notes.setAttribute("hidden", "true");
+			var play_notes_list = document.getElementById("play-notes-list");
+
+			while (play_notes_list.firstChild) {
+				play_notes_list.removeChild(play_notes_list.firstChild);
+			}
+
+			if (play_notes != null && play != null && play.notes.length > 0) {
+				for (i in play.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = play.notes[i];
+					play_notes_list.appendChild(list_item);
+				}
+
+				play_notes.removeAttribute("hidden");
+			}
+		};
+
 		$("#add-note-button").click(function(event) {
 			var note = document.getElementById("note");
 
 			var path = "/plays/create";
 			var csrf_token = "{{ csrf_token }}";
+
+			var selected = document.getElementById("selected");
 
 			if (note.value != "" && play != null) {
 				if (play.getSelected()[0] != null) {
@@ -1276,10 +1300,11 @@
 					play.notes.push(note.value);
 				}
 
-				var button_selected = document.getElementById("selected");
-				if (button_selected != null) {
+				if (selected) {
 					play.save(path, csrf_token);
 				}
+
+				updatePlayNotesAndCalls();
 			}
 
 			note.value = "";
