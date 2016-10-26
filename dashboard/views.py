@@ -936,11 +936,15 @@ def formation_quizzes(request, unit="offense"):
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		formation_names = []
+		for formation in formations:
+			formation_names.append(formation.name)
 		formations = formations[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,
+			'answer_choices': formation_names,
 			'page_header': 'FORMATION QUIZ'
 		})
 	elif type_of_quiz == "alignment":
@@ -986,11 +990,15 @@ def play_quizzes(request, unit="offense"):
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		play_names = []
+		for play in plays:
+			play_names.append(play.name)
 		plays = plays[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'plays': plays,
+			'answer_choices': play_names,
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "assignment":
@@ -1042,11 +1050,15 @@ def concept_quizzes(request, unit="offense"):
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		concept_names = []
+		for concept in concepts:
+			concept_names.append(concept.name)
 		concepts = concepts[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'concepts': concepts,
+			'answer_choices': concept_names,
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "assignment":
