@@ -435,33 +435,37 @@
 		});
 
 		$("#check-answer-button").click(function(event) {
-			var path = window.location.pathname;
-			var csrf_token = "{{ csrf_token }}";
+			if(!quiz.over){
+				var path = window.location.pathname;
+				var csrf_token = "{{ csrf_token }}";
 
-			quiz.checkCurrentQuestion(path, csrf_token);
+				quiz.checkCurrentQuestion(path, csrf_token);
 
-			for (i in buttons) {
-				buttons[i].display = false;
-				buttons[i].setUnclicked();
-			}
+				for (i in buttons) {
+					buttons[i].display = false;
+					buttons[i].setUnclicked();
+				}
 
-			updateMainviewAndSideview();
-			setButtonClicked();
+				updateMainviewAndSideview();
+				setButtonClicked();
+			}	
 		});
 
 		$("#skip-question-button").click(function(event) {
-			var path = window.location.pathname;
-			var csrf_token = "{{ csrf_token }}";
+			if(!quiz.over){
+				var path = window.location.pathname;
+				var csrf_token = "{{ csrf_token }}";
 
-			quiz.skipCurrentQuestion(path, csrf_token);
+				quiz.skipCurrentQuestion(path, csrf_token);
 
-			for (i in buttons) {
-				buttons[i].display = false;
-				buttons[i].setUnclicked();
+				for (i in buttons) {
+					buttons[i].display = false;
+					buttons[i].setUnclicked();
+				}
+
+				updateMainviewAndSideview();
+				setButtonClicked();
 			}
-
-			updateMainviewAndSideview();
-			setButtonClicked();
 		});
 
 		$("#zoom-in-button").click(function(event) {
