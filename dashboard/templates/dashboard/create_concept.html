@@ -1069,8 +1069,137 @@
 			var add_note_button = document.getElementById("add-note-button");
 
 			add_note_button.textContent = "Add Note for " + button_text;
-			add_call_button.textContent = "Add Call for " + button_text;
+			add_call_button.textContent = "Set Call for " + button_text;
 		};
+
+		// updateNotesAndCalls emptys the list of formation notes and updates
+		// them with the notes for the new formation.
+		function updateNotesAndCalls() {
+			var notes_and_calls = document.getElementById("notes-and-calls");
+
+			// Update Concept Notes
+			var concept_notes = document.getElementById("concept-notes");
+			if (concept_notes != null) { concept_notes.setAttribute("hidden", "true"); }
+
+			var concept_notes_list = document.getElementById("concept-notes-list");
+
+			while (concept_notes_list.firstChild) {
+				concept_notes_list.removeChild(concept_notes_list.firstChild);
+			}
+
+			if (concept_notes != null && concept != null && concept.notes.length > 0) {
+				for (i in concept.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = concept.notes[i];
+					concept_notes_list.appendChild(list_item);
+				}
+
+				concept_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+
+			// Update Calls
+			var calls = document.getElementById("calls");
+			if (calls != null)  { calls.setAttribute("hidden", "true"); }
+
+			var calls_list = document.getElementById("calls-list");
+
+			while (calls_list.firstChild) {
+				calls_list.removeChild(calls_list.firstChild);
+			}
+
+			if (calls != null && concept != null) {
+				for (i in concept.offensivePlayers) {
+					if (concept.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = concept.offensivePlayers[i].pos + ": " + concept.offensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+
+				for (i in concept.defensivePlayers) {
+					if (concept.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = concept.defensivePlayers[i].pos + ": " + concept.defensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+			}
+
+			// Update Player Notes
+			var player_notes = document.getElementById("player-notes");
+			if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
+
+			var player_notes_list = document.getElementById("player-notes-list");
+
+			while (player_notes_list.firstChild) {
+				player_notes_list.removeChild(player_notes_list.firstChild);
+			}
+
+			var player = concept.getSelected()[0];
+
+			if (player_notes != null && player != null && player.notes.length > 0) {
+				for (i in player.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = player.notes[i];
+					player_notes_list.appendChild(list_item);
+				}
+
+				player_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+		};
+
+		$("#add-note-button").click(function(event) {
+			var note = document.getElementById("note");
+
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			var selected = document.getElementById("selected");
+
+			if (note.value != "" && concept != null) {
+				var player = concept.getSelected()[0];
+				if (player != null) {
+					player.notes.push(note.value);
+				} else {
+					concept.notes.push(note.value);
+				}
+
+				if (selected) {
+					concept.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			note.value = "";
+		});
+
+		$("#add-call-button").click(function(event) {
+			var call = document.getElementById("call");
+
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (call.value != "" && concept != null && concept.getSelected()[0] != null) {
+				concept.getSelected()[0].call = call.value;
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					concept.clearSelected();
+					concept.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			call.value = "";
+		});
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
