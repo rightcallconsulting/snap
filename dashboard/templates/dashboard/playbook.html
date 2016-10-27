@@ -198,6 +198,8 @@
 			scout_formation = new Formation({});
 			dummy_offense = new Formation({});
 
+			updateNotesAndCalls();
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -669,6 +671,8 @@
 			var formation = play.formation;
 			play = new Play({});
 
+			updateNotesAndCalls();
+
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = formation;
 
@@ -714,6 +718,8 @@
 						break;
 					}
 				}
+
+				updateNotesAndCalls();
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -827,6 +833,8 @@
 
 			concept = new Concept({});
 
+			updateNotesAndCalls();
+
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
 
@@ -858,6 +866,8 @@
 						break;
 					}
 				}
+
+				updateNotesAndCalls();
 			}
 		};
 
