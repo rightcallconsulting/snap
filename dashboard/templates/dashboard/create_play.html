@@ -1304,19 +1304,23 @@
 
 			if (calls != null && play != null) {
 				for (i in play.offensivePlayers) {
-					var list_item = document.createElement("li");
-					list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
-					calls_list.appendChild(list_item);
-					calls.removeAttribute("hidden");
-					if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					if (play.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
 				}
 
 				for (i in play.defensivePlayers) {
-					var list_item = document.createElement("li");
-					list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
-					calls_list.appendChild(list_item);
-					calls.removeAttribute("hidden");
-					if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					if (play.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
 				}
 			}
 
