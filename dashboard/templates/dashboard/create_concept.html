@@ -951,7 +951,7 @@
 
 				var concept_name = new_selected.getAttribute("name");
 
-				for (var i = 0; i < concepts.length; ++i) {
+				for (i in concepts) {
 					if (concept_name === concepts[i].name) {
 						concept = concepts[i].deepCopy();
 						break;
