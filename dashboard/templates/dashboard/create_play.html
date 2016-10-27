@@ -169,6 +169,8 @@
 			button = new Button ({ label: "Block (G)" });
 			buttons.push(button);
 
+			updateNotesAndCalls();
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -353,66 +355,63 @@
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 				hideCallsInput();
 				hideNotesAndCallsInput();
-			}
 
-			var button_selected = document.getElementById("selected");
-			if (button_selected != null) {
-				unhideNotesAndCallsInput(play.name);
-			}
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					unhideNotesAndCallsInput(play.name);
+				}
 
-			// If a button is displayed and clicked then call it's click
-			// function and return.
-			for (i in buttons) {
-				if (buttons[i].isMouseInside(field)) {
-					for (j in buttons) {
-						if (j != i) {
-							buttons[j].setUnclicked();
+				// If a button is displayed and clicked then call it's click
+				// function and return.
+				for (i in buttons) {
+					if (buttons[i].isMouseInside(field)) {
+						for (j in buttons) {
+							if (j != i) {
+								buttons[j].setUnclicked();
+							}
 						}
-					}
 
-					buttons[i].click();
-					return false;
+						buttons[i].click();
+						return false;
+					}
 				}
-			}
 
-			// Handle clicks on players in the Play
-			var currentPlayerSelected = play.getSelected()[0];
-			var newPlayerSelected = play.mouseInPlayer(field);
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
+				// Handle clicks on players in the Play
+				var currentPlayerSelected = play.getSelected()[0];
+				var newPlayerSelected = play.mouseInPlayer(field);
+				var mouseYardX = field.getYardX(mouseX);
+				var mouseYardY = field.getYardY(mouseY);
 
-			if (currentPlayerSelected != null && newPlayerSelected != null) {
-				if (newPlayerSelected === currentPlayerSelected) {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
+				if (currentPlayerSelected != null && newPlayerSelected != null) {
+					if (newPlayerSelected === currentPlayerSelected) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						play.clearSelected();
+						return false;
+					} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						play.clearSelected();
+						newPlayerSelected.click();
+						unhideNotesAndCallsInput(newPlayerSelected.pos);
+						unhideCallsInput(newPlayerSelected.pos);
+
+						if (newPlayerSelected.pos === "QB") {
+							buttons[0].setClicked();
+						} else if (newPlayerSelected.eligible) {
+							buttons[3].setClicked();
+						} else if (!newPlayerSelected.eligible) {
+							buttons[4].setClicked();
+						}
+
+						return false;
 					}
-
-					play.clearSelected();
-					return false;
-				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-					}
-
-					play.clearSelected();
-					newPlayerSelected.click();
-					unhideNotesAndCallsInput(newPlayerSelected.pos);
-					unhideCallsInput(newPlayerSelected.pos);
-
-					if (newPlayerSelected.pos === "QB") {
-						buttons[0].setClicked();
-					} else if (newPlayerSelected.eligible) {
-						buttons[3].setClicked();
-					} else if (!newPlayerSelected.eligible) {
-						buttons[4].setClicked();
-					}
-
-					return false;
 				}
-			}
 
-			// If the buttons are selected add the appropriate assignments
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;				
@@ -443,37 +442,37 @@
 					currentPlayerSelected.blockingAssignmentArray.push(block);
 					return false;
 				}
-			}
 
-			// If someone is currently selected and no one is clicked on 
-			// unselect all buttons and players. Else if no one is currently 
-			// selected and someone is clicked on, then select that player and 
-			// return.
-			if (currentPlayerSelected != null && newPlayerSelected === null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
+				// If someone is currently selected and no one is clicked on 
+				// unselect all buttons and players. Else if no one is currently 
+				// selected and someone is clicked on, then select that player and 
+				// return.
+				if (currentPlayerSelected != null && newPlayerSelected === null) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					play.clearSelected();
+					return false;
+				} else if (currentPlayerSelected === null && newPlayerSelected != null) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					newPlayerSelected.click();
+					unhideNotesAndCallsInput(newPlayerSelected.pos);
+					unhideCallsInput(newPlayerSelected.pos);
+
+					if (newPlayerSelected.pos === "QB") {
+						buttons[0].setClicked();
+					} else if (newPlayerSelected.eligible) {
+						buttons[3].setClicked();
+					} else if (!newPlayerSelected.eligible) {
+						buttons[4].setClicked();
+					}
+
+					return false;
 				}
-
-				play.clearSelected();
-				return false;
-			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
-				}
-
-				newPlayerSelected.click();
-				unhideNotesAndCallsInput(newPlayerSelected.pos);
-				unhideCallsInput(newPlayerSelected.pos);
-
-				if (newPlayerSelected.pos === "QB") {
-					buttons[0].setClicked();
-				} else if (newPlayerSelected.eligible) {
-					buttons[3].setClicked();
-				} else if (!newPlayerSelected.eligible) {
-					buttons[4].setClicked();
-				}
-
-				return false;
 			}
 		};
 
@@ -1263,9 +1262,9 @@
 			add_call_button.textContent = "Set Call for " + button_text;
 		};
 
-		// updatePlayNotesAndCalls emptys the list of formation notes and updates
+		// updateNotesAndCalls emptys the list of formation notes and updates
 		// them with the notes for the new formation.
-		function updatePlayNotesAndCalls() {
+		function updateNotesAndCalls() {
 			// Update Play Notes
 			var play_notes = document.getElementById("play-notes");
 			play_notes.setAttribute("hidden", "true");
@@ -1292,6 +1291,22 @@
 
 			while (calls_list.firstChild) {
 				calls_list.removeChild(calls_list.firstChild);
+			}
+
+			if (calls != null && play != null) {
+				for (i in play.offensivePlayers) {
+					var list_item = document.createElement("li");
+					list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
+					call_list.appendChild(list_item);
+					calls.removeAttribute("hidden");
+				}
+
+				for (i in play.defensivePlayers) {
+					var list_item = document.createElement("li");
+					list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
+					call_list.appendChild(list_item);
+					calls.removeAttribute("hidden");
+				}
 			}
 
 			// Update Player Notes
@@ -1335,7 +1350,7 @@
 					play.save(path, csrf_token);
 				}
 
-				updatePlayNotesAndCalls();
+				updateNotesAndCalls();
 			}
 
 			note.value = "";
@@ -1354,6 +1369,8 @@
 				if (button_selected != null) {
 					play.save(path, csrf_token);
 				}
+
+				updateNotesAndCalls();
 			}
 
 			call.value = "";
