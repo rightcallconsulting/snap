@@ -249,6 +249,8 @@ Concept.prototype.mouseInPlayer = function(field) {
 // button. It checks the validity of the concept and then saves it (if valid)
 Concept.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
+		this.clearSelected();
+
 		var conceptJson = "";
 		var player;
 

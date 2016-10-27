@@ -252,6 +252,8 @@ Play.prototype.mouseInPlayer = function(field) {
 // button. It checks the validity of the play and then saves it (if valid)
 Play.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
+		this.clearSelected();
+
 		var playJson = "";
 		var player;
 
