@@ -353,8 +353,11 @@
 
 		function mouseReleased() {
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				// Hide the notes and calls and their input fields and then put
+				// them back if they should be there.
 				hideCallsInput();
 				hideNotesAndCallsInput();
+				updateNotesAndCalls();
 
 				var button_selected = document.getElementById("selected");
 				if (button_selected != null) {
@@ -389,6 +392,7 @@
 						}
 
 						play.clearSelected();
+						updateNotesAndCalls();
 						return false;
 					} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
 						for (i in buttons) {
@@ -399,6 +403,7 @@
 						newPlayerSelected.click();
 						unhideNotesAndCallsInput(newPlayerSelected.pos);
 						unhideCallsInput(newPlayerSelected.pos);
+						updateNotesAndCalls();
 
 						if (newPlayerSelected.pos === "QB") {
 							buttons[0].setClicked();
@@ -453,6 +458,7 @@
 					}
 
 					play.clearSelected();
+					updateNotesAndCalls();
 					return false;
 				} else if (currentPlayerSelected === null && newPlayerSelected != null) {
 					for (i in buttons) {
@@ -462,6 +468,7 @@
 					newPlayerSelected.click();
 					unhideNotesAndCallsInput(newPlayerSelected.pos);
 					unhideCallsInput(newPlayerSelected.pos);
+					updateNotesAndCalls();
 
 					if (newPlayerSelected.pos === "QB") {
 						buttons[0].setClicked();
@@ -507,17 +514,20 @@
 						if (play_name != null) {
 							if(string_length > 0) {
 								play_name.textContent = play_name.textContent.slice(0, string_length-1);
+								unhideNotesAndCallsInput(play_name.textContent);
 							}
 						}
 						return false;
 					} else if (keyCode == 32) {
 						if (play_name != null && string_length < 100) {
 							play_name.textContent += ' ';
+							unhideNotesAndCallsInput(play_name.textContent);
 						}
 						return false;
 					} else if (keyCode == 189) {
-						if (formation_name != null && string_length < 100) {
-							formation_name.textContent += '-';
+						if (play_name != null && string_length < 100) {
+							play_name.textContent += '-';
+							unhideNotesAndCallsInput(play_name.textContent);
 						}
 						return false;
 					}
@@ -637,6 +647,11 @@
 					addHeaderPlaceholder();
 				}
 			}
+		});
+
+		// Don't allow enter in the textarea.
+		$('#note').keypress(function(event){
+			if (event.keyCode === 10 || event.keyCode === 13) { event.preventDefault(); }
 		});
 
 		// When the header box is selected have it change colors and remove the
@@ -1361,7 +1376,8 @@
 			var selected = document.getElementById("selected");
 
 			if (note.value != "" && play != null) {
-				if (play.getSelected()[0] != null) {
+				var player = play.getSelected()[0];
+				if (player != null) {
 					player.notes.push(note.value);
 				} else {
 					play.notes.push(note.value);
