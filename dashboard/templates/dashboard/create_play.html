@@ -1297,14 +1297,14 @@
 				for (i in play.offensivePlayers) {
 					var list_item = document.createElement("li");
 					list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
-					call_list.appendChild(list_item);
+					calls_list.appendChild(list_item);
 					calls.removeAttribute("hidden");
 				}
 
 				for (i in play.defensivePlayers) {
 					var list_item = document.createElement("li");
 					list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
-					call_list.appendChild(list_item);
+					calls_list.appendChild(list_item);
 					calls.removeAttribute("hidden");
 				}
 			}
