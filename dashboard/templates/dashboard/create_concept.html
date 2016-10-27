@@ -926,6 +926,11 @@
 			// Create a new concept to replace whatever was already on screen.
 			concept = new Concept({});
 
+			// Hide notes and calls inputs and update notes and calls (get rid of them).
+			hideCallsInput();
+			hideNotesAndCallsInput();
+			updateNotesAndCalls();
+
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
 			if (old_selected != null) {
@@ -952,6 +957,10 @@
 						break;
 					}
 				}
+
+				// Show notes and calls inputs and update notes.
+				unhideNotesAndCallsInput(concept_name);
+				updateNotesAndCalls();
 
 				var header_text_content = concept_name;
 				concept_name = document.getElementById("concept-name");

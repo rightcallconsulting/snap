@@ -977,10 +977,6 @@
 			play_name_selected = "";
 			scout_formation_name_selected = "";
 
-			// Hide notes and calls inputs.
-			hideCallsInput();
-			hideNotesAndCallsInput();
-
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
 			// are selecting a button it will get replaced with the name of the
@@ -995,7 +991,9 @@
 			var formation = play.formation;
 			play = new Play({});
 
-			// Update notes and calls (make them go away).
+			// Hide notes and calls inputs and update notes and calls (get rid of them).
+			hideCallsInput();
+			hideNotesAndCallsInput();
 			updateNotesAndCalls();
 
 			for (i in formations) {
