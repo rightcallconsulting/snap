@@ -68,7 +68,7 @@
 			</div>
 
 			<div id="calls" class="col-md-4">
-				<h3 id="calls-header">Calls for Positions in Play</h3>
+				<h3 id="calls-header">Calls</h3>
 				<ul id="calls-list">
 				</ul>
 			</div>
@@ -974,6 +974,9 @@
 			var formation = play.formation;
 			play = new Play({});
 
+			// Update notes and calls (make them go away).
+			updateNotesAndCalls();
+
 			for (i in formations) {
 				if (formation === formations[i].name) {
 					play.fromFormation(formations[i]);
@@ -1015,8 +1018,9 @@
 					}
 				}
 
-				// Show notes and calls inputs.
+				// Show notes and calls inputs and update notes.
 				unhideNotesAndCallsInput(play_name);
+				updateNotesAndCalls();
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -1265,9 +1269,12 @@
 		// updateNotesAndCalls emptys the list of formation notes and updates
 		// them with the notes for the new formation.
 		function updateNotesAndCalls() {
+			var notes_and_calls = document.getElementById("notes-and-calls");
+
 			// Update Play Notes
 			var play_notes = document.getElementById("play-notes");
-			play_notes.setAttribute("hidden", "true");
+			if (play_notes != null) { play_notes.setAttribute("hidden", "true"); }
+
 			var play_notes_list = document.getElementById("play-notes-list");
 
 			while (play_notes_list.firstChild) {
@@ -1282,11 +1289,13 @@
 				}
 
 				play_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 			}
 
 			// Update Calls
 			var calls = document.getElementById("calls");
-			calls.setAttribute("hidden", "true");
+			if (calls != null)  { calls.setAttribute("hidden", "true"); }
+
 			var calls_list = document.getElementById("calls-list");
 
 			while (calls_list.firstChild) {
@@ -1299,6 +1308,7 @@
 					list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
 					calls_list.appendChild(list_item);
 					calls.removeAttribute("hidden");
+					if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 				}
 
 				for (i in play.defensivePlayers) {
@@ -1306,12 +1316,14 @@
 					list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
 					calls_list.appendChild(list_item);
 					calls.removeAttribute("hidden");
+					if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 				}
 			}
 
 			// Update Player Notes
 			var player_notes = document.getElementById("player-notes");
-			player_notes.setAttribute("hidden", "true");
+			if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
+
 			var player_notes_list = document.getElementById("player-notes-list");
 
 			while (player_notes_list.firstChild) {
@@ -1328,6 +1340,7 @@
 				}
 
 				player_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 			}
 		};
 
