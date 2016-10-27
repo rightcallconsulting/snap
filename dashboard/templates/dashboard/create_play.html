@@ -480,10 +480,12 @@
 			// Get the play-name html element if it exists. This is what
 			// will be updated.
 			var play_name = document.getElementById("play-name");
+			var note = document.getElementById("note");
+			var call = document.getElementById("call");
 
 			// If the header box is selected update the play name according
 			// to the key press. Otherwise, create a block.
-			if ($("#header-box").hasClass("selected") && play_name != null) {
+			if ($("#header-box").hasClass("selected") && play_name != null && !note.active && !call.active) {
 				// Get the currently selected sideview button so that you can
 				// unselect it when the name in the main view's top bar is
 				// changed.
@@ -582,7 +584,10 @@
 		};
 
 		function keyTyped() {
-			if ($("#header-box").hasClass("selected")) {
+			var note = document.getElementById("note");
+			var call = document.getElementById("call");
+
+			if ($("#header-box").hasClass("selected") && !note.active && !call.active) {
 				var play_name = document.getElementById("play-name");
 
 				if (play_name === null) {
