@@ -1333,7 +1333,7 @@
 				}
 
 				for (i in play.defensivePlayers) {
-					if (play.offensivePlayers[i].call != "") {
+					if (play.defensivePlayers[i].call != "") {
 						var list_item = document.createElement("li");
 						list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
 						calls_list.appendChild(list_item);
