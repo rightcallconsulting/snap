@@ -6,12 +6,13 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from quiz.models import Team, Player, Formation, Play, Position, Test, Group
+from quiz.models import Team, Player, Group
 from django.contrib.admin import widgets
 from django.forms.models import model_to_dict
 from datetimewidget.widgets import DateTimeWidget
 from passwords.fields import PasswordField
 from datetime import datetime
+from IPython import embed
 
 class UserCreateForm(UserCreationForm):
 	POSITIONS = (
@@ -127,36 +128,6 @@ class CoachForm(ModelForm):
 		model = Coach
 		fields = ['title']
 
-class TestForm(ModelForm):
-	OPTIONS = (
-			("QB_Progression", "QB_Progression"),
-			("WR_Route", "WR_Route"),
-			("OL_View", "OL_View"),
-			("CB_Assignment", "CB_Assignment"),
-		)
-
-	class Meta:
-		model = Test
-		fields = ['name','type_of_test', 'deadline']
-		widgets = {
-		#Use localization and bootstrap 3
-		}
-
-	def __init__(self, *args, **kwargs):
-		OPTIONS = (
-			("QBProgression", "QB Progression"),
-			("WRRoute", "WR Route"),
-			("OLView", "OL View"),
-			("CBAssignment", "CB Assignment"),
-		)
-
-		user = kwargs.pop('user','')
-		super(TestForm, self).__init__(*args, **kwargs)
-		self.fields['type_of_test']=forms.ChoiceField(OPTIONS)
-		self.fields['group']=forms.ModelChoiceField(queryset=PlayerGroup.objects.all(), initial=0)
-		self.fields['player']=forms.ModelChoiceField(queryset=Player.objects.all())
-		self.fields['deadline'].widget=widgets.AdminSplitDateTime()
-
 class UserMethods(User):
   def custom_method(self):
 	pass
@@ -194,6 +165,150 @@ class Concept(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(concept=self,player=player))
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		skips = 0
+		for result in results:
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
+
+class Formation(models.Model):
+	name = models.CharField(max_length=100)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	unit = models.CharField(max_length=100, default="offense")
+	scout = models.BooleanField(default=False)
+
+	formationJson = models.TextField(max_length=None, blank=True, null=True)
+
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ["-created_at"]
+
+	def __str__(self):
+		return self.name
+
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(formation=self,player=player))
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		skips = 0
+		for result in results:
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
+
+class Play(models.Model):
+	name = models.CharField(max_length=100)
+	scoutName = models.CharField(max_length=100, default="", blank=True, null=False)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+	scout = models.BooleanField(default=False)
+
+	playJson = models.TextField(max_length=None, blank=True, null=True)
+
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ["-created_at"]
+
+	def get_average_score_for_players(self, players):
+		results = []
+		for player in players:
+			results.extend(QuestionAttempted.objects.filter(play=self,player=player))
+		if len(results) == 0:
+			return 0.0
+		score = 0
+		skips = 0
+		for result in results:
+			if result.score != None:
+				score += result.score
+			else:
+				skips += 1
+		return score / len(results)
+
+	def __str__(self):
+		display_name = self.name + " from " + self.formation.name
+
+		if (self.scoutName != ""):
+			display_name += " vs " + self.scoutName
+
+		return display_name
+class Position(models.Model):
+	startX = models.FloatField()
+	startY = models.FloatField()
+	name = models.CharField(max_length=100)
+	formation = models.ForeignKey(Formation, on_delete=models.CASCADE, null=True, blank=True)
+	routeCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	runCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	blockingCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	motionCoordinates = models.CharField(max_length=200, null=True, blank=True)
+	progressionRank = models.IntegerField(null=True, blank=True)
+	playerIndex = models.IntegerField(null=True, blank=True)
+	routeNum = models.IntegerField(null=True, blank=True)
+	blocker = models.NullBooleanField()
+	runner = models.NullBooleanField()
+	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerID = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	CBAssignmentPlayerPosition = models.CharField(max_length=200, null=True, blank=True)
+	zoneYardX = models.FloatField(null=True, blank=True)
+	zoneYardY = models.FloatField(max_length=200, null=True, blank=True)
+	zoneHeight = models.FloatField(max_length=200, null=True, blank=True)
+	zoneWidth = models.FloatField(max_length=200, null=True, blank=True)
+	gapYardX = models.FloatField(max_length=200, null=True, blank=True)
+	gapYardY = models.FloatField(max_length=200, null=True, blank=True)
+	blockingAssignmentPlayerIndex = models.IntegerField(null=True, blank=True)
+	blockingAssignmentUnitIndex = models.IntegerField(null=True, blank=True)
+	blockingAssignmentObject = models.CharField(max_length=200, null=True, blank=True)
+	runAssignment = models.CharField(max_length=200, null=True, blank=True)
+
+	def __str__(self):
+		return self.name
+
+	def set_route_coordinates(self, coords):
+		self.routeCoordinates = json.dumps(coords)
+
+	def get_route_coordinates(self):
+		return json.loads(self.routeCoordinates)
+
+	def set_blocking_coordinates(self, coords):
+		self.blockingCoordinates = json.dumps(coords)
+
+	def get_blocking_coordinates(self):
+		return json.loads(self.blockingCoordinates)
+
+	def set_motion_coordinates(self, coords):
+		self.motionCoordinates = json.dumps(coords)
+
+	def get_motion_coordinates(self):
+		return json.loads(self.motionCoordinates)
+
+	def set_run_coordinates(self, coords):
+		self.routeCoordinates = json.dumps(coords)
+
+	def get_run_coordinates(self):
+		return json.loads(self.routeCoordinates)
+
+	def dict_for_json(self):
+		"""Dict representation of the instance (used in JSON APIs)."""
+		return model_to_dict(self)
 
 class Quiz(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)

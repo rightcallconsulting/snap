@@ -12,8 +12,8 @@ import json
 import simplejson
 from random import shuffle
 
-from quiz.models import Player, Team, Play, Formation, Test, TestResult
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, TestForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted
+from quiz.models import Player, Team
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -23,7 +23,6 @@ import simplejson
 from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import flot, gchart
 from django.core.files.uploadedfile import SimpleUploadedFile
-from dashboard.utils import PlayerAnalytics
 
 @login_required
 def homepage(request):
@@ -504,7 +503,7 @@ def groups(request):
 
 	if len(groups) > 0:
 		players_in_group = groups[0].players.all()
-		analytics = PlayerAnalytics(players_in_group)
+		analytics = None #PlayerAnalytics(players_in_group)
 	else:
 		players_in_group = []
 		analytics = None
@@ -721,7 +720,7 @@ def create_quiz(request):
 
 		if len(groups) > 0:
 			players_in_group = groups[0].players.all()
-			analytics = PlayerAnalytics(players_in_group)
+			analytics = None #PlayerAnalytics(players_in_group)
 		else:
 			players_in_group = []
 			analytics = None
@@ -933,15 +932,19 @@ def formation_quizzes(request, unit="offense"):
 		formations.sort(key=lambda formation: formation.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		formations.sort(key=lambda formation: formation.created_at, reverse=True)
+		formations.sort(key=lambda formation: formation.get_average_score_for_players([player]), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		formation_names = []
+		for formation in formations:
+			formation_names.append(formation.name)
 		formations = formations[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,
+			'answer_choices': formation_names,
 			'page_header': 'FORMATION QUIZ'
 		})
 	elif type_of_quiz == "alignment":
@@ -983,15 +986,19 @@ def play_quizzes(request, unit="offense"):
 		plays.sort(key=lambda play: play.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		plays.sort(key=lambda play: play.player_percent_correct(player), reverse=True)
+		plays.sort(key=lambda play: play.get_average_score_for_players([player]), reverse=True)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		play_names = []
+		for play in plays:
+			play_names.append(play.name)
 		plays = plays[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'plays': plays,
+			'answer_choices': play_names,
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "assignment":
@@ -1039,15 +1046,19 @@ def concept_quizzes(request, unit="offense"):
 		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
 	elif order_of_questions == "missed":
 		#sort is more complicated, so for now we do recent order
-		concepts.sort(key=lambda concept: concept.created_at, reverse=True)
+		concepts.sort(key=lambda concept: concept.get_average_score_for_players([player]), reverse=False)
 	### END SORT ###
 
 	if type_of_quiz == "identification":
+		concept_names = []
+		for concept in concepts:
+			concept_names.append(concept.name)
 		concepts = concepts[0:number_of_questions]
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
 			'concepts': concepts,
+			'answer_choices': concept_names,
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "assignment":
