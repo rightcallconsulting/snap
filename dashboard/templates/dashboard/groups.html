@@ -33,19 +33,29 @@
 				</tbody>
 			</table>
 		</div>
-
-		<form>
-			<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
-				<optgroup label="Groups">
-					{% for group in groups %}
-						<option value="{{ group.id }}" id="group-id">
-							&nbsp;&nbsp;&nbsp;{{ group }}
-						</option>
-					{% endfor %}
-				</optgroup>
-			</select>
-		</form>
-
+		<div>
+			<table><tbody><tr><td>
+			<form>
+				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
+					<optgroup label="Groups">
+						{% for group in groups %}
+							<option value="{{ group.id }}" id="group-id">
+								&nbsp;&nbsp;&nbsp;{{ group }}
+							</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+			</form></td><td>
+			<div id="delete-groups-button" onclick="deleteGroup()">
+				<span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-circle-thin fa-stack-2x"></i>
+						<i class="fa fa-users fa-stack-1x"></i>
+					</span>
+					DELETE GROUP
+				</span>
+			</div></td></tr></tbody></table>
+		</div>
 		<div class="row group-home">
 			<div class="col-lg-12" id="display-group-box">
 				<div class="table-wrapper" id="group-table-wrapper">
@@ -77,12 +87,28 @@
 
 {% block javascript %}
 	<script type="text/javascript">
+		var deleteGroup = function(){
+			var groupID = document.getElementById('group-form').selectedOptions[0].value;
+			var csrf_token = "{{ csrf_token }}";
+			var path = window.location.pathname;
+			var jqxhr = $.post(
+					path,
+					{csrfmiddlewaretoken: csrf_token, action: "DELETE", group_id: groupID}
+				).done(function() {
+					console.log("Group successfully sent to Django to be deleted");
+					window.location.href = window.location.href;
+				}).fail(function() {
+					console.log("Error sending Group to Django to be deleted");
+					window.location.href = window.location.href;
+			});
+		}
+
 		var createUserTable = function(users) {
 			var innerHTML = "<table class=\"player-list\">";
 			innerHTML += "<tr>"
 			innerHTML += "<th>PLAYER</th><th>POSITION</th><th>YEAR</th><th>RESULTS</th>"
 			innerHTML += "</tr>"
-			
+
 			for(var i = 0; i < users.length; i++) {
 				var user = users[i];
 				innerHTML += "<tr>"
@@ -104,7 +130,7 @@
 			var groupID = sel.value;
 
 			manageLink.href = 'manage'
-			
+
 			var queryString = "/groups/" + groupID + "/json";
 			var users = [];
 
@@ -118,7 +144,6 @@
 		};
 
 		var initGroupTable = function(){
-			debugger;
 			var sel = document.getElementById('group-form');
 			changeGroup(sel);
 		};
@@ -128,12 +153,12 @@
 
 	<!-- Pass Django variables to JS assets -->
 	<script type="text/javascript">
-		var percentCorrect = {{analytics.total_correct_attempts_percentage}},
+		/*var percentCorrect = {{analytics.total_correct_attempts_percentage}},
 			percentIncorrect = {{analytics.total_incorrect_attempts_percentage}},
-			percentSkipped = {{analytics.total_skipped_attempts_percentage}};
+			percentSkipped = {{analytics.total_skipped_attempts_percentage}};*/
 	</script>
 	<!-- Loading Chart.js through CDN for now -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 	<!-- Build Charts -->
-	<script src="{% static 'dashboard/js/analytics.js' %}"></script>
+	<!--<script src="{% static 'dashboard/js/analytics.js' %}"></script>-->
 {% endblock %}

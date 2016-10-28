@@ -501,6 +501,13 @@ def groups(request):
 	team = request.user.coach.team
 	groups = PlayerGroup.objects.filter(team=team)
 
+	if request.method == "POST" and request.POST['action'] == "DELETE":
+		group_id = int(request.POST['group_id'])
+		groups = groups.filter(pk=group_id)
+		if len(groups) > 0:
+			groups[0].delete()
+		return
+
 	if len(groups) > 0:
 		players_in_group = groups[0].players.all()
 		analytics = None #PlayerAnalytics(players_in_group)
