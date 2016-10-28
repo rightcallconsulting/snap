@@ -34,7 +34,7 @@
 			</table>
 		</div>
 		<div>
-			<table><tbody><tr><td>
+			<table class="master-detail-table"><tbody><tr><td class="first">
 			<form>
 				<select name="units" class="unit-form form-sm" id="group-form" onchange="changeGroup(this)">
 					<optgroup label="Groups">
@@ -45,16 +45,16 @@
 						{% endfor %}
 					</optgroup>
 				</select>
-			</form></td><td>
-			<div id="delete-groups-button" onclick="deleteGroup()">
+			</form></td><td class="second">
+			<button id="delete-groups-button" onclick="deleteGroup()">
 				<span>
-					<span class="fa-stack fa-lg">
+					<!--<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-users fa-stack-1x"></i>
-					</span>
+					</span>-->
 					DELETE GROUP
 				</span>
-			</div></td></tr></tbody></table>
+			</button></td></tr></tbody></table>
 		</div>
 		<div class="row group-home">
 			<div class="col-lg-12" id="display-group-box">
