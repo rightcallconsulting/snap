@@ -88,6 +88,7 @@
 						<optgroup>
 							<option value="identification">Identification</option>
 							<option value="assignment">Assignment</option>
+							<option value="calls">Calls</option>
 						</optgroup>
 					</select>
 				</div>
@@ -155,6 +156,7 @@
 						<optgroup>
 							<option value="identification">Identification</option>
 							<option value="assignment">Assignment</option>
+							<option value="calls">Calls</option>
 						</optgroup>
 					</select>
 				</div>
@@ -274,12 +276,16 @@
 
 			var value = selected.value;
 
-			if (value === "alignment" || value === "assignment") {
+			if (value === "alignment" || value === "assignment" || value === "calls") {
 				hr.removeAttribute("hidden");
 				position.removeAttribute("hidden");
 
 				if (type_of_assignment != null) {
 					type_of_assignment.removeAttribute("hidden");
+				}
+
+				if(value === "calls"){
+					type_of_assignment.setAttribute("hidden", "true");
 				}
 			} else if (value === "identification") {
 				hr.removeAttribute("hidden");

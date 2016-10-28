@@ -1036,6 +1036,31 @@ def play_quizzes(request, unit="offense"):
 			'position_groups': position_groups,
 			'page_header': 'PLAY QUIZ'
 		})
+	elif type_of_quiz == "calls":
+		call_options = ["ROGER", "LOUIE", "DANISH"]
+		position = request.GET['position'].upper()
+
+		filtered_plays = []
+		for play in plays:
+			play_dict = json.loads(play.playJson)
+			offensive_players = play_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+
+					### Do additional filtering for type of assignment here ###
+					if 'calls' in player_dict and len(player_dict['calls']) > 0:
+						filtered_plays.append(play)
+
+		plays = filtered_plays[0:number_of_questions]
+
+		return render(request, 'dashboard/call_quiz.html', {
+			'player': player,
+			'team': team,
+			'plays': plays,
+			'answer_choices': call_options,
+			'page_header': 'PLAY QUIZ'
+		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
 def concept_quizzes(request, unit="offense"):
