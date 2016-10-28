@@ -9,6 +9,13 @@
 			Select a player in the concept by clicking on them and then add assignments using the mouse and keyboard. Change the type of assignment by clicking the top buttons or using the 'A' key for quarterback dropbacks, the 'S' key for pre-snap motion, the 'D' key for runs, the 'F' key for routes, and the 'G' key for blocking assignments. All assignments can be created by selecting that button and then clicking anywhere on the field. If blocks are selected you can also click on a defensive player to specify that player as an assignment. Additionally, the 'Q', 'W', 'E', 'R', 'T', 'Y', and 'U' keys are shortcuts for adding different predefined blocks.
 		</div>
 
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
+			<div><button id="add-call-button" class="btn btn-success">Add Call</button></div>
+		</div>
+
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Concept Name</p>
@@ -50,6 +57,26 @@
 						{{ concept.name }}
 					</button>
 				{% endfor %}
+			</div>
+		</div>
+
+		<div id="notes-and-calls" class="col-md-12" hidden="true">
+			<div id="concept-notes" class="col-md-4">
+				<h3 id="concept-notes-header">Notes for Concept</h3>
+				<ul id="concept-notes-list">
+				</ul>
+			</div>
+
+			<div id="calls" class="col-md-4">
+				<h3 id="calls-header">Calls for Positions in Concept</h3>
+				<ul id="calls-list">
+				</ul>
+			</div>
+
+			<div id="player-notes" class="col-md-4">
+				<h3 id="player-notes-header">Notes for Player</h3>
+				<ul id="player-notes-list">
+				</ul>
 			</div>
 		</div>
 
@@ -135,6 +162,8 @@
 
 			button = new Button ({ label: "Block (G)" });
 			buttons.push(button);
+
+			updateNotesAndCalls();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -338,49 +367,136 @@
 		};
 
 		function mouseReleased() {
-			// If the mouse is being dragged don't do any of the click actions.
-			if (mouseBeingDragged === true) {
-				mouseBeingDragged = false;
-				playerBeingDragged = null;
-				return false;
-			}
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				// Hide the notes and calls and their input fields and then put
+				// them back if they should be there.
+				hideCallsInput();
+				hideNotesAndCallsInput();
+				updateNotesAndCalls();
 
-			// If a button is displayed and clicked then call it's click
-			// function and return.
-			for (i in buttons) {
-				if (buttons[i].isMouseInside(field)) {
-					for (j in buttons) {
-						if (j != i) {
-							buttons[j].setUnclicked();
-						}
-					}
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					unhideNotesAndCallsInput(concept.name);
+				}
 
-					buttons[i].click();
+				// If the mouse is being dragged don't do any of the click actions.
+				if (mouseBeingDragged === true) {
+					mouseBeingDragged = false;
+					playerBeingDragged = null;
 					return false;
 				}
-			}
 
-			// Handle clicks on players in the Concept
-			var currentPlayerSelected = concept.getSelected()[0];
-			var newPlayerSelected = concept.mouseInPlayer(field);
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
+				// If a button is displayed and clicked then call it's click
+				// function and return.
+				for (i in buttons) {
+					if (buttons[i].isMouseInside(field)) {
+						for (j in buttons) {
+							if (j != i) {
+								buttons[j].setUnclicked();
+							}
+						}
 
-			if (currentPlayerSelected != null && newPlayerSelected != null) {
-				if (newPlayerSelected === currentPlayerSelected) {
+						buttons[i].click();
+						return false;
+					}
+				}
+
+				// Handle clicks on players in the Concept
+				var currentPlayerSelected = concept.getSelected()[0];
+				var newPlayerSelected = concept.mouseInPlayer(field);
+				var mouseYardX = field.getYardX(mouseX);
+				var mouseYardY = field.getYardY(mouseY);
+
+				if (currentPlayerSelected != null && newPlayerSelected != null) {
+					if (newPlayerSelected === currentPlayerSelected) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						concept.clearSelected();
+						updateNotesAndCalls();
+						return false;
+					} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						concept.clearSelected();
+						newPlayerSelected.click();
+						unhideNotesAndCallsInput(newPlayerSelected.pos);
+						unhideCallsInput(newPlayerSelected.pos);
+						updateNotesAndCalls();
+
+						if (newPlayerSelected.pos === "QB") {
+							buttons[0].setClicked();
+						} else if (newPlayerSelected.eligible) {
+							buttons[3].setClicked();
+						} else if (!newPlayerSelected.eligible) {
+							buttons[4].setClicked();
+						}
+
+						return false;
+					}
+				}
+
+				// If the buttons are selected add the appropriate assignments
+				if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < (field.height - offensivePlayerBar.height) && currentPlayerSelected) {
+					if (buttons[0].clicked === true) {
+						currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
+						return false;
+					} else if (buttons[1].clicked === true) {
+						currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
+						return false;
+					} else if (buttons[2].clicked === true) {
+						currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
+						return false;
+					} else if (buttons[3].clicked === true) {
+						currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
+						return false;
+					} else if (buttons[4].clicked === true) {
+						var block;
+						if (newPlayerSelected != null && newPlayerSelected.unit === "defense") {
+							block = new BlockType({
+								type: 1,
+								player: newPlayerSelected,
+								x: mouseYardX, y: mouseYardY
+							});
+						} else {
+							block = new BlockType({
+								type: 0,
+								x: mouseYardX, y: mouseYardY
+							});
+						}
+
+						currentPlayerSelected.blockingAssignmentArray.push(block);
+						return false;
+					}else if(currentPlayerSelected.unit === "defense"){
+						currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
+						return false;
+					}
+				}
+
+				// If someone is currently selected and no one is clicked on
+				// unselect all buttons and players. Else if no one is currently
+				// selected and someone is clicked on, then select that player and
+				// return.
+				if (currentPlayerSelected != null && newPlayerSelected === null) {
 					for (i in buttons) {
 						buttons[i].setUnclicked();
 					}
 
 					concept.clearSelected();
+					updateNotesAndCalls();
 					return false;
-				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+				} else if (currentPlayerSelected === null && newPlayerSelected != null) {
 					for (i in buttons) {
 						buttons[i].setUnclicked();
 					}
 
-					concept.clearSelected();
 					newPlayerSelected.click();
+					unhideNotesAndCallsInput(newPlayerSelected.pos);
+					unhideCallsInput(newPlayerSelected.pos);
+					updateNotesAndCalls();
 
 					if (newPlayerSelected.pos === "QB") {
 						buttons[0].setClicked();
@@ -392,253 +508,196 @@
 
 					return false;
 				}
-			}
 
-			// If the buttons are selected add the appropriate assignments
-			if (mouseX > 0 && mouseX < field.width && mouseY > defensivePlayerBar.height && mouseY < (field.height - offensivePlayerBar.height) && currentPlayerSelected) {
-				if (buttons[0].clicked === true) {
-					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[1].clicked === true) {
-					currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[2].clicked === true) {
-					currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[3].clicked === true) {
-					currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
-					return false;
-				} else if (buttons[4].clicked === true) {
-					var block;
-					if (newPlayerSelected != null && newPlayerSelected.unit === "defense") {
-						block = new BlockType({
-							type: 1,
-							player: newPlayerSelected,
-							x: mouseYardX, y: mouseYardY
-						});
-					} else {
-						block = new BlockType({
-							type: 0,
-							x: mouseYardX, y: mouseYardY
-						});
-					}
+				// Handle clicks on players in the PlayerBar. mouseClicked will
+				// have already returned if a player on the field is clicked
+				newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
+				if (newPlayerSelected != null) {
+					var playerToAddToConcept = new Player({
+						num: newPlayerSelected.num,
+						pos: newPlayerSelected.pos,
+						x: Field.WIDTH / 2,
+						y: field.ballYardLine,
+						red: newPlayerSelected.red,
+						green: newPlayerSelected.green,
+						blue: newPlayerSelected.blue,
+						eligible: newPlayerSelected.eligible
+					});
 
-					currentPlayerSelected.blockingAssignmentArray.push(block);
-					return false;
-				}else if(currentPlayerSelected.unit === "defense"){
-					currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
+					concept.offensivePlayers.push(playerToAddToConcept);
+
 					return false;
 				}
-			}
 
-			// If someone is currently selected and no one is clicked on
-			// unselect all buttons and players. Else if no one is currently
-			// selected and someone is clicked on, then select that player and
-			// return.
-			if (currentPlayerSelected != null && newPlayerSelected === null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
+				// Handle clicks on players in the PlayerBar. mouseClicked will
+				// have already returned if a player on the field is clicked
+				newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
+				if (newPlayerSelected != null) {
+					var playerToAddToConcept = new Player({
+						num: newPlayerSelected.num,
+						pos: newPlayerSelected.pos,
+						x: Field.WIDTH / 2,
+						y: field.ballYardLine + field.pixelsToYards(30),
+						red: newPlayerSelected.red,
+						green: newPlayerSelected.green,
+						blue: newPlayerSelected.blue,
+						unit: newPlayerSelected.unit
+					});
+
+					concept.defensivePlayers.push(playerToAddToConcept);
+
+					return false;
 				}
-
-				concept.clearSelected();
-				return false;
-			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
-				}
-
-				newPlayerSelected.click();
-
-				if (newPlayerSelected.pos === "QB") {
-					buttons[0].setClicked();
-				} else if (newPlayerSelected.eligible) {
-					buttons[3].setClicked();
-				} else if (!newPlayerSelected.eligible) {
-					buttons[4].setClicked();
-				}
-
-				return false;
-			}
-
-			// Handle clicks on players in the PlayerBar. mouseClicked will
-			// have already returned if a player on the field is clicked
-			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
-			if (newPlayerSelected != null) {
-				var playerToAddToConcept = new Player({
-					num: newPlayerSelected.num,
-					pos: newPlayerSelected.pos,
-					x: Field.WIDTH / 2,
-					y: field.ballYardLine,
-					red: newPlayerSelected.red,
-					green: newPlayerSelected.green,
-					blue: newPlayerSelected.blue,
-					eligible: newPlayerSelected.eligible
-				});
-
-				concept.offensivePlayers.push(playerToAddToConcept);
-
-				return false;
-			}
-
-			// Handle clicks on players in the PlayerBar. mouseClicked will
-			// have already returned if a player on the field is clicked
-			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
-			if (newPlayerSelected != null) {
-				var playerToAddToConcept = new Player({
-					num: newPlayerSelected.num,
-					pos: newPlayerSelected.pos,
-					x: Field.WIDTH / 2,
-					y: field.ballYardLine + field.pixelsToYards(30),
-					red: newPlayerSelected.red,
-					green: newPlayerSelected.green,
-					blue: newPlayerSelected.blue,
-					unit: newPlayerSelected.unit
-				});
-
-				concept.defensivePlayers.push(playerToAddToConcept);
-
-				return false;
 			}
 		};
 
 		function keyPressed() {
-			// Get the concept-name html element if it exists. This is what
-			// will be updated.
-			var concept_name = document.getElementById("concept-name");
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				// Get the concept-name html element if it exists. This is what
+				// will be updated.
+				var concept_name = document.getElementById("concept-name");
 
-			// If the header box is selected update the concept name according
-			// to the key press. Otherwise, create a block.
-			if ($("#header-box").hasClass("selected") && concept_name != null) {
-				// Get the currently selected sideview button so that you can
-				// unselect it when the name in the main view's top bar is
-				// changed.
-				var selected = document.getElementById("selected");
+				// If the header box is selected update the concept name according
+				// to the key press. Otherwise, create a block.
+				if ($("#header-box").hasClass("selected") && concept_name != null) {
+					// Get the currently selected sideview button so that you can
+					// unselect it when the name in the main view's top bar is
+					// changed.
+					var selected = document.getElementById("selected");
 
-				// If there was a previously selected button remove it's selected
-				// id attribute and change it from btn-success to btn-primary.
-				if (selected != null) {
-					selected.removeAttribute("id");
-					selected.removeAttribute("class");
-					selected.setAttribute("class", "btn btn-primary sideview-button");
-				}
-
-				// Get the main view's top bar so that you can tell is the
-				// string has become empty and needs to be replaced with a
-				// placeholder message.
-				var string_length = concept_name.textContent.length;
-
-				if (keyCode == BACKSPACE) {
-					if (concept_name != null) {
-						if(string_length > 0) {
-							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
-						}
-					}
-					return false;
-				} else if (keyCode == 32) {
-					if (concept_name != null && string_length < 100) {
-						concept_name.textContent += ' ';
-					}
-					return false;
-				} else if (keyCode == 189) {
-					if (formation_name != null && string_length < 100) {
-						formation_name.textContent += '-';
-					}
-					return false;
-				}
-
-			} else if (concept.getSelected()[0] != null) {
-				var playerSelected = concept.getSelected()[0];
-				var playerSelectedIndex = concept.getSelected()[1];
-				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
-				var playerStatusKeys = ["A", "S", "D", "F", "G"];
-
-				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelected.unit == "offense") {
-						if (playerSelected.dropback.length > 0) {
-							playerSelected.dropback.pop();
-						} else if(playerSelected.run.length > 0) {
-							playerSelected.run.pop();
-						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
-						} else if (playerSelected.blockingAssignmentArray.length > 0) {
-							playerSelected.blockingAssignmentArray.pop();
-						} else if (playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop();
-						} else {
-							concept.offensivePlayers.splice(playerSelectedIndex, 1);
-						}
-					} else if (playerSelected.unit == "defense") {
-						if (playerSelected.defensiveMovement.length > 0) {
-							playerSelected.defensiveMovement.pop();
-						} else {
-							concept.defensivePlayers.splice(playerSelectedIndex, 1);
-						}
+					// If there was a previously selected button remove it's selected
+					// id attribute and change it from btn-success to btn-primary.
+					if (selected != null) {
+						selected.removeAttribute("id");
+						selected.removeAttribute("class");
+						selected.setAttribute("class", "btn btn-primary sideview-button");
 					}
 
-					return false;
-				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
-					var prevX = playerSelected.x;
-					var prevY = playerSelected.y;
-					var blockSize = playerSelected.blockingAssignmentArray.length;
+					// Get the main view's top bar so that you can tell is the
+					// string has become empty and needs to be replaced with a
+					// placeholder message.
+					var string_length = concept_name.textContent.length;
 
-					if (blockSize > 0) {
-						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
-						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
-					}
-
-					var block = new BlockType({
-						type: 2 + specialBlockKeys.indexOf(key),
-						player: null,
-						prevX: prevX,
-						prevY: prevY
-					});
-
-					playerSelected.blockingAssignmentArray.push(block);
-
-					return false;
-				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
-						for (i in buttons) {
-							if (i != playerStatusKeys.indexOf(key)) {
-								buttons[i].setUnclicked();
-							} else {
-								buttons[i].click();
+					if (keyCode == BACKSPACE) {
+						if (concept_name != null) {
+							if(string_length > 0) {
+								concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+								unhideNotesAndCallsInput(concept_name.textContent);
 							}
 						}
+						return false;
+					} else if (keyCode == 32) {
+						if (concept_name != null && string_length < 100) {
+							concept_name.textContent += ' ';
+							unhideNotesAndCallsInput(concept_name.textContent);
+						}
+						return false;
+					} else if (keyCode == 189) {
+						if (concept_name != null && string_length < 100) {
+							concept_name.textContent += '-';
+							unhideNotesAndCallsInput(concept_name.textContent);
+						}
+						return false;
 					}
 
-					return false;
+				} else if (concept.getSelected()[0] != null) {
+					var playerSelected = concept.getSelected()[0];
+					var playerSelectedIndex = concept.getSelected()[1];
+					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+					var playerStatusKeys = ["A", "S", "D", "F", "G"];
+
+					if (keyCode == BACKSPACE || keyCode == DELETE) {
+						if (playerSelected.unit == "offense") {
+							if (playerSelected.dropback.length > 0) {
+								playerSelected.dropback.pop();
+							} else if(playerSelected.run.length > 0) {
+								playerSelected.run.pop();
+							} else if(playerSelected.route.length > 0) {
+								playerSelected.route.pop();
+							} else if (playerSelected.blockingAssignmentArray.length > 0) {
+								playerSelected.blockingAssignmentArray.pop();
+							} else if (playerSelected.motionCoords.length > 0){
+								playerSelected.motionCoords.pop();
+							} else {
+								concept.offensivePlayers.splice(playerSelectedIndex, 1);
+							}
+						} else if (playerSelected.unit == "defense") {
+							if (playerSelected.defensiveMovement.length > 0) {
+								playerSelected.defensiveMovement.pop();
+							} else {
+								concept.defensivePlayers.splice(playerSelectedIndex, 1);
+							}
+						}
+
+						return false;
+					} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+						var prevX = playerSelected.x;
+						var prevY = playerSelected.y;
+						var blockSize = playerSelected.blockingAssignmentArray.length;
+
+						if (blockSize > 0) {
+							prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+							prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
+						}
+
+						var block = new BlockType({
+							type: 2 + specialBlockKeys.indexOf(key),
+							player: null,
+							prevX: prevX,
+							prevY: prevY
+						});
+
+						playerSelected.blockingAssignmentArray.push(block);
+
+						return false;
+					} else if (playerStatusKeys.indexOf(key) >= 0) {
+						if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+							for (i in buttons) {
+								if (i != playerStatusKeys.indexOf(key)) {
+									buttons[i].setUnclicked();
+								} else {
+									buttons[i].click();
+								}
+							}
+						}
+
+						return false;
+					}
 				}
 			}
 		};
 
 		function keyTyped() {
-			if ($("#header-box").hasClass("selected")) {
-				var concept_name = document.getElementById("concept-name");
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				if ($("#header-box").hasClass("selected")) {
+					var concept_name = document.getElementById("concept-name");
 
-				if (concept_name === null) {
-					concept_name = document.createElement("p");
-					concept_name.setAttribute("id", "concept-name");
-				}
-
-				document.getElementById("header-box").appendChild(concept_name);
-				var string_length = concept_name.textContent.length;
-
-				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-					removeHeaderPlaceholder();
-					removeHeaderError();
-
-					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-						if (string_length <= 100){
-							concept_name.textContent += key;
-						}
+					if (concept_name === null) {
+						concept_name = document.createElement("p");
+						concept_name.setAttribute("id", "concept-name");
 					}
 
-					// return false to prevent default behavior
-					return false;
+					document.getElementById("header-box").appendChild(concept_name);
+					var string_length = concept_name.textContent.length;
+
+					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+						removeHeaderPlaceholder();
+						removeHeaderError();
+
+						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+							if (string_length <= 100){
+								concept_name.textContent += key;
+							}
+						}
+
+						unhideNotesAndCallsInput(concept_name.textContent);
+
+						// return false to prevent default behavior
+						return false;
+					}
 				}
 			}
 		};
@@ -673,6 +732,11 @@
 			removeHeaderError();
 			$("#header-box").addClass("selected");
 			event.stopPropagation();
+		});
+
+		// Don't allow enter in the textarea.
+		$('#note').keypress(function(event){
+			if (event.keyCode === 10 || event.keyCode === 13) { event.preventDefault(); }
 		});
 
 		$("#save-button").click(function(event) {
@@ -862,6 +926,11 @@
 			// Create a new concept to replace whatever was already on screen.
 			concept = new Concept({});
 
+			// Hide notes and calls inputs and update notes and calls (get rid of them).
+			hideCallsInput();
+			hideNotesAndCallsInput();
+			updateNotesAndCalls();
+
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
 			if (old_selected != null) {
@@ -882,12 +951,16 @@
 
 				var concept_name = new_selected.getAttribute("name");
 
-				for (var i = 0; i < concepts.length; ++i) {
+				for (i in concepts) {
 					if (concept_name === concepts[i].name) {
 						concept = concepts[i].deepCopy();
 						break;
 					}
 				}
+
+				// Show notes and calls inputs and update notes.
+				unhideNotesAndCallsInput(concept_name);
+				updateNotesAndCalls();
 
 				var header_text_content = concept_name;
 				concept_name = document.getElementById("concept-name");
@@ -965,6 +1038,168 @@
 			error_message.textContent = "Invalid Concept Name";
 			header_box.appendChild(error_message);
 		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		function hideCallsInput() {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "none";
+			add_call_button.style.display = "none";
+		};
+
+		function unhideCallsInput(button_text) {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "initial";
+			add_call_button.style.display = "initial";
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+			add_call_button.textContent = "Set Call for " + button_text;
+		};
+
+		// updateNotesAndCalls emptys the list of formation notes and updates
+		// them with the notes for the new formation.
+		function updateNotesAndCalls() {
+			var notes_and_calls = document.getElementById("notes-and-calls");
+
+			// Update Concept Notes
+			var concept_notes = document.getElementById("concept-notes");
+			if (concept_notes != null) { concept_notes.setAttribute("hidden", "true"); }
+
+			var concept_notes_list = document.getElementById("concept-notes-list");
+
+			while (concept_notes_list.firstChild) {
+				concept_notes_list.removeChild(concept_notes_list.firstChild);
+			}
+
+			if (concept_notes != null && concept != null && concept.notes.length > 0) {
+				for (i in concept.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = concept.notes[i];
+					concept_notes_list.appendChild(list_item);
+				}
+
+				concept_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+
+			// Update Calls
+			var calls = document.getElementById("calls");
+			if (calls != null)  { calls.setAttribute("hidden", "true"); }
+
+			var calls_list = document.getElementById("calls-list");
+
+			while (calls_list.firstChild) {
+				calls_list.removeChild(calls_list.firstChild);
+			}
+
+			if (calls != null && concept != null) {
+				for (i in concept.offensivePlayers) {
+					if (concept.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = concept.offensivePlayers[i].pos + ": " + concept.offensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+
+				for (i in concept.defensivePlayers) {
+					if (concept.defensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = concept.defensivePlayers[i].pos + ": " + concept.defensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+			}
+
+			// Update Player Notes
+			var player_notes = document.getElementById("player-notes");
+			if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
+
+			var player_notes_list = document.getElementById("player-notes-list");
+
+			while (player_notes_list.firstChild) {
+				player_notes_list.removeChild(player_notes_list.firstChild);
+			}
+
+			var player = concept.getSelected()[0];
+
+			if (player_notes != null && player != null && player.notes.length > 0) {
+				for (i in player.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = player.notes[i];
+					player_notes_list.appendChild(list_item);
+				}
+
+				player_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+		};
+
+		$("#add-note-button").click(function(event) {
+			var note = document.getElementById("note");
+
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			var selected = document.getElementById("selected");
+
+			if (note.value != "" && concept != null) {
+				var player = concept.getSelected()[0];
+				if (player != null) {
+					player.notes.push(note.value);
+				} else {
+					concept.notes.push(note.value);
+				}
+
+				if (selected) {
+					concept.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			note.value = "";
+		});
+
+		$("#add-call-button").click(function(event) {
+			var call = document.getElementById("call");
+
+			var path = "/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (call.value != "" && concept != null && concept.getSelected()[0] != null) {
+				concept.getSelected()[0].call = call.value;
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					concept.clearSelected();
+					concept.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			call.value = "";
+		});
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

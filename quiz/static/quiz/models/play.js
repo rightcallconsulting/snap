@@ -252,6 +252,8 @@ Play.prototype.mouseInPlayer = function(field) {
 // button. It checks the validity of the play and then saves it (if valid)
 Play.prototype.save = function (path, csrf_token) {
 	if (this.isValid()) {
+		this.clearSelected();
+
 		var playJson = "";
 		var player;
 
@@ -267,7 +269,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;

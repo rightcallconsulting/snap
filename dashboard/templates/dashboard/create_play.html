@@ -9,6 +9,13 @@
 			Select a current play from the list of existing plays to edit it or use it as a starting point for a new play. Click the 'D' on the top of the sideview to see your scout defensive formations and implement specific versions of the selected play against a defensive look. If you save a play with the same name as a current play that play will be overwritten, otherwise a new play will be saved. To delete a current play select it from the list of existing plays and click on the trash can without changing the play's name.
 		</div>
 
+		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
+			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
+			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+			<div><input id="call" class="snap-input snap-text" type="text" maxlength="50"></div>
+			<div><button id="add-call-button" class="btn btn-success">Set Call</button></div>
+		</div>
+
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="interactive-header display-header placeholder">
 				<p id="placeholder-message">Enter Play Name</p>
@@ -50,6 +57,26 @@
 						{{ formation.name }}
 					</button>
 				{% endfor %}
+			</div>
+		</div>
+
+		<div id="notes-and-calls" class="col-md-12" hidden="true">
+			<div id="play-notes" class="col-md-4">
+				<h3 id="play-notes-header">Notes for Play</h3>
+				<ul id="play-notes-list">
+				</ul>
+			</div>
+
+			<div id="calls" class="col-md-4">
+				<h3 id="calls-header">Calls</h3>
+				<ul id="calls-list">
+				</ul>
+			</div>
+
+			<div id="player-notes" class="col-md-4">
+				<h3 id="player-notes-header">Notes for Player</h3>
+				<ul id="player-notes-list">
+				</ul>
 			</div>
 		</div>
 
@@ -141,6 +168,8 @@
 
 			button = new Button ({ label: "Block (G)" });
 			buttons.push(button);
+
+			updateNotesAndCalls();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -323,57 +352,71 @@
 		//*******************************************************************//
 
 		function mouseReleased() {
-			// If a button is displayed and clicked then call it's click
-			// function and return.
-			for (i in buttons) {
-				if (buttons[i].isMouseInside(field)) {
-					for (j in buttons) {
-						if (j != i) {
-							buttons[j].setUnclicked();
-						}
-					}
-
-					buttons[i].click();
-					return false;
-				}
-			}
-
-			// Handle clicks on players in the Play
-			var currentPlayerSelected = play.getSelected()[0];
-			var newPlayerSelected = play.mouseInPlayer(field);
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
-
-			if (currentPlayerSelected != null && newPlayerSelected != null) {
-				if (newPlayerSelected === currentPlayerSelected) {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-					}
-
-					play.clearSelected();
-					return false;
-				} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-					}
-
-					play.clearSelected();
-					newPlayerSelected.click();
-
-					if (newPlayerSelected.pos === "QB") {
-						buttons[0].setClicked();
-					} else if (newPlayerSelected.eligible) {
-						buttons[3].setClicked();
-					} else if (!newPlayerSelected.eligible) {
-						buttons[4].setClicked();
-					}
-
-					return false;
-				}
-			}
-
-			// If the buttons are selected add the appropriate assignments
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				// Hide the notes and calls and their input fields and then put
+				// them back if they should be there.
+				hideCallsInput();
+				hideNotesAndCallsInput();
+				updateNotesAndCalls();
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					unhideNotesAndCallsInput(play.name);
+				}
+
+				// If a button is displayed and clicked then call it's click
+				// function and return.
+				for (i in buttons) {
+					if (buttons[i].isMouseInside(field)) {
+						for (j in buttons) {
+							if (j != i) {
+								buttons[j].setUnclicked();
+							}
+						}
+
+						buttons[i].click();
+						return false;
+					}
+				}
+
+				// Handle clicks on players in the Play
+				var currentPlayerSelected = play.getSelected()[0];
+				var newPlayerSelected = play.mouseInPlayer(field);
+				var mouseYardX = field.getYardX(mouseX);
+				var mouseYardY = field.getYardY(mouseY);
+
+				if (currentPlayerSelected != null && newPlayerSelected != null) {
+					if (newPlayerSelected === currentPlayerSelected) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						play.clearSelected();
+						updateNotesAndCalls();
+						return false;
+					} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+						}
+
+						play.clearSelected();
+						newPlayerSelected.click();
+						unhideNotesAndCallsInput(newPlayerSelected.pos);
+						unhideCallsInput(newPlayerSelected.pos);
+						updateNotesAndCalls();
+
+						if (newPlayerSelected.pos === "QB") {
+							buttons[0].setClicked();
+						} else if (newPlayerSelected.eligible) {
+							buttons[3].setClicked();
+						} else if (!newPlayerSelected.eligible) {
+							buttons[4].setClicked();
+						}
+
+						return false;
+					}
+				}
+
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;				
@@ -404,170 +447,183 @@
 					currentPlayerSelected.blockingAssignmentArray.push(block);
 					return false;
 				}
-			}
 
-			// If someone is currently selected and no one is clicked on 
-			// unselect all buttons and players. Else if no one is currently 
-			// selected and someone is clicked on, then select that player and 
-			// return.
-			if (currentPlayerSelected != null && newPlayerSelected === null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
+				// If someone is currently selected and no one is clicked on 
+				// unselect all buttons and players. Else if no one is currently 
+				// selected and someone is clicked on, then select that player and 
+				// return.
+				if (currentPlayerSelected != null && newPlayerSelected === null) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					play.clearSelected();
+					updateNotesAndCalls();
+					return false;
+				} else if (currentPlayerSelected === null && newPlayerSelected != null) {
+					for (i in buttons) {
+						buttons[i].setUnclicked();
+					}
+
+					newPlayerSelected.click();
+					unhideNotesAndCallsInput(newPlayerSelected.pos);
+					unhideCallsInput(newPlayerSelected.pos);
+					updateNotesAndCalls();
+
+					if (newPlayerSelected.pos === "QB") {
+						buttons[0].setClicked();
+					} else if (newPlayerSelected.eligible) {
+						buttons[3].setClicked();
+					} else if (!newPlayerSelected.eligible) {
+						buttons[4].setClicked();
+					}
+
+					return false;
 				}
-
-				play.clearSelected();
-				return false;
-			} else if (currentPlayerSelected === null && newPlayerSelected != null) {
-				for (i in buttons) {
-					buttons[i].setUnclicked();
-				}
-
-				newPlayerSelected.click();
-
-				if (newPlayerSelected.pos === "QB") {
-					buttons[0].setClicked();
-				} else if (newPlayerSelected.eligible) {
-					buttons[3].setClicked();
-				} else if (!newPlayerSelected.eligible) {
-					buttons[4].setClicked();
-				}
-
-				return false;
 			}
 		};
 
 		function keyPressed() {
-			// Get the play-name html element if it exists. This is what
-			// will be updated.
-			var play_name = document.getElementById("play-name");
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				// Get the play-name html element if it exists. This is what
+				// will be updated.
+				var play_name = document.getElementById("play-name");
 
-			// If the header box is selected update the play name according
-			// to the key press. Otherwise, create a block.
-			if ($("#header-box").hasClass("selected") && play_name != null) {
-				// Get the currently selected sideview button so that you can
-				// unselect it when the name in the main view's top bar is
-				// changed.
-				var selected = document.getElementById("selected");
+				// If the header box is selected update the play name according
+				// to the key press. Otherwise, create a block.
+				if ($("#header-box").hasClass("selected") && play_name != null) {
+					// Get the currently selected sideview button so that you can
+					// unselect it when the name in the main view's top bar is
+					// changed.
+					var selected = document.getElementById("selected");
 
-				// If there was a previously selected button remove it's selected
-				// id attribute and change it from btn-success to btn-primary.
-				if (selected != null) {
-					selected.removeAttribute("id");
-					selected.removeAttribute("class");
-					selected.setAttribute("class", "btn btn-primary sideview-button");
-				}
-
-				// Get the main view's top bar so that you can tell is the
-				// string has become empty and needs to be replaced with a
-				// placeholder message.
-				var string_length = play_name.textContent.length;
-
-				if (keyCode == BACKSPACE) {
-					if (play_name != null) {
-						if(string_length > 0) {
-							play_name.textContent = play_name.textContent.slice(0, string_length-1);
-						}
-					}
-					return false;
-				} else if (keyCode == 32) {
-					if (play_name != null && string_length < 100) {
-						play_name.textContent += ' ';
-					}
-					return false;
-				} else if (keyCode == 189) {
-					if (formation_name != null && string_length < 100) {
-						formation_name.textContent += '-';
-					}
-					return false;
-				}
-			} else if (play.getSelected()[0] != null) {
-				var playerSelected = play.getSelected()[0];
-				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
-				var playerStatusKeys = ["A", "S", "D", "F", "G"];
-
-				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelected.unit == "offense") {
-						if (playerSelected.dropback.length > 0) {
-							playerSelected.dropback.pop();
-						} else if(playerSelected.run.length > 0) {
-							playerSelected.run.pop();
-						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
-						} else if (playerSelected.blockingAssignmentArray.length > 0) {
-							playerSelected.blockingAssignmentArray.pop();
-						} else if (playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop();
-						}
-					} else if (playerSelected.unit == "defense") {
-						if (playerSelected.defensiveMovement.length > 0) {
-							playerSelected.defensiveMovement.pop();
-						}
+					// If there was a previously selected button remove it's selected
+					// id attribute and change it from btn-success to btn-primary.
+					if (selected != null) {
+						selected.removeAttribute("id");
+						selected.removeAttribute("class");
+						selected.setAttribute("class", "btn btn-primary sideview-button");
 					}
 
-					return false;
-				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
-					var prevX = playerSelected.x;
-					var prevY = playerSelected.y;
-					var blockSize = playerSelected.blockingAssignmentArray.length;
-					
-					if (blockSize > 0) {
-						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
-						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
-					}
+					// Get the main view's top bar so that you can tell is the
+					// string has become empty and needs to be replaced with a
+					// placeholder message.
+					var string_length = play_name.textContent.length;
 
-					var block = new BlockType({
-						type: 2 + specialBlockKeys.indexOf(key),
-						player: null,
-						prevX: prevX,
-						prevY: prevY
-					});
-
-					playerSelected.blockingAssignmentArray.push(block);
-
-					return false;
-				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
-						for (i in buttons) {
-							if (i != playerStatusKeys.indexOf(key)) {
-								buttons[i].setUnclicked();
-							} else {
-								buttons[i].click();
+					if (keyCode == BACKSPACE) {
+						if (play_name != null) {
+							if(string_length > 0) {
+								play_name.textContent = play_name.textContent.slice(0, string_length-1);
+								unhideNotesAndCallsInput(play_name.textContent);
 							}
 						}
+						return false;
+					} else if (keyCode == 32) {
+						if (play_name != null && string_length < 100) {
+							play_name.textContent += ' ';
+							unhideNotesAndCallsInput(play_name.textContent);
+						}
+						return false;
+					} else if (keyCode == 189) {
+						if (play_name != null && string_length < 100) {
+							play_name.textContent += '-';
+							unhideNotesAndCallsInput(play_name.textContent);
+						}
+						return false;
 					}
+				} else if (play.getSelected()[0] != null) {
+					var playerSelected = play.getSelected()[0];
+					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+					var playerStatusKeys = ["A", "S", "D", "F", "G"];
 
-					return false;
+					if (keyCode == BACKSPACE || keyCode == DELETE) {
+						if (playerSelected.unit == "offense") {
+							if (playerSelected.dropback.length > 0) {
+								playerSelected.dropback.pop();
+							} else if(playerSelected.run.length > 0) {
+								playerSelected.run.pop();
+							} else if(playerSelected.route.length > 0) {
+								playerSelected.route.pop();
+							} else if (playerSelected.blockingAssignmentArray.length > 0) {
+								playerSelected.blockingAssignmentArray.pop();
+							} else if (playerSelected.motionCoords.length > 0){
+								playerSelected.motionCoords.pop();
+							}
+						} else if (playerSelected.unit == "defense") {
+							if (playerSelected.defensiveMovement.length > 0) {
+								playerSelected.defensiveMovement.pop();
+							}
+						}
+
+						return false;
+					} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+						var prevX = playerSelected.x;
+						var prevY = playerSelected.y;
+						var blockSize = playerSelected.blockingAssignmentArray.length;
+						
+						if (blockSize > 0) {
+							prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+							prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
+						}
+
+						var block = new BlockType({
+							type: 2 + specialBlockKeys.indexOf(key),
+							player: null,
+							prevX: prevX,
+							prevY: prevY
+						});
+
+						playerSelected.blockingAssignmentArray.push(block);
+
+						return false;
+					} else if (playerStatusKeys.indexOf(key) >= 0) {
+						if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+							for (i in buttons) {
+								if (i != playerStatusKeys.indexOf(key)) {
+									buttons[i].setUnclicked();
+								} else {
+									buttons[i].click();
+								}
+							}
+						}
+
+						return false;
+					}
 				}
 			}
 		};
 
 		function keyTyped() {
-			if ($("#header-box").hasClass("selected")) {
-				var play_name = document.getElementById("play-name");
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				if ($("#header-box").hasClass("selected")) {
+					var play_name = document.getElementById("play-name");
 
-				if (play_name === null) {
-					play_name = document.createElement("p");
-					play_name.setAttribute("id", "play-name");
-				}
-
-				document.getElementById("header-box").appendChild(play_name);
-				var string_length = play_name.textContent.length;
-
-				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-					removeHeaderPlaceholder();
-					removeHeaderError();
-
-					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-						if (string_length <= 100){
-							play_name.textContent += key;
-						}
+					if (play_name === null) {
+						play_name = document.createElement("p");
+						play_name.setAttribute("id", "play-name");
 					}
 
-					// return false to prevent default behavior
-					return false;
+					document.getElementById("header-box").appendChild(play_name);
+					var string_length = play_name.textContent.length;
+
+					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+						removeHeaderPlaceholder();
+						removeHeaderError();
+
+						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+							if (string_length <= 100){
+								play_name.textContent += key;
+							}
+						}
+
+						unhideNotesAndCallsInput(play_name.textContent);
+
+						// return false to prevent default behavior
+						return false;
+					}
 				}
 			}
 		};
@@ -593,6 +649,11 @@
 					addHeaderPlaceholder();
 				}
 			}
+		});
+
+		// Don't allow enter in the textarea.
+		$('#note').keypress(function(event){
+			if (event.keyCode === 10 || event.keyCode === 13) { event.preventDefault(); }
 		});
 
 		// When the header box is selected have it change colors and remove the
@@ -930,6 +991,11 @@
 			var formation = play.formation;
 			play = new Play({});
 
+			// Hide notes and calls inputs and update notes and calls (get rid of them).
+			hideCallsInput();
+			hideNotesAndCallsInput();
+			updateNotesAndCalls();
+
 			for (i in formations) {
 				if (formation === formations[i].name) {
 					play.fromFormation(formations[i]);
@@ -970,6 +1036,10 @@
 						break;
 					}
 				}
+
+				// Show notes and calls inputs and update notes.
+				unhideNotesAndCallsInput(play_name);
+				updateNotesAndCalls();
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -1181,6 +1251,168 @@
 			error_message.textContent = "Invalid Play Name";
 			header_box.appendChild(error_message);
 		};
+
+		function hideNotesAndCallsInput() {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.setAttribute("hidden", "true");
+		};
+
+		function unhideNotesAndCallsInput(button_text) {
+			var notes_and_calls_input = document.getElementById("notes-and-calls-input");
+			notes_and_calls_input.removeAttribute("hidden");
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+		};
+
+		function hideCallsInput() {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "none";
+			add_call_button.style.display = "none";
+		};
+
+		function unhideCallsInput(button_text) {
+			var call = document.getElementById("call");
+			var add_call_button = document.getElementById("add-call-button");
+			call.style.display = "initial";
+			add_call_button.style.display = "initial";
+
+			var add_note_button = document.getElementById("add-note-button");
+
+			add_note_button.textContent = "Add Note for " + button_text;
+			add_call_button.textContent = "Set Call for " + button_text;
+		};
+
+		// updateNotesAndCalls emptys the list of formation notes and updates
+		// them with the notes for the new formation.
+		function updateNotesAndCalls() {
+			var notes_and_calls = document.getElementById("notes-and-calls");
+
+			// Update Play Notes
+			var play_notes = document.getElementById("play-notes");
+			if (play_notes != null) { play_notes.setAttribute("hidden", "true"); }
+
+			var play_notes_list = document.getElementById("play-notes-list");
+
+			while (play_notes_list.firstChild) {
+				play_notes_list.removeChild(play_notes_list.firstChild);
+			}
+
+			if (play_notes != null && play != null && play.notes.length > 0) {
+				for (i in play.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = play.notes[i];
+					play_notes_list.appendChild(list_item);
+				}
+
+				play_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+
+			// Update Calls
+			var calls = document.getElementById("calls");
+			if (calls != null)  { calls.setAttribute("hidden", "true"); }
+
+			var calls_list = document.getElementById("calls-list");
+
+			while (calls_list.firstChild) {
+				calls_list.removeChild(calls_list.firstChild);
+			}
+
+			if (calls != null && play != null) {
+				for (i in play.offensivePlayers) {
+					if (play.offensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = play.offensivePlayers[i].pos + ": " + play.offensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+
+				for (i in play.defensivePlayers) {
+					if (play.defensivePlayers[i].call != "") {
+						var list_item = document.createElement("li");
+						list_item.textContent = play.defensivePlayers[i].pos + ": " + play.defensivePlayers[i].call;
+						calls_list.appendChild(list_item);
+						calls.removeAttribute("hidden");
+						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+					}
+				}
+			}
+
+			// Update Player Notes
+			var player_notes = document.getElementById("player-notes");
+			if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
+
+			var player_notes_list = document.getElementById("player-notes-list");
+
+			while (player_notes_list.firstChild) {
+				player_notes_list.removeChild(player_notes_list.firstChild);
+			}
+
+			var player = play.getSelected()[0];
+
+			if (player_notes != null && player != null && player.notes.length > 0) {
+				for (i in player.notes) {
+					var list_item = document.createElement("li");
+					list_item.textContent = player.notes[i];
+					player_notes_list.appendChild(list_item);
+				}
+
+				player_notes.removeAttribute("hidden");
+				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+			}
+		};
+
+		$("#add-note-button").click(function(event) {
+			var note = document.getElementById("note");
+
+			var path = "/plays/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			var selected = document.getElementById("selected");
+
+			if (note.value != "" && play != null) {
+				var player = play.getSelected()[0];
+				if (player != null) {
+					player.notes.push(note.value);
+				} else {
+					play.notes.push(note.value);
+				}
+
+				if (selected) {
+					play.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			note.value = "";
+		});
+
+		$("#add-call-button").click(function(event) {
+			var call = document.getElementById("call");
+
+			var path = "/plays/create";
+			var csrf_token = "{{ csrf_token }}";
+
+			if (call.value != "" && play != null && play.getSelected()[0] != null) {
+				play.getSelected()[0].call = call.value;
+
+				var button_selected = document.getElementById("selected");
+				if (button_selected != null) {
+					play.clearSelected();
+					play.save(path, csrf_token);
+				}
+
+				updateNotesAndCalls();
+			}
+
+			call.value = "";
+		});
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

@@ -763,11 +763,49 @@ div.take-quiz-form input.btn.btn-success.btn-lg.pull-right {
 }
 
 /*************************************************************************
+notes and calls
+*************************************************************************/
+
+div#notes-and-calls-input div {
+	float: left;
+}
+
+textarea#note {
+	margin-right: 10px;
+}
+
+button#add-note-button {
+	margin-right: 30px;
+}
+
+input#call {
+	margin-right: 10px;
+}
+
+button#add-call-button {}
+
+/*************************************************************************
 inputs
 *************************************************************************/
 
+.snap-input {
+    color: #555555;
+    margin: 0;
+    border: 3px solid #7cb34a;
+    padding: 0;
+}
+
+.snap-text {
+	height: 30px;
+}
+
+.snap-textarea {
+	border-radius: 5px;
+}
+
 .create-groups input[type="text"],
 .all-groups input[type="text"],
+
 .manage-groups input[type="text"],
 .create-quiz input[type="text"] {
 	width: 60%;
@@ -1823,7 +1861,7 @@ select#id_player {
 #create-play,
 #create-concept,
 #playbook {
-	padding: 0 0 20px 0;
+	padding: 0;
 }
 
 div.choose-existing-formation,
