@@ -155,7 +155,7 @@ Quiz.prototype.drawQuizSummary = function(field){
 	if (elapsedSeconds > this.cutOff * this.plays.length * this.questionsPerPlay) {
 		elapsedSeconds = this.cutOff * this.plays.length * this.questionsPerPlay;
 	}
-	
+
 	var timeDeduction = (elapsedSeconds - 10 * this.plays.length * this.questionsPerPlay)*0.01;
 	if (timeDeduction < 0.0) {
 		timeDeduction = 0.0;
@@ -180,7 +180,7 @@ Quiz.prototype.drawQuizSummary = function(field){
 	if (incorrectGuesses !== 1) {
 		guessesString += "es";
 	}
-	
+
 	var skipString = "You skipped " + skips.toFixed(0) + " question";
 	if(skips !== 1) {
 		skipString += "s";
@@ -324,6 +324,34 @@ Quiz.prototype.buildQuestions = function(player_positions) {
 	this.shuffle();
 	this.currentQuestionIndex = 0;
 };
+
+// buildIdentificationQuestions creates the question array. It iterates through
+// the plays or concepts and creates questions whose answers are
+// the correct call for the tested player on that play, or "No Call"
+Quiz.prototype.buildCallQuestions = function(testedPlayerPosition) {
+	var question;
+
+	for (i in this.plays) {
+		question = new Question({ question: this.plays[i].deepCopy() });
+		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition);
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
+	for (i in this.concepts) {
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition);
+
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
+	this.shuffle();
+	this.currentQuestionIndex = 0;
+}
 
 // buildIdentificationQuestions creates the question array. It iterates through
 // the formations, plays, or concepts and creates questions whose answers are

@@ -1037,7 +1037,7 @@ def play_quizzes(request, unit="offense"):
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "calls":
-		call_options = ["ROGER", "LOUIE", "DANISH"]
+		call_options = ["No Call"]
 		position = request.GET['position'].upper()
 
 		filtered_plays = []
@@ -1049,7 +1049,7 @@ def play_quizzes(request, unit="offense"):
 				if player_position == position:
 
 					### Do additional filtering for type of assignment here ###
-					if 'calls' in player_dict and len(player_dict['calls']) > 0:
+					if 'call' in player_dict and len(player_dict['call']) > 0:
 						filtered_plays.append(play)
 
 		plays = filtered_plays[0:number_of_questions]
@@ -1058,8 +1058,9 @@ def play_quizzes(request, unit="offense"):
 			'player': player,
 			'team': team,
 			'plays': plays,
+			'position': position,
 			'answer_choices': call_options,
-			'page_header': 'PLAY QUIZ'
+			'page_header': 'CALL QUIZ'
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
@@ -1119,6 +1120,31 @@ def concept_quizzes(request, unit="offense"):
 			'concepts': concepts,
 			'position_groups': position_groups,
 			'page_header': 'CONCEPT QUIZ'
+		})
+	elif type_of_quiz == "calls":
+		call_options = ["No Call"]
+		position = request.GET['position'].upper()
+
+		filtered_concepts = []
+		for concept in concepts:
+			concept_dict = json.loads(concept.conceptJson)
+			offensive_players = concept_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					### Do additional filtering for type of assignment here ###
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						filtered_concepts.append(concept)
+
+		concepts = filtered_concepts[0:number_of_questions]
+
+		return render(request, 'dashboard/call_quiz.html', {
+			'player': player,
+			'team': team,
+			'concepts': concepts,
+			'answer_choices': call_options,
+			'position': position,
+			'page_header': 'CALL QUIZ'
 		})
 
 # Analytics

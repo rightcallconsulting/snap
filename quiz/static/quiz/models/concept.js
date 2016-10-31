@@ -153,13 +153,13 @@ Concept.prototype.resetConcept = function(){
 Concept.prototype.getPlayerFromPosition = function(position){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
 		var player = this.offensivePlayers[i];
-		if(player.position === position){
+		if(player.pos === position){
 			return player;
 		}
 	}
 	for(var i = 0; i < this.defensivePlayers.length; i++){
 		var player = this.defensivePlayers[i];
-		if(player.position === position){
+		if(player.pos === position){
 			return player;
 		}
 	}

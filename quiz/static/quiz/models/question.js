@@ -136,7 +136,22 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 	return 1;
 };
 
-// buildIdentificationQuestionAndAnswer creates an appropriate creates a 
+// buildCallQuestionAndAnswer creates an appropriate creates a
+// question and answer based on the current content in the question variable.
+Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer !== null){
+		this.answer = testedPlayer.call
+	}else{
+		this.answer = ""
+	}
+
+	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.name;
+
+	return 0;
+};
+
+// buildIdentificationQuestionAndAnswer creates an appropriate creates a
 // question and answer based on the current content in the question variable.
 Question.prototype.buildIdentificationQuestionAndAnswer = function() {
 	this.answer = this.question.name;
@@ -155,7 +170,7 @@ Question.prototype.buildIdentificationQuestionAndAnswer = function() {
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
-	
+
 	if (millis() - this.startTime < 2000) {
 		//this.drawPrompt(field);
 	}
@@ -168,7 +183,7 @@ Question.prototype.drawIdentification = function(field) {
 	}
 
 	this.question.drawPlayers(field);
-	
+
 	if (millis() - this.startTime < 2000) {
 		//this.drawPrompt(field);
 	}
@@ -295,7 +310,7 @@ Question.prototype.checkRun = function(attempt){
 
 	for (i in attempt.run) {
 		var dist = sqrt(pow(attempt.run[i][0] - this.answer.run[i][0], 2) + pow(attempt.run[i][1] - this.answer.run[i][1], 2));
-		
+
 		if (dist > 3) {
 			return false;
 		}
@@ -421,7 +436,7 @@ Question.prototype.deepCopy = function() {
 	});
 
 	deepCopy.question = this.question.deepCopy();
-	
+
 	if (typeof this.answer === "string") {
 		deepCopy.answer = this.answer;
 	} else {
