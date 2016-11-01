@@ -1037,7 +1037,7 @@ def play_quizzes(request, unit="offense"):
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "calls":
-		call_options = ["No Call"]
+		call_options = [""]
 		position = request.GET['position'].upper()
 
 		filtered_plays = []
@@ -1061,6 +1061,29 @@ def play_quizzes(request, unit="offense"):
 			'position': position,
 			'answer_choices': call_options,
 			'page_header': 'CALL QUIZ'
+		})
+	elif type_of_quiz == "game":
+		call_options = ["No Call"]
+		position = request.GET['position'].upper()
+
+		filtered_plays = []
+		for play in plays:
+			play_dict = json.loads(play.playJson)
+			offensive_players = play_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_plays.append(play)
+
+		plays = filtered_plays[0:number_of_questions]
+
+		return render(request, 'dashboard/game_mode_quiz.html', {
+			'player': player,
+			'team': team,
+			'plays': plays,
+			'position': position,
+			'answer_choices': call_options,
+			'page_header': 'GAME MODE QUIZ'
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
@@ -1145,6 +1168,29 @@ def concept_quizzes(request, unit="offense"):
 			'answer_choices': call_options,
 			'position': position,
 			'page_header': 'CALL QUIZ'
+		})
+	elif type_of_quiz == "game":
+		call_options = ["No Call"]
+		position = request.GET['position'].upper()
+
+		filtered_concepts = []
+		for concept in concepts:
+			concept_dict = json.loads(concept.conceptJson)
+			offensive_players = concept_dict['offensivePlayers']
+			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_concepts.append(concept)
+
+		concepts = filtered_concepts[0:number_of_questions]
+
+		return render(request, 'dashboard/game_mode_quiz.html', {
+			'player': player,
+			'team': team,
+			'concepts': concepts,
+			'position': position,
+			'answer_choices': call_options,
+			'page_header': 'GAME MODE QUIZ'
 		})
 
 # Analytics
