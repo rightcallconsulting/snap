@@ -390,6 +390,55 @@ Quiz.prototype.buildIdentificationQuestions = function() {
 	this.currentQuestionIndex = 0;
 };
 
+Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition){
+	var question; var result;
+	//this.plays.shuffle();
+	//this.concepts.shuffle();
+
+	for (i in this.plays) {
+		question = new Question({ question: this.plays[i].deepCopy() });
+		result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+		question = new Question({ question: this.plays[i].deepCopy() });
+		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+		question = new Question({ question: this.plays[i].deepCopy() });
+		var result = question.buildAssignmentQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+	}
+
+	for (i in this.concepts) {
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+		question = new Question({ question: this.concepts[i].deepCopy() });
+		var result = question.buildAssignmentQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+
+	this.currentQuestionIndex = 0;
+}
+
 // getCurrentQuestionName returns the names of the question.
 Quiz.prototype.getCurrentQuestionName = function() {
 	if (!this.isEmpty()) {

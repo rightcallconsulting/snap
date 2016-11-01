@@ -607,6 +607,24 @@ Play.prototype.getPlayerFromPosition = function(pos){
 	return null;
 };
 
+Play.prototype.removePlayerWithPosition = function(position){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		var player = this.offensivePlayers[i];
+		if(player.pos === position){
+			this.offensivePlayers.splice(i, 1)
+			return 1;
+		}
+	}
+	/*for(var i = 0; i < this.defensivePlayers.length; i++){
+		var player = this.defensivePlayers[i];
+		if(player.pos === position){
+			this.defensivePlayers.splice(i, 1)
+			return 1;
+		}
+	}*/
+	return 0;
+}
+
 //POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
 Play.prototype.getPassStrength = function(){
   var centerX = this.oline[2].x;

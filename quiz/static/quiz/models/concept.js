@@ -150,6 +150,24 @@ Concept.prototype.resetConcept = function(){
 	}
 }
 
+Concept.prototype.removePlayerWithPosition = function(position){
+	for(var i = 0; i < this.offensivePlayers.length; i++){
+		var player = this.offensivePlayers[i];
+		if(player.pos === position){
+			this.offensivePlayers.splice(i, 1)
+			return 1;
+		}
+	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var player = this.defensivePlayers[i];
+		if(player.pos === position){
+			this.defensivePlayers.splice(i, 1)
+			return 1;
+		}
+	}
+	return 0;
+}
+
 Concept.prototype.getPlayerFromPosition = function(position){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
 		var player = this.offensivePlayers[i];

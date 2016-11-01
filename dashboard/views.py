@@ -1172,6 +1172,7 @@ def concept_quizzes(request, unit="offense"):
 	elif type_of_quiz == "game":
 		call_options = ["No Call"]
 		position = request.GET['position'].upper()
+		position_type = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)[0].position_type
 
 		filtered_concepts = []
 		for concept in concepts:
@@ -1189,6 +1190,7 @@ def concept_quizzes(request, unit="offense"):
 			'team': team,
 			'concepts': concepts,
 			'position': position,
+			'position_type': position_type,
 			'answer_choices': call_options,
 			'page_header': 'GAME MODE QUIZ'
 		})

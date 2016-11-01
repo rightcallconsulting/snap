@@ -98,26 +98,37 @@
 			quiz.unit = "{{ quiz.unit }}";
 
 			var testedPlayerPosition = "{{ position }}"
+			var testedPlayerPositionType = "{{ position_type }}"
+
+			if(testedPlayerPositionType === "Skill Position"){
+				//Quiz will have 3 parts: Alignment, Call, Assignment
+				//quiz.partsPerQuestion = 3;
+				quiz.questionParts = ["alignment", "call", "assignment"]
+			}else if(testedPlayerPositionType === "Offensive Lineman" || testedPlayerPositionType === "Quarterback"){
+				//Quiz will have 2 parts: Call & Assignment
+				//quiz.partsPerQuestion = 2;
+				quiz.questionParts = ["call", "assignment"]
+			}else{
+				//TBI
+			}
+
 
 			var formationJsonFromDatabase = "";
 			{% for formation in formations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
 			quiz.createFormationFromJson(JSON.parse(formationJsonFromDatabase));
-			//choices.push("{{ formation.name|safe }}");
 			{% endfor %}
 
 			var playJsonFromDatabase = "";
 			{% for play in plays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			quiz.createPlayFromJson(JSON.parse(playJsonFromDatabase));
-			//choices.push("{{ play.name|safe }}");
 			{% endfor %}
 
 			var conceptJsonFromDatabase = "";
 			{% for concept in concepts %}
 			conceptJsonFromDatabase = '{{ concept.conceptJson|safe }}';
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
-			//choices.push("{{ concept.name|safe }}");
 			{% endfor %}
 
 			{% for choice in answer_choices %}
@@ -125,7 +136,7 @@
 			{% endfor %}
 
 
-			quiz.buildCallQuestions(testedPlayerPosition);
+			quiz.buildGameModeQuestions(testedPlayerPosition);
 
 			if (quiz.isEmpty()) {
 				window.location.replace("/quizzes/custom");
@@ -133,12 +144,14 @@
 
 			for(var i = 0; i < quiz.questions.length; i++){
 				var answer = quiz.questions[i].answer;
-				if(choices.indexOf(answer) < 0){
-					choices.push(quiz.questions[i].answer);
+				if(!(answer instanceof Player) && choices.indexOf(answer) < 0){
+					choices.push(answer);
 				}
 			}
 
 			choices = shuffle_choices(choices);
+
+			debugger;
 
 			quiz.attempt = ""
 
@@ -176,7 +189,14 @@
 			field.drawBackground(quiz, height, width);
 
 			var question = quiz.getCurrentQuestion();
-			question.drawIdentification(field);
+
+			if (quiz.currentQuestionIndex % 3 === 2){
+				question.drawIdentification(field);
+			}else{
+				question.draw(field);
+			}
+
+
 		};
 
 		//*******************************************************************//
@@ -359,53 +379,55 @@
 			}
 
 			$("#choices-buttons").empty();
-			var choice_names = [];
-			var choices_buttons = document.getElementById("choices-buttons");
-			for (var i = 0; i < choices.length; ++i) {
-				var create_button = 1;
-				if (choices[i] != quiz.getCurrentQuestion().answer) {
-					// If a button with this name already exists continue to the next iteration of the loop
-					for (j in choice_names) {
-						if (choice_names[j] === choices[i]) {
-							create_button = 0;
+			if(!(quiz.getCurrentQuestion().answer instanceof Player)){
+				var choice_names = [];
+				var choices_buttons = document.getElementById("choices-buttons");
+				for (var i = 0; i < choices.length; ++i) {
+					var create_button = 1;
+					if (choices[i] != quiz.getCurrentQuestion().answer) {
+						// If a button with this name already exists continue to the next iteration of the loop
+						for (j in choice_names) {
+							if (choice_names[j] === choices[i]) {
+								create_button = 0;
+							}
+						}
+
+						if (create_button === 1) {
+							// Create a button for this choice.
+							var new_choice_button = document.createElement("button");
+							new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
+							new_choice_button.setAttribute("name", choices[i]);
+							new_choice_button.setAttribute("class", "btn btn-primary choice-button");
+							new_choice_button.textContent = choices[i];
+
+							choices_buttons.appendChild(new_choice_button);
+							choice_names.push(choices[i]);
 						}
 					}
 
-					if (create_button === 1) {
-						// Create a button for this choice.
-						var new_choice_button = document.createElement("button");
-						new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
-						new_choice_button.setAttribute("name", choices[i]);
-						new_choice_button.setAttribute("class", "btn btn-primary choice-button");
-						new_choice_button.textContent = choices[i];
-
-						choices_buttons.appendChild(new_choice_button);
-						choice_names.push(choices[i]);
+					if (choice_names.length === 9) {
+						break;
 					}
 				}
 
-				if (choice_names.length === 9) {
-					break;
+				var new_choice_button = document.createElement("button");
+				new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
+				new_choice_button.setAttribute("name", quiz.getCurrentQuestion().answer);
+				new_choice_button.setAttribute("class", "btn btn-primary choice-button");
+				new_choice_button.textContent =  quiz.getCurrentQuestion().answer;
+
+				var number_of_choice_buttons = choices_buttons.childElementCount;
+				var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons+1));
+				for (var i = 0; i <= number_of_choice_buttons; ++i) {
+					if (i === index_to_insert_answer) {
+						choices_buttons.insertBefore(new_choice_button, choices_buttons.childNodes[i]);
+						break;
+					}
 				}
-			}
 
-			var new_choice_button = document.createElement("button");
-			new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
-			new_choice_button.setAttribute("name", quiz.getCurrentQuestion().answer);
-			new_choice_button.setAttribute("class", "btn btn-primary choice-button");
-			new_choice_button.textContent =  quiz.getCurrentQuestion().answer;
-
-			var number_of_choice_buttons = choices_buttons.childElementCount;
-			var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons+1));
-			for (var i = 0; i <= number_of_choice_buttons; ++i) {
-				if (i === index_to_insert_answer) {
-					choices_buttons.insertBefore(new_choice_button, choices_buttons.childNodes[i]);
-					break;
+				if (index_to_insert_answer > number_of_choice_buttons) {
+					choices_buttons.appendChild(new_choice_button);
 				}
-			}
-
-			if (index_to_insert_answer > number_of_choice_buttons) {
-				choices_buttons.appendChild(new_choice_button);
 			}
 
 			var question_prompt = document.getElementById("question-prompt");

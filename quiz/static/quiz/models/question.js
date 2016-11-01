@@ -14,6 +14,7 @@ var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
 	this.prompt = config.prompt || "";
+	this.type = config.type || "assignment";
 	this.score = config.score || null;
 	this.startTime = 0;
 	this.feedbackStartTime = 0;
@@ -136,6 +137,28 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 	return 1;
 };
 
+Question.prototype.buildAlignmentQuestionAndAnswer = function(testedPlayerPosition){
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer === null){
+		return -1; //bad
+	}
+	this.answer = testedPlayer.deepCopy();
+	this.question.removePlayerWithPosition(testedPlayerPosition);
+	this.prompt = "Place the missing " + testedPlayerPosition + " in the correct spot for " + this.question.name;
+	return 0;
+}
+
+Question.prototype.buildAssignmentQuestionAndAnswer = function(testedPlayerPosition){
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer === null){
+		return -1; //bad
+	}
+	this.answer = testedPlayer.deepCopy();
+	this.prompt = "Draw the assignment for the " + testedPlayerPosition + " on " + this.question.name;
+	testedPlayer.setSelected();
+	return 0;
+}
+
 // buildCallQuestionAndAnswer creates an appropriate creates a
 // question and answer based on the current content in the question variable.
 Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
@@ -147,7 +170,7 @@ Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
 	}
 
 	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.name;
-
+	testedPlayer.setSelected();
 	return 0;
 };
 
