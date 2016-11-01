@@ -390,16 +390,18 @@ Quiz.prototype.buildIdentificationQuestions = function() {
 	this.currentQuestionIndex = 0;
 };
 
-Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition){
+Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questionsPerPlay){
 	var question; var result;
 	//this.plays.shuffle();
 	//this.concepts.shuffle();
 
 	for (i in this.plays) {
-		question = new Question({ question: this.plays[i].deepCopy() });
-		result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
-		if (result === 0) {
-			this.questions.push(question);
+		if(questionsPerPlay > 2){
+			question = new Question({ question: this.plays[i].deepCopy() });
+			result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
+			if (result === 0) {
+				this.questions.push(question);
+			}
 		}
 
 		question = new Question({ question: this.plays[i].deepCopy() });

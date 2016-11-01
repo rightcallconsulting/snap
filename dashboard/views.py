@@ -1065,6 +1065,7 @@ def play_quizzes(request, unit="offense"):
 	elif type_of_quiz == "game":
 		call_options = ["No Call"]
 		position = request.GET['position'].upper()
+		position_type = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)[0].position_type
 
 		filtered_plays = []
 		for play in plays:
@@ -1082,6 +1083,7 @@ def play_quizzes(request, unit="offense"):
 			'team': team,
 			'plays': plays,
 			'position': position,
+			'position_type': position_type,
 			'answer_choices': call_options,
 			'page_header': 'GAME MODE QUIZ'
 		})

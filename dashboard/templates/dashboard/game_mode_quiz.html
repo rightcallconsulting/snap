@@ -66,6 +66,7 @@
 	<script type="text/javascript">
 		var quiz;
 		var choices = [];
+		var questionsPerPlay = 3;
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -102,12 +103,10 @@
 
 			if(testedPlayerPositionType === "Skill Position"){
 				//Quiz will have 3 parts: Alignment, Call, Assignment
-				//quiz.partsPerQuestion = 3;
-				quiz.questionParts = ["alignment", "call", "assignment"]
+				//do nothing
 			}else if(testedPlayerPositionType === "Offensive Lineman" || testedPlayerPositionType === "Quarterback"){
 				//Quiz will have 2 parts: Call & Assignment
-				//quiz.partsPerQuestion = 2;
-				quiz.questionParts = ["call", "assignment"]
+				questionsPerPlay = 2;
 			}else{
 				//TBI
 			}
@@ -136,7 +135,7 @@
 			{% endfor %}
 
 
-			quiz.buildGameModeQuestions(testedPlayerPosition);
+			quiz.buildGameModeQuestions(testedPlayerPosition, questionsPerPlay);
 
 			if (quiz.isEmpty()) {
 				window.location.replace("/quizzes/custom");
@@ -150,8 +149,6 @@
 			}
 
 			choices = shuffle_choices(choices);
-
-			debugger;
 
 			quiz.attempt = ""
 
@@ -190,7 +187,7 @@
 
 			var question = quiz.getCurrentQuestion();
 
-			if (quiz.currentQuestionIndex % 3 === 2){
+			if (quiz.currentQuestionIndex % questionsPerPlay === 2){
 				question.drawIdentification(field);
 			}else{
 				question.draw(field);
