@@ -1,1 +1,1 @@
-[]
+[{"model": "auth.user", "pk": 1, "fields": {"password": "pbkdf2_sha256$24000$u0u9uStD6iNV$AZmDc/D5i4o48REuTiJhnV8rLWZi9bM6IdoQ4VOYEUk=", "last_login": null, "is_superuser": true, "username": "dylan", "first_name": "", "last_name": "", "email": "dylan@rightcallconsulting.com", "is_staff": true, "is_active": true, "date_joined": "2016-11-02T19:33:07.385Z", "groups": [], "user_permissions": []}}]
