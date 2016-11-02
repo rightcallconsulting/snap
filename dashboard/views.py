@@ -1047,8 +1047,7 @@ def play_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-
-					### Do additional filtering for type of assignment here ###
+					### Filters out plays that don't have calls ###
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						filtered_plays.append(play)
 
@@ -1147,7 +1146,7 @@ def concept_quizzes(request, unit="offense"):
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "calls":
-		call_options = ["No Call"]
+		call_options = []
 		position = request.GET['position'].upper()
 
 		filtered_concepts = []

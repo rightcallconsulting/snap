@@ -338,6 +338,9 @@
 						quiz.attempt.setSelected();
 						quiz.attempt.x = mouseYardX;
 						quiz.attempt.y = mouseYardY;
+						if (quiz.attempt.y > field.ballYardLine){
+							quiz.attempt.y = field.ballYardLine;
+						}
 					}
 					return true;
 				}
