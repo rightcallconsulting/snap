@@ -14,6 +14,7 @@ var Question = function(config) {
 	this.question = config.question || null;
 	this.answer = config.answer || null;
 	this.prompt = config.prompt || "";
+	this.type = config.type || "assignment";
 	this.score = config.score || null;
 	this.startTime = 0;
 	this.feedbackStartTime = 0;
@@ -136,7 +137,44 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 	return 1;
 };
 
-// buildIdentificationQuestionAndAnswer creates an appropriate creates a 
+Question.prototype.buildAlignmentQuestionAndAnswer = function(testedPlayerPosition){
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer === null){
+		return -1; //bad
+	}
+	this.answer = testedPlayer.deepCopy();
+	this.question.removePlayerWithPosition(testedPlayerPosition);
+	this.prompt = "Place the missing " + testedPlayerPosition + " in the correct spot for " + this.question.name;
+	return 0;
+}
+
+Question.prototype.buildAssignmentQuestionAndAnswer = function(testedPlayerPosition){
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer === null){
+		return -1; //bad
+	}
+	this.answer = testedPlayer.deepCopy();
+	this.prompt = "Draw the assignment for the " + testedPlayerPosition + " on " + this.question.name;
+	testedPlayer.setSelected();
+	return 0;
+}
+
+// buildCallQuestionAndAnswer creates an appropriate creates a
+// question and answer based on the current content in the question variable.
+Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
+	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
+	if(testedPlayer !== null){
+		this.answer = testedPlayer.call
+	}else{
+		this.answer = ""
+	}
+
+	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.name;
+	testedPlayer.setSelected();
+	return 0;
+};
+
+// buildIdentificationQuestionAndAnswer creates an appropriate creates a
 // question and answer based on the current content in the question variable.
 Question.prototype.buildIdentificationQuestionAndAnswer = function() {
 	this.answer = this.question.name;
@@ -155,7 +193,7 @@ Question.prototype.buildIdentificationQuestionAndAnswer = function() {
 // draw displays this question.
 Question.prototype.draw = function(field) {
 	this.question.drawPlayers(field);
-	
+
 	if (millis() - this.startTime < 2000) {
 		//this.drawPrompt(field);
 	}
@@ -168,7 +206,7 @@ Question.prototype.drawIdentification = function(field) {
 	}
 
 	this.question.drawPlayers(field);
-	
+
 	if (millis() - this.startTime < 2000) {
 		//this.drawPrompt(field);
 	}
@@ -216,7 +254,7 @@ Question.prototype.check = function(attempt) {
 			} else {
 				this.score = 0;
 			}
-		} else if (this.question instanceof Formation) {
+		} else if (this.question instanceof Formation || this.type === "alignment") {
 			var dist = sqrt(pow(attempt.x - this.answer.x, 2) + pow(attempt.y - this.answer.y, 2));
 
 			if (dist < 1) {
@@ -233,6 +271,20 @@ Question.prototype.check = function(attempt) {
 		}
 	}
 };
+
+Question.prototype.checkAlignment = function(attempt){
+	if(attempt === null || this.answer === null || !(this.answer instanceof Player) || !(attempt instanceof Player)){
+		return false;
+	}
+	var dx = this.answer.x - attempt.x;
+	var dy = this.answer.y - attempt.y;
+	var dist = sqrt(dx*dx + dy*dy);
+	if(dist < 2){
+		this.score = 1;
+		return true;
+	}
+	return false;
+}
 
 Question.prototype.checkAssignments = function(attempt){
 		if (this.checkDropback(attempt) && this.checkMotion(attempt) && this.checkRun(attempt) && this.checkRoute(attempt) && this.checkBlockingAssignment(attempt)) {
@@ -295,7 +347,7 @@ Question.prototype.checkRun = function(attempt){
 
 	for (i in attempt.run) {
 		var dist = sqrt(pow(attempt.run[i][0] - this.answer.run[i][0], 2) + pow(attempt.run[i][1] - this.answer.run[i][1], 2));
-		
+
 		if (dist > 3) {
 			return false;
 		}
@@ -421,7 +473,7 @@ Question.prototype.deepCopy = function() {
 	});
 
 	deepCopy.question = this.question.deepCopy();
-	
+
 	if (typeof this.answer === "string") {
 		deepCopy.answer = this.answer;
 	} else {

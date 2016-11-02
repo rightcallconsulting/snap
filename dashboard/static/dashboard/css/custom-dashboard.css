@@ -58,7 +58,7 @@ top navbar
 	list-style-type: none;
 }
 
-#custom-top-nav .nav-notification > li > a, 
+#custom-top-nav .nav-notification > li > a,
 #custom-top-nav .nav-notification > li > span {
 	color: #999;
 	display: block;
@@ -811,8 +811,9 @@ inputs
 	border-radius: 5px;
 }
 
-.create-groups input[type="text"], 
-.all-groups input[type="text"], 
+.create-groups input[type="text"],
+.all-groups input[type="text"],
+
 .manage-groups input[type="text"],
 .create-quiz input[type="text"] {
 	width: 60%;
@@ -825,8 +826,8 @@ inputs
 	line-height: 2.5em;
 }
 
-.create-groups input[type="submit"], 
-.all-groups input[type="submit"], 
+.create-groups input[type="submit"],
+.all-groups input[type="submit"],
 .manage-groups input[type="submit"],
 .create-quiz input[type="submit"] {
 	margin-left: 3%;
@@ -840,8 +841,8 @@ inputs
 	width: auto;
 }
 
-.create-groups input[type="button"], 
-.all-groups input[type="button"], 
+.create-groups input[type="button"],
+.all-groups input[type="button"],
 .manage-groups input[type="button"],
 .create-quiz input[type="button"] {
 	margin-left: 3%;
@@ -867,8 +868,8 @@ select#position-type {
 other
 *************************************************************************/
 
-.coach-homepage .action-boxes, 
-.playbook .action-boxes, 
+.coach-homepage .action-boxes,
+.playbook .action-boxes,
 .all-groups .action-boxes .create-groups {
 	margin-left: 3.5%;
 	width: 95%;
@@ -948,8 +949,8 @@ other
 	float: left;
 }
 
-.coach-homepage .secondary-content-area, 
-.playbook .secondary-content-area, 
+.coach-homepage .secondary-content-area,
+.playbook .secondary-content-area,
 .edit-test .secondary-content-area {
 	width: 100%;
 	min-height: 200px;
@@ -960,63 +961,79 @@ other
 	padding: 0px;
 }
 
-.coach-homepage .top, 
+.coach-homepage .top,
 .playbook .top {
 	margin-bottom: 20px;
 }
 
-.create-groups .action-boxes, 
-.all-groups .action-boxes, 
+.create-groups .action-boxes,
+.all-groups .action-boxes,
 .manage-groups .action-boxes {
 	margin-bottom: 0px;
 }
 
-.create-groups .group-home, 
-.all-groups .group-home, 
+.create-groups .group-home,
+.all-groups .group-home,
 .manage-groups .group-home {
 	margin-bottom: 1%;
 }
 
-.create-groups select, 
-.all-groups select, 
+.create-groups select,
+.all-groups select,
 .manage-groups select {
-	width: 60%;
+	width: 90%;
 	margin-left: 2%;
 	margin-bottom: 2%;
 }
 
-.create-groups form, 
-.create-groups table, 
-.all-groups form, 
-.all-groups table, 
-.manage-groups form, 
+.create-groups form,
+.create-groups table,
+.all-groups form,
+.all-groups table,
+.manage-groups form,
 .manage-groups table,
-.create-quiz form, 
+.create-quiz form,
 .create-quiz table   {
 	margin-left: 2%;
 	margin-bottom: 2%;
 	width: 90%;
 }
 
-.edit-profile form, 
+.edit-profile form,
 .edit-profile table   {
 	margin-left: 2%;
 	margin-bottom: 2%;
 	width: 90%;
 }
 
-.create-groups form, 
-.all-groups form, 
+.create-groups form,
+.all-groups form,
 .manage-groups form {
 	margin-left: 2%;
 	margin-bottom: 1%;
 	width: 90%;
 }
 
-.change-plays-box, 
-.display-play-box, 
-.choose-offensive-formation-box, 
-.choose-defensive-formation-box, 
+.master-detail-table td.first{
+	width: 80%;
+}
+
+.master-detail-table td.second{
+	width: 20%;
+	height: 100%;
+	padding: 0px;
+}
+
+#delete-groups-button{
+	background-color: #8C1515;
+	color: #fbfbf9;
+	height: 60%;
+}
+
+.change-plays-box,
+.display-play-box,
+.choose-offensive-formation-box,
+.choose-defensive-formation-box,
 .quiz-sidebar {
 	/*height: 600px;*/
 	margin-bottom: 50px;
@@ -1054,10 +1071,10 @@ other
   width: 500px;
 }
 
-.formation-button, 
-.concept-button, 
+.formation-button,
+.concept-button,
 .offensive-formation-button,
-.offensive-concept-button, 
+.offensive-concept-button,
 .group-button {
   width: 90%;
   height: 90%;
@@ -1322,7 +1339,7 @@ input.edit-profile {
 }
 
 .formation-list,
-.concept-list, 
+.concept-list,
 .play-list {
 	width: 90%;
 	margin-left: auto;
@@ -1623,7 +1640,7 @@ input.edit-profile {
 	height: 550px;
 }
 
-.player-home .news-col, 
+.player-home .news-col,
 .player-home .dash-col {
 	height: 600px;
 }
@@ -1638,7 +1655,7 @@ input.edit-profile {
 	width: 30%;
 }
 
-.player-home .dash-row, 
+.player-home .dash-row,
 .player-home .top-row {
 	height: 40%;
 	width: 100%;
@@ -1661,8 +1678,8 @@ input.edit-profile {
 	color: #15797E;
 }
 
-.play-link, 
-.formation-link, 
+.play-link,
+.formation-link,
 .concept-link {
 	margin-left: 4px;
 	color: #C5E1A5;
@@ -1807,7 +1824,7 @@ input.edit-profile {
   background: #558B2F;
 }
 
-.analytics-play-list td, 
+.analytics-play-list td,
 .analytics-play-list th {
 	border: 1px solid #000;
 	padding: 8px;
