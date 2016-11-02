@@ -485,6 +485,11 @@
 			}
 		});
 
+		// Don't allow enter in the textarea.
+		$('#note').keypress(function(event){
+			if (event.keyCode === 10 || event.keyCode === 13) { event.preventDefault(); }
+		});
+
 		// When the header box is selected have it change colors and remove the
 		// placeholder if it exists
 		$("#header-box").click(function(event) {
