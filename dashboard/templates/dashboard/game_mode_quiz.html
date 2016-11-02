@@ -65,6 +65,7 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var quiz;
+		var buttons = [];
 		var choices = [];
 		var questionsPerPlay = 3;
 
@@ -152,6 +153,22 @@
 
 			quiz.attempt = ""
 
+			// Create buttons for selecting type of assignment
+			var button = new Button ({ label: "Dropback (A)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Motion (S)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Run (D)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Route (F)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Block (G)" });
+			buttons.push(button);
+
 			updateMainviewAndSideview();
 
 			window.onresize = function() {
@@ -188,7 +205,63 @@
 			var question = quiz.getCurrentQuestion();
 
 			if (quiz.currentQuestionIndex % questionsPerPlay === 2){
+				if(question.feedbackStartTime > 0){
+					var elapsed = millis() - question.feedbackStartTime;
+					if(elapsed > 1500){
+						question.feedbackStartTime = 0;
+						quiz.nextQuestion();
+						updateMainviewAndSideview();
+					}else{
+						question.draw(field);
+						question.answer.drawAssignments(field);
+						return;
+					}
+				}
 				question.drawIdentification(field);
+					var player = quiz.attempt;
+
+					if (player != null) {
+						if (player.dropback.length > 0) {
+							buttons[0].display = true;
+						} else if (player.run.length > 0) {
+							buttons[2].display = true;
+						} else if (player.route.length > 0) {
+							buttons[3].display = true;
+						} else if (player.blockingAssignmentArray.length > 0) {
+							buttons[4].display = true;
+						} else if (player.pos === "QB") {
+							buttons[0].display = true;
+							buttons[1].display = true;
+							buttons[2].display = true;
+							buttons[3].display = true;
+							buttons[4].display = true;
+						} else if (player.eligible === true) {
+							buttons[1].display = true;
+							buttons[2].display = true;
+							buttons[3].display = true;
+							buttons[4].display = true;
+						} else if (player.eligible === false) {
+							buttons[4].display = true;
+						}
+					} else {
+						for (i in buttons) {
+							buttons[i].setUnclicked();
+							buttons[i].display = false;
+						}
+					}
+					var x = 10;
+					var y = 10;
+
+					for (i in buttons) {
+						if (buttons[i].display === true) {
+							buttons[i].x = x;
+							buttons[i].y = y;
+
+							buttons[i].draw(field);
+
+							x += buttons[i].width*1.25;
+						}
+					}
 			}else{
 				question.draw(field);
 				if(question.feedbackStartTime > 0){
@@ -341,6 +414,66 @@
 				}
 				return false;
 			}
+
+			if (quiz.getSelected()[0] != null) {
+				var playerSelected = quiz.attempt;
+				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
+				var playerStatusKeys = ["A", "S", "D", "F", "G"];
+
+				if (keyCode == BACKSPACE || keyCode == DELETE) {
+					if (playerSelected.unit == "offense") {
+						if (playerSelected.dropback.length > 0) {
+							playerSelected.dropback.pop();
+						} else if(playerSelected.run.length > 0) {
+							playerSelected.run.pop();
+						} else if(playerSelected.route.length > 0) {
+							playerSelected.route.pop();
+						} else if (playerSelected.blockingAssignmentArray.length > 0) {
+							playerSelected.blockingAssignmentArray.pop();
+						} else if (playerSelected.motionCoords.length > 0){
+							playerSelected.motionCoords.pop();
+						}
+					} else if (playerSelected.unit == "defense") {
+						if (playerSelected.defensiveMovement.length > 0) {
+							playerSelected.defensiveMovement.pop();
+						}
+					}
+
+					return false;
+				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+					var prevX = playerSelected.x;
+					var prevY = playerSelected.y;
+					var blockSize = playerSelected.blockingAssignmentArray.length;
+
+					if (blockSize > 0) {
+						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
+					}
+
+					var block = new BlockType({
+						type: 2 + specialBlockKeys.indexOf(key),
+						player: null,
+						prevX: prevX,
+						prevY: prevY
+					});
+
+					playerSelected.blockingAssignmentArray.push(block);
+
+					return false;
+				} else if (playerStatusKeys.indexOf(key) >= 0) {
+					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+						for (i in buttons) {
+							if (i != playerStatusKeys.indexOf(key)) {
+								buttons[i].setUnclicked();
+							} else {
+								buttons[i].click();
+							}
+						}
+					}
+
+					return false;
+				}
+			}
 		};
 
 		function keyTyped() {};
@@ -418,6 +551,30 @@
 				help_box.removeAttribute("hidden");
 			}
 		});
+
+		// setButtonClicked is responsible for presetting the most conveinent
+		// assignment type when questions change.
+		function setButtonClicked() {
+			for (var i = 0; i < buttons.length; i++){
+				buttons[i].setUnclicked();
+				buttons[i].display = false;
+			}
+
+			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
+				var player = quiz.getCurrentQuestion().answer;
+
+				if (player.dropback.length > 0) {
+					buttons[0].setClicked();
+				} else if (player.run.length > 0) {
+					buttons[2].setClicked();
+				} else if (player.route.length > 0) {
+					buttons[3].setClicked();
+				} else if (player.blockingAssignmentArray.length > 0) {
+					buttons[4].setClicked();
+				}
+			}
+
+		};
 
 		function changeSelectedChoice(selected) {
 			// The newly selected button is the one that is clicked on. The old
@@ -532,6 +689,13 @@
 
 			var question_prompt = document.getElementById("question-prompt");
 			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
+
+			var question = quiz.getCurrentQuestion();
+
+			if(question !== null && question.type === "assignment"){
+				setButtonClicked();
+			}
+
 		};
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
