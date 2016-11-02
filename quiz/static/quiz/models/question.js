@@ -254,7 +254,7 @@ Question.prototype.check = function(attempt) {
 			} else {
 				this.score = 0;
 			}
-		} else if (this.question instanceof Formation) {
+		} else if (this.question instanceof Formation || this.type === "alignment") {
 			var dist = sqrt(pow(attempt.x - this.answer.x, 2) + pow(attempt.y - this.answer.y, 2));
 
 			if (dist < 1) {
@@ -271,6 +271,20 @@ Question.prototype.check = function(attempt) {
 		}
 	}
 };
+
+Question.prototype.checkAlignment = function(attempt){
+	if(attempt === null || this.answer === null || !(this.answer instanceof Player) || !(attempt instanceof Player)){
+		return false;
+	}
+	var dx = this.answer.x - attempt.x;
+	var dy = this.answer.y - attempt.y;
+	var dist = sqrt(dx*dx + dy*dy);
+	if(dist < 2){
+		this.score = 1;
+		return true;
+	}
+	return false;
+}
 
 Question.prototype.checkAssignments = function(attempt){
 		if (this.checkDropback(attempt) && this.checkMotion(attempt) && this.checkRun(attempt) && this.checkRoute(attempt) && this.checkBlockingAssignment(attempt)) {

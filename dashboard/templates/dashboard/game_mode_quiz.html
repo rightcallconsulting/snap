@@ -191,6 +191,18 @@
 				question.drawIdentification(field);
 			}else{
 				question.draw(field);
+				if(question.feedbackStartTime > 0){
+					var elapsed = millis() - question.feedbackStartTime;
+					if(elapsed > 1500){
+						question.feedbackStartTime = 0;
+						quiz.nextQuestion();
+						updateMainviewAndSideview();
+					}else{
+						question.answer.draw(field);
+					}
+				} else if(quiz.attempt !== null && quiz.attempt instanceof Player){
+					quiz.attempt.draw(field);
+				}
 			}
 
 
@@ -226,6 +238,97 @@
 				}
 				return false;
 			}
+			var questionPart = quiz.currentQuestionIndex % questionsPerPlay;
+			var questionType = "assignment"
+			if(questionsPerPlay === 3){
+				if(questionPart === 0){
+					questionType = "alignment"
+				}else if(questionPart === 1){
+					questionType = "call"
+				}
+			}else if(questionsPerPlay === 2 && questionPart === 0){
+				questionType = "call"
+			}
+
+			if(questionType === "call"){
+				return true; //nothing else can happen here
+			}
+
+			if(questionType === "alignment"){
+				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+					var playerSelected = quiz.getSelected()[0];
+					var playerClicked = quiz.mouseInPlayer(field);
+					var mouseYardX = field.getYardX(mouseX);
+					var mouseYardY = field.getYardY(mouseY);
+					if(playerSelected === null){
+						quiz.attempt = quiz.getCurrentAnswer().deepCopy();
+						quiz.attempt.setSelected();
+						quiz.attempt.x = mouseYardX;
+						quiz.attempt.y = mouseYardY;
+					}
+					return true;
+				}
+				return false;
+			}
+
+			// If a button is displayed and clicked then call it's click
+			// function and return.
+			for (i in buttons) {
+				if (buttons[i].isMouseInside(field)) {
+					for (j in buttons) {
+						if (j != i) {
+							buttons[j].setUnclicked();
+						}
+					}
+
+					buttons[i].click();
+					return false;
+				}
+			}
+
+			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
+				var playerSelected = quiz.getSelected()[0];
+				var playerClicked = quiz.mouseInPlayer(field);
+				var mouseYardX = field.getYardX(mouseX);
+				var mouseYardY = field.getYardY(mouseY);
+
+				if (playerSelected === null) {
+					quiz.attempt = quiz.getCurrentAnswer().deepCopy();
+					quiz.attempt.setSelected();
+					quiz.attempt.x = mouseYardX;
+					quiz.attempt.y = mouseYardY;
+				} else if (buttons[0].clicked === true) {
+					playerSelected.dropback.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[1].clicked === true) {
+					playerSelected.motionCoords.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[2].clicked === true) {
+					playerSelected.run.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[3].clicked === true) {
+					playerSelected.route.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[4].clicked === true) {
+					var block;
+					if (playerClicked != null && playerClicked.unit === "defense") {
+						block = new BlockType({
+							type: 1,
+							player: playerClicked,
+							x: mouseYardX, y: mouseYardY
+						});
+					} else {
+						block = new BlockType({
+							type: 0,
+							x: mouseYardX, y: mouseYardY
+						});
+					}
+
+					playerSelected.blockingAssignmentArray.push(block);
+					return false;
+				}
+			}
+
 		};
 
 		function keyPressed() {

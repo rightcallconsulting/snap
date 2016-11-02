@@ -397,20 +397,20 @@ Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questions
 
 	for (i in this.plays) {
 		if(questionsPerPlay > 2){
-			question = new Question({ question: this.plays[i].deepCopy() });
+			question = new Question({ question: this.plays[i].deepCopy(), type: "alignment" });
 			result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
 			if (result === 0) {
 				this.questions.push(question);
 			}
 		}
 
-		question = new Question({ question: this.plays[i].deepCopy() });
+		question = new Question({ question: this.plays[i].deepCopy(), type: "call" });
 		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition)
 		if (result === 0) {
 			this.questions.push(question);
 		}
 
-		question = new Question({ question: this.plays[i].deepCopy() });
+		question = new Question({ question: this.plays[i].deepCopy(), type: "assignment" });
 		var result = question.buildAssignmentQuestionAndAnswer(testedPlayerPosition)
 		if (result === 0) {
 			this.questions.push(question);
