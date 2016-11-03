@@ -56,10 +56,12 @@
 			</div>
 		</div>
 
-		<div id="formation-notes" class="col-md-4" hidden="true">
-			<h3 id="formation-notes-header">Notes for Formation</h3>
-			<ul id="formation-notes-list">
-			</ul>
+		<div id="notes-and-calls" class="col-md-12">
+			<div id="formation-notes" class="col-md-4" hidden="true">
+				<h3 id="formation-notes-header">Notes for Formation</h3>
+				<ul id="formation-notes-list">
+				</ul>
+			</div>
 		</div>
 
 	</div><!--/create-formation-->
@@ -309,41 +311,6 @@
 				return false;
 			}
 
-			// Handle clicks on players in the Formation
-			var currentPlayerSelected = formation.getSelected()[0];
-			var newPlayerSelected = formation.mouseInPlayer(field);
-			var mouseYardX = field.getYardX(mouseX);
-			var mouseYardY = field.getYardY(mouseY);
-
-			// If no one is currently selected and no one is clicked on do 
-			// nothing. Else if no one is currently selected and someone is 
-			// clicked on, then select that player and return. Else if someone
-			// is currently selected and empty field is clicked on then do 
-			// nothing. Else if the currently selected player is the same as 
-			// the newly selected player then clear all selections and return. 
-			// Else two seperate players are assigned to those variables and 
-			// handle accordingly.
-			if (currentPlayerSelected === null && newPlayerSelected === null) {
-				// No one is selected and no one is clicked on.
-				// Do nothing	
-			} else if (currentPlayerSelected === null) {
-				newPlayerSelected.click();
-				return false;
-			} else if (newPlayerSelected === null) {
-				formation.clearSelected();
-				return false;
-			} else if (newPlayerSelected === currentPlayerSelected) {
-				formation.clearSelected();
-				return false;
-			} else if (currentPlayerSelected.unit === newPlayerSelected.unit) {
-				formation.clearSelected();
-				newPlayerSelected.click();
-				return false;
-			} else if (currentPlayerSelected.unit === "offense") {
-				currentPlayerSelected.blockingAssignmentArray.push(newPlayerSelected);
-				return false;
-			}
-
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
 			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
@@ -483,6 +450,11 @@
 					addHeaderPlaceholder();
 				}
 			}
+		});
+
+		// Don't allow enter in the textarea.
+		$('#note').keypress(function(event){
+			if (event.keyCode === 10 || event.keyCode === 13) { event.preventDefault(); }
 		});
 
 		// When the header box is selected have it change colors and remove the
