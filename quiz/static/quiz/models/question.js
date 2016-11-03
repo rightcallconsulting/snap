@@ -163,10 +163,10 @@ Question.prototype.buildAssignmentQuestionAndAnswer = function(testedPlayerPosit
 // question and answer based on the current content in the question variable.
 Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
 	var testedPlayer = this.question.getPlayerFromPosition(testedPlayerPosition)
-	if(testedPlayer !== null){
+	if(testedPlayer !== null && testedPlayer.call !== ""){
 		this.answer = testedPlayer.call
 	}else{
-		this.answer = ""
+		this.answer = "No Call"
 	}
 
 	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.name;
