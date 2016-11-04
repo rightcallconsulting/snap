@@ -284,7 +284,7 @@ Play.prototype.save = function (path, csrf_token) {
 				console.log("Error sending Play to Django to be saved");
 		});
 	} else {
-		this.feedbackMessage = "Invalid Play";
+		//this.feedbackMessage = "Invalid Play";
 	}
 };
 
@@ -641,7 +641,7 @@ Play.prototype.getPassStrength = function(){
 
 Play.prototype.isValidPlay = function(){
   if(!this.formation.isValidPlay()){
-    return false;
+    //return false;
   }
   return true;
 };
