@@ -151,7 +151,9 @@
 
 			choices = shuffle_choices(choices);
 
-			quiz.attempt = ""
+			quiz.shuffleInGroups(questionsPerPlay);
+
+			//quiz.attempt = ""
 
 			// Create buttons for selecting type of assignment
 			var button = new Button ({ label: "Dropback (A)" });
@@ -296,6 +298,7 @@
 					var clickedLabel = clickedButton.label;
 					if(clickedLabel === "Retake All"){
 						quiz = quiz.restartQuiz(false);
+						quiz.shuffleInGroups(questionsPerPlay);
 						quiz.setAttempt();
 						updateMainviewAndSideview()
 					}else if(clickedLabel === "Retake Missed"){
@@ -403,6 +406,7 @@
 			if(quiz.over){
 				if (key === "r" || key === "R"){
 					quiz = quiz.restartQuiz(false);
+					quiz.shuffleInGroups(questionsPerPlay);
 					quiz.setAttempt();
 					updateMainviewAndSideview()
 					setButtonClicked();

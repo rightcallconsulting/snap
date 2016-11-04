@@ -448,6 +448,36 @@ Quiz.prototype.getCurrentQuestionName = function() {
 	}
 };
 
+Quiz.prototype.shuffleInGroups = function(groupLength){
+	var currentGroupIndex = this.questions.length / groupLength;
+	var temporaryQuestions = [];
+	var randomGroupIndex;
+
+	// While the current index is not 0 (there is something left to shuffle).
+	while (currentGroupIndex != 0) {
+		// Pick a remaining question index at random.
+		randomGroupIndex = Math.floor(Math.random() * currentGroupIndex);
+		currentGroupIndex -= 1;
+
+		// Swap it with the current elements.
+		temporaryQuestions = []
+		for(var i = 0; i < groupLength; i++){
+			var currentQuestionIndex = currentGroupIndex*groupLength + i;
+			temporaryQuestions.push(this.questions[currentQuestionIndex].deepCopy());
+		}
+		for(var i = 0; i < groupLength; i++){
+			var currentQuestionIndex = currentGroupIndex*groupLength + i;
+			var randomQuestionIndex = randomGroupIndex * groupLength + i;
+			this.questions[currentQuestionIndex] = this.questions[randomQuestionIndex].deepCopy();
+		}
+		for(var i = 0; i < groupLength; i++){
+			var randomQuestionIndex = randomGroupIndex * groupLength + i;
+			this.questions[randomQuestionIndex] = temporaryQuestions[i].deepCopy();
+		}
+
+	}
+}
+
 // shuffle rearranges the questions in the array in a random order. It is and
 // implementation of the Fisher-Yates Shuffle.
 Quiz.prototype.shuffle = function() {
@@ -455,7 +485,7 @@ Quiz.prototype.shuffle = function() {
 	var temporaryQuestion;
 	var randomQuestionIndex;
 
-	// While the current index is not 0 (there is nothing left to shuffle).
+	// While the current index is not 0 (there is something left to shuffle).
 	while (currentQuestionIndex != 0) {
 		// Pick a remaining question index at random.
 		randomQuestionIndex = Math.floor(Math.random() * currentQuestionIndex);
