@@ -668,36 +668,34 @@
 		};
 
 		function keyTyped() {
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				if ($("#header-box").hasClass("selected")) {
-					var concept_name = document.getElementById("concept-name");
+			if ($("#header-box").hasClass("selected")) {
+				var concept_name = document.getElementById("concept-name");
 
-					if (concept_name === null) {
-						concept_name = document.createElement("p");
-						concept_name.setAttribute("id", "concept-name");
-					}
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
+				}
 
-					document.getElementById("header-box").appendChild(concept_name);
-					var string_length = concept_name.textContent.length;
+				document.getElementById("header-box").appendChild(concept_name);
+				var string_length = concept_name.textContent.length;
 
-					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-						removeHeaderPlaceholder();
-						removeHeaderError();
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
 
-						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-							if (string_length <= 100){
-								concept_name.textContent += key;
-							}
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							concept_name.textContent += key;
 						}
-
-						unhideNotesAndCallsInput(concept_name.textContent);
-
-						// return false to prevent default behavior
-						return false;
 					}
+
+					unhideNotesAndCallsInput(concept_name.textContent);
+
+					// return false to prevent default behavior
+					return false;
 				}
 			}
 		};
