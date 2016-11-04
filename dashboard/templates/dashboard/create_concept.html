@@ -552,55 +552,59 @@
 		};
 
 		function keyPressed() {
+			// Get the concept-name html element if it exists. This is what
+			// will be updated. This all has to be before the if (mouseX
+			// > 0 && mouse X ... ) statement or else there is weird buggy
+			// behavior.
+			var concept_name = document.getElementById("concept-name");
+
+			// If the header box is selected update the concept name according
+			// to the key press. Otherwise, create a block.
+			if ($("#header-box").hasClass("selected") && concept_name != null) {
+				// Get the currently selected sideview button so that you can
+				// unselect it when the name in the main view's top bar is
+				// changed.
+				var selected = document.getElementById("selected");
+
+				// If there was a previously selected button remove it's selected
+				// id attribute and change it from btn-success to btn-primary.
+				if (selected != null) {
+					selected.removeAttribute("id");
+					selected.removeAttribute("class");
+					selected.setAttribute("class", "btn btn-primary sideview-button");
+				}
+
+				// Get the main view's top bar so that you can tell is the
+				// string has become empty and needs to be replaced with a
+				// placeholder message.
+				var string_length = concept_name.textContent.length;
+
+				if (keyCode == BACKSPACE) {
+					if (concept_name != null) {
+						if(string_length > 0) {
+							concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
+							unhideNotesAndCallsInput(concept_name.textContent);
+						}
+					}
+					return false;
+				} else if (keyCode == 32) {
+					if (concept_name != null && string_length < 100) {
+						concept_name.textContent += ' ';
+						unhideNotesAndCallsInput(concept_name.textContent);
+					}
+					return false;
+				} else if (keyCode == 189) {
+					if (concept_name != null && string_length < 100) {
+						concept_name.textContent += '-';
+						unhideNotesAndCallsInput(concept_name.textContent);
+					}
+					return false;
+				}
+
+			} 
+
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				// Get the concept-name html element if it exists. This is what
-				// will be updated.
-				var concept_name = document.getElementById("concept-name");
-
-				// If the header box is selected update the concept name according
-				// to the key press. Otherwise, create a block.
-				if ($("#header-box").hasClass("selected") && concept_name != null) {
-					// Get the currently selected sideview button so that you can
-					// unselect it when the name in the main view's top bar is
-					// changed.
-					var selected = document.getElementById("selected");
-
-					// If there was a previously selected button remove it's selected
-					// id attribute and change it from btn-success to btn-primary.
-					if (selected != null) {
-						selected.removeAttribute("id");
-						selected.removeAttribute("class");
-						selected.setAttribute("class", "btn btn-primary sideview-button");
-					}
-
-					// Get the main view's top bar so that you can tell is the
-					// string has become empty and needs to be replaced with a
-					// placeholder message.
-					var string_length = concept_name.textContent.length;
-
-					if (keyCode == BACKSPACE) {
-						if (concept_name != null) {
-							if(string_length > 0) {
-								concept_name.textContent = concept_name.textContent.slice(0, string_length-1);
-								unhideNotesAndCallsInput(concept_name.textContent);
-							}
-						}
-						return false;
-					} else if (keyCode == 32) {
-						if (concept_name != null && string_length < 100) {
-							concept_name.textContent += ' ';
-							unhideNotesAndCallsInput(concept_name.textContent);
-						}
-						return false;
-					} else if (keyCode == 189) {
-						if (concept_name != null && string_length < 100) {
-							concept_name.textContent += '-';
-							unhideNotesAndCallsInput(concept_name.textContent);
-						}
-						return false;
-					}
-
-				} else if (concept.getSelected()[0] != null) {
+				if (concept.getSelected()[0] != null) {
 					var playerSelected = concept.getSelected()[0];
 					var playerSelectedIndex = concept.getSelected()[1];
 					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
@@ -668,36 +672,34 @@
 		};
 
 		function keyTyped() {
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				if ($("#header-box").hasClass("selected")) {
-					var concept_name = document.getElementById("concept-name");
+			if ($("#header-box").hasClass("selected")) {
+				var concept_name = document.getElementById("concept-name");
 
-					if (concept_name === null) {
-						concept_name = document.createElement("p");
-						concept_name.setAttribute("id", "concept-name");
-					}
+				if (concept_name === null) {
+					concept_name = document.createElement("p");
+					concept_name.setAttribute("id", "concept-name");
+				}
 
-					document.getElementById("header-box").appendChild(concept_name);
-					var string_length = concept_name.textContent.length;
+				document.getElementById("header-box").appendChild(concept_name);
+				var string_length = concept_name.textContent.length;
 
-					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-						removeHeaderPlaceholder();
-						removeHeaderError();
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
 
-						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-							if (string_length <= 100){
-								concept_name.textContent += key;
-							}
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							concept_name.textContent += key;
 						}
-
-						unhideNotesAndCallsInput(concept_name.textContent);
-
-						// return false to prevent default behavior
-						return false;
 					}
+
+					unhideNotesAndCallsInput(concept_name.textContent);
+
+					// return false to prevent default behavior
+					return false;
 				}
 			}
 		};

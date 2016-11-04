@@ -484,54 +484,58 @@
 		};
 
 		function keyPressed() {
+			// Get the play-name html element if it exists. This is what
+			// will be updated. This all has to be before the if (mouseX
+			// > 0 && mouse X ... ) statement or else there is weird buggy
+			// behavior.
+			var play_name = document.getElementById("play-name");
+
+			// If the header box is selected update the play name according
+			// to the key press. Otherwise, create a block.
+			if ($("#header-box").hasClass("selected") && play_name != null) {
+				// Get the currently selected sideview button so that you can
+				// unselect it when the name in the main view's top bar is
+				// changed.
+				var selected = document.getElementById("selected");
+
+				// If there was a previously selected button remove it's selected
+				// id attribute and change it from btn-success to btn-primary.
+				if (selected != null) {
+					selected.removeAttribute("id");
+					selected.removeAttribute("class");
+					selected.setAttribute("class", "btn btn-primary sideview-button");
+				}
+
+				// Get the main view's top bar so that you can tell is the
+				// string has become empty and needs to be replaced with a
+				// placeholder message.
+				var string_length = play_name.textContent.length;
+
+				if (keyCode == BACKSPACE) {
+					if (play_name != null) {
+						if(string_length > 0) {
+							play_name.textContent = play_name.textContent.slice(0, string_length-1);
+							unhideNotesAndCallsInput(play_name.textContent);
+						}
+					}
+					return false;
+				} else if (keyCode == 32) {
+					if (play_name != null && string_length < 100) {
+						play_name.textContent += ' ';
+						unhideNotesAndCallsInput(play_name.textContent);
+					}
+					return false;
+				} else if (keyCode == 189) {
+					if (play_name != null && string_length < 100) {
+						play_name.textContent += '-';
+						unhideNotesAndCallsInput(play_name.textContent);
+					}
+					return false;
+				}
+			}
+
 			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				// Get the play-name html element if it exists. This is what
-				// will be updated.
-				var play_name = document.getElementById("play-name");
-
-				// If the header box is selected update the play name according
-				// to the key press. Otherwise, create a block.
-				if ($("#header-box").hasClass("selected") && play_name != null) {
-					// Get the currently selected sideview button so that you can
-					// unselect it when the name in the main view's top bar is
-					// changed.
-					var selected = document.getElementById("selected");
-
-					// If there was a previously selected button remove it's selected
-					// id attribute and change it from btn-success to btn-primary.
-					if (selected != null) {
-						selected.removeAttribute("id");
-						selected.removeAttribute("class");
-						selected.setAttribute("class", "btn btn-primary sideview-button");
-					}
-
-					// Get the main view's top bar so that you can tell is the
-					// string has become empty and needs to be replaced with a
-					// placeholder message.
-					var string_length = play_name.textContent.length;
-
-					if (keyCode == BACKSPACE) {
-						if (play_name != null) {
-							if(string_length > 0) {
-								play_name.textContent = play_name.textContent.slice(0, string_length-1);
-								unhideNotesAndCallsInput(play_name.textContent);
-							}
-						}
-						return false;
-					} else if (keyCode == 32) {
-						if (play_name != null && string_length < 100) {
-							play_name.textContent += ' ';
-							unhideNotesAndCallsInput(play_name.textContent);
-						}
-						return false;
-					} else if (keyCode == 189) {
-						if (play_name != null && string_length < 100) {
-							play_name.textContent += '-';
-							unhideNotesAndCallsInput(play_name.textContent);
-						}
-						return false;
-					}
-				} else if (play.getSelected()[0] != null) {
+				if (play.getSelected()[0] != null) {
 					var playerSelected = play.getSelected()[0];
 					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 					var playerStatusKeys = ["A", "S", "D", "F", "G"];
@@ -594,36 +598,34 @@
 		};
 
 		function keyTyped() {
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				if ($("#header-box").hasClass("selected")) {
-					var play_name = document.getElementById("play-name");
+			if ($("#header-box").hasClass("selected")) {
+				var play_name = document.getElementById("play-name");
 
-					if (play_name === null) {
-						play_name = document.createElement("p");
-						play_name.setAttribute("id", "play-name");
-					}
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
 
-					document.getElementById("header-box").appendChild(play_name);
-					var string_length = play_name.textContent.length;
+				document.getElementById("header-box").appendChild(play_name);
+				var string_length = play_name.textContent.length;
 
-					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-						removeHeaderPlaceholder();
-						removeHeaderError();
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
 
-						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-							if (string_length <= 100){
-								play_name.textContent += key;
-							}
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							play_name.textContent += key;
 						}
-
-						unhideNotesAndCallsInput(play_name.textContent);
-
-						// return false to prevent default behavior
-						return false;
 					}
+
+					unhideNotesAndCallsInput(play_name.textContent);
+
+					// return false to prevent default behavior
+					return false;
 				}
 			}
 		};
