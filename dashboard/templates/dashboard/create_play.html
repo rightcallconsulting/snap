@@ -594,36 +594,34 @@
 		};
 
 		function keyTyped() {
-			if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
-				if ($("#header-box").hasClass("selected")) {
-					var play_name = document.getElementById("play-name");
+			if ($("#header-box").hasClass("selected")) {
+				var play_name = document.getElementById("play-name");
 
-					if (play_name === null) {
-						play_name = document.createElement("p");
-						play_name.setAttribute("id", "play-name");
-					}
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
 
-					document.getElementById("header-box").appendChild(play_name);
-					var string_length = play_name.textContent.length;
+				document.getElementById("header-box").appendChild(play_name);
+				var string_length = play_name.textContent.length;
 
-					if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
-						removeHeaderPlaceholder();
-						removeHeaderError();
+				if ((keyCode >= 48 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+					removeHeaderPlaceholder();
+					removeHeaderError();
 
-						var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
-						var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
-						var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
-						if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
-							if (string_length <= 100){
-								play_name.textContent += key;
-							}
+					var lcDiff = key.charCodeAt(0)-"a".charCodeAt(0);
+					var ucDiff = key.charCodeAt(0)-"A".charCodeAt(0);
+					var numDiff = key.charCodeAt(0)-"0".charCodeAt(0);
+					if (key.length === 1 && ((lcDiff >= 0 && lcDiff < 26)) || (ucDiff >= 0 && ucDiff < 26) || (numDiff >= 0 && numDiff < 10)) {
+						if (string_length <= 100){
+							play_name.textContent += key;
 						}
-
-						unhideNotesAndCallsInput(play_name.textContent);
-
-						// return false to prevent default behavior
-						return false;
 					}
+
+					unhideNotesAndCallsInput(play_name.textContent);
+
+					// return false to prevent default behavior
+					return false;
 				}
 			}
 		};
