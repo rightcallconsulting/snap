@@ -1050,6 +1050,7 @@ def play_quizzes(request, unit="offense"):
 					### Filters out plays that don't have calls ###
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						filtered_plays.append(play)
+						call_options.append(player_dict['call'])
 
 		plays = filtered_plays[0:number_of_questions]
 
@@ -1074,6 +1075,8 @@ def play_quizzes(request, unit="offense"):
 				player_position = str(player_dict['pos'])
 				if player_position == position:
 					filtered_plays.append(play)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
 
 		plays = filtered_plays[0:number_of_questions]
 
@@ -1158,6 +1161,7 @@ def concept_quizzes(request, unit="offense"):
 				if player_position == position:
 					### Do additional filtering for type of assignment here ###
 					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
 						filtered_concepts.append(concept)
 
 		concepts = filtered_concepts[0:number_of_questions]
@@ -1183,6 +1187,8 @@ def concept_quizzes(request, unit="offense"):
 				player_position = str(player_dict['pos'])
 				if player_position == position:
 					filtered_concepts.append(concept)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
 
 		concepts = filtered_concepts[0:number_of_questions]
 

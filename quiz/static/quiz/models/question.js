@@ -469,7 +469,8 @@ Question.prototype.getAnswer = function() {
 Question.prototype.deepCopy = function() {
 	var deepCopy = new Question ({
 		score: this.score,
-		prompt: this.prompt
+		prompt: this.prompt,
+		type: this.type
 	});
 
 	deepCopy.question = this.question.deepCopy();

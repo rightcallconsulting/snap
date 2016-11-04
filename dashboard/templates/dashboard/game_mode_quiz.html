@@ -204,7 +204,7 @@
 
 			var question = quiz.getCurrentQuestion();
 
-			if (quiz.currentQuestionIndex % questionsPerPlay === 2){
+			if (quiz.getCurrentQuestion().type === "assignment"){
 				if(question.feedbackStartTime > 0){
 					var elapsed = millis() - question.feedbackStartTime;
 					if(elapsed > 1500){
@@ -311,17 +311,9 @@
 				}
 				return false;
 			}
-			var questionPart = quiz.currentQuestionIndex % questionsPerPlay;
-			var questionType = "assignment"
-			if(questionsPerPlay === 3){
-				if(questionPart === 0){
-					questionType = "alignment"
-				}else if(questionPart === 1){
-					questionType = "call"
-				}
-			}else if(questionsPerPlay === 2 && questionPart === 0){
-				questionType = "call"
-			}
+			var questionType = quiz.getCurrentQuestion().type;
+
+			debugger;
 
 			if(questionType === "call"){
 				return true; //nothing else can happen here
