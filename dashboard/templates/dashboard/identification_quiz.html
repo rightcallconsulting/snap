@@ -22,9 +22,9 @@
 					<i class="fa fa-pencil-square-o fa-2x mainview-button-icon" title="Submit Quiz"></i>
 				</button>
 
-				<button id="check-answer-button" name="button">
+				<!--<button id="check-answer-button" name="button">
 					<i class="fa fa-check fa-2x mainview-button-icon" title="Check answer"></i>
-				</button>
+				</button>-->
 
 				<button id="skip-question-button" name="button">
 					<i class="fa fa-step-forward fa-2x mainview-button-icon" title="Skip question"></i>
@@ -233,7 +233,7 @@
 			window.location.replace("/quizzes/custom");
 		});
 
-		$("#check-answer-button").click(function(event) {
+		/*$("#check-answer-button").click(function(event) {
 			if(!quiz.over){
 				var path = window.location.pathname;
 				var csrf_token = "{{ csrf_token }}";
@@ -243,7 +243,7 @@
 				choices = shuffle_choices(choices);
 				updateMainviewAndSideview();
 			}
-		});
+		});*/
 
 		$("#skip-question-button").click(function(event) {
 
@@ -297,6 +297,17 @@
 		});
 
 		function changeSelectedChoice(selected) {
+			quiz.attempt = selected.textContent;
+			if(!quiz.over){
+				var path = window.location.pathname;
+				var csrf_token = "{{ csrf_token }}";
+
+				quiz.checkCurrentQuestion(path, csrf_token);
+
+				choices = shuffle_choices(choices);
+				updateMainviewAndSideview();
+			}
+			/*
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
@@ -321,7 +332,7 @@
 				new_selected.setAttribute("class", "btn btn-success choice-button");
 
 				quiz.attempt = new_selected.textContent;
-			}
+			}*/
 		};
 
 		function updateMainviewAndSideview() {
