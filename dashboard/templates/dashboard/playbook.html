@@ -198,8 +198,6 @@
 			scout_formation = new Formation({});
 			dummy_offense = new Formation({});
 
-			updateNotesAndCalls(null);
-
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
@@ -386,6 +384,8 @@
 			play = new Play({});
 			concept = new Concept({});
 			scout_formation = new Formation({});
+
+			updateNotesAndCalls(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -673,7 +673,7 @@
 			var formation = play.formation;
 			play = new Play({});
 
-			updateNotesAndCalls(null);
+			updateNotesAndCalls(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = formation;
@@ -721,7 +721,7 @@
 					}
 				}
 
-				updateNotesAndCalls(null);
+				updateNotesAndCalls(play);
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -790,7 +790,7 @@
 				}
 			}
 
-			updateNotesAndCalls(null);
+			updateNotesAndCalls(play);
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -827,7 +827,7 @@
 					}
 				}
 
-				updateNotesAndCalls(null);
+				updateNotesAndCalls(play);
 			}
 		};
 
@@ -839,7 +839,7 @@
 
 			concept = new Concept({});
 
-			updateNotesAndCalls(null);
+			updateNotesAndCalls(concept);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -873,7 +873,7 @@
 					}
 				}
 
-				updateNotesAndCalls(null);
+				updateNotesAndCalls(concept);
 			}
 		};
 
@@ -972,19 +972,9 @@
 
 		// updateNotesAndCalls emptys the list of formation notes and updates
 		// them with the notes for the new formation.
-		function updateNotesAndCalls(formation) {
+		function updateNotesAndCalls(content) {
 			var notes_and_calls = document.getElementById("notes-and-calls");
 			if (notes_and_calls != null) { notes_and_calls.setAttribute("hidden", true); }
-
-			var content = null;
-
-			if (formation != null) {
-				content = formation
-			} else if (play != null) {
-				content = play;
-			} else if (concept != null) {
-				content = concept;
-			}
 
 			// Update Notes
 			var notes = document.getElementById("notes");
