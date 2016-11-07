@@ -96,19 +96,19 @@
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12" hidden="true">
-			<div id="notes" class="col-md-4">
+			<div id="notes" class="col-md-4" hidden="true">
 				<h3 id="notes-header">Notes</h3>
 				<ul id="notes-list">
 				</ul>
 			</div>
 
-			<div id="calls" class="col-md-4">
+			<div id="calls" class="col-md-4" hidden="true">
 				<h3 id="calls-header">Calls for Positions</h3>
 				<ul id="calls-list">
 				</ul>
 			</div>
 
-			<div id="player-notes" class="col-md-4">
+			<div id="player-notes" class="col-md-4" hidden="true">
 				<h3 id="player-notes-header">Notes for Player</h3>
 				<ul id="player-notes-list">
 				</ul>
@@ -198,7 +198,7 @@
 			scout_formation = new Formation({});
 			dummy_offense = new Formation({});
 
-			updateNotesAndCalls();
+			updateNotesAndCalls(null);
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -610,6 +610,8 @@
 
 			sideview_header.appendChild(back_arrow);
 
+			updateNotesAndCalls(formation_selected);
+
 			play.fromFormation(formation_selected);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
@@ -671,7 +673,7 @@
 			var formation = play.formation;
 			play = new Play({});
 
-			updateNotesAndCalls();
+			updateNotesAndCalls(null);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = formation;
@@ -719,7 +721,7 @@
 					}
 				}
 
-				updateNotesAndCalls();
+				updateNotesAndCalls(null);
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -788,6 +790,8 @@
 				}
 			}
 
+			updateNotesAndCalls(null);
+
 			for (i in formations) {
 				if (formation === formations[i].name) {
 					play.fromFormation(formations[i]);
@@ -822,6 +826,8 @@
 						break;
 					}
 				}
+
+				updateNotesAndCalls(null);
 			}
 		};
 
@@ -833,7 +839,7 @@
 
 			concept = new Concept({});
 
-			updateNotesAndCalls();
+			updateNotesAndCalls(null);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -867,7 +873,7 @@
 					}
 				}
 
-				updateNotesAndCalls();
+				updateNotesAndCalls(null);
 			}
 		};
 
@@ -966,17 +972,21 @@
 
 		// updateNotesAndCalls emptys the list of formation notes and updates
 		// them with the notes for the new formation.
-		function updateNotesAndCalls() {
+		function updateNotesAndCalls(formation) {
 			var notes_and_calls = document.getElementById("notes-and-calls");
+			if (notes_and_calls != null) { notes_and_calls.setAttribute("hidden", true); }
+
 			var content = null;
 
-			if (play != null) {
+			if (formation != null) {
+				content = formation
+			} else if (play != null) {
 				content = play;
 			} else if (concept != null) {
 				content = concept;
 			}
 
-			// Update Concept Notes
+			// Update Notes
 			var notes = document.getElementById("notes");
 			if (notes != null) { notes.setAttribute("hidden", "true"); }
 
@@ -997,59 +1007,61 @@
 				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 			}
 
-			// Update Calls
-			var calls = document.getElementById("calls");
-			if (calls != null)  { calls.setAttribute("hidden", "true"); }
+			if (!content instanceof Formation) {
+				// Update Calls
+				var calls = document.getElementById("calls");
+				if (calls != null)  { calls.setAttribute("hidden", "true"); }
 
-			var calls_list = document.getElementById("calls-list");
+				var calls_list = document.getElementById("calls-list");
 
-			while (calls_list.firstChild) {
-				calls_list.removeChild(calls_list.firstChild);
-			}
+				while (calls_list.firstChild) {
+					calls_list.removeChild(calls_list.firstChild);
+				}
 
-			if (calls != null && content != null) {
-				for (i in content.offensivePlayers) {
-					if (content.offensivePlayers[i].call != "") {
-						var list_item = document.createElement("li");
-						list_item.textContent = content.offensivePlayers[i].pos + ": " + content.offensivePlayers[i].call;
-						calls_list.appendChild(list_item);
-						calls.removeAttribute("hidden");
-						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+				if (calls != null && content != null) {
+					for (i in content.offensivePlayers) {
+						if (content.offensivePlayers[i].call != "") {
+							var list_item = document.createElement("li");
+							list_item.textContent = content.offensivePlayers[i].pos + ": " + content.offensivePlayers[i].call;
+							calls_list.appendChild(list_item);
+							calls.removeAttribute("hidden");
+							if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+						}
+					}
+
+					for (i in content.defensivePlayers) {
+						if (content.defensivePlayers[i].call != "") {
+							var list_item = document.createElement("li");
+							list_item.textContent = content.defensivePlayers[i].pos + ": " + content.defensivePlayers[i].call;
+							calls_list.appendChild(list_item);
+							calls.removeAttribute("hidden");
+							if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+						}
 					}
 				}
 
-				for (i in content.defensivePlayers) {
-					if (content.defensivePlayers[i].call != "") {
+				// Update Player Notes
+				var player_notes = document.getElementById("player-notes");
+				if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
+
+				var player_notes_list = document.getElementById("player-notes-list");
+
+				while (player_notes_list.firstChild) {
+					player_notes_list.removeChild(player_notes_list.firstChild);
+				}
+
+				var player = content.getSelected()[0];
+
+				if (player_notes != null && player != null && player.notes.length > 0) {
+					for (i in player.notes) {
 						var list_item = document.createElement("li");
-						list_item.textContent = content.defensivePlayers[i].pos + ": " + content.defensivePlayers[i].call;
-						calls_list.appendChild(list_item);
-						calls.removeAttribute("hidden");
-						if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
+						list_item.textContent = player.notes[i];
+						player_notes_list.appendChild(list_item);
 					}
+
+					player_notes.removeAttribute("hidden");
+					if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 				}
-			}
-
-			// Update Player Notes
-			var player_notes = document.getElementById("player-notes");
-			if (player_notes != null) { player_notes.setAttribute("hidden", "true"); }
-
-			var player_notes_list = document.getElementById("player-notes-list");
-
-			while (player_notes_list.firstChild) {
-				player_notes_list.removeChild(player_notes_list.firstChild);
-			}
-
-			var player = content.getSelected()[0];
-
-			if (player_notes != null && player != null && player.notes.length > 0) {
-				for (i in player.notes) {
-					var list_item = document.createElement("li");
-					list_item.textContent = player.notes[i];
-					player_notes_list.appendChild(list_item);
-				}
-
-				player_notes.removeAttribute("hidden");
-				if (notes_and_calls != null) { notes_and_calls.removeAttribute("hidden"); }
 			}
 		};
 
