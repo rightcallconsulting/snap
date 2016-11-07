@@ -53,7 +53,7 @@ Concept.prototype.drawAssignments = function (field) {
 	}
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].drawDefensiveMovement(field);
+		this.defensivePlayers[i].drawAssignments(field);//DefensiveMovement(field);
 	}
 };
 

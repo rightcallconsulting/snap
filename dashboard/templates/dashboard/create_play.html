@@ -278,7 +278,7 @@
 			// Determine which buttons should be displayed based on which, if
 			// any buttons should be displayed.
 			var player = play.getSelected()[0];
-			
+
 			if (player != null) {
 				buttons[0].display = false;
 				buttons[1].display = false;
@@ -419,7 +419,7 @@
 
 				if (buttons[0].clicked === true) {
 					currentPlayerSelected.dropback.push([mouseYardX, mouseYardY]);
-					return false;				
+					return false;
 				} else if (buttons[1].clicked === true) {
 					currentPlayerSelected.motionCoords.push([mouseYardX, mouseYardY]);
 					return false;
@@ -448,9 +448,9 @@
 					return false;
 				}
 
-				// If someone is currently selected and no one is clicked on 
-				// unselect all buttons and players. Else if no one is currently 
-				// selected and someone is clicked on, then select that player and 
+				// If someone is currently selected and no one is clicked on
+				// unselect all buttons and players. Else if no one is currently
+				// selected and someone is clicked on, then select that player and
 				// return.
 				if (currentPlayerSelected != null && newPlayerSelected === null) {
 					for (i in buttons) {
@@ -564,7 +564,7 @@
 						var prevX = playerSelected.x;
 						var prevY = playerSelected.y;
 						var blockSize = playerSelected.blockingAssignmentArray.length;
-						
+
 						if (blockSize > 0) {
 							prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
 							prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;

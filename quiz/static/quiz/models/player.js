@@ -31,6 +31,7 @@ var Player = function(config) {
 	this.route = config.route || [];
 	this.blockingAssignmentArray = config.blockingAssignmentArray || [];
 	this.defensiveMovement = config.defensiveMovement || [];
+	this.blitz = config.blitz || [];
 
 	// Player notes and calls - strings used to add extra description to players assignments
 	this.notes = config.notes || [];
@@ -230,6 +231,7 @@ Player.prototype.drawAssignments = function(field){
 	this.drawBlocks(field);
 
 	this.drawDefensiveMovement(field);
+	this.drawBlitz(field);
 };
 
 // drawMotion iterates through a players presnap motion landmarks and draws
@@ -533,6 +535,55 @@ Player.prototype.drawDefensiveMovement = function(field) {
 		x2 = field.getTranslatedX(x2);
 		y2 = field.getTranslatedY(y2);
 		dottedLine(x1, y1, x2, y2);
+		x1 = field.getYardX(x1);
+		y1 = field.getYardY(y1);
+		x2 = field.getYardX(x2);
+		y2 = field.getYardY(y2);
+
+	}
+
+	if(this.blitz.length === 0){
+		// Draw arrow
+		var deltaX = x2 - x1;
+		var deltaY = y2 - y1;
+		var alpha = atan(deltaY/deltaX);
+
+		arrow(x2, y2, alpha, deltaX);
+	}
+
+
+	noStroke();
+};
+
+Player.prototype.drawBlitz = function(field){
+	if(this.blitz.length === 0){
+		return;
+	}
+	var x1 = this.x;
+	var y1 = this.y;
+
+	if(this.defensiveMovement.length > 0){
+		x1 = this.defensiveMovement[this.defensiveMovement.length - 1][0]
+		y1 = this.defensiveMovement[this.defensiveMovement.length - 1][1]
+	}
+
+	var x2 = x1;
+	var y2 = y1;
+
+	var red = color(255, 0, 0);
+	stroke(red);
+
+	for (var i = 0; i < this.blitz.length; i++) {
+		x1 = x2;
+		y1 = y2;
+		x2 = this.blitz[i][0];
+		y2 = this.blitz[i][1];
+
+		x1 = field.getTranslatedX(x1);
+		y1 = field.getTranslatedY(y1);
+		x2 = field.getTranslatedX(x2);
+		y2 = field.getTranslatedY(y2);
+		line(x1, y1, x2, y2);
 		x1 = field.getYardX(x1);
 		y1 = field.getYardY(y1);
 		x2 = field.getYardX(x2);
