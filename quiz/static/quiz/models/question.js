@@ -34,7 +34,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 				for (j in this.question.offensivePlayers) {
 					if (this.question.offensivePlayers[j].eligible === true && this.question.offensivePlayers[j].pos != "QB") {
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						this.question.offensivePlayers.splice(j, 1);
 						return 0;
 					}
@@ -43,7 +43,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 				for (j in this.question.offensivePlayers) {
 					if (this.question.offensivePlayers[j].pos === positions[i][0]) {
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Place the missing " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						this.question.offensivePlayers.splice(j, 1);
 						return 0;
 					}
@@ -58,14 +58,14 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 						if (this.question.offensivePlayers[j].hasAssignment() === true) {
 							this.question.offensivePlayers[j].setSelected();
 							this.answer = this.question.offensivePlayers[j].deepCopy();
-							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 							return 0;
 						} else {
 							for (k in this.question.offensivePlayers) {
 								if (this.question.offensivePlayers[k].eligible === true && this.question.offensivePlayers[k].hasAssignment() === true) {
 									this.question.offensivePlayers[k].setSelected();
 									this.answer = this.question.offensivePlayers[k].deepCopy();
-									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.name;
+									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.getFullName();
 									return 0;
 								}
 							}
@@ -77,7 +77,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
 						this.question.offensivePlayers[j].setSelected();
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						return 0;
 					}
 				}
@@ -86,7 +86,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
 						this.question.offensivePlayers[j].setSelected();
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						return 0;
 					}
 				}
@@ -98,14 +98,14 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 						if (this.question.offensivePlayers[j].hasAssignment() === true) {
 							this.question.offensivePlayers[j].setSelected();
 							this.answer = this.question.offensivePlayers[j].deepCopy();
-							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+							this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 							return 0;
 						} else {
 							for (k in this.question.offensivePlayers) {
 								if (this.question.offensivePlayers[k].eligible === true && this.question.offensivePlayers[k].hasAssignment() === true) {
 									this.question.offensivePlayers[k].setSelected();
 									this.answer = this.question.offensivePlayers[k].deepCopy();
-									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.name;
+									this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[k].pos + " in " + this.question.getFullName();
 									return 0;
 								}
 							}
@@ -117,7 +117,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
 						this.question.offensivePlayers[j].setSelected();
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						return 0;
 					}
 				}
@@ -126,7 +126,7 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 					if (this.question.offensivePlayers[j].pos === positions[i][0] && this.question.offensivePlayers[j].hasAssignment() === true) {
 						this.question.offensivePlayers[j].setSelected();
 						this.answer = this.question.offensivePlayers[j].deepCopy();
-						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.name;
+						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
 						return 0;
 					}
 				}
@@ -144,7 +144,7 @@ Question.prototype.buildAlignmentQuestionAndAnswer = function(testedPlayerPositi
 	}
 	this.answer = testedPlayer.deepCopy();
 	this.question.removePlayerWithPosition(testedPlayerPosition);
-	this.prompt = "Place the missing " + testedPlayerPosition + " in the correct spot for " + this.question.name;
+	this.prompt = "Place the missing " + testedPlayerPosition + " in the correct spot for " + this.question.getFullName();
 	return 0;
 }
 
@@ -154,7 +154,7 @@ Question.prototype.buildAssignmentQuestionAndAnswer = function(testedPlayerPosit
 		return -1; //bad
 	}
 	this.answer = testedPlayer.deepCopy();
-	this.prompt = "Draw the assignment for the " + testedPlayerPosition + " on " + this.question.name;
+	this.prompt = "Draw the assignment for the " + testedPlayerPosition + " on " + this.question.getFullName();
 	testedPlayer.setSelected();
 	return 0;
 }
@@ -169,7 +169,7 @@ Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
 		this.answer = "No Call"
 	}
 
-	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.name;
+	this.prompt = "Choose the correct call for the " + testedPlayerPosition +  " on " + this.question.getFullName();
 	testedPlayer.setSelected();
 	return 0;
 };
@@ -214,7 +214,7 @@ Question.prototype.drawIdentification = function(field) {
 
 // getName returns the name of the Question
 Question.prototype.getName = function() {
-	return this.question.name;
+	return this.question.getFullName();
 };
 
 Question.prototype.drawFeedbackScreen = function(field){

@@ -40,6 +40,10 @@ var Formation = function(config){
 //***************************************************************************//
 //***************************************************************************//
 
+Formation.prototype.getFullName = function(){
+	return this.name;
+}
+
 Formation.prototype.drawAssignments = function(field){
 	for(var i = 0; i < this.defensivePlayers.length; i++){
 		this.defensivePlayers[i].drawAssignments(field);

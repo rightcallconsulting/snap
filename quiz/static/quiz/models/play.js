@@ -47,6 +47,13 @@ var Play = function(config) {
     this.defensivePlayObject = config.defensivePlayObject || null;
 };
 
+Play.prototype.getFullName = function(){
+	if(this.formation === ""){
+		return this.name
+	}
+	return this.formation + ": " + this.name;
+}
+
 //***************************************************************************//
 //***************************************************************************//
 

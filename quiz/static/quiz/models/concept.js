@@ -29,6 +29,10 @@ var Concept = function(config) {
 //***************************************************************************//
 //***************************************************************************//
 
+Concept.prototype.getFullName = function(){
+	return this.name;
+}
+
 // drawPlayers draws all the players in a concept.
 Concept.prototype.drawPlayers = function (field) {
 
