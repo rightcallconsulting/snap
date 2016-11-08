@@ -493,8 +493,8 @@
 							currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
 						}else if(buttons[6].clicked){
 							currentPlayerSelected.blitz.push([mouseYardX,mouseYardY])
-						}else if(buttons[7].clicked){
-
+						}else if(buttons[7].clicked && newPlayerSelected != null){
+							currentPlayerSelected.manCoverage.push(newPlayerSelected);
 						}else if(buttons[8].clicked){
 
 						}
@@ -652,7 +652,9 @@
 								concept.offensivePlayers.splice(playerSelectedIndex, 1);
 							}
 						} else if (playerSelected.unit == "defense") {
-							if (playerSelected.blitz.length > 0){
+							if (playerSelected.manCoverage.length > 0){
+								playerSelected.manCoverage.pop();
+							}else if (playerSelected.blitz.length > 0){
 								playerSelected.blitz.pop();
 							}else if (playerSelected.defensiveMovement.length > 0) {
 								playerSelected.defensiveMovement.pop();
