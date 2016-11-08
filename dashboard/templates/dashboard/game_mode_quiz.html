@@ -219,51 +219,52 @@
 						return;
 					}
 				}
-				question.drawIdentification(field);
-					var player = quiz.attempt;
+				question.draw(field);
+				var player = quiz.attempt;
 
-					if (player != null) {
-						if (player.dropback.length > 0) {
-							buttons[0].display = true;
-						} else if (player.run.length > 0) {
-							buttons[2].display = true;
-						} else if (player.route.length > 0) {
-							buttons[3].display = true;
-						} else if (player.blockingAssignmentArray.length > 0) {
-							buttons[4].display = true;
-						} else if (player.pos === "QB") {
-							buttons[0].display = true;
-							buttons[1].display = true;
-							buttons[2].display = true;
-							buttons[3].display = true;
-							buttons[4].display = true;
-						} else if (player.eligible === true) {
-							buttons[1].display = true;
-							buttons[2].display = true;
-							buttons[3].display = true;
-							buttons[4].display = true;
-						} else if (player.eligible === false) {
-							buttons[4].display = true;
-						}
-					} else {
-						for (i in buttons) {
-							buttons[i].setUnclicked();
-							buttons[i].display = false;
-						}
+				if (player != null) {
+					player.drawAssignments(field);
+					if (player.dropback.length > 0) {
+						buttons[0].display = true;
+					} else if (player.run.length > 0) {
+						buttons[2].display = true;
+					} else if (player.route.length > 0) {
+						buttons[3].display = true;
+					} else if (player.blockingAssignmentArray.length > 0) {
+						buttons[4].display = true;
+					} else if (player.pos === "QB") {
+						buttons[0].display = true;
+						buttons[1].display = true;
+						buttons[2].display = true;
+						buttons[3].display = true;
+						buttons[4].display = true;
+					} else if (player.eligible === true) {
+						buttons[1].display = true;
+						buttons[2].display = true;
+						buttons[3].display = true;
+						buttons[4].display = true;
+					} else if (player.eligible === false) {
+						buttons[4].display = true;
 					}
-					var x = 10;
-					var y = 10;
-
+				} else {
 					for (i in buttons) {
-						if (buttons[i].display === true) {
-							buttons[i].x = x;
-							buttons[i].y = y;
-
-							buttons[i].draw(field);
-
-							x += buttons[i].width*1.25;
-						}
+						buttons[i].setUnclicked();
+						buttons[i].display = false;
 					}
+				}
+				var x = 10;
+				var y = 10;
+
+				for (i in buttons) {
+					if (buttons[i].display === true) {
+						buttons[i].x = x;
+						buttons[i].y = y;
+
+						buttons[i].draw(field);
+
+						x += buttons[i].width*1.25;
+					}
+				}
 			}else{
 				question.draw(field);
 				if(question.feedbackStartTime > 0){
