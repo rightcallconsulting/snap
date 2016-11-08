@@ -92,30 +92,25 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 
 	line(x1, y1, x2, y2)
 
-	x1 = field.getYardX(x1)
-	y1 = field.getYardY(y1)
-	x2 = field.getYardX(x2)
-	y2 = field.getYardY(y2)
-
 	var lengthOfPerpLine = 1.5;
-	xDiff = lengthOfPerpLine/2;
-	yDiff = 0;
+	var x1 = prevX;
+	var y1 = prevY;
+	var x2 = this.x;
+	var y2 = this.y;
 
-	if (this.type === 5 || this.type === 6) {
-		xDiff = (lengthOfPerpLine/4)*sqrt(2);
-		yDiff = (lengthOfPerpLine/4)*sqrt(2);
-	} else if (this.type === 7 || this.type === 8) {
-		xDiff = (lengthOfPerpLine/4)*sqrt(2);
-		yDiff = (lengthOfPerpLine/4)*sqrt(2);
-		if (this.type === 7) {
-			xDiff *= -1
-		}
+	if(this.type === 1 && this.player){
+		x2 = this.player.x;
+		y2 = this.player.y-this.player.siz/3;
 	}
 
-	x1 = x2 - xDiff;
-	y1 = y2 - yDiff;
-	x2 = x2 + xDiff;
-	y2 = y2 + yDiff;
+	var deltaY = y2 - y1;
+	var deltaX = x2 - x1;
+	var alpha = atan(-1* deltaX/deltaY);
+
+	x1 = x2 - lengthOfPerpLine*cos(alpha)/2;
+	y1 = y2 - lengthOfPerpLine*sin(alpha)/2;
+	x2 = x2 + lengthOfPerpLine*cos(alpha)/2;
+	y2 = y2 + lengthOfPerpLine*sin(alpha)/2;
 
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);

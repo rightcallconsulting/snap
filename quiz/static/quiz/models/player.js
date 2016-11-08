@@ -380,6 +380,10 @@ Player.prototype.drawRoute = function(field) {
 // drawAllBlocks iterates through the players blocking assignments and draws
 // all of them. It calls noStroke before it exits, but has no return value.
 Player.prototype.drawBlocks = function(field) {
+	if(this.blockingAssignmentArray.length === 0){
+		return;
+	}
+
 	var prevX = this.x;
 	var prevY = this.y;
 
@@ -413,10 +417,24 @@ Player.prototype.drawBlocks = function(field) {
 		stroke(black);
 
 		var lengthOfPerpLine = 1.5;
-		var x1 = blockPart.x + lengthOfPerpLine/2;
-		var y1 = blockPart.y;
-		var x2 = blockPart.x - lengthOfPerpLine/2;
-		var y2 = blockPart.y;
+		var x1 = this.x//blockPart.x + lengthOfPerpLine/2;
+		var y1 = this.y//blockPart.y;
+		var x2 = blockPart.x;//blockPart.x - lengthOfPerpLine/2;
+		var y2 = blockPart.y;//blockPart.y;
+
+		if(this.blockingAssignmentArray.length > 1){
+			x1 = this.blockingAssignmentArray[this.blockingAssignmentArray.length - 2].x;
+			y1 = this.blockingAssignmentArray[this.blockingAssignmentArray.length - 2].y;
+		}
+
+		var deltaY = y2 - y1;
+		var deltaX = x2 - x1;
+		var alpha = atan(-1* deltaX/deltaY);
+
+		x1 = x2 - lengthOfPerpLine*cos(alpha)/2;
+		y1 = y2 - lengthOfPerpLine*sin(alpha)/2;
+		x2 = x2 + lengthOfPerpLine*cos(alpha)/2;
+		y2 = y2 + lengthOfPerpLine*sin(alpha)/2;
 
 		x1 = field.getTranslatedX(x1);
 		y1 = field.getTranslatedY(y1);
