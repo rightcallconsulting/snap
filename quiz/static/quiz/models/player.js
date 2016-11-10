@@ -81,7 +81,7 @@ var Player = function(config) {
 	this.gapXPoint = config.gapXPoint || null;
 	this.gapYPoint = config.gapYPoint || null;
 	this.currentMotionBreak = config.currentMotionBreak || 0;
-	this.zoneAssignment = config.zoneAssignment || 0;
+	this.zoneAssignment = config.zoneAssignment || null;
 	this.optionAssignment = config.optionAssignment || [];
 	this.coverageAssignment = config.coverageAssignment || [];
 };
@@ -292,6 +292,9 @@ Player.prototype.drawDropback = function(field) {
 // drawRun iterates through a players landmarks and draws their run
 // with an arrow at the end.
 Player.prototype.drawRun = function(field) {
+	if(this.run.length === 0){
+		return;
+	}
 	var x1 = this.x;
 	var y1 = this.y;
 
@@ -336,6 +339,9 @@ Player.prototype.drawRun = function(field) {
 // drawRoute iterates through a players landmarks and draws their route
 // with an arrow at the end.
 Player.prototype.drawRoute = function(field) {
+	if(this.route.length === 0){
+		return;
+	}
 	var x1 = this.x;
 	var y1 = this.y;
 
@@ -623,7 +629,19 @@ Player.prototype.drawBlitz = function(field){
 
 Player.prototype.drawCoverage = function(field){
 	this.drawManCoverage(field);
-	//this.drawZoneCoverage(field);
+	this.drawZoneCoverage(field);
+}
+
+Player.prototype.drawZoneCoverage = function(field){
+	if(this.zoneCoverage != null){
+		var startX = this.x;
+		var startY = this.y;
+		if(this.defensiveMovement.length > 0){
+			startX = this.defensiveMovement[this.defensiveMovement.length-1][0];
+			startY = this.defensiveMovement[this.defensiveMovement.length-1][1];
+		}
+		this.zoneCoverage.draw(startX, startY, field);
+	}
 }
 
 Player.prototype.drawManCoverage = function(field){

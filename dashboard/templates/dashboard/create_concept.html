@@ -496,7 +496,12 @@
 						}else if(buttons[7].clicked && newPlayerSelected != null){
 							currentPlayerSelected.manCoverage.push(newPlayerSelected);
 						}else if(buttons[8].clicked){
-
+							//set the arrow direction for zone coverage
+							if(currentPlayerSelected.zoneCoverage == null){
+								currentPlayerSelected.zoneCoverage = new ZoneAssignment({});
+							}
+							currentPlayerSelected.zoneCoverage.x = mouseYardX;
+							currentPlayerSelected.zoneCoverage.y = mouseYardY;
 						}
 						return false;
 					}
@@ -654,6 +659,8 @@
 						} else if (playerSelected.unit == "defense") {
 							if (playerSelected.manCoverage.length > 0){
 								playerSelected.manCoverage.pop();
+							}else if (playerSelected.zoneCoverage != null){
+								playerSelected.zoneCoverage = null;
 							}else if (playerSelected.blitz.length > 0){
 								playerSelected.blitz.pop();
 							}else if (playerSelected.defensiveMovement.length > 0) {
