@@ -173,6 +173,21 @@ Formation.prototype.mouseInPlayer = function(field) {
 	return null;
 };
 
+Formation.prototype.updateCoverageForOffense = function(offense){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var defender = this.defensivePlayers[i];
+		for(var j = 0; j < defender.manCoverage.length; j++){
+			var assignment = defender.manCoverage[j]
+			for(var k = 0; k < offense.offensivePlayers.length; k++){
+				var receiver = offense.offensivePlayers[k];
+				if(receiver.pos === assignment.pos && receiver.x === assignment.x && receiver.y === assignment.y){
+					defender.manCoverage[j] = receiver;
+				}
+			}
+		}
+	}
+}
+
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the formation and then saves it (if valid).
 Formation.prototype.save = function (path, csrf_token) {
@@ -194,7 +209,7 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var formationName = this.name;
 		var formationUnit = this.unit;
-		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes"]);
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes", "blitz", "manCoverage", "zoneCoverage"]);
 
 		var jqxhr = $.post(
 				path,
@@ -310,6 +325,31 @@ function createFormationFromJson(formationJsonDictionary) {
 			eligible: formationJsonDictionary.defensivePlayers[i].eligible,
 			siz: formationJsonDictionary.defensivePlayers[i].siz
 		});
+
+		if (formationJsonDictionary.defensivePlayers[i].defensiveMovement != null) {
+			for (var j = 0; j < formationJsonDictionary.defensivePlayers[i].defensiveMovement.length; ++j) {
+				var movement = formationJsonDictionary.defensivePlayers[i].defensiveMovement[j];
+				player.defensiveMovement.push([movement[0], movement[1]]);
+			}
+		}
+
+		if (formationJsonDictionary.defensivePlayers[i].blitz != null) {
+			for (var j = 0; j < formationJsonDictionary.defensivePlayers[i].blitz.length; ++j) {
+				var blitz = formationJsonDictionary.defensivePlayers[i].blitz[j];
+				player.blitz.push([blitz[0], blitz[1]]);
+			}
+		}
+
+		if (formationJsonDictionary.defensivePlayers[i].manCoverage != null) {
+			for (var j = 0; j < formationJsonDictionary.defensivePlayers[i].manCoverage.length; ++j) {
+				var manCoverage = formationJsonDictionary.defensivePlayers[i].manCoverage[j];
+				player.manCoverage.push(manCoverage);
+			}
+		}
+
+		if (formationJsonDictionary.defensivePlayers[i].zoneCoverage != null) {
+			player.zoneCoverage = new ZoneAssignment(formationJsonDictionary.defensivePlayers[i].zoneCoverage)
+		}
 
 		defensivePlayersArray.push(player);
 	}

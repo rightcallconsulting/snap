@@ -331,16 +331,7 @@
 			drawOpening();
 		};
 
-		function drawOpening() {
-			field.drawBackground(concept, height, width);
-
-			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
-
-			concept.drawAssignments(field);
-			concept.drawPlayers(field);
-			defensivePlayerBar.draw(field);
-			offensivePlayerBar.draw(field);
-
+		function drawButtons() {
 			var x = 10;
 			var y = 45;
 
@@ -354,6 +345,19 @@
 					x += buttons[i].width*1.25;
 				}
 			}
+		}
+
+		function drawOpening() {
+			field.drawBackground(concept, height, width);
+
+			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
+
+			concept.drawAssignments(field);
+			concept.drawPlayers(field);
+			defensivePlayerBar.draw(field);
+			offensivePlayerBar.draw(field);
+
+			drawButtons(field);
 
 			fill(0, 0, 0);
 			textSize(20);
