@@ -84,6 +84,21 @@ Concept.prototype.updateBlocksForDefense = function(){
 	}
 }
 
+Concept.prototype.updateCoverageForOffense = function(){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var defender = this.defensivePlayers[i];
+		for(var j = 0; j < defender.manCoverage.length; j++){
+			var assignment = defender.manCoverage[j]
+			for(var k = 0; k < this.offensivePlayers.length; k++){
+				var receiver = this.offensivePlayers[k];
+				if(receiver.pos === assignment.pos && receiver.x === assignment.x && receiver.y === assignment.y){
+					defender.manCoverage[j] = receiver;
+				}
+			}
+		}
+	}
+}
+
 Concept.prototype.runConcept = function(){
 		if(this.movementIndex === 0){
 			if(this.runPreSnap()){
@@ -297,8 +312,6 @@ Concept.prototype.save = function (path, csrf_token) {
 		var conceptUnit = this.unit;
 		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz"]);
 
-		debugger;
-
 		var jqxhr = $.post(
 				path,
 				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: conceptName, unit: conceptUnit, concept: conceptJson}
@@ -356,6 +369,9 @@ Concept.prototype.deepCopy = function() {
 	for (var i = 0; i < this.eligibleReceivers.length; ++i) {
 		deepCopy.eligibleReceivers.push(this.eligibleReceivers[i].deepCopy());
 	}
+
+	deepCopy.updateBlocksForDefense();
+	deepCopy.updateCoverageForOffense();
 
 	return deepCopy;
 };
@@ -463,15 +479,13 @@ function createConceptFromJson(conceptJsonDictionary) {
 		if (conceptJsonDictionary.defensivePlayers[i].manCoverage != null) {
 			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].manCoverage.length; ++j) {
 				var manCoverage = conceptJsonDictionary.defensivePlayers[i].manCoverage[j];
-				//player.manCoverage.push(createPlayerFromJson(manCoverage));
+				player.manCoverage.push(manCoverage);
 			}
 		}
 
 		if (conceptJsonDictionary.defensivePlayers[i].zoneCoverage != null) {
 			player.zoneCoverage = new ZoneAssignment(conceptJsonDictionary.defensivePlayers[i].zoneCoverage)
 		}
-
-
 
 		defensivePlayersArray.push(player);
 	}
@@ -535,6 +549,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		notes: conceptJsonDictionary.notes
 	});
 	result.updateBlocksForDefense();
+	result.updateCoverageForOffense();
 	return result;
 };
 
