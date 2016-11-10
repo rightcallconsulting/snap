@@ -286,11 +286,18 @@ Concept.prototype.save = function (path, csrf_token) {
 			player = this.defensivePlayers[i];
 			player.startX = player.x;
 			player.startY = player.y;
+
+			//turn zoneCoverage into dict
+			if(player.zoneCoverage != null){
+				player.zoneCoverage = player.zoneCoverage.to_dict();
+			}
 		}
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz"]);
+
+		debugger;
 
 		var jqxhr = $.post(
 				path,
@@ -445,6 +452,26 @@ function createConceptFromJson(conceptJsonDictionary) {
 				player.defensiveMovement.push([movement[0], movement[1]]);
 			}
 		}
+
+		if (conceptJsonDictionary.defensivePlayers[i].blitz != null) {
+			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].blitz.length; ++j) {
+				var blitz = conceptJsonDictionary.defensivePlayers[i].blitz[j];
+				player.blitz.push([blitz[0], blitz[1]]);
+			}
+		}
+
+		if (conceptJsonDictionary.defensivePlayers[i].manCoverage != null) {
+			for (var j = 0; j < conceptJsonDictionary.defensivePlayers[i].manCoverage.length; ++j) {
+				var manCoverage = conceptJsonDictionary.defensivePlayers[i].manCoverage[j];
+				//player.manCoverage.push(createPlayerFromJson(manCoverage));
+			}
+		}
+
+		if (conceptJsonDictionary.defensivePlayers[i].zoneCoverage != null) {
+			player.zoneCoverage = new ZoneAssignment(conceptJsonDictionary.defensivePlayers[i].zoneCoverage)
+		}
+
+
 
 		defensivePlayersArray.push(player);
 	}

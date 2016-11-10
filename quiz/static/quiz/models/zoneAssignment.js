@@ -63,3 +63,11 @@ ZoneAssignment.prototype.draw = function(startX, startY, field) {
 
 	noStroke()
 };
+
+ZoneAssignment.prototype.to_dict = function(){
+	return {type: this.type, x: this.x, y: this.y}
+}
+
+ZoneAssignment.prototype.deepCopy = function(){
+	return new ZoneAssignment(this.to_dict())
+}

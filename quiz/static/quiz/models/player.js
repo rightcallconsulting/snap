@@ -745,6 +745,18 @@ Player.prototype.deepCopy = function() {
 		deepCopy.defensiveMovement.push([this.defensiveMovement[i][0], this.defensiveMovement[i][1]]);
 	}
 
+	for (var i = 0; i < this.blitz.length; ++i) {
+		deepCopy.blitz.push([this.blitz[i][0], this.blitz[i][1]]);
+	}
+
+	for (var i = 0; i < this.manCoverage.length; ++i){
+		deepCopy.manCoverage.push(this.manCoverage[i].deepCopy());
+	}
+
+	if(this.zoneCoverage != null){
+		deepCopy.zoneCoverage = this.zoneCoverage.deepCopy();
+	}
+
 	return deepCopy;
 };
 
