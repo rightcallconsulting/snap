@@ -640,6 +640,8 @@
 					var playerSelectedIndex = concept.getSelected()[1];
 					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 					var playerStatusKeys = ["A", "S", "D", "F", "G"];
+					var specialZoneKeys = ["Q", "W", "E", "R", "T"];
+					var zoneTypes = ["1/4", "1/3", "1/2", "Flat", "Hook/Curl"]
 
 					if (keyCode == BACKSPACE || keyCode == DELETE) {
 						if (playerSelected.unit == "offense") {
@@ -671,26 +673,25 @@
 						}
 
 						return false;
-					} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
-						var prevX = playerSelected.x;
-						var prevY = playerSelected.y;
-						var blockSize = playerSelected.blockingAssignmentArray.length;
-
-						if (blockSize > 0) {
-							prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
-							prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
+					}else if(playerSelected.unit === "defense"){
+						var zoneTypeIndex = specialZoneKeys.indexOf(key);
+						if(buttons[8].clicked && zoneTypeIndex >= 0){
+							if(playerSelected.zoneCoverage == null){
+								playerSelected.zoneCoverage = new ZoneAssignment({});
+							}
+							playerSelected.zoneCoverage.type = zoneTypes[zoneTypeIndex];
+						}else if(playerStatusKeys.indexOf(key) >= 0){
+							var index = 5 + playerStatusKeys.indexOf(key);
+							if (buttons[index].display === true) {
+								for (i in buttons) {
+									if (i != index) {
+										buttons[i].setUnclicked();
+									} else {
+										buttons[i].click();
+									}
+								}
+							}
 						}
-
-						var block = new BlockType({
-							type: 2 + specialBlockKeys.indexOf(key),
-							player: null,
-							prevX: prevX,
-							prevY: prevY
-						});
-
-						playerSelected.blockingAssignmentArray.push(block);
-
-						return false;
 					} else if (playerStatusKeys.indexOf(key) >= 0) {
 						if(playerSelected.unit === "offense"){
 							if (buttons[playerStatusKeys.indexOf(key)].display === true) {
@@ -702,17 +703,28 @@
 									}
 								}
 							}
-						}else if(playerSelected.unit === "defense"){
-							var index = 5 + playerStatusKeys.indexOf(key);
-							if (buttons[index].display === true) {
-								for (i in buttons) {
-									if (i != index) {
-										buttons[i].setUnclicked();
-									} else {
-										buttons[i].click();
-									}
-								}
+						} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+							var prevX = playerSelected.x;
+							var prevY = playerSelected.y;
+							var blockSize = playerSelected.blockingAssignmentArray.length;
+
+							if (blockSize > 0) {
+								prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
+								prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
 							}
+
+							var block = new BlockType({
+								type: 2 + specialBlockKeys.indexOf(key),
+								player: null,
+								prevX: prevX,
+								prevY: prevY
+							});
+
+							playerSelected.blockingAssignmentArray.push(block);
+
+							return false;
+						} else if(playerSelected.unit === "defense"){
+
 						}
 
 						return false;
