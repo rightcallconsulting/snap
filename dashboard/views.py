@@ -408,9 +408,11 @@ def create_defensive_look(request):
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, scout=True)
+		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		return render(request, 'dashboard/create_defensive_look.html', {
 			'formations': formations,
 			'team': team,
+			'positions': positions,
 			'page_header': 'CREATE DEFENSIVE LOOK'
 		})
 

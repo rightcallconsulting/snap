@@ -929,110 +929,37 @@
 		function createDefensivePlayerOptions() {
 			var players = [];
 			var player;
+			var positions = [];
 
-			player = new Player ({
-				num: "DL", pos: "DL",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			{% for position in positions %}
+			var position_type = "{{position.position_type}}";
+			if(position_type == "Defensive Lineman" || position_type == "Linebacker" || position_type == "Defensive Back"){
+				var abbreviation = "{{position.abbreviation}}";
+				if(positions.indexOf(abbreviation) < 0){
+					positions.push(abbreviation)
+				}
+			}
+			{% endfor %}
 
-			player = new Player ({
-				num: "E", pos: "E",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			//Not fully populated
+			if(positions.length < 5){
+				var defaultPositions = ["E", "N", "T", "W", "M", "B", "S", "C", "FS", "SS"]
+				for(i in defaultPositions){
+					if(positions.indexOf(defaultPositions[i]) < 0){
+						positions.push(defaultPositions[i]);
+					}
+				}
+			}
 
-			player = new Player ({
-				num: "N", pos: "N",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "T", pos: "T",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "LB", pos: "LB",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "M", pos: "M",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "S", pos: "S",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "W", pos: "W",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "B", pos: "B",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "DB", pos: "DB",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "C", pos: "C",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "FS", pos: "FS",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
-
-			player = new Player ({
-				num: "SS", pos: "SS",
-				red: 0, green: 0, blue: 0,
-				unit: "defense",
-				siz: 2
-			});
-			players.push(player);
+			for(i in positions){
+				player = new Player ({
+					num: positions[i], pos: positions[i],
+					red: 0, green: 0, blue: 0,
+					unit: "defense",
+					siz: 2
+				});
+				players.push(player);
+			}
 
 			return players;
 		};
