@@ -120,6 +120,18 @@ Field.prototype.getYOffset = function(){
 	return this.ballYardLine - this.heightInYards/2;
 }
 
+Field.prototype.isClickInsideField = function(){
+	if(mouseX < 0 || mouseX > this.width || mouseY < 0 || mouseY > this.height){
+		return false;
+	}
+	var mouseYardX = this.getYardX(mouseX);
+	var mouseYardY = this.getYardY(mouseY);
+	if(mouseYardX < 0 || mouseYardX > Field.WIDTH || mouseYardY < -10 || mouseYardY > 110){
+		return false;
+	}
+	return true;
+}
+
 
 Field.prototype.drawBackground = function(play, height, width) {
 	angleMode(RADIANS);
