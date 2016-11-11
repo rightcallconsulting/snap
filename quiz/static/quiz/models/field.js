@@ -142,7 +142,7 @@ Field.prototype.drawBackground = function(play, height, width) {
 	strokeWeight(yardline_weight);
 
 	for(var i = 0; i < this.heightInYards; i++) {
-		var currentYardLine = (this.ballYardLine + i - this.heightInYards/2).toFixed();
+		var currentYardLine = (this.ballYardLine + this.getViewDirection()*(i - this.heightInYards/2)).toFixed();
 		var yc = height - height * (i/this.heightInYards);
 		stroke(255, 255, 255);
 
@@ -156,7 +156,7 @@ Field.prototype.drawBackground = function(play, height, width) {
 			textAlign(CENTER);
 			rotate(HALF_PI);
 			fill(255,255,255);
-			textSize(30 * Field.WIDTH / this.getWidthInYards()); //the one thing that isn't adjusting for screen size...
+			textSize(30 * Field.WIDTH / this.getWidthInYards()); //the one thing that isn't adjusting well for screen size...
 			text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels - (this.width-this.height)/2);
 			//text(min(currentYardLine,100-currentYardLine), yc, this.getTranslatedX(9));
 			rotate(PI);
