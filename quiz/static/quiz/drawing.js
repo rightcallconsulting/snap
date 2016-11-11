@@ -55,12 +55,14 @@ function arrow(x1, y1, alpha, deltaX) {
 	var xDiff = cos(beta)*lengthOfArrow;
 	var yDiff = sin(beta)*lengthOfArrow;
 
+	debugger;
+
+	var x2 = x1 + yDiff;
+	var y2 = y1 + xDiff;
+
 	if (deltaX >= 0) {
 		x2 = x1 - yDiff;
 		y2 = y1 - xDiff;
-	} else {
-		x2 = x1 + yDiff;
-		y2 = y1 + xDiff;
 	}
 
 	x1 = field.getTranslatedX(x1);

@@ -99,6 +99,7 @@
 			field.width = width;
 			field.heightInYards = 35;
 			field.ballYardLine = 65;
+			field.viewPoint = "defense";
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
@@ -420,6 +421,9 @@
 		};
 
 		function keyPressed() {
+			if(key == "f" || key == "F"){
+				field.flipView();
+			}
 			// Get the formation-name html element if it exists. This is what
 			// will be updated.
 			var formation_name = document.getElementById("formation-name");

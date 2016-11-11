@@ -15,6 +15,7 @@ var FieldNumber = function(config){
 	this.y1 = config.y1 || 0,
 	this.x2 = config.x2 || 0,
 	this.y2 = config.y2 || 0
+	this.viewPoint = config.viewPoint || "offense";
 };
 
 FieldNumber.prototype.draw = function(){};
@@ -45,23 +46,57 @@ var createPlayField = new Field({
 	typeField: "Create"
 });
 
+Field.prototype.getViewPoint = function(){
+	return this.viewPoint;
+}
+
+Field.prototype.getViewDirection = function(){
+	if (this.viewPoint == "offense"){
+		return 1;
+	}
+	return -1;
+}
+
+Field.prototype.flipView = function(){
+	if(this.viewPoint === "offense"){
+		this.viewPoint = "defense";
+	}else{
+		this.viewPoint = "offense";
+	}
+}
+
 Field.prototype.getWidthInYards = function(){
 	return this.heightInYards;// * (width / height);
 }
 
 Field.prototype.getTranslatedX = function(x){
+
+	if(this.viewPoint === "defense"){
+		return this.yardsToPixels((Field.WIDTH - x) - this.getXOffset()) + (this.width - this.height)/2
+	}
 	return this.yardsToPixels(x - this.getXOffset()) + (this.width - this.height)/2;
 }
 
 Field.prototype.getTranslatedY = function(y){
+	if(this.viewPoint === "defense"){
+		var yDiffFromLOS = y - this.ballYardLine;
+		return this.height/2 + this.yardsToPixels(yDiffFromLOS);
+	}
 	return this.height - this.yardsToPixels(y - this.getYOffset());
 }
 
 Field.prototype.getYardX = function(x){
+	if(this.viewPoint === "defense"){
+		return Field.WIDTH - (this.pixelsToYards(x - (this.width - this.height)/2)+this.getXOffset());
+	}
 	return this.pixelsToYards(x - (this.width - this.height)/2)+this.getXOffset();
 }
 
 Field.prototype.getYardY = function(y){
+	if(this.viewPoint === "defense"){
+		var yDiffFromLOS = y - this.height/2;
+		return this.ballYardLine + this.pixelsToYards(yDiffFromLOS);
+	}
 	return this.ballYardLine + this.heightInYards/2 - this.pixelsToYards(y);
 }
 
@@ -101,8 +136,8 @@ Field.prototype.drawBackground = function(play, height, width) {
 
 	// Sidelines
 	strokeWeight(sideline_weight);
-	line(this.getTranslatedX(0)-sideline_weight/2, this.getTranslatedY(-10), this.getTranslatedX(0)-sideline_weight/2, this.getTranslatedY(110));
-	line(this.getTranslatedX(Field.WIDTH)+sideline_weight/2, this.getTranslatedY(-10), this.getTranslatedX(Field.WIDTH)+sideline_weight/2, this.getTranslatedY(110));
+	line(this.getTranslatedX(0)-sideline_weight*this.getViewDirection()/2, this.getTranslatedY(-10), this.getTranslatedX(0)-sideline_weight*this.getViewDirection()/2, this.getTranslatedY(110));
+	line(this.getTranslatedX(Field.WIDTH)+sideline_weight*this.getViewDirection()/2, this.getTranslatedY(-10), this.getTranslatedX(Field.WIDTH)+sideline_weight*this.getViewDirection()/2, this.getTranslatedY(110));
 
 	strokeWeight(yardline_weight);
 
