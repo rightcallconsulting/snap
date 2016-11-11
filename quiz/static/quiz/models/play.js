@@ -276,7 +276,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "blitz", "manCoverage", "zoneCoverage", "notes", "call"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -381,6 +381,7 @@ Play.prototype.fromFormation = function(formation) {
 // scoutFromFormation takes a cout formation object as an argument and adds the
 // defensive look to this play.
 Play.prototype.scoutFromFormation = function(formation) {
+	formation.updateCoverageForOffense(this);
 	var scout_formation = formation.deepCopy();
 
 	this.defensivePlayers = [];
@@ -491,6 +492,23 @@ function createPlayFromJson(playJsonDictionary) {
 				var movement = playJsonDictionary.defensivePlayers[i].defensiveMovement[j];
 				player.defensiveMovement.push([movement[0], movement[1]]);
 			}
+		}
+		if (playJsonDictionary.defensivePlayers[i].blitz != null) {
+			for (var j = 0; j < playJsonDictionary.defensivePlayers[i].blitz.length; ++j) {
+				var blitz = playJsonDictionary.defensivePlayers[i].blitz[j];
+				player.blitz.push([blitz[0], blitz[1]]);
+			}
+		}
+
+		if (playJsonDictionary.defensivePlayers[i].manCoverage != null) {
+			for (var j = 0; j < playJsonDictionary.defensivePlayers[i].manCoverage.length; ++j) {
+				var manCoverage = playJsonDictionary.defensivePlayers[i].manCoverage[j];
+				player.manCoverage.push(manCoverage);
+			}
+		}
+
+		if (playJsonDictionary.defensivePlayers[i].zoneCoverage != null) {
+			player.zoneCoverage = new ZoneAssignment(playJsonDictionary.defensivePlayers[i].zoneCoverage)
 		}
 
 		defensivePlayersArray.push(player);
@@ -902,4 +920,19 @@ Play.prototype.updateBlockingAssignmentForDefense = function(defensivePlayers){
         player.blockingAssignmentObject.setForDefense(defensivePlayers, player.blockingCoordinates)
     }
   })
+}
+
+Play.prototype.updateCoverageForOffense = function(){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var defender = this.defensivePlayers[i];
+		for(var j = 0; j < defender.manCoverage.length; j++){
+			var assignment = defender.manCoverage[j]
+			for(var k = 0; k < this.offensivePlayers.length; k++){
+				var receiver = this.offensivePlayers[k];
+				if(receiver.pos === assignment.pos && receiver.x === assignment.x && receiver.y === assignment.y){
+					defender.manCoverage[j] = receiver;
+				}
+			}
+		}
+	}
 }

@@ -497,7 +497,7 @@
 							currentPlayerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
 						}else if(buttons[6].clicked){
 							currentPlayerSelected.blitz.push([mouseYardX,mouseYardY])
-						}else if(buttons[7].clicked && newPlayerSelected != null){
+						}else if(buttons[7].clicked && newPlayerSelected != null && newPlayerSelected.unit === "offense"){
 							currentPlayerSelected.manCoverage.push(newPlayerSelected);
 						}else if(buttons[8].clicked){
 							//set the arrow direction for zone coverage
