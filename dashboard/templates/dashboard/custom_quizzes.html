@@ -4,7 +4,7 @@
 {% block content %}
 	<div id="custom-quizzes" class="custom-quizzes">
 		<div id="formation-quiz" class="take-quiz-form">
-			<div class="header">
+			<div class="header" id="formation-quiz-header">
 				FORMATION QUIZ
 			</div>
 
@@ -198,6 +198,31 @@
 {% block javascript %}
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
+		var offensive_positions = [];
+		var defensive_positions = [];
+		{% for position in position_groups %}
+		var position_type = "{{position.position_type}}";
+		if(position_type == "Defensive Lineman" || position_type == "Linebacker" || position_type == "Defensive Back"){
+			var abbreviation = "{{position.abbreviation}}";
+			if(defensive_positions.indexOf(abbreviation) < 0){
+				defensive_positions.push(abbreviation)
+			}
+		}else if(position_type == "Offensive Lineman" || position_type == "Quarterback" || position_type == "Skill Position"){
+			var abbreviation = "{{position.abbreviation}}";
+			if(offensive_positions.indexOf(abbreviation) < 0){
+				offensive_positions.push(abbreviation)
+			}
+		}
+		{% endfor %}
+
+		if(offensive_positions.length > 0){
+			//do nothing for now?
+		}else if(defensive_positions.length > 0){
+			toggleDefenseMode()
+		}else{
+			//can't do much here
+		}
+
 		$("i.fa-chevron-left").click(function(event) {
 			var arrow_parent = $(this).parent()[0];
 			var current_number = arrow_parent.querySelector("p.current-number");
@@ -225,6 +250,12 @@
 			current_input_number.setAttribute("value", number_of_questions);
 			current_number.textContent = number_of_questions.toString();
 		});
+
+		function toggleDefenseMode(){
+			//TBI - Change any categories/html headers that need to be changed
+			var formationHeader = document.getElementById("formation-quiz-header")
+			formationHeader.innerHTML = "BASE LOOK QUIZ"
+		}
 
 		function positionChanged(selected){
 			if(selected.id === "play-assignment-positions"){
@@ -254,8 +285,12 @@
 					assignment_type_options.push("Routes");
 				}else if(position_group_type === "Offensive Lineman"){
 					assignment_type_options.push("Blocks");
-				}else{
-
+				}else if(defensive_positions.indexOf(dropdown.value) >= 0){
+					//assignment_type_options.push("Man Coverage");
+					//assignment_type_options.push("Zone Coverage");
+					assignment_type_options.push("Coverage");
+					assignment_type_options.push("Blitz");
+					assignment_type_options.push("Movement");
 				}
 				setAssignmentOptions(assignment_dropdowns[i], assignment_type_options);
 			}

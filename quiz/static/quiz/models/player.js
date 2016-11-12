@@ -33,6 +33,7 @@ var Player = function(config) {
 	this.defensiveMovement = config.defensiveMovement || [];
 	this.blitz = config.blitz || [];
 	this.manCoverage = config.manCoverage || [];
+	this.zoneCoverage = config.zoneCoverage || null;
 
 	// Player notes and calls - strings used to add extra description to players assignments
 	this.notes = config.notes || [];
@@ -147,6 +148,18 @@ Player.prototype.setFill = function(red, green, blue) {
 	this.blue = blue;
 };
 
+Player.prototype.clearAssignments = function(){
+	this.dropback = [];
+	this.motionCoords = [];
+	this.run = [];
+	this.route = [];
+	this.blockingAssignmentArray = [];
+	this.defensiveMovement = [];
+	this.blitz = [];
+	this.manCoverage = [];
+	this.zoneCoverage = null;
+
+}
 // hasAssignments returns true is the player has a block, route, run, or
 // dropback.
 Player.prototype.hasAssignment = function() {
@@ -171,6 +184,18 @@ Player.prototype.hasAssignment = function() {
 	}
 
 	if (this.defensiveMovement.length != 0) {
+		return true;
+	}
+
+	if (this.blitz.length != 0) {
+		return true;
+	}
+
+	if (this.zoneCoverage != null) {
+		return true;
+	}
+
+	if (this.manCoverage.length > 0) {
 		return true;
 	}
 

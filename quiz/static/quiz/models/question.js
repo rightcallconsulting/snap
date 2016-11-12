@@ -90,6 +90,15 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 						return 0;
 					}
 				}
+			} else if (positions[i][1] === "Defensive Lineman" || positions[i][1] === "Defensive Back" || positions[i][1] === "Linebacker") {
+				for (j in this.question.defensivePlayers) {
+					if (this.question.defensivePlayers[j].pos === positions[i][0] && this.question.defensivePlayers[j].hasAssignment() === true) {
+						this.question.defensivePlayers[j].setSelected();
+						this.answer = this.question.defensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.defensivePlayers[j].pos + " in " + this.question.getFullName();
+						return 0;
+					}
+				}
 			}
 		} else if (this.question instanceof Concept) {
 			if (positions[i][1] === "Quarterback") {
@@ -127,6 +136,15 @@ Question.prototype.buildQuestionAndAnswer = function(player_positions) {
 						this.question.offensivePlayers[j].setSelected();
 						this.answer = this.question.offensivePlayers[j].deepCopy();
 						this.prompt = "Draw the assignment for the " + this.question.offensivePlayers[j].pos + " in " + this.question.getFullName();
+						return 0;
+					}
+				}
+			} else if (positions[i][1] === "Defensive Lineman" || positions[i][1] === "Defensive Back" || positions[i][1] === "Linebacker") {
+				for (j in this.question.defensivePlayers) {
+					if (this.question.defensivePlayers[j].pos === positions[i][0] && this.question.defensivePlayers[j].hasAssignment() === true) {
+						this.question.defensivePlayers[j].setSelected();
+						this.answer = this.question.defensivePlayers[j].deepCopy();
+						this.prompt = "Draw the assignment for the " + this.question.defensivePlayers[j].pos + " in " + this.question.getFullName();
 						return 0;
 					}
 				}
@@ -288,7 +306,9 @@ Question.prototype.checkAlignment = function(attempt){
 
 Question.prototype.checkAssignments = function(attempt){
 		if (this.checkDropback(attempt) && this.checkMotion(attempt) && this.checkRun(attempt) && this.checkRoute(attempt) && this.checkBlockingAssignment(attempt)) {
-			return true;
+			if(this.checkDefensiveMovement(attempt) && this.checkBlitz(attempt) && this.checkManCoverage(attempt) && this.checkZoneCoverage(attempt)){
+				return true;
+			}
 		}
 
 		return false;
@@ -391,6 +411,81 @@ Question.prototype.checkBlockingAssignment = function(attempt){
 		}
 	}
 	return true;
+}
+
+Question.prototype.checkDefensiveMovement = function(attempt){
+	if(this.answer.defensiveMovement === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.defensiveMovement.length !== this.answer.defensiveMovement.length){
+		return false;
+	}
+	for (i in attempt.defensiveMovement) {
+		var dist = sqrt(pow(attempt.defensiveMovement[i][0] - this.answer.defensiveMovement[i][0], 2) + pow(attempt.defensiveMovement[i][1] - this.answer.defensiveMovement[i][1], 2));
+		if (dist > 3) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkBlitz = function(attempt){
+	if(this.answer.blitz === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.blitz.length !== this.answer.blitz.length){
+		return false;
+	}
+	for (i in attempt.blitz) {
+		var dist = sqrt(pow(attempt.blitz[i][0] - this.answer.blitz[i][0], 2) + pow(attempt.blitz[i][1] - this.answer.blitz[i][1], 2));
+		if (dist > 3) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkManCoverage = function(attempt){
+	if(this.answer.manCoverage === null){
+		return true;
+	}
+	if(attempt === null){
+		return false;
+	}
+	if(attempt.manCoverage.length !== this.answer.manCoverage.length){
+		return false;
+	}
+	for (i in attempt.manCoverage) {
+		var dx = abs(attempt.manCoverage[i].x - this.answer.manCoverage[i].x);
+		var dy = abs(attempt.manCoverage[i].y - this.answer.manCoverage[i].y);
+		var positionMatch = (attempt.manCoverage[i].pos === this.answer.manCoverage[i].pos);
+		if (dx > 1 || dy > 1 || !positionMatch) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Question.prototype.checkZoneCoverage = function(attempt){
+	if(this.answer.zoneCoverage == null){
+		return true;
+	}
+	if(attempt == null || attempt.zoneCoverage == null){
+		return false;
+	}
+	if(attempt.zoneCoverage.type == this.answer.zoneCoverage.type){
+		var dx = attempt.zoneCoverage.x - this.answer.zoneCoverage.x
+		var dy = attempt.zoneCoverage.y - this.answer.zoneCoverage.y
+		var dist = Math.sqrt(dx*dx+dy*dy);
+		return (dist < 3)
+	}
+	return false;
 }
 
 // skip posts an attempted question to the database.

@@ -39,6 +39,10 @@
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
 
+				<button id="flip-field-button" name="button">
+					<i class="fa fa-arrows-v fa-2x mainview-button-icon" title="Flip field"></i>
+				</button>
+
 				<button id="help-button" name="button">
 					<i class="fa fa-question-circle-o fa-2x mainview-button-icon" title="Help"></i>
 				</button>
@@ -83,6 +87,7 @@
 			field.width = width;
 			field.heightInYards = 35;
 			field.ballYardLine = 65;
+			field.viewPoint = "offense";
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
@@ -93,10 +98,11 @@
 			quiz.unit = '{{ quiz.unit }}';
 
 			var position_groups = [];
+			var player_position = "{{player_position}}";
 			{% for group in position_groups %}
-			var player_position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
-			if (player_position[0] !== null) {
-				position_groups.push(player_position)
+			var position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
+			if (position[0] == player_position) {
+				position_groups.push(position)
 			}
 			{% endfor %}
 
@@ -118,19 +124,16 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-
 			quiz.buildQuestions(position_groups);
 
 			if (quiz.isEmpty()) {
 				window.location.replace("/quizzes/custom");
 			}
 
-			quiz.attempt = quiz.getSelected()[0];
-			if (quiz.attempt != null) {
-				quiz.attempt.motionCords = [];
-				quiz.attempt.blockingAssignmentArray = [];
-				quiz.attempt.route = [];
-				quiz.attempt.defensiveMovement = [];
+			quiz.setAttempt();
+
+			if(quiz.attempt.unit == "defense"){
+				field.flipView();
 			}
 
 			// Create buttons for selecting type of assignment
@@ -147,6 +150,18 @@
 			buttons.push(button);
 
 			button = new Button ({ label: "Block (G)" });
+			buttons.push(button);
+
+			var button = new Button ({ label: "Movement (A)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Rush/Blitz (S)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Man Coverage (D)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Zone Coverage (F)" });
 			buttons.push(button);
 
 			updateMainviewAndSideview();
@@ -171,11 +186,9 @@
 		};
 
 		function draw() {
-			buttons[0].display = false;
-			buttons[1].display = false;
-			buttons[2].display = false;
-			buttons[3].display = false;
-			buttons[4].display = false;
+			for(i in buttons){
+				buttons[i].display = false;
+			}
 
 			if(quiz.over){
 				quiz.drawQuizSummary(field);
@@ -189,7 +202,13 @@
 				var player = quiz.attempt;
 
 				if (player != null) {
-					if (player.dropback.length > 0) {
+					if(player.unit === "defense"){
+						buttons[5].display = true;
+						buttons[6].display = true;
+						buttons[7].display = true;
+						buttons[8].display = true;
+					}
+					else if (player.dropback.length > 0) {
 						buttons[0].display = true;
 					} else if (player.run.length > 0) {
 						buttons[2].display = true;
@@ -314,10 +333,10 @@
 				var mouseYardY = field.getYardY(mouseY);
 
 				if (playerSelected === null) {
-					quiz.attempt = quiz.getCurrentAnswer().deepCopy();
+					/*quiz.attempt = quiz.getCurrentAnswer().deepCopy();
 					quiz.attempt.setSelected();
 					quiz.attempt.x = mouseYardX;
-					quiz.attempt.y = mouseYardY;
+					quiz.attempt.y = mouseYardY;*/
 				} else if (buttons[0].clicked === true) {
 					playerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;
@@ -347,6 +366,22 @@
 
 					playerSelected.blockingAssignmentArray.push(block);
 					return false;
+				} else if (buttons[5].clicked === true) {
+					playerSelected.defensiveMovement.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[6].clicked === true) {
+					playerSelected.blitz.push([mouseYardX, mouseYardY]);
+					return false;
+				} else if (buttons[7].clicked === true && playerClicked != null) {
+					playerSelected.manCoverage.push(playerClicked);
+					return false;
+				} else if (buttons[8].clicked === true) {
+					if(playerSelected.zoneCoverage == null){
+						playerSelected.zoneCoverage = new ZoneAssignment({});
+					}
+					playerSelected.zoneCoverage.x = mouseYardX;
+					playerSelected.zoneCoverage.y = mouseYardY;
+					return false;
 				}
 			}
 		};
@@ -354,9 +389,9 @@
 		function keyPressed() {
 			if(quiz.over){
 				if (key === "r" || key === "R"){
-					quiz.restartQuiz(false);
+					quiz = quiz.restartQuiz(false);
+					quiz.setAttempt();
 					updateMainviewAndSideview();
-					setButtonClicked();
 				}
 				return false;
 			}
@@ -364,6 +399,8 @@
 				var playerSelected = quiz.attempt;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				var playerStatusKeys = ["A", "S", "D", "F", "G"];
+				var specialZoneKeys = ["Q", "W", "E", "R", "T"];
+				var zoneTypes = ["1/4", "1/3", "1/2", "Flat", "Hook/Curl"]
 
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "offense") {
@@ -379,13 +416,27 @@
 							playerSelected.motionCoords.pop();
 						}
 					} else if (playerSelected.unit == "defense") {
-						if (playerSelected.defensiveMovement.length > 0) {
+						if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
+							playerSelected.defensiveMovement.pop();
+						} else if (buttons[6].clicked && playerSelected.blitz.length > 0){
+							playerSelected.blitz.pop();
+						} else if (buttons[7].clicked && playerSelected.manCoverage.length > 0){
+							playerSelected.manCoverage.pop();
+						} else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
+							playerSelected.zoneCoverage = null;
+						} else if (playerSelected.blitz.length > 0){
+							playerSelected.blitz.pop();
+						} else if (playerSelected.manCoverage.length > 0){
+							playerSelected.manCoverage.pop();
+						} else if (playerSelected.zoneCoverage != null){
+							playerSelected.zoneCoverage = null;
+						} else if (playerSelected.defensiveMovement.length > 0) {
 							playerSelected.defensiveMovement.pop();
 						}
 					}
 
 					return false;
-				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+				} else if (buttons[4].clicked && playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;
@@ -406,9 +457,13 @@
 
 					return false;
 				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+					var index = playerStatusKeys.indexOf(key);
+					if(playerSelected.unit === "defense"){
+						index += 5;
+					}
+					if (buttons[index].display === true) {
 						for (i in buttons) {
-							if (i != playerStatusKeys.indexOf(key)) {
+							if (i != index) {
 								buttons[i].setUnclicked();
 							} else {
 								buttons[i].click();
@@ -417,6 +472,14 @@
 					}
 
 					return false;
+				} else if (playerSelected.unit == "defense"){
+					var zoneTypeIndex = specialZoneKeys.indexOf(key);
+					if(buttons[8].clicked && zoneTypeIndex >= 0){
+						if(playerSelected.zoneCoverage == null){
+							playerSelected.zoneCoverage = new ZoneAssignment({});
+						}
+						playerSelected.zoneCoverage.type = zoneTypes[zoneTypeIndex];
+					}
 				}
 			}
 		};
@@ -448,7 +511,7 @@
 
 				updateMainviewAndSideview();
 				setButtonClicked();
-			}	
+			}
 		});
 
 		$("#skip-question-button").click(function(event) {
@@ -492,6 +555,10 @@
 			}
 
 			resizeMainViewObjects();
+		});
+
+		$("#flip-field-button").click(function(event) {
+			field.flipView();
 		});
 
 		$("#help-button").click(function(event) {

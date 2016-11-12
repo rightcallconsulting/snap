@@ -550,14 +550,8 @@ Quiz.prototype.nextQuestion = function() {
 
 Quiz.prototype.setAttempt = function(){
 	this.attempt = this.getSelected()[0];
-	if (this.attempt != null) {
-		this.attempt.dropback = [];
-		this.attempt.motionCords = [];
-		this.attempt.run = [];
-		this.attempt.route = [];
-		this.attempt.blockingAssignmentArray = [];
-
-		this.attempt.defensiveMovement = [];
+	if (this.attempt != null && (this.attempt instanceof Player)) {
+		this.attempt.clearAssignments();
 	}
 }
 
@@ -655,10 +649,12 @@ Quiz.prototype.createFormationFromJson = function(formationJsonDictionary) {
 
 Quiz.prototype.createPlayFromJson = function(playJsonDictionary) {
 	var play = createPlayFromJson(playJsonDictionary);
+	play.updateCoverageForOffense();
 	this.plays.push(play);
 };
 
 Quiz.prototype.createConceptFromJson = function(conceptJsonDictionary) {
 	var concept = createConceptFromJson(conceptJsonDictionary);
+	concept.updateCoverageForOffense();
 	this.concepts.push(concept);
 };

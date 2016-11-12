@@ -1029,13 +1029,26 @@ def play_quizzes(request, unit="offense"):
 					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_plays.append(play)
 
+			defensive_players = play_dict['defensivePlayers']
+			for player_dict in defensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					### Do additional filtering for type of assignment here eventually ###
+					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
+						filtered_plays.append(play)
+					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
+						filtered_plays.append(play)
+					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+						filtered_plays.append(play)
+					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+						filtered_plays.append(play)
 		plays = filtered_plays[0:number_of_questions]
-
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'plays': plays,
 			'position_groups': position_groups,
+			'player_position': position,
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "calls":
@@ -1142,12 +1155,27 @@ def concept_quizzes(request, unit="offense"):
 					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_concepts.append(concept)
 
+			defensive_players = concept_dict['defensivePlayers']
+			for player_dict in defensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					### Do additional filtering for type of assignment here eventually ###
+					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
+						filtered_concepts.append(concept)
+					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
+						filtered_concepts.append(concept)
+					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+						filtered_concepts.append(concept)
+					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+						filtered_concepts.append(concept)
+
 		concepts = filtered_concepts[0:number_of_questions]
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'concepts': concepts,
 			'position_groups': position_groups,
+			'player_position': position,
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "calls":
