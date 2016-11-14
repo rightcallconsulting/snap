@@ -216,7 +216,7 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var formationName = this.name;
 		var formationUnit = this.unit;
-		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes", "blitz", "manCoverage", "zoneCoverage"]);
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes", "blitz", "manCoverage", "zoneCoverage", "type"]);
 
 		var jqxhr = $.post(
 				path,

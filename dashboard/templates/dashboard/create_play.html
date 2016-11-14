@@ -41,6 +41,10 @@
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
 
+				<button id="flip-field-button" name="button">
+					<i class="fa fa-arrows-v fa-2x mainview-button-icon" title="Flip field"></i>
+				</button>
+
 				<button id="help-button" name="button">
 					<i class="fa fa-question-circle-o fa-2x mainview-button-icon" title="Help"></i>
 				</button>
@@ -606,8 +610,8 @@
 					var playerSelected = play.getSelected()[0];
 					var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 					var playerStatusKeys = ["A", "S", "D", "F", "G"];
-					var specialZoneKeys = ["Q", "W", "E", "R", "T"];
-					var zoneTypes = ["1/4", "1/3", "1/2", "Flat", "Hook/Curl"]
+					var specialZoneKeys = ["Q", "W", "E", "R", "T", "Y"];
+					var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
 
 					if (keyCode == BACKSPACE || keyCode == DELETE) {
 						if (playerSelected.unit == "offense") {
@@ -953,6 +957,10 @@
 			}
 
 			resizeMainViewObjects();
+		});
+
+		$("#flip-field-button").click(function(event) {
+			field.flipView();
 		});
 
 		$("#help-button").click(function(event) {

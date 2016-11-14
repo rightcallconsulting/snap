@@ -649,12 +649,10 @@ Quiz.prototype.createFormationFromJson = function(formationJsonDictionary) {
 
 Quiz.prototype.createPlayFromJson = function(playJsonDictionary) {
 	var play = createPlayFromJson(playJsonDictionary);
-	play.updateCoverageForOffense();
 	this.plays.push(play);
 };
 
 Quiz.prototype.createConceptFromJson = function(conceptJsonDictionary) {
 	var concept = createConceptFromJson(conceptJsonDictionary);
-	concept.updateCoverageForOffense();
 	this.concepts.push(concept);
 };

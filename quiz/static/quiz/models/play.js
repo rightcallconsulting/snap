@@ -611,6 +611,8 @@ function createPlayFromJson(playJsonDictionary) {
 		eligibleReceivers: eligibleReceiversArray
 	});
 
+	result.updateCoverageForOffense();
+
 	return result;
 };
 
