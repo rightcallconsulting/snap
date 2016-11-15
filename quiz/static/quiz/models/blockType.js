@@ -83,10 +83,7 @@ BlockType.prototype.draw = function(prevX, prevY, field, playersBlocked) {
 			y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
 		}
 
-		debugger;
-
 		if(playersBlocked > 0){
-			debugger;
 			dottedLine(x1, y1, x2, y2);
 			return;
 		}
