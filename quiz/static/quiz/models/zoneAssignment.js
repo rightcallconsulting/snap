@@ -13,7 +13,6 @@
 //@param theta: (optional) direction of arrow
 var ZoneAssignment = function(config) {
 	this.type = config.type || "1/4";
-	//this.theta = config.theta || null; //null means no arrow, 0 => 2*PI are valid theta values
 	this.x = config.x || null;
 	this.y = config.y || null;
 };
@@ -43,10 +42,21 @@ ZoneAssignment.prototype.draw = function(startX, startY, field) {
 	var x2 = field.getTranslatedX(this.x)
 	var y2 = field.getTranslatedY(this.y)
 
-	var xMid = (x1+x2)/2; var yMid = (y1+y2)/2;
+	var theta = atan((y2-y1)/(x2-x1));
 
-	//draw the label at the midpoint
-	text(this.type, xMid, yMid-field.yardsToPixels(1));
+	if(x2 < x1){
+		theta = PI + theta;
+	}
+
+	var xDiff = ZoneAssignment.ARROW_LENGTH * cos(theta)
+	var yDiff = ZoneAssignment.ARROW_LENGTH * sin(theta)
+	var xLabel = x2 + field.yardsToPixels(xDiff)
+	var yLabel = y2 + field.yardsToPixels(yDiff)
+
+	//var xLabel =
+
+	//draw the label at the endpoint
+	text(this.type, xLabel, yLabel);
 
 	line(x1, y1, x2, y2);
 	x1 = field.getYardX(x1);
