@@ -451,7 +451,9 @@
 						unhideCallsInput(newPlayerSelected.pos);
 						updateNotesAndCalls();
 
-						if (newPlayerSelected.pos === "QB") {
+						if (newPlayerSelected.unit === "defense"){
+							buttons[6].setClicked();
+						} else if (newPlayerSelected.pos === "QB") {
 							buttons[0].setClicked();
 						} else if (newPlayerSelected.eligible) {
 							buttons[3].setClicked();
@@ -535,7 +537,9 @@
 					unhideCallsInput(newPlayerSelected.pos);
 					updateNotesAndCalls();
 
-					if (newPlayerSelected.pos === "QB") {
+					if (newPlayerSelected.unit === "defense"){
+						buttons[6].setClicked();
+					} else if (newPlayerSelected.pos === "QB") {
 						buttons[0].setClicked();
 					} else if (newPlayerSelected.eligible) {
 						buttons[3].setClicked();

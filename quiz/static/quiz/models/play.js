@@ -391,14 +391,9 @@ Play.prototype.scoutFromFormation = function(formation) {
 	}
 };
 
-// removeScoutFormation gets rid of the defensive look and player blocks from
-// and offensive play.
+// removeScoutFormation gets rid of the defensive look
 Play.prototype.removeScoutFormation = function() {
 	this.defensivePlayers = [];
-
-	for (var i = 0; i < this.offensivePlayers.length; ++i) {
-		this.offensivePlayers[i].blockingAssignmentArray = [];
-	}
 };
 
 /*********************************/

@@ -95,6 +95,7 @@
 		var formations = [];
 		var plays = [];
 		var play;
+		var parentPlay = null;
 		var scout_formations = [];
 		var scout_formation;
 		var formation_name_selected = "";
@@ -444,6 +445,9 @@
 					unhideCallsInput(newPlayerSelected.pos);
 					updateNotesAndCalls();
 
+					if (newPlayerSelected.unit === "defense"){
+						buttons[6].setClicked();
+					}
 					if (newPlayerSelected.pos === "QB") {
 						buttons[0].setClicked();
 					} else if (newPlayerSelected.eligible) {
@@ -1133,6 +1137,8 @@
 					}
 				}
 
+				parentPlay = play.deepCopy();
+
 				// Show notes and calls inputs and update notes.
 				unhideNotesAndCallsInput(play_name);
 				updateNotesAndCalls();
@@ -1194,7 +1200,12 @@
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
-			play.removeScoutFormation();
+			if(parentPlay != null){
+				play = parentPlay;
+			}else{
+				play.removeScoutFormation();
+			}
+
 			scout_formation_name_selected = "";
 
 			// If there was a previously selected button remove it's selected

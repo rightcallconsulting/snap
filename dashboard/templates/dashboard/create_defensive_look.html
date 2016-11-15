@@ -374,6 +374,7 @@
 				// Do nothing
 			} else if (currentPlayerSelected === null) {
 				newPlayerSelected.click();
+				buttons[1].setClicked();
 				return false;
 			} else if (newPlayerSelected === null && field.isClickInsideField()) {
 				if(buttons[0].clicked){
