@@ -443,7 +443,7 @@ Player.prototype.drawBlocks = function(field) {
 		}
 	}
 
-	if (blockPart != null && !this.selected && blockPart.type === 0) {
+	if (blockPart != null && blockPart.type === 0) {
 		var black = color(0, 0, 0);
 		stroke(black);
 
