@@ -424,13 +424,15 @@ Player.prototype.drawBlocks = function(field) {
 	}
 
 	var blockPart;
+	var playersBlocked = 0;
 	for (var i = 0; i < this.blockingAssignmentArray.length; i++) {
 		blockPart = this.blockingAssignmentArray[i]
-		blockPart.draw(prevX, prevY, field)
+		blockPart.draw(prevX, prevY, field, playersBlocked)
 		prevX = blockPart.x
 		prevY = blockPart.y
 
 		if (blockPart.type === 1 && blockPart.player !== null) {
+			playersBlocked++;
 			var defensiveMovement = blockPart.player.defensiveMovement
 			var defensiveMovementLength = defensiveMovement.length
 			if (defensiveMovementLength > 0) {

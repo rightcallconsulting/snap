@@ -63,7 +63,7 @@ var BlockType = function(config) {
 
 // draw determines the type of the block and calls the appropriate draw
 // function for that type of block.
-BlockType.prototype.draw = function(prevX, prevY, field) {
+BlockType.prototype.draw = function(prevX, prevY, field, playersBlocked) {
 	var black = color(0, 0, 0);
 	stroke(black);
 
@@ -72,7 +72,7 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 	var x2 = field.getTranslatedX(this.x)
 	var y2 = field.getTranslatedY(this.y)
 
-	if (this.type === 1 && this.player) {
+	if (this.type === 1 && this.player != null) {
 		var defensiveMovement = this.player.defensiveMovement
 		var defensiveMovementLength = defensiveMovement.length
 		if (defensiveMovementLength > 0) {
@@ -82,6 +82,15 @@ BlockType.prototype.draw = function(prevX, prevY, field) {
 			x2 = field.getTranslatedX(this.player.x)
 			y2 = field.getTranslatedY(this.player.y - (this.player.siz / 3))
 		}
+
+		debugger;
+
+		if(playersBlocked > 0){
+			debugger;
+			dottedLine(x1, y1, x2, y2);
+			return;
+		}
+
 	} else if (this.type === 7 || this.type === 8) {
 		xMid = (x1+x2)/2
 		yMid = field.getTranslatedY(this.y - 1)
