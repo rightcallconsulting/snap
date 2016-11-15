@@ -685,6 +685,12 @@
 						}
 
 						return false;
+					} else if(buttons[3].clicked){
+						var diff = key.charCodeAt(0) - "0".charCodeAt(0);
+						if(diff >= 0 && diff <= 5){
+							playerSelected.progressionRank = diff;
+							return false;
+						}
 					}
 				}
 			}

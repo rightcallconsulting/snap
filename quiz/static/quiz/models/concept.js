@@ -310,7 +310,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz", "progressionRank"]);
 
 		var jqxhr = $.post(
 				path,
@@ -402,7 +402,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
 			notes: conceptJsonDictionary.offensivePlayers[i].notes,
-			call: conceptJsonDictionary.offensivePlayers[i].call
+			call: conceptJsonDictionary.offensivePlayers[i].call,
+			progressionRank: conceptJsonDictionary.offensivePlayers[i].progressionRank
 		});
 
 		if (player.pos === "QB") {

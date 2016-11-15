@@ -276,7 +276,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "blitz", "manCoverage", "zoneCoverage", "notes", "call"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "blitz", "manCoverage", "zoneCoverage", "notes", "call", "progressionRank"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -422,7 +422,8 @@ function createPlayFromJson(playJsonDictionary) {
 			eligible: playJsonDictionary.offensivePlayers[i].eligible,
 			siz: playJsonDictionary.offensivePlayers[i].siz,
 			notes: playJsonDictionary.offensivePlayers[i].notes,
-			call: playJsonDictionary.offensivePlayers[i].call
+			call: playJsonDictionary.offensivePlayers[i].call,
+			progressionRank: playJsonDictionary.offensivePlayers[i].progressionRank
 		});
 
 		if (player.pos === "QB") {

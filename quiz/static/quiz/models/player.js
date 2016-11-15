@@ -24,7 +24,7 @@ var Player = function(config) {
 	this.selected = config.selected || false;
 	this.eligible = config.eligible || false;
 
-	// Player assignments - these should be converted into object types later on
+	// Player assignments - these could be converted into object types later on
 	this.dropback = config.dropback || [];
 	this.motionCoords = config.motionCoords || [];
 	this.run = config.run || [];
@@ -34,6 +34,7 @@ var Player = function(config) {
 	this.blitz = config.blitz || [];
 	this.manCoverage = config.manCoverage || [];
 	this.zoneCoverage = config.zoneCoverage || null;
+	this.progressionRank = config.progressionRank || 0;
 
 	// Player notes and calls - strings used to add extra description to players assignments
 	this.notes = config.notes || [];
@@ -60,7 +61,6 @@ var Player = function(config) {
 	this.routeNodes = [];
 	this.runNodes = [];
 	this.change = config.change || false;
-	this.progressionRank = config.progressionRank || 0;
 	this.routeNum = config.routeNum || null;
 	this.blockingAssignment = config.blockingAssignment || null;
 	this.blockingAssignmentPlayerIndex = config.blockingAssignmentPlayerIndex || null;
@@ -392,6 +392,16 @@ Player.prototype.drawRoute = function(field) {
 		x2 = field.getTranslatedX(x2);
 		y2 = field.getTranslatedY(y2);
 		line(x1, y1, x2, y2);
+
+		if(i === 0 && this.progressionRank > 0){
+			var xMid = (x1+x2)/2;
+			var yMid = (y1+y2)/2;
+			var xLabel = xMid + field.yardsToPixels(1);
+			var yLabel = yMid + field.yardsToPixels(1);
+			textSize(14);
+			text(str(this.progressionRank), xLabel, yLabel);
+		}
+
 		x1 = field.getYardX(x1);
 		y1 = field.getYardY(y1);
 		x2 = field.getYardX(x2);
@@ -735,7 +745,8 @@ Player.prototype.deepCopy = function() {
 		unit: this.unit,
 		name: this.name,
 		notes: this.notes,
-		call: this.call
+		call: this.call,
+		progressionRank: this.progressionRank
 	});
 
 	for (var i = 0; i < this.dropback.length; ++i) {
