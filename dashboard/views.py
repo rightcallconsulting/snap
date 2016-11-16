@@ -1158,8 +1158,13 @@ def concept_quizzes(request, unit="offense"):
 
 					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_concepts.append(concept)
+						break
 					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_concepts.append(concept)
+						break
+				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
+					filtered_concepts.append(concept)
+					break
 
 			defensive_players = concept_dict['defensivePlayers']
 			for player_dict in defensive_players:
@@ -1178,9 +1183,6 @@ def concept_quizzes(request, unit="offense"):
 					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
 						filtered_concepts.append(concept)
 						break
-				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
-					filtered_concepts.append(concept)
-					break
 
 		concepts = filtered_concepts[0:number_of_questions]
 		return render(request, 'dashboard/assignment_quiz.html', {

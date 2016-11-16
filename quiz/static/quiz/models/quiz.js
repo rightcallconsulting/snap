@@ -408,6 +408,16 @@ Quiz.prototype.buildProgressionQuestions = function(){
 
 	}
 
+	for (i in this.concepts) {
+
+		question = new Question({ question: this.concepts[i].deepCopy(), type: "progression" });
+		result = question.buildProgressionQuestionAndAnswer()
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+	}
+
 	this.shuffle();
 	this.currentQuestionIndex = 0;
 }
