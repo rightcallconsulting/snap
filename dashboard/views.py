@@ -31,6 +31,7 @@ def homepage(request):
 		team = player.team
 		quizzes = Quiz.objects.filter(team=team, players__in=[player])
 		quizzes_table = []
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 		for quiz in quizzes:
 			quiz_information = []
@@ -110,6 +111,7 @@ def homepage(request):
 			'newsfeed': newsfeed,
 			'quizzes': quizzes_table,
 			'team': team,
+			'position_groups': position_groups,
 			'page_header': 'DASHBOARD'
 		})
 	else:
