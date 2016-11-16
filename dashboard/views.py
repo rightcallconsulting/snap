@@ -808,6 +808,7 @@ def quizzes_todo(request):
 	team = player.team
 	quizzes = Quiz.objects.filter(team=team, players__in=[player])
 	quizzes_table = []
+	position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 	for quiz in quizzes:
 		quiz_information = []
@@ -843,11 +844,12 @@ def quizzes_todo(request):
 	return render(request, 'dashboard/todo.html', {
 			'quizzes': quizzes_table,
 			'team': team,
+			'position_groups': position_groups,
 			'page_header': 'TODO'
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
-def take_quiz(request, quiz_id):
+def take_quiz(request, quiz_id, position=''):
 	team = request.user.player.team
 	player = request.user.player
 	if request.method == 'POST':
@@ -889,6 +891,9 @@ def take_quiz(request, quiz_id):
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
+
+		if len(position) > 0:
+			position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player], abbreviation=position)
 
 		return render(request, 'dashboard/take_quiz.html', {
 			'quiz': quiz,

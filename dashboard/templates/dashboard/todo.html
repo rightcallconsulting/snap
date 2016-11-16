@@ -27,11 +27,17 @@
 						<td>{{ quiz.2|floatformat }} %</td>
 						<td>{{ quiz.3|floatformat }} %</td>
 						<td>{{ quiz.4|floatformat }} %</td>
-						<td>POS</td>
+						<td><select name="position" class="unit-form form-sm" id="position-select-{{quiz.5}}">
+							<optgroup>
+								{% for position_group in position_groups %}
+									<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
+								{% endfor %}
+							</optgroup>
+						</select></td>
 						{% if quiz.1 %}
-						<td><a href="/quizzes/take/{{ quiz.5 }}" >Retake {{ quiz.0 }}</a></td>
+						<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.5 }}">Retake {{ quiz.0 }}</button></td>
 						{% else %}
-						<td><a href="/quizzes/take/{{ quiz.5 }}" >Take {{ quiz.0 }}</a></td>
+						<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.5 }}">Take {{ quiz.0 }}</button></td>
 						{% endif %}
 					</tr>
 				{% endfor %}
@@ -42,4 +48,13 @@
 
 {% block javascript %}
 	<script src="{% static 'dashboard/js/sidebarSetActive.js' %}"></script>
+	<script type="text/javascript">
+		function takeQuiz(buttonClicked){
+			var quizID = buttonClicked.dataset["quizid"];
+			var selectID = "position-select-" + quizID;
+			var positionSelect = document.getElementById(selectID)
+			var path = "/quizzes/take/" + quizID + "/" + positionSelect.value;
+			window.location.replace(path);
+		}
+	</script>
 {% endblock %}

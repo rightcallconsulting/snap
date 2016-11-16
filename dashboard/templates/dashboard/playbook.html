@@ -913,6 +913,7 @@
 
 				for (i in scout_formations) {
 					if (scout_formation_name === scout_formations[i].name) {
+						scout_formations[i].updateCoverageForOffense(dummy_offense)
 						scout_formation = scout_formations[i].deepCopy();
 						break;
 					}
