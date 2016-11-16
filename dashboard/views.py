@@ -1105,6 +1105,13 @@ def play_quizzes(request, unit="offense"):
 					filtered_plays.append(play)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+			defensive_players = play_dict['defensivePlayers']
+			for player_dict in defensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_plays.append(play)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
 
 		plays = filtered_plays[0:number_of_questions]
 
@@ -1237,6 +1244,13 @@ def concept_quizzes(request, unit="offense"):
 			concept_dict = json.loads(concept.conceptJson)
 			offensive_players = concept_dict['offensivePlayers']
 			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_concepts.append(concept)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
+			defensive_players = concept_dict['defensivePlayers']
+			for player_dict in defensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
 					filtered_concepts.append(concept)

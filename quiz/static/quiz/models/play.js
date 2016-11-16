@@ -630,6 +630,12 @@ Play.prototype.getPlayerFromPosition = function(pos){
 			return player
 		}
 	}
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var player = this.defensivePlayers[i];
+		if(player.pos === pos){
+			return player
+		}
+	}
 	return null;
 };
 
@@ -641,13 +647,13 @@ Play.prototype.removePlayerWithPosition = function(position){
 			return 1;
 		}
 	}
-	/*for(var i = 0; i < this.defensivePlayers.length; i++){
+	for(var i = 0; i < this.defensivePlayers.length; i++){
 		var player = this.defensivePlayers[i];
 		if(player.pos === position){
 			this.defensivePlayers.splice(i, 1)
 			return 1;
 		}
-	}*/
+	}
 	return 0;
 }
 
