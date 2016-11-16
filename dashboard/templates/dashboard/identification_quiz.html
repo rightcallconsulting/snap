@@ -6,7 +6,7 @@
 		<div id="question-prompt"></div>
 
 		<div id="help-box" hidden="true">
-			<strong>Help: </strong> Choose the name of the formations from the options in the choices box. Click the green check mark to check your answer. The green arrow allows you to skip the question. The pencil allows you to submit the quiz at any time.
+			<strong>Help: </strong> Choose the name of the formation, play, or concept from the options in the choices box. The green arrow allows you to skip the question. The pencil allows you to submit the quiz at any time.
 		</div>
 
 		<div id="display-box" class="col-md-8 bordered-div">
@@ -367,7 +367,10 @@
 			var choices_buttons = document.getElementById("choices-buttons");
 			for (var i = 0; i < choices.length; ++i) {
 				var create_button = 1;
-				if (choices[i] != quiz.getCurrentQuestionName()) {
+				if(quiz.getCurrentQuestion().question.name == null || quiz.getCurrentQuestion().question.name === ""){
+					create_button = 0;
+				}
+				if (choices[i] != quiz.getCurrentQuestion().question.name) {
 					// If a button with this name already exists continue to the next iteration of the loop
 					for (j in choice_names) {
 						if (choice_names[j] === choices[i]) {
@@ -395,9 +398,9 @@
 
 			var new_choice_button = document.createElement("button");
 			new_choice_button.setAttribute("onclick", "changeSelectedChoice(this)");
-			new_choice_button.setAttribute("name", quiz.getCurrentQuestionName());
+			new_choice_button.setAttribute("name", quiz.getCurrentQuestion().question.name);
 			new_choice_button.setAttribute("class", "btn btn-primary choice-button");
-			new_choice_button.textContent = quiz.getCurrentQuestionName();
+			new_choice_button.textContent = quiz.getCurrentQuestion().question.name;
 
 			var number_of_choice_buttons = choices_buttons.childElementCount;
 			var index_to_insert_answer = Math.floor(Math.random() * (number_of_choice_buttons+1));
