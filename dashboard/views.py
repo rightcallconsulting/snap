@@ -1026,8 +1026,13 @@ def play_quizzes(request, unit="offense"):
 					### Do additional filtering for type of assignment here eventually ###
 					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_plays.append(play)
+						break
 					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
 						filtered_plays.append(play)
+						break
+				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
+					filtered_plays.append(play)
+					break
 
 			defensive_players = play_dict['defensivePlayers']
 			for player_dict in defensive_players:
@@ -1049,6 +1054,7 @@ def play_quizzes(request, unit="offense"):
 			'plays': plays,
 			'position_groups': position_groups,
 			'player_position': position,
+			'type_of_assignment': type_of_assignment,
 			'page_header': 'PLAY QUIZ'
 		})
 	elif type_of_quiz == "calls":
@@ -1162,12 +1168,19 @@ def concept_quizzes(request, unit="offense"):
 					### Do additional filtering for type of assignment here eventually ###
 					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
 						filtered_concepts.append(concept)
+						break
 					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
 						filtered_concepts.append(concept)
+						break
 					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
 						filtered_concepts.append(concept)
+						break
 					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
 						filtered_concepts.append(concept)
+						break
+				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
+					filtered_concepts.append(concept)
+					break
 
 		concepts = filtered_concepts[0:number_of_questions]
 		return render(request, 'dashboard/assignment_quiz.html', {
@@ -1176,6 +1189,7 @@ def concept_quizzes(request, unit="offense"):
 			'concepts': concepts,
 			'position_groups': position_groups,
 			'player_position': position,
+			'type_of_assignment': type_of_assignment,
 			'page_header': 'CONCEPT QUIZ'
 		})
 	elif type_of_quiz == "calls":

@@ -390,6 +390,22 @@ Quiz.prototype.buildIdentificationQuestions = function() {
 	this.currentQuestionIndex = 0;
 };
 
+Quiz.prototype.buildProgressionQuestions = function(){
+	var question; var result;
+	//this.plays.shuffle();
+	//this.concepts.shuffle();
+
+	for (i in this.plays) {
+
+		question = new Question({ question: this.plays[i].deepCopy(), type: "progression" });
+		result = question.buildProgressionQuestionAndAnswer()
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+	}
+}
+
 Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questionsPerPlay){
 	var question; var result;
 	//this.plays.shuffle();

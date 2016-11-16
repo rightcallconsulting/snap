@@ -280,7 +280,12 @@
 				var dropdown = position_dropdowns[i];
 				var position_group_type = dropdown.selectedOptions[0].dataset.type;
 				var assignment_type_options = ["All"]
-				if(position_group_type === "Skill Position"){
+				if(position_group_type === "Quarterback"){
+					assignment_type_options = [];
+					assignment_type_options.push("Progression");
+					assignment_type_options.push("Routes");
+				}
+				else if(position_group_type === "Skill Position"){
 					assignment_type_options.push("Blocks");
 					assignment_type_options.push("Routes");
 				}else if(position_group_type === "Offensive Lineman"){

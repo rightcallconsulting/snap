@@ -194,6 +194,20 @@ Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
 
 // buildIdentificationQuestionAndAnswer creates an appropriate creates a
 // question and answer based on the current content in the question variable.
+Question.prototype.buildProgressionQuestionAndAnswer = function() {
+	this.answer = this.question.deepCopy();
+	this.question.clearProgression();
+
+	this.prompt = "Choose the correct progression for " this.question.getFullName();
+	if(this.question.scoutName != null && this.question.scoutName !== ""){
+		this.prompt += " vs. " + this.question.scoutName
+	}
+
+	return 0;
+};
+
+// buildIdentificationQuestionAndAnswer creates an appropriate creates a
+// question and answer based on the current content in the question variable.
 Question.prototype.buildIdentificationQuestionAndAnswer = function() {
 	this.answer = this.question.name;
 
