@@ -726,6 +726,17 @@ Play.prototype.drawRunPlay = function(field){
 
 };
 
+Play.prototype.getNextProgressionRank = function(){
+	var highest = 0;
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+		var rank = this.offensivePlayers[i].progressionRank;
+    if(rank > highest){
+			highest = rank;
+		}
+  }
+	return highest+1;
+};
+
 Play.prototype.clearProgression = function(){
   for(var i = 0; i < this.offensivePlayers.length; i++){
       this.offensivePlayers[i].progressionRank = 0;

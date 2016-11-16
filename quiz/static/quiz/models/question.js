@@ -198,7 +198,7 @@ Question.prototype.buildProgressionQuestionAndAnswer = function() {
 	this.answer = this.question.deepCopy();
 	this.question.clearProgression();
 
-	this.prompt = "Choose the correct progression for " this.question.getFullName();
+	this.prompt = "Choose the correct progression for " + this.question.getFullName();
 	if(this.question.scoutName != null && this.question.scoutName !== ""){
 		this.prompt += " vs. " + this.question.scoutName
 	}
@@ -252,7 +252,12 @@ Question.prototype.getName = function() {
 Question.prototype.drawFeedbackScreen = function(field){
 	if (this.answer !== null) {
 		this.answer.drawAssignments(field);
-		this.answer.draw(field);
+		if(this.type === "progression"){
+			this.answer.drawPlayers(field);
+		}else{
+			this.question.drawPlayers(field);
+			this.answer.draw(field);
+		}
 	}
 };
 
@@ -301,6 +306,12 @@ Question.prototype.check = function(attempt) {
 				this.score = 0;
 			}
 		}
+	} else if (this.type === "progression"){
+		if(this.checkProgression()){
+			this.score = 1;
+		}else{
+			this.score = 0;
+		}
 	}
 };
 
@@ -316,6 +327,15 @@ Question.prototype.checkAlignment = function(attempt){
 		return true;
 	}
 	return false;
+}
+
+Question.prototype.checkProgression = function(){
+	for(var i = 0; i < this.question.offensivePlayers.length; i++){
+		if(this.question.offensivePlayers[i].progressionRank != this.answer.offensivePlayers[i].progressionRank){
+			return false;
+		}
+	}
+	return true;
 }
 
 Question.prototype.checkAssignments = function(attempt){

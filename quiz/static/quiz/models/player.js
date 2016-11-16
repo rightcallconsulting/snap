@@ -379,6 +379,7 @@ Player.prototype.drawRoute = function(field) {
 	var y2 = y1;
 
 	var red = color(255, 0, 0);
+	var white = color(255, 255, 255);
 	stroke(red);
 
 	for (var i = 0; i < this.route.length; i++) {
@@ -399,7 +400,11 @@ Player.prototype.drawRoute = function(field) {
 			var xLabel = xMid + field.yardsToPixels(1);
 			var yLabel = yMid + field.yardsToPixels(1);
 			textSize(14);
+			fill(white);
+			noStroke();
 			text(str(this.progressionRank), xLabel, yLabel);
+			stroke(red);
+			fill(red);
 		}
 
 		x1 = field.getYardX(x1);

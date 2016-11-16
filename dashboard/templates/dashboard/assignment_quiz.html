@@ -138,7 +138,7 @@
 
 			quiz.setAttempt();
 
-			if(quiz.attempt.unit == "defense"){
+			if(quiz.attempt != null && quiz.attempt.unit == "defense"){
 				field.flipView();
 			}
 
@@ -265,9 +265,19 @@
 					quiz.nextQuestion();
 					updateMainviewAndSideview();
 					setButtonClicked();
+					return;
 				}
 
 				quiz.draw(field);
+				if(question.feedbackStartTime === 0){
+					for(var i = 0; i < question.question.offensivePlayers.length; i++){
+						var player = question.question.offensivePlayers[i];
+						if(player.progressionRank > 0 && player.route.length > 0){
+							player.drawRoute(field);
+						}
+					}
+				}
+
 				fill(176,176,176);
 			}
 
@@ -338,11 +348,14 @@
 				var mouseYardX = field.getYardX(mouseX);
 				var mouseYardY = field.getYardY(mouseY);
 
-				if (playerSelected === null) {
-					/*quiz.attempt = quiz.getCurrentAnswer().deepCopy();
-					quiz.attempt.setSelected();
-					quiz.attempt.x = mouseYardX;
-					quiz.attempt.y = mouseYardY;*/
+				if (playerSelected === null && quiz.getCurrentQuestion().type === "progression") {
+					if(playerClicked != null){
+						if(playerClicked.progressionRank > 0){
+							playerClicked.progressionRank = 0;
+						}else{
+							playerClicked.progressionRank = quiz.getCurrentQuestion().question.getNextProgressionRank();
+						}
+					}
 				} else if (buttons[0].clicked === true) {
 					playerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;
@@ -399,6 +412,9 @@
 					quiz.setAttempt();
 					updateMainviewAndSideview();
 				}
+				return false;
+			}
+			if(quiz.getCurrentQuestion().type === "progression"){
 				return false;
 			}
 			if (quiz.getSelected()[0] != null) {
@@ -616,6 +632,9 @@
 		// setButtonClicked is responsible for presetting the most conveinent
 		// assignment type when questions change.
 		function setButtonClicked() {
+			if(quiz.getCurrentQuestion().type === "progression"){
+				return;
+			}
 			for (var i = 0; i < buttons.length; i++){
 				buttons[i].setUnclicked();
 				buttons[i].display = false;

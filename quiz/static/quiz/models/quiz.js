@@ -137,10 +137,10 @@ Quiz.prototype.draw = function(field) {
 			question.startTime = millis();
 		}
 
-		question.draw(field);
 		if (question.feedbackStartTime > 0) {
 			question.drawFeedbackScreen(field);
 		} else {
+			question.draw(field);
 			if (this.attempt !== null) {
 				this.attempt.drawAssignments(field);
 				this.attempt.draw(field);
@@ -271,13 +271,16 @@ Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 	this.attempt = null;
 	var newQuiz = this.deepCopy();
 	newQuiz.currentQuestionIndex = 0;
-	newQuiz.clearQuestionScores();
+	newQuiz.clearQuestions();
 	return newQuiz;
 }
 
-Quiz.prototype.clearQuestionScores = function(){
+Quiz.prototype.clearQuestions = function(){
 	for(var i = 0; i < this.questions.length; i++){
 		this.questions[i].score = null;
+		if(this.questions[i].type === "progression"){
+			this.questions[i].question.clearProgression();
+		}
 	}
 }
 
@@ -404,6 +407,9 @@ Quiz.prototype.buildProgressionQuestions = function(){
 		}
 
 	}
+
+	this.shuffle();
+	this.currentQuestionIndex = 0;
 }
 
 Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questionsPerPlay){
@@ -565,6 +571,10 @@ Quiz.prototype.nextQuestion = function() {
 };
 
 Quiz.prototype.setAttempt = function(){
+	if(this.getCurrentQuestion() == null || this.getCurrentQuestion().type === "progression"){
+		this.attempt = null;
+		return;
+	}
 	this.attempt = this.getSelected()[0];
 	if (this.attempt != null && (this.attempt instanceof Player)) {
 		this.attempt.clearAssignments();

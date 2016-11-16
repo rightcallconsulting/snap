@@ -61,6 +61,23 @@ Concept.prototype.drawAssignments = function (field) {
 	}
 };
 
+Concept.prototype.getNextProgressionRank = function(){
+	var highest = 0;
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+		var rank = this.offensivePlayers[i].progressionRank;
+    if(rank > highest){
+			highest = rank;
+		}
+  }
+	return highest+1;
+};
+
+Concept.prototype.clearProgression = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].progressionRank = 0;
+  }
+};
+
 Concept.prototype.updateBlocksForDefense = function(){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
 		var blocker = this.offensivePlayers[i];
