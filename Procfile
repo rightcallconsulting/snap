@@ -1,1 +1,1 @@
-web: gunicorn quiz_master.wsgi --log-file -
+web: gunicorn snap.wsgi --log-file -
