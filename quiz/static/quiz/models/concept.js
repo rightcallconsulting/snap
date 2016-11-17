@@ -21,7 +21,7 @@ var Concept = function(config) {
 	this.quarterback = config.quarterback || [];
 	this.offensiveLinemen = config.offensiveLinemen || [];
 	this.eligibleReceivers = config.eligibleReceivers || [];
-	this.feedbackMessage = config.feedbackMessage || [];
+	this.feedbackMessage = config.feedbackMessage || []; //FLAGGED FOR DELETION
 	this.movementIndex = config.movementIndex || 0;
 	this.notes = config.notes || [];
 };
@@ -61,6 +61,7 @@ Concept.prototype.drawAssignments = function (field) {
 	}
 };
 
+//Used for Route Progressions
 Concept.prototype.getNextProgressionRank = function(){
 	var highest = 0;
   for(var i = 0; i < this.offensivePlayers.length; i++){
@@ -72,12 +73,14 @@ Concept.prototype.getNextProgressionRank = function(){
 	return highest+1;
 };
 
+//Used for Route Progressions
 Concept.prototype.clearProgression = function(){
   for(var i = 0; i < this.offensivePlayers.length; i++){
       this.offensivePlayers[i].progressionRank = 0;
   }
 };
 
+//Updates man blocking assignments for defenders in concept
 Concept.prototype.updateBlocksForDefense = function(){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
 		var blocker = this.offensivePlayers[i];
@@ -101,6 +104,7 @@ Concept.prototype.updateBlocksForDefense = function(){
 	}
 }
 
+//Updates man coverage assignments for receivers in concept
 Concept.prototype.updateCoverageForOffense = function(){
 	for(var i = 0; i < this.defensivePlayers.length; i++){
 		var defender = this.defensivePlayers[i];
@@ -116,6 +120,7 @@ Concept.prototype.updateCoverageForOffense = function(){
 	}
 }
 
+//Runs concept on screen
 Concept.prototype.runConcept = function(){
 		if(this.movementIndex === 0){
 			if(this.runPreSnap()){
@@ -186,6 +191,7 @@ Concept.prototype.resetConcept = function(){
 	}
 }
 
+//Used by buildQuestionAndAnswer in Quiz/Question
 Concept.prototype.removePlayerWithPosition = function(position){
 	for(var i = 0; i < this.offensivePlayers.length; i++){
 		var player = this.offensivePlayers[i];
@@ -569,197 +575,4 @@ function createConceptFromJson(conceptJsonDictionary) {
 	result.updateBlocksForDefense();
 	result.updateCoverageForOffense();
 	return result;
-};
-
-/*********************************/
-/* Static functions for concepts */
-/*********************************/
-
-// createSwoop creates a static version Stanfords swoop blocking concept
-Concept.prototype.createSwoop = function(ballY){
-	// Create Offensive Players
-	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-
-	for (var i = -2; i <= 0; i++) {
-		var xPos = Field.WIDTH / 2 + i*2.5;
-		var yPos = ballY-1.5;
-
-		var offensive_lineman = new Player({
-			num: olPositions[i+2],
-			pos: olPositions[i+2],
-			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29,
-		});
-
-		this.offensiveLinemen.push(offensive_lineman);
-		this.offensivePlayers.push(offensive_lineman);
-	}
-
-	var left_tackle = this.offensiveLinemen[0];
-	var left_guard = this.offensiveLinemen[1];
-	var center = this.offensiveLinemen[2];
-
-	var f = new Player ({
-		num: "F", pos: "F",
-		x: left_tackle.x-2.5,
-		y: left_tackle.y,
-		red: 255, green: 0, blue: 0,
-		eligible: true
-	});
-
-	this.eligibleReceivers.push(f);
-	this.offensivePlayers.push(f);
-
-	// Create Defensive Players
-	var e = new Player ({
-		num: "E", pos: "E",
-		unit: "defense",
-		change: true,
-		x: f.x, y: f.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	var t = new Player ({
-		num: "T", pos: "T",
-		unit: "defense",
-		change: true,
-		x: left_guard.x-1, y: left_guard.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense",
-		change: true,
-		x: left_tackle.x, y: left_tackle.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(e);
-	this.defensivePlayers.push(t);
-	this.defensivePlayers.push(w);
-
-	// Create offensive assignments
-	f.blockingAssignmentArray.push("Down Block Right");
-	left_tackle.blockingAssignmentArray.push("Down Block Right");
-	left_guard.blockingAssignmentArray.push("Down Block Right");
-	left_guard.blockingAssignmentArray.push("Straight Seal Right");
-};
-
-// createCat creates a static version Stanfords cat blocking concept
-Concept.prototype.createCat = function(ballY){
-	// Create Offensive Players
-	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-
-	for (var i = -2; i <= 0; i++) {
-		var xPos = Field.WIDTH / 2 + i*2.5;
-		var yPos = ballY-1.5;
-
-		var offensive_lineman = new Player({
-			num: olPositions[i+2],
-			pos: olPositions[i+2],
-			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29,
-		});
-
-		this.offensiveLinemen.push(offensive_lineman);
-		this.offensivePlayers.push(offensive_lineman);
-	}
-
-	var left_tackle = this.offensiveLinemen[0];
-	var left_guard = this.offensiveLinemen[1];
-	var center = this.offensiveLinemen[2];
-
-	// Create Defensive Players
-	var t = new Player ({
-		num: "T", pos: "T",
-		unit: "defense",
-		change: true,
-		x: left_guard.x-1, y: left_guard.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	var n = new Player ({
-		num: "N", pos: "N",
-		unit: "defense",
-		change: true,
-		x: center.x+0.5, y: center.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	var w = new Player ({
-		num: "W", pos: "W",
-		unit: "defense",
-		change: true,
-		x: left_guard.x-1.25, y: left_guard.y+5,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(t);
-	this.defensivePlayers.push(n);
-	this.defensivePlayers.push(w);
-
-	// Create offensive assignments
-	left_tackle.blockingAssignmentArray.push("Down Block Right");
-	center.blockingAssignmentArray.push(t);
-	center.blockingAssignmentArray.push(w);
-};
-
-// createTO creates a static version Stanfords T.O. blocking concept
-Concept.prototype.createTO = function(ballY){
-	// Create Offensive Players
-	var olPositions = ["LT", "LG", "C", "RG", "RT"];
-
-	for (var i = 1; i <= 2; i++) {
-		var xPos = Field.WIDTH / 2 + i*2.5;
-		var yPos = ballY-1.5;
-
-		var offensive_lineman = new Player({
-			num: olPositions[i+2],
-			pos: olPositions[i+2],
-			x: xPos, y: yPos,
-			red: 143, blue: 29, green: 29
-		});
-
-		this.offensiveLinemen.push(offensive_lineman);
-		this.offensivePlayers.push(offensive_lineman);
-	}
-
-	var right_guard = this.offensiveLinemen[0];
-	var right_tackle = this.offensiveLinemen[1];
-
-	var y = new Player ({
-		num: "Y", pos: "Y",
-		x: right_tackle.x+2.5,
-		y: right_tackle.y,
-		red: 255, green: 0, blue: 0,
-		eligible: true
-	});
-
-	this.eligibleReceivers.push(y);
-	this.offensivePlayers.push(y);
-
-	// Create Defensive Players
-	var e = new Player ({
-		num: "E", pos: "E",
-		unit: "defense",
-		change: true,
-		x: right_tackle.x+1.75, y: right_tackle.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	var s = new Player ({
-		num: "S", pos: "S",
-		unit: "defense",
-		change: true,
-		x: y.x+1.75, y: y.y+2,
-		red: 0, green: 0, blue: 0
-	});
-
-	this.defensivePlayers.push(e);
-	this.defensivePlayers.push(s);
-
-	// Create offensive assignments
-	right_tackle.blockingAssignmentArray.push("Down Block Right");
-	y.blockingAssignmentArray.push("Down Block Right");
 };

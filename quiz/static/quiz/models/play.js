@@ -25,26 +25,6 @@ var Play = function(config) {
 	this.feedbackMessage = config.feedbackMessage || "";
 	this.movementIndex = config.movementIndex || 0;
 	this.notes = config.notes || [];
-
-	this.qb = config.qb || [];
-    this.playName = config.playName || "";
-    this.qb = config.qb || null;
-    this.oline = config.oline || [];
-    this.formation = config.formation || null;
-    this.checks = config.checks || [];
-    this.test = config.test || null;
-    this.inProgress = false;
-    this.newPlay = config.newPlay || false;
-    this.bigPlayer = config.bigPlayer || null;
-    this.id = config.id || null;
-    this.teamID = config.teamID || null;
-    this.positions = config.positions || [];
-    this.positionIDs = config.positionIDs || [];
-    //this.runPlay = config.runPlay || null;
-    this.updated_at = config.updated_at || null;
-    this.created_at = config.created_at || null;
-    this.defensiveFormationID = config.defensiveFormationID || 0;
-    this.defensivePlayObject = config.defensivePlayObject || null;
 };
 
 Play.prototype.getFullName = function(){
@@ -180,7 +160,7 @@ Play.prototype.isValid = function() {
 	// IDEAS: More players in a play than can be in a play.
 	//		  Inelligable setups. Illegal actions.
 
-	if (this.offensivePlayers.length != 11) {
+	if (this.offensivePlayers.length > 11 || this.defensivePlayers.length > 11) {
 		return false;
 	}
 
@@ -671,13 +651,6 @@ Play.prototype.getPassStrength = function(){
   return count;
 };
 
-Play.prototype.isValidPlay = function(){
-  if(!this.formation.isValidPlay()){
-    //return false;
-  }
-  return true;
-};
-
 
 Play.prototype.resetPlayers = function(defensivePlay){
   for(var i = 0; i < this.offensivePlayers.length; i++){
@@ -689,47 +662,6 @@ Play.prototype.resetPlayers = function(defensivePlay){
   for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
       defensivePlay.defensivePlayers[i].resetToStart();
   }
-};
-
-Play.getCurrentBlockingAssignment = function(){
-
-};
-
-Play.prototype.setAllRoutes = function(){
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    this.eligibleReceivers[i].setRoute(this.eligibleReceivers[i].routeNum, this.oline[2]);
-  }
-};
-
-Play.prototype.drawAllPlayers = function(field){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].draw(field);
-  }
-};
-
-Play.prototype.drawDefensivePlayers = function(field){
-	for(var i = 0; i < this.defensivePlayers.length; i++){
-      this.defensivePlayers[i].draw(field);
-  }
-}
-
-Play.prototype.drawAllRoutes = function(field){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].drawRoute(field);
-  }
-};
-
-Play.prototype.drawRunAssignments = function(field){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    var player = this.offensivePlayers[i];
-    if(player.runAssignment){
-        player.runAssignment.draw(player, field);
-    }
-  }
-};
-
-Play.prototype.drawRunPlay = function(field){
-
 };
 
 Play.prototype.getNextProgressionRank = function(){
@@ -746,46 +678,6 @@ Play.prototype.getNextProgressionRank = function(){
 Play.prototype.clearProgression = function(){
   for(var i = 0; i < this.offensivePlayers.length; i++){
       this.offensivePlayers[i].progressionRank = 0;
-  }
-};
-
-Play.prototype.checkProgression = function(){
-  var isCorrect = true;
-  this.eligibleReceivers.forEach(function(player){
-    if(player.rank !== player.progressionRank){
-      isCorrect = false;
-    }
-  })
-  if (isCorrect){
-    this.test.score++;
-    this.test.advanceToNextPlay(this.test.correctAnswerMessage, this.test.pk);
-  }else{
-    this.test.scoreboard.feedbackMessage = "Wrong Answer";
-    this.test.incorrectGuesses++;
-  }
-  $.post( "/quiz/players/"+this.test.playerID+"/tests/"+this.test.id+"/update", {
-    test: JSON.stringify(_.omit(this.test,'plays','defensivePlays', 'defensiveFormations', 'offensiveFormations')),
-    play_id: this.id
-  })
-  this.test.newTest = false;
-  return isCorrect;
-};
-
-Play.prototype.clearRouteDrawings = function(){
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    var p = this.eligibleReceivers[i];
-    p.routeCoordinates = [[p.startX, p.startY]];
-    p.routeNodes = [];
-    p.showPreviousRoute = false;
-    p.showPreviousRouteGuess = false;
-  }
-};
-
-Play.prototype.clearPreviousRouteDisplays = function(){
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    var p = this.eligibleReceivers[i];
-    p.showPreviousRoute = false;
-    p.showPreviousRouteGuess = false;
   }
 };
 
@@ -848,18 +740,6 @@ Play.prototype.clearSelection = function(test, play) {
   }
 };
 
-Play.prototype.saveToDB = function(){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    var assignment = this.offensivePlayers[i].blockingAssignmentObject;
-    if(assignment){
-      //assignment.convertBlockedPlayersToIDs();
-      this.offensivePlayers[i].blockingCoordinates = assignment.convertToCoordinates();
-    }
-  }
-  var playJSON = JSON.stringify(this, ['name', 'formation', 'id', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'blocker', 'runner', 'progressionRank', 'blockingAssignmentUnitIndex', 'blockingAssignmentPlayerIndex', 'blockingAssignmentObject', 'blockedPlayerIDs', 'blockedZone', 'type', 'routeCoordinates', 'blockingCoordinates', 'runAssignment', 'routeToExchange', 'routeAfterExchange', 'defensiveFormationID'])
-  $.post( "teams/broncos/plays/new", { play: playJSON});
-};
-
 Play.prototype.populatePositions = function(){
   var oline = this.positions.filter(function(player) {
     return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
@@ -882,51 +762,6 @@ Play.prototype.addPositionsFromID = function(positionArray){
     }
   }.bind(this))
 }
-
-
-var createPlayFromJSONSeed = function(jsonPlay){
-  var play = new Play({});
-  play.id = jsonPlay.pk;
-  play.playName = jsonPlay.name;
-  play.name = jsonPlay.name;
-  play.positions = jsonPlay.positions;
-  play.teamID = jsonPlay.team;
-  play.formation = jsonPlay.formation;
-  play.created_at = jsonPlay.created_at;
-  play.updated_at = jsonPlay.updated_at;
-  return play;
-};
-
-var createPlayFromJSON = function(jsonPlay){
-  var play = new Play({});
-  play.id = jsonPlay.pk;
-  play.playName = jsonPlay.fields.name;
-  play.name = jsonPlay.fields.name;
-  play.teamID = jsonPlay.fields.team;
-  play.formation = jsonPlay.fields.formation;
-  play.positionIDs = jsonPlay.fields.positions;
-  play.created_at = jsonPlay.fields.created_at;
-  play.updated_at = jsonPlay.fields.updated_at;
-  return play;
-};
-
-Play.prototype.drawBlockingAssignments = function(){
-  this.offensivePlayers.forEach(function(player){
-    if(player.blockingAssignment){
-      strokeWeight(1);
-      stroke(100);
-      line(player.x,player.y, player.blockingAssignment.x, player.blockingAssignment.y);
-    }
-  })
-};
-
-Play.prototype.drawBlockingAssignmentObjects = function(){
-  this.offensivePlayers.forEach(function(player){
-    if(player.blockingAssignmentObject){
-      player.blockingAssignmentObject.draw(player, field);
-    }
-  })
-};
 
 Play.prototype.updateBlockingAssignmentForDefense = function(defensivePlayers){
   this.offensivePlayers.forEach(function(player){

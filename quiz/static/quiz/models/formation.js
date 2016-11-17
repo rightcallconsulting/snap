@@ -26,8 +26,7 @@ var Formation = function(config){
 	this.optionsToCreate = config.optionsToCreate || [];
 	this.feedbackMessage = "";
 	this.id = config.id || null;
-	this.updated_at = config.updated_at || null;
-	this.created_at = config.created_at || null;
+
 	this.positions = config.positions || [];
 	this.dline = config.dline || [];
 	this.oline = config.oline || [];
@@ -619,102 +618,6 @@ Formation.prototype.createOLineAndQB = function(ballY){
 	this.offensivePlayers.push(quarterback);
 };
 
-Formation.prototype.createSkillPlayers = function(){
-	var rb1 = new Player ({
-      x: this.quarterback[0].x,
-      y: this.quarterback[0].y + 60,
-      num: 22,
-      pos: "RB",
-      fill: color(255, 0, 0),
-      progressionRank: 3,
-      routeNum: 2,
-      eligible: true
-  });
-
-  var te1 = new Player ({
-      x: this.offensiveLinemen[0].x - 30,
-      y: this.offensiveLinemen[0].y,
-      num: 80,
-      pos: "TE",
-      fill: color(255, 0, 0),
-      progressionRank: 2,
-      routeNum: 3,
-      eligible: true
-  });
-  var te2 = new Player({
-     x: this.offensiveLinemen[4].x + 40,
-     y: this.offensiveLinemen[4].y + 30,
-     num: 17,
-     pos: "TE",
-     fill: color(255, 0, 0),
-     progressionRank: 4,
-     routeNum: 4,
-     eligible: true
-  });
-  var wr1 = new Player({
-     x: this.offensiveLinemen[0].x - 80,
-     y: this.offensiveLinemen[4].y + 30,
-     num: 88,
-     pos: "WR",
-     fill: color(255, 0, 0),
-     progressionRank: 1,
-     routeNum: 0,
-     eligible: true
-  });
-  var wr2 = new Player({
-     x: this.offensiveLinemen[4].x + 80,
-     y: this.offensiveLinemen[4].y,
-     num: 84,
-     pos: "WR",
-     fill: color(255, 0, 0),
-     progressionRank: 5,
-     routeNum: 1,
-     eligible: true
-  });
-  this.offensivePlayers.push(rb1);
-  this.offensivePlayers.push(te1);
-  this.offensivePlayers.push(te2);
-  this.offensivePlayers.push(wr1);
-  this.offensivePlayers.push(wr2);
-
-  this.eligibleReceivers.push(rb1);
-  this.eligibleReceivers.push(te1);
-  this.eligibleReceivers.push(te2);
-  this.eligibleReceivers.push(wr1);
-  this.eligibleReceivers.push(wr2);
-};
-
-
-/*Formation.prototype.getPlayerFromIndex = function(playerIndex, unitIndex){
-    if(this.unit === "offense"){
-      var unit = this.offensiveLinemen;
-      if(unitIndex === 1){
-          unit = this.wideReceivers;
-      }else if(unitIndex === 2){
-          unit = this.runningBacks;
-      }else if(unitIndex === 3){
-          unit = this.tightEnds;
-      }
-      if(playerIndex >= 0 && playerIndex < unit.length){
-        return unit[playerIndex];
-      }
-      return null;
-    }else{
-      var unit = this.dline;
-      if(unitIndex === 1){
-          unit = this.linebackers;
-      }else if(unitIndex === 2){
-          unit = this.cornerbacks;
-      }else if(unitIndex === 3){
-          unit = this.safeties;
-      }
-      if(playerIndex >= 0 && playerIndex < unit.length){
-        return unit[playerIndex];
-      }
-      return null;
-    }
-}*/
-
 //pos is a str for now, but could be an int code later
 Formation.prototype.getPlayerFromPosition = function(pos) {
 	var players = this.offensivePlayers.filter(function(player) {return player.pos === pos});
@@ -876,77 +779,6 @@ Formation.prototype.clearPreviousRouteDisplays = function(){
   }
 }
 
-Formation.prototype.clearProgression = function(){
-    for(var i = 0; i < this.eligibleReceivers.length; i++){
-        var p = this.eligibleReceivers[i];
-        p.unselect();
-        p.showRoute = false;
-    }
-};
-
-Formation.prototype.clearRouteDrawings = function(){
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    var p = this.eligibleReceivers[i];
-    p.routeCoordinates = [[p.startX, p.startY]];
-    p.routeNodes = [];
-    p.progressionRank = 0;
-    p.showPreviousRoute = false;
-    p.showPreviousRouteGuess = false;
-    p.blocker = false;
-    p.blockingAssignment = null;
-  }
-};
-
-Formation.prototype.clearBlockingAssignments = function(){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    this.offensivePlayers[i].blockingAssignment = null;
-    this.offensivePlayers[i].blockingAssignmentObject = null;
-    this.offensivePlayers[i].unselect();
-  }
-};
-
-Formation.prototype.clearRunAssignments = function(){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    this.offensivePlayers[i].runAssignment = null;
-    this.offensivePlayers[i].runner = false;
-  }
-};
-
-Formation.prototype.drawRunAssignments = function(field){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    var player = this.offensivePlayers[i];
-    if(player.runAssignment){
-        player.runAssignment.draw(player, field);
-    }
-  }
-};
-
-Formation.prototype.drawBlockingAssignmentObjects = function(field){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-    var player = this.offensivePlayers[i];
-    if(player.blockingAssignmentObject){
-      player.blockingAssignmentObject.draw(player, field);
-    }
-  }
-}
-
-Formation.prototype.drawBlockingAssignments = function(field, defensivePlay){
-  this.offensivePlayers.forEach(function(player){
-    if(!player.blockingAssignment && defensivePlay && player.blockingAssignmentUnitIndex && player.blockingAssignmentPlayerIndex){
-      player.blockingAssignment = defensivePlay.getPlayer(player.blockingAssignmentUnitIndex, player.blockingAssignmentPlayerIndex);
-    }
-    if(player.blockingAssignment){
-      var x1 = field.getTranslatedX(player.x);
-      var y1 = field.getTranslatedY(player.y);
-      var x2 = field.getTranslatedX(player.blockingAssignment.x);
-      var y2 = field.getTranslatedY(player.blockingAssignment.y);
-      strokeWeight(1);
-      stroke(100);
-      line(x1, y1, x2, y2);
-    }
-  })
-};
-
 Formation.prototype.findSelectedOL = function(){
 	var selectedOffensiveLineman = this.offensiveLinemen.filter(function(offensiveLineman) {
 		return offensiveLineman.clicked === true;
@@ -965,32 +797,6 @@ Formation.prototype.mouseInOL = function(field){
 	}
 
 	return selectedOffensiveLineman;
-};
-
-Formation.prototype.saveToDB = function(){
-	var formationJSON = "";
-	var cache = [];
-
-	for(var i = 0; i < this.offensivePlayers.length; i++) {
-		p = this.offensivePlayers[i];
-		p.startX = p.x;
-		p.startY = p.y;
-	}
-
-	for(var i = 0; i < this.defensivePlayers.length; i++) {
-		p = this.defensivePlayers[i];
-		p.startX = p.x;
-		p.startY = p.y;
-	}
-
-	try {
-		formationJSON = JSON.stringify(this, ['playName', 'unit', 'offensivePlayers', 'pos', 'startX', 'startY', 'playerIndex', 'id', 'offensiveFormationID', 'defensivePlayers', 'CBAssignment', 'gapXPoint', 'gapYPoint', 'zoneXPoint', 'zoneYPoint'])
-		$.post( "teams/broncos/formations/new", {formation: formationJSON})
-			.done(function() { /* use for debugging information */ })
-			.fail(function() { /* use for debugging information */ });
-	} catch(e) {
-		console.log(e);
-	}
 };
 
 var createFormationButtons = function(formationArray){
@@ -1533,32 +1339,6 @@ var isFormationClicked = function(formationButtonArray, field){
     }
   })
   return formationClicked;
-};
-
-//Formatting differences with Nick's code. Will eventually merge
-var createFormationFromJSONSeed = function(jsonFormation){
-  var formation = new Formation({
-    id: jsonFormation.id,
-    name: jsonFormation.name,
-    playName: jsonFormation.name,
-    offensiveFormationID: jsonFormation.offensiveFormationID,
-    teamID: jsonFormation.team,
-    unit: jsonFormation.unit,
-  });
-  formation.positions = jsonFormation.positions;
-  return formation;
-};
-
-var createFormationFromJSON = function(jsonFormation){
-  var formation = new Formation({
-    id: jsonFormation.pk,
-    name: jsonFormation.fields.name,
-    playName: jsonFormation.fields.name,
-    offensiveFormationID: jsonFormation.fields.offensiveFormationID,
-    teamID: jsonFormation.fields.team,
-    unit: jsonFormation.fields.unit
-  });
-  return formation;
 };
 
 Formation.prototype.createDummyFormation = function(){

@@ -6,19 +6,7 @@ left hash: 60 feet in, 2 feet wide (starts at 59 feet)
 right hash: 100 feet, 2 feet wide (starts at 61 feet)
 secondary hashes: 2 feet wide, 1 foot from sideline?
 numbers: 6 feet high, 4 feet wide, top of numbers are 9 yards (27 feet) from sideline
-*/
-
-/* Probably not used */
-var FieldNumber = function(config){
-	this.num = config.num || 50,
-	this.x1 = config.x1 || 0,
-	this.y1 = config.y1 || 0,
-	this.x2 = config.x2 || 0,
-	this.y2 = config.y2 || 0
-	this.viewPoint = config.viewPoint || "offense";
-};
-
-FieldNumber.prototype.draw = function(){};
+*/ 
 
 var Field = function(config){
 	this.heightInYards = config.heightInYards || 30;

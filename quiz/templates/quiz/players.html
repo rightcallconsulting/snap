@@ -1,9 +1,0 @@
-{% if player_list %}
-    <ul>
-    {% for player in player_list %}
-        <li><a href="/quiz/players/{{ player.id }}/">{{ player.full_name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No players are available.</p>
-{% endif %}
