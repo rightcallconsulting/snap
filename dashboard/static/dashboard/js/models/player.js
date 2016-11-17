@@ -43,11 +43,6 @@ var Player = function(config) {
 
 	// Player movement - Sam is trying stuff here
 	this.movementIndex = config.movementIndex || 0;
-
-	// Older stuff
-	this.clicked = config.clicked || false;
-	this.num = config.num || 0;
-	this.rank = config.rank || 0;
 };
 
 //***************************************************************************//
@@ -706,7 +701,6 @@ Player.prototype.deepCopy = function() {
 		eligible: this.eligible,
 		selected: this.selected,
 		pos: this.pos,
-		num: this.num,
 		unit: this.unit,
 		name: this.name,
 		notes: this.notes,
@@ -797,27 +791,26 @@ Player.prototype.containsPoint = function(x, y){
 /******************************************************************************************************************************/
 
 Player.prototype.establishFill = function(){
-  if(this.unit ==="defense"){
-	this.red = 0;
-	this.green = 0;
-	this.blue = 0;
-  }
-  else{
-	if(this.pos==="QB"){
-	  this.red = 212;
-	  this.green = 130;
-	  this.blue = 130;
-	}
-	else if(this.pos==="OL" || this.pos ==="LT" || this.pos ==="LG" || this.pos ==="C" || this.pos ==="RG" || this.pos ==="RT"){
-	  this.red = 143;
-	  this.green = 29;
-	  this.blue = 29;
+	if(this.unit ==="defense"){
+		this.red = 0;
+		this.green = 0;
+		this.blue = 0;
 	}
 	else{
-	  this.red = 255;
-	  this.green = 0;
-	  this.blue = 0;
+		if(this.pos==="QB"){
+			this.red = 212;
+			this.green = 130;
+			this.blue = 130;
+		}
+		else if(this.pos==="OL" || this.pos ==="LT" || this.pos ==="LG" || this.pos ==="C" || this.pos ==="RG" || this.pos ==="RT"){
+			this.red = 143;
+			this.green = 29;
+			this.blue = 29;
+		}
+		else{
+			this.red = 255;
+			this.green = 0;
+			this.blue = 0;
+		}
 	}
-  }
-  this.fill = color(this.red, this.green, this.blue);
 };

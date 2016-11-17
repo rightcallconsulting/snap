@@ -5,11 +5,9 @@
 //																			 //
 //***************************************************************************//
 //																			 //
-// A play object represents one offensive or defensive play. Each instance   //
-// of a play object is associated with one offensive formation and one       //
-// defensive formation. The object maintains an array of all of the players  //
+// A play object represents one offensive or defensive play. //
+// The object maintains an array of all of the players  //
 // in the play and their positions on the field.				 			 //
-//																			 //
 //***************************************************************************//
 
 var Play = function(config) {
@@ -65,21 +63,6 @@ Play.prototype.drawAssignments = function (field) {
 
 	for(var i = 0; i < numberOfDefensivePlayers; i++) {
 		this.defensivePlayers[i].drawAssignments(field);
-	}
-};
-
-// drawAssignmentsExceptBlocks draws the assignments except blocking
-// assignments of all of the players in a play.
-Play.prototype.drawAssignmentsExceptBlocks = function (field) {
-	var numberOfOffensivePlayers = this.offensivePlayers.length;
-	var numberOfDefensivePlayers = this.defensivePlayers.length;
-
-	for(var i = 0; i < numberOfOffensivePlayers; i++) {
-		this.offensivePlayers[i].drawRoute(field);
-	}
-
-	for(var i = 0; i < numberOfDefensivePlayers; i++) {
-		this.defensivePlayers[i].drawDefensiveMovement(field);
 	}
 };
 
@@ -369,11 +352,13 @@ Play.prototype.scoutFromFormation = function(formation) {
 	for (var i = 0; i < scout_formation.defensivePlayers.length; ++i) {
 		this.defensivePlayers.push(scout_formation.defensivePlayers[i].deepCopy());
 	}
+	this.scoutName = formation.name;
 };
 
 // removeScoutFormation gets rid of the defensive look
 Play.prototype.removeScoutFormation = function() {
 	this.defensivePlayers = [];
+	this.scoutName = "";
 };
 
 /*********************************/
@@ -637,33 +622,6 @@ Play.prototype.removePlayerWithPosition = function(position){
 	return 0;
 }
 
-//POSITIVE = STRONG RIGHT, NEGATIVE = STRONG LEFT, 0 = EVEN
-Play.prototype.getPassStrength = function(){
-  var centerX = this.oline[2].x;
-  var count = 0;
-  this.eligibleReceivers.forEach(function(wr){
-    if(wr.x > centerX){
-      count++;
-    }else{
-      count--;
-    }
-  })
-  return count;
-};
-
-
-Play.prototype.resetPlayers = function(defensivePlay){
-  for(var i = 0; i < this.offensivePlayers.length; i++){
-      this.offensivePlayers[i].resetToStart();
-      this.offensivePlayers[i].showRoute = false;
-      this.offensivePlayers[i].showPreviousRoute = false;
-      this.offensivePlayers[i].showPreviousRouteGuess = false;
-  }
-  for(var i = 0; i < defensivePlay.defensivePlayers.length; i++){
-      defensivePlay.defensivePlayers[i].resetToStart();
-  }
-};
-
 Play.prototype.getNextProgressionRank = function(){
 	var highest = 0;
   for(var i = 0; i < this.offensivePlayers.length; i++){
@@ -681,87 +639,11 @@ Play.prototype.clearProgression = function(){
   }
 };
 
-Play.prototype.findSelectedWR = function(){
-  var selectedWR = this.eligibleReceivers.filter(function(wr) {
-    return wr.clicked === true;
-  })[0];
-  return selectedWR;
-};
-
 Play.prototype.clearSelectedReceivers = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
-    this.eligibleReceivers[i].clicked = false;
+    this.eligibleReceivers[i].selected = false;
   }
 };
-
-Play.prototype.mouseInReceiverOrNode = function(){
-  for(var i = 0; i < this.eligibleReceivers.length; i++){
-    var p = this.eligibleReceivers[i];
-    if (p.isMouseInside(field)){
-      var receiverClicked = p;
-    }
-    for(var j = 0; j < p.routeNodes.length; j++){
-      var n = p.routeNodes[j];
-      if (n.isMouseInside(field)){
-        var selectedNode = n;
-      }
-    }
-  }
-  return [receiverClicked, selectedNode];
-};
-
-Play.prototype.playerBeingTested = function(){
-  var playerBeingTested = this.offensivePlayers.filter(function(player){
-    return player.isBeingTested === true;
-  })[0];
-  return playerBeingTested;
-};
-
-Play.prototype.clearSelection = function(test, play) {
-  if (test.showBigPlayers) {
-    if (this.bigPlayer !== null && this.bigPlayer.clicked) {
-      this.bigPlayer.unselect();
-    } else if (this.bigDefender !== null && this.bigDefender.clicked) {
-      this.bigDefender.unselect();
-    }
-  } else {
-    for (var i = 0; i < play.defensivePlayers.length; i++) {
-      var p = play.defensivePlayers[i];
-      if (p.clicked) {
-        p.unselect();
-      }
-    }
-    for (var i = 0; i < this.offensivePlayers.length; i++) {
-      var p = this.offensivePlayers[i];
-      if (p.clicked) {
-        p.unselect();
-      }
-    }
-  }
-};
-
-Play.prototype.populatePositions = function(){
-  var oline = this.positions.filter(function(player) {
-    return player.pos ==="OL" || player.pos ==="LT" || player.pos ==="LG" || player.pos ==="C" || player.pos ==="RG" || player.pos ==="RT";
-  });
-  oline.forEach(function(player){this.oline.push(player)}.bind(this));
-  var qb = this.positions.filter(function(player) {return player.pos ==="QB"});
-  this.qb = qb
-  var receiverPositions = ["A", "B", "F", "X", "Y", "Z", "H"]
-  var eligibleReceivers = this.positions.filter(function(player) {
-    return receiverPositions.indexOf(player.pos) >= 0;
-  });
-  this.eligibleReceivers = eligibleReceivers;
-  this.offensivePlayers = this.positions;
-};
-
-Play.prototype.addPositionsFromID = function(positionArray){
-  positionArray.forEach(function(position){
-    if(this.positionIDs.includes(position.id)){
-      this.positions.push(position);
-    }
-  }.bind(this))
-}
 
 Play.prototype.updateBlockingAssignmentForDefense = function(defensivePlayers){
   this.offensivePlayers.forEach(function(player){
