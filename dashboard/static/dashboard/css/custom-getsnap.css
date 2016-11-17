@@ -10,6 +10,14 @@
 getsnap
 *************************************************************************/
 
+div#goto-login p {
+	color: #FFF;
+}
+
+div#goto-login p a {
+	color: #9ccc65;
+}
+
 form.getsnap-form {
 	width: 375px;
 	height: inherit;
