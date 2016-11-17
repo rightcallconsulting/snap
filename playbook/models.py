@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 from django.db import models
 
 #from dashboard.models import QuestionAttempted, Player
-from getsnap.models import Team
+#from getsnap.models import Team
 
 class Concept(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
 	unit = models.CharField(max_length=25, default="offense", blank=True, null=True)
 	scout = models.BooleanField(default=False)
 
@@ -39,7 +39,7 @@ class Concept(models.Model):
 
 class Formation(models.Model):
 	name = models.CharField(max_length=100)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
 	unit = models.CharField(max_length=100, default="offense")
 	scout = models.BooleanField(default=False)
 
@@ -72,7 +72,7 @@ class Formation(models.Model):
 class Play(models.Model):
 	name = models.CharField(max_length=100)
 	scoutName = models.CharField(max_length=100, default="", blank=True, null=False)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
 	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
 	scout = models.BooleanField(default=False)
 

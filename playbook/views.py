@@ -68,6 +68,7 @@ def create_formation(request):
 			'page_header': 'CREATE FORMATION'
 		})
 
+@login_required
 def create_defensive_look(request):
 	coach = request.user.coach
 	team = coach.team
@@ -103,6 +104,7 @@ def create_defensive_look(request):
 		})
 
 # Plays
+@login_required
 def create_play(request):
 	coach = request.user.coach
 	team = coach.team

@@ -21,4 +21,5 @@ urlpatterns = [
 	url(r'', include('dashboard.urls')),
 	url(r'', include('getsnap.urls')),
 	url(r'playbook/', include('playbook.urls')),
+	url(r'quizzes/', include('quizzes.urls')),
 ]

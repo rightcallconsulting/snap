@@ -19,20 +19,6 @@ urlpatterns = [
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
-	# Quizzes
-	url(r'^quizzes/assigned$', views.assigned_quizzes, name='assigned_quizzes'),
-	url(r'^quizzes/create$', views.create_quiz, name='create_quiz'),
-	url(r'^quizzes/manage/(?P<quiz_id>[0-9]+)$', views.manage_quiz, name='manage_quiz'),
-	url(r'^quizzes/todo$', views.quizzes_todo, name='quizzes_todo'),
-	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)/(?P<position>.+)$', views.take_quiz, name='take_quiz'),
-	url(r'^quizzes/take/(?P<quiz_id>[0-9]+)$', views.take_quiz, name='take_quiz'),
-	url(r'^quizzes/submit$', views.submit_quiz, name='submit_quiz'),
-	url(r'^quizzes/custom$', views.custom_quizzes, name='custom_quizzes'),
-
-	url(r'^quizzes/custom/formation$', views.formation_quizzes, name='formation_quizzes'),
-	url(r'^quizzes/custom/play$', views.play_quizzes, name='play_quizzes'),
-	url(r'^quizzes/custom/concept$', views.concept_quizzes, name='concept_quizzes'),
-
 	# Analytics
 	url(r'^analytics$', views.plays_analytics, name='plays_analytics'), # this will direct to the play analyitics until I implement an analytics page
 	url(r'^analytics/plays$', views.plays_analytics, name='plays_analytics'),

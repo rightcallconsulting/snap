@@ -38,6 +38,7 @@ INSTALLED_APPS = (
 	'dashboard',
 	'getsnap',
 	'playbook',
+	'quizzes',
 	'debug_toolbar',
 	'storages',
 	'datetimewidget',

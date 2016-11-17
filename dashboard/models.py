@@ -11,8 +11,9 @@ from datetimewidget.widgets import DateTimeWidget
 from datetime import datetime
 from IPython import embed
 
-from getsnap.models import UserCreateForm, Team
-from playbook.models import Concept, Formation, Play
+#from getsnap.models import UserCreateForm, Team
+#rom playbook.models import Concept, Formation, Play
+#from quizzes.models import Quiz
 
 class Player(models.Model):
 	YEAR_CHOICES = (
@@ -33,7 +34,7 @@ class Player(models.Model):
 	year = models.CharField(max_length=25, blank=True, null=True, choices=YEAR_CHOICES)
 	unit = models.CharField(max_length=20, blank=True, null=True) # offense or defense
 	number = models.IntegerField(blank=True, null=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, blank=True, null=True)
 	is_being_tested = models.BooleanField(default=False) # true if player has been assigned a test
 	image_url = models.ImageField(blank=True, null=True)
 	starter = models.BooleanField(default=False)
@@ -61,7 +62,7 @@ class Coach(models.Model):
 	title = models.CharField(max_length=120, blank=True, null=True)
 	created_at = models.DateTimeField(auto_now_add=True) # set when it's created
 	updated_at = models.DateTimeField(auto_now=True) # set every time it's updated
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, null=True, blank=True)
 
 	def testing_this(self):
 		return self.first_name
@@ -83,7 +84,7 @@ class PlayerGroup(models.Model):
 		]
 
 	name = models.CharField(max_length=30, blank=True, null=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, null=True, blank=True)
 	players = models.ManyToManyField(Player, blank=True)
 
 	position_group = models.BooleanField(default=False)
@@ -145,53 +146,15 @@ class Authentication(object):
 		except AttributeError:
 			return None
 
-class CustomQuiz(models.Model):
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	player = models.ForeignKey(Player, on_delete=models.CASCADE)
-
-	content_type = models.CharField(max_length=25, default="play") #formation, play, concept
-	number_of_questions = models.IntegerField(default=0)
-	ordering = models.CharField(max_length=25, default="recent") #recent, missed, random
-	quiz_type = models.CharField(max_length=25, default="identification") #identification, assignment, alignment
-	position = models.CharField(max_length=25, default="") #abbreviation
-	type_of_assignment = models.CharField(max_length=25, default="all") #all, blocks, etc.
-
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-
-
-class Quiz(models.Model):
-	name = models.CharField(max_length=50, blank=True, null=True)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	author = models.ForeignKey(User, on_delete=models.CASCADE)
-	unit = models.CharField(max_length=25, default="offense")
-	players = models.ManyToManyField(Player, related_name="players")
-	submissions = models.ManyToManyField(Player, blank=True, related_name="submissions")
-
-	formations = models.ManyToManyField(Formation, blank=True)
-	plays = models.ManyToManyField(Play, blank=True)
-	concepts = models.ManyToManyField(Concept, blank=True)
-
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-
-	class Meta:
-		verbose_name = "Quiz"
-		verbose_name_plural = "Quizzes"
-		ordering = ["-created_at"]
-
-	def __str__(self):
-		return self.name
-
 class QuestionAttempted(models.Model):
 	player = models.ForeignKey(Player, on_delete=models.CASCADE)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, blank=True)
 	time = models.DateTimeField(auto_now_add=True)
-	quiz = models.ForeignKey(Quiz)
+	quiz = models.ForeignKey('quizzes.Quiz')
 
-	formation = models.ForeignKey(Formation, blank=True, null=True)
-	play = models.ForeignKey(Play, blank=True, null=True)
-	concept = models.ForeignKey(Concept, blank=True, null=True)
+	formation = models.ForeignKey('playbook.Formation', blank=True, null=True)
+	play = models.ForeignKey('playbook.Play', blank=True, null=True)
+	concept = models.ForeignKey('playbook.Concept', blank=True, null=True)
 
 	score = models.IntegerField(null=True) # 0 = incorrect, 1 = correct, null = skipped
 
