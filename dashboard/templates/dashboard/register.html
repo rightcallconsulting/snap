@@ -1,70 +1,53 @@
+{% extends 'dashboard/logged_out_header.html' %}
 {% load staticfiles %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>Right Call Consulting: Snap</title>
-		<link rel="icon" href="{% static 'dashboard/images/rcc.ico' %}">
+{% block page %}
+	<div class="login-wrapper">
+		<div class="text-center">
+			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
+		</div>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="">
-		<meta name="author" content="">
+		<div class="panel panel-default">
+			<div class="panel-heading clearfix">
+				<div class="pull-left">
+					<i class="fa fa-plus-circle fa-lg"></i> Register
+				</div>
 
-		{% load staticfiles %}
-		{% include "dashboard/includes/css.html" %}
-	</head>
+				<div class="pull-right">
+					<span style="font-size:11px;">Already have an account?</span>
 
-	<body class="overflow-hidden login-body" style="background-image:url({% static 'dashboard/images/login-background-min.png' %}); background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
-		<div class="login-wrapper">
-			<div class="text-center">
-				<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
-		    </div>
-		    
-			<div class="panel panel-default">
-				<div class="panel-heading clearfix">
-					<div class="pull-left">
-						<i class="fa fa-plus-circle fa-lg"></i> Register
-					</div>
+					<a class="btn btn-default btn-xs login-link" href="login" style="margin-top:-2px;">
+						<i class="fa fa-sign-in"></i> Sign In
+					</a>
+				</div>
+			</div><!--/panel-heading -->
 
-					<div class="pull-right">
-						<span style="font-size:11px;">Already have an account?</span>
+			<div class="panel-body">
+				<form action="/register" method="post" class="form-login" enctype="multipart/form-data"> 
+					{% csrf_token %}
 
-						<a class="btn btn-default btn-xs login-link" href="login" style="margin-top:-2px;">
-							<i class="fa fa-sign-in"></i> Sign In
-						</a>
-					</div>
-				</div><!--/panel-heading -->
+					{% for field in form %}
+						{% if field.label == 'Coach' or field.label == 'Player' %}
+							<div class="form-group">
+								<label class="label-checkbox">
+									 <input type="checkbox" name="{{field.label}}" />
+									 <span class="custom-checkbox info bounceIn animation-delay6"></span>
+									 {{field.label}}
+								</label>
+							</div><!-- /form-group -->
+						{% else %}
+							<div class="form-group">
+								{{ field.label_tag }}
+								{{ field }}
+							</div>
+						{% endif %}
+					{% endfor %}
 
-				<div class="panel-body">
-					<form action="/register" method="post" class="form-login" enctype="multipart/form-data"> 
-						{% csrf_token %}
+					<hr>
 
-						{% for field in form %}
-							{% if field.label == 'Coach' or field.label == 'Player' %}
-								<div class="form-group">
-									<label class="label-checkbox">
-										 <input type="checkbox" name="{{field.label}}" />
-										 <span class="custom-checkbox info bounceIn animation-delay6"></span>
-										 {{field.label}}
-									</label>
-								</div><!-- /form-group -->
-							{% else %}
-								<div class="form-group">
-									{{ field.label_tag }}
-									{{ field }}
-								</div>
-							{% endif %}
-						{% endfor %}
-
-						<hr>
-
-						<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
-					</form>
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
-		</div><!-- /login-wrapper -->
-
-		{% include "dashboard/includes/js.html" %}
-	</body>
-</html>
+					<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
+				</form>
+			</div><!-- /panel-body -->
+		</div><!-- /panel -->
+	</div><!-- /login-wrapper -->
+{% endblock %}
