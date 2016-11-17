@@ -11,7 +11,7 @@
 					</tr>
 					<tr>
 						<th>QUIZ</th>
-						<th>SUBMITTED</th>
+						<th>POSITION</th>
 						<th>TAKE</th>
 					</tr>
 				</thead>
@@ -19,12 +19,19 @@
 					{% for quiz in quizzes %}
 						<tr>
 							<td>{{ quiz.0 }}</td>
+							<td><select name="position" class="unit-form form-sm" id="position-select-{{quiz.2}}">
+								<optgroup>
+									{% for position_group in position_groups %}
+										<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
+									{% endfor %}
+								</optgroup>
+							</select></td>
 							{% if quiz.1 %}
-							<td><i class="fa fa-check fa-lg"></i></td>
-							<td><a href="/quizzes/take/{{ quiz.2 }}" >Retake {{ quiz.0 }}</a></td>
+							<!--<td><i class="fa fa-check fa-lg"></i></td>-->
+							<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Retake {{ quiz.0 }}</button></td>
 							{% else %}
-							<td><i class="fa fa-close fa-lg"></i></td>
-							<td><a href="/quizzes/take/{{ quiz.2 }}" >Take {{ quiz.0 }}</a></td>
+							<!--<td><i class="fa fa-close fa-lg"></i></td>-->
+							<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Take {{ quiz.0 }}</button></td>
 							{% endif %}
 						</tr>
 					{% endfor %}
@@ -50,4 +57,13 @@
 {% endblock %}
 
 {% block javascript %}
+	<script type="text/javascript">
+		function takeQuiz(buttonClicked){
+			var quizID = buttonClicked.dataset["quizid"];
+			var selectID = "position-select-" + quizID;
+			var positionSelect = document.getElementById(selectID)
+			var path = "/quizzes/take/" + quizID + "/" + positionSelect.value;
+			window.location.href = path;
+		}
+	</script>
 {% endblock %}

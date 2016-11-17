@@ -312,6 +312,7 @@
 			concept.drawPlayers(field);
 
 			scout_formation.drawPlayers(field);
+			scout_formation.drawAssignments(field);
 			dummy_offense.drawPlayers(field);
 
 			fill(176,176,176);
@@ -912,6 +913,7 @@
 
 				for (i in scout_formations) {
 					if (scout_formation_name === scout_formations[i].name) {
+						scout_formations[i].updateCoverageForOffense(dummy_offense)
 						scout_formation = scout_formations[i].deepCopy();
 						break;
 					}

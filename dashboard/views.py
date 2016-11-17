@@ -13,7 +13,7 @@ import simplejson
 from random import shuffle
 
 from quiz.models import Player, Team
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation, CustomQuiz
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -31,6 +31,7 @@ def homepage(request):
 		team = player.team
 		quizzes = Quiz.objects.filter(team=team, players__in=[player])
 		quizzes_table = []
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 		for quiz in quizzes:
 			quiz_information = []
@@ -110,6 +111,7 @@ def homepage(request):
 			'newsfeed': newsfeed,
 			'quizzes': quizzes_table,
 			'team': team,
+			'position_groups': position_groups,
 			'page_header': 'DASHBOARD'
 		})
 	else:
@@ -809,6 +811,7 @@ def quizzes_todo(request):
 	team = player.team
 	quizzes = Quiz.objects.filter(team=team, players__in=[player])
 	quizzes_table = []
+	position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 	for quiz in quizzes:
 		quiz_information = []
@@ -844,11 +847,12 @@ def quizzes_todo(request):
 	return render(request, 'dashboard/todo.html', {
 			'quizzes': quizzes_table,
 			'team': team,
+			'position_groups': position_groups,
 			'page_header': 'TODO'
 		})
 
 @user_passes_test(lambda u: u.myuser.is_a_player)
-def take_quiz(request, quiz_id):
+def take_quiz(request, quiz_id, position=''):
 	team = request.user.player.team
 	player = request.user.player
 	if request.method == 'POST':
@@ -890,6 +894,9 @@ def take_quiz(request, quiz_id):
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
+
+		if len(position) > 0:
+			position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player], abbreviation=position)
 
 		return render(request, 'dashboard/take_quiz.html', {
 			'quiz': quiz,
@@ -935,6 +942,8 @@ def formation_quizzes(request, unit="offense"):
 	order_of_questions = str(request.GET['order'])
 	formations = list(Formation.objects.filter(team=team, scout=False))
 
+	custom_quiz = CustomQuiz(team=team, player=player, content_type="formation",number_of_questions=number_of_questions,ordering=order_of_questions,quiz_type=type_of_quiz)
+
 	### SORT THE FORMATIONS BY WHICHEVER METHOD IS SELECTED ###
 	if order_of_questions == "random":
 		shuffle(formations)
@@ -950,6 +959,8 @@ def formation_quizzes(request, unit="offense"):
 		for formation in formations:
 			formation_names.append(formation.name)
 		formations = formations[0:number_of_questions]
+
+		custom_quiz.save()
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -971,6 +982,8 @@ def formation_quizzes(request, unit="offense"):
 
 		formations = filtered_formations[0:number_of_questions]
 
+		custom_quiz.position = position
+		custom_quiz.save()
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
@@ -989,6 +1002,8 @@ def play_quizzes(request, unit="offense"):
 
 	plays = list(Play.objects.filter(team=team, scout=False))
 
+	custom_quiz = CustomQuiz(team=team, player=player, content_type="play",number_of_questions=number_of_questions,ordering=order_of_questions,quiz_type=type_of_quiz)
+
 	### SORT THE PLAYS BY WHICHEVER METHOD IS SELECTED ###
 	if order_of_questions == "random":
 		shuffle(plays)
@@ -1004,6 +1019,7 @@ def play_quizzes(request, unit="offense"):
 		for play in plays:
 			play_names.append(play.name)
 		plays = plays[0:number_of_questions]
+		custom_quiz.save()
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -1015,6 +1031,10 @@ def play_quizzes(request, unit="offense"):
 		position = request.GET['position'].upper()
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
 		type_of_assignment = str(request.GET['type-of-assignment'])
+
+		custom_quiz.position = position
+		custom_quiz.type_of_assignment = type_of_assignment
+		custom_quiz.save()
 
 		filtered_plays = []
 		for play in plays:
@@ -1076,6 +1096,9 @@ def play_quizzes(request, unit="offense"):
 
 		plays = filtered_plays[0:number_of_questions]
 
+		custom_quiz.position = position
+		custom_quiz.save()
+
 		return render(request, 'dashboard/call_quiz.html', {
 			'player': player,
 			'team': team,
@@ -1089,11 +1112,21 @@ def play_quizzes(request, unit="offense"):
 		position = request.GET['position'].upper()
 		position_type = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)[0].position_type
 
+		custom_quiz.position = position
+		custom_quiz.save()
+
 		filtered_plays = []
 		for play in plays:
 			play_dict = json.loads(play.playJson)
 			offensive_players = play_dict['offensivePlayers']
 			for player_dict in offensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_plays.append(play)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
+			defensive_players = play_dict['defensivePlayers']
+			for player_dict in defensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
 					filtered_plays.append(play)
@@ -1121,6 +1154,8 @@ def concept_quizzes(request, unit="offense"):
 	order_of_questions = str(request.GET['order'])
 	concepts = list(Concept.objects.filter(team=team))
 
+	custom_quiz = CustomQuiz(team=team, player=player, content_type="concept",number_of_questions=number_of_questions,ordering=order_of_questions,quiz_type=type_of_quiz)
+
 	### SORT THE CONCEPTS BY WHICHEVER METHOD IS SELECTED ###
 	if order_of_questions == "random":
 		shuffle(concepts)
@@ -1136,6 +1171,8 @@ def concept_quizzes(request, unit="offense"):
 		for concept in concepts:
 			concept_names.append(concept.name)
 		concepts = concepts[0:number_of_questions]
+
+		custom_quiz.save()
 		return render(request, 'dashboard/identification_quiz.html', {
 			'player': player,
 			'team': team,
@@ -1186,6 +1223,10 @@ def concept_quizzes(request, unit="offense"):
 						break
 
 		concepts = filtered_concepts[0:number_of_questions]
+
+		custom_quiz.type_of_assignment = type_of_assignment
+		custom_quiz.position = position
+		custom_quiz.save()
 		return render(request, 'dashboard/assignment_quiz.html', {
 			'player': player,
 			'team': team,
@@ -1213,6 +1254,8 @@ def concept_quizzes(request, unit="offense"):
 
 		concepts = filtered_concepts[0:number_of_questions]
 
+		custom_quiz.position = position
+		custom_quiz.save()
 		return render(request, 'dashboard/call_quiz.html', {
 			'player': player,
 			'team': team,
@@ -1236,9 +1279,18 @@ def concept_quizzes(request, unit="offense"):
 					filtered_concepts.append(concept)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+			defensive_players = concept_dict['defensivePlayers']
+			for player_dict in defensive_players:
+				player_position = str(player_dict['pos'])
+				if player_position == position:
+					filtered_concepts.append(concept)
+					if 'call' in player_dict and len(player_dict['call']) > 0:
+						call_options.append(player_dict['call'])
 
 		concepts = filtered_concepts[0:number_of_questions]
 
+		custom_quiz.position = position
+		custom_quiz.save()
 		return render(request, 'dashboard/game_mode_quiz.html', {
 			'player': player,
 			'team': team,
