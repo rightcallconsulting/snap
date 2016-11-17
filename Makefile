@@ -5,7 +5,7 @@ install:
 	sudo pip install --ignore-installed -r requirements.txt
 
 ###############################################################################
-# Local build 
+# Local build
 ###############################################################################
 
 # Flush the database
@@ -14,12 +14,12 @@ flush:
 
 # Make migrations to the database
 migrations:
-	python manage.py makemigrations --settings=quiz_master.settings.local 
+	python manage.py makemigrations --settings=quiz_master.settings.local
 	python manage.py migrate --settings=quiz_master.settings.local
 
 # Load seed file into database
 load-data:
-	python manage.py loaddata seed.json --settings=quiz_master.settings.local 
+	python manage.py loaddata seed.json --settings=quiz_master.settings.local
 
 # Build the local version of the website
 # If issues with build, check to make sure postgres is running, flush the database, and reinstall the requirements
@@ -35,7 +35,7 @@ run:
 fir:
 	python manage.py flush --settings=quiz_master.settings.local
 	sudo pip install -r requirements.txt
-	python manage.py loaddata seed.json --settings=quiz_master.settings.local 
+	python manage.py loaddata seed.json --settings=quiz_master.settings.local
 	python manage.py runserver --settings=quiz_master.settings.local
 
 ###############################################################################
@@ -44,11 +44,11 @@ fir:
 
 # Dump data into seed.json
 seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/seed.json --settings=quiz_master.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/seed.json --settings=quiz_master.settings.local
 
 # Dump data into dylan_seed.json
 dylan-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/dylan_seed.json --settings=quiz_master.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/dylan_seed.json --settings=quiz_master.settings.local
 
 # Load dylan seed file into database
 load-dylan:
@@ -57,33 +57,33 @@ load-dylan:
 
 # Dump data into sam_seed.json
 sam-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/sam_seed.json --settings=quiz_master.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/sam_seed.json --settings=quiz_master.settings.local
 
 # Load dylan seed file into database
 load-sam:
 	python manage.py loaddata sam_seed.json --settings=quiz_master.settings.local
-	python manage.py runserver --settings=quiz_master.settings.local 
+	python manage.py runserver --settings=quiz_master.settings.local
 
 # Dump data into stanford_seed.json
 stanford-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/stanford_seed.json --settings=quiz_master.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/stanford_seed.json --settings=quiz_master.settings.local
 
 # Load stanford seed file into database
 load-stanford:
 	python manage.py loaddata stanford_seed.json --settings=quiz_master.settings.local
-	python manage.py runserver --settings=quiz_master.settings.local 
+	python manage.py runserver --settings=quiz_master.settings.local
 
 # Dump data into rcc_seed.json
 rcc-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > quiz/fixtures/rcc_seed.json --settings=quiz_master.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/rcc_seed.json --settings=quiz_master.settings.local
 
 # Load stanford seed file into database
 load-rcc:
 	python manage.py loaddata rcc_seed.json --settings=quiz_master.settings.local
-	python manage.py runserver --settings=quiz_master.settings.local 
+	python manage.py runserver --settings=quiz_master.settings.local
 
 ###############################################################################
-# Django/python development commands 
+# Django/python development commands
 ###############################################################################
 superuser:
 	python manage.py createsuperuser --settings=quiz_master.settings.local
@@ -102,7 +102,7 @@ test:
 ###############################################################################
 
 migrations-heroku:
-	heroku run python manage.py makemigrations 
+	heroku run python manage.py makemigrations
 	heroku run python manage.py migrate
 
 flush-heroku:
