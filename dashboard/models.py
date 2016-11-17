@@ -310,6 +310,21 @@ class Position(models.Model):
 		"""Dict representation of the instance (used in JSON APIs)."""
 		return model_to_dict(self)
 
+class CustomQuiz(models.Model):
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	player = models.ForeignKey(Player, on_delete=models.CASCADE)
+
+	content_type = models.CharField(max_length=25, default="play") #formation, play, concept
+	number_of_questions = models.IntegerField(default=0)
+	ordering = models.CharField(max_length=25, default="recent") #recent, missed, random
+	quiz_type = models.CharField(max_length=25, default="identification") #identification, assignment, alignment
+	position = models.CharField(max_length=25, default="") #abbreviation
+	type_of_assignment = models.CharField(max_length=25, default="all") #all, blocks, etc.
+
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+
 class Quiz(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
