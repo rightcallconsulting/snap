@@ -6,6 +6,10 @@
 	height: 0;
 }
 
+/*************************************************************************
+login
+*************************************************************************/
+
 .login-wrapper {
 	height: 100%;
 	background: transparent;
@@ -20,9 +24,9 @@
 	max-width: 400px;
 }
 
-.panel {
+/*.panel {
 	margin: 0% auto 2% auto;
 	width: 35%;
 	min-width: 300px;
 	max-width: 400px;
-}
+}*/
