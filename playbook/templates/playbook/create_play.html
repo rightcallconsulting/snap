@@ -773,7 +773,7 @@
 
 			var placeholder_message = document.getElementById("placeholder-message");
 			var play_name = document.getElementById("play-name");
-			var path = "/plays/create";
+			var path = "/playbook/plays/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			// If there is a placeholder message remove it and add an error.
@@ -896,7 +896,7 @@
 				for (var i = 0; i < plays.length; ++i) {
 					if (play.formation === plays[i].formation && play.name === plays[i].name && play.scoutName === plays[i].scoutName) {
 						// Set the path and cross-site forgery token vars.
-						var path = "/plays/create";
+						var path = "/playbook/plays/create";
 						var csrf_token = "{{ csrf_token }}";
 
 						// Delete the play from the backend.
@@ -1483,7 +1483,7 @@
 		$("#add-note-button").click(function(event) {
 			var note = document.getElementById("note");
 
-			var path = "/plays/create";
+			var path = "/playbook/plays/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			var selected = document.getElementById("selected");
@@ -1509,7 +1509,7 @@
 		$("#add-call-button").click(function(event) {
 			var call = document.getElementById("call");
 
-			var path = "/plays/create";
+			var path = "/playbook/plays/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			if (call.value != "" && play != null && play.getSelected()[0] != null) {

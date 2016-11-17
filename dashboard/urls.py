@@ -13,20 +13,6 @@ urlpatterns = [
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
 
-	# Playbook
-	url(r'^playbook$', views.playbook, name='playbook'),
-	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'), # I'm not sure this is used anymore
-
-	# Formations
-	url(r'^formations/create$', views.create_formation, name='create_formation'),
-	url(r'^formations/create/defensive_look$', views.create_defensive_look, name='create_defensive_look'),
-
-	# Plays
-	url(r'^plays/create$', views.create_play, name='create_play'),
-
-	# Concepts
-	url(r'^concepts/create$', views.create_concept, name='create_concept'),
-
 	# Groups
 	url(r'^groups/$', views.groups, name='groups'),
 	url(r'^groups/create$', views.create_group, name='create_group'),

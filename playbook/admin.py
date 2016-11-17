@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Concept, Formation, Play
+
+admin.site.register(Concept)
+admin.site.register(Formation)
+admin.site.register(Play)

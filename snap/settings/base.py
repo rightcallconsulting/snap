@@ -37,6 +37,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'dashboard',
 	'getsnap',
+	'playbook',
 	'debug_toolbar',
 	'storages',
 	'datetimewidget',

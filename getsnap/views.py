@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render
 
 from .models import RFPAuthForm, UserCreateForm, Team
 from dashboard.models import myUser, Coach, Player

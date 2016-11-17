@@ -30,7 +30,7 @@
 
 			{% if user_is_a_coach %}
 				<div id="create-formation-button">
-					<a href="/formations/create">
+					<a href="formations/create">
 						<span class="fa-stack fa-lg">
 							<i class="fa fa-circle-thin fa-stack-2x"></i>
 							<i class="fa fa-plus fa-stack-1x"></i>
@@ -40,7 +40,7 @@
 				</div>
 
 				<div id="create-play-button">
-					<a href="/plays/create">
+					<a href="plays/create">
 						<span class="fa-stack fa-lg">
 							<i class="fa fa-circle-thin fa-stack-2x"></i>
 							<i class="fa fa-plus fa-stack-1x"></i>
@@ -417,7 +417,7 @@
 				create_formation_icon_span.appendChild(create_formation_icon_1x);
 
 				var create_formation_button_link = document.createElement("a");
-				create_formation_button_link.setAttribute("href", "/formations/create");
+				create_formation_button_link.setAttribute("href", "formations/create");
 				create_formation_button_link.textContent = "CREATE FORMATION";
 				create_formation_button_link.insertBefore(create_formation_icon_span, create_formation_button_link.firstChild);
 
@@ -439,7 +439,7 @@
 				create_play_icon_span.appendChild(create_play_icon_1x);
 
 				var create_play_button_link = document.createElement("a");
-				create_play_button_link.setAttribute("href", "/plays/create");
+				create_play_button_link.setAttribute("href", "plays/create");
 				create_play_button_link.textContent = "CREATE PLAY";
 				create_play_button_link.insertBefore(create_play_icon_span, create_play_button_link.firstChild);
 
@@ -477,7 +477,7 @@
 				create_concept_icon_span.appendChild(create_concept_icon_1x);
 
 				var create_concept_button_link = document.createElement("a");
-				create_concept_button_link.setAttribute("href", "/concepts/create");
+				create_concept_button_link.setAttribute("href", "concepts/create");
 				create_concept_button_link.textContent = "CREATE CONCEPT";
 				create_concept_button_link.insertBefore(create_concept_icon_span, create_concept_button_link.firstChild);
 
@@ -516,7 +516,7 @@
 				create_defensive_look_icon_span.appendChild(create_defensive_look_icon_1x);
 
 				var create_defensive_look_button_link = document.createElement("a");
-				create_defensive_look_button_link.setAttribute("href", "/formations/create/defensive_look");
+				create_defensive_look_button_link.setAttribute("href", "formations/create/defensive_look");
 				create_defensive_look_button_link.textContent = "CREATE DEFENSIVE LOOK";
 				create_defensive_look_button_link.insertBefore(create_defensive_look_icon_span, create_defensive_look_button_link.firstChild);
 

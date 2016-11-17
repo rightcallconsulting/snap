@@ -824,7 +824,7 @@
 
 			var placeholder_message = document.getElementById("placeholder-message");
 			var concept_name = document.getElementById("concept-name");
-			var path = "/concepts/create";
+			var path = "/playbook/concepts/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			// If there is a placeholder message remove it and add an error.
@@ -913,7 +913,7 @@
 			// the concept that is currently selected.
 			if (selected != null) {
 				// Set the path and cross-site forgery token vars.
-				var path = "/concepts/create";
+				var path = "/playbook/concepts/create";
 				var csrf_token = "{{ csrf_token }}";
 
 				// Delete the concept from the backend.
@@ -1236,7 +1236,7 @@
 		$("#add-note-button").click(function(event) {
 			var note = document.getElementById("note");
 
-			var path = "/concepts/create";
+			var path = "/playbook/concepts/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			var selected = document.getElementById("selected");
@@ -1262,7 +1262,7 @@
 		$("#add-call-button").click(function(event) {
 			var call = document.getElementById("call");
 
-			var path = "/concepts/create";
+			var path = "/playbook/concepts/create";
 			var csrf_token = "{{ csrf_token }}";
 
 			if (call.value != "" && concept != null && concept.getSelected()[0] != null) {
