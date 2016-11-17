@@ -12,8 +12,7 @@ import json
 import simplejson
 from random import shuffle
 
-from quiz.models import Player, Team
-from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation, CustomQuiz
+from dashboard.models import UserCreateForm, RFPAuthForm, PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Concept, Quiz, QuestionAttempted, Play, Formation, CustomQuiz, Player, Team
 from IPython import embed
 from datetime import datetime, timedelta
 from django.utils import timezone

@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Coach, PlayerGroup, Concept, Quiz, QuestionAttempted
-from quiz.models import Player
+from .models import Coach, PlayerGroup, Concept, Quiz, QuestionAttempted, Player
 
 admin.site.site_header = "Right Call Consulting"
 admin.site.site_title = "Snap site"
