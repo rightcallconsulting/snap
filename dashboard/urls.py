@@ -10,14 +10,6 @@ from . import views
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
 	
-	url(r'^login$', views.auth_login, name='auth_login'),
-	url(r'^register$', views.register, name='register'),
-	url(r'^logout$', views.auth_logout, name='auth_logout'),
-
-	# Get Snap
-	url(r'^getsnap$', views.getsnap, name='getsnap'),
-
-
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
 
