@@ -3,9 +3,17 @@
 
 {% block page %}
 	<div class="getsnap-info-wrapper">
-		<p>Already have an account? <a href="/login">Sign in</a></p>
+		<div id="goto-login">
+			<p>Already have an account? <a href="/login">Sign in</a></p>
+		</div>
 
 		<form action="/getsnap" method="post" class="getsnap-form"> 
+			{% csrf_token %}
+			<input type="text" name="fname" placeholder="First Name">
+			<input type="text" name="lname" placeholder="Last Name">
+			<input type="tel" name="number" placeholder="Phone Number">
+			<input type="email" name="email" placeholder="Email">
+			<button type="submit">Request Snap</button>
 		</form>
 	</div>
 {% endblock %}
