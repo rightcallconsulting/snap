@@ -257,8 +257,8 @@ def auth_logout(request):
 	logout(request)
 	return HttpResponseRedirect("/login")
 
-def getsnap_info(request):
-	return render(request, 'dashboard/getsnap_info.html', {})
+def getsnap(request):
+	return render(request, 'dashboard/getsnap.html', {})
 
 def edit_profile(request):
 	if request.method == 'POST':

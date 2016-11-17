@@ -1,0 +1,11 @@
+{% extends 'dashboard/logged_out_base.html' %}
+{% load staticfiles %}
+
+{% block page %}
+	<div class="getsnap-info-wrapper">
+		<p>Already have an account? <a href="/login">Sign in</a></p>
+
+		<form action="/getsnap" method="post" class="getsnap-form"> 
+		</form>
+	</div>
+{% endblock %}

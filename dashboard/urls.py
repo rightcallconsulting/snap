@@ -15,7 +15,7 @@ urlpatterns = [
 	url(r'^logout$', views.auth_logout, name='auth_logout'),
 
 	# Get Snap
-	url(r'^getsnap/info$', views.getsnap_info, name='getsnap_info'),
+	url(r'^getsnap$', views.getsnap, name='getsnap'),
 
 
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
