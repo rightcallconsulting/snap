@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='test',
             name='deadline',
-            field=models.DateTimeField(blank=True, default=quiz.models.deadline_time, null=True),
+            field=models.DateTimeField(blank=True, default=None, null=True),
         ),
     ]
