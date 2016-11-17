@@ -9,15 +9,21 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
+	
 	url(r'^login$', views.auth_login, name='auth_login'),
-	url(r'^register$', views.register, name='register'), # Registration feature is commented out until we are ready for people to sign up - Have to add button back then
+	url(r'^register$', views.register, name='register'),
 	url(r'^logout$', views.auth_logout, name='auth_logout'),
+
+	# Get Snap
+	url(r'^getsnap/info$', views.getsnap_info, name='getsnap_info'),
+
+
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
-	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'),
 
 	# Playbook
 	url(r'^playbook$', views.playbook, name='playbook'),
+	url(r'^playbook/?(?P<unit>defense)$', views.playbook, name='playbook'), # I'm not sure this is used anymore
 
 	# Formations
 	url(r'^formations/create$', views.create_formation, name='create_formation'),
