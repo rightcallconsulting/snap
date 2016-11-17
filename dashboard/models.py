@@ -11,10 +11,6 @@ from datetimewidget.widgets import DateTimeWidget
 from datetime import datetime
 from IPython import embed
 
-#from getsnap.models import UserCreateForm, Team
-#rom playbook.models import Concept, Formation, Play
-#from quizzes.models import Quiz
-
 class Player(models.Model):
 	YEAR_CHOICES = (
 		('FR', 'Freshman'),

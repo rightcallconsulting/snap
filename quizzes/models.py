@@ -3,9 +3,6 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.db import models
 
-#from getsnap.models import Team
-#from dashboard.models import Player
-
 class CustomQuiz(models.Model):
 	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
 	player = models.ForeignKey('dashboard.Player', on_delete=models.CASCADE)

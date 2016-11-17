@@ -2,9 +2,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-#from dashboard.models import QuestionAttempted, Player
-#from getsnap.models import Team
-
 class Concept(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
 	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)

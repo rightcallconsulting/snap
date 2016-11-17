@@ -22,4 +22,5 @@ urlpatterns = [
 	url(r'', include('getsnap.urls')),
 	url(r'playbook/', include('playbook.urls')),
 	url(r'quizzes/', include('quizzes.urls')),
+	url(r'analytics/', include('analytics.urls'))
 ]
