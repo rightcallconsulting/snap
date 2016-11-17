@@ -760,9 +760,9 @@ Player.prototype.deepCopy = function() {
 /******************************************************************************************************************************/
 /******************************************************************************************************************************/
 
-Player.prototype.getX = function(field) { return field.yardsToPixels(this.getYardX() - field.getXOffset()); };
+Player.prototype.getX = function(field) { return field.getTranslatedX(this.x); };
 
-Player.prototype.getY = function(field) { return field.height - field.yardsToPixels(this.getYardY() - field.getYOffset()); };
+Player.prototype.getY = function(field) { return field.getTranslatedY(this.y); };
 
 Player.prototype.getYardX = function() { return this.x; };
 
@@ -780,37 +780,10 @@ Player.prototype.isMouseInside = function(field) {
 	return dist <= siz/2;
 };
 
-// containsPoint takes an arbitrary set of coordinates as an argument and
-// returns true if that set of coordinates if inside the player.
-Player.prototype.containsPoint = function(x, y){
-	var dist = Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
-	return dist <= this.siz/2;
+Player.prototype.pixelIsMouseInside = function(field){
+	var siz = this.siz;
+	var x = this.x;
+	var y = this.y;
+	var dist = Math.sqrt( (mouseX - x)*(mouseX - x)+(mouseY - y)*(mouseY - y) );
+	return dist <= siz/2;
 }
-
-/******************************************************************************************************************************/
-/******************************************************************************************************************************/
-
-Player.prototype.establishFill = function(){
-	if(this.unit ==="defense"){
-		this.red = 0;
-		this.green = 0;
-		this.blue = 0;
-	}
-	else{
-		if(this.pos==="QB"){
-			this.red = 212;
-			this.green = 130;
-			this.blue = 130;
-		}
-		else if(this.pos==="OL" || this.pos ==="LT" || this.pos ==="LG" || this.pos ==="C" || this.pos ==="RG" || this.pos ==="RT"){
-			this.red = 143;
-			this.green = 29;
-			this.blue = 29;
-		}
-		else{
-			this.red = 255;
-			this.green = 0;
-			this.blue = 0;
-		}
-	}
-};

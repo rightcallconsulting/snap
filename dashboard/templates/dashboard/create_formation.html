@@ -28,11 +28,11 @@
 				<button id="delete-button" name="button">
 					<i class="fa fa-trash-o fa-2x mainview-button-icon" title="Delete Formation"></i>
 				</button>
-		
+
 				<button id="zoom-in-button" name="button">
 					<i class="fa fa-search-plus fa-2x mainview-button-icon" title="Zoom in"></i>
 				</button>
-		
+
 				<button id="zoom-out-button" name="button">
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
@@ -42,7 +42,7 @@
 				</button>
 			</div>
 		</div>
-		
+
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
 				Existing Formations
@@ -84,21 +84,21 @@
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
-		
+
 		function setup() {
 			var display_box = document.getElementById("display-box");
 			var display_box_header = display_box.querySelector(".display-header");
 			var display_box_footer = display_box.querySelector(".mainview-buttons");
 			var sideview = document.getElementById("sideview");
 			var height = sideview.offsetHeight - (display_box_header.offsetHeight + display_box_footer.offsetHeight);
-			
+
 			// 4px is the combined size of the borders on either side. What is a better way to do this?
-			var width = display_box.offsetWidth - 5; 
+			var width = display_box.offsetWidth - 5;
 
 			// Create canvas and add it to the main view
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
-			
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -106,7 +106,7 @@
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
-			
+
 			// Load formations from Json passed from database
 			var formationJsonFromDatabase = "";
 
@@ -140,7 +140,7 @@
 				resizeCanvas(width, height);
 				field.height = height;
 				field.width = width;
-				
+
 				resizeMainViewObjects();
 			};
 
@@ -150,7 +150,7 @@
 		function draw() {
 			// Limitations on where offensive players can be
 			var numberOfOffensivePlayers = formation.offensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfOffensivePlayers; ++i) {
 				var player = formation.offensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -192,7 +192,7 @@
 				} else {
 					if (player.y > field.ballYardLine - 1) {
 						player.y = field.ballYardLine;
-					} 
+					}
 				}
 			}
 
@@ -218,7 +218,7 @@
 
 			// Limitations on where defensive players can be
 			var numberOfDefensivePlayers = formation.defensivePlayers.length;
-			
+
 			for (var i = 0; i < numberOfDefensivePlayers; ++i) {
 				var player = formation.defensivePlayers[i];
 				var playerXPixel = field.getTranslatedX(player.x);
@@ -264,7 +264,7 @@
 
 			formation.drawPlayers(field);
 			offensivePlayerBar.draw(field);
-			
+
 			fill(0, 0, 0);
 			textSize(20);
 			text(formation.feedbackMessage, 330, 20);
@@ -316,12 +316,12 @@
 			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
 			if (newPlayerSelected != null) {
 				var playerToAddToFormation = new Player({
-					num: newPlayerSelected.num, 
-					pos: newPlayerSelected.pos, 
+					num: newPlayerSelected.num,
+					pos: newPlayerSelected.pos,
 					x: Field.WIDTH / 2,
 					y: field.ballYardLine-5,
-					red: newPlayerSelected.red, 
-					green: newPlayerSelected.green, 
+					red: newPlayerSelected.red,
+					green: newPlayerSelected.green,
 					blue: newPlayerSelected.blue,
 					eligible: newPlayerSelected.eligible
 				});
@@ -392,7 +392,7 @@
 					return false;
 				}
 
-				return false;	
+				return false;
 			}
 		};
 
@@ -499,7 +499,7 @@
 			// Deselect the currently selected sidebar because that formation is
 			// going to dissappear from the screen.
 			var selected_sideview_button = document.getElementById("selected");
-			
+
 			if (selected_sideview_button != null) {
 				selected_sideview_button.removeAttribute("id");
 				selected_sideview_button.removeAttribute("class");
@@ -534,7 +534,7 @@
 			formation.save(path, csrf_token);
 			formations.push(formation);
 
-			// Create a new formation to replace the one you just saved on the 
+			// Create a new formation to replace the one you just saved on the
 			// screen.
 			formation = new Formation({});
 			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
@@ -542,7 +542,7 @@
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
 			var sideview_buttons_div = document.getElementById("sideview-buttons");
-			
+
 			// Create a button for the new formation.
 			var new_formation_button = document.createElement("button");
 			new_formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
@@ -607,7 +607,7 @@
 		$("#zoom-in-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if (heightInYards > 25) {
 				field.heightInYards -= 5;
 			} else {
@@ -620,7 +620,7 @@
 		$("#zoom-out-button").click(function(event) {
 			var heightInYards = field.heightInYards;
 			var widthInYards = field.heightInYards * field.width / field.height;
-			
+
 			if (heightInYards > 50) {
 				field.heightInYards = 55;
 			} else {
@@ -646,7 +646,7 @@
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
-			
+
 			// Hide the notes input.
 			hideNotesAndCallsInput();
 
@@ -725,7 +725,7 @@
 			var header_box = document.getElementById("header-box");
 			var placeholder_message = document.getElementById("placeholder-message");
 			$("#header-box").removeClass("placeholder");
-			
+
 			if (placeholder_message != null) {
 				header_box.removeChild(placeholder_message);
 			}
@@ -735,7 +735,7 @@
 			var header_box = document.getElementById("header-box");
 			var error_message = document.getElementById("error-message");
 			$("#header-box").removeClass("error");
-			
+
 			if (error_message != null) {
 				header_box.removeChild(error_message);
 			}
@@ -859,19 +859,19 @@
 			textSize(20);
 
 			text(mouseXString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(mouseYString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(widthString, textX, textY);
-			
+
 			textY += textYSpacing;
 			text(heightString, textX, textY);
 
 			fill(176,176,176);
 		};
-		
+
 		function createOffensivePlayerOptions() {
 			var players = [];
 			var positions= []
@@ -892,7 +892,7 @@
 				}
 			}
 
-			for (i in positions) {			
+			for (i in positions) {
 				if (positions[i][0] == "Offensive Lineman") {
 					player = new Player ({
 						pos: positions[i][1],
@@ -903,7 +903,7 @@
 				}
 			}
 
-			for (i in positions) {			
+			for (i in positions) {
 				if (positions[i][0] == "Skill Position") {
 					player = new Player ({
 						pos: positions[i][1],
