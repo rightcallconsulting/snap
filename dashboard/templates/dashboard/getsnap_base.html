@@ -1,0 +1,23 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Right Call Consulting: Snap</title>
+		<link rel="icon" href="{% static 'dashboard/images/rcc.ico' %}">
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		{% include "dashboard/includes/css.html" %}
+	</head>
+
+	<body class="overflow-hidden login-body" style="background-image:url({% static 'dashboard/images/login-background.png' %}); background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
+		{% block page %}
+		{% endblock %}
+
+		{% include "dashboard/includes/js.html" %}
+	</body>
+</html>

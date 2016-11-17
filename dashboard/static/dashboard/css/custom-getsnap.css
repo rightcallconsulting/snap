@@ -1,0 +1,61 @@
+{% load staticfiles %}
+
+::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
+}
+
+/*************************************************************************
+getsnap
+*************************************************************************/
+
+div#getsnap-wrapper {
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    text-align: center;
+}
+
+div#goto-login p {
+	font-size: large;
+	color: #FFF;
+}
+
+div#goto-login p a {
+	font-size: large;
+	text-decoration: underline;
+	font-weight: bold;
+	color: #9ccc65;
+}
+
+form.getsnap-form {
+	position: absolute;
+	width: 350px;
+	background: #fff;
+	left: 50%;
+	top: 50%;
+	margin: -175px 0 0 -175px;
+	border: 2px solid #808080;
+	border-radius: 5px;
+	padding: 10px;
+	text-align: center;
+}
+
+/*************************************************************************
+login
+*************************************************************************/
+
+.login-wrapper {
+	height: 100%;
+	background: transparent;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.login-logo {
+	margin: 80px 0px 60px 0px;
+	width: 55%;
+	min-width: 200px;
+	max-width: 400px;
+}
