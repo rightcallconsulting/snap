@@ -364,7 +364,7 @@
 					playerSelected.run.push([mouseYardX, mouseYardY]);
 					return false;
 				} else if (buttons[3].clicked === true) {
-					playerSelected.route.push([mouseYardX, mouseYardY]);
+					playerSelected.addToRoute(mouseYardX, mouseYardY);
 					return false;
 				} else if (buttons[4].clicked === true) {
 					var block;
@@ -429,7 +429,7 @@
 						} else if(playerSelected.run.length > 0) {
 							playerSelected.run.pop();
 						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
+							playerSelected.stepRouteBackwards();
 						} else if (playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
 						} else if (playerSelected.motionCoords.length > 0){

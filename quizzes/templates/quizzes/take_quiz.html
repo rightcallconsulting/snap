@@ -129,7 +129,7 @@
 			if (quiz.attempt != null) {
 				quiz.attempt.motionCords = [];
 				quiz.attempt.blockingAssignmentArray = [];
-				quiz.attempt.route = [];
+				quiz.attempt.clearRoute();
 				quiz.attempt.defensiveMovement = [];
 			}
 
@@ -328,7 +328,7 @@
 					playerSelected.run.push([mouseYardX, mouseYardY]);
 					return false;
 				} else if (buttons[3].clicked === true) {
-					playerSelected.route.push([mouseYardX, mouseYardY]);
+					playerSelected.addToRoute(mouseYardX, mouseYardY);
 					return false;
 				} else if (buttons[4].clicked === true) {
 					var block;
@@ -375,7 +375,7 @@
 						} else if(buttons[2].clicked && playerSelected.run.length > 0) {
 							playerSelected.run.pop();
 						} else if(buttons[3].clicked && playerSelected.route.length > 0) {
-							playerSelected.route.pop();
+							playerSelected.stepRouteBackwards();
 						} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
 						} else if (playerSelected.dropback.length > 0) {
@@ -383,7 +383,7 @@
 						} else if(playerSelected.run.length > 0) {
 							playerSelected.run.pop();
 						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
+							playerSelected.stepRouteBackwards();
 						} else if (playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
 						} else if (playerSelected.motionCoords.length > 0){

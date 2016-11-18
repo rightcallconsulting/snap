@@ -110,7 +110,7 @@ Player.prototype.clearAssignments = function(){
 	this.dropback = [];
 	this.motionCoords = [];
 	this.run = [];
-	this.route = [];
+	this.clearRoute();
 	this.blockingAssignmentArray = [];
 	this.defensiveMovement = [];
 	this.blitz = [];
@@ -226,6 +226,12 @@ Player.prototype.addToRoute = function(x, y){
 	//create node
 	this.routeNodes.push(new Node({x: x, y: y}));
 	this.route.push([x, y]);
+}
+
+Player.prototype.clearRoute = function(){
+	while(this.route.length > 0 && this.routeNodes.length > 0){
+		this.stepRouteBackwards();
+	}
 }
 
 Player.prototype.stepRouteBackwards = function(){
@@ -404,7 +410,7 @@ Player.prototype.drawRoute = function(field) {
 		x2 = field.getTranslatedX(x2);
 		y2 = field.getTranslatedY(y2);
 		line(x1, y1, x2, y2);
-		if(this.routeNodes.length > i){
+		if(this.routeNodes.length > i+1){
 			this.routeNodes[i].draw(field);
 			stroke(red);
 		}
@@ -827,8 +833,6 @@ Player.prototype.getY = function(field) { return field.getTranslatedY(this.y); }
 Player.prototype.getYardX = function() { return this.x; };
 
 Player.prototype.getYardY = function() { return this.y; };
-
-Player.prototype.clearRoute = function() { this.route = []; };
 
 // isMouseInside returns true if the mouse coordinates are somewhere inside
 // this player.

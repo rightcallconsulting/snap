@@ -72,6 +72,8 @@
 		var buttons = [];
 		var choices = [];
 		var questionsPerPlay = 3;
+		var mouseBeingDragged = false;
+		var nodeBeingDragged = null;
 
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
@@ -310,11 +312,42 @@
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
 
-		function mousePressed() {};
+		function mousePressed() {
+			nodeBeingDragged = play.mouseInNode(field);
+		};
 
-		function mouseDragged() {};
+		function mouseDragged() {
+			mouseBeingDragged = true;
+
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
+
+			if (nodeBeingDragged != null) {
+				var player = null;
+				for(var i = 0; i < play.offensivePlayers.length; i++){
+					var new_player = play.offensivePlayers[i];
+					var index = new_player.routeNodes.indexOf(nodeBeingDragged);
+					if(index >= 0){
+						new_player.route[index][0] = mouseYardX;
+						new_player.route[index][1] = mouseYardY;
+					}
+				}
+				nodeBeingDragged.x = mouseYardX;
+				nodeBeingDragged.y = mouseYardY;
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
 
 		function mouseReleased() {
+			// If the mouse is being dragged don't do any of the click actions.
+			if (mouseBeingDragged === true) {
+				mouseBeingDragged = false;
+				nodeBeingDragged = null;
+				return false;
+			}
+
 			if(quiz.over){
 				var clickedButton = quiz.getClickedRestartButton(field)
 				if(clickedButton !== null){
@@ -401,7 +434,7 @@
 					playerSelected.run.push([mouseYardX, mouseYardY]);
 					return false;
 				} else if (buttons[3].clicked === true) {
-					playerSelected.route.push([mouseYardX, mouseYardY]);
+					playerSelected.addToRoute(mouseYardX, mouseYardY);
 					return false;
 				} else if (buttons[4].clicked === true) {
 					var block;
@@ -469,7 +502,7 @@
 						} else if(buttons[2].clicked && playerSelected.run.length > 0) {
 							playerSelected.run.pop();
 						} else if(buttons[3].clicked && playerSelected.route.length > 0) {
-							playerSelected.route.pop();
+							playerSelected.stepRouteBackwards();
 						} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
 						} else if (playerSelected.dropback.length > 0) {
@@ -477,7 +510,7 @@
 						} else if(playerSelected.run.length > 0) {
 							playerSelected.run.pop();
 						} else if(playerSelected.route.length > 0) {
-							playerSelected.route.pop();
+							playerSelected.stepRouteBackwards();
 						} else if (playerSelected.blockingAssignmentArray.length > 0) {
 							playerSelected.blockingAssignmentArray.pop();
 						} else if (playerSelected.motionCoords.length > 0){

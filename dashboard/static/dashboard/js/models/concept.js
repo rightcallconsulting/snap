@@ -284,6 +284,18 @@ Concept.prototype.reset = function() {
 	this.defensivePlayers = [];
 };
 
+Concept.prototype.mouseInNode = function(field){
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		var player = this.offensivePlayers[i];
+		for(var j = player.routeNodes.length-1; j >= 0; j--){
+			if(player.routeNodes[j].isMouseInside(field)){
+				return player.routeNodes[j];
+			}
+		}
+	}
+	return null;
+}
+
 // mouseInPlayer iterates through all the offensive and defensive players
 // in a concept. It returns the player that the mouse is inside of or
 // null if the mouse is not inside any player.
@@ -461,7 +473,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 		if (conceptJsonDictionary.offensivePlayers[i].route != null) {
 			for (var j = 0; j < conceptJsonDictionary.offensivePlayers[i].route.length; ++j) {
 				var route = conceptJsonDictionary.offensivePlayers[i].route[j];
-				player.route.push([route[0], route[1]]);
+				player.addToRoute(route[0], route[1]);
 			}
 		}
 

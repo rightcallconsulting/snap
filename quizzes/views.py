@@ -9,6 +9,8 @@ from dashboard.models import Admin, Coach, Player, PlayerGroup
 from playbook.models import Concept, Formation, Play
 from analytics.models import QuestionAttempted
 
+import json
+
 @user_passes_test(lambda u: not u.isPlayer())
 def assigned_quizzes(request):
 	team = request.user.coach.team

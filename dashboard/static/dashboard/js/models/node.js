@@ -22,7 +22,7 @@ Node.prototype.isMouseInside = function(field) {
 Node.prototype.draw = function(field) {
   var x = field.getTranslatedX(this.x);
   var y = field.getTranslatedY(this.y);
-  var siz = field.yardsToPixels(this.siz);
+  var siz = field.yardsToPixels(this.siz)/2;
   noStroke();
   fill(this.fill);
   ellipse(x, y, siz, siz);
