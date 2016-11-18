@@ -5,8 +5,9 @@ from django.shortcuts import render
 
 from .models import CustomQuiz, Quiz
 from getsnap.models import Team
-from dashboard.models import Player, Coach, myUser, PlayerGroup, QuestionAttempted
+from dashboard.models import Player, Coach, myUser, PlayerGroup
 from playbook.models import Concept, Formation, Play
+from analytics.models import QuestionAttempted
 
 @user_passes_test(lambda u: not u.myuser.is_a_player)
 def assigned_quizzes(request):

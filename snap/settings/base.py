@@ -39,11 +39,11 @@ INSTALLED_APPS = (
 	'getsnap',
 	'playbook',
 	'quizzes',
+	'analytics',
 	'debug_toolbar',
 	'storages',
 	'datetimewidget',
 	'bootstrap3_datetime',
-	'graphos',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

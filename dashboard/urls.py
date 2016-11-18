@@ -19,13 +19,6 @@ urlpatterns = [
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
-	# Analytics
-	url(r'^analytics$', views.plays_analytics, name='plays_analytics'), # this will direct to the play analyitics until I implement an analytics page
-	url(r'^analytics/plays$', views.plays_analytics, name='plays_analytics'),
-	url(r'^analytics/player$', views.player_analytics, name='player_analytics'),
-	url(r'^analytics/players$', views.players_analytics, name='players_analytics'),
-	url(r'^analytics/quiz/(?P<quiz_id>[0-9]+)$', views.quiz_analytics, name='quiz_analytics'),
-
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
 	url(r'^groups/json$', views.all_groups_json, name='all_groups_json'),
