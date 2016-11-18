@@ -314,7 +314,7 @@
 			// Handle clicks on players in the PlayerBar. mouseClicked will
 			// have already returned if a player on the field is clicked
 			newPlayerSelected = offensivePlayerBar.mouseInPlayer(field);
-			if (newPlayerSelected != null) {
+			if (newPlayerSelected != null && formation.offensivePlayers.length < 11) {
 				var playerToAddToFormation = new Player({
 					num: newPlayerSelected.num,
 					pos: newPlayerSelected.pos,
@@ -329,6 +329,8 @@
 				formation.offensivePlayers.push(playerToAddToFormation);
 
 				return false;
+			}else if (formation.mouseInPlayer(field) != null){
+				formation.mouseInPlayer(field).click();
 			}
 		};
 
