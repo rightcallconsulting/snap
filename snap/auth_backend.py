@@ -6,16 +6,20 @@ class CustomBackend:
 	# If those credentials are valid it returns the user, else it
 	# returns None.
 	def authenticate(self, email=None, password=None):
+		print "CustomBackend.authenticate got called to check credentials."
+
 		try:
 			# Try to find a user matching your email
 			user = CustomUser.objects.get(email=email)
+			print user
+			print user.check_password(password)
 
 			# If the password is correct then return the user, else return None.
 			if user.check_password(password):
 				return user
 			else:
 				return None
-		except User.DoesNotExist:
+		except CustomUser.DoesNotExist:
 			return None
 
 	# Required for your backend to work properly - unchanged in most scenarios

@@ -32,7 +32,7 @@ def register(request):
 
 		user_type = request.POST['type']
 
-		new_user = CustomUser.objects.create_user(email=email, password=password1)
+		new_user = CustomUser.objects.create_user(username=email, email=email, password=password1)
 		new_user.user_type = user_type[0].upper()
 		new_user.save()
 		
@@ -66,13 +66,18 @@ def getsnap(request):
 		email = request.POST['email']
 		phone_number = request.POST['number']
 
-		new_user = CustomUser.objects.create_user(email=email)
+		new_user = CustomUser.objects.create_user(username=email, email=email)
 		new_user.is_active = False
 		new_user.first_name = first_name
 		new_user.last_name = last_name
 		new_user.phone_number = phone_number
 		new_user.save()
 
-		# Send email and add notification to our Admin page
+		# Send email here and set notifications
+
+		return HttpResponseRedirect("/getsnap/thanks")
 	else:
 		return render(request, 'getsnap/getsnap.html', {})
+
+def thanks(request):	
+	return render(request, 'getsnap/thanks.html', {})

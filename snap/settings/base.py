@@ -30,7 +30,8 @@ ALLOWED_HOSTS = []
 # This specifies that we are using our own User model instead of Django's 
 # built-in type
 AUTH_USER_MODEL = 'getsnap.CustomUser'
-AUTHENTICATION_BACKENDS = ['snap.auth_backend.CustomBackend']
+AUTHENTICATION_BACKENDS = ('snap.auth_backend.CustomBackend',
+                            'django.contrib.auth.backends.ModelBackend',)
 
 # Application installed in my project
 INSTALLED_APPS = (
