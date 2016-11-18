@@ -5,15 +5,6 @@ from django.shortcuts import render
 from .models import CustomUser, Team
 from dashboard.models import Admin, Coach, Player
 
-'''def authenticate(self, username=None, password=None):
-		print "Custom authentication function got called! Hi."
-		try:
-			user = UserAccount.objects.get(username=username)
-			if user.check_password(password):
-				return user
-		except UserAccount.DoesNotExist:
-			return None'''
-
 def auth_login(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
