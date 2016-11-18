@@ -5,6 +5,7 @@ from django.shortcuts import render
 from .models import CustomUser, Team
 from dashboard.models import Admin, Coach, Player
 
+# Login/Logout
 def auth_login(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
@@ -21,6 +22,39 @@ def auth_login(request):
 	else:
 		return render(request, 'getsnap/login.html', {})
 
+def auth_logout(request):
+	logout(request)
+	return HttpResponseRedirect("/login")
+
+# Snap Demo
+def demo(request):	
+	return render(request, 'getsnap/demo.html', {})
+
+# Get Snap
+def getsnap(request):
+	if request.method == 'POST':
+		first_name = request.POST['fname']
+		last_name = request.POST['lname']
+		email = request.POST['email']
+		phone_number = request.POST['number']
+
+		new_user = CustomUser.objects.create_user(username=email, email=email)
+		new_user.is_active = False
+		new_user.first_name = first_name
+		new_user.last_name = last_name
+		new_user.phone_number = phone_number
+		new_user.save()
+
+		# Send email here and set notifications
+
+		return HttpResponseRedirect("/getsnap/thanks")
+	else:
+		return render(request, 'getsnap/getsnap.html', {})
+
+def thanks(request):
+	return render(request, 'getsnap/thanks.html', {})
+
+# Register - This link is only used internally to create accounts
 def register(request):
 	if request.method == 'POST':
 		email = request.POST['email']
@@ -54,30 +88,3 @@ def register(request):
 	else:
 		teams = Team.objects.all()
 	return render(request, 'getsnap/register.html', { 'teams': teams })
-
-def auth_logout(request):
-	logout(request)
-	return HttpResponseRedirect("/login")
-
-def getsnap(request):
-	if request.method == 'POST':
-		first_name = request.POST['fname']
-		last_name = request.POST['lname']
-		email = request.POST['email']
-		phone_number = request.POST['number']
-
-		new_user = CustomUser.objects.create_user(username=email, email=email)
-		new_user.is_active = False
-		new_user.first_name = first_name
-		new_user.last_name = last_name
-		new_user.phone_number = phone_number
-		new_user.save()
-
-		# Send email here and set notifications
-
-		return HttpResponseRedirect("/getsnap/thanks")
-	else:
-		return render(request, 'getsnap/getsnap.html', {})
-
-def thanks(request):	
-	return render(request, 'getsnap/thanks.html', {})
