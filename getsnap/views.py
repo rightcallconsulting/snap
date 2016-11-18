@@ -9,24 +9,21 @@ def auth_login(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
 	elif request.method == 'POST':
-		username = request.POST['username']
+		email = request.POST['email']
 		password = request.POST['password']
-		user = authenticate(username=username, password=password)
+		user = authenticate(email=email, password=password)
 		if user is not None:
 			if user.is_active:
 				login(request, user)
 				return HttpResponseRedirect("/")
-			# else:
-				# return HttpResponseRedirect("/login")
 		else:
-			# [TBD] Display an error message that login failed
 			return HttpResponseRedirect("/login")
 	else:
-		return render(request, 'getsnap/login.html', { })
+		return render(request, 'getsnap/login.html', {})
 
 def register(request):
 	if request.method == 'POST':
-		username = request.POST['username']
+		email = request.POST['email']
 		password1 = request.POST['password1']
 		password2 = request.POST['password2']
 		
@@ -35,7 +32,7 @@ def register(request):
 
 		user_type = request.POST['type']
 
-		new_user = CustomUser.objects.create_user(username=username, password=password1)
+		new_user = CustomUser.objects.create_user(email=email, password=password1)
 		new_user.user_type = user_type[0].upper()
 		new_user.save()
 		
@@ -50,9 +47,9 @@ def register(request):
 			player = Player(user=new_user, team=team)
 			player.save()
 
-		user = authenticate(username=username, password=password1)
-
+		user = authenticate(email=email, password=password1)
 		login(request, user)
+
 		return HttpResponseRedirect("/")
 	else:
 		teams = Team.objects.all()
