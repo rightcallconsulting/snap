@@ -35,10 +35,9 @@ def register(request):
 
 		user_type = request.POST['type']
 
-		new_user = CustomUser.objects.create_user(username, username, password1)
+		new_user = CustomUser.objects.create_user(username=username, password=password1)
 		new_user.user_type = user_type[0].upper()
 		new_user.save()
-
 		
 		team = Team.objects.get(id=request.POST['team'])
 		if user_type == "admin":
@@ -64,4 +63,19 @@ def auth_logout(request):
 	return HttpResponseRedirect("/login")
 
 def getsnap(request):
-	return render(request, 'getsnap/getsnap.html', {})
+	if request.method == 'POST':
+		first_name = request.POST['fname']
+		last_name = request.POST['lname']
+		email = request.POST['email']
+		phone_number = request.POST['number']
+
+		new_user = CustomUser.objects.create_user(email=email)
+		new_user.is_active = False
+		new_user.first_name = first_name
+		new_user.last_name = last_name
+		new_user.phone_number = phone_number
+		new_user.save()
+
+		# Send email and add notification to our Admin page
+	else:
+		return render(request, 'getsnap/getsnap.html', {})
