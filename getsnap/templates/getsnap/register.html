@@ -5,7 +5,7 @@
 	<div id="register-wrapper">
 		<form action="/register" method="post" class="getsnap-form"> 
 			{% csrf_token %}
-			<input type="text" name="username" placeholder="User Name"> <br>
+			<input type="email" name="email" placeholder="Email"> <br>
 			<input type="password" name="password1" placeholder="Password"> <br>
 			<input type="password" name="password2" placeholder="Check Password"> <br>
 			<select name="type">

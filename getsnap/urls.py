@@ -8,10 +8,17 @@ from django.views import static
 from . import views
 
 urlpatterns = [
+	# Login/Logout
 	url(r'^login$', views.auth_login, name='auth_login'),
-	url(r'^register$', views.register, name='register'),
 	url(r'^logout$', views.auth_logout, name='auth_logout'),
 
+	# Snap Demo
+	url(r'^demosnap$', views.demo, name='demo'),
+
 	# Get Snap
-	url(r'^getsnap$', views.getsnap, name='getsnap')
+	url(r'^getsnap$', views.getsnap, name='getsnap'),
+	url(r'^getsnap/thanks$', views.thanks, name='thanks'),
+
+	# Register - This link is only used internally to create accounts
+	url(r'^register$', views.register, name='register'),
 ]

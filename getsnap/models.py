@@ -18,6 +18,8 @@ class CustomUser(AbstractUser):
 	user_type = models.CharField(max_length=1,
 								choices=TYPES,
 								default='P')
+	
+	phone_number = models.CharField(max_length=15, blank=True, null=True)
 
 	def __str__(self):
 		return self.username
