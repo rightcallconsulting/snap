@@ -655,7 +655,17 @@
 
 					if (keyCode == BACKSPACE || keyCode == DELETE) {
 						if (playerSelected.unit == "offense") {
-							if (playerSelected.dropback.length > 0) {
+							if (buttons[0].clicked && playerSelected.dropback.length > 0) {
+								playerSelected.dropback.pop();
+							} else if (buttons[1].clicked && playerSelected.motionCoords.length > 0){
+								playerSelected.motionCoords.pop();
+							} else if(buttons[2].clicked && playerSelected.run.length > 0) {
+								playerSelected.run.pop();
+							} else if(buttons[3].clicked && playerSelected.route.length > 0) {
+								playerSelected.route.pop();
+							} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
+								playerSelected.blockingAssignmentArray.pop();
+							} else if (playerSelected.dropback.length > 0) {
 								playerSelected.dropback.pop();
 							} else if(playerSelected.run.length > 0) {
 								playerSelected.run.pop();
@@ -665,11 +675,21 @@
 								playerSelected.blockingAssignmentArray.pop();
 							} else if (playerSelected.motionCoords.length > 0){
 								playerSelected.motionCoords.pop();
-							} else {
+							}else{
+								debugger;
 								concept.offensivePlayers.splice(playerSelectedIndex, 1);
 							}
 						} else if (playerSelected.unit == "defense") {
-							if (playerSelected.manCoverage.length > 0){
+							if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
+								playerSelected.defensiveMovement.pop();
+							}else if (buttons[6].clicked && playerSelected.blitz.length > 0){
+								playerSelected.blitz.pop();
+							}else if (buttons[7].clicked && playerSelected.manCoverage.length > 0) {
+								playerSelected.manCoverage.pop();
+							}else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
+								playerSelected.zoneCoverage = null;
+							}
+							else if (playerSelected.manCoverage.length > 0){
 								playerSelected.manCoverage.pop();
 							}else if (playerSelected.zoneCoverage != null){
 								playerSelected.zoneCoverage = null;
@@ -677,11 +697,11 @@
 								playerSelected.blitz.pop();
 							}else if (playerSelected.defensiveMovement.length > 0) {
 								playerSelected.defensiveMovement.pop();
-							} else {
+							}else{
+								debugger;
 								concept.defensivePlayers.splice(playerSelectedIndex, 1);
 							}
 						}
-
 						return false;
 					}else if(playerSelected.unit === "defense"){
 						var zoneTypeIndex = specialZoneKeys.indexOf(key);

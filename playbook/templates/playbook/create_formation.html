@@ -382,14 +382,14 @@
 					return false;
 				}
 			} else if (formation.getSelected()[0] != null) {
-				var playerSelcted = formation.getSelected()[0];
-				var playerSelctedIndex = formation.getSelected()[1];
+				var playerSelected = formation.getSelected()[0];
+				var playerSelectedIndex = formation.getSelected()[1];
 				var what_kind_of_dog_is_this = key;
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelcted.unit == "offense") {
-						formation.offensivePlayers.splice(playerSelctedIndex, 1);
-					} else if (playerSelcted.unit == "defense") {
-						formation.defensivePlayers.splice(playerSelctedIndex, 1);
+					if (playerSelected.unit == "offense") {
+						formation.offensivePlayers.splice(playerSelectedIndex, 1);
+					} else if (playerSelected.unit == "defense") {
+						formation.defensivePlayers.splice(playerSelectedIndex, 1);
 					}
 					return false;
 				}

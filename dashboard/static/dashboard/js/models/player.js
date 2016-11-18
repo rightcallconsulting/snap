@@ -43,6 +43,9 @@ var Player = function(config) {
 
 	// Player movement - Sam is trying stuff here
 	this.movementIndex = config.movementIndex || 0;
+
+	//Additional information
+	this.routeNodes = config.routeNodes || [];
 };
 
 //***************************************************************************//
@@ -203,6 +206,59 @@ Player.prototype.pixelDraw = function(field) {
 	}
 };
 
+Player.prototype.getClosestPlayer = function(players){
+	if(players.length === 0){
+		return null;
+	}
+	var closest = players[0];
+	var closestDistance = sqrt((closest.x - this.x)*(closest.x - this.x) + (closest.y - this.y)*(closest.y - this.y));
+	for(var i = 1; i < players.length; i++){
+		var dist = sqrt((players[i].x - this.x)*(players[i].x - this.x) + (players[i].y - this.y)*(players[i].y - this.y));
+		if (dist < closestDistance) {
+			closest = players[i];
+			closestDistance = dist;
+		}
+	}
+	return closest;
+}
+
+Player.prototype.addToRoute = function(x, y){
+	//create node
+	this.routeNodes.push(new Node({x: x, y: y}));
+	this.route.push([x, y]);
+}
+
+Player.prototype.stepRouteBackwards = function(){
+	if(this.route.length > 0){
+		this.routeNodes.pop();
+		this.route.pop();
+	}
+}
+
+Player.prototype.drawShade = function(field, shade){
+	var x1 = field.getTranslatedX(this.x)
+	var x2 = x1;
+	var y1 = field.getTranslatedY(this.y-this.siz/2)
+	var y2 = field.getTranslatedY(this.y+this.siz/2)
+	var size = field.yardsToPixels(this.siz);
+
+	fill(0, 0, 0);
+	stroke(0, 0, 0);
+	strokeWeight(2);
+
+	if(shade === -1){
+		y1 = field.getTranslatedY(this.y);
+		arc(x1, y1, size, size, PI/2, 3*PI/2, PIE);
+	}else if(shade === 0){
+		line(x1,y1,x2,y2);
+	}else if(shade === 1){
+		y1 = field.getTranslatedY(this.y);
+		arc(x1, y1, size, size, -PI/2, PI/2, PIE);
+	}
+
+	strokeWeight(1);
+}
+
 // drawAssignments draws all of a players assignments.
 Player.prototype.drawAssignments = function(field){
 	this.drawMotion(field);
@@ -348,6 +404,10 @@ Player.prototype.drawRoute = function(field) {
 		x2 = field.getTranslatedX(x2);
 		y2 = field.getTranslatedY(y2);
 		line(x1, y1, x2, y2);
+		if(this.routeNodes.length > i){
+			this.routeNodes[i].draw(field);
+			stroke(red);
+		}
 
 		if(i === 0 && this.progressionRank > 0){
 			var xMid = (x1+x2)/2;
@@ -721,7 +781,7 @@ Player.prototype.deepCopy = function() {
 	}
 
 	for (var i = 0; i < this.route.length; ++i) {
-		deepCopy.route.push([this.route[i][0], this.route[i][1]]);
+		deepCopy.addToRoute(this.route[i][0], this.route[i][1]);
 	}
 
 	for (var i = 0; i < this.blockingAssignmentArray.length; ++i) {

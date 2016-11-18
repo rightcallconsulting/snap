@@ -218,6 +218,18 @@ Play.prototype.mouseInPlayer = function(field) {
 	return null;
 };
 
+Play.prototype.mouseInNode = function(field){
+	for(var i = 0; i < this.offensivePlayers.length; i++) {
+		var player = this.offensivePlayers[i];
+		for(var j = player.routeNodes.length-1; j >= 0; j--){
+			if(player.routeNodes[j].isMouseInside(field)){
+				return player.routeNodes[j];
+			}
+		}
+	}
+	return null;
+}
+
 // save handles everything that need to be done when the user pressed the save
 // button. It checks the validity of the play and then saves it (if valid)
 Play.prototype.save = function (path, csrf_token) {
@@ -423,7 +435,7 @@ function createPlayFromJson(playJsonDictionary) {
 		if (playJsonDictionary.offensivePlayers[i].route != null) {
 			for (var j = 0; j < playJsonDictionary.offensivePlayers[i].route.length; ++j) {
 				var route = playJsonDictionary.offensivePlayers[i].route[j];
-				player.route.push([route[0], route[1]]);
+				player.addToRoute(route[0], route[1]);
 			}
 		}
 

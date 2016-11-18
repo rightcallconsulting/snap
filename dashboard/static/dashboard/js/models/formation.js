@@ -92,6 +92,43 @@ Formation.prototype.drawPlayers = function(field) {
 	}
 };
 
+Formation.prototype.drawShades = function(field, defensivePlayers){
+	if(defensivePlayers.length === 0 || this.offensivePlayers.length === 0){
+		return;
+	}
+	var offensivePlayersUsed = [];
+	for(var i = 0; i < defensivePlayers.length; i++){
+		var defender = defensivePlayers[i];
+		var player = defender.getClosestPlayer(this.offensivePlayers);
+		var size = field.yardsToPixels(defender.siz);
+		var shade = 0;
+		var xDist = field.getTranslatedX(defender.x) - field.getTranslatedX(player.x);
+		var yDist = abs(defender.y - player.y);
+		if(xDist > 0.2*size){
+			shade = 1;
+		}else if(xDist < -0.2*size){
+			shade = -1;
+		}
+		if(abs(xDist) < size && yDist < player.siz*1.5 && offensivePlayersUsed.indexOf(player) < 0){
+			player.drawShade(field, shade);
+			offensivePlayersUsed.push(player);
+		}
+	}
+	/*for(var i = 0; i < this.offensivePlayers.length; i++){
+		var player = this.offensivePlayers[i];
+		var defender = player.getClosestPlayer(defensivePlayers);
+		var shade = 0;
+		var xDist = defender.x - player.x;
+		if(xDist > 0.5){
+			shade = 1;
+		}else if(xDist < -0.5){
+			shade = -1;
+		}
+		player.drawShade(field, shade);
+	}*/
+
+}
+
 // isValid checks the legality of a formation.
 Formation.prototype.isValid = function() {
 	// TODO: Implement

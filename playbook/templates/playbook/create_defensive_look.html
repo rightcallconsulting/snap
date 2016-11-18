@@ -286,6 +286,7 @@
 			formation.drawPlayers(field);
 
 			dummy_offense.drawPlayers(field);
+			dummy_offense.drawShades(field, formation.defensivePlayers);
 			defensivePlayerBar.draw(field);
 
 			drawButtons(field);
@@ -477,7 +478,16 @@
 				var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					if (playerSelected.unit == "defense") {
-						if (playerSelected.manCoverage.length > 0){
+						if (buttons[0].clicked && playerSelected.defensiveMovement.length > 0){
+							playerSelected.defensiveMovement.pop();
+						}else if (buttons[1].clicked && playerSelected.blitz.length > 0){
+							playerSelected.blitz.pop();
+						}else if (buttons[2].clicked && playerSelected.manCoverage.length > 0) {
+							playerSelected.manCoverage.pop();
+						}else if (buttons[3].clicked && playerSelected.zoneCoverage != null){
+							playerSelected.zoneCoverage = null;
+						}
+						else if (playerSelected.manCoverage.length > 0){
 							playerSelected.manCoverage.pop();
 						}else if (playerSelected.zoneCoverage != null){
 							playerSelected.zoneCoverage = null;

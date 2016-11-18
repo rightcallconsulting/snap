@@ -104,6 +104,7 @@
 		var buttons = [];
 		var mouseBeingDragged = false;
 		var playerBeingDragged = null;
+		var nodeBeingDragged = null;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 		var selectedPlayerStatus = 0; //0 - blocker, 1 - route, 2 - motion
 
@@ -377,6 +378,7 @@
 		//*******************************************************************//
 		function mousePressed() {
 			playerBeingDragged = play.mouseInPlayer(field);
+			nodeBeingDragged = play.mouseInNode(field);
 		};
 
 		function mouseDragged() {
@@ -388,6 +390,9 @@
 			if (playerBeingDragged != null && playerBeingDragged.unit == "defense") {
 				playerBeingDragged.x = mouseYardX;
 				playerBeingDragged.y = mouseYardY;
+			} else if (nodeBeingDragged != null) {
+				nodeBeingDragged.x = mouseYardX;
+				nodeBeingDragged.y = mouseYardY;
 			}
 
 			// return false to prevent default behavior
@@ -399,6 +404,7 @@
 			if (mouseBeingDragged === true) {
 				mouseBeingDragged = false;
 				playerBeingDragged = null;
+				nodeBeingDragged = null;
 				return false;
 			}
 
@@ -521,7 +527,7 @@
 					currentPlayerSelected.run.push([mouseYardX, mouseYardY]);
 					return false;
 				} else if (buttons[3].clicked === true) {
-					currentPlayerSelected.route.push([mouseYardX, mouseYardY]);
+					currentPlayerSelected.addToRoute(mouseYardX, mouseYardY);
 					return false;
 				} else if (buttons[4].clicked === true) {
 					var block;
@@ -619,24 +625,43 @@
 
 					if (keyCode == BACKSPACE || keyCode == DELETE) {
 						if (playerSelected.unit == "offense") {
-							if (playerSelected.dropback.length > 0) {
+							if (buttons[0].clicked && playerSelected.dropback.length > 0) {
+								playerSelected.dropback.pop();
+							} else if (buttons[1].clicked && playerSelected.motionCoords.length > 0){
+								playerSelected.motionCoords.pop();
+							} else if(buttons[2].clicked && playerSelected.run.length > 0) {
+								playerSelected.run.pop();
+							} else if(buttons[3].clicked && playerSelected.route.length > 0) {
+								playerSelected.stepRouteBackwards();
+							} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
+								playerSelected.blockingAssignmentArray.pop();
+							} else if (playerSelected.dropback.length > 0) {
 								playerSelected.dropback.pop();
 							} else if(playerSelected.run.length > 0) {
 								playerSelected.run.pop();
 							} else if(playerSelected.route.length > 0) {
-								playerSelected.route.pop();
+								playerSelected.stepRouteBackwards();
 							} else if (playerSelected.blockingAssignmentArray.length > 0) {
 								playerSelected.blockingAssignmentArray.pop();
 							} else if (playerSelected.motionCoords.length > 0){
 								playerSelected.motionCoords.pop();
 							}
 						} else if (playerSelected.unit == "defense") {
-							if (playerSelected.manCoverage.length > 0) {
-								playerSelected.manCoverage.pop();
-							}else if (playerSelected.blitz.length > 0) {
+							if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
+								playerSelected.defensiveMovement.pop();
+							}else if (buttons[6].clicked && playerSelected.blitz.length > 0){
 								playerSelected.blitz.pop();
-							}else if (playerSelected.zoneCoverage != null) {
+							}else if (buttons[7].clicked && playerSelected.manCoverage.length > 0) {
+								playerSelected.manCoverage.pop();
+							}else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
 								playerSelected.zoneCoverage = null;
+							}
+							else if (playerSelected.manCoverage.length > 0){
+								playerSelected.manCoverage.pop();
+							}else if (playerSelected.zoneCoverage != null){
+								playerSelected.zoneCoverage = null;
+							}else if (playerSelected.blitz.length > 0){
+								playerSelected.blitz.pop();
 							}else if (playerSelected.defensiveMovement.length > 0) {
 								playerSelected.defensiveMovement.pop();
 							}
