@@ -5,11 +5,11 @@ from django.shortcuts import render
 
 from .models import CustomQuiz, Quiz
 from getsnap.models import Team
-from dashboard.models import Player, Coach, myUser, PlayerGroup
+from dashboard.models import Admin, Coach, Player, PlayerGroup
 from playbook.models import Concept, Formation, Play
 from analytics.models import QuestionAttempted
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def assigned_quizzes(request):
 	team = request.user.coach.team
 	quizzes = Quiz.objects.filter(team=team)
@@ -51,7 +51,7 @@ def assigned_quizzes(request):
 			'page_header': 'QUIZZES'
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def create_quiz(request):
 	team = request.user.coach.team
 	if request.method == 'POST':
@@ -89,7 +89,7 @@ def create_quiz(request):
 			'page_header': 'CREATE QUIZ'
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def manage_quiz(request, quiz_id):
 	team = request.user.coach.team
 	if request.method == 'POST':
@@ -150,7 +150,7 @@ def manage_quiz(request, quiz_id):
 			'page_header': 'MANAGE QUIZ'
 		})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def quizzes_todo(request):
 	player = request.user.player
 	team = player.team
@@ -196,7 +196,7 @@ def quizzes_todo(request):
 			'page_header': 'TODO'
 		})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def take_quiz(request, quiz_id, position=''):
 	team = request.user.player.team
 	player = request.user.player
@@ -253,7 +253,7 @@ def take_quiz(request, quiz_id, position=''):
 			'page_header': quiz.name.upper()
 		})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def submit_quiz(request):
 	team = request.user.player.team
 	if request.method == 'POST':
@@ -266,7 +266,7 @@ def submit_quiz(request):
 
 		return HttpResponse('')
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def custom_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
@@ -278,7 +278,7 @@ def custom_quizzes(request, unit="offense"):
 		'page_header': 'CUSTOM QUIZZES'
 	})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def concept_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
@@ -435,7 +435,7 @@ def concept_quizzes(request, unit="offense"):
 		})
 
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def formation_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
@@ -494,7 +494,7 @@ def formation_quizzes(request, unit="offense"):
 			'page_header': 'FORMATION QUIZ'
 		})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team

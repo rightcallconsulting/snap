@@ -2,16 +2,47 @@ from __future__ import unicode_literals
 
 from django import forms
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 
 from passwords.fields import PasswordField
 
+class CustomUser(AbstractUser):
+	TYPES = [
+			['A', 'Admin'],
+			['C', 'Coach'],
+			['P', 'Player']
+		]
+
+	user_type = models.CharField(max_length=1,
+								choices=TYPES,
+								default='P')
+
+	def __str__(self):
+		return self.username
+
+	def isAdmin(self):
+		if self.user_type == 'A':
+			return True
+		return False
+
+	def isCoach(self):
+		if self.user_type == 'C':
+			return True
+		return False
+
+	def isPlayer(self):
+		if self.user_type == 'P':
+			return True
+		return False
+
+''' Flagged for deletion'''
 class RFPAuthForm(AuthenticationForm):
 	username = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2','placeholder': 'Username'}))
 	password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control input-sm bounceIn animation-delay4','placeholder':'Password'}))
 
+''' Flagged for deletion'''
 class UserCreateForm(UserCreationForm):
 	POSITIONS = (
 			("", ""),
@@ -26,6 +57,7 @@ class UserCreateForm(UserCreationForm):
 			("K", "Kicker"),
 			("P", "Punter"),
 		)
+	'''
 	first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'First Name'}))
 	last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Last Name'}))
 	username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control input-sm bounceIn animation-delay2', 'placeholder' : 'Username'}))
@@ -51,7 +83,7 @@ class UserCreateForm(UserCreationForm):
 		user.email = self.cleaned_data["email"]
 		if commit:
 			user.save()
-		return user
+		return user'''
 
 class Team(models.Model):
 	name = models.CharField(max_length=100)

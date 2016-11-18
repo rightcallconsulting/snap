@@ -27,6 +27,10 @@ SECRET_KEY = 'fgz^7hqp3hohi64gm)v$rvg54@po=pznce*$j$db9h1drp4m9i'
 # Allow all host headers
 ALLOWED_HOSTS = []
 
+# This specifies that we are using our own User model instead of Django's 
+# built-in type
+AUTH_USER_MODEL = 'getsnap.CustomUser'
+
 # Application installed in my project
 INSTALLED_APPS = (
     'django.contrib.admin',

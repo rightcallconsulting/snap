@@ -3,12 +3,12 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render
 
 from .models import Concept, Formation, Play
-from dashboard.models import Player, Coach, myUser, PlayerGroup
+from dashboard.models import Admin, Coach, Player, PlayerGroup
 
 # Playbook
 @login_required
 def playbook(request, unit="offense"):
-	if request.user.myuser.is_a_player:
+	if request.user.isPlayer():
 		user_is_a_coach = False
 		team = request.user.player.team
 	else:

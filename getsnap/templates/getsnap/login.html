@@ -18,12 +18,8 @@
 				<form action="/login" method="post" class="form-login"> 
 					{% csrf_token %}
 
-					{% for field in form %}
-						<div class="form-group">
-							{{ field.label_tag }}
-							{{ field }}
-						</div>
-					{% endfor %}
+					<input type="text" name="username" placeholder="User Name"> <br>
+					<input type="password" name="password" placeholder="Password"> <br>
 
 					<div class="checkbox">
 						<label class="label-checkbox">

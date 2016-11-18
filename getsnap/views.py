@@ -1,10 +1,18 @@
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 
-from .models import RFPAuthForm, UserCreateForm, Team
-from dashboard.models import myUser, Coach, Player
+from .models import CustomUser, Team
+from dashboard.models import Admin, Coach, Player
+
+'''def authenticate(self, username=None, password=None):
+		print "Custom authentication function got called! Hi."
+		try:
+			user = UserAccount.objects.get(username=username)
+			if user.check_password(password):
+				return user
+		except UserAccount.DoesNotExist:
+			return None'''
 
 def auth_login(request):
 	if request.user.is_authenticated():
@@ -23,32 +31,42 @@ def auth_login(request):
 			# [TBD] Display an error message that login failed
 			return HttpResponseRedirect("/login")
 	else:
-		form = RFPAuthForm()
-		return render(request, 'getsnap/login.html', { 'form': form, })
+		return render(request, 'getsnap/login.html', { })
 
 def register(request):
 	if request.method == 'POST':
-		team = Team.objects.filter(id=request.POST['team'])[0]
-		form = UserCreateForm(request.POST)
-		if form.is_valid():
-			new_user = form.save()
-			if 'Player' in request.POST.keys():
-				new_boolean_user = myUser(user=new_user, is_a_player=True)
-				new_boolean_user.save()
-				new_player = Player(user=new_user, team=team)
-				new_player.position = request.POST['position']
-				new_player.save()
-			elif 'Coach' in request.POST.keys():
-				new_boolean_user = myUser(user=new_user, is_a_player=False)
-				new_boolean_user.save()
-				new_coach = Coach(user=new_user, team=team)
-				new_coach.save()
-			user = authenticate(username=new_user.username, password=request.POST['password1'])
-			login(request, user)
-			return HttpResponseRedirect("/")
+		username = request.POST['username']
+		password1 = request.POST['password1']
+		password2 = request.POST['password2']
+		
+		if password1 != password2:
+			HttpResponseRedirect("/register")
+
+		user_type = request.POST['type']
+
+		new_user = CustomUser.objects.create_user(username, username, password1)
+		new_user.user_type = user_type[0].upper()
+		new_user.save()
+
+		
+		team = Team.objects.get(id=request.POST['team'])
+		if user_type == "admin":
+			admin = Admin(user=new_user)
+			admin.save()
+		elif user_type == "coach":
+			coach = Coach(user=new_user, team=team, admin=True)
+			coach.save()
+		elif user_type == "player":
+			player = Player(user=new_user, team=team)
+			player.save()
+
+		user = authenticate(username=username, password=password1)
+
+		login(request, user)
+		return HttpResponseRedirect("/")
 	else:
-		form = UserCreateForm()
-	return render(request, 'getsnap/register.html', { 'form': form })
+		teams = Team.objects.all()
+	return render(request, 'getsnap/register.html', { 'teams': teams })
 
 def auth_logout(request):
 	logout(request)

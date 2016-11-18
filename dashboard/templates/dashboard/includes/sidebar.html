@@ -34,7 +34,7 @@
 					</a>
 				</li>
 
-				{% if request.user.myuser.is_a_player %}
+				{% if request.user.isPlayer %}
 					<li class="openable open">
 						<a href="/quizzes/todo">
 							<img class="menu-icon" src="{% static 'dashboard/images/to-do-icon.png' %}" alt="">
@@ -58,7 +58,7 @@
 					</li>
 				{% endif %}
 
-				{% if not request.user.myuser.is_a_player %}
+				{% if not request.user.isPlayer %}
 					<li>
 						<a href="{% url 'groups' %}">
 							<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
@@ -82,7 +82,7 @@
 					</li>
 				{% endif %}
 
-				{% if request.user.myuser.is_a_player %}
+				{% if request.user.isPlayer %}
 					<li class="openable">
 						<a href="/analytics/player">
 							<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">

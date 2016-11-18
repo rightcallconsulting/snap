@@ -70,7 +70,7 @@ class Play(models.Model):
 	name = models.CharField(max_length=100)
 	scoutName = models.CharField(max_length=100, default="", blank=True, null=False)
 	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
-	formation = models.ForeignKey(Formation, on_delete=models.CASCADE)
+	formation = models.ForeignKey('Formation', on_delete=models.CASCADE)
 	scout = models.BooleanField(default=False)
 
 	playJson = models.TextField(max_length=None, blank=True, null=True)

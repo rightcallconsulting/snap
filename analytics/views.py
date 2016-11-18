@@ -13,7 +13,7 @@ def analytics(request):
 		'page_header': 'ANALYTICS'
 	})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def plays_analytics(request):
 	plays_analytics = []
 	team = request.user.coach.team
@@ -54,7 +54,7 @@ def plays_analytics(request):
 		'page_header': 'PLAYS ANALYTICS'
 	})
 
-@user_passes_test(lambda u: u.myuser.is_a_player)
+@user_passes_test(lambda u: u.isPlayer())
 def player_analytics(request):
 	player = request.user.player
 	team = player.team
@@ -97,7 +97,7 @@ def player_analytics(request):
 		'page_header': player.first_name.upper() + " " + player.last_name.upper()
 	})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def players_analytics(request):
 	players_analytics = []
 	team = request.user.coach.team
@@ -134,7 +134,7 @@ def players_analytics(request):
 		'page_header': 'PLAYERS ANALYTICS'
 	})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def quiz_analytics(request, quiz_id):
 	plays_analytics = []
 	team = request.user.coach.team

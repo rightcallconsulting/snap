@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
-
-from django.contrib.auth.models import User
+ 
 from django.db import models
 
 class CustomQuiz(models.Model):
@@ -21,7 +20,7 @@ class CustomQuiz(models.Model):
 class Quiz(models.Model):
 	name = models.CharField(max_length=50, blank=True, null=True)
 	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
-	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	author = models.ForeignKey('getsnap.CustomUser', on_delete=models.CASCADE)
 	unit = models.CharField(max_length=25, default="offense")
 	players = models.ManyToManyField('dashboard.Player', related_name="players")
 	submissions = models.ManyToManyField('dashboard.Player', blank=True, related_name="submissions")

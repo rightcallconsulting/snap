@@ -2,52 +2,27 @@
 {% load staticfiles %}
 
 {% block page %}
-	<div class="login-wrapper">
-		<div class="text-center">
-			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<div class="pull-left">
-					<i class="fa fa-plus-circle fa-lg"></i> Register
-				</div>
-
-				<div class="pull-right">
-					<span style="font-size:11px;">Already have an account?</span>
-
-					<a class="btn btn-default btn-xs login-link" href="login" style="margin-top:-2px;">
-						<i class="fa fa-sign-in"></i> Sign In
-					</a>
-				</div>
-			</div><!--/panel-heading -->
-
-			<div class="panel-body">
-				<form action="/register" method="post" class="form-login" enctype="multipart/form-data"> 
-					{% csrf_token %}
-
-					{% for field in form %}
-						{% if field.label == 'Coach' or field.label == 'Player' %}
-							<div class="form-group">
-								<label class="label-checkbox">
-									 <input type="checkbox" name="{{field.label}}" />
-									 <span class="custom-checkbox info bounceIn animation-delay6"></span>
-									 {{field.label}}
-								</label>
-							</div><!-- /form-group -->
-						{% else %}
-							<div class="form-group">
-								{{ field.label_tag }}
-								{{ field }}
-							</div>
-						{% endif %}
+	<div id="register-wrapper">
+		<form action="/register" method="post" class="getsnap-form"> 
+			{% csrf_token %}
+			<input type="text" name="username" placeholder="User Name"> <br>
+			<input type="password" name="password1" placeholder="Password"> <br>
+			<input type="password" name="password2" placeholder="Check Password"> <br>
+			<select name="type">
+				<optgroup>
+					<option value="coach">Coach</option>
+					<option value="player">Player</option>
+					<option value="admin">Admin</option>
+				</optgroup>
+			</select> <br>
+			<select name="team">
+				<optgroup>
+					{% for team in teams %}
+						<option value="{{ team.id }}">{{ team.name }}</option>
 					{% endfor %}
-
-					<hr>
-
-					<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign Up">
-				</form>
-			</div><!-- /panel-body -->
-		</div><!-- /panel -->
-	</div><!-- /login-wrapper -->
+				</optgroup>
+			</select> <br>
+			<button type="submit">Register</button>
+		</form>
+	</div>
 {% endblock %}

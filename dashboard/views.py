@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.core import serializers
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import PlayerForm, CoachForm, UserForm, PlayerGroupForm, Coach, Authentication, myUser, PlayerGroup, Player
+from .models import Admin, Coach, Player, PlayerGroup
 from getsnap.models import Team
 from playbook.models import Concept, Formation, Play
 from quizzes.models import Quiz
@@ -24,7 +24,7 @@ from analytics.models import QuestionAttempted
 
 @login_required
 def homepage(request):
-	if request.user.myuser.is_a_player:
+	if request.user.isPlayer():
 		player = request.user.player
 		team = player.team
 		quizzes = Quiz.objects.filter(team=team, players__in=[player])
@@ -224,7 +224,7 @@ def edit_profile(request):
 				player.save()'''
 		return HttpResponseRedirect("/edit_profile")
 	else:
-		if request.user.myuser.is_a_player:
+		if request.user.isPlayer():
 			team = request.user.player.team
 		else:
 			team = request.user.coach.team
@@ -258,7 +258,7 @@ def change_password(request):
 		else:
 			return HttpResponseRedirect("/change_password")
 	else:
-		if request.user.myuser.is_a_player:
+		if request.user.isPlayer():
 			team = request.user.player.team
 		else:
 			team = request.user.coach.team
@@ -268,7 +268,7 @@ def change_password(request):
 		})
 
 # Groups
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def groups(request):
 	team = request.user.coach.team
 	groups = PlayerGroup.objects.filter(team=team)
@@ -295,7 +295,7 @@ def groups(request):
 		'page_header': 'GROUPS'
 	})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def create_group(request):
 	team = request.user.coach.team
 	if request.method == "POST":
@@ -335,7 +335,7 @@ def create_group(request):
 			'page_header': 'CREATE GROUP'
 		})
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def manage_groups(request):
 	team = request.user.coach.team
 	if request.method == "POST":
@@ -431,13 +431,13 @@ def delete_group(request):
 		return HttpResponse('')
 
 # JSON requests
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def players_on_team_json(request, team_id):
 	team = Team.objects.filter(id=team_id)[0]
 	players = Player.objects.filter(team=team)
 	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def players_on_team_but_not_in_group_json(request, group_id, team_id):
 	team = Team.objects.filter(id=team_id)[0]
 	group = PlayerGroup.objects.filter(team=team, id=group_id)[0]
@@ -449,13 +449,13 @@ def players_on_team_but_not_in_group_json(request, group_id, team_id):
 
 	return HttpResponse(serializers.serialize("json", players_not_in_group, fields = ['first_name', 'last_name', 'position', 'year']))
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def all_groups_json(request):
 	groups = PlayerGroup.objects.all()
 	players = Player.objects.filter(playergroup__in=groups)
 	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
 
-@user_passes_test(lambda u: not u.myuser.is_a_player)
+@user_passes_test(lambda u: not u.isPlayer())
 def group_json(request, group_id):
 	group = PlayerGroup.objects.filter(id=group_id)[0]
 	players = group.players.all()
