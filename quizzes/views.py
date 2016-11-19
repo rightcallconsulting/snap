@@ -501,6 +501,40 @@ def formation_quizzes(request, unit="offense"):
 def play_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
+	if request.method == 'POST':
+		question_type = request.POST['type']
+		score = request.POST['score']
+		name = request.POST['name']
+
+		questionAttempt = QuestionAttempted()
+		questionAttempt.player = player
+		questionAttempt.team = team
+		questionAttempt.save()
+
+		#embed()
+
+		if question_type == "formation":
+			formation = Formation.objects.filter(team=team, name=name)[0]
+			questionAttempt.formation = formation
+			questionAttempt.save()
+		elif question_type == "play":
+			formation_name = request.POST['formationName']
+			scout_name = request.POST['scoutName']
+			formation = Formation.objects.filter(team=team, scout=False, name=formation_name)[0]
+			play = Play.objects.filter(team=team, formation=formation, scoutName=scout_name, name=name)[0]
+			questionAttempt.play = play
+			questionAttempt.save()
+		elif question_type == "concept":
+			concept = Concept.objects.filter(team=team, name=name)[0]
+			questionAttempt.concept = concept
+			questionAttempt.save()
+
+		if score:
+			questionAttempt.score = int(score)
+			questionAttempt.save()
+
+		return HttpResponse('')
+
 	type_of_quiz = request.GET['type']
 	number_of_questions = int(request.GET['number_of_questions'])
 	order_of_questions = str(request.GET['order'])

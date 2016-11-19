@@ -526,7 +526,7 @@ Question.prototype.checkZoneCoverage = function(attempt){
 Question.prototype.skip = function() {};
 
 // save is used to post an attempted question.
-Question.prototype.save = function(path, csrf_token) {
+Question.prototype.save = function(path, csrf_token, quiz_type) {
 	if (this.question instanceof Formation) {
 		var type = "formation";
 		var name = this.question.name;

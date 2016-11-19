@@ -12,6 +12,7 @@
 
 var Quiz = function(config) {
 	this.name = config.name || "";
+	this.quiz_type = config.quiz_type || "assigned"; //assigned or custom
 	this.unit = config.unit || "offense";
 	this.formations = config.formations || [];
 	this.plays = config.plays || [];
@@ -534,9 +535,10 @@ Quiz.prototype.shuffle = function() {
 // it to the correct answer. It posts a question attempt based on the result.
 Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
-		this.questions[this.currentQuestionIndex].check(this.attempt);
-		this.questions[this.currentQuestionIndex].save(path, csrf_token);
-		if (this.questions[this.currentQuestionIndex].score === 1) {
+		var currentQuestion = this.getCurrentQuestion();
+		currentQuestion.check(this.attempt);
+		currentQuestion.save(path, csrf_token, this.quiz_type);
+		if (currentQuestion.score === 1) {
 			this.results.push(1)
 			this.nextQuestion();
 		} else {
@@ -544,8 +546,7 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 			if (typeof this.attempt === "string") {
 				this.nextQuestion();
 			} else {
-				debugger;
-				this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
+				currentQuestion.feedbackStartTime = millis();
 			}
 		}
 	}
@@ -555,10 +556,11 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 // It posts a question attempt.
 Quiz.prototype.skipCurrentQuestion = function(path, csrf_token) {
 	if (!this.isEmpty()) {
-		if (this.questions[this.currentQuestionIndex].score === null) {
+		var currentQuestion = this.getCurrentQuestion();
+		if (currentQuestion.score === null) {
 			this.results.push(2);
-			this.questions[this.currentQuestionIndex].skip();
-			this.questions[this.currentQuestionIndex].save(path, csrf_token);
+			currentQuestion.skip();
+			currentQuestion.save(path, csrf_token, this.quiz_type);
 		}
 
 		this.nextQuestion();
