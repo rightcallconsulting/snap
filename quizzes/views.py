@@ -326,9 +326,7 @@ def concept_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-
 					### Do additional filtering for type of assignment here eventually ###
-
 					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_concepts.append(concept)
 						break
@@ -386,6 +384,7 @@ def concept_quizzes(request, unit="offense"):
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
 						filtered_concepts.append(concept)
+						break
 
 		concepts = filtered_concepts[0:number_of_questions]
 
@@ -414,6 +413,7 @@ def concept_quizzes(request, unit="offense"):
 					filtered_concepts.append(concept)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+					break
 			defensive_players = concept_dict['defensivePlayers']
 			for player_dict in defensive_players:
 				player_position = str(player_dict['pos'])
@@ -421,6 +421,7 @@ def concept_quizzes(request, unit="offense"):
 					filtered_concepts.append(concept)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+					break
 
 		concepts = filtered_concepts[0:number_of_questions]
 
@@ -566,12 +567,16 @@ def play_quizzes(request, unit="offense"):
 					### Do additional filtering for type of assignment here eventually ###
 					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
 						filtered_plays.append(play)
+						break
 					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
 						filtered_plays.append(play)
+						break
 					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
 						filtered_plays.append(play)
+						break
 					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
 						filtered_plays.append(play)
+						break
 		plays = filtered_plays[0:number_of_questions]
 		return render(request, 'quizzes/assignment_quiz.html', {
 			'player': player,
@@ -597,6 +602,7 @@ def play_quizzes(request, unit="offense"):
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						filtered_plays.append(play)
 						call_options.append(player_dict['call'])
+						break
 
 		plays = filtered_plays[0:number_of_questions]
 
@@ -629,6 +635,7 @@ def play_quizzes(request, unit="offense"):
 					filtered_plays.append(play)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+					break
 			defensive_players = play_dict['defensivePlayers']
 			for player_dict in defensive_players:
 				player_position = str(player_dict['pos'])
@@ -636,6 +643,7 @@ def play_quizzes(request, unit="offense"):
 					filtered_plays.append(play)
 					if 'call' in player_dict and len(player_dict['call']) > 0:
 						call_options.append(player_dict['call'])
+					break
 
 		plays = filtered_plays[0:number_of_questions]
 

@@ -451,19 +451,19 @@ Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questions
 	}
 
 	for (i in this.concepts) {
-		question = new Question({ question: this.concepts[i].deepCopy() });
+		question = new Question({ question: this.concepts[i].deepCopy(), type: "alignment" });
 		result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
 		if (result === 0) {
 			this.questions.push(question);
 		}
 
-		question = new Question({ question: this.concepts[i].deepCopy() });
+		question = new Question({ question: this.concepts[i].deepCopy(), type: "call" });
 		var result = question.buildCallQuestionAndAnswer(testedPlayerPosition)
 		if (result === 0) {
 			this.questions.push(question);
 		}
 
-		question = new Question({ question: this.concepts[i].deepCopy() });
+		question = new Question({ question: this.concepts[i].deepCopy(), type: "assignment" });
 		var result = question.buildAssignmentQuestionAndAnswer(testedPlayerPosition)
 		if (result === 0) {
 			this.questions.push(question);
@@ -544,6 +544,7 @@ Quiz.prototype.checkCurrentQuestion = function(path, csrf_token) {
 			if (typeof this.attempt === "string") {
 				this.nextQuestion();
 			} else {
+				debugger;
 				this.questions[this.currentQuestionIndex].feedbackStartTime = millis();
 			}
 		}

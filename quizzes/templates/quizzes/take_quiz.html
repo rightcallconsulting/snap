@@ -61,6 +61,9 @@
 		var buttons = [];
 		var position_groups = [];
 
+		var mouseBeingDragged = false;
+		var nodeBeingDragged = null;
+
 		//*******************************************************************//
 		// p5.js Animation Functions                                         //
 		//*******************************************************************//
@@ -265,11 +268,41 @@
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
 
-		function mousePressed() {};
+		function mousePressed() {
+			nodeBeingDragged = quiz.getCurrentQuestion().question.mouseInNode(field);
+		};
 
-		function mouseDragged() {};
+		function mouseDragged() {
+			mouseBeingDragged = true;
+
+			var mouseYardX = field.getYardX(mouseX);
+			var mouseYardY = field.getYardY(mouseY);
+
+			if (nodeBeingDragged != null) {
+				var player = null;
+				for(var i = 0; i < quiz.getCurrentQuestion().question.offensivePlayers.length; i++){
+					var new_player = quiz.getCurrentQuestion().question.offensivePlayers[i];
+					var index = new_player.routeNodes.indexOf(nodeBeingDragged);
+					if(index >= 0){
+						new_player.route[index][0] = mouseYardX;
+						new_player.route[index][1] = mouseYardY;
+					}
+				}
+				nodeBeingDragged.x = mouseYardX;
+				nodeBeingDragged.y = mouseYardY;
+			}
+
+			// return false to prevent default behavior
+			return false;
+		};
 
 		function mouseReleased() {
+			// If the mouse is being dragged don't do any of the click actions.
+			if (mouseBeingDragged === true) {
+				mouseBeingDragged = false;
+				nodeBeingDragged = null;
+				return false;
+			}
 
 			if(quiz.over){
 				var clickedButton = quiz.getClickedRestartButton(field)
@@ -411,7 +444,7 @@
 					}
 
 					return false;
-				} else if (playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
+				} else if (buttons[4].clicked && specialBlockKeys.indexOf(key) >= 0) {
 					var prevX = playerSelected.x;
 					var prevY = playerSelected.y;
 					var blockSize = playerSelected.blockingAssignmentArray.length;

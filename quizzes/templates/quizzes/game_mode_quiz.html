@@ -313,7 +313,7 @@
 		//*******************************************************************//
 
 		function mousePressed() {
-			nodeBeingDragged = play.mouseInNode(field);
+			nodeBeingDragged = quiz.getCurrentQuestion().question.mouseInNode(field);
 		};
 
 		function mouseDragged() {
@@ -324,8 +324,8 @@
 
 			if (nodeBeingDragged != null) {
 				var player = null;
-				for(var i = 0; i < play.offensivePlayers.length; i++){
-					var new_player = play.offensivePlayers[i];
+				for(var i = 0; i < quiz.getCurrentQuestion().question.offensivePlayers.length; i++){
+					var new_player = quiz.getCurrentQuestion().question.offensivePlayers[i];
 					var index = new_player.routeNodes.indexOf(nodeBeingDragged);
 					if(index >= 0){
 						new_player.route[index][0] = mouseYardX;
