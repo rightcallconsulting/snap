@@ -79,6 +79,11 @@
 				<button id="zoom-out-button" name="button">
 					<i class="fa fa-search-minus fa-2x mainview-button-icon" title="Zoom out"></i>
 				</button>
+
+				<button id="flip-field-button" name="button">
+					<i class="fa fa-arrows-v fa-2x mainview-button-icon" title="Flip field"></i>
+				</button>
+
 			</div>
 		</div>
 
@@ -154,6 +159,7 @@
 
 			field.height = height;
 			field.width = width;
+			field.viewPoint = "offense";
 			field.heightInYards = 35;
 			field.ballYardLine = 65;
 			background(58, 135, 70);
@@ -374,6 +380,10 @@
 			}
 
 			resizeMainViewObjects();
+		});
+
+		$("#flip-field-button").click(function(event) {
+			field.flipView();
 		});
 
 		// changeSideviewAndTopOptions the sideview with the appropriate content
