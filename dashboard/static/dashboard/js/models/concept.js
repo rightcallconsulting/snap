@@ -345,7 +345,7 @@ Concept.prototype.save = function (path, csrf_token) {
 
 		var conceptName = this.name;
 		var conceptUnit = this.unit;
-		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz", "progressionRank"]);
+		conceptJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "position_type", "num", "startX", "startY", "x", "y", "unit", "eligible", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "notes", "call", "zoneCoverage", "manCoverage", "blitz", "progressionRank"]);
 
 		var jqxhr = $.post(
 				path,
@@ -430,9 +430,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 			startY: conceptJsonDictionary.offensivePlayers[i].startY,
 			num: conceptJsonDictionary.offensivePlayers[i].num,
 			pos: conceptJsonDictionary.offensivePlayers[i].pos,
-			red: conceptJsonDictionary.offensivePlayers[i].red,
-			green: conceptJsonDictionary.offensivePlayers[i].green,
-			blue: conceptJsonDictionary.offensivePlayers[i].blue,
 			unit: conceptJsonDictionary.offensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
@@ -488,9 +485,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 			startY: conceptJsonDictionary.defensivePlayers[i].startY,
 			num: conceptJsonDictionary.defensivePlayers[i].num,
 			pos: conceptJsonDictionary.defensivePlayers[i].pos,
-			red: conceptJsonDictionary.defensivePlayers[i].red,
-			green: conceptJsonDictionary.defensivePlayers[i].green,
-			blue: conceptJsonDictionary.defensivePlayers[i].blue,
 			unit: conceptJsonDictionary.defensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.defensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.defensivePlayers[i].siz,
@@ -535,9 +529,6 @@ function createConceptFromJson(conceptJsonDictionary) {
 				startY: conceptJsonDictionary.offensiveLinemen[i].startY,
 				num: conceptJsonDictionary.offensiveLinemen[i].num,
 				pos: conceptJsonDictionary.offensiveLinemen[i].pos,
-				red: conceptJsonDictionary.offensiveLinemen[i].red,
-				green: conceptJsonDictionary.offensiveLinemen[i].green,
-				blue: conceptJsonDictionary.offensiveLinemen[i].blue,
 				unit: conceptJsonDictionary.offensiveLinemen[i].unit,
 				eligible: conceptJsonDictionary.offensiveLinemen[i].eligible,
 				siz: conceptJsonDictionary.offensiveLinemen[i].siz,

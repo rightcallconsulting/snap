@@ -251,7 +251,7 @@ Play.prototype.save = function (path, csrf_token) {
 			player.startY = player.y;
 		}
 
-		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "blitz", "manCoverage", "zoneCoverage", "notes", "call", "progressionRank"]);
+		playJson = JSON.stringify(this, ["name", "scoutName", "team", "unit", "formation", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "position_type", "num", "startX", "startY", "x", "y", "unit", "eligible", "siz", "motionCoords", "dropback", "run", "route", "blockingAssignmentArray", "type", "player", "defensiveMovement", "blitz", "manCoverage", "zoneCoverage", "notes", "call", "progressionRank"]);
 		var playName = this.name;
 		var scoutName = this.scoutName;
 		var playUnit = this.unit;
@@ -392,6 +392,7 @@ function createPlayFromJson(playJsonDictionary) {
 			startY: playJsonDictionary.offensivePlayers[i].startY,
 			num: playJsonDictionary.offensivePlayers[i].num,
 			pos: playJsonDictionary.offensivePlayers[i].pos,
+			position_type: playJsonDictionary.offensivePlayers[i].position_type,
 			red: playJsonDictionary.offensivePlayers[i].red,
 			green: playJsonDictionary.offensivePlayers[i].green,
 			blue: playJsonDictionary.offensivePlayers[i].blue,
@@ -450,6 +451,7 @@ function createPlayFromJson(playJsonDictionary) {
 			startY: playJsonDictionary.defensivePlayers[i].startY,
 			num: playJsonDictionary.defensivePlayers[i].num,
 			pos: playJsonDictionary.defensivePlayers[i].pos,
+			position_type: playJsonDictionary.defensivePlayers[i].position_type,
 			red: playJsonDictionary.defensivePlayers[i].red,
 			green: playJsonDictionary.defensivePlayers[i].green,
 			blue: playJsonDictionary.defensivePlayers[i].blue,

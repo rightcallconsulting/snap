@@ -17,10 +17,8 @@ var Player = function(config) {
 	this.startX = this.x;
 	this.startY = this.y;
 	this.pos = config.pos || "X";
+	this.position_type = config.position_type || "";
 	this.siz = config.siz || 2;
-	this.red = config.red || 0;
-	this.blue = config.blue || 0;
-	this.green = config.green || 0;
 	this.selected = config.selected || false;
 	this.eligible = config.eligible || false;
 	this.unit = config.unit || "offense";
@@ -66,44 +64,12 @@ Player.prototype.click = function() {
 // selected player.
 Player.prototype.setSelected = function () {
 	this.selected = true;
-
-	var red = 255;
-	var green = 255;
-	var blue = 0;
-
-	// TODO: impletment a different scheme for selecting defensive players.
-	// Maybe try drawing a white ellipse behind them.
-
-	this.setFill(red, green, blue);
 };
 
 // setUnselected changes the selected status to false and changes the color of
 // the player to their default color.
 Player.prototype.setUnselected = function () {
 	this.selected = false;
-
-	var red = 0;
-	var green = 0;
-	var blue = 0;
-
-	if (this.pos === "QB") {
-		red = 212; green = 130; blue = 130;
-	} else if (this.unit === "defense") {
-		red = 0; green = 0; blue = 0;
-	} else if (this.eligible) {
-		red = 255; green = 0; blue = 0;
-	} else if (!this.eligible) {
-		red = 143; green = 29; blue = 29;
-	}
-
-	this.setFill(red, green, blue);
-};
-
-// setFill changes the r, g, b values of the player.
-Player.prototype.setFill = function(red, green, blue) {
-	this.red = red;
-	this.green = green;
-	this.blue = blue;
 };
 
 Player.prototype.clearAssignments = function(){
@@ -167,17 +133,29 @@ Player.prototype.draw = function(field) {
 	var y = field.getTranslatedY(this.y);
 	var siz = field.yardsToPixels(this.siz);
 
+	noStroke();
+
 	if(this.unit === "offense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
+		if(this.selected){
+			fill(Colors.selectedPlayerColor());
+		} else if(this.position_type === "Offensive Lineman"){
+			fill(Colors.olColor());
+		} else if(this.position_type === "Quarterback"){
+			fill(Colors.qbColor());
+		} else if(this.position_type === "Skill Position"){
+			fill(Colors.skillPlayerColor());
+		}
 		ellipse(x, y, siz, siz);
 		fill(Colors.blackColor());
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
 	} else if (this.unit === "defense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
+		if(this.selected){
+			fill(Colors.selectedPlayerColor());
+		}else{
+			fill(Colors.defensivePlayerColor());
+		}
 		textSize(17);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
@@ -188,17 +166,28 @@ Player.prototype.draw = function(field) {
 // pixelDraw draws the player on the field. It assumes the players coordinates
 // are in yards and not pixels.
 Player.prototype.pixelDraw = function(field) {
+	noStroke();
 	if(this.unit === "offense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
+		if(this.selected){
+			fill(Colors.selectedPlayerColor());
+		} else if(this.position_type === "Offensive Lineman"){
+			fill(Colors.olColor());
+		} else if(this.position_type === "Quarterback"){
+			fill(Colors.qbColor());
+		} else if(this.position_type === "Skill Position"){
+			fill(Colors.skillPlayerColor());
+		}
 		ellipse(this.x, this.y, this.siz, this.siz);
 		fill(Colors.blackColor());
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, this.x, this.y);
 	} else if (this.unit === "defense") {
-		noStroke();
-		fill(this.red, this.green, this.blue);
+		if(this.selected){
+			fill(Colors.selectedPlayerColor());
+		}else{
+			fill(Colors.defensivePlayerColor());
+		}
 		textSize(17);
 		textAlign(CENTER, CENTER);
 		text(this.pos, this.x, this.y);
@@ -753,12 +742,10 @@ Player.prototype.deepCopy = function() {
 		startX: this.startX,
 		startY: this.startY,
 		siz: this.siz,
-		red: this.red,
-		blue: this.blue,
-		green: this.green,
 		eligible: this.eligible,
 		selected: this.selected,
 		pos: this.pos,
+		position_type: this.position_type,
 		unit: this.unit,
 		name: this.name,
 		notes: this.notes,

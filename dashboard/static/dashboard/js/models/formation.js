@@ -49,11 +49,8 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 			x: xPos,
 			y: yPos,
 			num: olPositions[i+2],
-			fill: color(143, 29, 29),
-			red: 143,
-			blue: 29,
-			green: 29,
 			pos: olPositions[i+2],
+			position_type: "Offensive Lineman",
 			index: i
 		});
 		this.offensiveLinemen.push(offensive_lineman);
@@ -65,11 +62,8 @@ Formation.prototype.createOffensiveLineAndQuarterback = function(ballY){
 		x: this.offensiveLinemen[2].x,
 		y: this.offensiveLinemen[2].y-2.25,
 		num: 12,
-		fill: color(212, 130, 130),
-		red: 212,
-		blue: 130,
-		green: 130,
 		pos: "QB",
+		position_type: "Quarterback",
 		eligible: true
 	});
 
@@ -241,7 +235,7 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var formationName = this.name;
 		var formationUnit = this.unit;
-		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "num", "startX", "startY", "x", "y", "unit", "eligible", "red", "green", "blue", "siz", "notes", "blitz", "manCoverage", "zoneCoverage", "type"]);
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "position_type", "num", "startX", "startY", "x", "y", "unit", "eligible", "siz", "notes", "blitz", "manCoverage", "zoneCoverage", "type"]);
 
 		var jqxhr = $.post(
 				path,
@@ -323,9 +317,7 @@ function createFormationFromJson(formationJsonDictionary) {
 			startY: formationJsonDictionary.offensivePlayers[i].startY,
 			num: formationJsonDictionary.offensivePlayers[i].num,
 			pos: formationJsonDictionary.offensivePlayers[i].pos,
-			red: formationJsonDictionary.offensivePlayers[i].red,
-			green: formationJsonDictionary.offensivePlayers[i].green,
-			blue: formationJsonDictionary.offensivePlayers[i].blue,
+			position_type: formationJsonDictionary.offensivePlayers[i].position_type,
 			unit: formationJsonDictionary.offensivePlayers[i].unit,
 			eligible: formationJsonDictionary.offensivePlayers[i].eligible,
 			siz: formationJsonDictionary.offensivePlayers[i].siz
@@ -350,9 +342,7 @@ function createFormationFromJson(formationJsonDictionary) {
 			startY: formationJsonDictionary.defensivePlayers[i].startY,
 			num: formationJsonDictionary.defensivePlayers[i].num,
 			pos: formationJsonDictionary.defensivePlayers[i].pos,
-			red: formationJsonDictionary.defensivePlayers[i].red,
-			green: formationJsonDictionary.defensivePlayers[i].green,
-			blue: formationJsonDictionary.defensivePlayers[i].blue,
+			position_type: formationJsonDictionary.defensivePlayers[i].position_type,
 			unit: formationJsonDictionary.defensivePlayers[i].unit,
 			eligible: formationJsonDictionary.defensivePlayers[i].eligible,
 			siz: formationJsonDictionary.defensivePlayers[i].siz
@@ -542,6 +532,6 @@ Formation.prototype.drawOptionsToCreate = function() {
 };
 
 Formation.prototype.createDummyFormation = function(){
-	var jsonString = "{\"name\":\"Green RT\",\"team\":\"1\",\"unit\":\"offense\",\"offensivePlayers\":[{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"T\",\"num\":\"T\",\"startX\":21.665,\"startY\":65,\"x\":21.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"G\",\"num\":\"G\",\"startX\":24.165,\"startY\":65,\"x\":24.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"C\",\"num\":\"C\",\"startX\":26.665,\"startY\":65,\"x\":26.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"G\",\"num\":\"G\",\"startX\":29.165,\"startY\":65,\"x\":29.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"T\",\"num\":\"T\",\"startX\":31.665,\"startY\":65,\"x\":31.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"QB\",\"num\":12,\"startX\":26.665,\"startY\":62.75,\"x\":26.665,\"y\":62.75,\"eligible\":true,\"red\":212,\"green\":130,\"blue\":130,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"Y\",\"num\":\"Y\",\"startX\":34.10227992957746,\"startY\":65,\"x\":34.10227992957746,\"y\":65,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"X\",\"num\":\"X\",\"startX\":11.848758802816901,\"startY\":65,\"x\":11.848758802816901,\"y\":65,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"Z\",\"num\":\"Z\",\"startX\":41.56706866197183,\"startY\":63.274647887323944,\"x\":41.56706866197183,\"y\":63.274647887323944,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"H\",\"num\":\"H\",\"startX\":26.77833626760563,\"startY\":57.21830985915493,\"x\":26.77833626760563,\"y\":57.21830985915493,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"F\",\"num\":\"F\",\"startX\":26.707913732394367,\"startY\":59.61267605633803,\"x\":26.707913732394367,\"y\":59.61267605633803,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2}],\"defensivePlayers\":[],\"quarterback\":[{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"QB\",\"num\":12,\"startX\":26.665,\"startY\":62.75,\"x\":26.665,\"y\":62.75,\"eligible\":true,\"red\":212,\"green\":130,\"blue\":130,\"siz\":2}],\"offensiveLinemen\":[{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"T\",\"num\":\"T\",\"startX\":21.665,\"startY\":65,\"x\":21.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"G\",\"num\":\"G\",\"startX\":24.165,\"startY\":65,\"x\":24.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"C\",\"num\":\"C\",\"startX\":26.665,\"startY\":65,\"x\":26.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"G\",\"num\":\"G\",\"startX\":29.165,\"startY\":65,\"x\":29.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2},{\"name\":\"\",\"unit\":\"offense\",\"pos\":\"T\",\"num\":\"T\",\"startX\":31.665,\"startY\":65,\"x\":31.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2}],\"eligibleReceivers\":[]}"
+	var jsonString = "{\"name\":\"Gun Trips Right\",\"team\":\"1\",\"unit\":\"offense\",\"offensivePlayers\":[{\"unit\":\"offense\",\"pos\":\"LT\",\"position_type\":\"Offensive Lineman\",\"startX\":21.665,\"startY\":65,\"x\":21.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"LG\",\"position_type\":\"Offensive Lineman\",\"startX\":24.165,\"startY\":65,\"x\":24.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"C\",\"position_type\":\"Offensive Lineman\",\"startX\":26.665,\"startY\":65,\"x\":26.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"RG\",\"position_type\":\"Offensive Lineman\",\"startX\":29.165,\"startY\":65,\"x\":29.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"RT\",\"position_type\":\"Offensive Lineman\",\"startX\":31.665,\"startY\":65,\"x\":31.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"QB\",\"position_type\":\"Quarterback\",\"startX\":26.857570655708393,\"startY\":60.394956110886895,\"x\":26.857570655708393,\"y\":60.394956110886895,\"eligible\":true,\"red\":212,\"green\":130,\"blue\":130,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"WR\",\"position_type\":\"Skill Position\",\"startX\":44.769776223160214,\"startY\":65,\"x\":44.769776223160214,\"y\":65,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"WR\",\"position_type\":\"Skill Position\",\"startX\":42.37148928525872,\"startY\":62.268617781122444,\"x\":42.37148928525872,\"y\":62.268617781122444,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"WR\",\"position_type\":\"Skill Position\",\"startX\":38.24943361074051,\"startY\":62.268617781122444,\"x\":38.24943361074051,\"y\":62.268617781122444,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"WR\",\"position_type\":\"Skill Position\",\"startX\":9.320097422303682,\"startY\":65,\"x\":9.320097422303682,\"y\":65,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"RB\",\"position_type\":\"Skill Position\",\"startX\":24.309390784188054,\"startY\":60.54484904450574,\"x\":24.309390784188054,\"y\":60.54484904450574,\"eligible\":true,\"red\":255,\"green\":0,\"blue\":0,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null}],\"defensivePlayers\":[],\"quarterback\":[{\"unit\":\"offense\",\"pos\":\"QB\",\"position_type\":\"Quarterback\",\"startX\":26.857570655708393,\"startY\":60.394956110886895,\"x\":26.857570655708393,\"y\":60.394956110886895,\"eligible\":true,\"red\":212,\"green\":130,\"blue\":130,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null}],\"offensiveLinemen\":[{\"unit\":\"offense\",\"pos\":\"LT\",\"position_type\":\"Offensive Lineman\",\"startX\":21.665,\"startY\":65,\"x\":21.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"LG\",\"position_type\":\"Offensive Lineman\",\"startX\":24.165,\"startY\":65,\"x\":24.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"C\",\"position_type\":\"Offensive Lineman\",\"startX\":26.665,\"startY\":65,\"x\":26.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"RG\",\"position_type\":\"Offensive Lineman\",\"startX\":29.165,\"startY\":65,\"x\":29.165,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null},{\"unit\":\"offense\",\"pos\":\"RT\",\"position_type\":\"Offensive Lineman\",\"startX\":31.665,\"startY\":65,\"x\":31.665,\"y\":65,\"eligible\":false,\"red\":143,\"green\":29,\"blue\":29,\"siz\":2,\"notes\":[],\"blitz\":[],\"manCoverage\":[],\"zoneCoverage\":null}],\"eligibleReceivers\":[],\"notes\":[]}"
 	return createFormationFromJson(JSON.parse(jsonString))
 }
