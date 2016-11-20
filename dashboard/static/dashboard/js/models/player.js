@@ -171,7 +171,7 @@ Player.prototype.draw = function(field) {
 		noStroke();
 		fill(this.red, this.green, this.blue);
 		ellipse(x, y, siz, siz);
-		fill(0,0,0);
+		fill(Colors.blackColor());
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
@@ -181,7 +181,7 @@ Player.prototype.draw = function(field) {
 		textSize(17);
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
-		fill(0,0,0);
+		fill(Colors.blackColor());
 	}
 };
 
@@ -192,7 +192,7 @@ Player.prototype.pixelDraw = function(field) {
 		noStroke();
 		fill(this.red, this.green, this.blue);
 		ellipse(this.x, this.y, this.siz, this.siz);
-		fill(0,0,0);
+		fill(Colors.blackColor());
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(this.pos, this.x, this.y);
@@ -202,7 +202,7 @@ Player.prototype.pixelDraw = function(field) {
 		textSize(17);
 		textAlign(CENTER, CENTER);
 		text(this.pos, this.x, this.y);
-		fill(0,0,0);
+		fill(Colors.blackColor());
 	}
 };
 
@@ -248,8 +248,8 @@ Player.prototype.drawShade = function(field, shade){
 	var y2 = field.getTranslatedY(this.y+this.siz/2)
 	var size = field.yardsToPixels(this.siz);
 
-	fill(0, 0, 0);
-	stroke(0, 0, 0);
+	fill(Colors.blackColor());
+	stroke(Colors.blackColor());
 	strokeWeight(2);
 
 	if(shade === -1){
@@ -287,7 +287,7 @@ Player.prototype.drawMotion = function(field){
 		var x2 = field.getTranslatedX(this.motionCoords[i][0]);
 		var y2 = field.getTranslatedY(this.motionCoords[i][1]);
 
-		stroke(50, 50, 50);
+		stroke(Colors.motionColor());
 		dottedLine(x1, y1, x2, y2);
 		noStroke();
 
@@ -310,8 +310,7 @@ Player.prototype.drawDropback = function(field) {
 	var x2 = x1;
 	var y2 = y1;
 
-	var yellow = color(255, 255, 0);
-	stroke(yellow);
+	stroke(Colors.dropbackColor())
 
 	for (var i = 0; i < this.dropback.length; i++) {
 		x1 = x2;
@@ -348,8 +347,7 @@ Player.prototype.drawRun = function(field) {
 	var x2 = x1;
 	var y2 = y1;
 
-	var blue = color(0, 0, 255);
-	stroke(blue);
+	stroke(Colors.runColor())
 
 	for (var i = 0; i < this.run.length; i++) {
 		x1 = x2;
@@ -395,9 +393,7 @@ Player.prototype.drawRoute = function(field) {
 	var x2 = x1;
 	var y2 = y1;
 
-	var red = color(255, 0, 0);
-	var white = color(255, 255, 255);
-	stroke(red);
+	stroke(Colors.routeColor());
 
 	for (var i = 0; i < this.route.length; i++) {
 		x1 = x2;
@@ -412,7 +408,7 @@ Player.prototype.drawRoute = function(field) {
 		line(x1, y1, x2, y2);
 		if(this.routeNodes.length > i+1){
 			this.routeNodes[i].draw(field);
-			stroke(red);
+			stroke(Colors.routeColor());
 		}
 
 		if(i === 0 && this.progressionRank > 0){
@@ -421,11 +417,11 @@ Player.prototype.drawRoute = function(field) {
 			var xLabel = xMid + field.yardsToPixels(1);
 			var yLabel = yMid + field.yardsToPixels(1);
 			textSize(14);
-			fill(white);
+			fill(Colors.whiteColor());
 			noStroke();
 			text(str(this.progressionRank), xLabel, yLabel);
-			stroke(red);
-			fill(red);
+			stroke(Colors.routeColor());
+			fill(Colors.routeColor());
 		}
 
 		x1 = field.getYardX(x1);
@@ -482,8 +478,7 @@ Player.prototype.drawBlocks = function(field) {
 	}
 
 	if (blockPart != null && blockPart.type === 0) {
-		var black = color(0, 0, 0);
-		stroke(black);
+		stroke(Colors.blockColor());
 
 		var lengthOfPerpLine = 1.5;
 		var x1 = this.x//blockPart.x + lengthOfPerpLine/2;
@@ -610,8 +605,7 @@ Player.prototype.drawDefensiveMovement = function(field) {
 	var x2 = this.x;
 	var y2 = this.y;
 
-	var gray = color(60, 60, 60);
-	stroke(gray);
+	stroke(Colors.defensiveMovementColor());
 
 	for (var i = 0; i < this.defensiveMovement.length; i++) {
 		x1 = x2;
@@ -659,8 +653,7 @@ Player.prototype.drawBlitz = function(field){
 	var x2 = x1;
 	var y2 = y1;
 
-	var red = color(255, 0, 0);
-	stroke(red);
+	stroke(Colors.blitzColor())
 
 	for (var i = 0; i < this.blitz.length; i++) {
 		x1 = x2;
@@ -722,8 +715,7 @@ Player.prototype.drawManCoverage = function(field){
 	var x2 = x1;
 	var y2 = y1;
 
-	var black = color(0, 0, 0);
-	stroke(black);
+	stroke(Colors.manCoverageColor());
 
 	for (var i = 0; i < this.manCoverage.length; i++) {
 		x1 = x2;

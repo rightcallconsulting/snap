@@ -64,8 +64,7 @@ var BlockType = function(config) {
 // draw determines the type of the block and calls the appropriate draw
 // function for that type of block.
 BlockType.prototype.draw = function(prevX, prevY, field, playersBlocked) {
-	var black = color(0, 0, 0);
-	stroke(black);
+	stroke(Colors.blockColor())
 
 	var x1 = field.getTranslatedX(prevX)
 	var y1 = field.getTranslatedY(prevY)

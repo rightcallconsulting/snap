@@ -87,3 +87,83 @@ function arrow(x1, y1, alpha, deltaX) {
 	y2 = field.getTranslatedY(y2);
 	line(x1, y1, x2, y2);
 };
+
+class Colors{
+	//Field Colors
+	static fieldColor(){
+			return color(93, 148, 81);
+	}
+
+	//Player Colors
+	static playerColor(){
+		return Colors.olColor(); //default
+	}
+	static selectedPlayerColor(){
+		return Colors.yellowColor(); //default
+	}
+	static skillPlayerColor(){
+		return Colors.redColor();
+	}
+	static qbColor(){
+		return color(212, 130, 130);
+	}
+	static olColor(){
+		return color(143, 29, 29);
+	}
+	static defensivePlayerColor(){
+		return Colors.blackColor();
+	}
+	static nodeColor(){
+		return Colors.redColor();
+	}
+
+	//Assignmnet Colors
+	static blockColor(){
+		return Colors.blackColor();
+	}
+	static dropbackColor(){
+		return Colors.yellowColor();
+	}
+	static motionColor(){
+		return Colors.greyColor();
+	}
+	static routeColor(){
+		return Colors.redColor();
+	}
+	static runColor(){
+		return Colors.blueColor();
+	}
+	static blitzColor(){
+		return Colors.redColor();
+	}
+	static defensiveMovementColor(){
+		return Colors.greyColor();
+	}
+	static manCoverageColor(){
+		return Colors.blackColor();
+	}
+	static zoneCoverageColor(){
+		return Colors.greyColor();
+	}
+
+	//Basic Colors
+	static blackColor(){
+		return color(0, 0, 0);
+	}
+	static redColor(){
+		return color(255, 0, 0);
+	}
+	static whiteColor(){
+		return color(255, 255, 255);
+	}
+	static blueColor(){
+		return color(0, 0, 255);
+	}
+	static yellowColor(){
+		return color(255, 255, 0);
+	}
+	static greyColor(){
+		return color(50, 50, 50);
+	}
+
+}

@@ -3,7 +3,7 @@ var Node = function(config){
   this.y = config.y;
   this.siz = config.siz || 1;
   this.change = false;
-  this.fill = config.fill || color(255,0,0);
+  this.fill = config.fill || Colors.nodeColor();
 };
 
 Node.prototype.isMouseInside = function(field) {

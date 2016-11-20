@@ -25,8 +25,7 @@ ZoneAssignment.ARROW_LENGTH = 1.5;
 // draw determines the type of the block and calls the appropriate draw
 // function for that type of block.
 ZoneAssignment.prototype.draw = function(startX, startY, field) {
-	var black = color(0, 0, 0);
-	stroke(black);
+	stroke(Colors.zoneCoverageColor())
 	textAlign(CENTER);
 	textSize(12); //field.getTextSize()???
 
@@ -56,6 +55,7 @@ ZoneAssignment.prototype.draw = function(startX, startY, field) {
 	//var xLabel =
 
 	//draw the label at the endpoint
+	fill(Colors.blackColor());
 	text(this.type, xLabel, yLabel);
 
 	line(x1, y1, x2, y2);

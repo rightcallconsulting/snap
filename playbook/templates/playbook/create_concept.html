@@ -383,7 +383,7 @@
 			var mouseYardX = field.getYardX(mouseX);
 			var mouseYardY = field.getYardY(mouseY);
 
-			if (playerBeingDragged != null && playerBeingDragged.unit == "defense") {
+			if (playerBeingDragged != null) {
 				playerBeingDragged.x = mouseYardX;
 				playerBeingDragged.y = mouseYardY;
 			} else if (nodeBeingDragged != null) {

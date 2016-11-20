@@ -5,6 +5,7 @@ from dashboard.models import Player, PlayerGroup
 from getsnap.models import Team
 from playbook.models import Concept, Formation, Play
 from quizzes.models import Quiz
+from .models import QuestionAttempted
 
 @login_required
 def analytics(request):
@@ -94,7 +95,7 @@ def player_analytics(request):
 	return render(request, 'analytics/plays_analytics.html', {
 		'plays_analytics': plays_analytics,
 		'team': team,
-		'page_header': player.first_name.upper() + " " + player.last_name.upper()
+		'page_header': player
 	})
 
 @user_passes_test(lambda u: not u.isPlayer())
@@ -105,8 +106,7 @@ def players_analytics(request):
 
 	for player in players:
 		player_analytics = []
-		player_analytics.append(player.first_name + " ")
-		player_analytics.append(player.last_name)
+		player_analytics.append(player)
 
 		number_correct = float(QuestionAttempted.objects.filter(team=team, player=player, score=1).count())
 		number_incorrect = float(QuestionAttempted.objects.filter(team=team, player=player, score=0).count())

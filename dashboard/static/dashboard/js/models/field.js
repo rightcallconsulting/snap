@@ -6,7 +6,7 @@ left hash: 60 feet in, 2 feet wide (starts at 59 feet)
 right hash: 100 feet, 2 feet wide (starts at 61 feet)
 secondary hashes: 2 feet wide, 1 foot from sideline?
 numbers: 6 feet high, 4 feet wide, top of numbers are 9 yards (27 feet) from sideline
-*/ 
+*/
 
 var Field = function(config){
 	this.heightInYards = config.heightInYards || 30;
@@ -130,9 +130,8 @@ Field.prototype.drawBackground = function(play, height, width) {
 	var pixelsToYards = this.heightInYards / height;
 	var yardsToPixels = height / this.heightInYards;
 	noStroke();
-	background(93, 148, 81); // original green
-	//background(157, 202, 106); // iOS green
-	stroke(255, 255, 255);
+	background(Colors.fieldColor());
+	stroke(Colors.whiteColor());
 
 	// Sidelines
 	strokeWeight(sideline_weight);
@@ -144,7 +143,7 @@ Field.prototype.drawBackground = function(play, height, width) {
 	for(var i = 0; i < this.heightInYards; i++) {
 		var currentYardLine = (this.ballYardLine + this.getViewDirection()*(i - this.heightInYards/2)).toFixed();
 		var yc = height - height * (i/this.heightInYards);
-		stroke(255, 255, 255);
+		stroke(Colors.whiteColor());
 
 		if(currentYardLine <= 0 || currentYardLine >= 100) {
 			currentYardLine = min(currentYardLine, 100 - currentYardLine).toFixed();
@@ -155,7 +154,7 @@ Field.prototype.drawBackground = function(play, height, width) {
 			line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
 			textAlign(CENTER);
 			rotate(HALF_PI);
-			fill(255,255,255);
+			fill(Colors.whiteColor());
 			textSize(30 * Field.WIDTH / this.getWidthInYards()); //the one thing that isn't adjusting well for screen size...
 			text(min(currentYardLine,100-currentYardLine), yc, (this.getXOffset()-9)*yardsToPixels - (this.width-this.height)/2);
 			//text(min(currentYardLine,100-currentYardLine), yc, this.getTranslatedX(9));
