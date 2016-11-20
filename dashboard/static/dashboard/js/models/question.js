@@ -192,13 +192,32 @@ Question.prototype.buildCallQuestionAndAnswer = function(testedPlayerPosition) {
 	return 0;
 };
 
-// buildIdentificationQuestionAndAnswer creates an appropriate creates a
+// buildProgressionQuestionAndAnswer creates an appropriate creates a
 // question and answer based on the current content in the question variable.
 Question.prototype.buildProgressionQuestionAndAnswer = function() {
 	this.answer = this.question.deepCopy();
 	this.question.clearProgression();
 
 	this.prompt = "Choose the correct progression for " + this.question.getFullName();
+	if(this.question.scoutName != null && this.question.scoutName !== ""){
+		this.prompt += " vs. " + this.question.scoutName
+	}
+
+	return 0;
+};
+
+Question.prototype.buildRouteTreeQuestionAndAnswer = function() {
+	this.answer = this.question.deepCopy();
+	for(var i = 0; i < this.question.offensivePlayers.length; i++){
+		var player = this.question.offensivePlayers[i];
+		if(player.route.length > 0){
+			player.setSelected();
+			break;
+		}
+	}
+	this.question.clearRoutes();
+
+	this.prompt = "Draw all routes for " + this.question.getFullName();
 	if(this.question.scoutName != null && this.question.scoutName !== ""){
 		this.prompt += " vs. " + this.question.scoutName
 	}
@@ -252,7 +271,7 @@ Question.prototype.getName = function() {
 Question.prototype.drawFeedbackScreen = function(field){
 	if (this.answer !== null) {
 		this.answer.drawAssignments(field);
-		if(this.type === "progression"){
+		if(this.type === "progression" || this.type === "route-tree"){
 			this.answer.drawPlayers(field);
 		}else{
 			this.question.drawPlayers(field);
@@ -312,6 +331,12 @@ Question.prototype.check = function(attempt) {
 		}else{
 			this.score = 0;
 		}
+	} else if(this.type === "route-tree"){
+		if(this.checkRouteTree()){
+			this.score = 1;
+		}else{
+			this.scoure = 0;
+		}
 	}
 };
 
@@ -327,6 +352,17 @@ Question.prototype.checkAlignment = function(attempt){
 		return true;
 	}
 	return false;
+}
+
+Question.prototype.checkRouteTree = function(){
+	for(var i = 0; i < this.question.offensivePlayers.length; i++){
+		if(!this.compareRoutes(this.question.offensivePlayers[i], this.answer.offensivePlayers[i])){
+			this.score = 0;
+			return false;
+		}
+	}
+	this.score = 1;
+	return true;
 }
 
 Question.prototype.checkProgression = function(){
@@ -409,23 +445,27 @@ Question.prototype.checkRun = function(attempt){
 	return true;
 }
 
-Question.prototype.checkRoute = function(attempt){
-	if(this.answer.route === null){
+Question.prototype.compareRoutes = function(attempt, answer){
+	if(answer.route == null){
 		return true;
 	}
-	if(attempt === null){
+	if(attempt == null){
 		return false;
 	}
-	if(attempt.route.length !== this.answer.route.length){
+	if(attempt.route.length !== answer.route.length){
 		return false;
 	}
 	for (i in attempt.route) {
-		var dist = sqrt(pow(attempt.route[i][0] - this.answer.route[i][0], 2) + pow(attempt.route[i][1] - this.answer.route[i][1], 2));
+		var dist = sqrt(pow(attempt.route[i][0] - answer.route[i][0], 2) + pow(attempt.route[i][1] - answer.route[i][1], 2));
 		if (dist > 3) {
 			return false;
 		}
 	}
 	return true;
+}
+
+Question.prototype.checkRoute = function(attempt){
+	return this.compareRoutes(attempt, this.answer);
 }
 
 Question.prototype.checkBlockingAssignment = function(attempt){

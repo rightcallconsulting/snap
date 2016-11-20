@@ -653,6 +653,12 @@ Play.prototype.clearProgression = function(){
   }
 };
 
+Play.prototype.clearRoutes = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].clearRoute();
+  }
+};
+
 Play.prototype.clearSelectedReceivers = function(){
   for(var i = 0; i < this.eligibleReceivers.length; i++){
     this.eligibleReceivers[i].selected = false;

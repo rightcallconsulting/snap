@@ -596,6 +596,9 @@ def play_quizzes(request, unit="offense"):
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, abbreviation=position)
 		type_of_assignment = str(request.GET['type-of-assignment'])
 
+		if type_of_assignment == "routes" and position_groups[0].position_type == "Quarterback":
+			type_of_assignment = "route-tree"
+
 		custom_quiz.position = position
 		custom_quiz.type_of_assignment = type_of_assignment
 		custom_quiz.save()
@@ -607,7 +610,6 @@ def play_quizzes(request, unit="offense"):
 			for player_dict in offensive_players:
 				player_position = str(player_dict['pos'])
 				if player_position == position:
-
 					### Do additional filtering for type of assignment here eventually ###
 					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
 						filtered_plays.append(play)
@@ -616,6 +618,9 @@ def play_quizzes(request, unit="offense"):
 						filtered_plays.append(play)
 						break
 				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
+					filtered_plays.append(play)
+					break
+				elif type_of_assignment == "route-tree" and 'route' in player_dict and len(player_dict['route']) > 0:
 					filtered_plays.append(play)
 					break
 

@@ -129,6 +129,8 @@
 
 			{% if type_of_assignment == 'progression' %}
 				quiz.buildProgressionQuestions();
+			{% elif type_of_assignment == 'route-tree' %}
+				quiz.buildRouteTreeQuestions();
 			{% else %}
 				quiz.buildQuestions(position_groups);
 			{% endif %}
@@ -207,8 +209,9 @@
 				// Determine which buttons should be displayed based on which, if
 				// any buttons should be displayed.
 				var player = quiz.attempt;
-
-				if (player != null) {
+				if(quiz.getCurrentQuestion().type == "route-tree"){
+					buttons[3].display = true;
+				} else if (player != null) {
 					if(player.unit === "defense"){
 						buttons[5].display = true;
 						buttons[6].display = true;
@@ -273,7 +276,7 @@
 				if(question.feedbackStartTime === 0){
 					for(var i = 0; i < question.question.offensivePlayers.length; i++){
 						var player = question.question.offensivePlayers[i];
-						if(player.progressionRank > 0 && player.route.length > 0){
+						if((question.type == "progression" && player.progressionRank > 0) || question.type == "route-tree"){
 							player.drawRoute(field);
 						}
 					}
@@ -380,12 +383,23 @@
 				var mouseYardX = field.getYardX(mouseX);
 				var mouseYardY = field.getYardY(mouseY);
 
-				if (playerSelected === null && quiz.getCurrentQuestion().type === "progression") {
+				if(quiz.getCurrentQuestion().type == "route-tree" && playerClicked != null && playerClicked.position_type == "Skill Position"){
+					if(playerSelected != null){
+						playerSelected.click();
+					}
+					playerClicked.click();
+					return false;
+				}
+				else if (playerSelected === null && quiz.getCurrentQuestion().type === "progression") {
 					if(playerClicked != null){
 						if(playerClicked.progressionRank > 0){
 							playerClicked.progressionRank = 0;
 						}else{
 							playerClicked.progressionRank = quiz.getCurrentQuestion().question.getNextProgressionRank();
+							if(playerClicked.route.length == 0){
+								checkAnswer();
+								return false;
+							}
 						}
 					}
 				} else if (buttons[0].clicked === true) {
@@ -450,7 +464,7 @@
 				return false;
 			}
 			if (quiz.getSelected()[0] != null) {
-				var playerSelected = quiz.attempt;
+				var playerSelected = quiz.getSelected()[0];
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				var playerStatusKeys = ["A", "S", "D", "F", "G"];
 				var specialZoneKeys = ["Q", "W", "E", "R", "T", "Y"];
@@ -544,14 +558,7 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		$("#submit-quiz-button").click(function(event) {
-			var csrf_token = "{{ csrf_token }}";
-			quiz.submit(csrf_token);
-
-			window.location.replace("/quizzes/custom");
-		});
-
-		$("#check-answer-button").click(function(event) {
+		function checkAnswer(){
 			if(!quiz.over){
 				var path = window.location.pathname;
 				var csrf_token = "{{ csrf_token }}";
@@ -566,6 +573,17 @@
 				updateMainviewAndSideview();
 				setButtonClicked();
 			}
+		}
+
+		$("#submit-quiz-button").click(function(event) {
+			var csrf_token = "{{ csrf_token }}";
+			quiz.submit(csrf_token);
+
+			window.location.replace("/quizzes/custom");
+		});
+
+		$("#check-answer-button").click(function(event) {
+			checkAnswer();
 		});
 
 		$("#skip-question-button").click(function(event) {
@@ -674,8 +692,9 @@
 
 			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
 				var player = quiz.getCurrentQuestion().answer;
-
-				if (player.dropback.length > 0) {
+				if(quiz.getCurrentQuestion().type == "route-tree"){
+					buttons[3].setClicked();
+				}else if (player.dropback.length > 0) {
 					buttons[0].setClicked();
 				} else if (player.run.length > 0) {
 					buttons[2].setClicked();

@@ -80,6 +80,12 @@ Concept.prototype.clearProgression = function(){
   }
 };
 
+Concept.prototype.clearRoutes = function(){
+  for(var i = 0; i < this.offensivePlayers.length; i++){
+      this.offensivePlayers[i].clearRoute();
+  }
+};
+
 //Updates man blocking assignments for defenders in concept
 Concept.prototype.updateBlocksForDefense = function(){
 	for(var i = 0; i < this.offensivePlayers.length; i++){

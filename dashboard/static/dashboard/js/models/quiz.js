@@ -281,6 +281,8 @@ Quiz.prototype.clearQuestions = function(){
 		this.questions[i].score = null;
 		if(this.questions[i].type === "progression"){
 			this.questions[i].question.clearProgression();
+		}else if(this.questions[i].type === "route-tree"){
+			this.questions[i].question.clearRoutes();
 		}
 	}
 }
@@ -413,6 +415,35 @@ Quiz.prototype.buildProgressionQuestions = function(){
 
 		question = new Question({ question: this.concepts[i].deepCopy(), type: "progression" });
 		result = question.buildProgressionQuestionAndAnswer()
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+	}
+
+	this.shuffle();
+	this.currentQuestionIndex = 0;
+}
+
+Quiz.prototype.buildRouteTreeQuestions = function(){
+	var question; var result;
+	//this.plays.shuffle();
+	//this.concepts.shuffle();
+
+	for (i in this.plays) {
+
+		question = new Question({ question: this.plays[i].deepCopy(), type: "route-tree" });
+		result = question.buildRouteTreeQuestionAndAnswer()
+		if (result === 0) {
+			this.questions.push(question);
+		}
+
+	}
+
+	for (i in this.concepts) {
+
+		question = new Question({ question: this.concepts[i].deepCopy(), type: "route-tree" });
+		result = question.buildRouteTreeQuestionAndAnswer()
 		if (result === 0) {
 			this.questions.push(question);
 		}
@@ -584,7 +615,7 @@ Quiz.prototype.nextQuestion = function() {
 };
 
 Quiz.prototype.setAttempt = function(){
-	if(this.getCurrentQuestion() == null || this.getCurrentQuestion().type === "progression"){
+	if(this.getCurrentQuestion() == null || this.getCurrentQuestion().type === "progression" || this.getCurrentQuestion().type === "route-tree"){
 		this.attempt = null;
 		return;
 	}
