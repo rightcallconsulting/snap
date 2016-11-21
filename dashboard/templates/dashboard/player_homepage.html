@@ -9,11 +9,13 @@
 					<tr>
 						<th colspan="3"><div class="header">TODO</div></th>
 					</tr>
+					{% if quizzes|length != 0 %}
 					<tr>
 						<th>QUIZ</th>
 						<th>POSITION</th>
 						<th>TAKE</th>
 					</tr>
+					{% endif %}
 				</thead>
 				<tbody id="quizzes-body">
 					{% for quiz in quizzes %}
