@@ -19,8 +19,8 @@
 			</div>
 
 			<div class="mainview-buttons">
-				<button id="submit-quiz-button" name="button">
-					<i class="fa fa-pencil-square-o fa-2x mainview-button-icon" title="Submit Quiz"></i>
+				<button id="delete-button" name="button">
+					<i class="fa fa-trash-o fa-2x mainview-button-icon" title="Delete Play"></i>
 				</button>
 
 				<button id="check-answer-button" name="button">
@@ -300,6 +300,70 @@
 			}
 		};
 
+		function performDelete(){
+			var question = quiz.getCurrentQuestion();
+			if(question == null){
+				return;
+			}
+			if(question.type === "progression"){
+				var offensive_players = question.question.offensivePlayers;
+				var rank_to_find = question.question.getNextProgressionRank()-1;
+				for(var i = 0; i < offensive_players.length; i++){
+					if(offensive_players[i].progressionRank === rank_to_find){
+						offensive_players[i].progressionRank = 0;
+						break;
+					}
+				}
+				return;
+			}
+			var playerSelected = quiz.getSelected()[0];
+			if(playerSelected == null){
+				return;
+			}
+			if (playerSelected.unit == "offense") {
+				if (buttons[0].clicked && playerSelected.dropback.length > 0) {
+					playerSelected.dropback.pop();
+				} else if (buttons[1].clicked && playerSelected.motionCoords.length > 0){
+					playerSelected.motionCoords.pop();
+				} else if(buttons[2].clicked && playerSelected.run.length > 0) {
+					playerSelected.run.pop();
+				} else if(buttons[3].clicked && playerSelected.route.length > 0) {
+					playerSelected.stepRouteBackwards();
+				} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
+					playerSelected.blockingAssignmentArray.pop();
+				} else if (playerSelected.dropback.length > 0) {
+					playerSelected.dropback.pop();
+				} else if(playerSelected.run.length > 0) {
+					playerSelected.run.pop();
+				} else if(playerSelected.route.length > 0) {
+					playerSelected.stepRouteBackwards();
+				} else if (playerSelected.blockingAssignmentArray.length > 0) {
+					playerSelected.blockingAssignmentArray.pop();
+				} else if (playerSelected.motionCoords.length > 0){
+					playerSelected.motionCoords.pop();
+				}
+			} else if (playerSelected.unit == "defense") {
+				if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
+					playerSelected.defensiveMovement.pop();
+				}else if (buttons[6].clicked && playerSelected.blitz.length > 0){
+					playerSelected.blitz.pop();
+				}else if (buttons[7].clicked && playerSelected.manCoverage.length > 0) {
+					playerSelected.manCoverage.pop();
+				}else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
+					playerSelected.zoneCoverage = null;
+				}
+				else if (playerSelected.manCoverage.length > 0){
+					playerSelected.manCoverage.pop();
+				}else if (playerSelected.zoneCoverage != null){
+					playerSelected.zoneCoverage = null;
+				}else if (playerSelected.blitz.length > 0){
+					playerSelected.blitz.pop();
+				}else if (playerSelected.defensiveMovement.length > 0) {
+					playerSelected.defensiveMovement.pop();
+				}
+			}
+		}
+
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
@@ -471,37 +535,7 @@
 				var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
 
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelected.unit == "offense") {
-						if (playerSelected.dropback.length > 0) {
-							playerSelected.dropback.pop();
-						} else if(playerSelected.run.length > 0) {
-							playerSelected.run.pop();
-						} else if(playerSelected.route.length > 0) {
-							playerSelected.stepRouteBackwards();
-						} else if (playerSelected.blockingAssignmentArray.length > 0) {
-							playerSelected.blockingAssignmentArray.pop();
-						} else if (playerSelected.motionCoords.length > 0){
-							playerSelected.motionCoords.pop();
-						}
-					} else if (playerSelected.unit == "defense") {
-						if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
-							playerSelected.defensiveMovement.pop();
-						} else if (buttons[6].clicked && playerSelected.blitz.length > 0){
-							playerSelected.blitz.pop();
-						} else if (buttons[7].clicked && playerSelected.manCoverage.length > 0){
-							playerSelected.manCoverage.pop();
-						} else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
-							playerSelected.zoneCoverage = null;
-						} else if (playerSelected.blitz.length > 0){
-							playerSelected.blitz.pop();
-						} else if (playerSelected.manCoverage.length > 0){
-							playerSelected.manCoverage.pop();
-						} else if (playerSelected.zoneCoverage != null){
-							playerSelected.zoneCoverage = null;
-						} else if (playerSelected.defensiveMovement.length > 0) {
-							playerSelected.defensiveMovement.pop();
-						}
-					}
+					performDelete();
 
 					return false;
 				} else if (buttons[4].clicked && playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
@@ -575,11 +609,8 @@
 			}
 		}
 
-		$("#submit-quiz-button").click(function(event) {
-			var csrf_token = "{{ csrf_token }}";
-			quiz.submit(csrf_token);
-
-			window.location.replace("/quizzes/custom");
+		$("#delete-button").click(function(event) {
+			performDelete();
 		});
 
 		$("#check-answer-button").click(function(event) {
