@@ -352,6 +352,9 @@
 
 			play.drawAssignments(field);
 			play.drawPlayers(field);
+			if(playerBeingDragged != null && playerBeingDragged.unit == "defense"){
+				play.drawShades(field);
+			}
 
 			var x = 10;
 			var y = 10;

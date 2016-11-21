@@ -108,19 +108,6 @@ Formation.prototype.drawShades = function(field, defensivePlayers){
 			offensivePlayersUsed.push(player);
 		}
 	}
-	/*for(var i = 0; i < this.offensivePlayers.length; i++){
-		var player = this.offensivePlayers[i];
-		var defender = player.getClosestPlayer(defensivePlayers);
-		var shade = 0;
-		var xDist = defender.x - player.x;
-		if(xDist > 0.5){
-			shade = 1;
-		}else if(xDist < -0.5){
-			shade = -1;
-		}
-		player.drawShade(field, shade);
-	}*/
-
 }
 
 // isValid checks the legality of a formation.

@@ -362,6 +362,9 @@
 
 			concept.drawAssignments(field);
 			concept.drawPlayers(field);
+			if(playerBeingDragged != null && playerBeingDragged.unit == "defense"){
+				concept.drawShades(field);
+			}
 			defensivePlayerBar.draw(field);
 			offensivePlayerBar.draw(field);
 
@@ -380,7 +383,7 @@
 			if(playerSelected == null){
 				return;
 			}
-			
+
 			if (playerSelected.unit == "offense") {
 				if (buttons[0].clicked && playerSelected.dropback.length > 0) {
 					playerSelected.dropback.pop();

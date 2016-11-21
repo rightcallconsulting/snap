@@ -61,6 +61,30 @@ Concept.prototype.drawAssignments = function (field) {
 	}
 };
 
+Concept.prototype.drawShades = function(field){
+	if(this.defensivePlayers.length === 0 || this.offensivePlayers.length === 0){
+		return;
+	}
+	var offensivePlayersUsed = [];
+	for(var i = 0; i < this.defensivePlayers.length; i++){
+		var defender = this.defensivePlayers[i];
+		var player = defender.getClosestPlayer(this.offensivePlayers);
+		var size = field.yardsToPixels(defender.siz);
+		var shade = 0;
+		var xDist = field.getTranslatedX(defender.x) - field.getTranslatedX(player.x);
+		var yDist = abs(defender.y - player.y);
+		if(xDist > 0.2*size){
+			shade = 1;
+		}else if(xDist < -0.2*size){
+			shade = -1;
+		}
+		if(abs(xDist) < size && yDist < player.siz*1.5 && offensivePlayersUsed.indexOf(player) < 0){
+			player.drawShade(field, shade);
+			offensivePlayersUsed.push(player);
+		}
+	}
+}
+
 //Used for Route Progressions
 Concept.prototype.getNextProgressionRank = function(){
 	var highest = 0;
