@@ -297,6 +297,38 @@
 			fill(176,176,176);
 		};
 
+		function performDelete(){
+			var playerSelected = formation.getSelected()[0];
+			var playerSelectedIndex = formation.getSelected()[1];
+
+			if(playerSelected == null){
+				return;
+			}
+
+			if (playerSelected.unit == "defense") {
+				if (buttons[0].clicked && playerSelected.defensiveMovement.length > 0){
+					playerSelected.defensiveMovement.pop();
+				}else if (buttons[1].clicked && playerSelected.blitz.length > 0){
+					playerSelected.blitz.pop();
+				}else if (buttons[2].clicked && playerSelected.manCoverage.length > 0) {
+					playerSelected.manCoverage.pop();
+				}else if (buttons[3].clicked && playerSelected.zoneCoverage != null){
+					playerSelected.zoneCoverage = null;
+				}
+				else if (playerSelected.manCoverage.length > 0){
+					playerSelected.manCoverage.pop();
+				}else if (playerSelected.zoneCoverage != null){
+					playerSelected.zoneCoverage = null;
+				}else if (playerSelected.blitz.length > 0){
+					playerSelected.blitz.pop();
+				}else if (playerSelected.defensiveMovement.length > 0) {
+					playerSelected.defensiveMovement.pop();
+				} else {
+					formation.defensivePlayers.splice(playerSelectedIndex, 1);
+				}
+			}
+		}
+
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
 		//*******************************************************************//
@@ -475,28 +507,7 @@
 				var specialZoneKeys = ["Q", "W", "E", "R", "T", "Y"];
 				var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					if (playerSelected.unit == "defense") {
-						if (buttons[0].clicked && playerSelected.defensiveMovement.length > 0){
-							playerSelected.defensiveMovement.pop();
-						}else if (buttons[1].clicked && playerSelected.blitz.length > 0){
-							playerSelected.blitz.pop();
-						}else if (buttons[2].clicked && playerSelected.manCoverage.length > 0) {
-							playerSelected.manCoverage.pop();
-						}else if (buttons[3].clicked && playerSelected.zoneCoverage != null){
-							playerSelected.zoneCoverage = null;
-						}
-						else if (playerSelected.manCoverage.length > 0){
-							playerSelected.manCoverage.pop();
-						}else if (playerSelected.zoneCoverage != null){
-							playerSelected.zoneCoverage = null;
-						}else if (playerSelected.blitz.length > 0){
-							playerSelected.blitz.pop();
-						}else if (playerSelected.defensiveMovement.length > 0) {
-							playerSelected.defensiveMovement.pop();
-						} else {
-							formation.defensivePlayers.splice(playerSelectedIndex, 1);
-						}
-					}
+					performDelete();
 					return false;
 				} else if(playerSelected.unit === "defense"){
 					var zoneTypeIndex = specialZoneKeys.indexOf(key);
@@ -675,7 +686,7 @@
 			return;
 		});
 
-		$("#delete-button").click(function(event) {
+		function deleteDefensiveLookFromDatabase(){
 			// Get the currently selected sideview button.
 			var selected = document.getElementById("selected");
 
@@ -718,6 +729,10 @@
 			// Set formation var to equal a new Formation. This will get rid of
 			// whatever is displayed on the screen.
 			formation = new Formation({});
+		}
+
+		$("#delete-button").click(function(event) {
+			performDelete();
 		});
 
 		$("#zoom-in-button").click(function(event) {
