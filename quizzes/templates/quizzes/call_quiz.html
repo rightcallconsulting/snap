@@ -309,7 +309,16 @@
 		});
 
 		function changeSelectedChoice(selected) {
-			// The newly selected button is the one that is clicked on. The old
+			var path = window.location.pathname;
+			var csrf_token = "{{ csrf_token }}";
+
+			quiz.attempt = selected.textContent;
+
+			quiz.checkCurrentQuestion(path, csrf_token);
+
+			choices = shuffle_choices(choices);
+			updateMainviewAndSideview();
+			/*// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
@@ -333,7 +342,7 @@
 				new_selected.setAttribute("class", "btn btn-success choice-button");
 
 				quiz.attempt = new_selected.textContent;
-			}
+			}*/
 		};
 
 		function updateMainviewAndSideview() {

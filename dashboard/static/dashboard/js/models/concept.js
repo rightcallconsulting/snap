@@ -460,6 +460,7 @@ function createConceptFromJson(conceptJsonDictionary) {
 			startY: conceptJsonDictionary.offensivePlayers[i].startY,
 			num: conceptJsonDictionary.offensivePlayers[i].num,
 			pos: conceptJsonDictionary.offensivePlayers[i].pos,
+			position_type: conceptJsonDictionary.offensivePlayers[i].position_type,
 			unit: conceptJsonDictionary.offensivePlayers[i].unit,
 			eligible: conceptJsonDictionary.offensivePlayers[i].eligible,
 			siz: conceptJsonDictionary.offensivePlayers[i].siz,
