@@ -93,7 +93,7 @@
 			</div>
 			<div id="sideview-buttons">
 				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="showPlaysInFormation(this)">
+					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="formationButtonClicked(this)">
 						{{ formation.name }}
 					</button>
 				{% endfor %}
@@ -203,6 +203,79 @@
 			concept = new Concept({});
 			scout_formation = new Formation({});
 			dummy_offense = new Formation({});
+
+			//If user passed in additional info, load the correct content here
+			{% if initial_playbook %}
+				var initial_playbook = "{{initial_playbook}}".toLowerCase();
+				//setSelectedTopOption(initial_playbook);
+				var top_options_dropdown = document.getElementById('top-options-dropdown');
+				var top_options_array = ['offensive playbook', 'offensive concepts', 'defensive looks'];
+				if(top_options_array.indexOf(initial_playbook) >= 0){
+					top_options_dropdown.selectedIndex = top_options_array.indexOf(initial_playbook);
+					setSelectedTopOption(initial_playbook);
+				}
+			{% endif %}
+			{% if initial_formation %}
+				var initial_formation_name = "{{initial_formation}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_formation_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
+
+			{% if initial_play %}
+				var initial_play_name = "{{initial_play}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_play_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
+
+			{% if initial_scout_defense %}
+				var toggle_button = document.getElementById("offense-defense-toggle");
+				toggle_button.click();
+				var initial_scout_defense_name = "{{initial_scout_defense}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_scout_defense_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
+
+			{% if initial_concept %}
+				var initial_concept_name = "{{initial_concept}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_concept_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
+
+			{% if initial_defense %}
+				var initial_defense_name = "{{initial_defense}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_defense_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -386,10 +459,7 @@
 			field.flipView();
 		});
 
-		// changeSideviewAndTopOptions the sideview with the appropriate content
-		// from the playbook and updates the buttons on the top of the screen.
-		function changeSideviewAndTopOptions(selected) {
-			var sideview_content = selected.value;
+		function setSelectedTopOption(option_label){
 			var top_options = document.getElementById("top-options");
 
 			play = new Play({});
@@ -401,7 +471,7 @@
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
 
-			if (sideview_content === "offensive playbook") {
+			if (option_label === "offensive playbook") {
 				showFormations();
 
 				dummy_offense = new Formation({});
@@ -459,7 +529,7 @@
 
 				top_options.appendChild(create_play_button);
 				{% endif %}
-			} else if (sideview_content === "offensive concepts") {
+			} else if (option_label === "offensive concepts") {
 				showConcepts();
 
 				dummy_offense = new Formation({});
@@ -497,7 +567,7 @@
 
 				top_options.appendChild(create_concept_button);
 				{% endif %}
-			} else if (sideview_content === "defensive looks") {
+			} else if (option_label === "defensive looks") {
 				showDefensiveLooks();
 
 				var dummy_formation = new Formation({});
@@ -537,6 +607,12 @@
 				top_options.appendChild(create_defensive_look_button);
 				{% endif %}
 			}
+		}
+
+		// changeSideviewAndTopOptions the sideview with the appropriate content
+		// from the playbook and updates the buttons on the top of the screen.
+		function changeSideviewAndTopOptions(selected) {
+			setSelectedTopOption(selected.value);
 		};
 
 		// showFormations loads the formation buttons back into the sideview
@@ -556,7 +632,7 @@
 				var formation_button = document.createElement("button");
 				formation_button.setAttribute("class", "btn btn-primary sideview-button");
 				formation_button.setAttribute("name", formations[i].name);
-				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
+				formation_button.setAttribute("onclick", "formationButtonClicked(this)");
 				formation_button.textContent = formations[i].name;
 
 				sideview_buttons.appendChild(formation_button);
@@ -589,19 +665,9 @@
 			}
 		};
 
-		// showPlaysInFormation is called when a formation sideview button
-		// is pressed. It changes the sideview header text to the name of the
-		// formation selected. It also removes all the formation buttons and
-		// replaces them with play buttons. It adds clickable back icon to
-		// sideview header div so that you can go back to formations.
-		function showPlaysInFormation(selected) {
-			var sideview_header = document.getElementById("sideview-header");
-
+		function formationButtonClicked(selected){
 			var formation_selected = selected;
 			var formation_name = formation_selected.getAttribute("name");
-
-			var mainview_header = document.getElementById("header-box");
-			mainview_header.textContent = formation_name;
 
 			for (i in formations) {
 				if (formation_name === formations[i].name) {
@@ -610,6 +676,23 @@
 				}
 			}
 
+			if(formation_selected != null){
+				showPlaysInFormation(formation_selected);
+			}
+
+
+		}
+
+		// showPlaysInFormation is called when a formation sideview button
+		// is pressed. It changes the sideview header text to the name of the
+		// formation selected. It also removes all the formation buttons and
+		// replaces them with play buttons. It adds clickable back icon to
+		// sideview header div so that you can go back to formations.
+		function showPlaysInFormation(formation) {
+			var sideview_header = document.getElementById("sideview-header");
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = formation.name;
+
 			$("#sideview-buttons").empty();
 
 			var back_arrow = document.createElement("i");
@@ -617,18 +700,18 @@
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
 			back_arrow.setAttribute("onclick", "showFormations()");
 
-			sideview_header.textContent = formation_name;
+			sideview_header.textContent = formation.name;
 
 			sideview_header.appendChild(back_arrow);
 
-			updateNotesAndCalls(formation_selected);
+			updateNotesAndCalls(formation);
 
-			play.fromFormation(formation_selected);
+			play.fromFormation(formation);
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in plays) {
-				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
+				if (plays[i].formation === formation.name && plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button");
 					play_button.setAttribute("name", plays[i].name);

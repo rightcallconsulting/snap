@@ -249,6 +249,8 @@ def take_quiz(request, quiz_id, position=''):
 
 		if len(position) > 0:
 			position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player], abbreviation=position)
+		elif player.primary_position != None:
+			position_groups = [player.primary_position]
 
 		return render(request, 'quizzes/take_quiz.html', {
 			'quiz': quiz,
@@ -282,7 +284,7 @@ def custom_quizzes(request, unit="offense"):
 
 	if primary_position != None and primary_position in position_groups:
 		position_groups.remove(primary_position)
-		
+
 	return render(request, 'quizzes/custom_quizzes.html', {
 		'player': player,
 		'primary_position': primary_position,

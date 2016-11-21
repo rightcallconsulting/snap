@@ -52,7 +52,7 @@ def homepage(request):
 
 		newsfeed = []
 
-		formations = Formation.objects.filter(team=team)
+		formations = Formation.objects.filter(team=team, scout=False)
 
 		for formation in formations:
 			news_item = []
@@ -61,7 +61,8 @@ def homepage(request):
 			news_item.append(formation.name)
 			news_item.append("created")
 			news_item.append(formation.created_at)
-			news_item.append("/playbook")
+			full_link = "/playbook?initial_formation=" + formation.name
+			news_item.append(full_link)
 			newsfeed.append(news_item)
 
 		plays = Play.objects.filter(team=team)
@@ -78,7 +79,10 @@ def homepage(request):
 				news_item.append(newstext)
 
 			news_item.append(play.created_at)
-			news_item.append("/playbook")
+			full_link = "/playbook?initial_playbook=Offensive Playbook&initial_formation=" + play.formation.name + "&initial_play=" + play.name
+			if play.scoutName != "":
+				full_link += "&initial_scout_defense=" + play.scoutName
+			news_item.append(full_link)
 			newsfeed.append(news_item)
 
 		concepts = Concept.objects.filter(team=team)
@@ -90,7 +94,21 @@ def homepage(request):
 			news_item.append(concept.name)
 			news_item.append("created")
 			news_item.append(concept.created_at)
-			news_item.append("/playbook")
+			full_link = "/playbook?initial_playbook=Offensive Concepts&initial_concept=" + concept.name
+			news_item.append(full_link)
+			newsfeed.append(news_item)
+
+		defensive_looks = Formation.objects.filter(team=team, scout=True)
+
+		for formation in defensive_looks:
+			news_item = []
+			news_item.append("playbook")
+			news_item.append("formation")
+			news_item.append(formation.name)
+			news_item.append("created")
+			news_item.append(formation.created_at)
+			full_link = "/playbook?initial_playbook=Defensive Looks&initial_defense=" + formation.name
+			news_item.append(full_link)
 			newsfeed.append(news_item)
 
 		quizzes = Quiz.objects.filter(team=team, players__in=[player])
