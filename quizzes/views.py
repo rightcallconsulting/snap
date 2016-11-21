@@ -158,7 +158,11 @@ def quizzes_todo(request):
 	team = player.team
 	quizzes = Quiz.objects.filter(team=team, players__in=[player])
 	quizzes_table = []
-	position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
+	position_groups = list(PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player]))
+	primary_position = player.primary_position
+
+	if primary_position != None and primary_position in position_groups:
+		position_groups.remove(primary_position)
 
 	for quiz in quizzes:
 		quiz_information = []
@@ -194,7 +198,8 @@ def quizzes_todo(request):
 	return render(request, 'quizzes/todo.html', {
 			'quizzes': quizzes_table,
 			'team': team,
-			'position_groups': position_groups,
+			'primary_position': primary_position,
+			'other_positions': position_groups,
 			'page_header': 'TODO'
 		})
 
@@ -272,10 +277,16 @@ def submit_quiz(request):
 def custom_quizzes(request, unit="offense"):
 	player = request.user.player
 	team = player.team
-	position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
+	position_groups = list(PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player]))
+	primary_position = player.primary_position
+
+	if primary_position != None and primary_position in position_groups:
+		position_groups.remove(primary_position)
+		
 	return render(request, 'quizzes/custom_quizzes.html', {
 		'player': player,
-		'position_groups': position_groups,
+		'primary_position': primary_position,
+		'other_positions': position_groups,
 		'team': team,
 		'page_header': 'CUSTOM QUIZZES'
 	})

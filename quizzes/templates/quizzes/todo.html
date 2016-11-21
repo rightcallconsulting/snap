@@ -29,7 +29,10 @@
 						<td>{{ quiz.4|floatformat }} %</td>
 						<td><select name="position" class="unit-form form-sm" id="position-select-{{quiz.5}}">
 							<optgroup>
-								{% for position_group in position_groups %}
+								{% if primary_position != None %}
+								<option value="{{primary_position.abbreviation}}">{{primary_position.abbreviation}}</option>
+								{% endif%}
+								{% for position_group in other_positions %}
 									<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
 								{% endfor %}
 							</optgroup>

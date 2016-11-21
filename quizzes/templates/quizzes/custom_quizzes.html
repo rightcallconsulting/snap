@@ -46,7 +46,10 @@
 					Position:
 					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)">
 						<optgroup>
-							{% for group in position_groups %}
+							{% if player.primary_position != None %}
+								<option value="{{ player.primary_position.abbreviation|safe }}" data-type="{{ player.primary_position.position_type|safe }}">{{ player.primary_position.abbreviation|safe }}</option>
+							{% endif %}
+							{% for group in other_positions %}
 							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
@@ -100,7 +103,10 @@
 					Position:
 					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)" id="play-assignment-positions">
 						<optgroup>
-							{% for group in position_groups %}
+							{% if player.primary_position != None %}
+								<option value="{{ player.primary_position.abbreviation|safe }}" data-type="{{ player.primary_position.position_type|safe }}">{{ player.primary_position.abbreviation|safe }}</option>
+							{% endif %}
+							{% for group in other_positions %}
 							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
@@ -169,7 +175,10 @@
 					Position:
 					<select name="position" class="unit-form form-sm position" onchange="positionChanged(this)" id="concept-assignment-positions">
 						<optgroup>
-							{% for group in position_groups %}
+							{% if player.primary_position != None %}
+								<option value="{{ player.primary_position.abbreviation|safe }}" data-type="{{ player.primary_position.position_type|safe }}">{{ player.primary_position.abbreviation|safe }}</option>
+							{% endif %}
+							{% for group in other_positions %}
 							<option value="{{ group.abbreviation|safe }}" data-type="{{ group.position_type|safe }}">{{ group.abbreviation|safe }}</option>
 							{% endfor %}
 						</optgroup>
@@ -200,7 +209,7 @@
 	<script type="text/javascript">
 		var offensive_positions = [];
 		var defensive_positions = [];
-		{% for position in position_groups %}
+		{% for position in other_positions %}
 		var position_type = "{{position.position_type}}";
 		if(position_type == "Defensive Lineman" || position_type == "Linebacker" || position_type == "Defensive Back"){
 			var abbreviation = "{{position.abbreviation}}";
@@ -215,6 +224,13 @@
 		}
 		{% endfor %}
 
+		{% if player.primary_position != None %}
+			var primary_position_type = "{{player.primary_position.position_type}}";
+			if(primary_position_type === "Defensive Lineman" || primary_position_type === "Linebacker" || primary_position_type === "Defensive Back"){
+				toggleDefenseMode();
+			}
+		{% else %}
+
 		if(offensive_positions.length > 0){
 			//do nothing for now?
 		}else if(defensive_positions.length > 0){
@@ -222,6 +238,8 @@
 		}else{
 			//can't do much here
 		}
+
+		{% endif %}
 
 		$("i.fa-chevron-left").click(function(event) {
 			var arrow_parent = $(this).parent()[0];
