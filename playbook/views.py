@@ -73,12 +73,14 @@ def create_formation(request):
 			formation.delete()
 		return HttpResponse('')
 	else:
-		formations = Formation.objects.filter(team=team, scout=False)
+		formations = Formation.objects.filter(team=team, unit="offense", scout=False)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
+		initial_formation = request.GET.get('initial_formation')
 		return render(request, 'playbook/create_formation.html', {
 			'team': team,
 			'formations': formations,
 			'positions': positions,
+			'initial_formation': initial_formation,
 			'team': team,
 			'page_header': 'CREATE FORMATION'
 		})

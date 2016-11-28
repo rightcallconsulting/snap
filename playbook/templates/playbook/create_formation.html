@@ -129,6 +129,18 @@
 			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
 			offensivePlayerBar.init(field);
 
+			{% if initial_formation %}
+				var initial_formation_name = "{{initial_formation}}";
+				var sideview_buttons = document.getElementById("sideview-buttons").children;
+				for(i in sideview_buttons){
+					if(sideview_buttons[i].name === initial_formation_name){
+						sideview_buttons[i].click();
+						break;
+					}
+				}
+				debugger;
+			{% endif %}
+
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
 				var display_box_header = display_box.querySelector(".display-header");
