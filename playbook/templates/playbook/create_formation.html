@@ -99,6 +99,9 @@
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
 
+			{% if team.field_type %}
+				field.setFieldType("{{team.field_type}}");
+			{% endif %}
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;

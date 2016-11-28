@@ -100,6 +100,8 @@ class Team(models.Model):
 	midfield_art = models.ImageField(blank=True, null=True)
 	endzone_art = models.ImageField(blank=True, null=True)
 
+	field_type = models.CharField(max_length=10, default="HS", blank=True, null=True) #HS, NCAA, NFL or custom
+
 	#payment info
 	payment_status = models.CharField(max_length=20, default="", blank=True, null=True)
 	payment_renew_date = models.DateField(null=True, blank=True)

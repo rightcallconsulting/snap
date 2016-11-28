@@ -34,6 +34,25 @@ var createPlayField = new Field({
 	typeField: "Create"
 });
 
+
+Field.prototype.setFieldType = function(field_type){
+	this.typeField = field_type;
+	this.updateStaticConstantsForFieldType();
+}
+
+Field.prototype.updateStaticConstantsForFieldType = function(){
+	if(this.typeField === "HS"){
+		Field.leftHashYardX = 17.78
+		Field.rightHashYardX = 35.56
+	} else if(this.typeField === "NCAA"){
+		Field.leftHashYardX = 20
+		Field.rightHashYardX = 33.33
+	} else if(this.typeField === "NFL"){
+		Field.leftHashYardX = 23.58
+		Field.rightHashYardX = 29.75
+	}
+}
+
 Field.prototype.getViewPoint = function(){
 	return this.viewPoint;
 }
@@ -167,8 +186,8 @@ Field.prototype.drawBackground = function(play, height, width) {
 			line(this.getTranslatedX(0), yc, this.getTranslatedX(Field.WIDTH), yc);
 		} else {
 			line(this.getTranslatedX(0), yc, this.getTranslatedX(1), yc);
-			line((19.67-this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (20.33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
-			line((33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (33.67 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
+			line((Field.leftHashYardX - 0.33 -this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (Field.leftHashYardX + 0.33  - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
+			line((Field.rightHashYardX - 0.33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc, (Field.rightHashYardX + 0.33 - this.getXOffset())*yardsToPixels + (this.width-this.height)/2, yc);
 			line(this.getTranslatedX(Field.WIDTH - 1), yc, this.getTranslatedX(Field.WIDTH), yc);
 		}
 	}
