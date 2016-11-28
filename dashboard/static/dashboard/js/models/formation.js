@@ -13,6 +13,7 @@
 var Formation = function(config){
 	this.name = config.name || "";
 	this.unit = config.unit || "offense";
+	this.scout = config.scout || false;
 	this.offensivePlayers = config.offensivePlayers || [];
 	this.defensivePlayers = config.defensivePlayers || [];
 	this.quarterback = config.quarterback || [];
@@ -222,11 +223,11 @@ Formation.prototype.save = function (path, csrf_token) {
 
 		var formationName = this.name;
 		var formationUnit = this.unit;
-		formationJson = JSON.stringify(this, ["name", "team", "unit", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "position_type", "num", "startX", "startY", "x", "y", "unit", "eligible", "siz", "notes", "blitz", "manCoverage", "zoneCoverage", "type"]);
+		formationJson = JSON.stringify(this, ["name", "team", "unit", "scout", "offensivePlayers", "defensivePlayers", "quarterback", "offensiveLinemen", "eligibleReceivers", "pos", "position_type", "num", "startX", "startY", "x", "y", "unit", "eligible", "siz", "notes", "blitz", "manCoverage", "zoneCoverage", "type"]);
 
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, formation: formationJson}
+				{csrfmiddlewaretoken: csrf_token, save: true, delete: false, name: formationName, unit: formationUnit, formation: formationJson, scout: this.scout}
 			).done(function() {
 				console.log("Formation successfully sent to Django to be saved");
 			}).fail(function() {
@@ -258,6 +259,7 @@ Formation.prototype.deepCopy = function() {
 		name: this.name,
 		team: this.team,
 		unit: this.unit,
+		scout: this.scout,
 		feedbackMessage: this.feedbackMessage,
 		notes: this.notes
 	});
@@ -421,6 +423,7 @@ function createFormationFromJson(formationJsonDictionary) {
 		name: formationJsonDictionary.name,
 		team: formationJsonDictionary.team,
 		unit: formationJsonDictionary.unit,
+		scout: formationJsonDictionary.scout,
 		notes: formationJsonDictionary.notes,
 		offensivePlayers: offensivePlayersArray,
 		defensivePlayers: defensivePlayersArray,

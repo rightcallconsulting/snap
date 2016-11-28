@@ -62,13 +62,14 @@ def create_formation(request):
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
+				formation.scout = (request.POST['scout'] == "true")
 				formation.save()
 			elif formation.count() == 0:
 				formation = Formation()
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
-				formation.scout = False
+				formation.scout = (request.POST['scout'] == "true")
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
@@ -77,12 +78,14 @@ def create_formation(request):
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, unit="offense", scout=False)
+		scout_formations = Formation.objects.filter(team=team, unit="offense", scout=True)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		initial_formation = request.GET.get('initial_formation')
 
 		return render(request, 'playbook/create_formation.html', {
 			'team': team,
 			'formations': formations,
+			'scout_formations': scout_formations,
 			'positions': positions,
 			'initial_formation': initial_formation,
 			'team': team,
