@@ -161,6 +161,11 @@ def create_play(request):
 		base_defenses = Formation.objects.filter(team=team, scout=False, unit="defense")
 		defensive_plays = Play.objects.filter(team=team, scout=False, unit="defense")
 
+		initial_view = request.GET.get('initial_view') #offense or defense
+		initial_formation = request.GET.get('initial_formation') #or base look?
+		initial_play = request.GET.get('initial_play')
+		initial_scout = request.GET.get('initial_scout')
+
 		return render(request, 'playbook/create_play.html', {
 			'formations': formations,
 			'scoutFormations': scout_formations,
@@ -169,6 +174,10 @@ def create_play(request):
 			'defensive_plays': defensive_plays,
 			'base_defenses': base_defenses,
 			'team': team,
+			'initial_view': initial_view,
+			'initial_formation': initial_formation,
+			'initial_play': initial_play,
+			'initial_scout': initial_scout,
 			'page_header': 'CREATE PLAY'
 		})
 

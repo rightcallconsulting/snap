@@ -137,6 +137,7 @@
 			field.width = width;
 			field.heightInYards = 35;
 			field.ballYardLine = 65;
+			field.viewPoint = "offense";
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
@@ -216,6 +217,51 @@
 			buttons.push(button);
 
 			updateNotesAndCalls();
+
+			{% if initial_view %}
+				field.viewPoint = "{{initial_view}}";
+				var dropdown = document.getElementById('change-unit');
+				dropdown.selectedIndex = 0;
+				changeUnit(field.viewPoint);
+				if(field.viewPoint === "defense"){
+					dropdown.selectedIndex = 1;
+				}
+			{% endif %}
+			{% if initial_formation %}
+				var initial_formation_name = "{{initial_formation}}";
+				var sideview_buttons = document.getElementById("sideview-buttons").children;
+				for(i in sideview_buttons){
+					if(sideview_buttons[i].textContent === initial_formation_name){
+						sideview_buttons[i].click();
+						break;
+					}
+				}
+			{% endif %}
+			{% if initial_play %}
+				var initial_play_name = "{{initial_play}}";
+				var sideview_buttons = document.getElementById("sideview-buttons").children;
+				for(i in sideview_buttons){
+					if(sideview_buttons[i].textContent === initial_play_name){
+						sideview_buttons[i].click();
+						break;
+					}
+				}
+			{% endif %}
+			{% if initial_scout %}
+				if(field.viewPoint === "offense"){
+					showDefensiveLooks();
+				}else{
+					showOffensiveLooks();
+				}
+				var initial_scout_name = "{{initial_scout}}";
+				var sideview_buttons = document.getElementById("sideview-buttons").children;
+				for(i in sideview_buttons){
+					if(sideview_buttons[i].textContent === initial_scout_name){
+						sideview_buttons[i].click();
+						break;
+					}
+				}
+			{% endif %}
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
