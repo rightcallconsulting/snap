@@ -212,9 +212,13 @@ def create_concept(request):
 	else:
 		concepts = Concept.objects.filter(team=team, scout=False)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
+		initial_view = request.GET.get('initial_view') #offense or defense
+		initial_concept = request.GET.get('initial_concept')
 		return render(request, 'playbook/create_concept.html', {
 			'concepts': concepts,
 			'positions': positions,
+			'initial_view': initial_view,
+			'initial_concept': initial_concept,
 			'team': team,
 			'page_header': 'CREATE CONCEPT'
 		})
