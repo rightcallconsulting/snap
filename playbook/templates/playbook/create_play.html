@@ -3,6 +3,10 @@
 
 {% block content %}
 	<div id="create-play" class="create-play padding-md">
+		<select id="change-unit" onchange="changeUnit(this.value)">
+			<option value="offense">Offense</option>
+			<option value="defense">Defense</option>
+		</select>
 		<div id="help-box" hidden="true">
 			<strong>Help:</strong> Select a formation from the list on the side to create a play out of that formation. Select a player in the formation by clicking on them and then add assignments using the mouse and keyboard. Change the type of assignment by clicking the top buttons or using the 'A' key for quarterback dropbacks, the 'S' key for pre-snap motion, the 'D' key for runs, the 'F' key for routes, and the 'G' key for blocking assignments. All assignments can be created by selecting that button and then clicking anywhere on the field. If blocks are selected you can also click on a defensive player to specify that player as an assignment. Additionally, the 'Q', 'W', 'E', 'R', 'T', 'Y', and 'U' keys are shortcuts for adding different predefined blocks.
 			<br><br>
@@ -93,7 +97,10 @@
 	<script src="{% static 'dashboard/js/jquery-1.10.2.min.js' %}"></script>
 	<script type="text/javascript">
 		var formations = [];
-		var plays = [];
+		var offensive_plays = [];
+		var offensive_looks = [];
+		var defensive_plays = [];
+		var base_defenses = [];
 		var play;
 		var parentPlay = null;
 		var scout_formations = [];
@@ -142,14 +149,26 @@
 			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
 			{% endfor %}
 
+			{% for formation in offensive_looks %}
+			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
+			offensive_looks.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			{% endfor %}
+
 			// Load plays from Json passed from database.
 			var playJsonFromDatabase = "";
 
-			{% for play in plays %}
+			{% for play in offensive_plays %}
 			playJsonFromDatabase = '{{ play.playJson|safe }}';
 			var p = createPlayFromJson(JSON.parse(playJsonFromDatabase));
 			p.updateCoverageForOffense();
-			plays.push(p);
+			offensive_plays.push(p);
+			{% endfor %}
+
+			{% for play in defensive_plays %}
+			playJsonFromDatabase = '{{ play.playJson|safe }}';
+			var p = createPlayFromJson(JSON.parse(playJsonFromDatabase));
+			p.updateCoverageForOffense();
+			defensive_plays.push(p);
 			{% endfor %}
 
 			// Load scout formations from Json passed from databse.
@@ -158,6 +177,11 @@
 			{% for scoutFormation in scoutFormations %}
 			scoutFormationJsonFromDatabase = '{{ scoutFormation.formationJson|safe }}';
 			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
+			{% endfor %}
+
+			{% for base_defense in base_defenses %}
+			base_defenseJsonFromDatabase = '{{ base_defense.formationJson|safe }}';
+			base_defenses.push(createFormationFromJson(JSON.parse(base_defenseJsonFromDatabase)));
 			{% endfor %}
 
 			// Create new Play
@@ -859,6 +883,27 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
+			if(play.unit === "defense"){
+				// If this play name already exists the backend should replace
+				// the old one and not save a new one. The frontend should also
+				// update the existing version it has and return.
+				for(i in defensive_plays){
+					if (play.formation === defensive_plays[i].formation && name === defensive_plays[i].name) {
+						defensive_plays[i] = play.deepCopy();
+						play.save(path, csrf_token);
+						play = defensive_plays[i].deepCopy();
+						return;
+					}
+				}
+
+				play.name = name;
+				play.team = teamID;
+				play.save(path, csrf_token);
+				defensive_plays.push(play);
+				return;
+				//new play, so create new DB entry
+			}
+
 			var formation = play.formation;
 
 			for (i in formations) {
@@ -871,9 +916,9 @@
 			// If this play name already exists the backend should replace
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
-			for (i in plays) {
-				if (play.formation === plays[i].formation && name === plays[i].name && scout_formation_name_selected === plays[i].scoutName) {
-					plays[i] = play.deepCopy();
+			for (i in offensive_plays) {
+				if (play.formation === offensive_plays[i].formation && name === offensive_plays[i].name && scout_formation_name_selected === offensive_plays[i].scoutName) {
+					offensive_plays[i] = play.deepCopy();
 					play.scoutName = scout_formation_name_selected;
 					play.save(path, csrf_token);
 					play = new Play({});
@@ -892,7 +937,7 @@
 			play.team = teamID;
 			play.scoutName = scout_formation_name_selected;
 			play.save(path, csrf_token);
-			plays.push(play);
+			offensive_plays.push(play);
 
 			// Create a new play to replace the one you just saved on the
 			// screen. Use the same formation that you were already using.
@@ -925,6 +970,14 @@
 			return;
 		});
 
+		function changeUnit(unit){
+			if(unit === "offense"){
+				showFormations();
+			}else{
+				showBaseDefenses();
+			}
+		}
+
 		function deletePlayFromDatabase(){
 			// Get the currently selected sideview button.
 			var selected = document.getElementById("selected");
@@ -938,8 +991,8 @@
 				// get saved properly but no button would be added dynamically
 				// because a play with the same name would exist in the
 				// plays array.
-				for (var i = 0; i < plays.length; ++i) {
-					if (play.formation === plays[i].formation && play.name === plays[i].name && play.scoutName === plays[i].scoutName) {
+				for (var i = 0; i < offensive_plays.length; ++i) {
+					if (play.formation === offensive_plays[i].formation && play.name === offensive_plays[i].name && play.scoutName === offensive_plays[i].scoutName) {
 						// Set the path and cross-site forgery token vars.
 						var path = "/playbook/plays/create";
 						var csrf_token = "{{ csrf_token }}";
@@ -948,7 +1001,7 @@
 						play.scoutName = scout_formation_name_selected;
 						play.delete(path, csrf_token);
 
-						plays.splice(i, 1);
+						offensive_plays.splice(i, 1);
 						break;
 					}
 				}
@@ -1033,6 +1086,36 @@
 			}
 		});
 
+		function showBaseDefenses(){
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Base Looks";
+
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in base_defenses) {
+				var base_defense_button = document.createElement("button");
+				base_defense_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
+				base_defense_button.setAttribute("name", base_defenses[i].name);
+				base_defense_button.setAttribute("onclick", "showPlaysWithBaseDefense(this)");
+				base_defense_button.textContent = base_defenses[i].name;
+
+				sideview_buttons.appendChild(base_defense_button);
+			}
+
+			play = new Play({unit:"defense"});
+		}
+
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
 		function showFormations() {
@@ -1103,18 +1186,169 @@
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
-			for (i in plays) {
-				if (plays[i].formation === formation_name && plays[i].scoutName === "") {
+			for (i in offensive_plays) {
+				if (offensive_plays[i].formation === formation_name && offensive_plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
-					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("name", offensive_plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
-					play_button.textContent = plays[i].name;
+					play_button.textContent = offensive_plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
 				}
 			}
 		};
+
+		// showPlaysWithBaseDefense is called when a base_defense sideview button
+		// is pressed. It changes the sideview header text to the name of the
+		// base_defense selected. It also removes all the base_defense buttons and
+		// replaces them with defensive_play buttons. It adds clickable back icon to
+		// sideview header div so that you can go back to base_defenses.
+		function showPlaysWithBaseDefense(selected) {
+			var sideview_header = document.getElementById("sideview-header");
+
+			var base_defense_selected = selected;
+			var base_defense_name = base_defense_selected.getAttribute("name");
+			base_defense_name_selected = base_defense_name;
+
+			for (i in base_defenses) {
+				if (base_defense_name === base_defenses[i].name) {
+					base_defense_selected = base_defenses[i].deepCopy();
+					break;
+				}
+			}
+
+			$("#sideview-buttons").empty();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showBaseDefenses()");
+
+			sideview_header.textContent = base_defense_name;
+
+			sideview_header.appendChild(back_arrow);
+
+			play = new Play({});
+			play.fromFormation(Formation.createDummyFormation());
+			play.scoutFromFormation(base_defense_selected);
+			play.formation = base_defense_name;
+			play.unit = "defense";
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			for (i in defensive_plays) {
+				if (defensive_plays[i].formation === base_defense_name) {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					play_button.setAttribute("name", defensive_plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedDefensivePlay(this)");
+					play_button.textContent = defensive_plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+				}
+			}
+		};
+
+		function changeSelectedDefensivePlay(selected){
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			var sideview_header = document.getElementById("sideview-header");
+			var toggle_button = document.getElementById("offense-defense-toggle");
+
+			if (toggle_button != null) {
+				sideview_header.removeChild(toggle_button);
+			}
+
+			play_name_selected = "";
+
+			// Add a placeholder message to the top bar of the main view. If we
+			// are deseclecting a button then the placeholder will stay. If we
+			// are selecting a button it will get replaced with the name of the
+			// formation we selected.
+			removeHeaderPlaceholder();
+			removeHeaderError();
+			removeHeaderName();
+			addHeaderPlaceholder();
+
+			// Create a new play to replace the one you just deselected on the
+			// screen. Use the same formation that you were already using.
+			var formation = play.formation;
+			play = new Play({unit:"defense"});
+
+			// Hide notes and calls inputs and update notes and calls (get rid of them).
+			hideCallsInput();
+			hideNotesAndCallsInput();
+			updateNotesAndCalls();
+
+			for (i in base_defenses) {
+				if (formation === base_defenses[i].name) {
+					play.fromFormation(Formation.createDummyFormation());
+					play.scoutFromFormation(base_defenses[i]);
+					play.formation = formation;
+					play.scoutName = "";
+					break;
+				}
+			}
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button play-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to.
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button play-button");
+
+				toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showOffensiveLooks()");
+				toggle_button.textContent = "O";
+				sideview_header.appendChild(toggle_button);
+
+				var play_name = new_selected.getAttribute("name");
+				play_name_selected = play_name;
+
+				for (i in defensive_plays) {
+					if (play.formation === defensive_plays[i].formation && play_name === defensive_plays[i].name){
+						play = defensive_plays[i].deepCopy();
+						break;
+					}
+				}
+
+				parentPlay = play.deepCopy();
+
+				// Show notes and calls inputs and update notes.
+				unhideNotesAndCallsInput(play_name);
+				updateNotesAndCalls();
+
+				var header_text_content = play_name;
+				play_name = document.getElementById("play-name");
+
+				if (play_name === null) {
+					play_name = document.createElement("p");
+					play_name.setAttribute("id", "play-name");
+				}
+
+				removeHeaderPlaceholder();
+				removeHeaderError();
+				removeHeaderName();
+				play_name.textContent = header_text_content;
+				document.getElementById("header-box").appendChild(play_name);
+			}
+		}
 
 		function changeSelectedPlay(selected) {
 			// The newly selected button is the one that is clicked on. The old
@@ -1185,9 +1419,9 @@
 				var play_name = new_selected.getAttribute("name");
 				play_name_selected = play_name;
 
-				for (i in plays) {
-					if (play.formation === plays[i].formation && play_name === plays[i].name && plays[i].scoutName === "") {
-						play = plays[i].deepCopy();
+				for (i in offensive_plays) {
+					if (play.formation === offensive_plays[i].formation && play_name === offensive_plays[i].name && offensive_plays[i].scoutName === "") {
+						play = offensive_plays[i].deepCopy();
 						break;
 					}
 				}
@@ -1214,6 +1448,31 @@
 			}
 		};
 
+		function showOffensiveLooks(){
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Offensive Looks";
+
+			var toggle_button = document.createElement("div");
+			toggle_button.setAttribute("id", "offense-defense-toggle");
+			toggle_button.setAttribute("onclick", "showOffense()");
+			toggle_button.textContent = "D";
+			sideview_header.appendChild(toggle_button);
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			for (i in offensive_looks) {
+				var scout_offense_button = document.createElement("button");
+				scout_offense_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
+				scout_offense_button.setAttribute("name", offensive_looks[i].name);
+				scout_offense_button.setAttribute("onclick", "addOffensiveLookToPlay(this)");
+				scout_offense_button.textContent = offensive_looks[i].name;
+
+				sideview_buttons.appendChild(scout_offense_button);
+			}
+		}
+
 		// showDefensiveLooks updates the sideview to include all of the defensive
 		// looks in the playbook.
 		function showDefensiveLooks() {
@@ -1231,23 +1490,67 @@
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in scout_formations) {
-				var scout_formation_button = document.createElement("button");
-				scout_formation_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
-				scout_formation_button.setAttribute("name", scout_formations[i].name);
-				scout_formation_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
-				scout_formation_button.textContent = scout_formations[i].name;
+				var scout_defense_button = document.createElement("button");
+				scout_defense_button.setAttribute("class", "btn btn-primary sideview-button scout-button");
+				scout_defense_button.setAttribute("name", scout_formations[i].name);
+				scout_defense_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
+				scout_defense_button.textContent = scout_formations[i].name;
 
-				for (j in plays) {
-					if (plays[j].name === play.name && plays[j].formation === play.formation && plays[j].scoutName === scout_formations[i].name) {
-						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
-						scout_formation_button.appendChild(check_mark);
+				sideview_buttons.appendChild(scout_defense_button);
+			}
+		};
+
+		function addOffensiveLookToPlay(selected){
+			// The newly selected button is the one that is clicked on. The old
+			// selected button may not exist.
+			var new_selected = selected;
+			var old_selected = document.getElementById("selected");
+
+			if(parentPlay != null){
+				play = parentPlay;
+			}else{
+				//play.removeScoutFormation();
+			}
+
+			// If there was a previously selected button remove it's selected
+			// id attribute and change it from btn-success to btn-primary.
+			if (old_selected != null) {
+				old_selected.removeAttribute("id");
+				old_selected.removeAttribute("class");
+				old_selected.setAttribute("class", "btn btn-primary sideview-button scout-button");
+			}
+
+			// If the old selected button is the same as the newly selected
+			// button we are done. If it isn't we need to update the newly
+			// selected button and the main view area.
+			if (old_selected != new_selected) {
+				// Change the color of the newly selected button and set it's
+				// id to
+				new_selected.removeAttribute("class");
+				new_selected.setAttribute("id", "selected");
+				new_selected.setAttribute("class", "btn btn-success sideview-button scout-button");
+
+				var scout_formation_name = new_selected.getAttribute("name");
+				scout_formation_name_selected = scout_formation_name;
+
+				for (i in defensive_plays) {
+					if (defensive_plays[i].name === play.name && defensive_plays[i].formation === play.formation && defensive_plays[i].scoutName === scout_formation_name) {
+						play = defensive_plays[i].deepCopy();
+						return;
 					}
 				}
 
-				sideview_buttons.appendChild(scout_formation_button);
+				for (i in offensive_looks) {
+					if (scout_formation_name === offensive_looks[i].name) {
+						scout_formation = offensive_looks[i];
+						break;
+					}
+				}
+
+				play.setScoutOffense(scout_formation);
+
 			}
-		};
+		}
 
 		function addScoutFormationToPlay(selected) {
 			// The newly selected button is the one that is clicked on. The old
@@ -1284,9 +1587,9 @@
 				var scout_formation_name = new_selected.getAttribute("name");
 				scout_formation_name_selected = scout_formation_name;
 
-				for (i in plays) {
-					if (plays[i].name === play.name && plays[i].formation === play.formation && plays[i].scoutName === scout_formation_name) {
-						play = plays[i].deepCopy();
+				for (i in offensive_plays) {
+					if (offensive_plays[i].name === play.name && offensive_plays[i].formation === play.formation && offensive_plays[i].scoutName === scout_formation_name) {
+						play = offensive_plays[i].deepCopy();
 						return;
 					}
 				}
@@ -1322,18 +1625,18 @@
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
-			for (i in plays) {
-				if (plays[i].formation === play.formation && plays[i].scoutName === "") {
+			for (i in offensive_plays) {
+				if (offensive_plays[i].formation === play.formation && offensive_plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
-					play_button.setAttribute("name", plays[i].name);
+					play_button.setAttribute("name", offensive_plays[i].name);
 					play_button.setAttribute("onclick", "changeSelectedPlay(this)");
-					play_button.textContent = plays[i].name;
+					play_button.textContent = offensive_plays[i].name;
 
 					sideview_buttons.appendChild(play_button);
 
-					if (plays[i].name === play.name) {
-						play = plays[i].deepCopy();
+					if (offensive_plays[i].name === play.name) {
+						play = offensive_plays[i].deepCopy();
 					}
 				}
 			}

@@ -119,7 +119,7 @@
 			{% endfor %}
 
 			// Create new Formation
-			formation = new Formation({});
+			formation = new Formation({unit:"defense"});
 
 			// Create Player bar
 			defensivePlayerBar = new PlayerBar({
@@ -653,7 +653,7 @@
 					formations[i] = formation.deepCopy();
 					formations[i].updateCoverageForOffense(dummy_offense);
 					formation.save(path, csrf_token);
-					formation = new Formation({});
+					formation = new Formation({unit:"defense"});
 					return;
 				}
 			}
@@ -668,7 +668,7 @@
 
 			// Create a new formation to replace the one you just saved on the
 			// screen.
-			formation = new Formation({});
+			formation = new Formation({unit:"defense"});
 
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
@@ -728,7 +728,7 @@
 
 			// Set formation var to equal a new Formation. This will get rid of
 			// whatever is displayed on the screen.
-			formation = new Formation({});
+			formation = new Formation({unit:"defense"});
 		}
 
 		$("#delete-button").click(function(event) {
@@ -792,7 +792,7 @@
 			addHeaderPlaceholder();
 
 			// Create a new formation to replace whatever was already on screen.
-			formation = new Formation({});
+			formation = new Formation({unit:"defense"});
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.

@@ -125,10 +125,11 @@ def create_play(request):
 		name = request.POST['name']
 		scout_name = request.POST['scout_name']
 		formation_name = request.POST['formation']
-		formation = Formation.objects.filter(team=team, scout=False, name=formation_name)[0]
+		unit = request.POST['unit']
+		formation = Formation.objects.filter(team=team, unit=unit, scout=False, name=formation_name)[0]
 		if request.POST['save'] == "true":
 			playJson = request.POST['play']
-			play = Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)
+			play = Play.objects.filter(team=team, scout=False, unit=unit, formation=formation, name=name, scoutName=scout_name)
 			if play.count() == 1:
 				play = play[0]
 				play.playJson = playJson
@@ -138,7 +139,7 @@ def create_play(request):
 				play.name = name
 				play.scoutName = scout_name
 				play.team = request.user.coach.team
-				play.unit = request.POST['unit']
+				play.unit = unit
 				play.scout = False
 				play.formation = Formation.objects.filter(team=team, name=formation_name)[0]
 				play.playJson = playJson
@@ -151,13 +152,20 @@ def create_play(request):
 
 		return HttpResponse('')
 	else:
-		formations = Formation.objects.filter(team=team, scout=False)
-		scout_formations = Formation.objects.filter(team=team, scout=True)
-		plays = Play.objects.filter(team=team, scout=False)
+		formations = Formation.objects.filter(team=team, unit="offense", scout=False)
+		scout_formations = Formation.objects.filter(team=team, unit="offense", scout=True)
+		offensive_looks = Formation.objects.filter(team=team, unit="defense", scout=True)
+		offensive_plays = Play.objects.filter(team=team, scout=False, unit="offense")
+		base_defenses = Formation.objects.filter(team=team, scout=False, unit="defense")
+		defensive_plays = Play.objects.filter(team=team, scout=False, unit="defense")
+
 		return render(request, 'playbook/create_play.html', {
 			'formations': formations,
 			'scoutFormations': scout_formations,
-			'plays': plays,
+			'offensive_looks': offensive_looks,
+			'offensive_plays': offensive_plays,
+			'defensive_plays': defensive_plays,
+			'base_defenses': base_defenses,
 			'team': team,
 			'page_header': 'CREATE PLAY'
 		})

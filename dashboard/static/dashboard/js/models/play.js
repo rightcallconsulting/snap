@@ -377,6 +377,15 @@ Play.prototype.fromFormation = function(formation) {
 	}
 };
 
+Play.prototype.setScoutOffense = function(offensive_look){
+	this.scoutName = offensive_look.name;
+	this.offensivePlayers = [];
+	for(var i = 0; i < offensive_look.offensivePlayers.length; i++){
+		this.offensivePlayers.push(offensive_look.offensivePlayers[i].deepCopy());
+	}
+	this.updateCoverageForOffense();
+}
+
 // scoutFromFormation takes a cout formation object as an argument and adds the
 // defensive look to this play.
 Play.prototype.scoutFromFormation = function(formation) {
