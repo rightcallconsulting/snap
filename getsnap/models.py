@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from datetime import datetime, timedelta
 from django import forms
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +8,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 
 from passwords.fields import PasswordField
+
+
 
 class CustomUser(AbstractUser):
 	TYPES = [
@@ -18,7 +21,7 @@ class CustomUser(AbstractUser):
 	user_type = models.CharField(max_length=1,
 								choices=TYPES,
 								default='P')
-	
+
 	phone_number = models.CharField(max_length=15, blank=True, null=True)
 
 	def __str__(self):
@@ -96,6 +99,11 @@ class Team(models.Model):
 	banner_image = models.ImageField(blank=True, null=True)
 	midfield_art = models.ImageField(blank=True, null=True)
 	endzone_art = models.ImageField(blank=True, null=True)
+
+	#payment info
+	payment_status = models.CharField(max_length=20, default="", blank=True, null=True)
+	payment_renew_date = models.DateField(null=True, blank=True)
+	service_tier = models.CharField(max_length=20, default="", blank=True, null=False)
 
 	def __str__(self):
 		return self.name

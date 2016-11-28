@@ -1,0 +1,108 @@
+{% extends 'getsnap/base.html' %}
+{% load staticfiles %}
+
+{% block page %}
+	<div class="login-wrapper">
+		<div class="text-center">
+			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form id="checkout-form" action="/getsnap/create_purchase" method="post">
+					{% csrf_token %}
+  <div id="error-message"></div>
+
+  <label for="card-number">Card Number</label>
+  <div class="hosted-field" id="card-number"></div>
+
+  <label for="cvv">CVV</label>
+  <div class="hosted-field" id="cvv"></div>
+
+  <label for="expiration-date">Expiration Date</label>
+  <div class="hosted-field" id="expiration-date"></div>
+
+  <input type="hidden" name="payment_method_nonce">
+  <input type="submit" value="Pay $10" disabled>
+</form>
+
+<!-- Load the Client component. -->
+<script src="https://js.braintreegateway.com/web/3.6.0/js/client.min.js"></script>
+
+<!-- Load the Hosted Fields component. -->
+<script src="https://js.braintreegateway.com/web/3.6.0/js/hosted-fields.min.js"></script>
+
+<script>
+// We generated a client token for you so you can test out this code
+// immediately. In a production-ready integration, you will need to
+// generate a client token on your server (see section below).
+var authorization = "{{braintree_client_token}}";
+var submit = document.querySelector('input[type="submit"]');
+var form = document.getElementById('checkout-form');
+
+braintree.client.create({
+  authorization: authorization
+}, function (clientErr, clientInstance) {
+  if (clientErr) {
+    // Handle error in client creation
+    return;
+  }
+
+  braintree.hostedFields.create({
+    client: clientInstance,
+    styles: {
+      'input': {
+        'font-size': '14pt'
+      },
+      'input.invalid': {
+        'color': 'red'
+      },
+      'input.valid': {
+        'color': 'green'
+      }
+    },
+    fields: {
+      number: {
+        selector: '#card-number',
+        placeholder: '4111 1111 1111 1111'
+      },
+      cvv: {
+        selector: '#cvv',
+        placeholder: '123'
+      },
+      expirationDate: {
+        selector: '#expiration-date',
+        placeholder: '10/2019'
+      }
+    }
+  }, function (hostedFieldsErr, hostedFieldsInstance) {
+    if (hostedFieldsErr) {
+      // Handle error in Hosted Fields creation
+      return;
+    }
+
+    submit.removeAttribute('disabled');
+		form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+        if (tokenizeErr) {
+          // Handle error in Hosted Fields tokenization
+          return;
+        }
+
+        // Put `payload.nonce` into the `payment-method-nonce` input, and then
+        // submit the form. Alternatively, you could send the nonce to your server
+        // with AJAX.
+        document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
+				debugger;
+        form.submit();
+      });
+    }, false);
+  });
+});
+</script>
+			</div><!-- /panel-body -->
+		</div><!-- /panel -->
+	</div><!-- /login-wrapper -->
+{% endblock %}

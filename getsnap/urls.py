@@ -17,6 +17,9 @@ urlpatterns = [
 
 	# Get Snap
 	url(r'^getsnap$', views.getsnap, name='getsnap'),
+	url(r'^getsnap/client_token$', views.client_token, name='client_token'),
+	url(r'^getsnap/create_purchase$', views.create_purchase, name='create_purchase'),
+	url(r'^getsnap/purchase$', views.purchase, name='purchase'),
 	url(r'^getsnap/thanks$', views.thanks, name='thanks'),
 
 	# Register - This link is only used internally to create accounts
