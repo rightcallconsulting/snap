@@ -5,6 +5,8 @@ from django.shortcuts import render
 from .models import Concept, Formation, Play
 from dashboard.models import Admin, Coach, Player, PlayerGroup
 
+from IPython import embed
+
 # Playbook
 @login_required
 def playbook(request, unit="offense"):
@@ -141,7 +143,7 @@ def create_play(request):
 				play.team = request.user.coach.team
 				play.unit = unit
 				play.scout = False
-				play.formation = Formation.objects.filter(team=team, name=formation_name)[0]
+				play.formation = formation
 				play.playJson = playJson
 				play.save()
 		elif request.POST['delete'] == "true":

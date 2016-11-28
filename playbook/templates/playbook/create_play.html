@@ -888,20 +888,37 @@
 				// the old one and not save a new one. The frontend should also
 				// update the existing version it has and return.
 				for(i in defensive_plays){
-					if (play.formation === defensive_plays[i].formation && name === defensive_plays[i].name) {
+					if (play.formation === defensive_plays[i].formation && name === defensive_plays[i].name && play.scoutName === defensive_plays[i].scoutName) {
 						defensive_plays[i] = play.deepCopy();
 						play.save(path, csrf_token);
 						play = defensive_plays[i].deepCopy();
+						showDefense();
 						return;
 					}
 				}
 
+				//new play, so create new DB entry
+
 				play.name = name;
 				play.team = teamID;
+				defensive_plays.push(play.deepCopy());
 				play.save(path, csrf_token);
-				defensive_plays.push(play);
+
+				if(play.scoutName === ""){
+					var sideview_buttons_div = document.getElementById("sideview-buttons");
+					var new_play_button = document.createElement("button");
+					new_play_button.setAttribute("onclick", "changeSelectedDefensivePlay(this)");
+					new_play_button.setAttribute("name", name);
+					new_play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					new_play_button.textContent = name;
+
+					// Add the new button to the sideview button div.
+					sideview_buttons_div.appendChild(new_play_button);
+					new_play_button.click();
+				}else{
+					showDefense();
+				}
 				return;
-				//new play, so create new DB entry
 			}
 
 			var formation = play.formation;
@@ -1234,11 +1251,12 @@
 			play.scoutFromFormation(base_defense_selected);
 			play.formation = base_defense_name;
 			play.unit = "defense";
+			play.scoutName = "";
 
 			var sideview_buttons = document.getElementById("sideview-buttons");
 
 			for (i in defensive_plays) {
-				if (defensive_plays[i].formation === base_defense_name) {
+				if (defensive_plays[i].formation === base_defense_name && defensive_plays[i].scoutName === "") {
 					var play_button = document.createElement("button");
 					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
 					play_button.setAttribute("name", defensive_plays[i].name);
@@ -1288,6 +1306,7 @@
 				if (formation === base_defenses[i].name) {
 					play.fromFormation(Formation.createDummyFormation());
 					play.scoutFromFormation(base_defenses[i]);
+					play.unit = "defense";
 					play.formation = formation;
 					play.scoutName = "";
 					break;
@@ -1322,7 +1341,7 @@
 				play_name_selected = play_name;
 
 				for (i in defensive_plays) {
-					if (play.formation === defensive_plays[i].formation && play_name === defensive_plays[i].name){
+					if (play.formation === defensive_plays[i].formation && play_name === defensive_plays[i].name && defensive_plays[i].scoutName === ""){
 						play = defensive_plays[i].deepCopy();
 						break;
 					}
@@ -1454,7 +1473,7 @@
 
 			var toggle_button = document.createElement("div");
 			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showOffense()");
+			toggle_button.setAttribute("onclick", "showDefense()");
 			toggle_button.textContent = "D";
 			sideview_header.appendChild(toggle_button);
 
@@ -1468,6 +1487,14 @@
 				scout_offense_button.setAttribute("name", offensive_looks[i].name);
 				scout_offense_button.setAttribute("onclick", "addOffensiveLookToPlay(this)");
 				scout_offense_button.textContent = offensive_looks[i].name;
+				for(j in defensive_plays){
+					if(defensive_plays[j].name === play.name && defensive_plays[j].formation === play.formation && defensive_plays[j].scoutName === offensive_looks[i].name){
+						var check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
+						scout_offense_button.appendChild(check_mark);
+						break;
+					}
+				}
 
 				sideview_buttons.appendChild(scout_offense_button);
 			}
@@ -1507,7 +1534,7 @@
 			var old_selected = document.getElementById("selected");
 
 			if(parentPlay != null){
-				play = parentPlay;
+				play = parentPlay.deepCopy();
 			}else{
 				//play.removeScoutFormation();
 			}
@@ -1559,7 +1586,7 @@
 			var old_selected = document.getElementById("selected");
 
 			if(parentPlay != null){
-				play = parentPlay;
+				play = parentPlay.deepCopy();
 			}else{
 				play.removeScoutFormation();
 			}
@@ -1604,6 +1631,58 @@
 				play.scoutFromFormation(scout_formation);
 			}
 		};
+
+		function showDefense(){
+			debugger;
+			scout_formation_name_selected = "";
+
+			// Show Plays in Base Look
+			var sideview_header = document.getElementById("sideview-header");
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			$("#sideview-buttons").empty();
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showBaseDefenses()");
+
+			sideview_header.textContent = play.formation;
+
+			sideview_header.appendChild(back_arrow);
+
+			var sideview_buttons = document.getElementById("sideview-buttons");
+
+			for (i in defensive_plays) {
+				if (defensive_plays[i].formation === play.formation  && defensive_plays[i].scoutName === "") {
+					var play_button = document.createElement("button");
+					play_button.setAttribute("class", "btn btn-primary sideview-button play-button");
+					play_button.setAttribute("name", defensive_plays[i].name);
+					play_button.setAttribute("onclick", "changeSelectedDefensivePlay(this)");
+					play_button.textContent = defensive_plays[i].name;
+
+					sideview_buttons.appendChild(play_button);
+
+					if (defensive_plays[i].name === play.name) {
+						play = defensive_plays[i].deepCopy();
+					}
+				}
+			}
+
+			// Change selected
+			if (play_name_selected != "") {
+				var play_selected_button = $("[name=\"" + play_name_selected + "\"]")[0];
+				play_selected_button.removeAttribute("class");
+				play_selected_button.setAttribute("id", "selected");
+				play_selected_button.setAttribute("class", "btn btn-success sideview-button play-button");
+
+				var toggle_button = document.createElement("div");
+				toggle_button.setAttribute("id", "offense-defense-toggle");
+				toggle_button.setAttribute("onclick", "showOffensiveLooks()");
+				toggle_button.textContent = "O";
+				sideview_header.appendChild(toggle_button);
+			}
+		}
 
 		function showOffense() {
 			scout_formation_name_selected = "";
