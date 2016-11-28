@@ -111,12 +111,14 @@ def create_defensive_look(request):
 			formation.delete()
 		return HttpResponse('')
 	else:
-		formations = Formation.objects.filter(team=team, scout=True)
+		formations = Formation.objects.filter(team=team, unit="offense", scout=True)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
+		initial_look = request.GET.get('initial_look')
 		return render(request, 'playbook/create_defensive_look.html', {
 			'formations': formations,
 			'team': team,
 			'positions': positions,
+			'initial_look': initial_look,
 			'page_header': 'CREATE DEFENSIVE LOOK'
 		})
 
