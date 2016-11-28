@@ -88,6 +88,46 @@ function arrow(x1, y1, alpha, deltaX) {
 	line(x1, y1, x2, y2);
 };
 
+// draws prongs at point x1, y1 facing in the direciton of alpha (for man coverage).
+function prongs(x1, y1, alpha, deltaX) {
+	var lengthOfArrow = 0.6;
+	var beta = (45*(PI/180)) - alpha;
+	var xDiff = cos(beta)*lengthOfArrow;
+	var yDiff = sin(beta)*lengthOfArrow;
+
+	var x2 = x1 + yDiff;
+	var y2 = y1 + xDiff;
+
+	if (deltaX >= 0) {
+		x2 = x1 - yDiff;
+		y2 = y1 - xDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+	x1 = field.getYardX(x1);
+	y1 = field.getYardY(y1);
+	x2 = field.getYardX(x2);
+	y2 = field.getYardY(y2);
+
+	if (deltaX >= 0) {
+		x2 = x1 - xDiff;
+		y2 = y1 + yDiff;
+	} else {
+		x2 = x1 + xDiff;
+		y2 = y1 - yDiff;
+	}
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+};
+
 class Colors{
 	//Field Colors
 	static fieldColor(){

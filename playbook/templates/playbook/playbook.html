@@ -137,6 +137,7 @@
 		var scout_formations = [];
 		var scout_formation;
 		var dummy_offense;
+		var primary_position = null;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
 
 		//*******************************************************************//
@@ -197,6 +198,10 @@
 			scoutFormationJsonFromDatabase = '{{ scoutFormation.formationJson|safe }}';
 			scout_formations.push(createFormationFromJson(JSON.parse(scoutFormationJsonFromDatabase)));
 			{% endfor %}
+
+			{% if primary_position %}
+				primary_position = "{{primary_position.abbreviation}}"
+			{% endif %}
 
 			// Create new Play, new Concept, new Scout Formation, and new Dummy Offense
 			play = new Play({});
@@ -376,6 +381,17 @@
 
 		function drawOpening() {
 			field.drawBackground(play, height, width);
+
+			if(primary_position != null){
+				var concept_player = concept.getPlayerFromPosition(primary_position);
+				if(concept_player != null){
+					concept_player.setSelected();
+				}
+				var play_player = play.getPlayerFromPosition(primary_position);
+				if(play_player != null){
+					play_player.setSelected();
+				}
+			}
 
 			if (playButtonClicked) {
 				if (concept.runConcept() && play.runPlay()) {

@@ -147,7 +147,7 @@ Player.prototype.draw = function(field) {
 		}
 		ellipse(x, y, siz, siz);
 		fill(Colors.blackColor());
-		textSize(14);
+		textSize(field.getOffensivePlayerTextSize());
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
 	} else if (this.unit === "defense") {
@@ -156,7 +156,7 @@ Player.prototype.draw = function(field) {
 		}else{
 			fill(Colors.defensivePlayerColor());
 		}
-		textSize(17);
+		textSize(field.getDefensivePlayerTextSize());
 		textAlign(CENTER, CENTER);
 		text(this.pos, x, y);
 		fill(Colors.blackColor());
@@ -710,7 +710,7 @@ Player.prototype.drawManCoverage = function(field){
 		x1 = x2;
 		y1 = y2;
 		x2 = this.manCoverage[i].x;
-		y2 = this.manCoverage[i].y;
+		y2 = this.manCoverage[i].y + this.siz;
 
 		x1 = field.getTranslatedX(x1);
 		y1 = field.getTranslatedY(y1);
@@ -724,12 +724,12 @@ Player.prototype.drawManCoverage = function(field){
 
 	}
 
-	// Draw arrow
+	// Draw man coverage prongs
 	var deltaX = x2 - x1;
 	var deltaY = y2 - y1;
 	var alpha = atan(deltaY/deltaX);
 
-	arrow(x2, y2, alpha, deltaX);
+	prongs(x2, y2, alpha, deltaX);
 
 	noStroke();
 };

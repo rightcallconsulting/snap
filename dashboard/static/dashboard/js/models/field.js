@@ -34,6 +34,13 @@ var createPlayField = new Field({
 	typeField: "Create"
 });
 
+Field.prototype.getOffensivePlayerTextSize = function(){
+	return 11 * (40 / this.heightInYards) ;
+}
+
+Field.prototype.getDefensivePlayerTextSize = function(){
+	return 14 * (40 / this.heightInYards) ;
+}
 
 Field.prototype.setFieldType = function(field_type){
 	this.typeField = field_type;

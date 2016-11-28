@@ -13,11 +13,13 @@ def playbook(request, unit="offense"):
 	if request.user.isPlayer():
 		user_is_a_coach = False
 		team = request.user.player.team
+		primary_position = request.user.player.primary_position
 	else:
 		user_is_a_coach = True
 		team = request.user.coach.team
+		primary_position = None
 
-	formations = Formation.objects.filter(team=team, scout=False)
+	formations = Formation.objects.filter(team=team, unit="offense", scout=False)
 	scout_formations = Formation.objects.filter(team=team, scout=True)
 	plays = Play.objects.filter(team=team)
 	concepts = Concept.objects.filter(team=team)
@@ -37,6 +39,7 @@ def playbook(request, unit="offense"):
 		'plays': plays,
 		'concepts': concepts,
 		'team': team,
+		'primary_position': primary_position,
 		'initial_playbook': initial_playbook,
 		'initial_formation': initial_formation,
 		'initial_play': initial_play,
