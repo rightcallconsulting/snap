@@ -4,7 +4,9 @@
 	<div class="sidebar-header">
 		<a href="/">
 			{% if team.sidebar_image %}
-			<img src="{{ team.sidebar_image.url }}" class="sidebar-logo" alt="Stanford" />
+				<img src="{{ team.sidebar_image.url }}" class="sidebar-logo" alt="Team Logo">
+			{% else %}
+				<img  src="{% static 'dashboard/images/snap-logo.png' %}" class="sidebar-logo" alt="Snap Logo">
 			{% endif %}
 		</a>
 	</div>
