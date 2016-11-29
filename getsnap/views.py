@@ -14,7 +14,7 @@ from .models import CustomUser, Team
 from dashboard.models import Admin, Coach, Player
 
 
-braintree.Configuration.configure(braintree.Environment.Sandbox,
+braintree.Configuration.configure(braintree.Environment.Production,
     merchant_id=settings.BRAINTREE_MERCHANT_ID,
     public_key=settings.BRAINTREE_PUBLIC_KEY,
     private_key=settings.BRAINTREE_PRIVATE_KEY)
@@ -74,7 +74,7 @@ def create_purchase(request):
 	nonce_from_the_client = request.POST['payment_method_nonce']
 
 	result = braintree.Transaction.sale({
-    "amount": "10.00",
+    "amount": "0.10",
     "payment_method_nonce": nonce_from_the_client,
     "options": {
       "submit_for_settlement": True

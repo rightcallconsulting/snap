@@ -2,11 +2,7 @@
 {% load staticfiles %}
 
 {% block page %}
-	<div class="login-wrapper">
-		<div class="text-center">
-			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
-		</div>
-
+	<div>
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<form id="checkout-form" action="/getsnap/create_purchase" method="post">
@@ -23,7 +19,7 @@
   <div class="hosted-field" id="expiration-date"></div>
 
   <input type="hidden" name="payment_method_nonce">
-  <input type="submit" value="Pay $10" disabled>
+  <input type="submit" value="Pay $0.10" disabled>
 </form>
 
 <!-- Load the Client component. -->
