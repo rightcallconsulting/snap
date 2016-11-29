@@ -69,7 +69,7 @@ def getsnap(request):
 def client_token(request):
 	return braintree.ClientToken.generate()
 
-#Post only
+# Post only
 def create_purchase(request):
 	nonce_from_the_client = request.POST['payment_method_nonce']
 
@@ -94,7 +94,7 @@ def purchase(request):
 	if request.method == 'GET':
 		return render(request, 'getsnap/purchase.html', {'braintree_client_token': braintree.ClientToken.generate()})
 
-	#Otherwise it's a post
+	# Otherwise it's a post
 	if not form.is_valid():
 		return render(request, 'getsnap/purchase.html', {})
 	else:  # The transaction can be finalized.
