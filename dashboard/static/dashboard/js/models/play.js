@@ -29,7 +29,10 @@ Play.prototype.getFullName = function(){
 	if(this.formation === ""){
 		return this.name
 	}
-	return this.formation + ": " + this.name;
+	if(this.scoutName == null || this.scoutName === ""){
+		return this.formation + ": " + this.name;
+	}
+	return this.formation + ": " + this.name + " vs. " + this.scoutName;
 }
 
 //***************************************************************************//

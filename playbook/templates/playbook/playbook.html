@@ -98,6 +98,9 @@
 					</button>
 				{% endfor %}
 			</div>
+			<div id="sideview-footer">
+
+			</div>
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12" hidden="true">
@@ -483,6 +486,7 @@
 			scout_formation = new Formation({});
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -629,7 +633,47 @@
 		// from the playbook and updates the buttons on the top of the screen.
 		function changeSideviewAndTopOptions(selected) {
 			setSelectedTopOption(selected.value);
+			//clear or update sideview footer?!?
 		};
+
+		function updateSideviewFooter(content){
+			var currentPlaybook = document.getElementById("top-options-dropdown").value;
+
+			var content_type = "Play";
+			var content_name = "";
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			{% if user_is_a_coach %}
+			if(content != null){
+				if(content instanceof Concept){
+					content_type = "Concept";
+				}else if(content instanceof Formation){
+					content_type = "Formation";
+				}else if(content instanceof Play){
+					content_type = "Play";
+				}
+				content_name = content.getFullName();
+				if(content_name === ""){
+					return;//leave empty
+				}
+			}else{
+				return; //leave empty
+			}
+
+			var edit_button = document.createElement("button");
+			edit_button.setAttribute("onclick", "editButtonPressed()");
+			edit_button.textContent = "Edit " + content_name; //TBI - better label
+			var delete_button = document.createElement("button");
+			delete_button.setAttribute("onclick", "deleteButtonPressed()");
+			delete_button.textContent = "Delete " + content_name; //TBI - better label
+			sideview_footer.appendChild(edit_button)
+			sideview_footer.appendChild(delete_button)
+			{% else %}
+				return; //eventually add quiz links
+			{% endif %}
+		}
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
@@ -655,6 +699,7 @@
 			}
 
 			play = new Play({});
+			updateSideviewFooter(null);
 		};
 
 		// showConcepts updates the sideview to include all of the concepts in
@@ -721,6 +766,7 @@
 			sideview_header.appendChild(back_arrow);
 
 			updateNotesAndCalls(formation);
+			updateSideviewFooter(formation);
 
 			play.fromFormation(formation);
 
@@ -763,6 +809,17 @@
 			}
 		};
 
+		function editButtonPressed(){
+			//figure out what the currently selected content is
+			//generate a link to the create_screen with initial values set
+			//follow that link -- window.href = link
+		}
+
+		function deleteButtonPressed(){
+			//figure out what the currently selected content is
+			//generate prompt to ask user if sure
+		}
+
 		function changeSelectedPlay(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
@@ -784,6 +841,7 @@
 			play = new Play({});
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = formation;
@@ -832,6 +890,7 @@
 				}
 
 				updateNotesAndCalls(play);
+				updateSideviewFooter(play);
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -901,6 +960,7 @@
 			}
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -938,6 +998,7 @@
 				}
 
 				updateNotesAndCalls(play);
+				updateSideviewFooter(play);
 			}
 		};
 
@@ -950,6 +1011,7 @@
 			concept = new Concept({});
 
 			updateNotesAndCalls(concept);
+			updateSideviewFooter(concept);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -984,6 +1046,7 @@
 				}
 
 				updateNotesAndCalls(concept);
+				updateSideviewFooter(concept);
 			}
 		};
 
