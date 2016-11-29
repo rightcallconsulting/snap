@@ -645,7 +645,6 @@
 			var sideview_footer = document.getElementById("sideview-footer");
 			sideview_footer.innerHTML = "";
 
-			{% if user_is_a_coach %}
 			if(content != null){
 				if(content instanceof Concept){
 					content_type = "Concept";
@@ -662,16 +661,20 @@
 				return; //leave empty
 			}
 
-			var edit_button = document.createElement("button");
-			edit_button.setAttribute("onclick", "editButtonPressed()");
-			edit_button.textContent = "Edit " + content_name; //TBI - better label
-			var delete_button = document.createElement("button");
-			delete_button.setAttribute("onclick", "deleteButtonPressed()");
-			delete_button.textContent = "Delete " + content_name; //TBI - better label
-			sideview_footer.appendChild(edit_button)
-			sideview_footer.appendChild(delete_button)
+			{% if user_is_a_coach %}
+				var edit_button = document.createElement("button");
+				edit_button.setAttribute("onclick", "editButtonPressed()");
+				edit_button.textContent = "Edit " + content_name; //TBI - better label
+				var delete_button = document.createElement("button");
+				delete_button.setAttribute("onclick", "deleteButtonPressed()");
+				delete_button.textContent = "Delete " + content_name; //TBI - better label
+				sideview_footer.appendChild(edit_button)
+				sideview_footer.appendChild(delete_button)
 			{% else %}
-				return; //eventually add quiz links
+				var take_quiz_button = document.createElement("button");
+				take_quiz_button.setAttribute("onclick", "startQuizButtonPressed()");
+				take_quiz_button.textContent = "Start Quiz On " + content_name; //TBI - better label
+				sideview_footer.appendChild(take_quiz_button)
 			{% endif %}
 		}
 
