@@ -480,20 +480,7 @@ Player.prototype.drawBlocks = function(field) {
 			y1 = this.blockingAssignmentArray[this.blockingAssignmentArray.length - 2].y;
 		}
 
-		var deltaY = y2 - y1;
-		var deltaX = x2 - x1;
-		var alpha = atan(-1* deltaX/deltaY);
-
-		x1 = x2 - lengthOfPerpLine*cos(alpha)/2;
-		y1 = y2 - lengthOfPerpLine*sin(alpha)/2;
-		x2 = x2 + lengthOfPerpLine*cos(alpha)/2;
-		y2 = y2 + lengthOfPerpLine*sin(alpha)/2;
-
-		x1 = field.getTranslatedX(x1);
-		y1 = field.getTranslatedY(y1);
-		x2 = field.getTranslatedX(x2);
-		y2 = field.getTranslatedY(y2);
-		line(x1, y1, x2, y2);
+		perpendicularLine(x1, y1, x2, y2);
 
 		noStroke();
 	}
@@ -725,11 +712,7 @@ Player.prototype.drawManCoverage = function(field){
 	}
 
 	// Draw man coverage prongs
-	var deltaX = x2 - x1;
-	var deltaY = y2 - y1;
-	var alpha = atan(deltaY/deltaX);
-
-	prongs(x2, y2, alpha, deltaX);
+	prongs(x1, y1, x2, y2);
 
 	noStroke();
 };

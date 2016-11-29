@@ -88,20 +88,45 @@ function arrow(x1, y1, alpha, deltaX) {
 	line(x1, y1, x2, y2);
 };
 
+function perpendicularLine(x1, y1, x2, y2){
+	var lengthOfPerpLine = 1.5;
+
+	var deltaY = y2 - y1;
+	var deltaX = x2 - x1;
+	var alpha = atan(-1* deltaX/deltaY);
+
+	x1 = x2 - lengthOfPerpLine*cos(alpha)/2;
+	y1 = y2 - lengthOfPerpLine*sin(alpha)/2;
+	x2 = x2 + lengthOfPerpLine*cos(alpha)/2;
+	y2 = y2 + lengthOfPerpLine*sin(alpha)/2;
+
+	x1 = field.getTranslatedX(x1);
+	y1 = field.getTranslatedY(y1);
+	x2 = field.getTranslatedX(x2);
+	y2 = field.getTranslatedY(y2);
+	line(x1, y1, x2, y2);
+}
+
 // draws prongs at point x1, y1 facing in the direciton of alpha (for man coverage).
-function prongs(x1, y1, alpha, deltaX) {
-	var lengthOfArrow = 0.6;
-	var beta = (45*(PI/180)) - alpha;
-	var xDiff = cos(beta)*lengthOfArrow;
-	var yDiff = sin(beta)*lengthOfArrow;
+function prongs(x1, y1, x2, y2) {
+	var lengthOfPerpLine = 1.5;
+	var lengthOfParallelLines = lengthOfPerpLine/2;
 
-	var x2 = x1 + yDiff;
-	var y2 = y1 + xDiff;
-
-	if (deltaX >= 0) {
-		x2 = x1 - yDiff;
-		y2 = y1 - xDiff;
+	var deltaY = y2 - y1;
+	var deltaX = x2 - x1;
+	var perp_alpha = atan(-1* deltaX/deltaY);
+	var alpha = atan(deltaY/deltaX);
+	var xDiff = cos(alpha)*lengthOfParallelLines;
+	var yDiff = sin(alpha)*lengthOfParallelLines;
+	if(deltaX < 0){
+		xDiff *= -1;
+		yDiff *= -1;
 	}
+
+	x1 = x2 - lengthOfPerpLine*cos(perp_alpha)/2;
+	y1 = y2 - lengthOfPerpLine*sin(perp_alpha)/2;
+	x2 = x2 + lengthOfPerpLine*cos(perp_alpha)/2;
+	y2 = y2 + lengthOfPerpLine*sin(perp_alpha)/2;
 
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);
@@ -113,19 +138,20 @@ function prongs(x1, y1, alpha, deltaX) {
 	x2 = field.getYardX(x2);
 	y2 = field.getYardY(y2);
 
-	if (deltaX >= 0) {
-		x2 = x1 - xDiff;
-		y2 = y1 + yDiff;
-	} else {
-		x2 = x1 + xDiff;
-		y2 = y1 - yDiff;
-	}
+	//continue out from x1, y1 in alpha direction; then do same from x2, y2
 
+	var dest1X = field.getTranslatedX(x1 + xDiff);
+	var dest1Y = field.getTranslatedY(y1 + yDiff);
+	var dest2X = field.getTranslatedX(x2 + xDiff);
+	var dest2Y = field.getTranslatedY(y2 + yDiff);
 	x1 = field.getTranslatedX(x1);
 	y1 = field.getTranslatedY(y1);
 	x2 = field.getTranslatedX(x2);
 	y2 = field.getTranslatedY(y2);
-	line(x1, y1, x2, y2);
+
+	line(x1, y1, dest1X, dest1Y);
+	line(x2, y2, dest2X, dest2Y);
+
 };
 
 class Colors{
