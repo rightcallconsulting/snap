@@ -132,6 +132,12 @@ def homepage(request):
 		custom_quizzes.sort(key=lambda quiz: quiz.created_at, reverse=True)
 		custom_quizzes = custom_quizzes[0:5] #keep it recent
 
+		custom_quiz_tuples = []
+		for quiz in custom_quizzes:
+			custom_quiz_tuples.append((str(quiz), quiz.launch_url()))
+
+		custom_quizzes = custom_quiz_tuples
+
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
 			'quizzes': quizzes_table,

@@ -16,6 +16,9 @@ class CustomQuiz(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
+	def __str__(self):
+		return "Custom Quiz" #TBI
+
 	def launch_url(self):
 		full_link = "/quizzes/custom/"
 		full_link += (str(self.content_type) + "?")
