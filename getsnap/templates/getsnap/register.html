@@ -8,6 +8,7 @@
 			<input type="email" name="email" placeholder="Email"> <br>
 			<input type="password" name="password1" placeholder="Password"> <br>
 			<input type="password" name="password2" placeholder="Check Password"> <br>
+			
 			<select name="type">
 				<optgroup>
 					<option value="coach">Coach</option>
@@ -15,6 +16,7 @@
 					<option value="admin">Admin</option>
 				</optgroup>
 			</select> <br>
+			
 			<select name="team">
 				<optgroup>
 					{% for team in teams %}
@@ -22,6 +24,7 @@
 					{% endfor %}
 				</optgroup>
 			</select> <br>
+			
 			<button type="submit">Register</button>
 		</form>
 	</div>

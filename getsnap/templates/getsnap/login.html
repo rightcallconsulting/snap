@@ -3,37 +3,18 @@
 
 {% block page %}
 	<div class="login-wrapper">
+		<a href="/getsnap/packages">Get Snap</a>
+		<a href="/demosnap">Demo Snap</a>
+
 		<div class="text-center">
 			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
 		</div>
-		
-		<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<div class="pull-left">
-					<i class="fa fa-lock fa-lg"></i> Login
-				</div>
-			</div><!--/panel-heading -->
 
-			<div class="panel-body">
-				<form action="/login" method="post" class="form-login"> 
-					{% csrf_token %}
-
-					<input type="email" name="email" placeholder="Email"> <br>
-					<input type="password" name="password" placeholder="Password"> <br>
-
-					<div class="checkbox">
-						<label class="label-checkbox">
-							<input type="checkbox" name="remember_me" />
-							<span class="custom-checkbox info bounceIn animation-delay6"></span>
-							Remember me<br/>
-						</label>
-					</div>
-
-					<hr>
-					
-					<input class="btn btn-success btn-sm bounceIn animation-delay5 login-link pull-right" type="submit" value="Sign In">
-				</form>
-			</div><!-- /panel-body -->
-		</div><!-- /panel -->
+		<form action="/login" method="post" class="login-form"> 
+			{% csrf_token %}
+			<input type="email" name="email" placeholder="Email"> <br>
+			<input type="password" name="password" placeholder="Password"> <br>
+			<button type="submit">Sign In</button>
+		</form>
 	</div><!-- /login-wrapper -->
 {% endblock %}

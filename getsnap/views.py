@@ -20,7 +20,7 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
     private_key=settings.BRAINTREE_PRIVATE_KEY)
 
 
-# Login/Logout
+### Login/Logout ##########################################
 def auth_login(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
@@ -41,11 +41,11 @@ def auth_logout(request):
 	logout(request)
 	return HttpResponseRedirect("/login")
 
-# Snap Demo
+### Snap Demo #############################################
 def demo(request):
 	return render(request, 'getsnap/demo.html', {})
 
-# Get Snap
+### Get Snap ##############################################
 def getsnap(request):
 	if request.method == 'POST':
 		first_name = request.POST['fname']
@@ -65,6 +65,12 @@ def getsnap(request):
 		return HttpResponseRedirect("/getsnap/thanks")
 	else:
 		return render(request, 'getsnap/getsnap.html', {})
+
+def packages(request):
+	return render(request, 'getsnap/packages.html', {})
+
+def thanks(request):
+	return render(request, 'getsnap/thanks.html', {})
 
 def client_token(request):
 	return braintree.ClientToken.generate()
@@ -100,10 +106,7 @@ def purchase(request):
 	else:  # The transaction can be finalized.
 		return render(request, 'getsnap/thanks.html', {})
 
-def thanks(request):
-	return render(request, 'getsnap/thanks.html', {})
-
-# Register - This link is only used internally to create accounts
+### Register ############################################## 
 def register(request):
 	if request.method == 'POST':
 		email = request.POST['email']
