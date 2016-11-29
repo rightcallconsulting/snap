@@ -104,13 +104,14 @@ def create_defensive_look(request):
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
+				formation.scout = (request.POST['scout'] == "true")
 				formation.save()
 			elif formation.count() == 0:
 				formation = Formation()
 				formation.name = name
 				formation.team = request.user.coach.team
 				formation.unit = request.POST['unit']
-				formation.scout = True
+				formation.scout = (request.POST['scout'] == "true")
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
@@ -118,11 +119,13 @@ def create_defensive_look(request):
 			formation.delete()
 		return HttpResponse('')
 	else:
-		formations = Formation.objects.filter(team=team, unit="offense", scout=True)
+		formations = Formation.objects.filter(team=team, unit="defense", scout=False)
+		scout_formations = Formation.objects.filter(team=team, unit="defense", scout=True)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		initial_look = request.GET.get('initial_look')
 		return render(request, 'playbook/create_defensive_look.html', {
 			'formations': formations,
+			'scout_formations': scout_formations,
 			'team': team,
 			'positions': positions,
 			'initial_look': initial_look,
