@@ -169,8 +169,8 @@ def create_play(request):
 		return HttpResponse('')
 	else:
 		formations = Formation.objects.filter(team=team, unit="offense", scout=False)
-		scout_formations = Formation.objects.filter(team=team, unit="offense", scout=True)
-		offensive_looks = Formation.objects.filter(team=team, unit="defense", scout=True)
+		scout_formations = Formation.objects.filter(team=team, unit="defense", scout=True)
+		offensive_looks = Formation.objects.filter(team=team, unit="offense", scout=True)
 		offensive_plays = Play.objects.filter(team=team, scout=False, unit="offense")
 		base_defenses = Formation.objects.filter(team=team, scout=False, unit="defense")
 		defensive_plays = Play.objects.filter(team=team, scout=False, unit="defense")
