@@ -717,6 +717,23 @@ Player.prototype.drawManCoverage = function(field){
 	noStroke();
 };
 
+Player.prototype.drawCalls = function(field){
+	if(this.call != ""){
+		var x = field.getTranslatedX(this.x);
+		var y = field.getTranslatedY(this.y - 1.2*this.siz);
+		if(this.unit == "defense"){
+			y = field.getTranslatedY(this.y + 1.2*this.siz);
+		}
+		textSize(field.getCallTextSize())
+		fill(Colors.redColor())
+		text(this.call, x, y);
+	}
+}
+
+Player.prototype.drawNotes = function(field){
+
+}
+
 // deepCopy returns a new Player object that is exactly the same as this.
 Player.prototype.deepCopy = function() {
 	var deepCopy = new Player({

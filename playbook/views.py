@@ -20,7 +20,7 @@ def playbook(request, unit="offense"):
 		primary_position = None
 
 	formations = Formation.objects.filter(team=team, unit="offense", scout=False)
-	scout_formations = Formation.objects.filter(team=team, scout=True)
+	scout_formations = Formation.objects.filter(team=team, unit="defense", scout=True)
 	plays = Play.objects.filter(team=team)
 	concepts = Concept.objects.filter(team=team)
 

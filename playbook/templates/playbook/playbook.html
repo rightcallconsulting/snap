@@ -409,6 +409,17 @@
 			play.drawPlayers(field);
 			concept.drawPlayers(field);
 
+			var selectedPlayer = play.getSelected()[0];
+			if(selectedPlayer == null){
+				selectedPlayer = concept.getSelected()[0];
+			}
+
+			if(selectedPlayer != null){
+				//do more drawing here
+				selectedPlayer.drawCalls(field);
+				selectedPlayer.drawNotes(field);
+			}
+
 			scout_formation.drawPlayers(field);
 			scout_formation.drawAssignments(field);
 			dummy_offense.drawPlayers(field);
