@@ -25,7 +25,6 @@ def auth_login(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect("/")
 	elif request.method == 'POST':
-		print "hi"
 		email = request.POST['email']
 		password = request.POST['password']
 		user = authenticate(email=email, password=password)
