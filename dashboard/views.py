@@ -469,7 +469,7 @@ def delete_group(request):
 @user_passes_test(lambda user: user.isCoach())
 def admin(request):
 	team = request.user.coach.team
-	return render(request, 'dashboard/admin.html' {
+	return render(request, 'dashboard/admin.html', {
 			'team': team,
 			'page_header': 'ADMIN'
 		})
