@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
- 
+
 from django.db import models
 
 class CustomQuiz(models.Model):
@@ -15,6 +15,23 @@ class CustomQuiz(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+	def __str__(self):
+		return "Custom Quiz" #TBI
+
+	def launch_url(self):
+		full_link = "/quizzes/custom/"
+		full_link += (str(self.content_type) + "?")
+		full_link += ("number_of_questions=" + str(self.number_of_questions))
+		full_link += ("&order=" + str(self.ordering))
+		full_link += ("&type=" + str(self.quiz_type))
+		if self.position:
+			full_link += ("&position=" + str(self.position))
+			if self.type_of_assignment:
+				full_link += ("&type-of-assignment=" + str(self.type_of_assignment))
+		return full_link
+
+
 
 
 class Quiz(models.Model):

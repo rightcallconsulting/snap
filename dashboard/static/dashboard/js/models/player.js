@@ -697,7 +697,23 @@ Player.prototype.drawManCoverage = function(field){
 		x1 = x2;
 		y1 = y2;
 		x2 = this.manCoverage[i].x;
-		y2 = this.manCoverage[i].y + this.siz;
+		y2 = this.manCoverage[i].y;
+
+		var dx = x2-x1;
+		var dy = y2-y1;
+		var alpha = atan(dy/dx);
+		var buffer = this.siz * 1.2;
+
+		var xDiff = buffer*cos(alpha);
+		var yDiff = buffer*sin(alpha);
+
+		if(dx < 0){
+			xDiff *= -1;
+			yDiff *= -1;
+		}
+
+		x2 -= xDiff;
+		y2 -= yDiff;
 
 		x1 = field.getTranslatedX(x1);
 		y1 = field.getTranslatedY(y1);
@@ -716,6 +732,23 @@ Player.prototype.drawManCoverage = function(field){
 
 	noStroke();
 };
+
+Player.prototype.drawCalls = function(field){
+	if(this.call != ""){
+		var x = field.getTranslatedX(this.x);
+		var y = field.getTranslatedY(this.y - 1.2*this.siz);
+		if(this.unit == "defense"){
+			y = field.getTranslatedY(this.y + 1.2*this.siz);
+		}
+		textSize(field.getCallTextSize())
+		fill(Colors.redColor())
+		text(this.call, x, y);
+	}
+}
+
+Player.prototype.drawNotes = function(field){
+
+}
 
 // deepCopy returns a new Player object that is exactly the same as this.
 Player.prototype.deepCopy = function() {

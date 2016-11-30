@@ -22,8 +22,8 @@
 					<option value="defensive concepts">
 						Defensive Concepts
 					</option>
-					<option value="offensive plays">
-						Offensive Plays
+					<option value="offensive looks">
+						Offensive Looks
 					</option>
 				{% endif %}
 			</select>
@@ -97,6 +97,9 @@
 						{{ formation.name }}
 					</button>
 				{% endfor %}
+			</div>
+			<div id="sideview-footer">
+
 			</div>
 		</div>
 
@@ -406,6 +409,17 @@
 			play.drawPlayers(field);
 			concept.drawPlayers(field);
 
+			var selectedPlayer = play.getSelected()[0];
+			if(selectedPlayer == null){
+				selectedPlayer = concept.getSelected()[0];
+			}
+
+			if(selectedPlayer != null){
+				//do more drawing here
+				selectedPlayer.drawCalls(field);
+				selectedPlayer.drawNotes(field);
+			}
+
 			scout_formation.drawPlayers(field);
 			scout_formation.drawAssignments(field);
 			dummy_offense.drawPlayers(field);
@@ -483,6 +497,7 @@
 			scout_formation = new Formation({});
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -629,7 +644,55 @@
 		// from the playbook and updates the buttons on the top of the screen.
 		function changeSideviewAndTopOptions(selected) {
 			setSelectedTopOption(selected.value);
+			//clear or update sideview footer?!?
 		};
+
+		function updateSideviewFooter(content){
+			var currentPlaybook = document.getElementById("top-options-dropdown").value;
+
+			var content_type = "Play";
+			var content_name = "";
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			if(content != null){
+				if(content instanceof Concept){
+					content_type = "Concept";
+				}else if(content instanceof Formation){
+					content_type = "Formation";
+				}else if(content instanceof Play){
+					content_type = "Play";
+				}
+				content_name = content.getFullName();
+				if(content_name === ""){
+					return;//leave empty
+				}
+			}else{
+				return; //leave empty
+			}
+
+			{% if user_is_a_coach %}
+				var edit_button = document.createElement("button");
+				edit_button.setAttribute("onclick", "contentButtonPressed(this)");
+				edit_button.textContent = "Edit " + content_name; //TBI - better label
+				edit_button.dataset.button_type = "edit";
+				edit_button.dataset.content_type = content_type;
+				var delete_button = document.createElement("button");
+				delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+				delete_button.textContent = "Delete " + content_name; //TBI - better label
+				delete_button.dataset.button_type = "delete";
+				delete_button.dataset.content_type = content_type;
+
+				sideview_footer.appendChild(edit_button)
+				sideview_footer.appendChild(delete_button)
+			{% else %}
+				var take_quiz_button = document.createElement("button");
+				take_quiz_button.setAttribute("onclick", "startQuizButtonPressed()");
+				take_quiz_button.textContent = "Start Quiz On " + content_name; //TBI - better label
+				sideview_footer.appendChild(take_quiz_button)
+			{% endif %}
+		}
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
@@ -655,6 +718,7 @@
 			}
 
 			play = new Play({});
+			updateSideviewFooter(null);
 		};
 
 		// showConcepts updates the sideview to include all of the concepts in
@@ -721,6 +785,7 @@
 			sideview_header.appendChild(back_arrow);
 
 			updateNotesAndCalls(formation);
+			updateSideviewFooter(formation);
 
 			play.fromFormation(formation);
 
@@ -763,6 +828,71 @@
 			}
 		};
 
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+			var content_type = button.dataset.content_type;
+			var content = play;
+
+			if(content_type == "Concept"){
+				content = concept;
+			}
+
+			if(button_type == "edit"){
+				editContent(content, content_type);
+			}else if(button_type == "delete"){
+				var sideview_footer = document.getElementById("sideview-footer");
+				var confirm_delete_button = sideview_footer.children[1];
+				//confirm_delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+				confirm_delete_button.textContent = "CONFIRM DELETE"
+				confirm_delete_button.dataset.button_type = "confirm-delete";
+				confirm_delete_button.style.backgroundColor = "red"
+				confirm_delete_button.style.color = "black"
+				//confirm_delete_button.dataset.content_type = content_type;
+				//sideview_footer.children[1] = confirm_delete_button;
+			}else if(button_type == "confirm-delete"){
+				deleteContent(content, content_type);
+			}
+		}
+
+		function editContent(content, content_type){
+			//generate a link to the create_screen with initial values set
+			var link = "";
+			if(content_type == "Concept"){
+				link = "/playbook/concepts/create?initial_concept="+content.name;
+			}else if(content_type == "Formation"){
+				link = "/playbook/formations/create?initial_formation="+content.formation;
+			}else if(content_type == "Play"){
+				link = "/playbook/plays/create?initial_formation="+content.formation;
+				link += "&initial_play=" + content.name;
+				if(content.scoutName != ""){
+					link += "&initial_scout=" + content.scoutName;
+				}
+			}
+
+			window.location.href = link;
+		}
+
+		function deleteContent(content, content_type){
+			//figure out what the currently selected content is
+			//generate prompt to ask user if sure
+			//prompt_text += "Warning: This will delete all plays in this formation as well."
+			var path = "/playbook/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+			if(content_type == "Formation"){
+				path = "/playbook/formations/create";
+			} else if(content_type == "Play"){
+				path = "/playbook/plays/create";
+			}
+
+			if(content_type == "Formation"){
+				content = new Formation({name:content.formation});
+			}
+
+			content.delete(path, csrf_token);
+			window.location.href = "/playbook" //add initial_view later depending on content
+
+		}
+
 		function changeSelectedPlay(selected) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
@@ -784,6 +914,7 @@
 			play = new Play({});
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = formation;
@@ -832,6 +963,7 @@
 				}
 
 				updateNotesAndCalls(play);
+				updateSideviewFooter(play);
 
 				var header_text_content = play_name;
 				play_name = document.getElementById("play-name");
@@ -901,6 +1033,7 @@
 			}
 
 			updateNotesAndCalls(play);
+			updateSideviewFooter(play);
 
 			for (i in formations) {
 				if (formation === formations[i].name) {
@@ -938,6 +1071,7 @@
 				}
 
 				updateNotesAndCalls(play);
+				updateSideviewFooter(play);
 			}
 		};
 
@@ -950,6 +1084,7 @@
 			concept = new Concept({});
 
 			updateNotesAndCalls(concept);
+			updateSideviewFooter(concept);
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -984,6 +1119,7 @@
 				}
 
 				updateNotesAndCalls(concept);
+				updateSideviewFooter(concept);
 			}
 		};
 

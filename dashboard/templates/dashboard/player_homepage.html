@@ -7,7 +7,7 @@
 			<table>
 				<thead>
 					<tr>
-						<th colspan="3"><div class="header">TODO</div></th>
+						<th colspan="3"><div class="header">ASSIGNED QUIZZES</div></th>
 					</tr>
 					{% if quizzes|length != 0 %}
 					<tr>
@@ -38,6 +38,27 @@
 							<!--<td><i class="fa fa-close fa-lg"></i></td>-->
 							<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Take {{ quiz.0 }}</button></td>
 							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<table>
+				<thead>
+					<tr>
+						<th colspan="3"><div class="header">CUSTOM QUIZZES</div></th>
+					</tr>
+					{% if custom_quizzes|length != 0 %}
+					<tr>
+						<th colspan="2">QUIZ</th>
+						<th>TAKE</th>
+					</tr>
+					{% endif %}
+				</thead>
+				<tbody id="quizzes-body">
+					{% for quiz in custom_quizzes %}
+						<tr>
+							<td colspan="2">{{ quiz.0 }}</td>
+							<td><a href="{{quiz.1}}">Retake {{ quiz.0 }}</a></td>
 						</tr>
 					{% endfor %}
 				</tbody>

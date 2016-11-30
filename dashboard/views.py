@@ -18,7 +18,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Admin, Coach, Player, PlayerGroup
 from getsnap.models import Team
 from playbook.models import Concept, Formation, Play
-from quizzes.models import Quiz
+from quizzes.models import CustomQuiz, Quiz
 from analytics.models import QuestionAttempted
 
 
@@ -127,9 +127,21 @@ def homepage(request):
 		if len(newsfeed) > 20:
 			newsfeed = newsfeed[0:20]
 
+		custom_quizzes = list(CustomQuiz.objects.filter(team=team, player=player))
+		#sort by recent (if not default?)
+		custom_quizzes.sort(key=lambda quiz: quiz.created_at, reverse=True)
+		custom_quizzes = custom_quizzes[0:5] #keep it recent
+
+		custom_quiz_tuples = []
+		for quiz in custom_quizzes:
+			custom_quiz_tuples.append((str(quiz), quiz.launch_url()))
+
+		custom_quizzes = custom_quiz_tuples
+
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
 			'quizzes': quizzes_table,
+			'custom_quizzes': custom_quizzes,
 			'team': team,
 			'primary_position': player.primary_position,
 			'other_positions': position_groups,

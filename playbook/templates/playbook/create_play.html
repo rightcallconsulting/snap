@@ -231,7 +231,7 @@
 				var initial_formation_name = "{{initial_formation}}";
 				var sideview_buttons = document.getElementById("sideview-buttons").children;
 				for(i in sideview_buttons){
-					if(sideview_buttons[i].textContent === initial_formation_name){
+					if(sideview_buttons[i].name === initial_formation_name){
 						sideview_buttons[i].click();
 						break;
 					}
@@ -241,7 +241,7 @@
 				var initial_play_name = "{{initial_play}}";
 				var sideview_buttons = document.getElementById("sideview-buttons").children;
 				for(i in sideview_buttons){
-					if(sideview_buttons[i].textContent === initial_play_name){
+					if(sideview_buttons[i].name === initial_play_name){
 						sideview_buttons[i].click();
 						break;
 					}
@@ -256,7 +256,7 @@
 				var initial_scout_name = "{{initial_scout}}";
 				var sideview_buttons = document.getElementById("sideview-buttons").children;
 				for(i in sideview_buttons){
-					if(sideview_buttons[i].textContent === initial_scout_name){
+					if(sideview_buttons[i].name === initial_scout_name){
 						sideview_buttons[i].click();
 						break;
 					}

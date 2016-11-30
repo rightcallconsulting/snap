@@ -319,6 +319,12 @@ div#choices-sideview {
 	border-width: 2px;
 }
 
+div#sideview-footer{
+	height: 50px;
+	width: 100%;
+	border-top: 1px solid #FFFFFF;
+}
+
 div#sideview-header,
 div#questions-header,
 div#choices-header {
@@ -336,7 +342,7 @@ div#choices-header {
 
 div#sideview-buttons,
 div#choices-buttons {
-	height: calc(100% - 52px);
+	height: calc(100% - 80px);
 	width: 100%;
 	overflow: scroll;
 	margin: 0;
