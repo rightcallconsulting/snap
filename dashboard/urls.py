@@ -20,7 +20,7 @@ urlpatterns = [
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
 	# Admin
-	url(r'^admin/$', views.admin, name = 'admin'),
+	url(r'^team/$', views.team, name = 'team'),
 
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
@@ -30,10 +30,3 @@ urlpatterns = [
 	url(r'^concepts/(?P<concept_id>[0-9]+)/json$', views.concept_json, name='group_json'),
 	url(r'^concepts/json$', views.concepts_json, name='group_json'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', static.serve, {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-    ]

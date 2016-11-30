@@ -467,9 +467,9 @@ def delete_group(request):
 
 ### Admin #################################################
 @user_passes_test(lambda user: user.isCoach())
-def admin(request):
+def team(request):
 	team = request.user.coach.team
-	return render(request, 'dashboard/admin.html', {
+	return render(request, 'dashboard/team.html', {
 			'team': team,
 			'page_header': 'ADMIN'
 		})
