@@ -60,6 +60,12 @@ def getsnap(request):
 		new_user.phone_number = phone_number
 		new_user.save()
 
+        #create a customer account in braintree and assign client_id to new_user
+        result = braintree.Customer.create({
+            "first_name": first_name,
+            "last_name": last_name
+        })
+
 		# Send email here and set notifications
 
 		return HttpResponseRedirect("/getsnap/thanks")

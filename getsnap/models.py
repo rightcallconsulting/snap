@@ -24,6 +24,8 @@ class CustomUser(AbstractUser):
 
 	phone_number = models.CharField(max_length=15, blank=True, null=True)
 
+	customer_id = models.CharField(max_length=30, blank=True, null=True) #braintree
+
 	def __str__(self):
 		return self.username
 
