@@ -47,30 +47,33 @@ def demo(request):
 
 # Get Snap
 def getsnap(request):
-	if request.method == 'POST':
-		first_name = request.POST['fname']
-		last_name = request.POST['lname']
-		email = request.POST['email']
-		phone_number = request.POST['number']
+    if request.method == 'POST':
+        first_name = request.POST['fname']
+        last_name = request.POST['lname']
+        email = request.POST['email']
+        phone_number = request.POST['number']
 
-		new_user = CustomUser.objects.create_user(username=email, email=email)
-		new_user.is_active = False
-		new_user.first_name = first_name
-		new_user.last_name = last_name
-		new_user.phone_number = phone_number
-		new_user.save()
-
+        new_user = CustomUser.objects.create_user(username=email, email=email)
+        new_user.is_active = False
+        new_user.first_name = first_name
+        new_user.last_name = last_name
+        new_user.phone_number = phone_number
+        new_user.save()
         #create a customer account in braintree and assign client_id to new_user
         result = braintree.Customer.create({
             "first_name": first_name,
-            "last_name": last_name
+            "last_name": last_name,
+            "email": email,
+            "phone": phone_number
         })
 
-		# Send email here and set notifications
+        if result.is_success and result.customer.id > 0:
+            new_user.customer_id = result.customer.id
+            new_user.save()
 
-		return HttpResponseRedirect("/getsnap/thanks")
-	else:
-		return render(request, 'getsnap/getsnap.html', {})
+        # Send email here and set notifications
+        return HttpResponseRedirect("/getsnap/thanks")
+    return render(request, 'getsnap/getsnap.html', {})
 
 def client_token(request):
 	return braintree.ClientToken.generate()
@@ -97,8 +100,14 @@ def create_purchase(request):
 
 @user_passes_test(lambda u: not u.isPlayer())
 def purchase(request):
-	if request.method == 'GET':
-		return render(request, 'getsnap/purchase.html', {'braintree_client_token': braintree.ClientToken.generate()})
+    if request.method == 'GET':
+        customer = None
+        if request.user.customer_id:
+            customer = braintree.Customer.find(request.user.customer_id)
+        return render(request, 'getsnap/purchase.html', {
+            'braintree_client_token': braintree.ClientToken.generate(),
+            'braintree_customer': customer
+        })
 
 	# Otherwise it's a post
 	if not form.is_valid():

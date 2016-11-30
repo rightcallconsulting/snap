@@ -7,7 +7,12 @@
 
 		</div>
 		<div class="billing-info">
-			
+			{% if braintree_customer %}
+			Bill To: <br />
+			{{braintree_customer.first_name}} {{braintree_customer.last_name}}<br />
+			{{braintree_customer.email}} <br />
+			{{braintree_customer.phone}} <br />
+			{% endif %}
 		</div>
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -97,7 +102,6 @@ braintree.client.create({
         // submit the form. Alternatively, you could send the nonce to your server
         // with AJAX.
         document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
-				debugger;
         form.submit();
       });
     }, false);
