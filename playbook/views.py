@@ -73,7 +73,7 @@ def create_formation(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, scout=False, name=name)[0]
+			formation = Formation.objects.filter(team=team, scout=request.POST['scout'], name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -115,7 +115,7 @@ def create_defensive_look(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, scout=True, name=name)[0]
+			formation = Formation.objects.filter(team=team, scout=request.POST['scout'], name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:

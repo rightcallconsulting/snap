@@ -244,7 +244,7 @@ Formation.prototype.delete = function(path, csrf_token) {
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: formationName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, scout: this.scout, name: formationName}
 		).done(function() {
 			console.log("Formation successfully sent to Django to be deleted");
 		}).fail(function() {
