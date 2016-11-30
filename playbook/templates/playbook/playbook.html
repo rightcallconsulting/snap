@@ -663,11 +663,15 @@
 
 			{% if user_is_a_coach %}
 				var edit_button = document.createElement("button");
-				edit_button.setAttribute("onclick", "editButtonPressed()");
+				edit_button.setAttribute("onclick", "contentButtonPressed(this)");
 				edit_button.textContent = "Edit " + content_name; //TBI - better label
+				edit_button.dataset.button_type = "edit";
+				edit_button.dataset.content_type = content_type;
 				var delete_button = document.createElement("button");
-				delete_button.setAttribute("onclick", "deleteButtonPressed()");
+				delete_button.setAttribute("onclick", "contentButtonPressed(this)");
 				delete_button.textContent = "Delete " + content_name; //TBI - better label
+				delete_button.dataset.button_type = "delete";
+				delete_button.dataset.content_type = content_type;
 				sideview_footer.appendChild(edit_button)
 				sideview_footer.appendChild(delete_button)
 			{% else %}
@@ -812,13 +816,41 @@
 			}
 		};
 
-		function editButtonPressed(){
-			//figure out what the currently selected content is
-			//generate a link to the create_screen with initial values set
-			//follow that link -- window.href = link
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+			var content_type = button.dataset.content_type;
+			var content = play;
+
+			if(content_type == "Concept"){
+				content = concept;
+			}
+
+			if(button_type == "edit"){
+				editContent(content, content_type);
+			}else if(button_type == "delete"){
+				deleteContent(content, content_type);
+			}
 		}
 
-		function deleteButtonPressed(){
+		function editContent(content, content_type){
+			//generate a link to the create_screen with initial values set
+			var link = "";
+			if(content_type == "Concept"){
+				link = "/playbook/concepts/create?initial_concept="+content.name;
+			}else if(content_type == "Formation"){
+				link = "/playbook/formations/create?initial_formation="+content.formation;
+			}else if(content_type == "Play"){
+				link = "/playbook/plays/create?initial_formation="+content.formation;
+				link += "&initial_play=" + content.name;
+				if(content.scoutName != ""){
+					link += "&initial_scout=" + content.scoutName;
+				}
+			}
+
+			window.location.href = link;
+		}
+
+		function deleteContent(content, content_type){
 			//figure out what the currently selected content is
 			//generate prompt to ask user if sure
 		}
