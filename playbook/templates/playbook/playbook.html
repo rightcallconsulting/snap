@@ -22,8 +22,8 @@
 					<option value="defensive concepts">
 						Defensive Concepts
 					</option>
-					<option value="offensive plays">
-						Offensive Plays
+					<option value="offensive looks">
+						Offensive Looks
 					</option>
 				{% endif %}
 			</select>
@@ -683,6 +683,7 @@
 				delete_button.textContent = "Delete " + content_name; //TBI - better label
 				delete_button.dataset.button_type = "delete";
 				delete_button.dataset.content_type = content_type;
+
 				sideview_footer.appendChild(edit_button)
 				sideview_footer.appendChild(delete_button)
 			{% else %}
@@ -839,6 +840,16 @@
 			if(button_type == "edit"){
 				editContent(content, content_type);
 			}else if(button_type == "delete"){
+				var sideview_footer = document.getElementById("sideview-footer");
+				var confirm_delete_button = sideview_footer.children[1];
+				//confirm_delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+				confirm_delete_button.textContent = "CONFIRM DELETE"
+				confirm_delete_button.dataset.button_type = "confirm-delete";
+				confirm_delete_button.style.backgroundColor = "red"
+				confirm_delete_button.style.color = "black"
+				//confirm_delete_button.dataset.content_type = content_type;
+				//sideview_footer.children[1] = confirm_delete_button;
+			}else if(button_type == "confirm-delete"){
 				deleteContent(content, content_type);
 			}
 		}
@@ -864,6 +875,22 @@
 		function deleteContent(content, content_type){
 			//figure out what the currently selected content is
 			//generate prompt to ask user if sure
+			//prompt_text += "Warning: This will delete all plays in this formation as well."
+			var path = "/playbook/concepts/create";
+			var csrf_token = "{{ csrf_token }}";
+			if(content_type == "Formation"){
+				path = "/playbook/formations/create";
+			} else if(content_type == "Play"){
+				path = "/playbook/plays/create";
+			}
+
+			if(content_type == "Formation"){
+				content = new Formation({name:content.formation});
+			}
+
+			content.delete(path, csrf_token);
+			window.location.href = "/playbook" //add initial_view later depending on content
+
 		}
 
 		function changeSelectedPlay(selected) {
