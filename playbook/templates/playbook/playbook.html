@@ -661,6 +661,9 @@
 					content_type = "Concept";
 				}else if(content instanceof Formation){
 					content_type = "Formation";
+					if(content.unit === "defense"){
+						content_type = "Defensive Look"
+					}
 				}else if(content instanceof Play){
 					content_type = "Play";
 				}
@@ -835,6 +838,8 @@
 
 			if(content_type == "Concept"){
 				content = concept;
+			}else if(content_type == "Defensive Look"){
+				content = scout_formation;
 			}
 
 			if(button_type == "edit"){
@@ -859,6 +864,8 @@
 			var link = "";
 			if(content_type == "Concept"){
 				link = "/playbook/concepts/create?initial_concept="+content.name;
+			}else if(content_type == "Defensive Look"){
+				link = "/playbook/formations/create/defensive_look?initial_look="+content.name;
 			}else if(content_type == "Formation"){
 				link = "/playbook/formations/create?initial_formation="+content.formation;
 			}else if(content_type == "Play"){
@@ -878,7 +885,9 @@
 			//prompt_text += "Warning: This will delete all plays in this formation as well."
 			var path = "/playbook/concepts/create";
 			var csrf_token = "{{ csrf_token }}";
-			if(content_type == "Formation"){
+			if(content_type == "Defensive Look"){
+				path = "/playbook/formations/create/defensive_look";
+			}else if(content_type == "Formation"){
 				path = "/playbook/formations/create";
 			} else if(content_type == "Play"){
 				path = "/playbook/plays/create";
@@ -1164,6 +1173,8 @@
 					}
 				}
 			}
+
+			updateSideviewFooter(scout_formation);
 		};
 
 		function showOffense() {

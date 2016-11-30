@@ -73,7 +73,7 @@ def create_formation(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, scout=False, name=name)
+			formation = Formation.objects.filter(team=team, scout=False, name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -115,7 +115,7 @@ def create_defensive_look(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, scout=True, name=name)
+			formation = Formation.objects.filter(team=team, scout=True, name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -123,11 +123,13 @@ def create_defensive_look(request):
 		scout_formations = Formation.objects.filter(team=team, unit="defense", scout=True)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
 		initial_look = request.GET.get('initial_look')
+		initial_view = request.GET.get('initial_view')
 		return render(request, 'playbook/create_defensive_look.html', {
 			'formations': formations,
 			'scout_formations': scout_formations,
 			'team': team,
 			'positions': positions,
+			'initial_view': initial_view,
 			'initial_look': initial_look,
 			'page_header': 'CREATE DEFENSIVE LOOK'
 		})
@@ -162,9 +164,9 @@ def create_play(request):
 				play.save()
 		elif request.POST['delete'] == "true":
 			if scout_name == "":
-				Play.objects.filter(team=team, scout=False, formation=formation, name=name).delete()
+				Play.objects.filter(team=team, scout=False, formation=formation, name=name)[0].delete()
 			else:
-				Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name).delete()
+				Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)[0].delete()
 
 		return HttpResponse('')
 	else:
@@ -218,7 +220,7 @@ def create_concept(request):
 				concept.conceptJson = conceptJson
 				concept.save()
 		elif request.POST['delete'] == "true":
-			concept = Concept.objects.filter(team=team, scout=False, name=name)
+			concept = Concept.objects.filter(team=team, scout=False, name=name)[0]
 			concept.delete()
 		return HttpResponse('')
 	else:

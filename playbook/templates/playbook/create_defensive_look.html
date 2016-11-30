@@ -150,6 +150,16 @@
 			button = new Button ({ label: "Zone Coverage (F)" });
 			buttons.push(button);
 
+			{% if initial_view %}
+				var initial_view_name = "{{initial_view}}";
+				changePlaybook(initial_view_name);
+				if(initial_view_name == "base"){
+					document.getElementById('change-playbook').selectedIndex = 0;
+				}else if(initial_view_name == "scout"){
+					document.getElementById('change-playbook').selectedIndex = 1;
+				}
+			{% endif %}
+
 			{% if initial_look %}
 				var initial_look_name = "{{initial_look}}";
 				var sideview_buttons = document.getElementById("sideview-buttons").children;
