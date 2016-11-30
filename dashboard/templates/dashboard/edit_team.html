@@ -3,40 +3,12 @@
 
 {% block content %}
 	<div class="edit-profile">
-		<form class="form-edit-profile" method="post" action="/edit_profile"> 
+		<form action="/team/edit" method="post"> 
 			{% csrf_token %}
-			
-			<div class="form-group">
-				<label for="group_name">First Name:</label> 
-				<input type="text" name="first-name" id="profile-first-name" class="unit-form form-sm" placeholder="First Name" value="{{ first_name }}" required>
-			</div>
+			<input type="text" name="team-name" placeholder="Team Name" value="{{ team.name }}" required>
 
-			<div class="form-group">
-				<label for="group_name">Last Name:</label> 
-				<input type="text" name="last-name" id="profile-last-name" class="unit-form form-sm" placeholder="Last Name" value="{{ last_name }}" required>
-			</div>
-
-			<div class="form-group">
-				<label for="group_name">Email:</label> 
-				<input type="text" name="email" id="profile-email" class="unit-form form-sm" placeholder="Email Address" value="{{ email }}" required>
-			</div>
-
-			<div class="form-group">
-				<label for="group_name">Username:</label> 
-				<input type="text" name="username" id="profile-username" class="unit-form form-sm" placeholder="Username" value="{{ username }}" required>
-			</div>
-
-			<div class="form-group">
-				<label for="group_name">Password:</label> 
-				<a href="/change_password">
-					<button class="btn btn-sm btn-warning" type="button">Change Password</button>
-				</a>
-			</div>
-
-			<div class="text-left">
-				<button class="btn btn-success btn-md" type="submit">Update</button>
-				<button class="btn btn-danger btn-md" type="reset">Reset</button>
-			</div>
+			<button class="btn btn-success btn-md" type="submit">Update</button>
+			<button class="btn btn-danger btn-md" type="reset">Reset</button>
 		</form>
 	</div><!--/padding-md-->
 {% endblock %}
