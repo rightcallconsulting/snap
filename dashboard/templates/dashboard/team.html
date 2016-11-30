@@ -56,6 +56,20 @@
 		</div>
 
 		<div class="col-md-12">
+			<table id="blocked-users-table">
+				<tr>
+					<th>Name</th>
+					<th>Unblock User</th>
+					<th>Remove User</th>
+				</tr>
+				{% for user in blocked_users %}
+					<tr>
+						<th>{{ user.first_name }} {{ user.last_name }}</th>
+						<th></th>
+						<th></th>
+					</tr>
+				{% endfor %}
+			</table>
 		</div>
 	</div>
 {% endblock %}
