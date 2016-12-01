@@ -1569,7 +1569,16 @@
 				scout_defense_button.setAttribute("onclick", "addScoutFormationToPlay(this)");
 				scout_defense_button.textContent = scout_formations[i].name;
 
+				for(j in offensive_plays){
+					if(play.name === offensive_plays[j].name && play.formation === offensive_plays[j].formation && play.scoutName === offensive_plays[j].scoutName){
+						var check_mark = document.createElement("i");
+						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
+						scout_defense_button.appendChild(check_mark);
+						break;
+					}
+				}
 				sideview_buttons.appendChild(scout_defense_button);
+
 			}
 		};
 

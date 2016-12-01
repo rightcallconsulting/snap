@@ -19,11 +19,14 @@ def playbook(request, unit="offense"):
 		team = request.user.coach.team
 		primary_position = None
 
-	formations = Formation.objects.filter(team=team, unit="offense", scout=False)
-	scout_formations = Formation.objects.filter(team=team, unit="defense", scout=True)
+	formations = Formation.objects.filter(team=team, scout=False)
+	scout_formations = Formation.objects.filter(team=team, scout=True)
 	plays = Play.objects.filter(team=team)
 	concepts = Concept.objects.filter(team=team)
 
+	unit = request.GET.get('unit')
+	if not unit:
+		unit = "all"
 	initial_playbook = request.GET.get('initial_playbook')
 	initial_formation = request.GET.get('initial_formation')
 	initial_play = request.GET.get('initial_play')
