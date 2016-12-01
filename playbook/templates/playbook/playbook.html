@@ -212,7 +212,6 @@
 			//If user passed in additional info, load the correct content here
 			{% if initial_playbook %}
 				var initial_playbook = "{{initial_playbook}}".toLowerCase();
-				//setSelectedTopOption(initial_playbook);
 				var top_options_dropdown = document.getElementById('top-options-dropdown');
 				var top_options_array = ['offensive playbook', 'offensive concepts', 'defensive looks'];
 				if(top_options_array.indexOf(initial_playbook) >= 0){
@@ -492,6 +491,7 @@
 
 		function setSelectedTopOption(option_label){
 			var top_options = document.getElementById("top-options");
+			//top_options.innerHTML = "";
 
 			play = new Play({});
 			concept = new Concept({});
@@ -517,8 +517,7 @@
 				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
 
 				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); }
-				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
+				clearCreationButtons();
 
 				// Create and add ones we do need
 				var create_formation_icon_2x = document.createElement("i");
@@ -579,9 +578,7 @@
 				var create_play_button = document.getElementById("create-play-button");
 
 				// Remove top option buttons we don't need
-				if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); }
-				if (create_play_button != null) { top_options.removeChild(create_play_button); }
+				clearCreationButtons();
 
 				// Create and add ones we do need
 				var create_concept_icon_2x = document.createElement("i");
@@ -618,9 +615,7 @@
 				var create_play_button = document.getElementById("create-play-button");
 
 				// Remove top option buttons we don't need
-				if (create_concept_button != null) { top_options.removeChild(create_concept_button); }
-				if (create_formation_button != null) { top_options.removeChild(create_formation_button); }
-				if (create_play_button != null) { top_options.removeChild(create_play_button); }
+				clearCreationButtons();
 
 				// Create and add ones we do need
 				var create_defensive_look_icon_2x = document.createElement("i");
@@ -698,10 +693,10 @@
 				sideview_footer.appendChild(edit_button)
 				sideview_footer.appendChild(delete_button)
 			{% else %}
-				var take_quiz_button = document.createElement("button");
+				/*var take_quiz_button = document.createElement("button");
 				take_quiz_button.setAttribute("onclick", "startQuizButtonPressed()");
 				take_quiz_button.textContent = "Start Quiz On " + content_name; //TBI - better label
-				sideview_footer.appendChild(take_quiz_button)
+				sideview_footer.appendChild(take_quiz_button)*/
 			{% endif %}
 		}
 
@@ -1322,6 +1317,21 @@
 				}
 			}
 		};
+
+		function clearCreationButtons(){
+			var top_options = document.getElementById("top-options");
+
+			var create_concept_button = document.getElementById("create-concept-button");
+			var create_defensive_look_button = document.getElementById("create-defensive-look-button");
+			var create_formation_button = document.getElementById("create-formation-button");
+			var create_play_button = document.getElementById("create-play-button");
+
+			// Remove top option buttons we don't need
+			if (create_concept_button != null) { top_options.removeChild(create_concept_button); }
+			if (create_defensive_look_button != null) { top_options.removeChild(create_defensive_look_button); }
+			if (create_formation_button != null) { top_options.removeChild(create_formation_button); }
+			if (create_play_button != null) { top_options.removeChild(create_play_button); }
+		}
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
