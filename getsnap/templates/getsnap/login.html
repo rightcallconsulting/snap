@@ -10,10 +10,12 @@
 			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
 		</div>
 
-		<form action="/login" method="post" class="login-form"> 
+		<form action="/login" method="post" class="login"> 
 			{% csrf_token %}
-			<input type="email" name="email" placeholder="Email"> <br>
-			<input type="password" name="password" placeholder="Password"> <br>
+			<p>Login</p>
+			<hr>
+			<input type="email" name="email" class="getsnap" placeholder="Email"> <br>
+			<input type="password" name="password" class="getsnap" placeholder="Password"> <br>
 			<button type="submit">Sign In</button>
 		</form>
 	</div><!-- /login-wrapper -->

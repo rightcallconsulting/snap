@@ -7,51 +7,172 @@
 }
 
 /*************************************************************************
-getsnap
+divs
 *************************************************************************/
 
 div#getsnap-wrapper {
-    height: 100vh;
-    width: 100vw;
-    margin: auto;
-    text-align: center;
+	height: 100vh;
+	width: 100vw;
+	margin: auto;
+	padding: 12% 0 0 0;
+	text-align: center;
 }
 
-div#goto-login p {
+div#packages-wrapper {
+	height: 100vh;
+	width: 100vw;
+	margin: auto;
+	padding: 10% 0 0 0;
+	text-align: center;
+}
+
+div.package {
+	height: 400px;
+	margin: 0 0 25px 0;
+	border: 2px solid #9ccc65;
+	border-radius: 2px;
+	padding: 20px;
+	background: white;
+	text-align: center;
+}
+
+div.package h1 {
+	color: #555;
+	margin: 0 0 10px 0;
+	border: none;
+	padding: 0;
+	font-size: 35px;
+	font-weight: 900;
+}
+
+div.package p {
+	color: #888;
+	margin: 0;
+	border: none;
+	padding: 0;
+	font-size: 15px;
+	font-weight: 200;
+}
+
+div.package strong {
+	color: #222;
+	margin: 0;
+	border: none;
+	padding: 0;
+	font-size: 25px;
+	font-weight: 500;
+}
+
+div.package a {
+	color: #33691e;
+	font-weight: 600;
+}
+
+div.package a:hover {
+	color: #9ccc65;
+}
+
+/*************************************************************************
+text
+*************************************************************************/
+
+p {
 	font-size: large;
 	color: #FFF;
 }
 
-div#goto-login p a {
-	font-size: large;
-	text-decoration: underline;
-	font-weight: bold;
+p.bold {
+	font-weight: 600;
+}
+
+a {
 	color: #9ccc65;
 }
 
-form.getsnap-form {
-	position: absolute;
-	width: 350px;
-	background: #fff;
-	left: 50%;
-	top: 50%;
-	margin: -175px 0 0 -175px;
-	border: 2px solid #808080;
+a:hover {
+	color: #33691e;
+}
+
+/*************************************************************************
+forms
+*************************************************************************/
+form {
+	height: 400px; width: 400px;
+	margin: auto;
+	border: 2px solid #9ccc65;
 	border-radius: 5px;
-	padding: 10px;
+	padding: 20px;
+	background: white;
 	text-align: center;
+}
+
+form.login {
+	position: relative;
+	height: 270px;
+}
+
+form.getsnap {
+	height: 315px;
+}
+
+form.register {}
+
+form p {
+	color: #000;
+	margin: 0;
+	border: none;
+	padding: 0;
+	font-size: 14px;
+	font-weight: 200;
+}
+
+input.getsnap {
+	height: 40px;
+	width: 100%;
+	color: #000;
+	margin: 0 0 15px 0;
+	border: 1px solid #909090;
+	border-radius: 2px;
+	padding: 5px;
+	font-size: 15px;
+}
+
+button {
+	height: 40px;
+	width: 100%;
+	background: #9ccc65;
+	color: #FFF;
+	margin: 0;
+	border: none;
+	border-radius: 2px;
+	padding: 0;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+a.button {
+	display: inline-block;
+	background: #9ccc65;
+	color: #FFF;
+	margin: 0;
+	border: none;
+	border-radius: 2px;
+	padding: 10px;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+a.button:hover {
+	background: #33691e;
+}
+
+button:hover {
+	background: #33691e;
 }
 
 /*************************************************************************
 login
 *************************************************************************/
-
-.login-wrapper {
-	height: 100%;
-	background: transparent;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
 
 .login-logo {
 	margin: 80px 0px 60px 0px;

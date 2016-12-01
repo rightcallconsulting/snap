@@ -1,0 +1,17 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="edit-profile">
+		<form action="/team/edit" method="post"> 
+			{% csrf_token %}
+			<input type="text" name="team-name" placeholder="Team Name" value="{{ team.name }}" required>
+
+			<button class="btn btn-success btn-md" type="submit">Update</button>
+			<button class="btn btn-danger btn-md" type="reset">Reset</button>
+		</form>
+	</div><!--/padding-md-->
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

@@ -465,7 +465,24 @@ def delete_group(request):
 		group.delete()
 		return HttpResponse('')
 
-# JSON requests
+### Admin #################################################
+@user_passes_test(lambda user: user.isCoach())
+def team(request):
+	team = request.user.coach.team
+	return render(request, 'dashboard/team.html', {
+			'team': team,
+			'page_header': 'ADMIN'
+		})
+
+@user_passes_test(lambda user: user.isCoach())
+def edit_team(request):
+	team = request.user.coach.team
+	return render(request, 'dashboard/edit_team.html', {
+			'team': team,
+			'page_header': 'ADMIN'
+		})
+
+### JSON requests #########################################
 @user_passes_test(lambda u: not u.isPlayer())
 def players_on_team_json(request, team_id):
 	team = Team.objects.filter(id=team_id)[0]

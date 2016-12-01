@@ -13,11 +13,14 @@ urlpatterns = [
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
 
-	# Groups
+	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
+
+	# Admin
+	url(r'^team/$', views.team, name='team'),
+	url(r'^team/edit$', views.edit_team, name='edit_team'),
 	url(r'^groups/$', views.groups, name='groups'),
 	url(r'^groups/create$', views.create_group, name='create_group'),
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
-	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
 	# JSON requests
 	url(r'^teams/(?P<team_id>[0-9]+)/players/json$', views.players_on_team_json, name='players_on_team_json'),
@@ -27,10 +30,3 @@ urlpatterns = [
 	url(r'^concepts/(?P<concept_id>[0-9]+)/json$', views.concept_json, name='group_json'),
 	url(r'^concepts/json$', views.concepts_json, name='group_json'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', static.serve, {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-    ]

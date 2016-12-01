@@ -3,28 +3,38 @@
 
 {% block page %}
 	<div id="packages-wrapper">
-		<div class="getsnap-package">
-			<h1>Tier 1</h1>
-			<p><strong>$199</strong>/yr</p>
-			<hr>
+		<div class="col-md-4 package-wrapper"> 
+			<div class="package">
+				<h1>Tier 1</h1>
+				<p><strong>$199</strong>/yr</p>
+				<hr>
 
-			<ul></ul>
-		</div>
-		<div class="getsnap-package">
-			<h1>Tier 2</h1>
-			<p><strong>$399</strong>/yr</p>
-			<hr>
-
-			<ul></ul>
-		</div>
-		<div class="getsnap-package">
-			<h1>Enterprise</h1>
-			<p>
-				<a href="/getsnap">Contact Us</a> 
-				for more information on pricing and package features.
-			</p>
+				<ul></ul>
+			</div>
 		</div>
 
-		<a href="/getsnap">Contact us to get started<a>	
+		<div class="col-md-4 package-wrapper"> 
+			<div class="package">
+				<h1>Tier 2</h1>
+				<p><strong>$399</strong>/yr</p>
+				<hr>
+
+				<ul></ul>
+			</div>
+		</div>
+
+		<div class="col-md-4 package-wrapper"> 
+			<div class="package">
+				<h1>Enterprise</h1>
+				<p>
+					<a href="/getsnap">Contact Us</a> 
+					for more information on pricing and package features.
+				</p>
+			</div>
+		</div>
+
+		<div class="col-md-12">
+			<a href="/getsnap" class="button">Contact us to get started</a>
+		</div>
 	</div>
 {% endblock %}
