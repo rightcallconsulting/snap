@@ -3,7 +3,7 @@
 
 {% block page %}
 	<div id="register-wrapper">
-		<form action="/register" method="post" class="getsnap-form"> 
+		<form action="/register" method="post" class="register"> 
 			{% csrf_token %}
 			<input type="email" name="email" class="getsnap" placeholder="Email"> <br>
 			<input type="password" name="password1" class="getsnap" placeholder="Password"> <br>

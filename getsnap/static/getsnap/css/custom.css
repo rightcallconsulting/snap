@@ -14,6 +14,7 @@ div#getsnap-wrapper {
     height: 100vh;
     width: 100vw;
     margin: auto;
+    padding: 12% 0 0 0;
     text-align: center;
 }
 
@@ -33,25 +34,24 @@ p {
 	color: #FFF;
 }
 
-p a {
-	font-size: large;
-	text-decoration: underline;
-	font-weight: bold;
-	color: #9ccc65;
+p.bold {
+	font-weight: 600;
 }
 
 a {
-	font-size: large;
-	font-weight: bold;
 	color: #9ccc65;
+}
+
+a:hover {
+	color: #33691e;
 }
 
 /*************************************************************************
 forms
 *************************************************************************/
 form {
-	position: absolute;
-	height: 500px; width: 400px;
+	/*position: absolute;*/
+	height: 400px; width: 400px;
 	margin: auto;
 	border: 2px solid #9ccc65;
 	border-radius: 5px;
@@ -61,9 +61,30 @@ form {
 	text-align: center;
 }
 
+form.login {
+	position: relative;
+	height: 270px;
+}
+
+form.getsnap {
+	height: 315px;
+}
+
+form.register {}
+
+form p {
+	color: #000;
+	margin: 0;
+	border: none;
+	padding: 0;
+	font-size: 14px;
+	font-weight: 200;
+}
+
 input.getsnap {
 	height: 40px;
 	width: 100%;
+	color: #000;
 	margin: 0 0 15px 0;
 	border: 1px solid #909090;
 	border-radius: 2px;

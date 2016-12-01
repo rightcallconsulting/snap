@@ -4,10 +4,11 @@
 {% block page %}
 	<div id="getsnap-wrapper">
 		<div id="goto-login">
+			<p class="bold">FILL OUT THIS FORM TO REQUEST SNAP</p>
 			<p>Already have an account? <a href="/login">Sign in</a></p>
 		</div>
 
-		<form action="/getsnap" method="post" class="getsnap-form"> 
+		<form action="/getsnap" method="post" class="getsnap"> 
 			{% csrf_token %}
 			<input type="text" name="fname" class="getsnap" placeholder="First Name">
 			<input type="text" name="lname" class="getsnap" placeholder="Last Name"> <br>
