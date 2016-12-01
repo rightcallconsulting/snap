@@ -7,7 +7,7 @@
 }
 
 /*************************************************************************
-getsnap
+wrappers
 *************************************************************************/
 
 div#getsnap-wrapper {
@@ -17,41 +17,56 @@ div#getsnap-wrapper {
     text-align: center;
 }
 
-div#goto-login p {
-	font-size: large;
-	color: #FFF;
-}
-
-div#goto-login p a {
-	font-size: large;
-	text-decoration: underline;
-	font-weight: bold;
-	color: #9ccc65;
-}
-
-form.getsnap-form {
-	position: absolute;
-	width: 350px;
-	background: #fff;
-	left: 50%;
-	top: 50%;
-	margin: -175px 0 0 -175px;
-	border: 2px solid #808080;
-	border-radius: 5px;
-	padding: 10px;
-	text-align: center;
-}
-
-/*************************************************************************
-login
-*************************************************************************/
-
 .login-wrapper {
 	height: 100%;
 	background: transparent;
 	background-repeat: no-repeat;
 	background-size: cover;
 }
+
+/*************************************************************************
+text
+*************************************************************************/
+
+p {
+	font-size: large;
+	color: #FFF;
+}
+
+p a {
+	font-size: large;
+	text-decoration: underline;
+	font-weight: bold;
+	color: #9ccc65;
+}
+
+/*************************************************************************
+forms
+*************************************************************************/
+form {
+	position: absolute;
+	height: 500px; width: 400px;
+	margin: auto;
+	border: 2px solid #9ccc65;
+	border-radius: 5px;
+	padding: 20px;
+	top: 0; left: 0; bottom: 0; right: 0;
+	background: white;
+	text-align: center;
+}
+
+input.getsnap {
+	height: 40px;
+	width: 100%;
+	margin: 0 0 15px 0;
+	border: 1px solid #909090;
+	border-radius: 2px;
+	padding: 5px;
+}
+
+/*************************************************************************
+login
+*************************************************************************/
 
 .login-logo {
 	margin: 80px 0px 60px 0px;

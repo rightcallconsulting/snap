@@ -9,10 +9,10 @@
 
 		<form action="/getsnap" method="post" class="getsnap-form"> 
 			{% csrf_token %}
-			<input type="text" name="fname" placeholder="First Name">
-			<input type="text" name="lname" placeholder="Last Name"> <br>
-			<input type="tel" name="number" placeholder="Phone Number"> <br>
-			<input type="email" name="email" placeholder="Email"> <br>
+			<input type="text" name="fname" class="getsnap" placeholder="First Name">
+			<input type="text" name="lname" class="getsnap" placeholder="Last Name"> <br>
+			<input type="tel" name="number" class="getsnap" placeholder="Phone Number"> <br>
+			<input type="email" name="email" class="getsnap" placeholder="Email"> <br>
 			<button type="submit">Request Snap</button>
 		</form>
 	</div>
