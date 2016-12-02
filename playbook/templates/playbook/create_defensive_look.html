@@ -62,6 +62,9 @@
 					</button>
 				{% endfor %}
 			</div>
+			<div id="sideview-footer">
+
+			</div>
 		</div>
 	</div><!--/create-formation-->
 
@@ -979,6 +982,7 @@
 				removeHeaderName();
 				formation_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(formation_name);
+				updateSideviewFooter();
 			}
 		};
 
@@ -1056,6 +1060,46 @@
 
 			add_note_button.textContent = "Add Note for " + button_text;
 		};
+
+		function updateSideviewFooter(){
+			var content = formation;
+			var content_type = "Defensive Look";
+			var content_name = formation.name;
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			if(content == null || content_name === ""){
+				return;
+			}
+
+			var delete_button = document.createElement("button");
+			delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+			delete_button.textContent = "Delete " + content_name; //TBI - better label
+			delete_button.dataset.button_type = "delete";
+			delete_button.dataset.content_type = content_type;
+
+			sideview_footer.appendChild(delete_button)
+		}
+
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+			var content_type = button.dataset.content_type;
+			var content = formation;
+
+			if(button_type == "delete"){
+				var sideview_footer = document.getElementById("sideview-footer");
+				var confirm_delete_button = sideview_footer.children[0];
+				confirm_delete_button.textContent = "CONFIRM DELETE"
+				confirm_delete_button.dataset.button_type = "confirm-delete";
+				confirm_delete_button.style.backgroundColor = "red"
+				confirm_delete_button.style.color = "black"
+			}else if(button_type == "confirm-delete"){
+				deleteDefensiveLookFromDatabase();
+				updateSideviewFooter();
+				//window.location.href = "/playbook/formations/create/defensive_look"
+			}
+		}
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

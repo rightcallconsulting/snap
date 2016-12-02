@@ -58,6 +58,9 @@
 					</button>
 				{% endfor %}
 			</div>
+			<div id="sideview-footer">
+
+			</div>
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12">
@@ -858,6 +861,7 @@
 				removeHeaderName();
 				formation_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(formation_name);
+				updateSideviewFooter();
 			}
 		};
 
@@ -1023,6 +1027,45 @@
 			}else if(playbook_name === "scout"){
 				formation.scout = true;
 				showScoutFormations();
+			}
+			updateSideviewFooter();
+		}
+
+		function updateSideviewFooter(){
+			var content = formation;
+			var content_type = "Formation";
+			var content_name = formation.name;
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			if(content == null || content_name === ""){
+				return;
+			}
+
+			var delete_button = document.createElement("button");
+			delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+			delete_button.textContent = "Delete " + content_name; //TBI - better label
+			delete_button.dataset.button_type = "delete";
+			delete_button.dataset.content_type = content_type;
+
+			sideview_footer.appendChild(delete_button)
+		}
+
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+			var content_type = button.dataset.content_type;
+			var content = formation;
+
+			if(button_type == "delete"){
+				button.textContent = "CONFIRM DELETE"
+				button.dataset.button_type = "confirm-delete";
+				button.style.backgroundColor = "red"
+				button.style.color = "black"
+			}else if(button_type == "confirm-delete"){
+				deleteFormationFromDatabase();
+				updateSideviewFooter();
+				//window.location.href = "/playbook/formations/create"
 			}
 		}
 

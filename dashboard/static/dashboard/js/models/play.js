@@ -305,7 +305,7 @@ Play.prototype.delete = function(path, csrf_token) {
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: playName, scout_name: scoutName, formation: formationName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, unit: this.unit, name: playName, scout_name: scoutName, formation: formationName}
 		).done(function() {
 			console.log("Play successfully sent to Django to be deleted");
 		}).fail(function() {

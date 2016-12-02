@@ -66,6 +66,9 @@
 					</button>
 				{% endfor %}
 			</div>
+			<div id="sideview-footer">
+
+			</div>
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12" hidden="true">
@@ -1039,6 +1042,7 @@
 			}else{
 				showBaseDefenses();
 			}
+			updateSideviewFooter();
 		}
 
 		function deletePlayFromDatabase(){
@@ -1101,6 +1105,7 @@
 			}
 
 			play_name_selected = "";
+
 			showOffense();
 		}
 
@@ -1413,6 +1418,7 @@
 				play_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(play_name);
 			}
+			updateSideviewFooter();
 		}
 
 		function changeSelectedPlay(selected) {
@@ -1511,6 +1517,7 @@
 				play_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(play_name);
 			}
+			updateSideviewFooter();
 		};
 
 		function showOffensiveLooks(){
@@ -1570,7 +1577,7 @@
 				scout_defense_button.textContent = scout_formations[i].name;
 
 				for(j in offensive_plays){
-					if(play.name === offensive_plays[j].name && play.formation === offensive_plays[j].formation && play.scoutName === offensive_plays[j].scoutName){
+					if(play.name === offensive_plays[j].name && play.formation === offensive_plays[j].formation && scout_formations[i].name === offensive_plays[j].scoutName){
 						var check_mark = document.createElement("i");
 						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
 						scout_defense_button.appendChild(check_mark);
@@ -1672,6 +1679,7 @@
 				for (i in offensive_plays) {
 					if (offensive_plays[i].name === play.name && offensive_plays[i].formation === play.formation && offensive_plays[i].scoutName === scout_formation_name) {
 						play = offensive_plays[i].deepCopy();
+						updateSideviewFooter();
 						return;
 					}
 				}
@@ -1685,10 +1693,10 @@
 
 				play.scoutFromFormation(scout_formation);
 			}
+			updateSideviewFooter();
 		};
 
 		function showDefense(){
-			debugger;
 			scout_formation_name_selected = "";
 
 			// Show Plays in Base Look
@@ -1737,6 +1745,7 @@
 				toggle_button.textContent = "O";
 				sideview_header.appendChild(toggle_button);
 			}
+			updateSideviewFooter();
 		}
 
 		function showOffense() {
@@ -2012,6 +2021,42 @@
 
 			call.value = "";
 		});
+
+		function updateSideviewFooter(){
+			var content = play;
+			var content_type = "Play";
+			var content_name = content.getFullName();
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			if(content == null || content_name === ""){
+				return;
+			}
+
+			var delete_button = document.createElement("button");
+			delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+			delete_button.textContent = "Delete " + content_name; //TBI - better label
+			delete_button.dataset.button_type = "delete";
+			delete_button.dataset.content_type = content_type;
+
+			sideview_footer.appendChild(delete_button)
+		}
+
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+
+			if(button_type == "delete"){
+				button.textContent = "CONFIRM DELETE"
+				button.dataset.button_type = "confirm-delete";
+				button.style.backgroundColor = "red"
+				button.style.color = "black"
+			}else if(button_type == "confirm-delete"){
+				deletePlayFromDatabase();
+				updateSideviewFooter();
+				//window.location.href = "/playbook/formations/create"
+			}
+		}
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.

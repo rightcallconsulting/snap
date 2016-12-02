@@ -62,6 +62,9 @@
 					</button>
 				{% endfor %}
 			</div>
+			<div id="sideview-footer">
+
+			</div>
 		</div>
 
 		<div id="notes-and-calls" class="col-md-12" hidden="true">
@@ -1132,6 +1135,7 @@
 				concept_name.textContent = header_text_content;
 				document.getElementById("header-box").appendChild(concept_name);
 			}
+			updateSideviewFooter();
 		};
 
 		//*******************************************************************//
@@ -1356,6 +1360,44 @@
 
 			call.value = "";
 		});
+
+		function updateSideviewFooter(){
+			var content = concept;
+			var content_type = "Concept";
+			var content_name = concept.name;
+
+			var sideview_footer = document.getElementById("sideview-footer");
+			sideview_footer.innerHTML = "";
+
+			if(content == null || content_name === ""){
+				return;
+			}
+
+			var delete_button = document.createElement("button");
+			delete_button.setAttribute("onclick", "contentButtonPressed(this)");
+			delete_button.textContent = "Delete " + content_name; //TBI - better label
+			delete_button.dataset.button_type = "delete";
+			delete_button.dataset.content_type = content_type;
+
+			sideview_footer.appendChild(delete_button)
+		}
+
+		function contentButtonPressed(button){
+			var button_type = button.dataset.button_type;
+			var content_type = button.dataset.content_type;
+			var content = concept;
+
+			if(button_type == "delete"){
+				button.textContent = "CONFIRM DELETE"
+				button.dataset.button_type = "confirm-delete";
+				button.style.backgroundColor = "red"
+				button.style.color = "black"
+			}else if(button_type == "confirm-delete"){
+				deleteConceptFromDatabase();
+				updateSideviewFooter();
+				//window.location.href = "/playbook/formations/create"
+			}
+		}
 
 		// resizeMainViewObjects resizes all of the buttons and bars in our
 		// main view. It is called when the user resizes their browser.
