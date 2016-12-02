@@ -1048,6 +1048,7 @@
 		function deletePlayFromDatabase(){
 			// Get the currently selected sideview button.
 			var selected = document.getElementById("selected");
+			var unit = play.unit;
 
 			// If selected is not undefined then send a delete request for
 			// the play that is currently selected.
@@ -1058,20 +1059,38 @@
 				// get saved properly but no button would be added dynamically
 				// because a play with the same name would exist in the
 				// plays array.
-				for (var i = 0; i < offensive_plays.length; ++i) {
-					if (play.formation === offensive_plays[i].formation && play.name === offensive_plays[i].name && play.scoutName === offensive_plays[i].scoutName) {
-						// Set the path and cross-site forgery token vars.
-						var path = "/playbook/plays/create";
-						var csrf_token = "{{ csrf_token }}";
+				if(unit === "offense"){
+					for (var i = 0; i < offensive_plays.length; ++i) {
+						if (play.formation === offensive_plays[i].formation && play.name === offensive_plays[i].name && play.scoutName === offensive_plays[i].scoutName) {
+							// Set the path and cross-site forgery token vars.
+							var path = "/playbook/plays/create";
+							var csrf_token = "{{ csrf_token }}";
 
-						// Delete the play from the backend.
-						play.scoutName = scout_formation_name_selected;
-						play.delete(path, csrf_token);
+							// Delete the play from the backend.
+							play.scoutName = scout_formation_name_selected;
+							play.delete(path, csrf_token);
 
-						offensive_plays.splice(i, 1);
-						break;
+							offensive_plays.splice(i, 1);
+							break;
+						}
+					}
+				}else{
+					for (var i = 0; i < defensive_plays.length; ++i) {
+						if (play.formation === defensive_plays[i].formation && play.name === defensive_plays[i].name && play.scoutName === defensive_plays[i].scoutName) {
+							// Set the path and cross-site forgery token vars.
+							var path = "/playbook/plays/create";
+							var csrf_token = "{{ csrf_token }}";
+
+							// Delete the play from the backend.
+							play.scoutName = scout_formation_name_selected;
+							play.delete(path, csrf_token);
+
+							defensive_plays.splice(i, 1);
+							break;
+						}
 					}
 				}
+
 
 				if (scout_formation_name_selected === "") {
 					// Delete the button from the sidebar. After this step the
@@ -1096,17 +1115,30 @@
 			// Create a new play to replace the one you just deleted on the
 			// screen. Use the same formation that you were already using.
 			var formation = play.formation;
-			play = new Play({});
+			play = new Play({unit: unit});
 
-			for (i in formations) {
-				if (formation === formations[i].name) {
-					play.fromFormation(formations[i]);
+			if(unit === "offense"){
+				for (i in formations) {
+					if (formation === formations[i].name) {
+						play.fromFormation(formations[i]);
+					}
 				}
+				play_name_selected = "";
+
+				showOffense();
+			}else{
+				for (i in base_defenses) {
+					if (formation === base_defenses[i].name) {
+						play.fromFormation(base_defenses[i]);
+					}
+				}
+				play_name_selected = "";
+
+				showDefense();
 			}
 
-			play_name_selected = "";
 
-			showOffense();
+
 		}
 
 		$("#delete-button").click(function(event) {

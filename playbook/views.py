@@ -76,7 +76,12 @@ def create_formation(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, unit="offense", scout=(request.POST['scout'] == "true"), name=name)[0]
+			scout = (request.POST['scout'] == "true")
+			if scout:
+				plays_to_delete = Play.objects.filter(team=team, unit="defense", scout=False, scoutName=name)
+				for play in plays_to_delete:
+					play.delete()
+			formation = Formation.objects.filter(team=team, unit="offense", scout=scout, name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -118,7 +123,12 @@ def create_defensive_look(request):
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			formation = Formation.objects.filter(team=team, scout=(request.POST['scout'] == "true"), name=name)[0]
+			scout = (request.POST['scout'] == "true")
+			if scout:
+				plays_to_delete = Play.objects.filter(team=team, unit="offense", scout=False, scoutName=name)
+				for play in plays_to_delete:
+					play.delete()
+			formation = Formation.objects.filter(unit="defense", team=team, scout=scout, name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
@@ -167,7 +177,9 @@ def create_play(request):
 				play.save()
 		elif request.POST['delete'] == "true":
 			if scout_name == "":
-				Play.objects.filter(team=team, scout=False, formation=formation, name=name)[0].delete()
+				plays_to_delete = Play.objects.filter(team=team, scout=False, formation=formation, name=name)
+				for play in plays_to_delete:
+					play.delete()
 			else:
 				Play.objects.filter(team=team, scout=False, formation=formation, name=name, scoutName=scout_name)[0].delete()
 
@@ -229,12 +241,12 @@ def create_concept(request):
 	else:
 		concepts = Concept.objects.filter(team=team, scout=False)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
-		initial_view = request.GET.get('initial_view') #offense or defense
+		initial_unit = request.GET.get('initial_unit') #offense or defense
 		initial_concept = request.GET.get('initial_concept')
 		return render(request, 'playbook/create_concept.html', {
 			'concepts': concepts,
 			'positions': positions,
-			'initial_view': initial_view,
+			'initial_unit': initial_unit,
 			'initial_concept': initial_concept,
 			'team': team,
 			'page_header': 'CREATE CONCEPT'
