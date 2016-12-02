@@ -182,12 +182,13 @@
 			button = new Button ({ label: "Zone Coverage (F)" });
 			buttons.push(button);
 
+			showUnitOptions();
+
 			{% if initial_unit %}
 				field.viewPoint = "{{initial_unit}}";
 				changeUnit("{{initial_unit}}");
 			{% else %}
 				field.viewPoint = "offense";
-				changeUnit("offense");
 			{% endif %}
 			{% if initial_concept %}
 				var initial_concept_name = "{{initial_concept}}";
@@ -449,6 +450,26 @@
 			}
 		}
 
+		function showUnitOptions(){
+			concept = new Concept({});
+			var sideview_header = document.getElementById("sideview-header");
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons")
+			sideview_header.textContent = "Select Unit";
+			var offense_button = document.createElement("button");
+			offense_button.setAttribute("class", "btn btn-primary sideview-button unit-button");
+			offense_button.setAttribute("onclick", "changeUnit(\"offense\")");
+			offense_button.textContent = "Offensive Concepts";
+
+			var defense_button = document.createElement("button");
+			defense_button.setAttribute("class", "btn btn-primary sideview-button unit-button");
+			defense_button.setAttribute("onclick", "changeUnit(\"defense\")");
+			defense_button.textContent = "Defensive Concepts";
+
+			sideview_buttons.appendChild(offense_button);
+			sideview_buttons.appendChild(defense_button);
+		}
+
 		function changeUnit(new_unit){
 			concept = new Concept({unit: new_unit})
 			var sideview_header = document.getElementById("sideview-header");
@@ -460,6 +481,12 @@
 			}else{
 				sideview_header.textContent = "Defensive Concepts";
 			}
+
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showUnitOptions()");
+			sideview_header.appendChild(back_arrow);
 
 			for(i in concepts) {
 				if(concepts[i].unit == new_unit){
