@@ -532,9 +532,9 @@
 				create_formation_icon_span.appendChild(create_formation_icon_1x);
 
 				var create_formation_button_link = document.createElement("a");
-				create_formation_button_link.setAttribute("href", "formations/create");
+				create_formation_button_link.setAttribute("href", "formations/create?initial_playbook=base");
 				if(unit === "defense"){
-					create_formation_button_link.setAttribute("href", "formations/create/defensive_look");
+					create_formation_button_link.setAttribute("href", "formations/create/defensive_look?initial_playbook=base");
 				}
 				create_formation_button_link.textContent = "CREATE FORMATION";
 				create_formation_button_link.insertBefore(create_formation_icon_span, create_formation_button_link.firstChild);
@@ -557,7 +557,7 @@
 				create_play_icon_span.appendChild(create_play_icon_1x);
 
 				var create_play_button_link = document.createElement("a");
-				create_play_button_link.setAttribute("href", "plays/create");
+				create_play_button_link.setAttribute("href", "plays/create?initial_unit="+unit);
 				create_play_button_link.textContent = "CREATE PLAY";
 				create_play_button_link.insertBefore(create_play_icon_span, create_play_button_link.firstChild);
 
@@ -567,16 +567,16 @@
 
 				top_options.appendChild(create_play_button);
 				{% endif %}
-			} else if (option_label === "offensive concepts") {
-				showConcepts();
+			} else if (option_label === "offensive concepts" || option_label === "defensive concepts") {
+				var unit = "offense";
+				if(option_label === "defensive concepts"){
+					unit = "defense";
+				}
+				showConcepts(unit);
 
 				dummy_offense = new Formation({});
 
 				{% if user_is_a_coach %}
-				var create_defensive_look_button = document.getElementById("create-defensive-look-button");
-				var create_formation_button = document.getElementById("create-formation-button");
-				var create_play_button = document.getElementById("create-play-button");
-
 				// Remove top option buttons we don't need
 				clearCreationButtons();
 
@@ -603,17 +603,19 @@
 
 				top_options.appendChild(create_concept_button);
 				{% endif %}
-			} else if (option_label === "defensive looks") {
-				showDefensiveLooks();
+			} else if (option_label === "defensive looks" || option_label === "offensive looks") {
+				var unit = "defense";
+				if(option_label === "offensive looks"){
+					unit = "offense";
+				}
+				showScoutFormations(unit);
 
 				var dummy_formation = new Formation({});
-				dummy_offense = dummy_formation.createDummyFormation();
-
+				dummy_offense = dummy_formation;
+				if(unit === "defense"){
+					dummy_offense = dummy_formation.createDummyFormation();
+				}
 				{% if user_is_a_coach %}
-				var create_concept_button = document.getElementById("create-concept-button");
-				var create_formation_button = document.getElementById("create-formation-button");
-				var create_play_button = document.getElementById("create-play-button");
-
 				// Remove top option buttons we don't need
 				clearCreationButtons();
 
@@ -630,8 +632,12 @@
 				create_defensive_look_icon_span.appendChild(create_defensive_look_icon_1x);
 
 				var create_defensive_look_button_link = document.createElement("a");
-				create_defensive_look_button_link.setAttribute("href", "formations/create/defensive_look");
+				create_defensive_look_button_link.setAttribute("href", "formations/create/defensive_look?initial_playbook=scout");
 				create_defensive_look_button_link.textContent = "CREATE DEFENSIVE LOOK";
+				if(unit === "offense"){
+					create_defensive_look_button_link.setAttribute("href", "formations/create?initial_playbook=scout");
+					create_defensive_look_button_link.textContent = "CREATE OFFENSIVE LOOK";
+				}
 				create_defensive_look_button_link.insertBefore(create_defensive_look_icon_span, create_defensive_look_button_link.firstChild);
 
 				var create_defensive_look_button = document.createElement("div");
@@ -666,6 +672,8 @@
 					content_type = "Formation";
 					if(content.unit === "defense"){
 						content_type = "Defensive Look"
+					}else if(content.scout){
+						content_type = "Offensive Look"
 					}
 				}else if(content instanceof Play){
 					content_type = "Play";
@@ -692,6 +700,7 @@
 
 				sideview_footer.appendChild(edit_button)
 				sideview_footer.appendChild(delete_button)
+
 			{% else %}
 				/*var take_quiz_button = document.createElement("button");
 				take_quiz_button.setAttribute("onclick", "startQuizButtonPressed()");
@@ -731,9 +740,12 @@
 
 		// showConcepts updates the sideview to include all of the concepts in
 		// the playbook.
-		function showConcepts() {
+		function showConcepts(unit) {
 			var sideview_header = document.getElementById("sideview-header");
-			sideview_header.textContent = "Concepts";
+			sideview_header.textContent = "Offensive Concepts";
+			if(unit === "defense"){
+				sideview_header.textContent = "Defensive Concepts";
+			}
 
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = "Playbook";
@@ -743,13 +755,15 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in concepts) {
-				var concept_button = document.createElement("button");
-				concept_button.setAttribute("class", "btn btn-primary sideview-button");
-				concept_button.setAttribute("name", concepts[i].name);
-				concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
-				concept_button.textContent = concepts[i].name;
+				if(concepts[i].unit === unit){
+					var concept_button = document.createElement("button");
+					concept_button.setAttribute("class", "btn btn-primary sideview-button");
+					concept_button.setAttribute("name", concepts[i].name);
+					concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
+					concept_button.textContent = concepts[i].name;
 
-				sideview_buttons.appendChild(concept_button);
+					sideview_buttons.appendChild(concept_button);
+				}
 			}
 		};
 
@@ -812,6 +826,34 @@
 			}
 		};
 
+		function showScoutFormations(unit){
+			var sideview_header = document.getElementById("sideview-header");
+			sideview_header.textContent = "Offensive Looks";
+
+			var mainview_header = document.getElementById("header-box");
+			mainview_header.textContent = "Playbook";
+
+			if(unit == "defense"){
+				sideview_header.textContent = "Defensive Looks";
+			}
+
+			$("#sideview-buttons").empty();
+
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			for(i in scout_formations) {
+				if(scout_formations[i].unit === unit){
+					var formation_button = document.createElement("button");
+					formation_button.setAttribute("class", "btn btn-primary sideview-button");
+					formation_button.setAttribute("name", scout_formations[i].name);
+					formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+					formation_button.textContent = scout_formations[i].name;
+
+					sideview_buttons.appendChild(formation_button);
+				}
+			}
+		}
+
 		// showDefensiveLooks updates the sideview to include all of the defensive
 		// looks in the playbook.
 		function showDefensiveLooks() {
@@ -843,7 +885,9 @@
 
 			if(content_type == "Concept"){
 				content = concept;
-			}else if(content_type == "Defensive Look"){
+			}else if(content_type == "Formation"){
+				content = new Formation({unit: play.unit, name: play.formation, scout: false});
+			}else if(content_type == "Defensive Look" || content_type == "Offensive Look"){
 				content = scout_formation;
 			}
 
@@ -872,7 +916,9 @@
 			}else if(content_type == "Defensive Look"){
 				link = "/playbook/formations/create/defensive_look?initial_look="+content.name;
 			}else if(content_type == "Formation"){
-				link = "/playbook/formations/create?initial_formation="+content.formation;
+				link = "/playbook/formations/create?initial_formation="+content.name;
+			}else if(content_type == "Offensive Look"){
+				link = "/playbook/formations/create?initial_view=scout&initial_formation="+content.name;
 			}else if(content_type == "Play"){
 				link = "/playbook/plays/create?initial_formation="+content.formation;
 				link += "&initial_play=" + content.name;
@@ -892,7 +938,7 @@
 			var csrf_token = "{{ csrf_token }}";
 			if(content_type == "Defensive Look"){
 				path = "/playbook/formations/create/defensive_look";
-			}else if(content_type == "Formation"){
+			}else if(content_type == "Formation" || content_type == "Offensive Look"){
 				path = "/playbook/formations/create";
 			} else if(content_type == "Play"){
 				path = "/playbook/plays/create";
@@ -1170,13 +1216,23 @@
 
 				mainview_header.textContent = scout_formation_name;
 
-				for (i in scout_formations) {
-					if (scout_formation_name === scout_formations[i].name) {
-						scout_formations[i].updateCoverageForOffense(dummy_offense)
-						scout_formation = scout_formations[i].deepCopy();
-						break;
+				if(play.unit == "offense"){
+					for (i in scout_formations) {
+						if (scout_formations[i].unit == play.unit && scout_formation_name === scout_formations[i].name) {
+							scout_formations[i].updateCoverageForOffense(dummy_offense)
+							scout_formation = scout_formations[i].deepCopy();
+							break;
+						}
+					}
+				}else{
+					for (i in scout_formations) {
+						if (scout_formations[i].unit == play.unit && scout_formation_name === scout_formations[i].name) {
+							scout_formation = scout_formations[i].deepCopy();
+							break;
+						}
 					}
 				}
+
 			}
 
 			updateSideviewFooter(scout_formation);

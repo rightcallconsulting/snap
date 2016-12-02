@@ -2,10 +2,6 @@
 {% load staticfiles %}
 
 {% block content %}
-<select id="change-playbook" onchange="changePlaybook(this.value)">
-	<option value="base">Base</option>
-	<option value="scout">Scout</option>
-</select>
 	<div id="create-formation" class="create-formation padding-md">
 		<div id="help-box" hidden="true">
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
@@ -53,14 +49,10 @@
 
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
-				Base Defenses
+
 			</div>
 			<div id="sideview-buttons">
-				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedFormation(this)">
-						{{ formation.name }}
-					</button>
-				{% endfor %}
+
 			</div>
 			<div id="sideview-footer">
 
@@ -153,14 +145,11 @@
 			button = new Button ({ label: "Zone Coverage (F)" });
 			buttons.push(button);
 
-			{% if initial_view %}
-				var initial_view_name = "{{initial_view}}";
-				changePlaybook(initial_view_name);
-				if(initial_view_name == "base"){
-					document.getElementById('change-playbook').selectedIndex = 0;
-				}else if(initial_view_name == "scout"){
-					document.getElementById('change-playbook').selectedIndex = 1;
-				}
+			{% if initial_playbook %}
+				var initial_playbook_name = "{{initial_playbook}}";
+				changePlaybook(initial_playbook_name);
+			{% else %}
+				showPlaybookOptions();
 			{% endif %}
 
 			{% if initial_look %}
@@ -313,7 +302,13 @@
 				sideview_buttons.appendChild(formation_button);
 			}
 
-			formation = new Formation({});
+			formation = new Formation({scout: false});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showPlaybookOptions()");
+			sideview_header.appendChild(back_arrow);
 		}
 
 		function showScoutFormations(){
@@ -348,6 +343,34 @@
 			}
 
 			formation = new Formation({scout: true});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showPlaybookOptions()");
+			sideview_header.appendChild(back_arrow);
+		}
+
+		function showPlaybookOptions(){
+			addHeaderPlaceholder();
+			hideNotesAndCallsInput();
+			formation = new Formation({});
+			var sideview_header = document.getElementById("sideview-header");
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons")
+			sideview_header.textContent = "Select Playbook";
+			var base_button = document.createElement("button");
+			base_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			base_button.setAttribute("onclick", "changePlaybook(\"base\")");
+			base_button.textContent = "Base Looks";
+
+			var scout_button = document.createElement("button");
+			scout_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			scout_button.setAttribute("onclick", "changePlaybook(\"scout\")");
+			scout_button.textContent = "Scout Looks";
+
+			sideview_buttons.appendChild(base_button);
+			sideview_buttons.appendChild(scout_button);
 		}
 
 		function changePlaybook(playbook_name){
@@ -711,9 +734,6 @@
 			// Don't save the formation with one of the players selected.
 			formation.clearSelected();
 
-			if(document.getElementById('change-playbook').value === "scout"){
-				formation.scout = true;
-			}
 			formation.unit = "defense";
 
 			var placeholder_message = document.getElementById("placeholder-message");
@@ -759,32 +779,26 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-
-			var playbook = document.getElementById('change-playbook').value;
-
-			if(playbook === "base"){
-				// If this formation name already exists the backend should replace
-				// the old one and not save a new one. The frontend should also
-				// update the existing version it has and return.
-				for (var i = 0; i < formations.length; ++i) {
-					if (name === formations[i].name) {
-						formations[i] = formation.deepCopy();
-						formations[i].updateCoverageForOffense(dummy_offense);
-						formation.save(path, csrf_token);
-						formation = new Formation({unit:"defense"});
-						return;
-					}
-				}
-			}else if(playbook === "scout"){
-				// If this formation name already exists the backend should replace
-				// the old one and not save a new one. The frontend should also
-				// update the existing version it has and return.
+			// If this formation name already exists the backend should replace
+			// the old one and not save a new one. The frontend should also
+			// update the existing version it has and return.
+			if(formation.scout){
 				for (var i = 0; i < scout_formations.length; ++i) {
 					if (name === scout_formations[i].name) {
 						scout_formations[i] = formation.deepCopy();
 						scout_formations[i].updateCoverageForOffense(dummy_offense);
 						formation.save(path, csrf_token);
 						formation = new Formation({unit:"defense", scout: true});
+						return;
+					}
+				}
+			}else{
+				for (var i = 0; i < formations.length; ++i) {
+					if (name === formations[i].name) {
+						formations[i] = formation.deepCopy();
+						formations[i].updateCoverageForOffense(dummy_offense);
+						formation.save(path, csrf_token);
+						formation = new Formation({unit:"defense"});
 						return;
 					}
 				}
@@ -796,16 +810,16 @@
 
 			formation.name = name;
 			formation.team = teamID;
-			if(playbook === "base"){
-				formations.push(formation.deepCopy());
-			}else if(playbook === "scout"){
+			if(formation.scout){
 				scout_formations.push(formation.deepCopy());
+			}else{
+				formations.push(formation.deepCopy());
 			}
 			formation.save(path, csrf_token);
 
 			// Create a new formation to replace the one you just saved on the
 			// screen.
-			formation = new Formation({unit:"defense"});
+			formation = new Formation({scout: formation.scout, unit:"defense"});
 
 			// Update the sidebar to include a new button for the formation that
 			// was just saved.
@@ -929,7 +943,7 @@
 			addHeaderPlaceholder();
 
 			// Create a new formation to replace whatever was already on screen.
-			formation = new Formation({unit:"defense"});
+			formation = new Formation({scout: formation.scout, unit:"defense"});
 
 			// If there was a previously selected button remove it's selected
 			// id attribute and change it from btn-success to btn-primary.
@@ -951,19 +965,17 @@
 
 				var formation_name = new_selected.getAttribute("name");
 
-				var playbook = document.getElementById('change-playbook').value;
-
-				if(playbook === "base"){
-					for (var i = 0; i < formations.length; ++i) {
-						if (formation_name === formations[i].name) {
-							formation = formations[i].deepCopy();
-							break;
-						}
-					}
-				}else if(playbook === "scout"){
+				if(formation.scout){
 					for (var i = 0; i < scout_formations.length; ++i) {
 						if (formation_name === scout_formations[i].name) {
 							formation = scout_formations[i].deepCopy();
+							break;
+						}
+					}
+				}else{
+					for (var i = 0; i < formations.length; ++i) {
+						if (formation_name === formations[i].name) {
+							formation = formations[i].deepCopy();
 							break;
 						}
 					}

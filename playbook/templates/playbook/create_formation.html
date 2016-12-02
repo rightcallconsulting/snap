@@ -6,10 +6,6 @@
 		<div id="help-box" hidden="true">
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
 		</div>
-		<select id="change-playbook" onchange="changePlaybook(this.value)">
-			<option value="base">Base</option>
-			<option value="scout">Scout</option>
-		</select>
 
 		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
 			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
@@ -49,14 +45,10 @@
 
 		<div id="sideview" class="col-md-3">
 			<div id="sideview-header">
-				Base Formations
+				Select Playbook
 			</div>
 			<div id="sideview-buttons">
-				{% for formation in formations %}
-					<button class="btn btn-primary sideview-button" name="{{ formation.name }}" onclick="changeSelectedFormation(this)">
-						{{ formation.name }}
-					</button>
-				{% endfor %}
+
 			</div>
 			<div id="sideview-footer">
 
@@ -145,6 +137,16 @@
 			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
 			offensivePlayerBar.init(field);
 
+			{% if initial_playbook %}
+				var initial_playbook_name = "{{initial_playbook}}";
+				if(initial_playbook_name == "scout"){
+					showScoutFormations();
+				}else{
+					showFormations();
+				}
+			{% else %}
+				showPlaybookOptions();
+			{% endif %}
 			{% if initial_formation %}
 				var initial_formation_name = "{{initial_formation}}";
 				var sideview_buttons = document.getElementById("sideview-buttons").children;
@@ -206,6 +208,12 @@
 			}
 
 			formation = new Formation({});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showPlaybookOptions()");
+			sideview_header.appendChild(back_arrow);
 		}
 
 		function showScoutFormations(){
@@ -240,6 +248,12 @@
 			}
 
 			formation = new Formation({scout: true});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showPlaybookOptions()");
+			sideview_header.appendChild(back_arrow);
 		}
 
 		function draw() {
@@ -798,7 +812,7 @@
 
 			// Create a new formation to replace whatever was already on screen
 			// and update the notes list.
-			formation = new Formation({});
+			formation = new Formation({scout: formation.scout});
 			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			updateFormationNotes();
@@ -825,19 +839,18 @@
 				// the existing formations to find the correct object to set
 				// as the current formation.
 				var formation_name = new_selected.getAttribute("name");
-				var playbook_value = document.getElementById('change-playbook').value;
 
-				if(playbook_value === "base"){
-					for (var i = 0; i < formations.length; ++i) {
-						if (formation_name === formations[i].name) {
-							formation = formations[i].deepCopy();
-							break;
-						}
-					}
-				}else if(playbook_value === "scout"){
+				if(formation.scout){
 					for (var i = 0; i < scout_formations.length; ++i) {
 						if (formation_name === scout_formations[i].name) {
 							formation = scout_formations[i].deepCopy();
+							break;
+						}
+					}
+				}else{
+					for (var i = 0; i < formations.length; ++i) {
+						if (formation_name === formations[i].name) {
+							formation = formations[i].deepCopy();
 							break;
 						}
 					}
@@ -1066,6 +1079,41 @@
 				deleteFormationFromDatabase();
 				updateSideviewFooter();
 				//window.location.href = "/playbook/formations/create"
+			}
+		}
+
+		function showPlaybookOptions(){
+			addHeaderPlaceholder();
+			hideNotesAndCallsInput();
+			formation = new Formation({});
+			var sideview_header = document.getElementById("sideview-header");
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons")
+			sideview_header.textContent = "Select Playbook";
+			var base_button = document.createElement("button");
+			base_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			base_button.setAttribute("onclick", "changePlaybook(\"base\")");
+			base_button.textContent = "Base Formations";
+
+			var scout_button = document.createElement("button");
+			scout_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			scout_button.setAttribute("onclick", "changePlaybook(\"scout\")");
+			scout_button.textContent = "Scout Formations";
+
+			sideview_buttons.appendChild(base_button);
+			sideview_buttons.appendChild(scout_button);
+		}
+
+		function changePlaybook(new_playbook){
+			formation = new Formation({});
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons")
+
+			if(new_playbook == "base"){
+				showFormations();
+			}else{
+				formation.scout = true;
+				showScoutFormations();
 			}
 		}
 

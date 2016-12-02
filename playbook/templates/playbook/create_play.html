@@ -3,10 +3,6 @@
 
 {% block content %}
 	<div id="create-play" class="create-play padding-md">
-		<select id="change-unit" onchange="changeUnit(this.value)">
-			<option value="offense">Offense</option>
-			<option value="defense">Defense</option>
-		</select>
 		<div id="help-box" hidden="true">
 			<strong>Help:</strong> Select a formation from the list on the side to create a play out of that formation. Select a player in the formation by clicking on them and then add assignments using the mouse and keyboard. Change the type of assignment by clicking the top buttons or using the 'A' key for quarterback dropbacks, the 'S' key for pre-snap motion, the 'D' key for runs, the 'F' key for routes, and the 'G' key for blocking assignments. All assignments can be created by selecting that button and then clicking anywhere on the field. If blocks are selected you can also click on a defensive player to specify that player as an assignment. Additionally, the 'Q', 'W', 'E', 'R', 'T', 'Y', and 'U' keys are shortcuts for adding different predefined blocks.
 			<br><br>
@@ -221,14 +217,11 @@
 
 			updateNotesAndCalls();
 
-			{% if initial_view %}
-				field.viewPoint = "{{initial_view}}";
-				var dropdown = document.getElementById('change-unit');
-				dropdown.selectedIndex = 0;
+			{% if initial_unit %}
+				field.viewPoint = "{{initial_unit}}";
 				changeUnit(field.viewPoint);
-				if(field.viewPoint === "defense"){
-					dropdown.selectedIndex = 1;
-				}
+			{% else %}
+				showUnitOptions();
 			{% endif %}
 			{% if initial_formation %}
 				var initial_formation_name = "{{initial_formation}}";
@@ -1036,12 +1029,36 @@
 			return;
 		});
 
+		function showUnitOptions(){
+			addHeaderPlaceholder();
+			hideNotesAndCallsInput();
+			formation = new Formation({});
+			var sideview_header = document.getElementById("sideview-header");
+			$("#sideview-buttons").empty();
+			var sideview_buttons = document.getElementById("sideview-buttons")
+			sideview_header.textContent = "Select Playbook";
+			var offense_button = document.createElement("button");
+			offense_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			offense_button.setAttribute("onclick", "changeUnit(\"offense\")");
+			offense_button.textContent = "Offensive Plays";
+
+			var defense_button = document.createElement("button");
+			defense_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			defense_button.setAttribute("onclick", "changeUnit(\"defense\")");
+			defense_button.textContent = "Defensive Plays";
+
+			sideview_buttons.appendChild(offense_button);
+			sideview_buttons.appendChild(defense_button);
+		}
+
 		function changeUnit(unit){
+
 			if(unit === "offense"){
 				showFormations();
 			}else{
 				showBaseDefenses();
 			}
+
 			updateSideviewFooter();
 		}
 
@@ -1214,6 +1231,12 @@
 			}
 
 			play = new Play({unit:"defense"});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showUnitOptions()");
+			sideview_header.appendChild(back_arrow);
 		}
 
 		// showFormations loads the formation buttons back into the sideview
@@ -1250,6 +1273,12 @@
 			}
 
 			play = new Play({});
+			var sideview_header = document.getElementById("sideview-header");
+			var back_arrow = document.createElement("i");
+			back_arrow.setAttribute("id", "back-arrow");
+			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
+			back_arrow.setAttribute("onclick", "showUnitOptions()");
+			sideview_header.appendChild(back_arrow);
 		};
 
 		// showPlaysInFormation is called when a formation sideview button
