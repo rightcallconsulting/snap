@@ -396,7 +396,7 @@ Concept.prototype.delete = function(path, csrf_token) {
 
 	var jqxhr = $.post(
 			path,
-			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, name: conceptName}
+			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, unit: this.unit, name: conceptName}
 		).done(function() {
 			console.log("Concept successfully sent to Django to be deleted");
 		}).fail(function() {

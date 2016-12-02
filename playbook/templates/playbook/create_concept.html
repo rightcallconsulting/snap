@@ -966,7 +966,7 @@
 			// the old one and not save a new one. The frontend should also
 			// update the existing version it has and return.
 			for (var i = 0; i < concepts.length; ++i) {
-				if (name === concepts[i].name) {
+				if (name === concepts[i].name && concept.unit === concepts[i].unit) {
 					concepts[i] = concept.deepCopy();
 					concept.save(path, csrf_token);
 					concept = new Concept({});
@@ -984,7 +984,7 @@
 
 			// Create a new concept to replace the one you just saved on the
 			// screen.
-			concept = new Concept({});
+			concept = new Concept({unit: concept.unit});
 
 			// Update the sidebar to include a new button for the concept that
 			// was just saved.
@@ -1044,7 +1044,7 @@
 
 			// Set concept var to equal a new Concept. This will get rid of
 			// whatever is displayed on the screen.
-			concept = new Concept({});
+			concept = new Concept({unit: concept.unit});
 		}
 
 		$("#delete-button").click(function(event) {
@@ -1108,7 +1108,7 @@
 			addHeaderPlaceholder();
 
 			// Create a new concept to replace whatever was already on screen.
-			concept = new Concept({});
+			concept = new Concept({unit: concept.unit});
 
 			// Hide notes and calls inputs and update notes and calls (get rid of them).
 			hideCallsInput();
@@ -1136,7 +1136,7 @@
 				var concept_name = new_selected.getAttribute("name");
 
 				for (i in concepts) {
-					if (concept_name === concepts[i].name) {
+					if (concept_name === concepts[i].name && concept.unit === concepts[i].unit) {
 						concept = concepts[i].deepCopy();
 						break;
 					}
