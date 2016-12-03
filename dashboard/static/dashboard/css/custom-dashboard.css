@@ -524,7 +524,8 @@ analytics
 quizzes tables
 *************************************************************************/
 
-.quizzes table {
+.quizzes table,
+.team table {
 	width: 90%;
 	text-align: center;
 	margin: 0 auto;
@@ -532,7 +533,8 @@ quizzes tables
 	table-layout: fixed;
 }
 
-.quizzes table th {
+.quizzes table th,
+.team table th {
 	height: 50px;
 	background: #666;
 	color: white;
@@ -540,15 +542,18 @@ quizzes tables
 	margin: 0;
 }
 
-.quizzes table tr:nth-child(odd) {
+.quizzes table tr:nth-child(odd),
+.team table tr:nth-child(odd) {
 	background: #ddd;
 }
 
-.quizzes table tr:nth-child(even) {
+.quizzes table tr:nth-child(even),
+.team table tr:nth-child(even) {
 	background: #eee;
 }
 
-.quizzes table td {
+.quizzes table td,
+.team table td {
 	height: 50px;
 	color: black;
 	text-align: center;
@@ -557,13 +562,18 @@ quizzes tables
 
 .quizzes table a,
 .quizzes table a:link,
-.quizzes table a:active {
+.quizzes table a:active
+.team table a,
+.team table a:link,
+.team table a:active {
 	font-weight: bold;
 	color: #33691e;
 }
 
 .quizzes table a:hover,
-.quizzes table a:active {
+.quizzes table a:active,
+.team table a:hover,
+.team table a:active {
 	font-weight: bold;
 	color: #9CCC65;
 }
@@ -868,6 +878,65 @@ input[type="text"]#abbreviation {
 
 select#position-type {
 	width: 200px;
+}
+
+/*************************************************************************
+team
+*************************************************************************/
+
+div.team {
+	text-align: center;
+}
+
+div.team a.button {
+	display: block;
+	height: 40px;
+	width: 200px;
+	background: #9ccc65;
+	color: #33691e;
+	margin: 10px;
+	border: 1px solid #9ccc65;
+	border-radius: 10px;
+	padding: 0;
+	text-align: center;
+	line-height: 2.25em;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+div.team a.button:hover {
+	background: #33691e;
+	color: #9ccc65;
+}
+
+div.team div.mainview {
+	margin: 0 0 20px 0; 
+}
+
+div.team input {
+    height: 35px;
+    width: 175px;
+    margin: 5px 10px 10px 0;
+    border: 2px solid #9ccc65;
+    padding: 5px;
+}
+
+div.team button.btn {
+    height: 35px;
+    width: 120px;
+}
+
+div.edit-team {
+	padding: 30px;
+}
+
+div.edit-team input[type="text"] {
+    height: 35px;
+    width: 200px;
+    margin: 0;
+    border: 2px solid #9ccc65;
+    padding: 0;
+    font-size: 16px;
 }
 
 /*************************************************************************

@@ -24,7 +24,7 @@ class Coach(models.Model):
 		]
 
 	user = models.OneToOneField('getsnap.CustomUser', on_delete=models.CASCADE)
-	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, blank=True, null=True)
 	admin = models.BooleanField(default=False)
 	unit = models.CharField(max_length=1, choices=UNITS, blank=True, null=True)
 
@@ -44,7 +44,7 @@ class Player(models.Model):
 		]
 
 	user = models.OneToOneField('getsnap.CustomUser', on_delete=models.CASCADE)
-	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE)
+	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, blank=True, null=True)
 	unit = models.CharField(max_length=30, blank=True, null=True)
 	primary_position = models.ForeignKey('PlayerGroup', blank=True, null=True)
 	

@@ -2,57 +2,59 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="admin">
-		<div class="col-md-4">
-			<form action="/team" method="post" class="add-player"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="add-player">
-				<input type="email" name="email" placeholder="Player's Email">
-				<button type="submit">Add Player</button>
-			</form>
+	<div class="team">
+		<div class="col-md-12 mainview">		
+			<div class="col-md-4">
+				<form action="/team/" method="post" class="add-player"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="add-player">
+					<input type="email" name="email" placeholder="Player's Email">
+					<button type="submit" class="btn btn-success">Add Player</button>
+				</form>
 
-			<form action="/team" method="post" class="block-player"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="block-player">
-				<input type="email" name="email" placeholder="Player's Email">
-				<button type="submit">Block Player</button>
-			</form>
+				<form action="/team/" method="post" class="block-player"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="block-player">
+					<input type="email" name="email" placeholder="Player's Email">
+					<button type="submit" class="btn btn-warning">Block Player</button>
+				</form>
 
-			<form action="/team" method="post" class="remove-player"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="remove-player">
-				<input type="email" name="email" placeholder="Player's Email">
-				<button type="submit">Remove Player</button>
-			</form>
-		</div>
+				<form action="/team/" method="post" class="remove-player"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="remove-player">
+					<input type="email" name="email" placeholder="Player's Email">
+					<button type="submit" class="btn btn-danger">Remove Player</button>
+				</form>
+			</div>
 
-		<div class="col-md-4">
-			<form action="/team" method="post" class="add-coach"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="add-coach">
-				<input type="email" name="email" placeholder="Coach's Email">
-				<button type="submit">Add Coach</button>
-			</form>
+			<div class="col-md-4">
+				<form action="/team/" method="post" class="add-coach"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="add-coach">
+					<input type="email" name="email" placeholder="Coach's Email">
+					<button type="submit" class="btn btn-success">Add Coach</button>
+				</form>
 
-			<form action="/team" method="post" class="block-coach"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="block-coach">
-				<input type="email" name="email" placeholder="Coach's Email">
-				<button type="submit">Block Coach</button>
-			</form>
+				<form action="/team/" method="post" class="block-coach"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="block-coach">
+					<input type="email" name="email" placeholder="Coach's Email">
+					<button type="submit" class="btn btn-warning">Block Coach</button>
+				</form>
 
-			<form action="/team" method="post" class="remove-coach"> 
-				{% csrf_token %}
-				<input type="hidden" name="action" value="remove-coach">
-				<input type="email" name="email" placeholder="Coach's Email">
-				<button type="submit">Remove Coach</button>
-			</form>
-		</div>
+				<form action="/team/" method="post" class="remove-coach"> 
+					{% csrf_token %}
+					<input type="hidden" name="action" value="remove-coach">
+					<input type="email" name="email" placeholder="Coach's Email">
+					<button type="submit" class="btn btn-danger">Remove Coach</button>
+				</form>
+			</div>
 
-		<div class="col-md-4">
-			<a href="/team/edit">Edit Team Settings</a>
-			<a href="/groups/create">Create New Group</a>
-			<a href="/groups/manage">Manage Existing Group</a>
+			<div class="col-md-4">
+				<a href="/team/edit" class="button">Edit Team Settings</a>
+				<a href="/groups/create" class="button">Create New Group</a>
+				<a href="/groups/manage" class="button">Manage Existing Group</a>
+			</div>
 		</div>
 
 		<div class="col-md-12">
@@ -64,9 +66,9 @@
 				</tr>
 				{% for user in blocked_users %}
 					<tr>
-						<th>{{ user.first_name }} {{ user.last_name }}</th>
-						<th></th>
-						<th></th>
+						<td>{{ user.user.email }}</td>
+						<td></td>
+						<td></td>
 					</tr>
 				{% endfor %}
 			</table>
