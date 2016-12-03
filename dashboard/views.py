@@ -469,14 +469,66 @@ def delete_group(request):
 @user_passes_test(lambda user: user.isCoach())
 def team(request):
 	team = request.user.coach.team
-	return render(request, 'dashboard/team.html', {
-			'team': team,
-			'page_header': 'ADMIN'
-		})
+	if request.method == 'POST':
+		action = request.POST['action']
+		email = request.POST['email']
+		player = Player.objects.filter(team=team, user__email=email)
+		coach = Coach.objects.filter(team=team, user__email=email)
+
+		if len(player) == 1:
+			player = player[0]
+		elif len(coach) == 1:
+			coach = coach[0]
+		
+		if action == 'add-player':
+			player = Player.objects.filter(user__email=email)
+			if len(player) == 1:
+				player = player[0]
+
+			if player.team == None:
+				player.team = team
+				player.save()
+		elif action == 'block-player':
+			player.user.is_active = False
+			player.user.save()
+		elif action == 'remove-player':
+			player.team = None
+			player.save()
+		elif action == 'add-coach':
+			coach = Coach.objects.filter(user__email=email)
+			if len(coach) == 1:
+				coach = coach[0]
+
+			if coach.team == None:
+				coach.team = team
+				coach.save()
+		elif action == 'block-coach':
+			coach.user.is_active = False
+			coach.user.save()
+		elif action == 'remove-coach':
+			coach.team = None
+			coach.save()
+
+		return HttpResponseRedirect(reverse('team'))
+	else:
+		blocked_coaches = list(Coach.objects.filter(team=team, user__is_active=False))
+		blocked_players = list(Player.objects.filter(team=team, user__is_active=False))
+		blocked_users = blocked_players + blocked_coaches
+		print blocked_users
+		return render(request, 'dashboard/team.html', {
+				'team': team,
+				'blocked_users': blocked_users,
+				'page_header': 'ADMIN'
+			})
 
 @user_passes_test(lambda user: user.isCoach())
 def edit_team(request):
 	team = request.user.coach.team
+	if request.method == 'POST':
+		new_name = request.POST['team-name']
+		team.name = new_name
+		team.save()
+		return HttpResponseRedirect(reverse('team'))
 	return render(request, 'dashboard/edit_team.html', {
 			'team': team,
 			'page_header': 'ADMIN'

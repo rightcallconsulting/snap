@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="edit-profile">
+	<div class="edit-team">
 		<form action="/team/edit" method="post"> 
 			{% csrf_token %}
 			<input type="text" name="team-name" placeholder="Team Name" value="{{ team.name }}" required>

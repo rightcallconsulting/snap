@@ -926,6 +926,19 @@ div.team button.btn {
     width: 120px;
 }
 
+div.edit-team {
+	padding: 30px;
+}
+
+div.edit-team input[type="text"] {
+    height: 35px;
+    width: 200px;
+    margin: 0;
+    border: 2px solid #9ccc65;
+    padding: 0;
+    font-size: 16px;
+}
+
 /*************************************************************************
 other
 *************************************************************************/
