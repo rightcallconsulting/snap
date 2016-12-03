@@ -16,7 +16,7 @@ from django.core import serializers
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Admin, Coach, Player, PlayerGroup
-from getsnap.models import Team, CustomUser
+from getsnap.models import Team, CustomUser, ActivationToken
 from playbook.models import Concept, Formation, Play
 from quizzes.models import CustomQuiz, Quiz
 from analytics.models import QuestionAttempted
@@ -487,6 +487,7 @@ def team(request):
 			else:
 				user = CustomUser(email=email, username=email)
 				user.save()
+				ActivationToken.generateTokenFor(user)
 				player = Player(user=user)
 
 			if player.team == None:

@@ -10,7 +10,7 @@ import braintree
 
 import settings
 
-from .models import CustomUser, Team
+from .models import CustomUser, Team, ActivationToken
 from dashboard.models import Admin, Coach, Player
 
 
@@ -121,7 +121,51 @@ def purchase(request):
 	else:  # The transaction can be finalized.
 		return render(request, 'getsnap/thanks.html', {})
 
-### Register ############################################## 
+### Register ##############################################
+def activate(request):
+    if request.method == 'GET':
+        token = request.GET.get('token')
+        result = None
+        if token:
+            result = ActivationToken.verifyActivationToken(token)
+        if result:
+            result.is_active = True
+            return HttpResponseRedirect("/getsnap/setpassword?token="+token)
+        else:
+            return HttpResponseRedirect("/")
+
+def setpassword(request):
+    if request.method == 'GET':
+        token = request.GET.get('token')
+        if token:
+            return render(request, 'getsnap/setpassword.html', {'token': token})
+        else:
+            return HttpResponseRedirect("/")
+    if request.method == 'POST':
+        token = request.POST['token']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        if password1 != password2:
+            HttpResponseRedirect("/setpassword?error=match")
+
+        activation_token = ActivationToken.objects.filter(token=token)
+        if len(activation_token) > 0 and activation_token[0].is_valid():
+            activation_token = activation_token[0]
+        else:
+            HttpResponseRedirect("/setpassword?error=token")
+
+        user = activation_token.user
+        user.set_password(password1)
+        user.save()
+
+        user = authenticate(email=user.email, password=password1)
+        if user is not None:
+            user.is_active = True
+            user.save()
+            activation_token.delete()
+            login(request, user)
+            return HttpResponseRedirect("/")
+
 def register(request):
 	if request.method == 'POST':
 		email = request.POST['email']

@@ -10,6 +10,7 @@ from datetimewidget.widgets import DateTimeWidget
 from datetime import datetime
 from IPython import embed
 
+
 class Admin(models.Model):
 	user = models.OneToOneField('getsnap.CustomUser', on_delete=models.CASCADE)
 

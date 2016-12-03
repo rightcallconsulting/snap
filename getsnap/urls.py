@@ -17,7 +17,9 @@ urlpatterns = [
 
 	# Get Snap
 	url(r'^getsnap$', views.getsnap, name='getsnap'),
+	url(r'^getsnap/activate$', views.activate, name='activate'),
 	url(r'^getsnap/packages$', views.packages, name='packages'),
+	url(r'^getsnap/setpassword$', views.setpassword, name='setpassword'),
 	url(r'^getsnap/thanks$', views.thanks, name='thanks'),
 	url(r'^getsnap/client-token$', views.client_token, name='client_token'),
 	url(r'^getsnap/create-purchase$', views.create_purchase, name='create_purchase'),

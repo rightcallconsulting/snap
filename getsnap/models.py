@@ -9,6 +9,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from passwords.fields import PasswordField
 
+import random
+
+from IPython import embed
+
 
 
 class CustomUser(AbstractUser):
@@ -110,3 +114,59 @@ class Team(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class ActivationToken(models.Model):
+	token = models.CharField(max_length=40, blank=False, null=False)
+	expiration = models.DateTimeField()
+	user = models.ForeignKey('getsnap.CustomUser', on_delete=models.CASCADE, blank=False, null=False)
+
+	def is_valid(self):
+		if datetime.today() < self.expiration.replace(tzinfo=None):
+			return True
+		return False
+	@classmethod
+	def generateTokenFor(cls, user):
+		activation_token = ActivationToken(user=user)
+		activation_token.expiration = datetime.today() + timedelta(days=7)
+
+		random.seed()
+		existing_tokens = list(ActivationToken.objects.all())
+		existing_token_strings = []
+		for t in existing_tokens:
+			existing_token_strings.append(str(t.token))
+		new_token = ActivationToken.generateTokenString()
+		while(new_token in existing_token_strings):
+			new_token = ActivationToken.generateTokenString()
+		activation_token.token = new_token
+		activation_token.save()
+		return 0 #success
+
+	@classmethod
+	def generateTokenString(cls):
+		token_length = 20
+		token = ""
+		valid_symbols = []
+		for i in range(10):
+			valid_symbols.append(chr(ord('0')+i))
+		for i in range(26):
+			valid_symbols.append(chr(ord('a')+i))
+			valid_symbols.append(chr(ord('A')+i))
+		for i in range(token_length):
+			token += valid_symbols[random.randint(0, len(valid_symbols)-1)]
+		return token
+
+	@classmethod
+	def verifyActivationToken(cls, token):
+		existing_tokens = list(ActivationToken.objects.all())
+		token_found = None
+		for t in existing_tokens:
+			if t.token == token:
+				token_found = t
+				break
+		if token_found:
+			if datetime.today() < token_found.expiration.replace(tzinfo=None):
+				return token_found.user
+			else:
+				return None#"Token Expired"
+		else:
+			return None#"Invalid Token"
