@@ -132,19 +132,22 @@ def homepage(request):
 			newsfeed.append(news_item)
 
 		newsfeed.sort(key=lambda x: x[4], reverse=True)
-		if len(newsfeed) > 20:
-			newsfeed = newsfeed[0:20]
+		if len(newsfeed) > 10:
+			newsfeed = newsfeed[0:10]
 
 		custom_quizzes = list(CustomQuiz.objects.filter(team=team, player=player))
 		#sort by recent (if not default?)
 		custom_quizzes.sort(key=lambda quiz: quiz.created_at, reverse=True)
-		custom_quizzes = custom_quizzes[0:5] #keep it recent
 
+		quiz_links_used = []
 		custom_quiz_tuples = []
 		for quiz in custom_quizzes:
-			custom_quiz_tuples.append((str(quiz), quiz.launch_url()))
+			quiz_url = quiz.launch_url()
+			if quiz_url not in quiz_links_used:
+				quiz_links_used.append(quiz_url)
+				custom_quiz_tuples.append((str(quiz), quiz_url))
 
-		custom_quizzes = custom_quiz_tuples
+		custom_quizzes = custom_quiz_tuples[0:5]
 
 		return render(request, 'dashboard/player_homepage.html', {
 			'newsfeed': newsfeed,
