@@ -139,10 +139,8 @@
 
 			{% if initial_playbook %}
 				var initial_playbook_name = "{{initial_playbook}}";
-				if(initial_playbook_name == "scout"){
-					showScoutFormations();
-				}else{
-					showFormations();
+				if(initial_playbook_name == "scout" || initial_playbook_name == "base"){
+					changePlaybook(initial_playbook_name);
 				}
 			{% else %}
 				showPlaybookOptions();
@@ -588,10 +586,6 @@
 			// Don't save the formation with one of the players selected.
 			formation.clearSelected();
 
-			if(document.getElementById('change-playbook').value === "scout"){
-				formation.scout = true;
-			}
-
 			var placeholder_message = document.getElementById("placeholder-message");
 			var formation_name = document.getElementById("formation-name");
 			var path = "/playbook/formations/create";
@@ -635,9 +629,7 @@
 			removeHeaderName();
 			addHeaderPlaceholder();
 
-			var playbook = document.getElementById('change-playbook').value;
-
-			if(playbook === "base"){
+			if(formation.scout == false){
 				// If this formation name already exists the backend should replace
 				// the old one and not save a new one. The frontend should also
 				// update the existing version it has and return.
@@ -650,7 +642,7 @@
 						return;
 					}
 				}
-			}else if(playbook === "scout"){
+			}else{
 				// If this formation name already exists the backend should replace
 				// the old one and not save a new one. The frontend should also
 				// update the existing version it has and return.
@@ -683,7 +675,7 @@
 
 			// Create a new formation to replace the one you just saved on the
 			// screen.
-			formation = new Formation({});
+			formation = new Formation({formation.scout});
 			formation.createOffensiveLineAndQuarterback(field.ballYardLine);
 
 			// Update the sidebar to include a new button for the formation that
@@ -1085,7 +1077,7 @@
 		function showPlaybookOptions(){
 			addHeaderPlaceholder();
 			hideNotesAndCallsInput();
-			formation = new Formation({});
+			formation = new Formation({scout:formation.scout});
 			var sideview_header = document.getElementById("sideview-header");
 			$("#sideview-buttons").empty();
 			var sideview_buttons = document.getElementById("sideview-buttons")
