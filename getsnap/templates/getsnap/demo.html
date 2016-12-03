@@ -3,18 +3,20 @@
 
 {% block page %}
 	<div id="demosnap-wrapper">
-		<a href="/getsnap/packages">Get Snap</a>
-		<a href="/login">Sign In</a>
-
-		<h1>Coach Demo</h1>
-		<video controls>
-			<source src="{% static 'getsnap/videos/coach-demo.mp4' %}" type="video/mp4">
-			Your browser does not support HTML5 videos.
-		</video>
+		<div class="clearfix">
+			<a href="/getsnap/packages" class="nav-button">Get Snap</a>
+			<a href="/login" class="nav-button">Sign In</a>
+		</div>
 
 		<h1>Player Demo</h1>
 		<video controls>
 			<source src="{% static 'getsnap/videos/player-demo.mp4' %}" type="video/mp4">
+			Your browser does not support HTML5 videos.
+		</video>
+
+		<h1>Coach Demo</h1>
+		<video controls>
+			<source src="{% static 'getsnap/videos/coach-demo.mp4' %}" type="video/mp4">
 			Your browser does not support HTML5 videos.
 		</video>
 	</div>

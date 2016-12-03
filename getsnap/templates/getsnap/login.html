@@ -3,8 +3,10 @@
 
 {% block page %}
 	<div class="login-wrapper">
-		<a href="/getsnap/packages">Get Snap</a>
-		<a href="/demosnap">Demo Snap</a>
+		<div class="clearfix">
+			<a href="/getsnap/packages" class="nav-button">Get Snap</a>
+			<a href="/demosnap" class="nav-button">Demo Snap</a>
+		</div>
 
 		<div class="text-center">
 			<img class="login-logo" src="{% static 'dashboard/images/snap-banner-min.png' %}" alt="">
