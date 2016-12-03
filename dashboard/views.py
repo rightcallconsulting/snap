@@ -61,7 +61,9 @@ def homepage(request):
 			news_item.append(formation.name)
 			news_item.append("created")
 			news_item.append(formation.created_at)
-			full_link = "/playbook?initial_formation=" + formation.name
+			full_link = "/playbook?initial_playbook=Offensive Playbook&initial_formation=" + formation.name
+			if(formation.unit == "defense"):
+				full_link = "/playbook?initial_playbook=Defensive Playbook&initial_formation=" + formation.name
 			news_item.append(full_link)
 			newsfeed.append(news_item)
 
@@ -80,8 +82,10 @@ def homepage(request):
 
 			news_item.append(play.created_at)
 			full_link = "/playbook?initial_playbook=Offensive Playbook&initial_formation=" + play.formation.name + "&initial_play=" + play.name
+			if(play.unit == "defense"):
+				full_link = "/playbook?initial_playbook=Defensive Playbook&initial_formation=" + play.formation.name + "&initial_play=" + play.name
 			if play.scoutName != "":
-				full_link += "&initial_scout_defense=" + play.scoutName
+				full_link += "&initial_scout=" + play.scoutName
 			news_item.append(full_link)
 			newsfeed.append(news_item)
 
@@ -95,19 +99,23 @@ def homepage(request):
 			news_item.append("created")
 			news_item.append(concept.created_at)
 			full_link = "/playbook?initial_playbook=Offensive Concepts&initial_concept=" + concept.name
+			if(concept.unit == "defense"):
+				full_link = "/playbook?initial_playbook=Defensive Concepts&initial_concept=" + concept.name
 			news_item.append(full_link)
 			newsfeed.append(news_item)
 
-		defensive_looks = Formation.objects.filter(team=team, scout=True)
+		scout_formations = Formation.objects.filter(team=team, scout=True)
 
-		for formation in defensive_looks:
+		for formation in scout_formations:
 			news_item = []
 			news_item.append("playbook")
 			news_item.append("formation")
 			news_item.append(formation.name)
 			news_item.append("created")
 			news_item.append(formation.created_at)
-			full_link = "/playbook?initial_playbook=Defensive Looks&initial_defense=" + formation.name
+			full_link = "/playbook?initial_playbook=Defensive Looks&initial_look=" + formation.name
+			if formation.unit == "offense":
+				full_link = "/playbook?initial_playbook=Offensive Looks&initial_look=" + formation.name
 			news_item.append(full_link)
 			newsfeed.append(news_item)
 
@@ -506,6 +514,7 @@ def team(request):
 			else:
 				user = CustomUser(email=email, username=email)
 				user.save()
+				ActivationToken.generateTokenFor(user)
 				coach = Coach(user=user)
 
 			if coach.team == None:

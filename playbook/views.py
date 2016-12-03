@@ -30,9 +30,10 @@ def playbook(request, unit="offense"):
 	initial_playbook = request.GET.get('initial_playbook')
 	initial_formation = request.GET.get('initial_formation')
 	initial_play = request.GET.get('initial_play')
-	initial_scout_defense = request.GET.get('initial_scout_defense')
+	initial_scout = request.GET.get('initial_scout')
 	initial_concept = request.GET.get('initial_concept')
 	initial_defense = request.GET.get('initial_defense')
+	initial_look = request.GET.get('initial_look')
 
 	return render(request, 'playbook/playbook.html', {
 		'user_is_a_coach': user_is_a_coach,
@@ -46,9 +47,10 @@ def playbook(request, unit="offense"):
 		'initial_playbook': initial_playbook,
 		'initial_formation': initial_formation,
 		'initial_play': initial_play,
-		'initial_scout_defense': initial_scout_defense,
+		'initial_scout': initial_scout,
 		'initial_concept': initial_concept,
 		'initial_defense': initial_defense,
+		'initial_look': initial_look,
 		'page_header': 'PLAYBOOK'
 	})
 

@@ -195,14 +195,14 @@
 				}
 			{% endif %}
 
-			{% if initial_scout_defense %}
+			{% if initial_scout %}
 				var toggle_button = document.getElementById("offense-defense-toggle");
 				toggle_button.click();
-				var initial_scout_defense_name = "{{initial_scout_defense}}";
+				var initial_scout_name = "{{initial_scout}}";
 				var sideview_buttons = document.getElementById("sideview-buttons");
 				for(var i = 0; i < sideview_buttons.children.length; i++){
 					var button = sideview_buttons.children[i];
-					if(button.name === initial_scout_defense_name){
+					if(button.name === initial_scout_name){
 						button.click();
 						break;
 					}
@@ -227,6 +227,18 @@
 				for(var i = 0; i < sideview_buttons.children.length; i++){
 					var button = sideview_buttons.children[i];
 					if(button.name === initial_defense_name){
+						button.click();
+						break;
+					}
+				}
+			{% endif %}
+
+			{% if initial_look %}
+				var initial_look_name = "{{initial_look}}";
+				var sideview_buttons = document.getElementById("sideview-buttons");
+				for(var i = 0; i < sideview_buttons.children.length; i++){
+					var button = sideview_buttons.children[i];
+					if(button.name === initial_look_name){
 						button.click();
 						break;
 					}
@@ -481,6 +493,7 @@
 				if(option_label === "defensive playbook"){
 					unit = "defense"
 				}
+				field.viewPoint = unit;
 				showFormations(unit);
 
 				dummy_offense = new Formation({unit: unit});
@@ -545,6 +558,7 @@
 				if(option_label === "defensive concepts"){
 					unit = "defense";
 				}
+				field.viewPoint = unit;
 				showConcepts(unit);
 
 				dummy_offense = new Formation({});
@@ -581,6 +595,7 @@
 				if(option_label === "offensive looks"){
 					unit = "offense";
 				}
+				field.viewPoint = unit;
 				showScoutFormations(unit);
 
 				var dummy_formation = new Formation({});
