@@ -47,12 +47,12 @@ class Player(models.Model):
 	team = models.ForeignKey('getsnap.Team', on_delete=models.CASCADE, blank=True, null=True)
 	unit = models.CharField(max_length=30, blank=True, null=True)
 	primary_position = models.ForeignKey('PlayerGroup', blank=True, null=True)
-	
+
 	year = models.CharField(max_length=3, choices=YEARS, blank=True, null=True)
 	number = models.IntegerField(blank=True, null=True)
 
 	def __str__(self):
-			return self.user.username
+			return self.user.email
 
 class PlayerGroup(models.Model):
 	POSITIONS = [

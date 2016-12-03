@@ -16,7 +16,7 @@ from django.core import serializers
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Admin, Coach, Player, PlayerGroup
-from getsnap.models import Team
+from getsnap.models import Team, CustomUser
 from playbook.models import Concept, Formation, Play
 from quizzes.models import CustomQuiz, Quiz
 from analytics.models import QuestionAttempted
@@ -475,15 +475,19 @@ def team(request):
 		player = Player.objects.filter(team=team, user__email=email)
 		coach = Coach.objects.filter(team=team, user__email=email)
 
-		if len(player) == 1:
+		if len(player) > 0:
 			player = player[0]
-		elif len(coach) == 1:
+		elif len(coach) > 0:
 			coach = coach[0]
-		
+
 		if action == 'add-player':
 			player = Player.objects.filter(user__email=email)
-			if len(player) == 1:
+			if len(player) > 0:
 				player = player[0]
+			else:
+				user = CustomUser(email=email, username=email)
+				user.save()
+				player = Player(user=user)
 
 			if player.team == None:
 				player.team = team
@@ -496,8 +500,12 @@ def team(request):
 			player.save()
 		elif action == 'add-coach':
 			coach = Coach.objects.filter(user__email=email)
-			if len(coach) == 1:
+			if len(coach) > 0:
 				coach = coach[0]
+			else:
+				user = CustomUser(email=email, username=email)
+				user.save()
+				coach = Coach(user=user)
 
 			if coach.team == None:
 				coach.team = team

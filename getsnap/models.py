@@ -26,7 +26,7 @@ class CustomUser(AbstractUser):
 	customer_id = models.CharField(max_length=30, blank=True, null=True) #braintree
 
 	def __str__(self):
-		return self.username
+		return self.email
 
 	def isAdmin(self):
 		if self.user_type == 'A':

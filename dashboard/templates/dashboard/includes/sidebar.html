@@ -56,17 +56,7 @@
 					</li>
 				{% endif %}
 
-				{% if not request.user.isPlayer %}
-					<li>
-						<a href="{% url 'team' %}">
-							<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
-							<span class="menu-text">
-								TEAM ADMIN
-							</span>
-							<span class="menu-hover"></span>
-						</a>
-					</li>
-				{% else %}
+				{% if request.user.isPlayer %}
 					<li class="openable open">
 						<a href="/quizzes/custom">
 							<img class="menu-icon" src="{% static 'dashboard/images/quiz-icon.png' %}" alt="">
@@ -94,6 +84,17 @@
 							<img class="menu-icon" src="{% static 'dashboard/images/analytics-icon.png' %}" alt="">
 							<span class="menu-text">
 								ANALYTICS
+							</span>
+							<span class="menu-hover"></span>
+						</a>
+					</li>
+				{% endif %}
+				{% if not request.user.isPlayer %}
+					<li>
+						<a href="{% url 'team' %}">
+							<img class="menu-icon" src="{% static 'dashboard/images/groups-icon.png' %}" alt="">
+							<span class="menu-text">
+								ADMIN
 							</span>
 							<span class="menu-hover"></span>
 						</a>
