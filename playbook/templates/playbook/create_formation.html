@@ -666,10 +666,10 @@
 			formation.team = teamID;
 			formation.save(path, csrf_token);
 
-			if(playbook === "base"){
-				formations.push(formation);
-			} else if(playbook === "scout"){
+			if(formation.scout){
 				scout_formations.push(formation);
+			} else{
+				formations.push(formation);
 			}
 
 
