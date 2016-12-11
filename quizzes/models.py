@@ -17,7 +17,12 @@ class CustomQuiz(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return "Custom Quiz" #TBI
+		quiz_str = str(self.number_of_questions) + "-question " + str(self.content_type) + " " + str(self.quiz_type) + " quiz"
+		if self.type_of_assignment and not (str(self.type_of_assignment) == "all"):
+			quiz_str += " on " + str(self.type_of_assignment)
+		if self.position and len(str(self.position)) > 0:
+			quiz_str += " as the " + str(self.position)
+		return quiz_str
 
 	def launch_url(self):
 		full_link = "/quizzes/custom/"
