@@ -138,7 +138,7 @@
 				quiz.attempt.motionCords = [];
 				quiz.attempt.blockingAssignmentArray = [];
 				quiz.attempt.clearRoute();
-				quiz.attempt.defensiveMovement = [];
+				quiz.attempt.clearAssignments();
 				if(quiz.attempt.unit === "defense"){
 					field.flipView();
 				}
@@ -158,6 +158,18 @@
 			buttons.push(button);
 
 			button = new Button ({ label: "Block (G)" });
+			buttons.push(button);
+
+			var button = new Button ({ label: "Movement (A)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Rush/Blitz (S)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Man Coverage (D)" });
+			buttons.push(button);
+
+			button = new Button ({ label: "Zone Coverage (F)" });
 			buttons.push(button);
 
 			updateMainviewAndSideview();
@@ -182,11 +194,9 @@
 		};
 
 		function draw() {
-			buttons[0].display = false;
-			buttons[1].display = false;
-			buttons[2].display = false;
-			buttons[3].display = false;
-			buttons[4].display = false;
+			for(i in buttons){
+				buttons[i].display = false;
+			}
 
 			if(quiz.over){
 				quiz.drawQuizSummary(field);
@@ -200,27 +210,34 @@
 				var player = quiz.attempt;
 
 				if (player != null) {
-					if (player.dropback.length > 0) {
-						buttons[0].display = true;
-					} else if (player.run.length > 0) {
-						buttons[2].display = true;
-					} else if (player.route.length > 0) {
-						buttons[3].display = true;
-					} else if (player.blockingAssignmentArray.length > 0) {
-						buttons[4].display = true;
-					} else if (player.pos === "QB") {
-						buttons[0].display = true;
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === true) {
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === false) {
-						buttons[4].display = true;
+					if(player.unit == "defense"){
+						buttons[5].display = true;
+						buttons[6].display = true;
+						buttons[7].display = true;
+						buttons[8].display = true;
+					}else{
+						if (player.dropback.length > 0) {
+							buttons[0].display = true;
+						} else if (player.run.length > 0) {
+							buttons[2].display = true;
+						} else if (player.route.length > 0) {
+							buttons[3].display = true;
+						} else if (player.blockingAssignmentArray.length > 0) {
+							buttons[4].display = true;
+						} else if (player.pos === "QB") {
+							buttons[0].display = true;
+							buttons[1].display = true;
+							buttons[2].display = true;
+							buttons[3].display = true;
+							buttons[4].display = true;
+						} else if (player.eligible === true) {
+							buttons[1].display = true;
+							buttons[2].display = true;
+							buttons[3].display = true;
+							buttons[4].display = true;
+						} else if (player.eligible === false) {
+							buttons[4].display = true;
+						}
 					}
 				} else {
 					for (i in buttons) {
@@ -437,7 +454,21 @@
 
 					playerSelected.blockingAssignmentArray.push(block);
 					return false;
+				} else if(buttons[5].clicked){
+					playerSelected.defensiveMovement.push([mouseYardX,mouseYardY])
+				}else if(buttons[6].clicked){
+					playerSelected.blitz.push([mouseYardX,mouseYardY])
+				}else if(buttons[7].clicked && playerClicked != null && playerClicked.unit === "offense"){
+					playerSelected.manCoverage.push(playerClicked);
+				}else if(buttons[8].clicked){
+					//set the arrow direction for zone coverage
+					if(playerSelected.zoneCoverage == null){
+						playerSelected.zoneCoverage = new ZoneAssignment({});
+					}
+					playerSelected.zoneCoverage.x = mouseYardX;
+					playerSelected.zoneCoverage.y = mouseYardY;
 				}
+				return false;
 			}
 		};
 
@@ -455,6 +486,8 @@
 				var playerSelected = quiz.attempt;
 				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
 				var playerStatusKeys = ["A", "S", "D", "F", "G"];
+				var specialZoneKeys = ["Q", "W", "E", "R", "T", "Y"];
+				var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
 
 				if (keyCode == BACKSPACE || keyCode == DELETE) {
 					performDelete();
@@ -481,9 +514,13 @@
 
 					return false;
 				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					if (buttons[playerStatusKeys.indexOf(key)].display === true) {
+					var index = playerStatusKeys.indexOf(key);
+					if(playerSelected.unit == "defense"){
+						index += 5;
+					}
+					if (buttons[index].display === true) {
 						for (i in buttons) {
-							if (i != playerStatusKeys.indexOf(key)) {
+							if (i != index) {
 								buttons[i].setUnclicked();
 							} else {
 								buttons[i].click();

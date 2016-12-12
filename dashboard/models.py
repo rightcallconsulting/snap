@@ -81,6 +81,13 @@ class PlayerGroup(models.Model):
 	def __str__(self):
 		return self.name
 
+	def getUnit(self):
+		if(self.position_type == "Quarterback" or self.position_type == "Skill Position" or self.position_type == "Offensive Lineman"):
+			return "offense"
+		if(self.position_type == "Defensive Lineman" or self.position_type == "Linebacker" or self.position_type == "Defensive Back"):
+			return "defense"
+		return None
+
 class DeletePlayerFromGroupForm(forms.Form):
 	groupID = forms.CharField(max_length=10)
 	playerID = forms.CharField(max_length=10)

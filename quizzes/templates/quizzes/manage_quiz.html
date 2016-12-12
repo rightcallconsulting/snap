@@ -11,6 +11,12 @@
 				<option value="offensive concepts">
 					Offensive Concepts
 				</option>
+				<option value="defensive playbook">
+					Defensive Playbook
+				</option>
+				<option value="defensive concepts">
+					Defensive Concepts
+				</option>
 			</select>
 		</div>
 
@@ -173,7 +179,7 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			showFormations();
+			showFormations("offense");
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -421,21 +427,23 @@
 			mainview_header.textContent = '{{ quiz.name }}';
 
 			if (sideview_content === "offensive playbook") {
-				showFormations();
+				showFormations("offense");
 			} else if (sideview_content === "offensive concepts") {
-				showConcepts();
-			} else if (sideview_content === "defensive looks") {
-				showDefensiveLooks();
+				showConcepts("offense");
+			} else if (sideview_content === "defensive playbook") {
+				showFormations("defense");
+			}else if(sideview_content === "defensive concepts") {
+				showConcepts("defense");
 			}
 		};
 
 		// showFormations loads the formation buttons back into the sideview
 		// removes the back icon. It also adds all the formation buttons back.
-		function showFormations() {
-			formation = new Formation({});
-			play = new Play({});
-			concept = new Concept({});
-			scout_formation = new Formation({});
+		function showFormations(unit) {
+			formation = new Formation({unit: unit});
+			play = new Play({unit: unit});
+			concept = new Concept({unit: unit});
+			scout_formation = new Formation({unit: unit});
 
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Formations";
@@ -448,31 +456,33 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button");
-				formation_button.setAttribute("name", formations[i].name);
-				formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
-				formation_button.textContent = formations[i].name;
+				if(formations[i].unit == unit){
+					var formation_button = document.createElement("button");
+					formation_button.setAttribute("class", "btn btn-primary sideview-button");
+					formation_button.setAttribute("name", formations[i].name);
+					formation_button.setAttribute("onclick", "showPlaysInFormation(this)");
+					formation_button.textContent = formations[i].name;
 
-				for (j in quiz.formations) {
-					if (quiz.formations[j].name === formations[i].name) {
-						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
-						formation_button.appendChild(check_mark);
+					for (j in quiz.formations) {
+						if (quiz.formations[j].name === formations[i].name) {
+							var check_mark = document.createElement("i");
+							check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
+							formation_button.appendChild(check_mark);
+						}
 					}
-				}
 
-				sideview_buttons.appendChild(formation_button);
+					sideview_buttons.appendChild(formation_button);
+				}
 			}
 		};
 
 		// showConcepts updates the sideview to include all of the concepts in
 		// the playbook.
-		function showConcepts() {
-			formation = new Formation({});
-			play = new Play({});
-			concept = new Concept({});
-			scout_formation = new Formation({});
+		function showConcepts(unit) {
+			formation = new Formation({unit: unit});
+			play = new Play({unit: unit});
+			concept = new Concept({unit: unit});
+			scout_formation = new Formation({unit: unit});
 
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Concepts";
@@ -485,21 +495,23 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in concepts) {
-				var concept_button = document.createElement("button");
-				concept_button.setAttribute("class", "btn btn-primary sideview-button");
-				concept_button.setAttribute("name", concepts[i].name);
-				concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
-				concept_button.textContent = concepts[i].name;
+				if(concepts[i].unit == unit){
+					var concept_button = document.createElement("button");
+					concept_button.setAttribute("class", "btn btn-primary sideview-button");
+					concept_button.setAttribute("name", concepts[i].name);
+					concept_button.setAttribute("onclick", "changeSelectedConcept(this)");
+					concept_button.textContent = concepts[i].name;
 
-				for (j in quiz.concepts) {
-					if (quiz.concepts[j].name === concepts[i].name) {
-						var check_mark = document.createElement("i");
-						check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
-						concept_button.appendChild(check_mark);
+					for (j in quiz.concepts) {
+						if (quiz.concepts[j].name === concepts[i].name) {
+							var check_mark = document.createElement("i");
+							check_mark.setAttribute("class", "fa fa-check fa-lg sideview-button-checkmark");
+							concept_button.appendChild(check_mark);
+						}
 					}
-				}
 
-				sideview_buttons.appendChild(concept_button);
+					sideview_buttons.appendChild(concept_button);
+				}
 			}
 		};
 
@@ -528,7 +540,7 @@
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
-			back_arrow.setAttribute("onclick", "showFormations()");
+			back_arrow.setAttribute("onclick", "showFormations(\""+formation.unit+"\")");
 
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = formation_name;
@@ -600,8 +612,11 @@
 
 				toggle_button = document.createElement("div");
 				toggle_button.setAttribute("id", "offense-defense-toggle");
-				toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+				toggle_button.setAttribute("onclick", "showScoutLooksForPlay()");
 				toggle_button.textContent = "D";
+				if(play.unit == "defense"){
+					toggle_button.textContent = "O";
+				}
 
 				sideview_header.appendChild(toggle_button);
 
@@ -631,7 +646,7 @@
 
 		// showDefensiveLooks updates the sideview to include all of the defensive
 		// looks in the playbook.
-		function showDefensiveLooksForPlay() {
+		function showScoutLooksForPlay() {
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Defensive Looks";
 
@@ -639,6 +654,10 @@
 			toggle_button.setAttribute("id", "offense-defense-toggle");
 			toggle_button.setAttribute("onclick", "showOffense()");
 			toggle_button.textContent = "O";
+			if(play.unit == "defense"){
+				toggle_button.textContent = "D";
+				sideview_header.textContent = "Offensive Looks";
+			}
 			sideview_header.appendChild(toggle_button);
 
 			$("#sideview-buttons").empty();
@@ -824,12 +843,15 @@
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
 			back_arrow.setAttribute("class", "fa fa-2x fa-angle-left");
-			back_arrow.setAttribute("onclick", "showFormations()");
+			back_arrow.setAttribute("onclick", "showFormations(\""+play.unit+"\")");
 
 			var toggle_button = document.createElement("div");
 			toggle_button.setAttribute("id", "offense-defense-toggle");
-			toggle_button.setAttribute("onclick", "showDefensiveLooksForPlay()");
+			toggle_button.setAttribute("onclick", "showScoutLooksForPlay()");
 			toggle_button.textContent = "D";
+			if(play.unit == "defense"){
+				toggle_button.textContent = "O";
+			}
 
 			sideview_header.appendChild(back_arrow);
 			sideview_header.appendChild(toggle_button);

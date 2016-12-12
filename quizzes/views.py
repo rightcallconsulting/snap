@@ -9,6 +9,8 @@ from dashboard.models import Admin, Coach, Player, PlayerGroup
 from playbook.models import Concept, Formation, Play
 from analytics.models import QuestionAttempted
 
+from IPython import embed
+
 import json
 
 @user_passes_test(lambda u: not u.isPlayer())
@@ -131,7 +133,7 @@ def manage_quiz(request, quiz_id):
 		unit = quiz.unit
 
 		formations = Formation.objects.filter(team=team, scout=False)
-		scout_formations = Formation.objects.filter(team=team, scout=True)
+		scout_formations = Formation.objects.filter(team=team,scout=True)
 		plays = Play.objects.filter(team=team)
 		concepts = Concept.objects.filter(team=team)
 
@@ -252,6 +254,19 @@ def take_quiz(request, quiz_id, position=''):
 		elif player.primary_position != None:
 			position_groups = [player.primary_position]
 
+		units = []
+		for group in position_groups:
+			group_unit = group.getUnit()
+			if group_unit and not group_unit in units:
+				units.append(group_unit)
+
+		filtered_plays = []
+		for play in quiz_plays:
+			if play.unit in units:
+				filtered_plays.append(play)
+
+		quiz_plays = filtered_plays
+
 		return render(request, 'quizzes/take_quiz.html', {
 			'quiz': quiz,
 			'quizFormations': quiz_formations,
@@ -353,38 +368,39 @@ def concept_quizzes(request, unit="offense"):
 		filtered_concepts = []
 		for concept in concepts:
 			concept_dict = json.loads(concept.conceptJson)
-			offensive_players = concept_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Do additional filtering for type of assignment here eventually ###
-					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
+			if(concept_dict['unit'] == "offense"):
+				offensive_players = concept_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here eventually ###
+						if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
+							filtered_concepts.append(concept)
+							break
+						elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
+							filtered_concepts.append(concept)
+							break
+					elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
 						filtered_concepts.append(concept)
 						break
-					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
-						filtered_concepts.append(concept)
-						break
-				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
-					filtered_concepts.append(concept)
-					break
-
-			defensive_players = concept_dict['defensivePlayers']
-			for player_dict in defensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Do additional filtering for type of assignment here eventually ###
-					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
-						filtered_concepts.append(concept)
-						break
-					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
-						filtered_concepts.append(concept)
-						break
-					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
-						filtered_concepts.append(concept)
-						break
-					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
-						filtered_concepts.append(concept)
-						break
+			else:
+				defensive_players = concept_dict['defensivePlayers']
+				for player_dict in defensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here eventually ###
+						if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
+							filtered_concepts.append(concept)
+							break
+						elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
+							filtered_concepts.append(concept)
+							break
+						elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+							filtered_concepts.append(concept)
+							break
+						elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+							filtered_concepts.append(concept)
+							break
 
 		concepts = filtered_concepts[0:number_of_questions]
 
@@ -407,15 +423,26 @@ def concept_quizzes(request, unit="offense"):
 		filtered_concepts = []
 		for concept in concepts:
 			concept_dict = json.loads(concept.conceptJson)
-			offensive_players = concept_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Do additional filtering for type of assignment here ###
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						call_options.append(player_dict['call'])
-						filtered_concepts.append(concept)
-						break
+			if(concept_dict['unit'] == "offense"):
+				offensive_players = concept_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here ###
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+							filtered_concepts.append(concept)
+							break
+			else:
+				defensive_players = concept_dict['defensivePlayers']
+				for player_dict in defensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here ###
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+							filtered_concepts.append(concept)
+							break
 
 		concepts = filtered_concepts[0:number_of_questions]
 
@@ -437,22 +464,24 @@ def concept_quizzes(request, unit="offense"):
 		filtered_concepts = []
 		for concept in concepts:
 			concept_dict = json.loads(concept.conceptJson)
-			offensive_players = concept_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					filtered_concepts.append(concept)
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						call_options.append(player_dict['call'])
-					break
-			defensive_players = concept_dict['defensivePlayers']
-			for player_dict in defensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					filtered_concepts.append(concept)
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						call_options.append(player_dict['call'])
-					break
+			if(concept_dict['unit'] == "offense"):
+				offensive_players = concept_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						filtered_concepts.append(concept)
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+						break
+			else:
+				defensive_players = concept_dict['defensivePlayers']
+				for player_dict in defensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						filtered_concepts.append(concept)
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+						break
 
 		concepts = filtered_concepts[0:number_of_questions]
 
@@ -619,41 +648,42 @@ def play_quizzes(request, unit="offense"):
 		filtered_plays = []
 		for play in plays:
 			play_dict = json.loads(play.playJson)
-			offensive_players = play_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Do additional filtering for type of assignment here eventually ###
-					if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
+			if(play_dict['unit'] == 'offense'):
+				offensive_players = play_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here eventually ###
+						if 'blockingAssignmentArray' in player_dict and len(player_dict['blockingAssignmentArray']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blocks"):
+							filtered_plays.append(play)
+							break
+						elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
+							filtered_plays.append(play)
+							break
+					elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
 						filtered_plays.append(play)
 						break
-					elif 'route' in player_dict and len(player_dict['route']) > 0 and (type_of_assignment == "all" or type_of_assignment == "routes"):
+					elif type_of_assignment == "route-tree" and 'route' in player_dict and len(player_dict['route']) > 0:
 						filtered_plays.append(play)
 						break
-				elif type_of_assignment == "progression" and 'progressionRank' in player_dict and player_dict['progressionRank'] > 0:
-					filtered_plays.append(play)
-					break
-				elif type_of_assignment == "route-tree" and 'route' in player_dict and len(player_dict['route']) > 0:
-					filtered_plays.append(play)
-					break
-
-			defensive_players = play_dict['defensivePlayers']
-			for player_dict in defensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Do additional filtering for type of assignment here eventually ###
-					if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
-						filtered_plays.append(play)
-						break
-					elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
-						filtered_plays.append(play)
-						break
-					elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
-						filtered_plays.append(play)
-						break
-					elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
-						filtered_plays.append(play)
-						break
+			else:
+				defensive_players = play_dict['defensivePlayers']
+				for player_dict in defensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Do additional filtering for type of assignment here eventually ###
+						if 'blitz' in player_dict and len(player_dict['blitz']) > 0 and (type_of_assignment == "all" or type_of_assignment == "blitz"):
+							filtered_plays.append(play)
+							break
+						elif 'defensiveMovement' in player_dict and len(player_dict['defensiveMovement']) > 0 and (type_of_assignment == "all" or type_of_assignment == "movement"):
+							filtered_plays.append(play)
+							break
+						elif 'zoneCoverage' in player_dict and player_dict['zoneCoverage'] and len(player_dict['zoneCoverage']) > 0 and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+							filtered_plays.append(play)
+							break
+						elif 'manCoverage' in player_dict and player_dict['manCoverage'] and (type_of_assignment == "all" or type_of_assignment == "coverage"):
+							filtered_plays.append(play)
+							break
 		plays = filtered_plays[0:number_of_questions]
 		return render(request, 'quizzes/assignment_quiz.html', {
 			'player': player,
@@ -671,15 +701,16 @@ def play_quizzes(request, unit="offense"):
 		filtered_plays = []
 		for play in plays:
 			play_dict = json.loads(play.playJson)
-			offensive_players = play_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					### Filters out plays that don't have calls ###
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						filtered_plays.append(play)
-						call_options.append(player_dict['call'])
-						break
+			if(play_dict['unit'] == 'offense'):
+				offensive_players = play_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						### Filters out plays that don't have calls ###
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							filtered_plays.append(play)
+							call_options.append(player_dict['call'])
+							break
 
 		plays = filtered_plays[0:number_of_questions]
 
@@ -705,22 +736,24 @@ def play_quizzes(request, unit="offense"):
 		filtered_plays = []
 		for play in plays:
 			play_dict = json.loads(play.playJson)
-			offensive_players = play_dict['offensivePlayers']
-			for player_dict in offensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					filtered_plays.append(play)
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						call_options.append(player_dict['call'])
-					break
-			defensive_players = play_dict['defensivePlayers']
-			for player_dict in defensive_players:
-				player_position = str(player_dict['pos'])
-				if player_position == position:
-					filtered_plays.append(play)
-					if 'call' in player_dict and len(player_dict['call']) > 0:
-						call_options.append(player_dict['call'])
-					break
+			if(play_dict['unit'] == 'offense'):
+				offensive_players = play_dict['offensivePlayers']
+				for player_dict in offensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						filtered_plays.append(play)
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+						break
+			else:
+				defensive_players = play_dict['defensivePlayers']
+				for player_dict in defensive_players:
+					player_position = str(player_dict['pos'])
+					if player_position == position:
+						filtered_plays.append(play)
+						if 'call' in player_dict and len(player_dict['call']) > 0:
+							call_options.append(player_dict['call'])
+						break
 
 		plays = filtered_plays[0:number_of_questions]
 
