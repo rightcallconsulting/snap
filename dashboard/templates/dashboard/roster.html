@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="team">
+		<div class="col-md-12 mainview">
+			<div class="col-md-4">
+				<form action="/team/" method="post" class="add-player">
+					{% csrf_token %}
+					<input type="hidden" name="action" value="add-player">
+					<input type="email" name="email" placeholder="Player's Email">
+					<button type="submit" class="btn btn-success">Add Player</button>
+				</form>
+			</div>
+
+			<div class="col-md-4">
+				<form action="/team/" method="post" class="add-coach">
+					{% csrf_token %}
+					<input type="hidden" name="action" value="add-coach">
+					<input type="email" name="email" placeholder="Coach's Email">
+					<button type="submit" class="btn btn-success">Add Coach</button>
+				</form>
+			</div>
+
+			<div class="col-md-4">
+				<a href="/team/edit" class="button">Edit Team Settings</a>
+			</div>
+		</div>
+
+		<div class="col-md-12">
+			<table id="active-users-table">
+				<tr>
+					<th>Email</th>
+					<th>Primary Position</th>
+					<th>Block User</th>
+					<th>Remove User</th>
+				</tr>
+				{% for player in active_players %}
+					<tr>
+						<td>{{ player.user.email }}</td>
+						<td>
+							<select name="position" class="unit-form" id="position-select-{{quiz.2}}">
+								<optgroup>
+									{% if player.primary_position != None %}
+									<option value="{{player.primary_position.abbreviation}}">{{player.primary_position.abbreviation}}</option>
+									{% else %}
+									<option value=""></option>
+									{% endif%}
+									{% for position_group in position_groups %}
+										{% if position_group != player.primary_position %}
+										<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+							</select>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

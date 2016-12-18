@@ -478,6 +478,74 @@ def delete_group(request):
 
 ### Admin #################################################
 @user_passes_test(lambda user: user.isCoach())
+def roster(request):
+	team = request.user.coach.team
+	if request.method == 'POST':
+		action = request.POST['action']
+		email = request.POST['email']
+		player = Player.objects.filter(team=team, user__email=email)
+		coach = Coach.objects.filter(team=team, user__email=email)
+
+		if len(player) > 0:
+			player = player[0]
+		elif len(coach) > 0:
+			coach = coach[0]
+
+		if action == 'add-player':
+			player = Player.objects.filter(user__email=email)
+			if len(player) > 0:
+				player = player[0]
+			else:
+				user = CustomUser(email=email, username=email)
+				user.save()
+				ActivationToken.generateTokenFor(user)
+				player = Player(user=user)
+
+			if player.team == None:
+				player.team = team
+				player.save()
+		elif action == 'block-player':
+			player.user.is_active = False
+			player.user.save()
+		elif action == 'remove-player':
+			player.team = None
+			player.save()
+		elif action == 'add-coach':
+			coach = Coach.objects.filter(user__email=email)
+			if len(coach) > 0:
+				coach = coach[0]
+			else:
+				user = CustomUser(email=email, username=email)
+				user.save()
+				ActivationToken.generateTokenFor(user)
+				coach = Coach(user=user)
+
+			if coach.team == None:
+				coach.team = team
+				coach.save()
+		elif action == 'block-coach':
+			coach.user.is_active = False
+			coach.user.save()
+		elif action == 'remove-coach':
+			coach.team = None
+			coach.save()
+
+		return HttpResponseRedirect(reverse('team'))
+	else:
+		active_coaches = list(Coach.objects.filter(team=team, user__is_active=True))
+		active_players = list(Player.objects.filter(team=team, user__is_active=True))
+		active_users = active_players + active_coaches
+		position_groups = PlayerGroup.objects.filter(team=team, position_group=True)
+		return render(request, 'dashboard/roster.html', {
+				'team': team,
+				'active_coaches': active_coaches,
+				'active_players': active_players,
+				'active_users': active_users,
+				'position_groups': position_groups,
+				'page_header': 'ROSTER'
+			})
+
+@user_passes_test(lambda user: user.isCoach())
 def team(request):
 	team = request.user.coach.team
 	if request.method == 'POST':

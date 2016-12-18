@@ -9,7 +9,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.homepage, name='homepage'),
-	
+
 	url(r'^edit_profile$', views.edit_profile, name='edit_profile'),
 	url(r'^change_password$', views.change_password, name='change_password'),
 
@@ -18,6 +18,7 @@ urlpatterns = [
 	# Admin
 	url(r'^team/$', views.team, name='team'),
 	url(r'^team/edit$', views.edit_team, name='edit_team'),
+	url(r'^roster/$', views.roster, name='roster'),
 	url(r'^groups/$', views.groups, name='groups'),
 	url(r'^groups/create$', views.create_group, name='create_group'),
 	url(r'^groups/manage$', views.manage_groups, name='manage_groups'),
