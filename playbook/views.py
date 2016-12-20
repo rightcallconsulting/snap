@@ -61,36 +61,40 @@ def create_formation(request):
 	team = coach.team
 	if request.method == "POST":
 		name = request.POST['name']
+		scout = (request.POST['scout'] == "true")
+		unit = request.POST.get('unit')
 		if request.POST['save'] == "true":
 			formationJson = request.POST['formation']
-			formation = Formation.objects.filter(team=team, scout=False, name=name)
+			formation = Formation.objects.filter(team=team, scout=scout, name=name)
 			if formation.count() == 1:
 				formation = formation[0]
 				formation.formationJson = formationJson
-				formation.scout = (request.POST['scout'] == "true")
+				formation.scout = scout
 				formation.save()
 			elif formation.count() == 0:
 				formation = Formation()
 				formation.name = name
 				formation.team = request.user.coach.team
-				formation.unit = request.POST['unit']
-				formation.scout = (request.POST['scout'] == "true")
+				formation.unit = unit
+				formation.scout = scout
 				formation.formationJson = formationJson
 				formation.save()
 		elif request.POST['delete'] == "true":
-			scout = (request.POST['scout'] == "true")
 			if scout:
-				plays_to_delete = Play.objects.filter(team=team, unit="defense", scout=False, scoutName=name)
+				unit_to_delete = "defense"
+				if unit == "defense":
+					unit_to_delete = "offense"
+				plays_to_delete = Play.objects.filter(team=team, unit=unit_to_delete, scout=False, scoutName=name)
 				for play in plays_to_delete:
 					play.delete()
-			formation = Formation.objects.filter(team=team, unit="offense", scout=scout, name=name)[0]
+			formation = Formation.objects.filter(team=team, unit=unit, scout=scout, name=name)[0]
 			formation.delete()
 		return HttpResponse('')
 	else:
-		formations = Formation.objects.filter(team=team, unit="offense", scout=False)
-		scout_formations = Formation.objects.filter(team=team, unit="offense", scout=True)
+		formations = Formation.objects.filter(team=team, scout=False)
+		scout_formations = Formation.objects.filter(team=team, scout=True)
 		positions = PlayerGroup.objects.filter(team=team, position_group=True)
-		initial_playbook = request.GET.get('initial_playbook') #base or scout
+		initial_playbook = request.GET.get('initial_playbook') #base or scout, o or d
 		initial_formation = request.GET.get('initial_formation')
 
 		return render(request, 'playbook/create_formation.html', {

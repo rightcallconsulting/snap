@@ -520,7 +520,7 @@
 				var create_formation_button_link = document.createElement("a");
 				create_formation_button_link.setAttribute("href", "formations/create?initial_playbook=base");
 				if(unit === "defense"){
-					create_formation_button_link.setAttribute("href", "formations/create/defensive_look?initial_playbook=base");
+					create_formation_button_link.setAttribute("href", "formations/create/formation?initial_playbook=base_defense");
 				}
 				create_formation_button_link.textContent = "CREATE FORMATION";
 				create_formation_button_link.insertBefore(create_formation_icon_span, create_formation_button_link.firstChild);
@@ -634,6 +634,7 @@
 
 				top_options.appendChild(create_defensive_look_button);
 				{% endif %}
+				updateSideviewFooter(null)
 			}
 
 		}
@@ -847,7 +848,7 @@
 					var formation_button = document.createElement("button");
 					formation_button.setAttribute("class", "btn btn-primary sideview-button");
 					formation_button.setAttribute("name", scout_formations[i].name);
-					formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this)");
+					formation_button.setAttribute("onclick", "changeSelectedScoutFormation(this, \"" + unit + "\")");
 					formation_button.textContent = scout_formations[i].name;
 
 					sideview_buttons.appendChild(formation_button);
@@ -902,7 +903,7 @@
 			if(content_type == "Concept"){
 				link = "/playbook/concepts/create?initial_unit="+content.unit+"&initial_concept="+content.name;
 			}else if(content_type == "Defensive Look"){
-				link = "/playbook/formations/create/defensive_look?initial_playbook="+playbook+"&initial_look="+content.name;
+				link = "/playbook/formations/create?initial_playbook="+playbook+"_defense&initial_formation="+content.name;
 			}else if(content_type == "Formation"){
 				link = "/playbook/formations/create?initial_playbook="+playbook+"&initial_formation="+content.name;
 			}else if(content_type == "Offensive Look"){
@@ -1205,7 +1206,7 @@
 			}
 		};
 
-		function changeSelectedScoutFormation(selected) {
+		function changeSelectedScoutFormation(selected, unit) {
 			// The newly selected button is the one that is clicked on. The old
 			// selected button may not exist.
 			var new_selected = selected;
@@ -1238,9 +1239,9 @@
 
 				mainview_header.textContent = scout_formation_name;
 
-				if(play.unit == "offense"){
+				if(unit == "offense"){
 					for (i in scout_formations) {
-						if (scout_formations[i].unit == play.unit && scout_formation_name === scout_formations[i].name) {
+						if (scout_formations[i].unit == unit && scout_formation_name === scout_formations[i].name) {
 							scout_formations[i].updateCoverageForOffense(dummy_offense)
 							scout_formation = scout_formations[i].deepCopy();
 							break;
@@ -1248,7 +1249,7 @@
 					}
 				}else{
 					for (i in scout_formations) {
-						if (scout_formations[i].unit == play.unit && scout_formation_name === scout_formations[i].name) {
+						if (scout_formations[i].unit == unit && scout_formation_name === scout_formations[i].name) {
 							scout_formation = scout_formations[i].deepCopy();
 							break;
 						}

@@ -530,7 +530,7 @@ def roster(request):
 			coach.team = None
 			coach.save()
 
-		return HttpResponseRedirect(reverse('team'))
+		return HttpResponseRedirect(reverse('roster'))
 	else:
 		active_coaches = list(Coach.objects.filter(team=team, user__is_active=True))
 		active_players = list(Player.objects.filter(team=team, user__is_active=True))

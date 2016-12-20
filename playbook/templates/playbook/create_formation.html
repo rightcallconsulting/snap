@@ -76,7 +76,9 @@
 		var formations = [];
 		var scout_formations = [];
 		var formation;
+		var dummy_offense;
 		var offensivePlayerBar;
+		var defensivePlayerBar;
 		var playerBeingDragged;
 		var mouseBeingDragged = false;
 		var teamID = document.getElementById("team-id").getAttribute("team-id");
@@ -102,6 +104,10 @@
 			{% if team.field_type %}
 				field.setFieldType("{{team.field_type}}");
 			{% endif %}
+
+			var dummy_formation = new Formation({});
+			dummy_offense = dummy_formation.createDummyFormation();
+
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
@@ -115,12 +121,20 @@
 
 			{% for formation in formations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
-			formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			var f = createFormationFromJson(JSON.parse(formationJsonFromDatabase));
+			if(f.unit == "defense"){
+				f.updateCoverageForOffense(dummy_offense);
+			}
+			formations.push(f);
 			{% endfor %}
 
 			{% for formation in scout_formations %}
 			formationJsonFromDatabase = '{{ formation.formationJson|safe }}';
-			scout_formations.push(createFormationFromJson(JSON.parse(formationJsonFromDatabase)));
+			var f = createFormationFromJson(JSON.parse(formationJsonFromDatabase));
+			if(f.unit == "defense"){
+				f.updateCoverageForOffense(dummy_offense);
+			}
+			scout_formations.push(f);
 			{% endfor %}
 
 			// Create new Formation and add offensive linemen and quarterback
@@ -130,16 +144,21 @@
 
 			updateFormationNotes();
 
-			// Create player bar
+			// Create player bars
 			offensivePlayerBar = new PlayerBar({
 				playerOptions: createOffensivePlayerOptions()
 			});
 			offensivePlayerBar.y = field.height - offensivePlayerBar.height;
 			offensivePlayerBar.init(field);
+			defensivePlayerBar = new PlayerBar({
+				playerOptions: createDefensivePlayerOptions()
+			});
+			defensivePlayerBar.init(field);
 
 			{% if initial_playbook %}
 				var initial_playbook_name = "{{initial_playbook}}";
-				if(initial_playbook_name == "scout" || initial_playbook_name == "base"){
+				if(initial_playbook_name == "scout" || initial_playbook_name == "base" ||
+					initial_playbook_name == "base_defense" || initial_playbook_name == "scout_defense"){
 					changePlaybook(initial_playbook_name);
 				}
 			{% else %}
@@ -174,9 +193,12 @@
 			drawOpening();
 		};
 
-		function showFormations(){
+		function showFormations(unit){
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Base Formations";
+			if(unit == "defense"){
+				sideview_header.textContent = "Base Defenses";
+			}
 
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
@@ -196,16 +218,18 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
-				formation_button.setAttribute("name", formations[i].name);
-				formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
-				formation_button.textContent = formations[i].name;
+				if(formations[i].unit == unit){
+					var formation_button = document.createElement("button");
+					formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
+					formation_button.setAttribute("name", formations[i].name);
+					formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
+					formation_button.textContent = formations[i].name;
 
-				sideview_buttons.appendChild(formation_button);
+					sideview_buttons.appendChild(formation_button);
+				}
 			}
 
-			formation = new Formation({});
+			formation = new Formation({unit: unit});
 			var sideview_header = document.getElementById("sideview-header");
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
@@ -214,9 +238,12 @@
 			sideview_header.appendChild(back_arrow);
 		}
 
-		function showScoutFormations(){
+		function showScoutFormations(unit){
 			var sideview_header = document.getElementById("sideview-header");
 			sideview_header.textContent = "Scout Formations";
+			if(unit == "defense"){
+				sideview_header.textContent = "Scout Defenses";
+			}
 
 			// Add a placeholder message to the top bar of the main view. If we
 			// are deseclecting a button then the placeholder will stay. If we
@@ -236,16 +263,18 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			for(i in scout_formations) {
-				var formation_button = document.createElement("button");
-				formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
-				formation_button.setAttribute("name", scout_formations[i].name);
-				formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
-				formation_button.textContent = scout_formations[i].name;
+				if(scout_formations[i].unit == unit){
+					var formation_button = document.createElement("button");
+					formation_button.setAttribute("class", "btn btn-primary sideview-button formation-button");
+					formation_button.setAttribute("name", scout_formations[i].name);
+					formation_button.setAttribute("onclick", "changeSelectedFormation(this)");
+					formation_button.textContent = scout_formations[i].name;
 
-				sideview_buttons.appendChild(formation_button);
+					sideview_buttons.appendChild(formation_button);
+				}
 			}
 
-			formation = new Formation({scout: true});
+			formation = new Formation({scout: true, unit: unit});
 			var sideview_header = document.getElementById("sideview-header");
 			var back_arrow = document.createElement("i");
 			back_arrow.setAttribute("id", "back-arrow");
@@ -253,6 +282,42 @@
 			back_arrow.setAttribute("onclick", "showPlaybookOptions()");
 			sideview_header.appendChild(back_arrow);
 		}
+
+		function createDefensivePlayerOptions() {
+			var players = [];
+			var player;
+			var positions = [];
+			var abbreviations = [];
+
+			{% for position in positions %}
+			var position_type = "{{position.position_type}}";
+			if(position_type == "Defensive Lineman" || position_type == "Linebacker" || position_type == "Defensive Back"){
+				abbreviations.push("{{position.abbreviation}}")
+				positions.push(["{{ position.position_type }}", "{{ position.abbreviation }}"]);
+			}
+			{% endfor %}
+
+			//Not fully populated
+			if(positions.length < 5){
+				var defaultPositions = [["Defensive Lineman", "E"], ["Defensive Lineman", "N"], ["Defensive Lineman", "T"], ["Linebacker", "W"], ["Linebacker", "M"], ["Linebacker", "B"], ["Linebacker", "S"], ["Defensive Back", "C"], ["Defensive Back", "SS"], ["Defensive Back", "FS"]]
+				for(i in defaultPositions){
+					if(abbreviations.indexOf(defaultPositions[i][1]) < 0){
+						positions.push(defaultPositions[i]);
+					}
+				}
+			}
+
+			for(i in positions){
+				player = new Player ({
+					pos: positions[i][1], position_type: positions[i][0],
+					unit: "defense",
+					siz: 2
+				});
+				players.push(player);
+			}
+
+			return players;
+		};
 
 		function draw() {
 			// Limitations on where offensive players can be
@@ -370,7 +435,16 @@
 			//drawDebuggingInfo(); // uncomment this to have the canvas display some useful information
 
 			formation.drawPlayers(field);
-			offensivePlayerBar.draw(field);
+
+
+			if(formation.unit == "offense"){
+				offensivePlayerBar.draw(field);
+			}else{
+				defensivePlayerBar.draw(field);
+				dummy_offense.drawPlayers(field);
+				dummy_offense.drawShades(field, formation.defensivePlayers);
+			}
+
 
 			fill(0, 0, 0);
 			textSize(20);
@@ -450,6 +524,22 @@
 				return false;
 			}else if (formation.mouseInPlayer(field) != null){
 				formation.mouseInPlayer(field).click();
+			}
+
+			newPlayerSelected = defensivePlayerBar.mouseInPlayer(field);
+			if (newPlayerSelected != null && formation.defensivePlayers.length < 11) {
+				var playerToAddToFormation = new Player({
+					num: newPlayerSelected.num,
+					pos: newPlayerSelected.pos,
+					position_type: newPlayerSelected.position_type,
+					x: Field.WIDTH / 2,
+					y: field.ballYardLine + field.pixelsToYards(30),
+					unit: newPlayerSelected.unit
+				});
+
+				formation.defensivePlayers.push(playerToAddToFormation);
+
+				return false;
 			}
 		};
 
@@ -634,11 +724,13 @@
 				// the old one and not save a new one. The frontend should also
 				// update the existing version it has and return.
 				for (var i = 0; i < formations.length; ++i) {
-					if (name === formations[i].name) {
+					if (name == formations[i].name && formation.unit == formations[i].unit) {
 						formations[i] = formation.deepCopy();
 						formation.save(path, csrf_token);
-						formation = new Formation({});
-						formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+						formation = new Formation({unit: formation.unit});
+						if(formation.unit == "offense"){
+							formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+						}
 						return;
 					}
 				}
@@ -647,11 +739,13 @@
 				// the old one and not save a new one. The frontend should also
 				// update the existing version it has and return.
 				for (var i = 0; i < scout_formations.length; ++i) {
-					if (name === scout_formations[i].name) {
+					if (name === scout_formations[i].name  && formation.unit == scout_formations[i].unit) {
 						scout_formations[i] = formation.deepCopy();
 						formation.save(path, csrf_token);
-						formation = new Formation({scout: true});
-						formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+						formation = new Formation({unit: formation.unit, scout: true});
+						if(formation.unit == "offense"){
+							formation.createOffensiveLineAndQuarterback(field.ballYardLine);
+						}
 						return;
 					}
 				}
@@ -1025,17 +1119,6 @@
 			fill(176,176,176);
 		};
 
-		function changePlaybook(playbook_name){
-			if(playbook_name === "base"){
-				formation.scout = false;
-				showFormations();
-			}else if(playbook_name === "scout"){
-				formation.scout = true;
-				showScoutFormations();
-			}
-			updateSideviewFooter();
-		}
-
 		function updateSideviewFooter(){
 			var content = formation;
 			var content_type = "Formation";
@@ -1092,8 +1175,20 @@
 			scout_button.setAttribute("onclick", "changePlaybook(\"scout\")");
 			scout_button.textContent = "Scout Formations";
 
+			var base_defense_button = document.createElement("button");
+			base_defense_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			base_defense_button.setAttribute("onclick", "changePlaybook(\"base_defense\")");
+			base_defense_button.textContent = "Base Defenses";
+
+			var scout_defense_button = document.createElement("button");
+			scout_defense_button.setAttribute("class", "btn btn-primary sideview-button playbook-button");
+			scout_defense_button.setAttribute("onclick", "changePlaybook(\"scout_defense\")");
+			scout_defense_button.textContent = "Scout Defenses";
+
 			sideview_buttons.appendChild(base_button);
 			sideview_buttons.appendChild(scout_button);
+			sideview_buttons.appendChild(base_defense_button);
+			sideview_buttons.appendChild(scout_defense_button);
 		}
 
 		function changePlaybook(new_playbook){
@@ -1102,11 +1197,21 @@
 			var sideview_buttons = document.getElementById("sideview-buttons")
 
 			if(new_playbook == "base"){
-				showFormations();
+				showFormations("offense");
+				field.viewPoint = "offense"
+			}else if(new_playbook == "scout"){
+				formation.scout = true;
+				field.viewPoint = "defense"
+				showScoutFormations("offense");
+			}else if(new_playbook == "base_defense"){
+				showFormations("defense");
+				field.viewPoint = "defense"
 			}else{
 				formation.scout = true;
-				showScoutFormations();
+				field.viewPoint = "offense"
+				showScoutFormations("defense");
 			}
+			updateSideviewFooter();
 		}
 
 		function createOffensivePlayerOptions() {
