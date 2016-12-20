@@ -513,6 +513,12 @@
 					playerSelected.blockingAssignmentArray.push(block);
 
 					return false;
+				} else if (buttons[8].clicked && specialZoneKeys.indexOf(key) >= 0){
+					var index = specialZoneKeys.indexOf(key);
+					if(playerSelected.zoneCoverage == null){
+						playerSelected.zoneCoverage = new ZoneAssignment({});
+					}
+					playerSelected.zoneCoverage.type = zoneTypes[index];
 				} else if (playerStatusKeys.indexOf(key) >= 0) {
 					var index = playerStatusKeys.indexOf(key);
 					if(playerSelected.unit == "defense"){
