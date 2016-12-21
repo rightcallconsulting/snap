@@ -482,6 +482,20 @@ def roster(request):
 	team = request.user.coach.team
 	if request.method == 'POST':
 		action = request.POST['action']
+
+		if action == 'force_password_reset':
+			user_id = int(request.POST['user'])
+			user = CustomUser.objects.filter(pk=user_id)[0]
+			user.force_password_reset = True
+			user.save()
+			return HttpResponseRedirect(reverse('roster'))
+
+		if action == 'resend_activation_email':
+			user_id = int(request.POST['user'])
+			user = CustomUser.objects.filter(pk=user_id)[0]
+			ActivationToken.generateTokenFor(user)
+			return HttpResponseRedirect(reverse('roster'))
+
 		email = request.POST['email']
 		player = Player.objects.filter(team=team, user__email=email)
 		coach = Coach.objects.filter(team=team, user__email=email)
@@ -497,6 +511,7 @@ def roster(request):
 				player = player[0]
 			else:
 				user = CustomUser(email=email, username=email)
+				user.has_set_password = False
 				user.save()
 				ActivationToken.generateTokenFor(user)
 				player = Player(user=user)

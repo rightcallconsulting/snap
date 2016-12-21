@@ -29,6 +29,9 @@ class CustomUser(AbstractUser):
 	phone_number = models.CharField(max_length=15, blank=True, null=True)
 	customer_id = models.CharField(max_length=30, blank=True, null=True) #braintree
 
+	has_set_password = models.BooleanField(default=True)
+	force_password_reset = models.BooleanField(default=False)
+
 	def __str__(self):
 		return self.email
 

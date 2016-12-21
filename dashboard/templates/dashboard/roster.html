@@ -5,7 +5,7 @@
 	<div class="team">
 		<div class="col-md-12 mainview">
 			<div class="col-md-4">
-				<form action="/team/" method="post" class="add-player">
+				<form action="/roster/" method="post" class="add-player">
 					{% csrf_token %}
 					<input type="hidden" name="action" value="add-player">
 					<input type="email" name="email" placeholder="Player's Email">
@@ -14,7 +14,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<form action="/team/" method="post" class="add-coach">
+				<form action="/roster/" method="post" class="add-coach">
 					{% csrf_token %}
 					<input type="hidden" name="action" value="add-coach">
 					<input type="email" name="email" placeholder="Coach's Email">
@@ -34,6 +34,8 @@
 					<th>Primary Position</th>
 					<th>Block User</th>
 					<th>Remove User</th>
+					<th>Is Active?</th>
+					<th></th>
 				</tr>
 				{% for player in active_players %}
 					<tr>
@@ -56,6 +58,14 @@
 						</td>
 						<td></td>
 						<td></td>
+						<td>{% if player.user.has_set_password %}Active{%else%}Not Active{%endif%}</td>
+						<td>
+							{% if player.user.has_set_password %}
+								<button value="{{player.user.pk}}" onclick="forcePasswordReset(this.value)">Force Password Reset</button>
+							{%else%}
+								<button value="{{player.user.pk}}" onclick="resendActivationEmail(this.value)">Resend Activation Email</button>
+							{%endif%}
+						</td>
 					</tr>
 				{% endfor %}
 			</table>
@@ -64,4 +74,35 @@
 {% endblock %}
 
 {% block javascript %}
+<script type="text/javascript">
+	function forcePasswordReset(value){
+		var userID = parseInt(value)
+		var path = "/roster/"
+		var action = "force_password_reset"
+		var csrf_token = "{{csrf_token}}"
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, action: action, user: userID}
+			).done(function() {
+				window.location.href = path
+			}).fail(function() {
+				console.log("Error");
+		});
+	}
+
+	function resendActivationEmail(value){
+		var userID = parseInt(value)
+		var path = "/roster/"
+		var action = "resend_activation_email"
+		var csrf_token = "{{csrf_token}}"
+		var jqxhr = $.post(
+				path,
+				{csrfmiddlewaretoken: csrf_token, action: action, user: userID}
+			).done(function() {
+				window.location.href = path
+			}).fail(function() {
+				console.log("Error");
+		});
+	}
+</script>
 {% endblock %}
