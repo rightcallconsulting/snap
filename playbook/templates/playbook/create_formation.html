@@ -7,9 +7,19 @@
 			<strong>Help:</strong> Click on players in the player bar to add them to the formation and then drag them into position. Enter a formation name in the header and then click on the check mark to save a new formation. Select a current formation from the list of existing formations to edit it or use it as a starting point for a new formation. If you save a formation with the same name as a current formation that formation will be overwritten, otherwise a new formation will be saved. To delete a current formation select it from the list of existing formations and click the trash can without changing the formation's name.
 		</div>
 
-		<div id="notes-and-calls-input" class="col-md-12" hidden="true">
-			<div><textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea></div>
-			<div><button id="add-note-button" class="btn btn-success">Add Note</button></div>
+		<div id="notes-and-calls-input" class="col-md-8" hidden="true">
+			<div>
+				<textarea id="note" class="snap-input snap-textarea" rows="3" cols="35"></textarea>
+			</div>
+			<div>
+				<button id="add-note-button" class="btn btn-success">Add Note</button>
+			</div>
+		</div>
+
+		<div id="create-play" class="col-md-4" hidden="true">
+			<a href="/playbook/plays/create?" class="button">
+				Create Play from 
+			</a>
 		</div>
 
 		<div id="display-box" class="col-md-8 col-sm-12 bordered-div">
@@ -797,7 +807,7 @@
 			// the formation that is currently selected.
 			if (selected != null) {
 				// Set the path and cross-site forgery token vars.
-				var path = "/playbook/formations/create";
+				var path = "/playbook/formations/create?";
 				var csrf_token = "{{ csrf_token }}";
 
 				// Delete the formation from the backend.
@@ -884,6 +894,12 @@
 			var new_selected = selected;
 			var old_selected = document.getElementById("selected");
 
+			var create_play_div = document.getElementById("create-play");
+			var create_play_button = create_play_div.querySelector("a.button");
+			create_play_div.hidden = true;
+			create_play_button.textContent = "Create Play from ";
+			create_play_button.href = "/playbook/plays/create?";
+
 			// Hide the notes input.
 			hideNotesAndCallsInput();
 
@@ -941,6 +957,10 @@
 						}
 					}
 				}
+
+				create_play_div.hidden = false;
+				create_play_button.textContent += formation_name + " formation";
+				create_play_button.href += "initial_unit=offense&initial_formation=" + formation_name;
 
 				// Add the notes and calls input back and update the notes.
 				unhideNotesAndCallsInput(formation_name);
