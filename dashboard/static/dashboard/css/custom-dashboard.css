@@ -40,6 +40,26 @@ body {
 	background: white;
 }
 
+a.button {
+	display: block;
+	height: inherit;
+	max-width: 250px;
+	margin: 0 0 5px 0;
+	border: 3px solid #33691e;
+	border-radius: 5px;
+	padding: 5px;
+	background: #9ccc65;
+	color: #33691e;
+	text-align: center;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+a.button:hover {
+	background: #33691e;
+	color: #9ccc65;
+}
+
 /*************************************************************************
 top navbar
 *************************************************************************/
@@ -271,7 +291,7 @@ div.interactive-header p {
 }
 
 i.fa.mainview-button-icon {
-	color: #9CCC65;
+	color: #9ccc65;
 }
 
 .mainview-buttons {
