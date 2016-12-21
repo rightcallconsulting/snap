@@ -34,7 +34,6 @@
 					<th>Primary Position</th>
 					<th>Block User</th>
 					<th>Remove User</th>
-					<th>Is Active?</th>
 					<th></th>
 				</tr>
 				{% for player in active_players %}
@@ -56,9 +55,8 @@
 								</optgroup>
 							</select>
 						</td>
-						<td></td>
-						<td></td>
-						<td>{% if player.user.has_set_password %}Active{%else%}Not Active{%endif%}</td>
+						<td><button value="{{player.user.pk}}" onclick="blockUser(this.value)">Block User</button></td>
+						<td><button value="{{player.user.pk}}" onclick="removeUser(this.value)">Remove User</button></td>
 						<td>
 							{% if player.user.has_set_password %}
 								<button value="{{player.user.pk}}" onclick="forcePasswordReset(this.value)">Force Password Reset</button>
@@ -75,25 +73,29 @@
 
 {% block javascript %}
 <script type="text/javascript">
+
+	function blockUser(value){
+		var userID = parseInt(value)
+		postData(userID, "block_user")
+	}
+
+	function removeUser(value){
+		var userID = parseInt(value)
+		postData(userID, "remove_user")
+	}
+
 	function forcePasswordReset(value){
 		var userID = parseInt(value)
-		var path = "/roster/"
-		var action = "force_password_reset"
-		var csrf_token = "{{csrf_token}}"
-		var jqxhr = $.post(
-				path,
-				{csrfmiddlewaretoken: csrf_token, action: action, user: userID}
-			).done(function() {
-				window.location.href = path
-			}).fail(function() {
-				console.log("Error");
-		});
+		postData(userID, "force_password_reset")
 	}
 
 	function resendActivationEmail(value){
 		var userID = parseInt(value)
+		postData(userID, "resend_activation_email")
+	}
+
+	function postData(userID, action){
 		var path = "/roster/"
-		var action = "resend_activation_email"
 		var csrf_token = "{{csrf_token}}"
 		var jqxhr = $.post(
 				path,

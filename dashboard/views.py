@@ -496,6 +496,19 @@ def roster(request):
 			ActivationToken.generateTokenFor(user)
 			return HttpResponseRedirect(reverse('roster'))
 
+		if action == 'block_user':
+			user_id = int(request.POST['user'])
+			user = CustomUser.objects.filter(pk=user_id)[0]
+			user.is_active = False
+			user.save()
+			return HttpResponseRedirect(reverse('roster'))
+
+		if action == 'remove_user':
+			user_id = int(request.POST['user'])
+			user = CustomUser.objects.filter(pk=user_id)[0]
+			user.delete()
+			return HttpResponseRedirect(reverse('roster'))
+
 		email = request.POST['email']
 		player = Player.objects.filter(team=team, user__email=email)
 		coach = Coach.objects.filter(team=team, user__email=email)
