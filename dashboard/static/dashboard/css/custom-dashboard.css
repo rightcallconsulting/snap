@@ -528,7 +528,7 @@ quizzes tables
 .team table {
 	width: 90%;
 	text-align: center;
-	margin: 0 auto;
+	margin: 0 0 20px 0;
 	font-size: small;
 	table-layout: fixed;
 }
