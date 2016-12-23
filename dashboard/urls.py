@@ -16,7 +16,7 @@ urlpatterns = [
 	url(r'^groups/delete/(?P<group_id>[0-9]+)$', views.delete_group, name='delete_group'),
 
 	# Admin
-	url(r'^team/$', views.team, name='team'),
+	url(r'^team/$', views.roster, name='team'),
 	url(r'^team/edit$', views.edit_team, name='edit_team'),
 	url(r'^roster/$', views.roster, name='roster'),
 	url(r'^groups/$', views.groups, name='groups'),
