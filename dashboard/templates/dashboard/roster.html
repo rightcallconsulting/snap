@@ -4,6 +4,7 @@
 {% block content %}
 	<div class="team">
 		<div class="col-md-12 mainview">
+			{% if group_to_show == 'players' %}
 			<div class="col-md-4">
 				<form action="/roster/" method="post" class="add-player">
 					{% csrf_token %}
@@ -12,7 +13,7 @@
 					<button type="submit" class="btn btn-success">Add Player</button>
 				</form>
 			</div>
-
+			{% else %}
 			<div class="col-md-4">
 				<form action="/roster/" method="post" class="add-coach">
 					{% csrf_token %}
@@ -21,7 +22,7 @@
 					<button type="submit" class="btn btn-success">Add Coach</button>
 				</form>
 			</div>
-
+			{% endif %}
 			<div class="col-md-4">
 				<a href="/team/edit" class="button">Edit Team Settings</a>
 			</div>
@@ -31,25 +32,31 @@
 			<table id="active-users-table">
 				<tr>
 					<th>Email</th>
+					{% if group_to_show == 'players' %}
 					<th>Primary Position</th>
-					<th>Block User</th>
-					<th>Remove User</th>
-					<th></th>
+					<th>Block Player</th>
+					<th>Remove Player</th>
+					{% else %}
+					<th>Block Coach</th>
+					<th>Remove Coach</th>
+					{% endif %}
+					<th>Security</th>
 				</tr>
+				{% if group_to_show == 'players' %}
 				{% for player in active_players %}
 					<tr>
 						<td>{{ player.user.email }}</td>
 						<td>
-							<select name="position" class="unit-form" id="position-select-{{quiz.2}}">
+							<select data-userid="{{player.user.pk}}" name="position" class="unit-form" id="position-select-{{quiz.2}}" onchange="primaryPositionChanged(this)">
 								<optgroup>
 									{% if player.primary_position != None %}
-									<option value="{{player.primary_position.abbreviation}}">{{player.primary_position.abbreviation}}</option>
+									<option data-groupid="{{player.primary_position.pk}}" value="{{player.primary_position.abbreviation}}">{{player.primary_position.abbreviation}}</option>
 									{% else %}
-									<option value=""></option>
+									<option data-groupid="0" value=""></option>
 									{% endif%}
 									{% for position_group in position_groups %}
 										{% if position_group != player.primary_position %}
-										<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
+										<option data-groupid="{{position_group.pk}}" value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
 										{% endif %}
 									{% endfor %}
 								</optgroup>
@@ -66,6 +73,22 @@
 						</td>
 					</tr>
 				{% endfor %}
+				{% else %}
+				{% for coach in active_coaches %}
+					<tr>
+						<td>{{ coach.user.email }}</td>
+						<td><button value="{{coach.user.pk}}" onclick="blockUser(this.value)">Block User</button></td>
+						<td><button value="{{coach.user.pk}}" onclick="removeUser(this.value)">Remove User</button></td>
+						<td>
+							{% if coach.user.has_set_password %}
+								<button value="{{coach.user.pk}}" onclick="forcePasswordReset(this.value)">Force Password Reset</button>
+							{%else%}
+								<button value="{{coach.user.pk}}" onclick="resendActivationEmail(this.value)">Resend Activation Email</button>
+							{%endif%}
+						</td>
+					</tr>
+				{% endfor %}
+				{% endif %}
 			</table>
 		</div>
 	</div>
@@ -94,12 +117,19 @@
 		postData(userID, "resend_activation_email")
 	}
 
-	function postData(userID, action){
+	function primaryPositionChanged(select){
+		var userID = parseInt(select.dataset.userid)
+		var groupID = parseInt(select.selectedOptions[0].dataset.groupid)
+		//var positionGroupID = parseInt(select.)
+		postData(userID, "update_primary_position", groupID)
+	}
+
+	function postData(userID, action, groupID = -1){
 		var path = "/roster/"
 		var csrf_token = "{{csrf_token}}"
 		var jqxhr = $.post(
 				path,
-				{csrfmiddlewaretoken: csrf_token, action: action, user: userID}
+				{csrfmiddlewaretoken: csrf_token, action: action, user: userID, group: groupID}
 			).done(function() {
 				window.location.href = path
 			}).fail(function() {
