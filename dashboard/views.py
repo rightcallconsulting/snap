@@ -315,33 +315,6 @@ def change_password(request):
 
 # Groups
 @user_passes_test(lambda u: not u.isPlayer())
-def groups(request):
-	team = request.user.coach.team
-	groups = PlayerGroup.objects.filter(team=team)
-
-	if request.method == "POST" and request.POST['action'] == "DELETE":
-		group_id = int(request.POST['group_id'])
-		groups = groups.filter(pk=group_id)
-		if len(groups) > 0:
-			groups[0].delete()
-		return
-
-	if len(groups) > 0:
-		players_in_group = groups[0].players.all()
-		analytics = None #PlayerAnalytics(players_in_group)
-	else:
-		players_in_group = []
-		analytics = None
-
-	return render(request, 'dashboard/groups.html', {
-		'groups': groups,
-		'players_in_group': players_in_group,
-		'analytics': analytics,
-		'team': team,
-		'page_header': 'GROUPS'
-	})
-
-@user_passes_test(lambda u: not u.isPlayer())
 def create_group(request):
 	team = request.user.coach.team
 	if request.method == "POST":
@@ -656,7 +629,13 @@ def edit_team(request):
 def players_on_team_json(request, team_id):
 	team = Team.objects.filter(id=team_id)[0]
 	players = Player.objects.filter(team=team)
-	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
+
+	users = [] #create list
+	for player in players:
+		users.append({'email':player.user.email, 'first_name':player.user.first_name, 'last_name':player.user.last_name, 'primary_position':player.primary_position})
+
+	json_users = json.dumps(users)
+	return HttpResponse(json_users)
 
 @user_passes_test(lambda u: not u.isPlayer())
 def players_on_team_but_not_in_group_json(request, group_id, team_id):
@@ -668,19 +647,34 @@ def players_on_team_but_not_in_group_json(request, group_id, team_id):
 	for player in list(players_in_group):
 		players_not_in_group.remove(player)
 
-	return HttpResponse(serializers.serialize("json", players_not_in_group, fields = ['first_name', 'last_name', 'position', 'year']))
+	users = [] #create list
+	for player in players_not_in_group:
+		users.append({'email':player.user.email, 'first_name':player.user.first_name, 'last_name':player.user.last_name, 'primary_position':player.primary_position})
+
+	json_users = json.dumps(users)
+	return HttpResponse(json_users)
 
 @user_passes_test(lambda u: not u.isPlayer())
 def all_groups_json(request):
 	groups = PlayerGroup.objects.all()
 	players = Player.objects.filter(playergroup__in=groups)
-	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
+	users = [] #create list
+	for player in players:
+		users.append({'email':player.user.email, 'first_name':player.user.first_name, 'last_name':player.user.last_name, 'primary_position':player.primary_position})
+
+	json_users = json.dumps(users)
+	return HttpResponse(json_users)
 
 @user_passes_test(lambda u: not u.isPlayer())
 def group_json(request, group_id):
 	group = PlayerGroup.objects.filter(id=group_id)[0]
 	players = group.players.all()
-	return HttpResponse(serializers.serialize("json", players, fields = ['first_name', 'last_name', 'position', 'year']))
+	users = [] #create list
+	for player in players:
+		users.append({'email':player.user.email, 'first_name':player.user.first_name, 'last_name':player.user.last_name, 'primary_position':player.primary_position})
+
+	json_users = json.dumps(users)
+	return HttpResponse(json_users)
 
 def concepts_json(request):
 	concepts = Concept.objects.all()

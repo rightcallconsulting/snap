@@ -1,9 +1,9 @@
 var User = function(config){
 	this.id = config.id || -1;
-	this.firstName = config.firstName || null;
-	this.lastName = config.lastName || null;
-	this.position = config.position || null;
-	this.year = config.year|| null;
+	this.email = config.email || null;
+	this.first_name = config.first_name || null;
+	this.last_name = config.last_name || null;
+	this.primary_position = config.primary_position || null;
 
 	this.name = config.name || null;
 	this.score = 0;
@@ -30,10 +30,10 @@ var User = function(config){
 var createUserFromJson = function(jsonUser) {
 	var user = new User({
 		id: jsonUser.id,
-		firstName: jsonUser.first_name,
-		lastName: jsonUser.last_name,
-		position: jsonUser.position,
-		year: jsonUser.year,
+		email: jsonUser.email,
+		first_name: jsonUser.first_name,
+		last_name: jsonUser.last_name,
+		primary_position: jsonUser.primary_position,
 		ignoreInit: true,
 	});
 
@@ -43,10 +43,10 @@ var createUserFromJson = function(jsonUser) {
 var createUserFromJSON = function(jsonUser){
 	var user = new User({
 		id: jsonUser.pk,
-		firstName: jsonUser.fields.first_name,
-		lastName: jsonUser.fields.last_name,
-		position: jsonUser.fields.position,
-		year: jsonUser.fields.year,
+		email: jsonUser.email,
+		first_name: jsonUser.first_name,
+		last_name: jsonUser.last_name,
+		primary_position: jsonUser.primary_position,
 		ignoreInit: true,
 	});
 
@@ -56,10 +56,10 @@ var createUserFromJSON = function(jsonUser){
 var createUserFromJSONSeed = function(jsonUser){
 	var user = new User({
 		id: jsonUser.pk,
-		firstName: jsonUser.first_name,
-		lastName: jsonUser.last_name,
-		position: jsonUser.position,
-		year: jsonUser.fields.year,
+		email: jsonUser.email,
+		first_name: jsonUser.first_name,
+		last_name: jsonUser.last_name,
+		primary_position: jsonUser.primary_position,
 		ignoreInit: true,
 	});
 
@@ -69,7 +69,7 @@ var createUserFromJSONSeed = function(jsonUser){
 // Not sure if we need the stuff under this line
 
 User.prototype.getFullName = function(){
-  return this.firstName + " " + this.lastName;
+  return this.first_name + " " + this.last_name;
 }
 
 User.prototype.createPlayerButton = function(){
@@ -203,14 +203,14 @@ User.prototype.drawAssignNewQuiz = function() {
 };
 
 User.prototype.drawQuizOptions = function() {
-  if(this.position === "QB"){
+  if(this.primary_position === "QB"){
 
   }
 
 };
 
 User.prototype.drawQuizResults = function() {
-  if(this.position === "QB"){
+  if(this.primary_position === "QB"){
 
   }
 };

@@ -48,7 +48,6 @@
 								</th>
 								<th>PLAYER</th>
 								<th>POSITION</th>
-								<th>YEAR</th>
 							</tr>
 							{% for player in players %}
 								<tr>
@@ -60,9 +59,18 @@
 											</label>
 										</div>
 									</td>
-									<td>{{ player.first_name }} {{ player.last_name }}</td>
-									<td>{{ player.position }}</td>
-									<td>{{ player.year }}</td>
+									<td>
+										{% if player.user.first_name %}
+											{{ player.user.first_name }} {{ player.user.last_name }}
+										{% else %}
+											{{ player.user.email }}
+										{% endif %}
+									</td>
+									<td>
+										{% if player.primary_position %}
+											{{ player.primary_position }}
+										{% endif %}
+									</td>
 								</tr>
 							{% endfor %}
 						</tbody>

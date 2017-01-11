@@ -54,8 +54,7 @@
 							<tr class="header">
 								<th>REMOVE</th>
 								<th>PLAYER</th>
-								<th>POSITION</th>
-								<th>YEAR</th>
+								<th>PRIMARY POSITION</th>
 							</tr>
 							{% if players_in_group %}
 								{% for player in players_in_group %}
@@ -63,9 +62,18 @@
 										<td class="icon-cell">
 											<i class="fa fa-minus-circle fa-2x red" onclick="changeColumnAndAddToForm(this, 'REMOVE')"></i>
 										</td>
-										<td>{{ player.first_name }} {{ player.last_name }}</td>
-										<td>{{ player.position }}</td>
-										<td>{{ player.year }}</td>
+										<td>
+											{% if player.user.first_name %}
+												{{ player.user.first_name }} {{ player.user.last_name }}
+											{% else %}
+												{{ player.user.email }}
+											{% endif %}
+										</td>
+										<td>
+											{% if player.primary_position %}
+												{{ player.primary_position }}
+											{% endif %}
+										</td>
 									</tr>
 								{% endfor %}
 							{% endif %}
@@ -85,8 +93,7 @@
 							<tr class="header">
 								<th>ADD</th>
 								<th>PLAYER</th>
-								<th>POSITION</th>
-								<th>YEAR</th>
+								<th>PRIMARY POSITION</th>
 							</tr>
 							{% if players_not_in_group %}
 								{% for player in players_not_in_group %}
@@ -94,9 +101,18 @@
 										<td class="icon-cell">
 											<i class="fa fa-plus-circle fa-2x green" onclick="changeColumnAndAddToForm(this, 'ADD')"></i>
 										</td>
-										<td>{{ player.first_name }} {{ player.last_name }}</td>
-										<td>{{ player.position }}</td>
-										<td>{{ player.year }}</td>
+										<td>
+											{% if player.user.first_name %}
+												{{ player.user.first_name }} {{ player.user.last_name }}
+											{% else %}
+												{{ player.user.email }}
+											{% endif %}
+										</td>
+										<td>
+											{% if player.primary_position %}
+												{{ player.primary_position }}
+											{% endif %}
+										</td>
 									</tr>
 								{% endfor %}
 							{% endif %}
@@ -248,19 +264,21 @@
 			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
 
 			var new_name_cell = document.createElement("td");
-			new_name_cell.textContent = user.firstName + " " + user.lastName;
+			if (user.first_name !== null) {
+				new_name_cell.textContent = user.first_name + " " + user.last_name;
+			} else {
+				new_name_cell.textContent = user.email
+			}
 
 			var new_position_cell = document.createElement("td");
-			new_position_cell.textContent = user.position;
-
-			var new_year_cell = document.createElement("td");
-			new_year_cell.textContent = user.year;
+			if (user.primary_position !== null) {
+				new_position_cell.textContent = user.primary_position;
+			}
 
 			new_icon_cell.appendChild(new_icon);
 			new_row.appendChild(new_icon_cell);
 			new_row.appendChild(new_name_cell);
 			new_row.appendChild(new_position_cell);
-			new_row.appendChild(new_year_cell);
 
 			table_body.appendChild(new_row);
 
@@ -280,19 +298,21 @@
 			new_icon.addEventListener("click", changeColumnAndAddToFormNoArgs);
 
 			var new_name_cell = document.createElement("td");
-			new_name_cell.textContent = user.firstName + " " + user.lastName;
+			if (user.first_name !== null) {
+				new_name_cell.textContent = user.first_name + " " + user.last_name;
+			} else {
+				new_name_cell.textContent = user.email
+			}
 
 			var new_position_cell = document.createElement("td");
-			new_position_cell.textContent = user.position;
-
-			var new_year_cell = document.createElement("td");
-			new_year_cell.textContent = user.year;
+			if (user.primary_position !== null) {
+				new_position_cell.textContent = user.primary_position;
+			}
 
 			new_icon_cell.appendChild(new_icon);
 			new_row.appendChild(new_icon_cell);
 			new_row.appendChild(new_name_cell);
 			new_row.appendChild(new_position_cell);
-			new_row.appendChild(new_year_cell);
 
 			table_body.appendChild(new_row);
 		};
