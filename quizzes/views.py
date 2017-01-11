@@ -247,6 +247,13 @@ def take_quiz(request, quiz_id, position=''):
 		quiz_formations = quiz.formations.all()
 		quiz_plays = quiz.plays.all()
 		quiz_concepts = quiz.concepts.all()
+		content_names = []
+		for formation in quiz_formations:
+			content_names.append(formation.name)
+		for play in quiz_plays:
+			content_names.append(play.name)
+		for concept in quiz_concepts:
+			content_names.append(concept.name)
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True, players__in=[player])
 
 		if len(position) > 0:
@@ -267,13 +274,14 @@ def take_quiz(request, quiz_id, position=''):
 
 		quiz_plays = filtered_plays
 
-		return render(request, 'quizzes/take_quiz.html', {
+		return render(request, 'quizzes/identification_quiz.html', {
 			'quiz': quiz,
-			'quizFormations': quiz_formations,
-			'quizPlays': quiz_plays,
-			'quizConcepts': quiz_concepts,
-			'positionGroups': position_groups,
+			'player': player,
 			'team': team,
+			'concepts': quiz_concepts,
+			'formations': quiz_formations,
+			'plays': quiz_plays,
+			'answer_choices': content_names,
 			'page_header': quiz.name.upper()
 		})
 

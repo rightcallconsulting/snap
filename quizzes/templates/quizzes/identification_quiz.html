@@ -136,13 +136,13 @@
 
 			choices = shuffle_choices(choices);
 
-			quiz.attempt = quiz.getSelected()[0];
+			/*quiz.attempt = quiz.getSelected()[0];
 			if (quiz.attempt != null) {
 				quiz.attempt.motionCords = [];
 				quiz.attempt.blockingAssignmentArray = [];
 				quiz.attempt.clearRoute();
 				quiz.attempt.defensiveMovement = [];
-			}
+			}*/
 
 			updateMainviewAndSideview();
 
@@ -237,18 +237,6 @@
 			window.location.replace("/quizzes/custom");
 		});
 
-		/*$("#check-answer-button").click(function(event) {
-			if(!quiz.over){
-				var path = window.location.pathname;
-				var csrf_token = "{{ csrf_token }}";
-
-				quiz.checkCurrentQuestion(path, csrf_token);
-
-				choices = shuffle_choices(choices);
-				updateMainviewAndSideview();
-			}
-		});*/
-
 		$("#skip-question-button").click(function(event) {
 
 			if(!quiz.over){
@@ -315,32 +303,6 @@
 				choices = shuffle_choices(choices);
 				updateMainviewAndSideview();
 			}
-			/*
-			// The newly selected button is the one that is clicked on. The old
-			// selected button may not exist.
-			var new_selected = selected;
-			var old_selected = document.getElementById("selected");
-
-			// If there was a previously selected button remove it's selected
-			// id attribute and change it from btn-success to btn-primary.
-			if (old_selected != null) {
-				old_selected.removeAttribute("id");
-				old_selected.removeAttribute("class");
-				old_selected.setAttribute("class", "btn btn-primary choice-button");
-			}
-
-			// If the old selected button is the same as the newly selected
-			// button we are done. If it isn't we need to update the newly
-			// selected button.
-			if (old_selected != new_selected) {
-				// Change the color of the newly selected button and set it's
-				// id to
-				new_selected.removeAttribute("class");
-				new_selected.setAttribute("id", "selected");
-				new_selected.setAttribute("class", "btn btn-success choice-button");
-
-				quiz.attempt = new_selected.textContent;
-			}*/
 		};
 
 		function updateMainviewAndSideview() {

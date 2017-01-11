@@ -482,6 +482,17 @@ def roster(request):
 			user.delete()
 			return HttpResponseRedirect(reverse('roster'))
 
+		if action == 'update_primary_position':
+			user_id = int(request.POST['user'])
+			player = CustomUser.objects.filter(pk=user_id)[0].player
+			position_group_id = int(request.POST['group'])
+			position_group = PlayerGroup.objects.filter(pk=position_group_id)[0]
+			player.primary_position = position_group
+			player.save()
+			position_group.players.add(player)
+			position_group.save()
+			return HttpResponseRedirect(reverse('roster'))
+
 		email = request.POST['email']
 		player = Player.objects.filter(team=team, user__email=email)
 		coach = Coach.objects.filter(team=team, user__email=email)
@@ -537,11 +548,17 @@ def roster(request):
 		active_players = list(Player.objects.filter(team=team, user__is_active=True))
 		active_users = active_players + active_coaches
 		position_groups = PlayerGroup.objects.filter(team=team, position_group=True)
+		group_to_show = 'players'
+		if request.GET.get('group-to-show'):
+			group_to_show = request.GET.get('group-to-show')
+			if not group_to_show in ['coaches', 'players']:
+				group_to_show = 'players'
 		return render(request, 'dashboard/roster.html', {
 				'team': team,
 				'active_coaches': active_coaches,
 				'active_players': active_players,
 				'active_users': active_users,
+				'group_to_show': group_to_show,
 				'position_groups': position_groups,
 				'page_header': 'ROSTER'
 			})
