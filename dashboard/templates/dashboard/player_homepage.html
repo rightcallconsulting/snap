@@ -7,12 +7,11 @@
 			<table>
 				<thead>
 					<tr>
-						<th colspan="3"><div class="header">ASSIGNED QUIZZES</div></th>
+						<th colspan="2"><div class="header">ASSIGNED QUIZZES</div></th>
 					</tr>
 					{% if quizzes|length != 0 %}
 					<tr>
 						<th>QUIZ</th>
-						<th>POSITION</th>
 						<th>TAKE</th>
 					</tr>
 					{% endif %}
@@ -21,22 +20,12 @@
 					{% for quiz in quizzes %}
 						<tr>
 							<td>{{ quiz.0 }}</td>
-							<td><select name="position" class="unit-form form-sm" id="position-select-{{quiz.2}}">
-								<optgroup>
-									{% if primary_position != None %}
-									<option value="{{primary_position.abbreviation}}">{{primary_position.abbreviation}}</option>
-									{% endif%}
-									{% for position_group in other_positions %}
-										<option value="{{position_group.abbreviation}}">{{position_group.abbreviation}}</option>
-									{% endfor %}
-								</optgroup>
-							</select></td>
 							{% if quiz.1 %}
 							<!--<td><i class="fa fa-check fa-lg"></i></td>-->
-							<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Retake {{ quiz.0 }}</button></td>
+							<td><button class="launchQuizButton" onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Retake {{ quiz.0 }} Quiz</button></td>
 							{% else %}
 							<!--<td><i class="fa fa-close fa-lg"></i></td>-->
-							<td><button onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Take {{ quiz.0 }}</button></td>
+							<td><button class="launchQuizButton" onclick="takeQuiz(this)" data-quizid="{{ quiz.2 }}">Take {{ quiz.0 }} Quiz</button></td>
 							{% endif %}
 						</tr>
 					{% endfor %}
