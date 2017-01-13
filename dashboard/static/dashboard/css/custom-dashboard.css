@@ -398,7 +398,11 @@ button.sideview-button {
 }
 
 button.choice-button {
-	margin: 5px 2px 0 2px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 50px;
+	width: 90%;
+	font-size: 16px;
 }
 
 div#offense-defense-toggle {
@@ -930,7 +934,7 @@ div.team a.button:hover {
 }
 
 div.team div.mainview {
-	margin: 0 0 20px 0; 
+	margin: 0 0 20px 0;
 }
 
 div.team input {
