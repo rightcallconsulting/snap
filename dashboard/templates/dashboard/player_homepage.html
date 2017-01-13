@@ -77,7 +77,7 @@
 			var quizID = buttonClicked.dataset["quizid"];
 			var selectID = "position-select-" + quizID;
 			var positionSelect = document.getElementById(selectID)
-			var path = "/quizzes/take/" + quizID + "/" + positionSelect.value;
+			var path = "/quizzes/take/" + quizID;// + "/" + positionSelect.value;
 			window.location.href = path;
 		}
 	</script>

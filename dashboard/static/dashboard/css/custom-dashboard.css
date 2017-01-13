@@ -573,7 +573,7 @@ quizzes tables
 
 .quizzes table tr:nth-child(odd),
 .team table tr:nth-child(odd) {
-	background: #ddd;
+	background: #eee;
 }
 
 .quizzes table tr:nth-child(even),
