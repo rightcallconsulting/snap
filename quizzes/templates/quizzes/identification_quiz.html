@@ -92,7 +92,7 @@
 			field.height = height;
 			field.width = width;
 			field.viewPoint = "offense"
-			field.heightInYards = 35;
+			field.heightInYards = 25;
 			field.ballYardLine = 65;
 			background(58, 135, 70);
 
@@ -333,6 +333,7 @@
 			}
 
 			$("#choices-buttons").empty();
+			var num_choices = 3;
 			var choice_names = [];
 			var choices_buttons = document.getElementById("choices-buttons");
 			for (var i = 0; i < choices.length; ++i) {
@@ -346,6 +347,10 @@
 						if (choice_names[j] === choices[i]) {
 							create_button = 0;
 						}
+					}
+
+					if(choices_buttons.children.length >= num_choices - 1){
+						create_button = 0;
 					}
 
 					if (create_button === 1) {

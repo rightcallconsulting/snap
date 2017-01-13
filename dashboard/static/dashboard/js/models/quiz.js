@@ -23,6 +23,8 @@ var Quiz = function(config) {
 	this.currentQuestionIndex = config.currentQuestionIndex || null;
 	this.over = false;
 
+	this.originalQuestionList = config.originalQuestionList || []; //used for retake all
+
 	this.results = config.results || []; //array of Int results - 0 is wrong, 1 is right, 2 is skipped
 	this.restartButtons = config.restartButtons || [];
 };
@@ -263,6 +265,8 @@ Quiz.prototype.restartQuiz = function(missedQuestionsOnly){
 		if(newQuestions.length > 0){
 			this.questions = newQuestions;
 		}
+	}else{
+		this.questions = this.originalQuestionList.slice();
 	}
 
 	this.over = false;
@@ -394,6 +398,7 @@ Quiz.prototype.buildIdentificationQuestions = function() {
 
 	this.shuffle();
 	this.currentQuestionIndex = 0;
+	this.originalQuestionList = this.questions.slice();
 };
 
 Quiz.prototype.buildProgressionQuestions = function(){
@@ -690,7 +695,8 @@ Quiz.prototype.isEmpty = function() {
 Quiz.prototype.deepCopy = function() {
 	var result = new Quiz({
 		name: this.name,
-		unit: this.unit
+		unit: this.unit,
+		originalQuestionList: this.originalQuestionList,
 	});
 
 	for (i in this.formations) {
