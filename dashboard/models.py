@@ -7,9 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.admin import widgets
 from django.forms.models import model_to_dict
 from datetimewidget.widgets import DateTimeWidget
-from datetime import datetime
-from IPython import embed
-
+from datetime import datetime, timedelta
+import random
 
 class Admin(models.Model):
 	user = models.OneToOneField('getsnap.CustomUser', on_delete=models.CASCADE)
@@ -91,3 +90,61 @@ class PlayerGroup(models.Model):
 class DeletePlayerFromGroupForm(forms.Form):
 	groupID = forms.CharField(max_length=10)
 	playerID = forms.CharField(max_length=10)
+
+class APIToken(models.Model):
+	token = models.CharField(max_length=40, blank=False, null=False)
+	expiration = models.DateTimeField()
+	user = models.ForeignKey('getsnap.CustomUser', on_delete=models.CASCADE, blank=False, null=False)
+
+	def is_valid(self):
+		if datetime.today() < self.expiration.replace(tzinfo=None):
+			return True
+		return False
+	@classmethod
+	def getTokenFor(cls, user):
+		api_token = APIToken(user=user)
+		api_token.expiration = datetime.today() + timedelta(days=7)
+
+		random.seed()
+		existing_tokens = list(APIToken.objects.all())
+		existing_token_strings = []
+		for t in existing_tokens:
+			if t.user == user and t.is_valid():
+				return t.token
+			existing_token_strings.append(str(t.token))
+		new_token = APIToken.generateTokenString()
+		while(new_token in existing_token_strings):
+			new_token = APIToken.generateTokenString()
+		api_token.token = new_token
+		api_token.save()
+		return new_token #success
+
+	@classmethod
+	def generateTokenString(cls):
+		token_length = 20
+		token = ""
+		valid_symbols = []
+		for i in range(10):
+			valid_symbols.append(chr(ord('0')+i))
+		for i in range(26):
+			valid_symbols.append(chr(ord('a')+i))
+			valid_symbols.append(chr(ord('A')+i))
+		for i in range(token_length):
+			token += valid_symbols[random.randint(0, len(valid_symbols)-1)]
+		return token
+
+	@classmethod
+	def verifyAPIToken(cls, token):
+		existing_tokens = list(APIToken.objects.all())
+		token_found = None
+		for t in existing_tokens:
+			if t.token == token:
+				token_found = t
+				break
+		if token_found:
+			if datetime.today() < token_found.expiration.replace(tzinfo=None):
+				return token_found.user
+			else:
+				return None#"Token Expired"
+		else:
+			return None#"Invalid Token"

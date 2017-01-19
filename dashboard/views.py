@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext, loader
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 import json
@@ -15,7 +16,7 @@ from django.utils import timezone
 from django.core import serializers
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import Admin, Coach, Player, PlayerGroup
+from .models import Admin, Coach, Player, PlayerGroup, APIToken
 from getsnap.models import Team, CustomUser, ActivationToken
 from playbook.models import Concept, Formation, Play
 from quizzes.models import CustomQuiz, Quiz
@@ -702,3 +703,31 @@ def concept_json(request, concept_id):
 	concepts = Concept.objects.filter(id=concept_id)
 	#concept = concepts[0]
 	return HttpResponse(serializers.serialize("json", concepts))
+
+### API #################################################
+def get_assigned_quizzes(request):
+	if request.method == 'GET':
+		token_str = request.GET.get('token')
+		if token_str:
+			token = APIToken.objects.find(token=token_str)
+			if token:
+				if token.is_valid():
+					#Change to quizzes
+					concepts = Concept.objects.filter(id=concept_id)
+					return HttpResponse(serializers.serialize("json", concepts))
+				else:
+					token.delete()
+		return HttpResponse('Bad Token')
+
+
+def remote_login(request):
+	if request.method == 'POST':
+		email = request.POST.get('email')
+		password = request.POST.get('password')
+		user = authenticate(email=email, password=password)
+		if user is not None:
+			token = APIToken.getTokenFor(user)
+			embed()
+			return HttpResponse(token)
+
+	return HttpResponse('Invalid Email Or Password')

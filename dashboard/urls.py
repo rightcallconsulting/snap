@@ -29,4 +29,7 @@ urlpatterns = [
 	url(r'^groups/(?P<group_id>[0-9]+)/(?P<team_id>[0-9]+)/json$', views.players_on_team_but_not_in_group_json, name='players_on_team_but_not_in_group_json'),
 	url(r'^concepts/(?P<concept_id>[0-9]+)/json$', views.concept_json, name='group_json'),
 	url(r'^concepts/json$', views.concepts_json, name='group_json'),
+
+	# Token API requests
+	url(r'^api/authenticate$', views.remote_login, name='remote login'),
 ]
