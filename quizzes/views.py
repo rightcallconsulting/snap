@@ -11,6 +11,8 @@ from analytics.models import QuestionAttempted
 
 from IPython import embed
 
+from random import shuffle
+
 import json
 
 @user_passes_test(lambda u: not u.isPlayer())
