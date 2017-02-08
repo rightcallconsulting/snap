@@ -27,7 +27,7 @@ SECRET_KEY = 'fgz^7hqp3hohi64gm)v$rvg54@po=pznce*$j$db9h1drp4m9i'
 # Allow all host headers
 ALLOWED_HOSTS = []
 
-# This specifies that we are using our own User model instead of Django's 
+# This specifies that we are using our own User model instead of Django's
 # built-in type
 AUTH_USER_MODEL = 'getsnap.CustomUser'
 AUTHENTICATION_BACKENDS = ('snap.auth_backend.CustomBackend',
@@ -41,6 +41,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+    'rest_framework',
 	'dashboard',
 	'getsnap',
 	'playbook',
@@ -133,7 +134,7 @@ PASSWORD_MAX_LENGTH         = 120   # Defaults to none
 PASSWORD_DICTIONARY         = ""    # Defaults to None, Should have a directory path to a dictionary
 PASSWORD_MATCH_THRESHOLD    = 1.0   # Defaults to 0.9, should be 0.0 - 1.0 where 1.0 means exactly the same.
 PASSWORD_COMMON_SEQUENCES   = []    # Should be a list of strings, see passwords/validators.py for default
-PASSWORD_COMPLEXITY = { 
+PASSWORD_COMPLEXITY = {
     "UPPER": 	0,  	# Uppercase
     "LOWER": 	0, 		# Lowercase
     "LETTERS": 	0, 		# Either uppercase or lowercase letters

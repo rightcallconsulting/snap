@@ -15,8 +15,27 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from getsnap.models import CustomUser
+from rest_framework import routers, serializers, viewsets
+
+# Serializers define the API representation.
+class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email')
+
+# ViewSets define the view behavior.
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.SimpleRouter()
+router.register(r'api/users', CustomUserViewSet)
 
 urlpatterns = [
+    url(r'', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^admin/', admin.site.urls),
 	url(r'', include('dashboard.urls')),
 	url(r'', include('getsnap.urls')),
