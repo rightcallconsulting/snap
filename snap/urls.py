@@ -16,22 +16,62 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from getsnap.models import CustomUser
+from playbook.models import Concept, Formation, Play
+from quizzes.models import Quiz
 from rest_framework import routers, serializers, viewsets
 
-# Serializers define the API representation.
 class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
 
-# ViewSets define the view behavior.
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
+class ConceptSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Concept
+        fields = ('name', 'unit', 'scout', 'conceptJson')
+
+class ConceptViewSet(viewsets.ModelViewSet):
+    queryset = Concept.objects.all()
+    serializer_class = ConceptSerializer
+
+class FormationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Formation
+        fields = ('name', 'unit', 'scout', 'formationJson')
+
+class FormationViewSet(viewsets.ModelViewSet):
+    queryset = Formation.objects.all()
+    serializer_class = FormationSerializer
+
+class PlaySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Play
+        fields = ('name', 'unit', 'scout', 'playJson')
+
+class PlayViewSet(viewsets.ModelViewSet):
+    queryset = Play.objects.all()
+    serializer_class = PlaySerializer
+
+class QuizSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = ('name', 'formations', 'plays', 'concepts')
+
+class QuizViewSet(viewsets.ModelViewSet):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.SimpleRouter()
 router.register(r'api/users', CustomUserViewSet)
+router.register(r'api/concepts', ConceptViewSet)
+router.register(r'api/formations', FormationViewSet)
+router.register(r'api/plays', PlayViewSet)
+router.register(r'api/quizzes', QuizViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
