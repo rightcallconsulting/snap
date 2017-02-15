@@ -306,6 +306,13 @@
 		};
 
 		function updateMainviewAndSideview() {
+			var mainview_header = document.getElementById("header-box");
+			var prompt = quiz.getCurrentQuestion().question.prompt;
+			if(prompt && prompt.length > 0){
+				mainview_header.textContent = prompt;
+			}
+
+
 			// Remove and update sideview buttons.
 			$("#questions-buttons").empty();
 			var questions_buttons = document.getElementById("questions-buttons");

@@ -24,6 +24,7 @@ var Concept = function(config) {
 	this.feedbackMessage = config.feedbackMessage || []; //FLAGGED FOR DELETION
 	this.movementIndex = config.movementIndex || 0;
 	this.notes = config.notes || [];
+	this.prompt = config.prompt || "";
 };
 
 //***************************************************************************//
@@ -412,7 +413,8 @@ Concept.prototype.deepCopy = function() {
 		team: this.team,
 		unit: this.unit,
 		feedbackMessage: this.feedbackMessage,
-		notes: this.notes
+		notes: this.notes,
+		prompt: this.prompt,
 	});
 
 	for (var i = 0; i < this.quarterback.length; ++i) {
@@ -604,7 +606,8 @@ function createConceptFromJson(conceptJsonDictionary) {
 		quarterback: quarterback,
 		offensiveLinemen: offensiveLinemenArray,
 		eligibleReceivers: eligibleReceiversArray,
-		notes: conceptJsonDictionary.notes
+		notes: conceptJsonDictionary.notes,
+		prompt: conceptJsonDictionary.prompt,
 	});
 	result.updateBlocksForDefense();
 	result.updateCoverageForOffense();

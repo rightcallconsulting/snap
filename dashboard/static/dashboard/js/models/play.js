@@ -303,8 +303,6 @@ Play.prototype.delete = function(path, csrf_token) {
 	var scoutName = this.scoutName;
 	var formationName = this.formation;
 
-	debugger;
-
 	var jqxhr = $.post(
 			path,
 			{csrfmiddlewaretoken: csrf_token, save: false, delete: true, unit: this.unit, name: playName, scout_name: scoutName, formation: formationName}
