@@ -582,6 +582,7 @@ def formation_quizzes(request, unit="offense"):
 			'player': player,
 			'team': team,
 			'formations': formations,
+			'player_position': position,
 			'position_groups': position_groups,
 			'page_header': 'FORMATION QUIZ'
 		})

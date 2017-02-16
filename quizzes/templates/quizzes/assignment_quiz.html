@@ -102,6 +102,7 @@
 
 			var position_groups = [];
 			var player_position = "{{player_position}}";
+			
 			{% for group in position_groups %}
 			var position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
 			if (position[0] == player_position) {

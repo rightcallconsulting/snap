@@ -303,7 +303,6 @@ Quiz.prototype.clearQuestionStartTimes = function(){
 // array once it is populated.
 Quiz.prototype.buildQuestions = function(player_positions) {
 	var question;
-
 	for (i in this.formations) {
 		question = new Question({ question: this.formations[i].deepCopy() });
 		var result = question.buildQuestionAndAnswer(player_positions);
