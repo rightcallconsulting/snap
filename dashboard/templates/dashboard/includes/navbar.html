@@ -9,7 +9,7 @@
 						{{page_header}}
 					</h4>
 				</td><!--/left-->
-				
+
 				<td class="middle">
 					<a href="/">
 						{% if team.banner_image %}
@@ -37,7 +37,7 @@
 										{% else %}
 											<img class="dropdown-picture" src="{% static 'dashboard/images/empty_avatar.jpg' %}" alt="No Avatar">
 										{% endif %}
-										
+
 										<div class="detail">
 											<strong>{{ request.user.get_full_name }}</strong>
 											<p class="grey">{{ request.user.email }}</p>
@@ -45,8 +45,8 @@
 									</a>
 								</li>
 								<li>
-									<a tabindex="-1" href="edit_profile" class="main-link">
-										<i class="fa fa-edit fa-lg"></i> Edit profile
+									<a tabindex="-1" href="change_password" class="main-link">
+										<i class="fa fa-edit fa-lg"></i> Change Password
 									</a>
 								</li>
 								<li class="divider">
