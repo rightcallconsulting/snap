@@ -19,6 +19,7 @@ from getsnap.models import CustomUser
 from playbook.models import Concept, Formation, Play
 from quizzes.models import Quiz
 from rest_framework import routers, serializers, viewsets
+from rest_framework.authtoken import views
 
 class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -78,6 +79,7 @@ router.register(r'api/quizzes', QuizViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
+    url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^admin/', admin.site.urls),
 	url(r'', include('dashboard.urls')),

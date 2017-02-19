@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
 	'dashboard',
 	'getsnap',
 	'playbook',
@@ -67,6 +68,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
 
 ROOT_URLCONF = 'snap.urls'
 
