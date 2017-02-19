@@ -56,7 +56,10 @@ class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.all()
     serializer_class = PlaySerializer
 
-class QuizSerializer(serializers.HyperlinkedModelSerializer):
+class QuizSerializer(serializers.ModelSerializer):
+    formations = FormationSerializer(many=True, read_only=True)
+    plays = PlaySerializer(many=True, read_only=True)
+    concepts = ConceptSerializer(many=True, read_only=True)
     class Meta:
         model = Quiz
         fields = ('name', 'formations', 'plays', 'concepts')
