@@ -61,23 +61,47 @@ def ConceptsView(request, format=None):
     serializer = ConceptSerializer(concepts, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@authentication_classes((SessionAuthentication, TokenAuthentication))
+@permission_classes((IsAuthenticated,))
+def FormationsView(request, format=None):
+    formations = Formation.objects.filter(team=request.user.player.team)
+    serializer = FormationSerializer(formations, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes((SessionAuthentication, TokenAuthentication))
+@permission_classes((IsAuthenticated,))
+def PlaysView(request, format=None):
+    plays = Play.objects.filter(team=request.user.player.team)
+    serializer = PlaySerializer(plays, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes((SessionAuthentication, TokenAuthentication))
+@permission_classes((IsAuthenticated,))
+def QuizzesView(request, format=None):
+    quizzes = Quiz.objects.filter(players__in=[request.user.player])
+    serializer = QuizSerializer(quizzes, many=True)
+    return Response(serializer.data)
+
 class FormationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Formation
         fields = ('name', 'unit', 'scout', 'formationJson')
 
-class FormationViewSet(viewsets.ModelViewSet):
-    queryset = Formation.objects.all()
-    serializer_class = FormationSerializer
+# class FormationViewSet(viewsets.ModelViewSet):
+#     queryset = Formation.objects.all()
+#     serializer_class = FormationSerializer
 
 class PlaySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Play
         fields = ('name', 'unit', 'scout', 'playJson')
 
-class PlayViewSet(viewsets.ModelViewSet):
-    queryset = Play.objects.all()
-    serializer_class = PlaySerializer
+# class PlayViewSet(viewsets.ModelViewSet):
+#     queryset = Play.objects.all()
+#     serializer_class = PlaySerializer
 
 class QuizSerializer(serializers.ModelSerializer):
     formations = FormationSerializer(many=True, read_only=True)
@@ -87,21 +111,24 @@ class QuizSerializer(serializers.ModelSerializer):
         model = Quiz
         fields = ('name', 'formations', 'plays', 'concepts')
 
-class QuizViewSet(viewsets.ModelViewSet):
-    queryset = Quiz.objects.all()
-    serializer_class = QuizSerializer
+# class QuizViewSet(viewsets.ModelViewSet):
+#     queryset = Quiz.objects.all()
+#     serializer_class = QuizSerializer
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.SimpleRouter()
 router.register(r'api/users', CustomUserViewSet)
 #router.register(r'api/concepts/', ConceptsView)
-router.register(r'api/formations', FormationViewSet)
-router.register(r'api/plays', PlayViewSet)
-router.register(r'api/quizzes', QuizViewSet)
+# router.register(r'api/formations', FormationViewSet)
+# router.register(r'api/plays', PlayViewSet)
+# router.register(r'api/quizzes', QuizViewSet)
 
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'api/concepts', ConceptsView),
+    url(r'api/formations', FormationsView),
+    url(r'api/plays', PlaysView),
+    url(r'api/quizzes', QuizzesView),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^admin/', admin.site.urls),
