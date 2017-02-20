@@ -578,7 +578,7 @@ def formation_quizzes(request, unit="offense"):
 
 		custom_quiz.position = position
 		custom_quiz.save()
-		return render(request, 'quizzes/assignment_quiz.html', {
+		return render(request, 'quizzes/alignment_quiz.html', {
 			'player': player,
 			'team': team,
 			'formations': formations,

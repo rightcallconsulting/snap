@@ -6,13 +6,12 @@
 		<div id="question-prompt"></div>
 
 		<div id="help-box" hidden="true">
-		{% block help %}
-		{% endblock %}
+			<strong>Help: </strong> Choose the correct call from the options in the choices box. Click the green check mark to check your answer. The green arrow allows you to skip the question. The pencil allows you to submit the quiz at any time.
 		</div>
 
 		<div id="display-box" class="col-md-8 bordered-div">
 			<div id="header-box" class="static-header display-header">
-				{{ quiz.name }}
+				{{page_header}}
 			</div>
 
 			<div id="quiz-box">
@@ -49,9 +48,16 @@
 			</div>
 		</div>
 
-		<div id="sideview" class="col-md-3">
-			<div id="sideview-header">Questions</div>
-			<div id="sideview-buttons"></div>
+		<div id="sideview" class="col-md-3 no-border">
+			<div id="questions-sideview">
+				<div id="questions-header">Questions</div>
+				<div id="questions-buttons"></div>
+			</div>
+
+			<div id="choices-sideview">
+				<div id="choices-header">Choices</div>
+				<div id="choices-buttons"></div>
+			</div>
 		</div>
 
 	<div id="test-id" test-id="{{test.id}}" style="display: none;"></div>
@@ -64,7 +70,8 @@
 	<script type="text/javascript">
 		var quiz;
 		var buttons = [];
-
+		var choices = [];
+		var questionsPerPlay = 3;
 		var mouseBeingDragged = false;
 		var nodeBeingDragged = null;
 
@@ -86,29 +93,20 @@
 			var quiz_box_div = document.getElementById("quiz-box");
 			var myCanvas = createCanvas(width, height);
 
+			field.viewPoint = "offense";
 			field.height = height;
 			field.width = width;
 			field.heightInYards = 35;
 			field.ballYardLine = 65;
-			field.viewPoint = "offense";
 			background(58, 135, 70);
 
 			myCanvas.parent("quiz-box");
 
-			// Create quiz and load it's content from Json.
 			quiz = new Quiz({});
-			quiz.name = '{{ quiz.name }}';
-			quiz.unit = '{{ quiz.unit }}';
+			quiz.name = "Call Quiz";
+			quiz.unit = "{{ quiz.unit }}";
 
-			var position_groups = [];
-			var player_position = "{{player_position}}";
-
-			{% for group in position_groups %}
-			var position = ["{{ group.abbreviation|safe }}", "{{ group.position_type|safe }}"];
-			if (position[0] == player_position) {
-				position_groups.push(position)
-			}
-			{% endfor %}
+			var testedPlayerPosition = "{{ player_position }}"
 
 			var formationJsonFromDatabase = "";
 			{% for formation in formations %}
@@ -128,54 +126,19 @@
 			quiz.createConceptFromJson(JSON.parse(conceptJsonFromDatabase));
 			{% endfor %}
 
-			{% if type_of_assignment == 'progression' %}
-				quiz.buildProgressionQuestions();
-			{% elif type_of_assignment == 'route-tree' %}
-				quiz.buildRouteTreeQuestions();
-			{% else %}
-				quiz.buildQuestions(position_groups);
-			{% endif %}
+			{% for choice in answer_choices %}
+				choices.push("{{choice}}");
+			{% endfor %}
+
+			quiz.buildAlignmentQuestions(testedPlayerPosition);
+
+			debugger
 
 			if (quiz.isEmpty()) {
 				window.location.replace("/quizzes/custom");
 			}
 
-			quiz.setAttempt();
-
-			if(quiz.attempt != null && quiz.attempt.unit == "defense"){
-				field.flipView();
-			}
-
-			// Create buttons for selecting type of assignment
-			var button = new Button ({ label: "Dropback (A)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Motion (S)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Run (D)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Route (F)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Block (G)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Movement (A)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Rush/Blitz (S)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Man Coverage (D)" });
-			buttons.push(button);
-
-			button = new Button ({ label: "Zone Coverage (F)" });
-			buttons.push(button);
-
 			updateMainviewAndSideview();
-			setButtonClicked();
 
 			window.onresize = function() {
 				var display_box = document.getElementById("display-box");
@@ -196,63 +159,9 @@
 		};
 
 		function draw() {
-			for(i in buttons){
-				buttons[i].display = false;
-			}
-
-			if(quiz.over){
+			if (quiz.over) {
 				quiz.drawQuizSummary(field);
-				//draw restart buttons
 				return;
-			}
-
-			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
-				// Determine which buttons should be displayed based on which, if
-				// any buttons should be displayed.
-				var player = quiz.attempt;
-				if(quiz.getCurrentQuestion().type == "route-tree"){
-					buttons[3].display = true;
-				} else if (player != null) {
-					if(player.unit === "defense"){
-						buttons[5].display = true;
-						buttons[6].display = true;
-						buttons[7].display = true;
-						buttons[8].display = true;
-					}
-					else if (player.dropback.length > 0) {
-						buttons[0].display = true;
-					} else if (player.run.length > 0) {
-						buttons[2].display = true;
-					} else if (player.route.length > 0) {
-						buttons[3].display = true;
-					} else if (player.blockingAssignmentArray.length > 0) {
-						buttons[4].display = true;
-					} else if (player.pos === "QB") {
-						buttons[0].display = true;
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === true) {
-						buttons[1].display = true;
-						buttons[2].display = true;
-						buttons[3].display = true;
-						buttons[4].display = true;
-					} else if (player.eligible === false) {
-						buttons[4].display = true;
-					}
-				} else {
-					for (i in buttons) {
-						buttons[i].setUnclicked();
-						buttons[i].display = false;
-					}
-				}
-			} else {
-				buttons[0].display = false;
-				buttons[1].display = false;
-				buttons[2].display = false;
-				buttons[3].display = false;
-				buttons[4].display = false;
 			}
 
 			// Draw opening
@@ -263,107 +172,20 @@
 			field.drawBackground(quiz, height, width);
 
 			var question = quiz.getCurrentQuestion();
-
-			if (question !== null) {
-				if(question.feedbackStartTime > 0 && millis() - question.feedbackStartTime > 2000){
+			question.draw(field);
+			if(question.feedbackStartTime > 0){
+				var elapsed = millis() - question.feedbackStartTime;
+				if(elapsed > 1500){
 					question.feedbackStartTime = 0;
 					quiz.nextQuestion();
 					updateMainviewAndSideview();
-					setButtonClicked();
-					return;
+				}else{
+					question.answer.draw(field);
 				}
-
-				quiz.draw(field);
-				if(question.feedbackStartTime === 0){
-					for(var i = 0; i < question.question.offensivePlayers.length; i++){
-						var player = question.question.offensivePlayers[i];
-						if((question.type == "progression" && player.progressionRank > 0) || question.type == "route-tree"){
-							player.drawRoute(field);
-						}
-					}
-				}
-
-				fill(176,176,176);
-			}
-
-			var x = 10;
-			var y = 10;
-
-			for (i in buttons) {
-				if (buttons[i].display === true) {
-					buttons[i].x = x;
-					buttons[i].y = y;
-
-					buttons[i].draw(field);
-
-					x += buttons[i].width*1.25;
-				}
+			} else if(quiz.attempt !== null && quiz.attempt instanceof Player){
+				quiz.attempt.draw(field);
 			}
 		};
-
-		function performDelete(){
-			var question = quiz.getCurrentQuestion();
-			if(question == null){
-				return;
-			}
-			if(question.type === "progression"){
-				var offensive_players = question.question.offensivePlayers;
-				var rank_to_find = question.question.getNextProgressionRank()-1;
-				for(var i = 0; i < offensive_players.length; i++){
-					if(offensive_players[i].progressionRank === rank_to_find){
-						offensive_players[i].progressionRank = 0;
-						break;
-					}
-				}
-				return;
-			}
-			var playerSelected = quiz.getSelected()[0];
-			if(playerSelected == null){
-				return;
-			}
-			if (playerSelected.unit == "offense") {
-				if (buttons[0].clicked && playerSelected.dropback.length > 0) {
-					playerSelected.dropback.pop();
-				} else if (buttons[1].clicked && playerSelected.motionCoords.length > 0){
-					playerSelected.motionCoords.pop();
-				} else if(buttons[2].clicked && playerSelected.run.length > 0) {
-					playerSelected.run.pop();
-				} else if(buttons[3].clicked && playerSelected.route.length > 0) {
-					playerSelected.stepRouteBackwards();
-				} else if (buttons[4].clicked && playerSelected.blockingAssignmentArray.length > 0) {
-					playerSelected.blockingAssignmentArray.pop();
-				} else if (playerSelected.dropback.length > 0) {
-					playerSelected.dropback.pop();
-				} else if(playerSelected.run.length > 0) {
-					playerSelected.run.pop();
-				} else if(playerSelected.route.length > 0) {
-					playerSelected.stepRouteBackwards();
-				} else if (playerSelected.blockingAssignmentArray.length > 0) {
-					playerSelected.blockingAssignmentArray.pop();
-				} else if (playerSelected.motionCoords.length > 0){
-					playerSelected.motionCoords.pop();
-				}
-			} else if (playerSelected.unit == "defense") {
-				if (buttons[5].clicked && playerSelected.defensiveMovement.length > 0){
-					playerSelected.defensiveMovement.pop();
-				}else if (buttons[6].clicked && playerSelected.blitz.length > 0){
-					playerSelected.blitz.pop();
-				}else if (buttons[7].clicked && playerSelected.manCoverage.length > 0) {
-					playerSelected.manCoverage.pop();
-				}else if (buttons[8].clicked && playerSelected.zoneCoverage != null){
-					playerSelected.zoneCoverage = null;
-				}
-				else if (playerSelected.manCoverage.length > 0){
-					playerSelected.manCoverage.pop();
-				}else if (playerSelected.zoneCoverage != null){
-					playerSelected.zoneCoverage = null;
-				}else if (playerSelected.blitz.length > 0){
-					playerSelected.blitz.pop();
-				}else if (playerSelected.defensiveMovement.length > 0) {
-					playerSelected.defensiveMovement.pop();
-				}
-			}
-		}
 
 		//*******************************************************************//
 		// p5.js Event Listeners                                             //
@@ -426,8 +248,13 @@
 				}
 				return false;
 			}
+			var questionType = quiz.getCurrentQuestion().type;
 
-			if(quiz.getCurrentQuestion().type === "alignment"){
+			if(questionType === "call"){
+				return true; //nothing else can happen here
+			}
+
+			if(questionType === "alignment"){
 				if (mouseX > 0 && mouseX < field.width && mouseY > 0 && mouseY < field.height) {
 					var playerSelected = quiz.getSelected()[0];
 					var playerClicked = quiz.mouseInPlayer(field);
@@ -470,25 +297,11 @@
 				var mouseYardX = field.getYardX(mouseX);
 				var mouseYardY = field.getYardY(mouseY);
 
-				if(quiz.getCurrentQuestion().type == "route-tree" && playerClicked != null && playerClicked.position_type == "Skill Position"){
-					if(playerSelected != null){
-						playerSelected.click();
-					}
-					playerClicked.click();
-					return false;
-				}
-				else if (playerSelected === null && quiz.getCurrentQuestion().type === "progression") {
-					if(playerClicked != null){
-						if(playerClicked.progressionRank > 0){
-							playerClicked.progressionRank = 0;
-						}else{
-							playerClicked.progressionRank = quiz.getCurrentQuestion().question.getNextProgressionRank();
-							if(playerClicked.route.length == 0){
-								checkAnswer();
-								return false;
-							}
-						}
-					}
+				if (playerSelected === null) {
+					quiz.attempt = quiz.getCurrentAnswer().deepCopy();
+					quiz.attempt.setSelected();
+					quiz.attempt.x = mouseYardX;
+					quiz.attempt.y = mouseYardY;
 				} else if (buttons[0].clicked === true) {
 					playerSelected.dropback.push([mouseYardX, mouseYardY]);
 					return false;
@@ -536,6 +349,7 @@
 					return false;
 				}
 			}
+
 		};
 
 		function keyPressed() {
@@ -543,69 +357,10 @@
 				if (key === "r" || key === "R"){
 					quiz = quiz.restartQuiz(false);
 					quiz.setAttempt();
-					updateMainviewAndSideview();
+					updateMainviewAndSideview()
+					setButtonClicked();
 				}
 				return false;
-			}
-			if(quiz.getCurrentQuestion().type === "progression"){
-				return false;
-			}
-			if (quiz.getSelected()[0] != null) {
-				var playerSelected = quiz.getSelected()[0];
-				var specialBlockKeys = ["Q", "W", "E", "R", "T", "Y", "U"];
-				var playerStatusKeys = ["A", "S", "D", "F", "G"];
-				var specialZoneKeys = ["Q", "W", "E", "R", "T", "Y"];
-				var zoneTypes = ["1/4", "1/3", "1/2", "OUT", "HC", "CF"]
-
-				if (keyCode == BACKSPACE || keyCode == DELETE) {
-					performDelete();
-
-					return false;
-				} else if (buttons[4].clicked && playerSelected.dropback.length === 0 && playerSelected.route.length === 0 && playerSelected.run.length === 0 && specialBlockKeys.indexOf(key) >= 0) {
-					var prevX = playerSelected.x;
-					var prevY = playerSelected.y;
-					var blockSize = playerSelected.blockingAssignmentArray.length;
-
-					if (blockSize > 0) {
-						prevX = playerSelected.blockingAssignmentArray[blockSize - 1].x;
-						prevY = playerSelected.blockingAssignmentArray[blockSize - 1].y;
-					}
-
-					var block = new BlockType({
-						type: 2 + specialBlockKeys.indexOf(key),
-						player: null,
-						prevX: prevX,
-						prevY: prevY
-					});
-
-					playerSelected.blockingAssignmentArray.push(block);
-
-					return false;
-				} else if (playerStatusKeys.indexOf(key) >= 0) {
-					var index = playerStatusKeys.indexOf(key);
-					if(playerSelected.unit === "defense"){
-						index += 5;
-					}
-					if (buttons[index].display === true) {
-						for (i in buttons) {
-							if (i != index) {
-								buttons[i].setUnclicked();
-							} else {
-								buttons[i].click();
-							}
-						}
-					}
-
-					return false;
-				} else if (playerSelected.unit == "defense"){
-					var zoneTypeIndex = specialZoneKeys.indexOf(key);
-					if(buttons[8].clicked && zoneTypeIndex >= 0){
-						if(playerSelected.zoneCoverage == null){
-							playerSelected.zoneCoverage = new ZoneAssignment({});
-						}
-						playerSelected.zoneCoverage.type = zoneTypes[zoneTypeIndex];
-					}
-				}
 			}
 		};
 
@@ -615,46 +370,32 @@
 		// jQuery Event Listener Functions                                   //
 		//*******************************************************************//
 
-		function checkAnswer(){
+		$("#delete-button").click(function(event) {
+
+		});
+
+		$("#check-answer-button").click(function(event) {
 			if(!quiz.over){
 				var path = window.location.pathname;
 				var csrf_token = "{{ csrf_token }}";
 
 				quiz.checkCurrentQuestion(path, csrf_token);
 
-				for (i in buttons) {
-					buttons[i].display = false;
-					buttons[i].setUnclicked();
-				}
-
 				updateMainviewAndSideview();
-				setButtonClicked();
 			}
-		}
-
-		$("#delete-button").click(function(event) {
-			performDelete();
-		});
-
-		$("#check-answer-button").click(function(event) {
-			checkAnswer();
 		});
 
 		$("#skip-question-button").click(function(event) {
+
 			if(!quiz.over){
 				var path = window.location.pathname;
 				var csrf_token = "{{ csrf_token }}";
 
 				quiz.skipCurrentQuestion(path, csrf_token);
 
-				for (i in buttons) {
-					buttons[i].display = false;
-					buttons[i].setUnclicked();
-				}
-
 				updateMainviewAndSideview();
-				setButtonClicked();
 			}
+
 		});
 
 		$("#zoom-in-button").click(function(event) {
@@ -699,13 +440,13 @@
 		});
 
 		function updateMainviewAndSideview() {
-			// Update mainview header.
+			//update header box to contain name of current question
 			var mainview_header = document.getElementById("header-box");
 			mainview_header.textContent = quiz.getCurrentQuestionName();
 
 			// Remove and update sideview buttons.
-			$("#sideview-buttons").empty();
-			var sideview_buttons = document.getElementById("sideview-buttons");
+			$("#questions-buttons").empty();
+			var questions_buttons = document.getElementById("questions-buttons");
 
 			for (i in quiz.questions) {
 				var question_index = int(i);
@@ -726,38 +467,13 @@
 				}
 
 				sideview_question_button.textContent = question_number.toString();
-				sideview_buttons.appendChild(sideview_question_button);
+				questions_buttons.appendChild(sideview_question_button);
 			}
 
 			var question_prompt = document.getElementById("question-prompt");
 			question_prompt.textContent = quiz.questions[quiz.currentQuestionIndex].prompt;
-		};
 
-		// setButtonClicked is responsible for presetting the most conveinent
-		// assignment type when questions change.
-		function setButtonClicked() {
-			if(quiz.getCurrentQuestion().type === "progression"){
-				return;
-			}
-			for (var i = 0; i < buttons.length; i++){
-				buttons[i].setUnclicked();
-				buttons[i].display = false;
-			}
-
-			if (!(quiz.getCurrentQuestion().question instanceof Formation)) {
-				var player = quiz.getCurrentQuestion().answer;
-				if(quiz.getCurrentQuestion().type == "route-tree"){
-					buttons[3].setClicked();
-				}else if (player.dropback.length > 0) {
-					buttons[0].setClicked();
-				} else if (player.run.length > 0) {
-					buttons[2].setClicked();
-				} else if (player.route.length > 0) {
-					buttons[3].setClicked();
-				} else if (player.blockingAssignmentArray.length > 0) {
-					buttons[4].setClicked();
-				}
-			}
+			var question = quiz.getCurrentQuestion();
 
 		};
 

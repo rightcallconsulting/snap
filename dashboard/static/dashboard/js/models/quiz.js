@@ -20,7 +20,7 @@ var Quiz = function(config) {
 	this.attempt = config.attempt || null;
 
 	this.questions = config.questions || [];
-	this.currentQuestionIndex = config.currentQuestionIndex || null;
+	this.currentQuestionIndex = config.currentQuestionIndex || 0;
 	this.over = false;
 
 	this.originalQuestionList = config.originalQuestionList || []; //used for retake all
@@ -458,6 +458,17 @@ Quiz.prototype.buildRouteTreeQuestions = function(){
 	this.currentQuestionIndex = 0;
 }
 
+Quiz.prototype.buildAlignmentQuestions = function(testedPlayerPosition){
+	var question; var result;
+	for (i in this.formations) {
+		question = new Question({ question: this.formations[i].deepCopy(), type: "alignment" });
+		result = question.buildAlignmentQuestionAndAnswer(testedPlayerPosition)
+		if (result === 0) {
+			this.questions.push(question);
+		}
+	}
+}
+
 Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questionsPerPlay){
 	var question; var result;
 	//this.plays.shuffle();
@@ -511,9 +522,10 @@ Quiz.prototype.buildGameModeQuestions = function(testedPlayerPosition, questions
 
 // getCurrentQuestionName returns the names of the question.
 Quiz.prototype.getCurrentQuestionName = function() {
-	if (!this.isEmpty()) {
+	if (this.currentQuestionIndex >= 0 && this.currentQuestionIndex < this.questions.length) {
 		return this.questions[this.currentQuestionIndex].getName();
 	}
+	return ''
 };
 
 Quiz.prototype.shuffleInGroups = function(groupLength){
