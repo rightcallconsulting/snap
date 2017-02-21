@@ -17,11 +17,14 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.core.serializers import serialize
 from django.http import HttpResponse
+from dashboard.models import Player, PlayerGroup
 from getsnap.models import CustomUser
 from playbook.models import Concept, Formation, Play
 from quizzes.models import Quiz
-from rest_framework import authentication, exceptions, routers, serializers, viewsets
+from rest_framework import authentication, exceptions, parsers, renderers, routers, serializers, viewsets
 from rest_framework.authtoken import views
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -29,16 +32,28 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from IPython import embed
 
-class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
+class PlayerGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlayerGroup
+        fields = ('abbreviation', 'position_type')
+
+class PlayerSerializer(serializers.ModelSerializer):
+    primary_position = PlayerGroupSerializer(many=False, read_only=True)
+    class Meta:
+        model = Player
+        fields = ('primary_position', 'year')
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    player = PlayerSerializer(many=False, read_only=True)
     class Meta:
         model = CustomUser
-        fields = ('username', 'email')
+        fields = ('username', 'id', 'email', 'first_name', 'last_name', 'player')
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
-class ConceptSerializer(serializers.HyperlinkedModelSerializer):
+class ConceptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Concept
         fields = ('name', 'unit', 'scout', 'conceptJson')
@@ -52,6 +67,23 @@ class ConceptSerializer(serializers.HyperlinkedModelSerializer):
 #         queryset = Concept.objects.all()
 #         serializer = ConceptSerializer(queryset, many=True)
 #         return Response(serializer.data)
+
+class ObtainAuthToken(APIView):
+    throttle_classes = ()
+    permission_classes = ()
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key, 'user': CustomUserSerializer(user).data})
+
+
+obtain_auth_token = ObtainAuthToken.as_view()
 
 @api_view(['GET'])
 @authentication_classes((SessionAuthentication, TokenAuthentication))
@@ -129,7 +161,7 @@ urlpatterns = [
     url(r'api/formations', FormationsView),
     url(r'api/plays', PlaysView),
     url(r'api/quizzes', QuizzesView),
-    url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^api-token-auth/', obtain_auth_token),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^admin/', admin.site.urls),
 	url(r'', include('dashboard.urls')),
