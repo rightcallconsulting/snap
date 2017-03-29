@@ -1,8 +1,7 @@
 # language setting
-  language: python
-
-# version numbers
-  python: 2.7
+  language:
+    python: 
+      2.7
 
 # install requirements 
 # TODO make sure we need --use-mirrors 
