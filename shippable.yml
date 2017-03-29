@@ -1,20 +1,16 @@
 # language setting
-   language: python
+  language: python
 
 # version numbers
-  python:
-    - 2.7
+  python: 2.7
 
 # install requirements 
 # TODO make sure we need --use-mirrors 
 # I think it's extra protection against something not downloading
-  install: 
-    - "pip install -r requirements.txt --use-mirrors"
+  install: "pip install -r requirements.txt --use-mirrors"
 
 # command to run tests
-  script: 
-    - nosetests
+  script: nosetests
 
 # Django enviornment
-  env:
-   - DJANGO_VERSION=1.8.3
+  env: DJANGO_VERSION=1.8.3
