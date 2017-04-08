@@ -4,6 +4,13 @@
 	box-sizing: border-box;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
 ::-webkit-scrollbar {
 	display: none;
 	width: 0;
