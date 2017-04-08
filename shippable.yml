@@ -6,7 +6,7 @@ python:
 # install requirements 
 # TODO make sure we need --use-mirrors 
 # I think it's extra protection against something not downloading
-install: "pip install -r requirements.txt --use-mirrors"
+install: "pip install -r requirements.txt --use-mirror"
 
 # command to run tests
 script: nosetests
