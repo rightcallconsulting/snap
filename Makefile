@@ -47,7 +47,7 @@ fir:
 # Example: 'make test APP=dashboard'
 tests:
 	coverage run manage.py test $(APP) --settings=snap.settings.local --parallel
-	coverage html --fail-under=50 --title="Snap Coverage report" # TODO raise percentage 
+	coverage html --fail-under=55 --title="Snap Coverage report" # TODO raise percentage 
 
 ###############################################################################
 # Heroku commands
