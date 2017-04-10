@@ -12,7 +12,7 @@ services:
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
-  - psql -c 'CREATE DATABASE snapdb;'
+  - psql -c 'CREATE DATABASE snapdb;' -U ''
 
 # install requirements
 install: 
@@ -22,3 +22,15 @@ install:
 script:
   - coverage run manage.py test --settings=snap.settings.local --parallel
   - coverage html --fail-under=55 --title="Snap Coverage report"
+
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      recipients:
+        - dylan@rightcallconsulting.com
+        - sam@rightcallconsulting.com
+    - integrationName: Shippable-Slack
+      type: slack 
+      recipients:
+        - "#devops"
