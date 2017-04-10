@@ -2,10 +2,13 @@
 .DS_Store
 
 # Prevent build artifacts
+build/*
+htmlcov/*
+staticfiles
 venv
 .env
+.coverage
 *.pyc
-staticfiles
 
 # Prevent profile pictures
 media/profile/*

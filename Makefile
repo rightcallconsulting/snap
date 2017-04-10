@@ -42,9 +42,26 @@ fir:
 # Testing
 ###############################################################################
 
-# Run tests
-unit-tests:
-	python manage.py test --settings=snap.settings.local --parallel
+# Run unit tests for all apps with coverage reports
+# If you want to run tests on only one app, use the APP variable
+# Example: 'make test APP=dashboard'
+tests:
+	coverage run manage.py test $(APP) --settings=snap.settings.local --parallel
+	coverage html --fail-under=50 --title="Snap Coverage report" # TODO raise percentage 
+
+###############################################################################
+# Heroku commands
+###############################################################################
+
+migrations-heroku:
+	heroku run python manage.py makemigrations
+	heroku run python manage.py migrate
+
+flush-heroku:
+	heroku run python manage.py flush
+
+load-stanford-heroku:
+	heroku run python manage.py loaddata stanford_seed.json
 
 ###############################################################################
 # Database dump and load commands
@@ -99,26 +116,6 @@ superuser:
 shell:
 	python manage.py shell --settings=snap.settings.local
 
-# Run unit tests for all apps
-# If you want to run tests on only one app, use the APP variable
-# Example: 'make test APP=dashboard'
-test:
-	python manage.py test $(APP) --settings=snap.settings.local
-
-###############################################################################
-# Heroku commands
-###############################################################################
-
-migrations-heroku:
-	heroku run python manage.py makemigrations
-	heroku run python manage.py migrate
-
-flush-heroku:
-	heroku run python manage.py flush
-
-load-stanford-heroku:
-	heroku run python manage.py loaddata stanford_seed.json
-
 ###############################################################################
 # Make clean commands
 ###############################################################################
@@ -127,3 +124,6 @@ load-stanford-heroku:
 clean:
 	python manage.py flush --settings=snap.settings.local
 	find . -name "*.pyc" -exec rm -rf {} \;
+	find . -name ".coverage" -exec rm -rf {} \;
+	rm -rf "htmlcov"
+	rm -rf "build"

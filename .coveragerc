@@ -1,0 +1,11 @@
+[html]
+directory = build/coverage
+
+[run] 
+source = .
+
+include =
+	*/models.py
+
+omit =
+	venv/*
