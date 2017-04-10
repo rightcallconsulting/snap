@@ -7,15 +7,21 @@ env: DJANGO_VERSION=1.8.3
 services:
   - postgres
 
+# create databse needed for django
+build:
+  ci:
+    - psql -c 'CREATE DATABASE snapdb;' -U postgres
+
 # install libjpeg to prevent Pillow installation from failing in the minion
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
 
 # install requirements
-install: "pip install -r requirements.txt"
+install: 
+  - pip install -r requirements.txt
 
 # command to run tests
 script:
-  - coverage run manage.py test $(APP) --settings=snap.settings.local --parallel
+  - coverage run manage.py test --settings=snap.settings.local --parallel
   - coverage html --fail-under=50 --title="Snap Coverage report"
