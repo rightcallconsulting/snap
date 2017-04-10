@@ -7,15 +7,12 @@ env: DJANGO_VERSION=1.8.3
 services:
   - postgres
 
-# create databse needed for django
-build:
-  ci:
-    - psql -c 'CREATE DATABASE snapdb;' -U postgres
-
 # install libjpeg to prevent Pillow installation from failing in the minion
+# and create database needed for testing
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
+  - psql -c 'CREATE DATABASE snapdb;' -U postgres
 
 # install requirements
 install: 
