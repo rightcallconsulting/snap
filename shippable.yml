@@ -12,7 +12,7 @@ services:
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
-  - psql -c 'CREATE DATABASE snapdb;' -U postgres
+  - psql -c 'CREATE DATABASE snapdb;'
 
 # install requirements
 install: 
@@ -21,4 +21,4 @@ install:
 # command to run tests
 script:
   - coverage run manage.py test --settings=snap.settings.local --parallel
-  - coverage html --fail-under=50 --title="Snap Coverage report"
+  - coverage html --fail-under=55 --title="Snap Coverage report"

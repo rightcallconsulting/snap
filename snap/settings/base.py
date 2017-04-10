@@ -108,9 +108,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'snapdb',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
         'PORT': '5432',
     }
 }
