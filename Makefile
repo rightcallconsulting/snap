@@ -44,7 +44,7 @@ fir:
 
 # Run tests
 unit-tests:
-	python manage.py test --settings=snap.settings.local
+	python manage.py test --settings=snap.settings.local --parallel
 
 ###############################################################################
 # Database dump and load commands
