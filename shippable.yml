@@ -12,7 +12,7 @@ services:
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
-  - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
+  - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres -h localhost
   - psql -c 'CREATE DATABASE snapdb;' -U postgres
 
 # install requirements
