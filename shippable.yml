@@ -12,6 +12,7 @@ services:
 # TODO figure out what this is and we need it
 before_install:
   - sudo apt-get install libjpeg-dev
+  - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
   - psql -c 'CREATE DATABASE snapdb;' -U postgres
 
 # install requirements
@@ -30,6 +31,10 @@ integrations:
       recipients:
         - dylan@rightcallconsulting.com
         - sam@rightcallconsulting.com
+      branches:
+        only:
+          - master
+          - develop
     - integrationName: Shippable-Slack
       type: slack 
       recipients:
