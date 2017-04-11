@@ -1,27 +1,28 @@
-# Configure the project language, language version, and Django enviornment
+# Configure the project language, language runtime version, and enviornment variables
+# TODO maybe add AWS credentials as enviornment variables?
 language: python
-python: 2.7
-env: DJANGO_VERSION=1.8.3
+
+python: 
+  - 2.7
+
+env: 
+  - DJANGO_VERSION=1.8.3
 
 # Include postgres for tests
 services:
   - postgres
-
-# Create the database needed for testing
-build:
-  ci:
-    - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
-    - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
 # Install requirements
 install:
   - sudo apt-get install libjpeg-dev # To prevent Pillow install from failing -- Not sure we need it long term 
   - pip install -r requirements.txt
 
-# Make folders for the reports
+# Make folders for the reports and create the test database
 before_script:
-   - mkdir -p shippable/testresults
-   - mkdir -p shippable/codecoverage
+  - mkdir -p shippable/testresults
+  - mkdir -p shippable/codecoverage
+  - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
+  - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
 # Command to run tests
 script:
