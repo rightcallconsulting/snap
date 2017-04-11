@@ -1,32 +1,34 @@
-# configure the project language, language version, and Django enviornment
+# Configure the project language, language version, and Django enviornment
 language: python
 python: 2.7
 env: DJANGO_VERSION=1.8.3
 
-# include postgres for tests
+# Include postgres for tests
 services:
   - postgres
 
-# create database needed for testing
+# Create the database needed for testing
 build:
   ci:
     - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
-    - psql -c 'CREATE DATABASE snapdb;' -U postgres
+    - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
-# install libjpeg to prevent Pillow installation from failing in the minion
-# TODO figure out what this is and we need it
-before_install:
-  - sudo apt-get install libjpeg-dev
-
-# install requirements
-install: 
+# Install requirements
+install:
+  - sudo apt-get install libjpeg-dev # To prevent Pillow install from failing -- Not sure we need it long term 
   - pip install -r requirements.txt
 
-# command to run tests
-script:
-  - coverage run manage.py test --settings=snap.settings.local --parallel
-  - coverage html --fail-under=55 --title="Snap Coverage report"
+# Make folders for the reports
+before_script:
+   - mkdir -p shippable/testresults
+   - mkdir -p shippable/codecoverage
 
+# Command to run tests
+script:
+  - which python && coverage run manage.py test --settings=snap.settings.local --parallel
+  - which python && coverage html --fail-under=55 --title="Snap Coverage report" -o shippable/codecoverage/coverage.xml
+
+# Integrations with email and Slack
 integrations:
   notifications:
     - integrationName: email
