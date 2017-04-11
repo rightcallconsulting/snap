@@ -69,42 +69,42 @@ load-stanford-heroku:
 
 # Dump data into seed.json
 seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/seed.json --settings=snap.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/seed.json --settings=snap.settings.local
 
 # Dump data into dylan_seed.json
 dylan-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/dylan_seed.json --settings=snap.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/dylan_seed.json --settings=snap.settings.local
 
 # Load dylan seed file into database
 load-dylan:
-	python manage.py loaddata dylan_seed.json --settings=snap.settings.local
+	python manage.py loaddata fixtures/dylan_seed.json --settings=snap.settings.local
 	python manage.py runserver --settings=snap.settings.local
 
 # Dump data into sam_seed.json
 sam-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/sam_seed.json --settings=snap.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/sam_seed.json --settings=snap.settings.local
 
 # Load dylan seed file into database
 load-sam:
-	python manage.py loaddata sam_seed.json --settings=snap.settings.local
+	python manage.py loaddata fixtures/sam_seed.json --settings=snap.settings.local
 	python manage.py runserver --settings=snap.settings.local
 
 # Dump data into stanford_seed.json
 stanford-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/stanford_seed.json --settings=snap.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/stanford_seed.json --settings=snap.settings.local
 
 # Load stanford seed file into database
 load-stanford:
-	python manage.py loaddata stanford_seed.json --settings=snap.settings.local
+	python manage.py loaddata fixtures/stanford_seed.json --settings=snap.settings.local
 	python manage.py runserver --settings=snap.settings.local
 
 # Dump data into rcc_seed.json
 rcc-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/rcc_seed.json --settings=snap.settings.local
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/rcc_seed.json --settings=snap.settings.local
 
 # Load stanford seed file into database
 load-rcc:
-	python manage.py loaddata rcc_seed.json --settings=snap.settings.local
+	python manage.py loaddata fixtures/rcc_seed.json --settings=snap.settings.local
 	python manage.py runserver --settings=snap.settings.local
 
 ###############################################################################

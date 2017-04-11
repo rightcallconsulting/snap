@@ -1,33 +1,33 @@
-# Configure the project language, language runtime version, and enviornment variables
-# TODO maybe add AWS credentials as enviornment variables?
-language: python
+# Written according to the shippable docs
+# http://docs.shippable.com/ci/shippableyml/
 
+# Configure the project language, language runtime version
+language: python
 python: 
   - 2.7
-
-env: 
-  - DJANGO_VERSION=1.8.3
 
 # Include postgres for tests
 services:
   - postgres
 
-# Install requirements
-install:
-  - sudo apt-get install libjpeg-dev # To prevent Pillow install from failing -- Not sure we need it long term 
-  - pip install -r requirements.txt
+# Set enviornment variables
+# TODO add AWS credentials here in the future?
+env: 
+  - DJANGO_VERSION=1.8.3
 
-# Make folders for the reports and create the test database
-before_script:
-  - mkdir -p shippable/testresults
-  - mkdir -p shippable/codecoverage
-  - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
-  - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
+build:
+  ci:
+    # Install requirements
+    - sudo apt-get install libjpeg-dev # Prevents the Pillow command from failing
+    - pip install -r requirements.txt
 
-# Command to run tests
-script:
-  - which python && coverage run manage.py test --settings=snap.settings.local --parallel
-  - which python && coverage html --fail-under=55 --title="Snap Coverage report" -o shippable/codecoverage/coverage.xml
+    # Create test database
+    - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
+    - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
+
+    # Run tests with coverage
+    - which python && coverage run manage.py test --settings=snap.settings.local --parallel
+    - which python && coverage html --fail-under=55 --title="Snap Coverage report"
 
 # Integrations with email and Slack
 integrations:
