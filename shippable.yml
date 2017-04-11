@@ -31,7 +31,7 @@ build:
 
     # Run tests with coverage
     - which python && coverage run manage.py test --settings=snap.settings.local --parallel
-    - which python && coverage xml --fail-under=55 -o shippable/testresults/coverage.xml
+    - which python && coverage xml --fail-under=55 -o shippable/codecoverage/coverage.xml
     - which python && coverage html --fail-under=55 --title="Snap Coverage report" -d shippable/codecoverage
 
 # Integrations with email and Slack
