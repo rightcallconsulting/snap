@@ -15,5 +15,8 @@ DATABASES = {
     }
 }
 
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+
 MEDIA_ROOT = os.path.normpath(os.path.join(BASE_DIR, '../../media'))
 MEDIA_URL = '/media/'

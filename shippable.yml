@@ -22,8 +22,8 @@ build:
     - pip install -r requirements.txt
 
     # Create test database
-    - psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
-    - psql -c 'CREATE DATABASE test_snapdb;' -U postgres
+    #- psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
+    #- psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
     # Run tests with coverage
     - which python && coverage run manage.py test --settings=snap.settings.local --parallel
