@@ -1,4 +1,5 @@
 from snap.settings.base import *
+import sys
 import dj_database_url
 
 DEBUG = True
