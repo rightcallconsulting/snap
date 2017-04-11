@@ -1,6 +1,3 @@
-[html]
-directory = build/coverage
-
 [run] 
 source = .
 

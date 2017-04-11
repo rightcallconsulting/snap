@@ -25,9 +25,14 @@ build:
     #- psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
     #- psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
+    #Create folders for test and code coverage
+    - mkdir -p shippable/testresults
+    - mkdir -p shippable/codecoverage
+
     # Run tests with coverage
     - which python && coverage run manage.py test --settings=snap.settings.local --parallel
-    - which python && coverage html --fail-under=55 --title="Snap Coverage report"
+    - which python && coverage xml --fail-under=55 -o shippable/testresults/coverage.xml
+    - which python && coverage html --fail-under=55 --title="Snap Coverage report" -d shippable/codecoverage
 
 # Integrations with email and Slack
 integrations:
