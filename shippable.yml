@@ -32,7 +32,7 @@ build:
     - mkdir -p shippable/codecoverage
 
     # Run tests with coverage
-    - which python && coverage run manage.py test --settings=snap.settings.local --parallel
+    - which python && coverage run --branch manage.py test --settings=snap.settings.local --parallel
     - which python && coverage xml --fail-under=45 -o shippable/codecoverage/coverage.xml
 
 # Integrations with email and Slack
