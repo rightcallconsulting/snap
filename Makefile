@@ -46,10 +46,11 @@ fir:
 # If you want to run tests on only one app, use the APP variable
 # Example: 'make test APP=dashboard'
 tests:
+	rm -rf "build"
 	mkdir build && mkdir build/coverage
-	coverage run manage.py test $(APP) --settings=snap.settings.local --parallel
-	coverage xml --fail-under=55 -o build/coverage/coverage.xml  # TODO raise percentage 
-	coverage html --fail-under=55 --title="Snap Coverage report" -d build/html # TODO raise percentage 
+	coverage run --branch manage.py test $(APP) --settings=snap.settings.local --parallel
+	coverage xml --fail-under=45 -o build/coverage/coverage.xml  # TODO raise percentage 
+	coverage html --fail-under=45 --title="Snap Coverage report" -d build/html # TODO raise percentage 
 
 ###############################################################################
 # Heroku commands
