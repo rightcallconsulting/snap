@@ -22,12 +22,9 @@ class CustomUser(AbstractUser):
 			['P', 'Player']
 		]
 
-	user_type = models.CharField(max_length=1,
-								choices=TYPES,
-								default='P')
-
+	user_type = models.CharField(max_length=1, choices=TYPES, default='P')
 	phone_number = models.CharField(max_length=15, blank=True, null=True)
-	customer_id = models.CharField(max_length=30, blank=True, null=True) #braintree
+	customer_id = models.CharField(max_length=30, blank=True, null=True)
 
 	has_set_password = models.BooleanField(default=True)
 	force_password_reset = models.BooleanField(default=False)

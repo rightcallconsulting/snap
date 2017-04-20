@@ -1,0 +1,8 @@
+[run] 
+source = .
+
+include =
+	*/models.py
+
+omit =
+	venv/*

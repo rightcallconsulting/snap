@@ -1,20 +1,53 @@
-#build_environment: Ubuntu 14.04
+# Written according to the shippable docs
+# http://docs.shippable.com/ci/shippableyml/
 
+# TODO figure out how to make postgres work in test runner
+
+# Configure the project language, language runtime version
 language: python
+python: 
+  - 2.7
 
-python:
-	- 2.7
+# Include postgres for tests
+services:
+  - postgres
 
-before_install:
-  - sudo apt-get install libjpeg-dev
+# Set enviornment variables
+# TODO add AWS credentials here in the future?
+env: 
+  - DJANGO_VERSION=1.8.3
 
-# install requirements 
-# TODO make sure we need --use-mirrors 
-# I think it's extra protection against something not downloading
-install: "pip install -r requirements.txt"
+build:
+  ci:
+    # Install requirements
+    - sudo apt-get install libjpeg-dev # Prevents the Pillow command from failing
+    - pip install -r requirements.txt
 
-# command to run tests
-script: nosetests
+    # Create test database
+    #- psql -c 'CREATE ROLE shippable WITH superuser;' -U postgres
+    #- psql -c 'CREATE DATABASE test_snapdb;' -U postgres
 
-# Django enviornment
-env: DJANGO_VERSION=1.8.3
+    #Create folders for test and code coverage
+    - mkdir -p shippable/testresults
+    - mkdir -p shippable/codecoverage
+
+    # Run tests with coverage
+    - which python && coverage run --branch manage.py test --settings=snap.settings.local --parallel
+    - which python && coverage xml --fail-under=45 -o shippable/codecoverage/coverage.xml
+
+# Integrations with email and Slack
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      recipients:
+        - dylan@rightcallconsulting.com
+        - sam@rightcallconsulting.com
+      branches:
+        only:
+          - master
+          - develop
+    - integrationName: Shippable-Slack
+      type: slack 
+      recipients:
+        - "#devops"

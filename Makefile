@@ -39,63 +39,18 @@ fir:
 	python manage.py runserver --settings=snap.settings.local
 
 ###############################################################################
-# Database dump and load commands
+# Testing
 ###############################################################################
 
-# Dump data into seed.json
-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/seed.json --settings=snap.settings.local
-
-# Dump data into dylan_seed.json
-dylan-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/dylan_seed.json --settings=snap.settings.local
-
-# Load dylan seed file into database
-load-dylan:
-	python manage.py loaddata dylan_seed.json --settings=snap.settings.local
-	python manage.py runserver --settings=snap.settings.local
-
-# Dump data into sam_seed.json
-sam-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/sam_seed.json --settings=snap.settings.local
-
-# Load dylan seed file into database
-load-sam:
-	python manage.py loaddata sam_seed.json --settings=snap.settings.local
-	python manage.py runserver --settings=snap.settings.local
-
-# Dump data into stanford_seed.json
-stanford-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/stanford_seed.json --settings=snap.settings.local
-
-# Load stanford seed file into database
-load-stanford:
-	python manage.py loaddata stanford_seed.json --settings=snap.settings.local
-	python manage.py runserver --settings=snap.settings.local
-
-# Dump data into rcc_seed.json
-rcc-seed:
-	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > dashboard/fixtures/rcc_seed.json --settings=snap.settings.local
-
-# Load stanford seed file into database
-load-rcc:
-	python manage.py loaddata rcc_seed.json --settings=snap.settings.local
-	python manage.py runserver --settings=snap.settings.local
-
-###############################################################################
-# Django/python development commands
-###############################################################################
-superuser:
-	python manage.py createsuperuser --settings=snap.settings.local
-
-shell:
-	python manage.py shell --settings=snap.settings.local
-
-# Run unit tests for all apps
+# Run unit tests for all apps with coverage reports
 # If you want to run tests on only one app, use the APP variable
 # Example: 'make test APP=dashboard'
-test:
-	python manage.py test $(APP) --settings=snap.settings.local
+tests:
+	rm -rf "build"
+	mkdir build && mkdir build/coverage
+	coverage run --branch manage.py test $(APP) --settings=snap.settings.local --parallel
+	coverage xml --fail-under=45 -o build/coverage/coverage.xml  # TODO raise percentage 
+	coverage html --fail-under=45 --title="Snap Coverage report" -d build/html # TODO raise percentage 
 
 ###############################################################################
 # Heroku commands
@@ -112,6 +67,59 @@ load-stanford-heroku:
 	heroku run python manage.py loaddata stanford_seed.json
 
 ###############################################################################
+# Database dump and load commands
+###############################################################################
+
+# Dump data into seed.json
+seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/seed.json --settings=snap.settings.local
+
+# Dump data into dylan_seed.json
+dylan-seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/dylan_seed.json --settings=snap.settings.local
+
+# Load dylan seed file into database
+load-dylan:
+	python manage.py loaddata fixtures/dylan_seed.json --settings=snap.settings.local
+	python manage.py runserver --settings=snap.settings.local
+
+# Dump data into sam_seed.json
+sam-seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/sam_seed.json --settings=snap.settings.local
+
+# Load dylan seed file into database
+load-sam:
+	python manage.py loaddata fixtures/sam_seed.json --settings=snap.settings.local
+	python manage.py runserver --settings=snap.settings.local
+
+# Dump data into stanford_seed.json
+stanford-seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/stanford_seed.json --settings=snap.settings.local
+
+# Load stanford seed file into database
+load-stanford:
+	python manage.py loaddata fixtures/stanford_seed.json --settings=snap.settings.local
+	python manage.py runserver --settings=snap.settings.local
+
+# Dump data into rcc_seed.json
+rcc-seed:
+	python manage.py dumpdata --exclude contenttypes --exclude auth.permission > fixtures/rcc_seed.json --settings=snap.settings.local
+
+# Load stanford seed file into database
+load-rcc:
+	python manage.py loaddata fixtures/rcc_seed.json --settings=snap.settings.local
+	python manage.py runserver --settings=snap.settings.local
+
+###############################################################################
+# Django/python development commands
+###############################################################################
+superuser:
+	python manage.py createsuperuser --settings=snap.settings.local
+
+shell:
+	python manage.py shell --settings=snap.settings.local
+
+###############################################################################
 # Make clean commands
 ###############################################################################
 
@@ -119,3 +127,6 @@ load-stanford-heroku:
 clean:
 	python manage.py flush --settings=snap.settings.local
 	find . -name "*.pyc" -exec rm -rf {} \;
+	find . -name ".coverage" -exec rm -rf {} \;
+	rm -rf "htmlcov"
+	rm -rf "build"
