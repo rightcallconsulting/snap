@@ -36,22 +36,22 @@ AUTHENTICATION_BACKENDS = ('snap.auth_backend.CustomBackend',
 # Application installed in my project
 INSTALLED_APPS = (
     'django.contrib.admin',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-	'dashboard',
-	'getsnap',
-	'playbook',
-	'quizzes',
-	'analytics',
-	'debug_toolbar',
-	'storages',
-	'datetimewidget',
-	'bootstrap3_datetime',
+    'dashboard',
+    'getsnap',
+    'playbook',
+    'quizzes',
+    'analytics',
+    'debug_toolbar',
+    'storages',
+    'datetimewidget',
+    'bootstrap3_datetime',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -122,11 +122,11 @@ STATIC_URL = '/static/'
 
 # Password settings
 # https://github.com/dstufft/django-passwords
-PASSWORD_MIN_LENGTH         = 2     # Defaults to 6
-PASSWORD_MAX_LENGTH         = 120   # Defaults to none
-PASSWORD_DICTIONARY         = ""    # Defaults to None, Should have a directory path to a dictionary
-PASSWORD_MATCH_THRESHOLD    = 1.0   # Defaults to 0.9, should be 0.0 - 1.0 where 1.0 means exactly the same.
-PASSWORD_COMMON_SEQUENCES   = []    # Should be a list of strings, see passwords/validators.py for default
+PASSWORD_MIN_LENGTH         = None      # Defaults to 6
+PASSWORD_MAX_LENGTH         = None      # Defaults to None
+PASSWORD_DICTIONARY         = None      # Defaults to None, Should have a directory path to a dictionary
+PASSWORD_MATCH_THRESHOLD    = 1.0       # Defaults to 0.9, should be 0.0 - 1.0 where 1.0 means exactly the same.
+PASSWORD_COMMON_SEQUENCES   = []        # Should be a list of strings, see passwords/validators.py for default
 PASSWORD_COMPLEXITY = {
     "UPPER": 	0,  	# Uppercase
     "LOWER": 	0, 		# Lowercase
